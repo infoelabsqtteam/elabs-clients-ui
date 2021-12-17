@@ -1,0 +1,11 @@
+.custom-text-color {
+    color: white;
+}
+
+mat-checkbox ::ng-deep .mat-checkbox-inner-container {width: 13px;height: 13px;}
+
+.custom-font {
+    color: rgb(53, 125, 213);
+    font-size: 17px;
+    font-weight: 500;
+}

@@ -1,0 +1,380 @@
+<!-- <mdb-icon far icon="arrow-alt-circle-down" class="cusPosition" (click)="convetToPDF()"></mdb-icon> -->
+
+<div id="contentToConvert">
+    <div class="row bg-cerulean pt-2" id="head">
+        <div class="col-lg-2">
+            <img src="assets/img/template_logo-new.png" width="70%">
+        </div>
+        <div class="col-lg-7">
+          <!-- <div class="row d-flex justify-content-center">
+            <h3 class="white-text cusborder">FORM 50</h3>
+          </div> -->
+          <div class="row d-flex justify-content-center">
+            <h1></h1>
+            <h4 class="white-text">{{ "Lic. No. Lab-3D (I)88} / Lic. 2-ISM-HR"}}</h4>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <h1 class="white-text" style="font-size: 36px;"><b>Interstellar Testing Centre Pvt. Ltd.</b></h1>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <h4 class="white-text">(The Drugs and Cosmetics Act 1940 and the Rules thereunder)</h4>
+          </div>
+            
+        </div>
+      
+        <div class="col-lg-3 my-auto d-inline-flex d-flex justify-content-center">
+          <h2 class="px-2 white-text cusborder">FORM 50</h2>
+        </div>
+        
+      </div>
+<div class="row">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-7 text-center">
+      <h1><u>TEST REPORT</u></h1>
+  </div>
+</div>
+
+<form [formGroup]="reportForm">
+    
+    <div class="row px-3 mt-4"> 
+        <div class="col-lg-12 border border-bottom-0"> 
+
+
+            <div class="row border-bottom"> 
+                <div class="col-lg-6 border-right">
+                    <p class="my-auto b">Issued To :</p>
+                    <div class="form-group my-auto">
+                        <textarea class="form-control fontSize" id="example-textarea" rows="5" formControlName="issued_to" [ngClass]="editable == true ? '' : 'custom-input input-disabled'" [attr.disabled]="!editable ? '' : null"></textarea>
+                      <!-- <input type="text" class="form-control form-control-sm" formControlName="issued_to" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null"> -->
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-12 d-flex">
+                            <p class="my-auto b"><u>SUBMITTED SAMPLE</u></p>
+                           
+                        </div>
+                        <div class="col-lg-12 d-flex">
+                            <p class="my-auto b">Received On :</p>
+                            <div class="form-group my-auto">
+                                <input type="text" class="form-control form-control-sm" formControlName="received_on" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                            </div>
+                        </div>  
+                        <div class="col-lg-12 d-flex">
+                            <p class="my-auto b">Commenced On :</p>
+                            <div class="form-group my-auto">
+                                <input type="text" class="form-control form-control-sm" formControlName="commenced_on" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                            </div>
+                        </div> 
+                        <div class="col-lg-12 d-flex">
+                            <p class="my-auto b">Completed On  :</p>
+                            <div class="form-group my-auto">
+                                <input type="text" class="form-control form-control-sm" formControlName="complete_date" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                            </div>
+                        </div> 
+                        <div class="col-lg-12 d-flex">
+                            <p class="my-auto b">Date Of Report :</p>
+                            <div class="form-group my-auto">
+                                <input type="text" class="form-control form-control-sm" formControlName="report_date" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                            </div>
+                        </div> 
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row px-3 mt-4"> 
+        <div class="col-lg-12 border border-bottom-0"> 
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2 b">General Information</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Sample Regstratlon No</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="reg_no" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>     
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Sample Description</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="description" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Sample Appearance</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="appearance" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Sample details (if any)</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Sample Quantity</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="quantity" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Sample Condition</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="condition" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Block Name</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="block" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Village Name</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="village" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Name of Group</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="name_of_group" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Name of Dristric</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="district" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Name Of Farmer</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="farmer_name" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Fathers Name</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="father_name" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Aadhar No</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="aadhar" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Contact NO</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="contact_no" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Khasara NO</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="khasara_no" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2">Customer Reference</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="customer_ref" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2 b">Discipline</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="discipline" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="my-auto py-2 b">Group</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group my-auto">
+                        <input type="text" class="form-control form-control-sm" formControlName="group" [ngClass]="editable == true ? '' : 'custom-input'" [attr.disabled]="!editable ? '' : null">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+      </div>
+      <div class="mt-2" data-html2canvas-ignore="true">
+        <button *ngIf="editable == false" mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect (click)="updates()">Update</button>
+        <button *ngIf="editable == true" mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect (click)="save()">Update</button>
+      </div>
+      <div class="row px-3 mt-4">
+        <div class="col-lg-12 border border-bottom-0">
+  
+            <div class="row  border-bottom">
+                <div class="col-lg-12 bg-cerulean white-text">
+                    <p class="my-auto py-3 b">TEST RESULTS</p>
+                </div>
+            </div>
+  
+          
+  
+          <div class="row  border-bottom b">
+            <div class="col-lg-1 border-right text-center">
+              <p class="my-auto py-2">S.No.</p>
+            </div>
+            <div class="col-lg-3 border-right">
+              <p class="my-auto py-2">Test Parameter</p>
+            </div>
+            <div class="col-lg-1 border-right">
+              <p class="my-auto py-2">Code No.</p>
+            </div>
+            <div class="col-lg-2 border-right">
+              <p class="my-auto py-2">Test Method</p>
+            </div>
+            <div class="col-lg-2 border-right">
+              <p class="my-auto py-2">Result</p>
+            </div>
+            <div class="col-lg-1 border-right">
+              <p class="my-auto py-2">Unit</p>
+            </div>
+            <div class="col-lg-2 border-right">
+                <p class="my-auto py-2">LOQ</p>
+              </div>
+          </div>
+  
+          <div class="row  border-bottom">
+            <div class="col-lg-12">
+                <p class="my-auto py-2 b">Test Details :</p>
+            </div>
+          </div>
+  
+          <div class="row  border-bottom" *ngFor="let prm of listOfData.param_category; let i=index">
+            <div class="col-lg-12  border-bottom" *ngIf="prm.name && prm.name.length > 0">
+              <div class="row bg1">
+                  <div class="col-lg-1 border-right text-center">
+                      <p class="my-auto py-2">{{i+1}}.</p>
+                  </div>
+                  <div class="col-lg-11">
+                      <p class="my-auto py-2 b">{{prm.name}}</p>
+                  </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="row border-bottom" *ngFor="let item of prm.parameter; let j=index">
+                  <div class="col-lg-1 border-right text-center">
+                    <p class="my-auto py-2">{{letterFromNumber(j)}}.</p>
+                  </div>
+                  <div class="col-lg-3 border-right">
+                    <p class="my-auto py-2">{{item.name}}</p>
+                  </div>
+                  <div class="col-lg-1 border-right">
+                    <p class="my-auto py-2">{{item.code}}</p>
+                  </div>
+                  <div class="col-lg-2 border-right">
+                    <p class="my-auto py-2">{{item.method}}</p>
+                  </div>
+                  <div class="col-lg-2 border-right">
+                    <p class="my-auto py-2">{{item.result}}</p>
+                  </div>
+                  <div class="col-lg-1 border-right">
+                    <p class="my-auto py-2">{{item.unit}}</p>
+                  </div>
+                  <div class="col-lg-2 border-right">
+                    <p class="my-auto py-2">{{item.loq}}</p>
+                  </div>
+                </div>
+            </div>
+          </div>
+  
+        </div>
+    </div>
+</form>
+</div>

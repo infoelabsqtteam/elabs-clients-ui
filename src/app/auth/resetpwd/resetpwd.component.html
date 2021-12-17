@@ -1,0 +1,51 @@
+<div  style="background: url(assets/img/pexels-public-domain-pictures-60022.jpg);height: 100vh;background-size:cover ;">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    
+                    <mat-card style="text-align: center;opacity: 90%;">
+                        <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white" >
+                            <img class="w-75 mat-card-image m-0" mat-card-image src="assets/img/logo.png" alt="E-Labs logo">
+                        </mat-card-title>
+                        <mat-divider></mat-divider>
+                        <mat-card-content>
+                            <div class="text-center w-75 m-auto">
+                                <h4 class="text-dark-50 text-center mt-2 font-weight-bold">Reset Password</h4>
+                            </div>
+
+                          
+
+                          <div >
+                            <form class="example-form" [formGroup]="resetForm" (ngSubmit)="resetNewpass()">
+                                
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                <div class="row justify-content-center ">
+                                    <button mat-raised-button color="primary" type="submit">Submit New Password</button>
+                                </div>
+                              </form>
+                          </div>
+                        </mat-card-content>
+                       
+                    </mat-card>
+
+                    
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+

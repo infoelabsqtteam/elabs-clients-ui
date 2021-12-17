@@ -1,0 +1,47 @@
+
+<div mdbModal #uploadDocFileModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="dropzone position-relative " appDnd (fileDropped)="onFileDropped($event)">
+                <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+                <div class="dz-message ">
+                    <i class="h1 text-muted dripicons-cloud-upload"></i>
+                    <h3>Drop files here or click to upload.</h3>
+                </div>
+            </div>
+            <div class="progress mt-1" *ngIf="uploadFile">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+            </div>
+            <div class="files-list">
+                <div class="card mt-1 mb-0 shadow-none border" *ngFor="let file of files; let i = index">
+                    <div class="p-2">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img data-dz-thumbnail src="assets/img/dnd/ic-file.svg" class="avatar-sm rounded bg-light" alt="">
+                            </div>
+                            <div class="col pl-0">
+                                <a href="javascript:void(0);" class="text-muted font-weight-bold">{{ file?.name }}</a>
+                                <p class="mb-0">{{ formatBytes(file?.size,2) }}</p>
+                                <!-- <app-progress [progress]="file?.progress" *ngIf="uploadFile"></app-progress> -->
+                            </div>
+                            <div class="col-auto">
+                                <!-- Button -->
+                                <a href="javascript:void(0);" (click)="deleteFile(i)" class="btn btn-link btn-lg text-muted">
+                                    <i class="dripicons-cross"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group text-right px-2">
+            <button class="btn btn-light btn-sm mr-1" (click)="cancel()" *ngIf="!uploadFile">Cancel</button>
+            <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator()" *ngIf="!uploadFile">Upload</button>
+
+        </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+</div>

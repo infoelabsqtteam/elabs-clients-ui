@@ -1,0 +1,79 @@
+
+    <!-- Card -->
+    <div class="card card-cascade">
+
+        <!-- Card image -->
+        <div class="bg-custome-theme rounded d-flex justify-content-between">
+  
+          <!-- Title -->
+          <h3 class="card-header-title my-2 custom-text-color ml-2">Module Permission</h3>
+  
+        </div>
+  
+        <!-- Card content -->
+        <div class="card-body card-body-cascade text-center">
+            <div class="row">
+              <div class="col-lg-4">
+                  <mat-form-field class="w-100">
+                      <mat-label>Select Roles</mat-label>
+                      <mat-select (selectionChange)="changeRoles($event)">
+                        <mat-option *ngFor="let role of roles" [value]="role" >
+                          {{role.roleLabel}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+              </div>
+              <div class="col-lg-4">
+                  <mat-form-field class="w-100">
+                      <mat-label>Select Module</mat-label>
+                      <mat-select (selectionChange)="changeModule($event)">
+                        <mat-option *ngFor="let module of modules" [value]="module">
+                          {{module.moduleLabel}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+              </div>
+              <div class="col-lg-4">
+                <mat-form-field class="w-100">
+                    <mat-label>Select Sub Module Menu</mat-label>
+                    <mat-select (selectionChange)="changeSubModule($event)">
+                      <mat-option *ngFor="let sub of submenu" [value]="sub">
+                        {{sub.label}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            </div>
+
+            <div class="row">
+              <div *ngFor="let subm of subModuleSubmenu" class="col-lg-4">
+              <div class="col-lg-12 text-left">
+                <mat-label class="custom-font">{{subm.label}}</mat-label>
+              </div>
+              <div class="col-lg-12 text-left">
+                <ul style="list-style-type: none;">
+                  <li><mat-checkbox [value]="subm" [checked]="subm.add" name="add" (change)="onPermissionChange($event)" color="primary">Add</mat-checkbox></li>
+                  <li><mat-checkbox [value]="subm" [checked]="subm.edit" name="edit" (change)="onPermissionChange($event)"color="primary">Edit</mat-checkbox></li>
+                  <li><mat-checkbox [value]="subm" [checked]="subm.view" name="view" (change)="onPermissionChange($event)"color="primary">View</mat-checkbox></li>
+                  <li><mat-checkbox [value]="subm" [checked]="subm.delete" name="delete" (change)="onPermissionChange($event)"color="primary">Delete</mat-checkbox></li>
+                </ul>
+              </div>
+            </div>
+            </div>
+            
+            <div class="d-flex flex-row-reverse pt-3">
+              <button type="button" mdbBtn size="sm" color="light" mdbWavesEffect (click)="onCancel()">Cancel</button>
+              <button type="button" mdbBtn size="sm" color="info" (click)="submit()" mdbWavesEffect>Save</button>
+            </div>
+          
+          
+  
+        
+  
+  
+        </div>
+  
+      </div>
+      <!-- Card -->
+  
+    

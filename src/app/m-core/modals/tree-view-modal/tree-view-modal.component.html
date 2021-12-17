@@ -1,0 +1,64 @@
+<div mdbModal #treeViewModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header">
+        <h4 class="modal-title m-0" >{{ fieldName }}</h4>
+        <button type="button" class="closebtb" data-dismiss="modal" (click)="closeModal()"><span>×</span></button>
+      </div>
+      <!--Body-->
+      <div class="modal-body pt-0">
+        <mat-tree [dataSource]="treeViewData" [treeControl]="treeControl" class="example-tree bg-aluminium" >
+            <!-- This is the tree node template for leaf nodes -->
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                <li class="mat-tree-node" *ngIf="node.name">
+                <!-- use a disabled button to provide padding for tree leaf -->
+                    <button mat-icon-button disabled><mat-icon class="material-icons">remove</mat-icon></button>
+                    <a >{{node.name}}</a>
+                    <button *ngIf="node.add_on_click" mat-icon-button (click)="setFieldData(node)" class="plusicon"><mat-icon class="material-icons text-cerulean">add</mat-icon></button>
+                </li>
+            </mat-tree-node>
+            <!-- This is the tree node template for expandable nodes -->
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                <li *ngIf="node.name">
+                <div class="mat-tree-node">
+                    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name" class="pr-1">
+                    <mat-icon class="mat-icon-rtl-mirror material-icons text-cerulean">{{treeControl.isExpanded(node) ? 'remove_circle_outline' : 'add_circle_outline'}}</mat-icon>
+                    </button>
+                    {{node.name}}
+                    <button *ngIf="node.add_on_click" mat-icon-button (click)="setFieldData(node)" class="plusicon"><mat-icon class="material-icons text-cerulean">add</mat-icon></button>
+                </div>
+                <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                    <ng-container matTreeNodeOutlet></ng-container>
+                </ul>
+                </li>
+            </mat-nested-tree-node>
+        </mat-tree>
+        <!-- <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="p-1">#</th>
+              <th class="p-1">{{ fieldName.label }}</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr *ngFor="let item of data; let i = index">
+              <td scope="row" class="p-1">{{ i + 1 }}</td>
+              <td class="p-1">{{ item.name }}</td>
+              <td><button mdbBtn type="button" size="sm" outline="true" class="bg-cerulean py-2 px-3 text-white" mdbWavesEffect (click)="setFieldData(item)" >
+                    <mdb-icon fas icon="plus"></mdb-icon>
+                </button></td>
+            </tr>
+          </tbody>
+        </table> -->
+
+      </div>
+      <!--Footer-->
+      <!-- <div class="modal-footer">
+        <button type="button" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect data-dismiss="modal" (click)="treeViewModal.hide()">Close</button>
+      </div> -->
+    </div>
+  </div>
+</div>

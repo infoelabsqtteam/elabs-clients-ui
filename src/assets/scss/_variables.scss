@@ -1,0 +1,332 @@
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --white: #fff;
+    --module-hover-bg: #eef5fd;
+    //Header
+    --headerbg:#fcfcfc;
+    --headericon: #555;
+    --headericonhover: #fff;
+    //Navigation
+    --navtxtcolor: #222;
+    --navtxthovercolor:#77bce8;
+    --activebg: #77bce8;
+    --activecolor: #fff;
+    //Button
+    --buttonColor: #0d6efd;
+    --buttonHoverColor: #0d6efd;
+
+}
+
+// Header Color Setting
+$headerbg: var(--headerbg);
+$headericon: var(--headericon);
+$headericonhover: var(--headericonhover);
+// Navigation Color Setting
+$navtxtcolor: var(--navtxtcolor);
+$navtxthovercolor: var(--navtxthovercolor);
+$activebg: var(--activebg);
+$activecolor: var(--activecolor);
+// Button Color Setting
+$buttoncolor: var(--buttonColor);
+$buttonHovercolor: var(--buttonHoverColor);
+
+// Theme Setting
+$themecolor:#77bce8;
+$themetext: #77bce8;
+$popupheadingbg: #ecf0f1;
+$inputbordercolor: #ced4da;
+$white :#fff;
+$black: #000;
+$themebg: #665852;
+//Display
+$no: none;
+$normal: normal;
+$block: block;
+$dflex: flex;
+$dflex-inline: inline-flex;
+$inblock: inline-block;
+$blockinline: inline;
+$inherit: inherit;
+$table-cell: table-cell;
+$dinline-table: inline-table;
+//Positions
+$fixed : fixed;
+$relative: relative;
+$absolute: absolute;
+$left: left;
+$top: top;
+$right: right;
+$bottom: bottom;
+//zindex
+$zindexs1: 1;
+$zindexs: 5;
+$zindex99:99;
+$zindex100:100;
+$zindex998:998;
+$zindex999:999;
+$zindex1000: 1000;
+$zindex2000:2000;
+$zindex9999:9999;
+//Opacity
+$opacity1:1;
+$opacity06: 0.6;
+//Algin
+$left: left;
+$right: right;
+$center: center;
+$uppercase: uppercase;
+$capitalize: capitalize;
+//Global
+$transition: all 0.5s;
+$overflowshow: visible;
+$overflowscroll: scroll;
+$hide:hidden;
+$collapse: collapse;
+$pointer:pointer;
+$ellipsis: ellipsis;
+$middle: middle;
+$nowrap: nowrap;
+$cover: cover;
+//Fonts Family
+$iconfamily:"Material Design Icons";
+$roboto:'Roboto', sans-serif;
+$cabin: 'Cabin', sans-serif;
+$opensans: 'Open Sans', sans-serif;
+$montserrat: Roboto,Montserrat,sans-serif;
+$neo-sans: "Neo Sans Std",sans-serif;
+$nunito: Nunito,sans-serif;
+$Source: "Source Sans Pro",sans-serif;
+
+//Fonts Weight
+$fw-bold: bold;
+$fw-norml: normal;
+$fw-300: 300;
+$fw-400: 400;
+$fw-500: 500;
+$fw-600: 600;
+$fw-700: 700;
+$fw-800: 800;
+$fw-900: 900;
+//Size in 
+$point39: .39;
+$point5: .5px;
+$zero: 0;
+$one: 1;
+$two: 2;
+$oneptwo: 1.2;
+$onepsix: 1.6;
+$twoptwo: 2.2;
+$ten: 10;
+$auto: auto;
+$size1: 1px;
+$size2: 2px;
+$size3: 3px;
+$size4: 4px;
+$size5: 5px;
+$size6: 6px;
+$size7: 7px;
+$size8: 8px;
+$size9: 9px;
+$size10: 10px;
+$size11: 11px;
+$size12: 12px;
+$size13: 13px;
+$size14: 14px;
+$size15: 15px;
+$size16: 16px;
+$size17: 17px;
+$size18: 18px;
+$size19: 19px;
+$size20: 20px;
+$size21: 21px;
+$size22: 22px;
+$size23: 23px;
+$size24: 24px;
+$size25: 25px;
+$size26: 26px;
+$size27: 27px;
+$size28: 28px;
+$size29: 29px;
+$size30: 30px;
+$size31: 31px;
+$size32: 32px;
+$size33: 33px;
+$size35: 35px;
+$size36: 36px;
+$size38: 38px;
+$size39: 39px;
+$size40: 40px;
+$size42: 42px;
+$size44: 44px;
+$size45: 45px;
+$size46: 46px;
+$size47: 47px;
+$size50: 50px;
+$size55: 55px;
+$size60: 60px;
+$size61: 61px;
+$size62: 62px;
+$size65: 65px;
+$size70: 70px;
+$size75: 75px;
+$size80: 80px;
+$size85: 85px;
+$size90: 90px;
+$size95: 95px;
+$size100: 100px;
+$size110: 110px;
+$size130: 130px;
+$size140: 140px;
+$size150: 150px;
+$size190: 190px;
+$size220: 220px;
+$size240: 240px;
+$size250: 250px;
+$size380: 380px;
+$size437: 437px;
+
+//Size in Percent
+$per5: 5%;
+$per10: 10%;
+
+$per20: 20%;
+$per30: 30%;
+$per40: 40%;
+$per50: 50%;
+$per60: 60%;
+$per70: 70%;
+$per75: 75%;
+$per80: 80%;
+$per90: 90%;
+$per98: 98%;
+$per100:100%;
+$per200:200%;
+//Minus Size
+$minus4: -4px;
+$minus5: -5px;
+$minus8: -8px;
+$minus11: -11px;
+$minus15: -15px;
+$minus20: -20px;
+
+//Size in em or rem
+$em071: .71em;
+$em078: .78em;
+$em0343: .34375em;
+$em085: .85em;
+$em087: .87em;
+$em025: .25em;
+$em035: .35em;
+$em04: .4em;
+$em05: .5rem;
+$em06: .6em;
+$em08: .8em;
+$em09: .9em;
+$em096: .96em;
+$em108: 1.8em;
+$em2: 2em;
+$em10: 10em;
+$em102minus: -1.2em;
+
+$rem01: .1rem;
+$rem02: .2rem;
+$rem03: .3rem;
+$rem035: .35rem;
+$rem06: .6rem;
+$rem1: 1rem;
+$rem2: 2rem;
+$rem3: 3rem;
+$rem305: 3.5rem;
+$rem105: 1.5rem;
+$rem1025: 1.25rem;
+$rem10625: 1.625rem;
+$rem066154: .66154rem;
+
+//Calc Size
+$calc1: calc(24px / 2);
+$calc2: 70px calc(24px / 3) 0px calc(24px / 3);
+$calc3: calc(100vh - 212px);
+$calc4: calc(100% - .8916666667em);
+//Shadow
+$shadow: 0 2px 4px rgb(0 0 0 / 8%);
+$navhovershdow: 3px 5px 12px -4px rgb(18 19 21 / 10%);
+$shadow2: 0 0 10px #ccc;
+$shadow3: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
+$shadow4: 0 1px 0 0 rgb(0 0 0 / 16%),0 -2px 0 0 rgb(0 0 0 / 12%);
+$shadow5: rgb(204 204 204 / 42%);
+$shadow6: 0 6px 10px 4px rgb(240 223 206 / 80%);
+$shadow7: 0 24px 44px 0 rgb(190 114 99 / 37%);
+$shadow8: 0 0 20px -5px rgb(0 0 0 / 20%);
+$shadow9: 0 0 20px -5px rgb(0 0 0 / 20%);
+$shadow10: 0 0 20px -5px rgb(0 0 0 / 20%);
+$shadow11: 0 0 20px -5px rgb(0 0 0 / 20%);
+$shadow12: rgb(114 147 149 / 70%);
+//Border
+$whiteborder: 1px solid #fff;
+$hoverborder: 1px solid #c4d9f1;
+//transition
+$transition1: all 1s;
+$transition2: all .5s ease;
+$transition3: all .2s ease-in-out;
+$transition4: all .3s ease;
+//Color Variable 
+$sidenav: #252b3b;
+$iconcolor: #627a94;
+$color1 : #e9e4e4;
+$color2: #222;
+$color3: #e4e4e4;
+$color4: #2d5883;
+$color5: #e0e6ed;
+$color6: #f1f5f7;
+$color7: #636e75;
+$color8: #274058;
+$color9: #4267b2;
+$color10: #f2f2f2;
+$color11: #ccc;
+$color12: #f1f1f1;
+$color13: #5a5a5a;
+$color14:#faf1df;
+$color15: #5d5845;
+$color16: #48bdc5;
+$color17: rgba(19,38,70,.7);
+$color18: #ababab;
+$white07: rgba(255,255,255,.7);
+$white02: rgba(255,255,255,.2);
+$colorred:#ec1a20;
+$yellow: #f19f4d;
+$color999: #999;
+$color888: #888;
+$color777: #777;
+$color333: #333;
+$color555: #555;
+$dark-green: #87ac34;
+$light-green:#a9d129;
+$light-blue :#50a0d2;
+$orange :#fe9c24;
+$dark-blue :#3473b8;
+$light-red :#fc6a3f;
+$color19: rgba(19,38,70,.6);
+$color20: #0d1a2f;
+$color21: #f5f5f5;
+$bg1: #c76e6e;
+$bg2: #0f9393;
+$bg3: #62a25a;
+$bg4: #5c97a9;
+$bg5: #bd9663;
+$bg6: #a59e52;
+$bg7:#b57e65;
+$bg8: #8c92a9;
+$bg10: #b581b1;
+$bg11: #9c8d1e;
+$bg12: #323232;
+$bg13: #e0e0e0;
+
+
+
+
+$gradient1: -webkit-linear-gradient(-90deg,rgba(0,0,0,.8),rgba(0,0,0,.6) 100%);
+
+
+
+

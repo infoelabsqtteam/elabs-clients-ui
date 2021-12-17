@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-xs-12">
+        <form [formGroup]="verifyForm" (ngSubmit)="onVerify()">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" 
+                        id="username" 
+                        class="form-control" 
+                        formControlName="username"
+                        disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="verifycode">Verification Code</label>
+                        <input type="text" 
+                        id="verifycode" 
+                        class="form-control"
+                        formControlName="verifycode" 
+                        />
+                    </div>
+                </div>
+            </div>
+             <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-success"
+                    >Verify Now</button>&nbsp;
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</div>

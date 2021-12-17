@@ -1,0 +1,35 @@
+.custom-input{
+    border: 0;
+    box-shadow: none;
+}
+
+input[type="text"]:disabled{
+    background-color: white!important;
+}
+
+.white-text{
+    color:white;
+}
+
+.b{
+    font-weight: bold;
+}
+
+.bg1{
+    background: #d6d6d6;
+}
+
+.input-disabled{
+    background-color:#FFF !important;
+}
+
+.fontSize{
+    font-size: 15px;
+}
+
+.cusborder{
+    border: 2px solid white;
+    font-weight: 500;
+}
+
+.cusPosition{ position: fixed; top: 70px; right: 15px; z-index:1; font-size: 40px;}

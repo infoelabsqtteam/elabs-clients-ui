@@ -1,0 +1,45 @@
+<div mdbModal #docUploadModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="dropzone position-relative " appDnd (fileDropped)="onFileDropped($event,false,null)">
+                    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+                    <div class="dz-message ">
+                        <mdb-icon fas icon="cloud-upload-alt" size="3x" class="animated text-muted"></mdb-icon>
+                        <h3>Drop files here or click to upload.</h3>
+                    </div>
+                </div>
+
+                <div class="files-list">
+                    <div class="card mt-1 mb-0 shadow-none border" *ngFor="let file of uploadData; let i = index">
+                        <div class="p-2">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <img data-dz-thumbnail src="assets/img/ic-file.png" class="avatar-sm rounded" alt="">
+                                </div>
+                                <div class="col pl-0">
+                                    <a href="javascript:void(0);" class="text-muted font-weight-bold">{{ file?.fileName }}</a>
+                                    <!-- <p class="mb-0">{{ formatBytes(file?.size,2) }}</p> -->
+                                    <!-- <app-progress [progress]="file?.progress" *ngIf="uploadFile"></app-progress> -->
+                                </div>
+                                <div class="col-auto">
+                                    <!-- Button -->
+                                    <a href="javascript:void(0);" (click)="deleteFile(i)" class="btn btn-link btn-lg text-muted">
+                                        <mdb-icon fas icon="times" size="2x" color="danger" class="animated rotateIn"></mdb-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group text-right px-2">
+                <button class="btn btn-light btn-sm mr-1" (click)="cancel()">Cancel</button>
+                <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator(0)">Add</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
