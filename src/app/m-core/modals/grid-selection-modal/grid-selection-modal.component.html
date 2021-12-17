@@ -1,0 +1,126 @@
+<div mdbModal #gridViewModalSelection="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
+    <div class="modal-content" >
+      <!--Header-->
+      <div class="modal-header">
+        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}</h3>
+        <div *ngIf="applyOnGridFilter(field)" class="mr-auto ml-3">
+            <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="data" [placeholder]="applyOnGridFilterLabel(field)"/>
+        </div>        
+        <a class="h5 m-0 closebtb" (click)="closeModal()"><span>×</span></a>
+      </div>
+      <!--Body-->
+      
+      <div class="modal-body pt-0 popuptable">
+        <div class="">
+            <div class="table without-filter mb-2">            
+                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th *ngIf="preSelectedData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></th>
+                            <th *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="heading" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
+                            <td *ngIf="preSelectedData" class="text-center">
+                              <span *ngIf="data.selected" class="material-icons" (click)="refreshRowWithMasterData(i)">edit</span>
+                              <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                                (change)="$event ? toggle(data, $event, i) : null"
+                                [checked]="data.selected">
+                                </mat-checkbox>
+                              </td>
+
+                            <td *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                              <!-- <div *ngIf="!editedColumne">
+                                <span  [innerHtml]="getValueForGrid(fieldName,data)" ></span>
+                              </div> -->
+                              <div>
+                                <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align">
+                                    <span class="grid-coloumn-nowrap" [matTooltip]="getValueForGridTooltip(fieldName,data)" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="getValueForGrid(fieldName,data)" ></span>
+                                </div>
+                                <div *ngIf="fieldName.editable">
+                                  <div *ngIf="fieldName.type == 'boolean'">
+                                    <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)"></mat-checkbox>
+                                </div>
+                                <div *ngIf="fieldName.type == 'checkbox'">
+                                  <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)"></mat-checkbox>
+                                </div>
+                                <div *ngIf="fieldName.type.toLowerCase() == 'text'">
+                                    <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)" >
+                                </div>
+                                <div *ngIf="fieldName.type.toLowerCase() == 'number'">
+                                  <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
+                                </div>
+                                 <!-- <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
+                                  <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
+                                      <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                      <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]">
+                                          <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field]" [value]="staticValue">
+                                              {{getddnDisplayVal(staticValue)}}
+                                          </mat-option>
+                                      </mat-select>
+                                  </mat-form-field>
+                                  <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">
+                                      <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                      <mat-select [(ngModel)]="data[fieldName.field_name]" >
+                                          <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field]" [value]="staticValue">
+                                              {{getddnDisplayVal(staticValue)}}
+                                          </mat-option>
+                                      </mat-select>
+                                  </mat-form-field>
+                                </div>  -->
+                                </div>
+                              </div>
+                              </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table *ngIf="field.type == 'grid_selection_vertical'" class="table-bordered table-striped table-hover">
+                    <tbody>
+                    <tr>
+                        <td *ngIf="preSelectedData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></td>
+                        <td *ngFor="let data of gridData|filter:data; let i = index" class="text-center" >
+                            <mat-checkbox color="primary" (click)="$event.stopPropagation()"(change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected">
+                            </mat-checkbox>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
+                        <td><div class="heading" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></td>
+                        <td *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
+
+                                 <div>
+                                <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align">
+                                    <span class="grid-coloumn-nowrap" [matTooltip]="getValueForGridTooltip(fieldName,data)" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="getValueForGrid(fieldName,data)" ></span>
+                                </div>
+                                <div *ngIf="fieldName.editable">
+                                    <div *ngIf="fieldName.type == 'boolean'">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)"></mat-checkbox>
+                                    </div>
+                                    <div *ngIf="fieldName.type == 'checkbox'">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)"></mat-checkbox>
+                                    </div>
+                                    <div *ngIf="fieldName.type.toLowerCase() == 'text'">
+                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)" >
+                                    </div>
+                                    <div *ngIf="fieldName.type.toLowerCase() == 'number'">
+                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
+                                    </div>
+                                  </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button" [disabled]="checkValidator()" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect  (click)="selectGridData()">{{ field.label}}</button>
+        <button type="button" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

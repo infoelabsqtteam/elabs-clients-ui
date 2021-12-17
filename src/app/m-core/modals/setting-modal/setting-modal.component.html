@@ -1,0 +1,44 @@
+<div mdbModal #settingModal="mdbModal" class="modal fade right" id="frameModalTop" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: false, ignoreBackdropClick: true}">
+  <div class="modal-dialog modal-full-height modal-right modal-notify modal-info" role="document">
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header">
+        <p class="heading lead">Application Setting</p>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+          <span aria-hidden="true" class="white-text">×</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+        <!-- <div class="text-center">
+          <mdb-icon far icon="file-alt" size="4x" class="mb-3 animated rotateIn"></mdb-icon>
+          <p>
+            <strong>Your opinion matters</strong>
+          </p>
+          <p>Have some ideas how to improve our product?
+            <strong>Give us your feedback.</strong>
+          </p>
+        </div> -->
+
+        <!-- <hr> -->
+        <div >
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Host Name</mat-label>
+              <mat-select  [(ngModel)]="hostName" (selectionChange)="setHostName()">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let staticValue of hostData" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>

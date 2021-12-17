@@ -1,0 +1,81 @@
+<div class="container my-2 modulelist pb-5">
+    <div class="my-5 position-relative searchfilter">
+        <div class="searchicon"><span class="material-icons-outlined">search</span></div>
+        <input [(ngModel)]="filterdata" class="form-control rounded-pill" placeholder="Search Module by Module Name, Master Name or Menu Name">
+    </div>
+    
+    <ng-container *ngIf="module">
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4" *ngFor="let module of AllModuleList  | filter:filterdata; index as i">
+                <button mat-button class="moduleitem text-left w-100" (click)="GoToSelectedModule(module)" title="{{module.mouseHover}}">
+                    <div class="px-3 py-2 d-flex align-items-center">
+                        <div class="moduleicon"><img src="assets/img/svg-icon/{{module.imgPath}}.svg"></div>
+                        <div class="moduleinfo ml-4">
+                            <h2>{{module.title}}</h2>
+                            <p class="m-0">{{module.description}}</p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+            <div class="col-md-12" *ngIf="(AllModuleList | filter: filterdata).length === 0">No matching elements</div>
+        </div>
+    </ng-container>
+
+
+    <div *ngIf="!module">
+        <div class="pt-4">
+            <div class="card mt-4">
+                <div class="card-header"><h1 class="m-0">Permission Denied!</h1></div>
+                <div class="card-body"><h2 class="card-title">You don't have permission, Please contact site administrator.</h2></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="text-center"></p>
+                <p class="text-left"><button type="button" class="app-bg-color text-white" mdbBtn size="sm" rounded="true" mdbWavesEffect (click)="gotoHomePage()">Go to Home</button></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<div class="container my-2">
+    <div class="my-5"><input [(ngModel)]="filterdata" class="form-control" placeholder="Search Module"></div>
+    <ng-container *ngIf="module">
+        <ul class="row">
+          <li class="col-md-2 text-center pointer py-2" *ngFor="let module of AllModuleList  | filter:filterdata; index as i">
+              <a href="javascript:void(0)" class="d-block mb-3" (click)="GoToSelectedModule(module)" title="{{module.mouseHover}}">
+                  <span class="module-icon d-inline-block p-2" [ngClass]="module.imgPath" [style.background]="module.background_color" [style.color]="module.color"></span>
+                  <strong class="d-block module-heading pt-2">{{module.title}}</strong>
+              </a>
+          </li>
+          <li *ngIf="(AllModuleList | filter: filterdata).length === 0">No matching elements</li>
+        </ul>
+      </ng-container>
+</div> -->

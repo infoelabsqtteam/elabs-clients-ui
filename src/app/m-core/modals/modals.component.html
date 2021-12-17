@@ -1,0 +1,119 @@
+<div mdbModal #basicTableModal="mdbModal" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
+    <div class="modal-content" >
+      <!--Header-->
+      <div class="modal-header justify-content-center">
+        <h3 class="modal-title m-0 text-uppercase">{{ coloumName }}</h3>
+        <a class="py-1 mr-4" (click)="editeField()" *ngIf="editeMode"><mdb-icon fas icon="edit"></mdb-icon></a>
+        <a class="h5 m-0 closebtb" (click)="closeModal()" data-dismiss="modal" [matTooltip]="'Close (ALT + C)'" [matTooltipPosition]="'above'"><span>×</span></a>
+      </div>
+      <!--Body-->
+      <div class="modal-body py-1 table without-filter">
+        <table class="table-hover table-bordered table-striped" *ngIf="gridColumns.length == 0">
+          <thead>
+            <tr>
+              <th class="p-1">#</th>
+              <th class="p-1"><div class="heading"><span class="grid-heading-nowrap">{{ coloumName }}</span></div></th>
+              <th *ngIf="rateShow" class="p-1" width="20%">Rate</th>
+            </tr>
+          </thead>
+          <tbody [formGroup]="rateForm">
+            <tr *ngFor="let item of data; let i = index">
+              <td scope="row" class="p-1">{{ i + 1 }}</td>
+              <td class="p-1"><div class="heading"><span class="grid-coloumn-nowrap" >{{ getddnDisplayVal(item) }}</span></div></td>
+              <td *ngIf="rateShow" class="p-1" class="grid-filter">
+                <input type="number" class="form-control form-control-sm"  [formControlName]="i" (keyup)="addRates()">
+              </td>
+            </tr>
+            <tr *ngIf="rateShow">
+              <td class="p-1"></td>
+              <td class="p-1" >Total</td>
+              <td class="p-1">{{ rateTotal }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-responsive table without-filter">
+          <table class="table-hover table-bordered table-striped" *ngIf="gridColumns.length > 0">
+            <thead>
+              <tr>
+                <th class="p-1" *ngIf="!bulkDownload">#</th>
+                <th *ngIf="bulkDownload" class="text-center"><mat-checkbox  color="primary" class="mb-0"  [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></th>
+                <th class="p-1" *ngFor="let coloum of gridColumns"><div class="heading" [style.width]="getGridColumnWidth(coloum)" [style.text-align]="coloum.text_align"><span class="grid-heading-nowrap" [title]="coloum.label">{{ coloum.label }}</span></div></th>
+                <!-- <th *ngIf="rateShow" class="p-1" width="20%">Rate</th> -->
+              </tr>
+            </thead>
+            <tbody >
+              <tr *ngFor="let item of data; let i = index" class="grid-filter">
+                <td scope="row" class="p-1" *ngIf="!bulkDownload">{{ i + 1 }}</td>
+                <td *ngIf="bulkDownload" class="text-center"><mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                  (change)="$event ? toggle(i, $event) : null"
+                  [checked]="item.selected">
+                  </mat-checkbox>
+                </td>
+                <td class="p-1" *ngFor="let coloum of gridColumns">
+                  <div *ngIf="!editedColumne">
+                      <div *ngIf="coloum.type != 'checkbox'"><span (click)="clickOnGridElement(coloum,item,i)" [innerHtml]="getddnDisplayVal(getValueForGrid(coloum,item))"></span></div>
+                      <div *ngIf="coloum.type == 'checkbox'">
+                        <mat-checkbox  color="primary" [disabled]="coloum.is_disabled" [(ngModel)]="item[coloum.field_name]"></mat-checkbox>
+                    </div>
+                  </div>
+                  <div *ngIf="editedColumne">
+                      <div *ngIf="!coloum.editable" class="grid-data" [style.width]="getGridColumnWidth(coloum)" [style.text-align]="coloum.text_align"><span class="grid-coloumn-nowrap" [matTooltip]="getValueForGridTooltip(coloum,item)" [matTooltipPosition]="'above'" [ngClass]="coloum.field_class != ''?coloum.field_class:''" (click)="clickOnGridElement(coloum,item,i)" [innerHtml]="getddnDisplayVal(getValueForGrid(coloum,item))"></span></div>
+                      <div *ngIf="coloum.editable">  
+                        <div *ngIf="coloum.type == 'boolean'">
+                            <mat-checkbox  color="primary"  [(ngModel)]="item[coloum.field_name]"></mat-checkbox>
+                        </div>
+                        <div *ngIf="coloum.type == 'checkbox'">
+                          <mat-checkbox  color="primary"  [(ngModel)]="item[coloum.field_name]"></mat-checkbox>
+                        </div>
+                        <div *ngIf="coloum.type.toLowerCase() == 'text'">
+                            <input  type="text" class="w-75 form-control form-control-sm d-inline mr-2"  [(ngModel)]="item[coloum.field_name]" >
+                        </div>
+                        <div *ngIf="coloum.type.toLowerCase() == 'dropdown'">
+                          <mat-form-field appearance="outline" style="min-width: 130px;" *ngIf="coloum.datatype == 'object'">
+                              <mat-label>{{ coloum.label | titlecase}}</mat-label>
+                              <mat-select [compareWith]="compareObjects" [(ngModel)]="item[coloum.field_name]" (selectionChange)="setValue(coloum,i)">
+                                  <mat-option *ngFor="let staticValue of copyStaticData[coloum.ddn_field][i]" [value]="staticValue">
+                                      {{getddnDisplayVal(staticValue)}}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" style="min-width: 130px;" *ngIf="coloum.datatype != 'object'">
+                              <mat-label>{{ coloum.label | titlecase}}</mat-label>
+                              <mat-select [(ngModel)]="item[coloum.field_name]" (selectionChange)="setValue(coloum,i)">
+                                  <mat-option *ngFor="let staticValue of copyStaticData[coloum.ddn_field][i]" [value]="staticValue">
+                                      {{getddnDisplayVal(staticValue)}}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                        </div>                   
+                      </div>
+                  </div>
+                </td>
+                <!-- <td *ngIf="rateShow" class="p-1">
+                  <input type="number" class="form-control form-control-sm"  [formControlName]="i" (keyup)="addRates()">
+                </td> -->
+              </tr>
+              <!-- <tr *ngIf="rateShow">
+                <td class="p-1"></td>
+                <td class="p-1" [attr.colspan]="gridColumns.length">Total</td>
+                <td class="p-1">{{ rateTotal }}</td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+        
+
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <!-- <mat-checkbox  color="primary" class="example-margin">Send to Customer</mat-checkbox> -->
+        <button  type="button" mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect (click)="multipleDownload()" *ngIf="bulkDownload" [disabled]="!checkSelectedData()">Download Selected</button>
+        <button  type="button" mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect (click)="save()" *ngIf="editeMode">Ok</button>
+        <button type="button" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<app-multi-download-modal id="multiple-download-modal" (multiDownloadResponce)="multiDownloadResponce($event)"></app-multi-download-modal>

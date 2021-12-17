@@ -1,0 +1,17 @@
+<div mdbModal #alertModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false,class: 'modal-full-height modal-right',containerClass: '',animated: true}">
+    <div class="modal-dialog deletealertmst modal-sm modal-notify modal-{{class_name}}" role="document">
+        <div class="modal-content text-center" style="min-height:auto">           
+            <div class="modal-body p-3">
+                <div class="icon-box mb-2"><i class="material-icons">&#xE5CD;</i></div>
+                <h4 class="heading">{{ headerMessage }}</h4>
+                <p class="m-0"><small>{{ bodyMessage }}</small></p>
+            </div>           
+            <div class="modal-footer justify-content-center">
+                <a type="button" mdbBtn [color]="class_name" outline="true" *ngIf="class_name == 'primary'" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect (click)="ok()">Delete</a>
+                <a type="button" mdbBtn [color]="class_name" *ngIf="class_name == 'primary'" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect data-dismiss="modal" (click)="cancel()">Cancel</a>
+                <a type="button" mdbBtn [color]="class_name" *ngIf="class_name == 'success' || class_name == 'info'" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect data-dismiss="modal" (click)="cancel()">Ok</a>
+            </div>
+        </div>    
+    </div>
+</div>

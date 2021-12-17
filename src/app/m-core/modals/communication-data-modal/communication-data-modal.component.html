@@ -1,0 +1,60 @@
+<div mdbModal #communicationModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false,class: 'modal-full-height modal-right',containerClass: '',animated: true}">
+    <div class="modal-dialog modal-xl modal-notify modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="heading blinkings text-dark">Communication</p>
+                <a class="h5 m-0" (click)="closeModal()"><span aria-hidden="true">×</span></a>
+            </div>            
+            <div class="modal-body pt-0">
+                <div class="row mb-4 sticky-top pt-4 mt-1 bg-white">
+                    <div class="col-lg-3">
+                       <span *ngIf="selectedGridData && selectedGridData.name">Name : {{selectedGridData.name}}</span> 
+                    </div>
+                    <div class="col-lg-3">
+                        <span *ngIf="selectedGridData && selectedGridData.phone">Phone : {{selectedGridData.phone}}</span>
+                    </div>
+                    <div class="col-lg-4">
+                        <span *ngIf="selectedGridData && selectedGridData.email">Email : {{selectedGridData.email}}</span>
+                    </div>
+                </div>
+                  <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel *ngFor="let el of elements">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <span *ngIf="el && el.typeList && el.typeList[0]">{{el.typeList[0]}}</span>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            {{el.title}}
+                            <mat-icon *ngIf="typeCheck(el) == 'EMAIL' ">email</mat-icon>
+                            <mat-icon *ngIf="typeCheck(el) == 'SMS' ">sms</mat-icon>
+                            <mat-icon *ngIf="typeCheck(el) == 'CALL' ">call</mat-icon>
+                          </mat-panel-description>
+                      </mat-expansion-panel-header>
+                  
+                      <div class="row">
+                        <div class="col-lg-3">
+                            Date - <span [innerHtml]="getValueForGrid({field_name:'date', type:'date'},{date:el.createdDate})"></span>
+                        </div>
+                        <div class="col-lg-3" *ngIf="el && el.start_datetime">
+                          Start Time - <span [innerHtml]="getValueForGrid({field_name:'date', type:'datetime'},{date:el.start_datetime})"></span>
+                      </div>
+                      <div class="col-lg-3" *ngIf="el && el.end_datetime">
+                        End Time - <span [innerHtml]="getValueForGrid({field_name:'date', type:'datetime'},{date:el.end_datetime})"></span>
+                    </div>
+                        <div class="col-lg-12 mt-2">
+                            Message : <span [innerHtml]="getValueForGrid({field_name:'message', type:'text'},{message:el.message})"></span>
+                        </div>
+                      </div>
+                  
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                  
+                  
+            </div>           
+            <div class="modal-footer justify-content-center">
+            </div>
+
+        </div>    
+    </div>
+</div>

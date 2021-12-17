@@ -1,0 +1,40 @@
+@media only screen and (max-width: 991px) {
+    .navbar .navbar-toggler{background-color:$themecolor!important}
+    .navbar .navbar-toggler:focus {outline:$zero;}
+    .downloadbtn {right:$size70;top:-35px;z-index:999;}
+    .downloadbtn .btn.btn-sm { font-size:$zero;}
+
+
+}
+
+
+@media only screen and (max-width: 778px) {
+     mdb-navbar-brand{width:$per80!important}
+    .carousel-caption h1{font-size:$size20!important;padding-bottom:$zero!important}
+    .btn.btn-lg{padding:$size4 $size8!important;font-size:$size8!important}
+    .carousel-caption{top:$zero!important}
+    .caption-text1{font-size:$size10;padding-top:$size36;color:$white!important}
+    .caption-info{padding-top:$zero;color:$white!important;font-size:$size8}
+    .contact_form {padding:$zero !important;}
+}
+
+
+
+@media only screen and (max-width: 600px){
+    .anim-typewriter{font-size:$size32!important}
+    .banner2text{font-size:$size35!important}
+    section div .col-lg-2{margin-left:$rem3!important;margin-top:$rem2!important}
+  }
+
+
+
+  @media screen and (max-width:575px) {
+    .moduleitem {
+        display:$block !important;
+      }
+
+      .downloadbtn .btn.btn-sm {font-size:$zero;}
+  }
+
+
+  

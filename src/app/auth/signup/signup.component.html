@@ -1,0 +1,231 @@
+<!-- <div style="background: url(assets/img/pexels-public-domain-pictures-60022.jpg);height: 100vh;background-size:cover ;">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    
+                    <mat-card style="text-align: center;opacity: 90%;">
+                        <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-cerulean" >
+                            <img class="w-75 mat-card-image m-0" mat-card-image src="assets/img/1.png" alt="E-Labs logo">
+                        </mat-card-title>
+                        <mat-divider></mat-divider>
+                        <mat-card-content>
+                            <div class="text-center w-75 m-auto">
+                                <h4 class="text-dark-50 text-center mt-2">Sign Up</h4>
+                            </div>
+
+                            <form class="example-form" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Full Name</mat-label>
+                                    <input matInput placeholder="Enter your name" formControlName="name">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Email address</mat-label>
+                                    <input matInput placeholder="Enter your Email" formControlName="email">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" formControlName="password">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Mobile</mat-label>
+                                    <input matInput placeholder="Enter your mobile no." formControlName="mobile">
+                                </mat-form-field>
+
+                                <div class="row justify-content-center ">
+                                    <button  class="hover1" mat-raised-button color="primary" type="submit" style="width: 35%;"> Sign Up</button>
+                                </div>
+
+                                
+                              </form>
+                        </mat-card-content>
+                        
+                    </mat-card>
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <p class="text-dark">Already have account? <a [routerLink]="['/signin']" class="text-dark ml-1"><b>Log In</b></a></p>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> -->
+
+
+<section class="hero-section-2 signup" id="home" style="background: url(assets/img/bg-1.png) center center;">
+    <div class="container">
+      <div class="row vertical-content justify-content-center">
+        <div class="col-lg-6">
+          <div class="hero-wrapper mb-4" >
+            <!-- <p class="font-16 text-uppercase">Discover Invoza Today</p>
+            <h1 class="hero-title mb-4">Make your Site Amazing & Unique with <span class="text-primary">Invoza</span>
+            </h1> -->
+
+            <!-- <p>To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine
+              occidental</p> -->
+              <p><img src="assets/images/logo.png" alt=""></p>
+              <!-- <h1 class="hero-title mb-1 heading-color" >E-Labs GenNext Automation for Labs</h1>
+              <h2 class="text-color-custom">Deliver More, Deliver Excellence</h2> -->
+
+            <!-- <div class="mt-4">
+              <a href="javascript: void(0);" class="btn btn-primary mt-2 mr-2">Get Started</a>
+              <a href="javascript: void(0);" class="btn btn-success mt-2 mr-2">Learn more</a>
+            </div> -->
+          </div>
+
+        </div>
+
+        <div class="col-lg-4 offset-lg-2">
+          <div class="card mx-auto p-4 rounded mt-lg-0">
+            <div class="text-center">
+              <p class="text-muted mb-2 font-13 text-uppercase">Welcome To E-Labs</p>
+              <!-- <h5 class="form-title mb-4">Get 30 Days Free Trial</h5> -->
+            </div>
+            <form class="registration-form"  [formGroup]="signUpForm" >
+              <div class="form-group mb-4">
+                <label class="font-15">Full Name</label>
+                <input type="text" class="form-control" id="email" placeholder="" formControlName="name" required>
+              </div>
+
+              <div class="form-group mb-4">
+                <label class="font-15">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="" formControlName="email" required>
+              </div>
+
+              <div class="form-group mb-4">
+                <label class="font-15">PASSWORD</label>
+                <input type="password" class="form-control" id="email" placeholder="" formControlName="password" required>
+              </div>
+
+              <div class="form-group mb-4">
+                <label class="font-15">Mobile</label>
+                <input type="tel" class="form-control" id="email" placeholder="" formControlName="mobile" required>
+              </div>
+              
+              <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!signUpForm.valid" (click)="onSignUp()">Sign Up</button>
+            </form>
+
+
+            <div class="row mt-2 text-muted">
+                <div class="col-lg-12">
+                    <h4 [routerLink]="['/signin']">Already have account? <a><b> Log In</b></a></h4>
+                </div>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+    <!-- end container -->
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<div class="login-background">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container">
+            <div class="row justify-content-center" style="position:relative;">
+                <div class="col-lg-5">
+                    <div class="card">
+
+                        <div class="card-header pt-2 pb-2 text-center">
+                            <a href="#">
+                                <span><img src="assets/img/login-logo.png" alt="" width="100%"></span>
+                            </a>
+                        </div>
+
+                        <div class="card-body p-4">
+
+                            <div class="text-center w-75 m-auto">
+                                <h4 class="text-dark-50 text-center mt-0 font-weight-bold">Sign Up</h4>
+                            </div>
+
+                            <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+
+                                <div class="form-group required">
+                                    <label class="col-form-label" for="fullname">Full Name</label>
+                                    <input class="form-control" type="text" id="fullname" formControlName="name" placeholder="Enter your name" required>
+                                    <h5 *ngIf="signUpForm.controls['name'].invalid && (signUpForm.controls['name'].dirty || signUpForm.controls['name'].touched)">
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['name'].errors.required">
+                                           This field is required.
+                                        </span>
+                                    </h5>
+                                </div>
+
+                                <div class="form-group required">
+                                    <label class="col-form-label" for="reg-emailaddress">Email address</label>
+                                    <input class="form-control" type="email" id="reg-emailaddress" formControlName="email" required placeholder="Enter your email">
+                                    <h5 *ngIf="signUpForm.controls['email'].invalid && (signUpForm.controls['email'].dirty || signUpForm.controls['email'].touched)">
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['email'].errors.required">
+                                           This field is required.
+                                        </span>
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['email'].errors?.pattern">
+                                            Please enter valid email.
+                                        </span>
+                                    </h5>
+                                </div>
+
+                                <div class="form-group required">
+                                    <label class="col-form-label" for="reg-password">Password</label>
+                                    <input class="form-control" type="password" required id="reg-password" formControlName="password" placeholder="Enter your password">
+                                    <h5 *ngIf="signUpForm.controls['password'].invalid && (signUpForm.controls['password'].dirty || signUpForm.controls['password'].touched)">
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['password'].errors.required">
+                                           This field is required.
+                                        </span>
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['password'].errors?.minlength">
+                                            Password minimum length must be 6.
+                                        </span>
+                                    </h5>
+                                </div>
+
+                                <div class="form-group required">
+                                    <label class="col-form-label" for="mobile">Mobile</label>
+                                    <input class="form-control" type="tel" required id="mobile" formControlName="mobile" placeholder="Enter your mobile No.">
+                                    <h5 *ngIf="signUpForm.controls['mobile'].invalid && (signUpForm.controls['mobile'].dirty || signUpForm.controls['mobile'].touched)">
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['mobile'].errors.required">
+                                           This field is required.
+                                        </span>
+                                        <span class="badge badge-danger" *ngIf="signUpForm.controls['mobile'].errors?.pattern">
+                                            Please enter 10 digit mobile no.
+                                        </span>
+                                    </h5>
+                                </div>
+
+                                <div class="form-group mb-0 text-center">
+                                    <button class="btn btn-primary" type="submit"> Sign Up </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <p class="text-muted">Already have account? <a href="javascript: void(0);" [routerLink]="['/signin']" class="text-muted ml-1"><b>Log In</b></a></p>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

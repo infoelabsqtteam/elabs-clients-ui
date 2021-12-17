@@ -1,0 +1,39 @@
+<div mdbModal #signupModal="mdbModal" class="modal fade right"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false,class: 'modal-full-height modal-right',containerClass: '',animated: true}">
+    <div class="modal-dialog modal-side modal-top-right body" role="document">
+        <div class="modal-content">
+            <div class="modal-header v_center">
+               <h4 class="modal-title" id="exampleModalLabel">Signup</h4>
+               <span class="bi bi-x-lg" (click)="close()" ></span>
+            </div>
+            <div class="modal-body">
+               <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+                  <div class="mb-3">
+                     <label for="name" class="form-label">Name</label>
+                     <input type="text" class="form-control" id="name" formControlName="name" aria-describedby="emailHelp">
+                   </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" formControlName="email" aria-describedby="emailHelp">
+                  </div>
+                  <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" formControlName="password">
+                  </div>
+                  <div class="mb-4">
+                    <label for="mobile" class="form-label">Mobile</label>
+                    <input type="tel" class="form-control" id="mobile" formControlName="mobile">
+                  </div>
+                  
+                  <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">I agree to all the T&C and Privacy Policy</label>
+                  </div>
+                  <button type="submit" class="btn mybtn mb-2 w-100">Signup</button> <br>
+                  <label class="form-check-label" for="">Already a Member? &nbsp; <a href="javascript:void(0)"  class="dark text-bold" (click)="signin()">Login</a></label>
+                </form>
+                <div>&nbsp;</div>
+            </div>
+         </div>
+    </div>
+</div>

@@ -1,0 +1,258 @@
+
+  <!------Banner------- -->
+  <section class="">
+   <!-- <div class="container">
+     <div class="row">
+       <div class="col-md-6">
+         <h3 class="mb-3">GenNext Automation <span> for Labs </span></h3>
+         <p class="mb-5">Experience the next generation digitization of your laboratory operations. <span>One digital platform for all you laboratory operations.</span></p>
+         <button class="btn">Watch a video</button>
+       </div>
+       <div class="col-md-6"><img src="../../../assets/images/bannerimg.png"></div>
+     </div>
+   </div> -->
+   <!-- <div style="width: 98%;margin: 0 auto;">
+     <img src="assets/images/banner_1-01.png"  style="width:100%">
+  </div> -->
+  <owl-carousel-o [options]="slider">
+      <ng-template carouselSlide>
+        <div class="">
+            <img src="assets/images/banner/banner_1.png"  style="width:100%">
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+          <div class="">
+              <img src="assets/images/banner/banner_2.png"  style="width:100%">
+          </div>
+        </ng-template>
+        <ng-template carouselSlide>
+            <div class="">
+                <img src="assets/images/banner/banner_3.png"  style="width:100%">
+            </div>
+          </ng-template>
+          <ng-template carouselSlide>
+              <div class="">
+                  <img src="assets/images/banner/banner_4.png"  style="width:100%">
+              </div>
+            </ng-template>
+    </owl-carousel-o>
+ </section>
+
+  <!------------ Solutions Section -------------->
+  <section class="solutions pt-5">
+   <div class="container">
+     <div class="section_title my-4"><p class="front">Solutions We Provide</p></div>
+     <div class="py-5">
+       <div class="solutionsitems">
+           <ul>'
+              <li *ngFor="let item of solutions" (click)="onChangeSolution(item.value)"><img [src]="item.src" [alt]="item.name" /><span>{{item.name}}</span></li>
+           </ul>
+         </div>
+       <!-- <div class="col-md-12 bglight">
+         <div class="solutionsinformation px-4 py-3">
+           <h4 class="my-3">{{solution.title}}</h4>
+           <p>{{solution.description}}</p>
+           <ul>
+             <li class="d-flex" *ngFor="let item of solution.list"> <i class="bi bi-check-circle-fill text-success"></i> &nbsp; &nbsp; <p>{{item}}</p> </li>
+           </ul>
+         </div>
+       </div> --> 
+     </div>
+   </div>
+ </section>
+ 
+  <!---------------Service Section ------------- -->
+  <section class="services py-5">
+   <div class="container">
+      <div id="automation">&nbsp;</div>
+     <div class="section_title"><p class="front">Our Services</p></div>
+     <div class="row align-items-center mb-5">
+       <div class="col-md-5 offset-md-1 order-lg-last mb-3">
+         <div class="services_img"><img src="../../../assets/images/services/1.png" alt="services image"/></div>
+       </div>
+       <div class="col-md-6 order-lg-first">
+         <h3>Laboratory Automation</h3>
+         <div class="serviceinfo">
+           <p>Having worked with a number of reputed laboratories, we can offer deeper expertise on automation of your business processes for better operational efficiency. The big question is how can e-Labs team come in and help you with automation when you are already running a laboratory and already know the processes far too well. The answer lies in our expertise as a technology partner who understands how data lineage, transformation transparency and data integration can be built to seamlessly automate your business processes.</p>
+               <ul>
+                  <li><i class="fas fa-angle-double-right"></i> Deeper expertise on all aspects of laboratory processes starting from Sales to Invoicing</li>
+                  <li><i class="fas fa-angle-double-right"></i> Right from digitization of your product test master to your quotations we can help set-up a digital laboratory</li>
+                  <li><i class="fas fa-angle-double-right"></i> We create a digital roadmap for error free test booking and invoicing</li>
+                  <li><i class="fas fa-angle-double-right"></i> Working with several equipment, we can help ensure that correct reading from devices are channeled into LIMS to minimize errors in reporting</li>
+               </ul>
+         </div>
+       </div>
+     </div>
+     <div id="business">&nbsp;</div>
+     <div class="row align-items-center mb-5">
+       <div class="col-md-5 mb-3">
+         <div class="services_img"><img src="../../../assets/images/services/2.png" alt="services image"/></div>
+       </div>
+       <div class="col-md-6 offset-md-1">
+         <h3>Laboratory Business Process Advisory</h3>
+         <div class="serviceinfo">
+           <p>We have helped a number of laboratory in their growth stage by helping them better understand nitty-gritties of department and branch integration.</p>
+           <ul>
+            <li><i class="fas fa-angle-double-right"></i> How to design your processes around a seamless customer experience of quotation to invoicing?</li>
+            <li><i class="fas fa-angle-double-right"></i> How to design your processes for an error free order booking?</li>
+            <li><i class="fas fa-angle-double-right"></i> Are you efficiently managing your order discounting and corresponding invoicing?</li>
+            <li><i class="fas fa-angle-double-right"></i> Are you operating from more than one locations and struggling to streamline business processes for effective resource utilization?</li>
+           </ul>
+         </div>
+       </div>
+     </div>
+     <div id="customization">&nbsp;</div>
+     <div class="row align-items-center mb-5">
+       <div class="col-md-5 offset-md-1 order-lg-last mb-3">
+         <div class="services_img"><img src="../../../assets/images/services/3.png" alt="services image"/></div>
+       </div>
+       <div class="col-md-6 order-lg-first">
+         <h3>Application Customization </h3>
+         <div class="serviceinfo text-justify">
+           <p>We all understand that the dynamic of business changes extremely frequently. With more and more regulatory oversight on laboratory processes, compliance demand puts additional pressure on processes. Under such circumstances, your technology infrastructure needs to offer flexibility faster adoption to ever changing business demand.</p>
+           <ul>
+            <li><i class="fas fa-angle-double-right"></i> We offer a highly configurable application platform that can change in a very short span of time</li>
+            <li><i class="fas fa-angle-double-right"></i> A customizable workflow solution that can help move data flow between functions and departments really easy</li>
+            <li><i class="fas fa-angle-double-right"></i> Our application platform also offers a highly customizable MIS engine allowing creation of complex MI very quickly that can help drive key business customizations and changes</li>
+           </ul>
+         </div>
+       </div>
+     </div>
+     <div id="information">&nbsp;</div>
+     <div class="row align-items-center mb-5">
+       <div class="col-md-5 mb-3">
+         <div class="services_img"><img src="../../../assets/images/services/4.png" alt="services image"/></div>
+       </div>
+       <div class="col-md-6 offset-md-1">
+         <h3>Information Security Advisory &Consultancy</h3>
+         <div class="serviceinfo text-justify">
+           <p>Every business has its own proprietary data and business specific confidential information both pertaining to core business as well your clients. In an environment where digitization is the need of hour, security & protection of data is more important than ever.</p>
+           <ul>
+            <li><i class="fas fa-angle-double-right"></i> Incident Management and response service</li>
+            <li><i class="fas fa-angle-double-right"></i> Managed security services</li>
+            <li><i class="fas fa-angle-double-right"></i> Cyber Security Audit and Consulting services</li>
+           </ul>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+
+
+
+  <!---- Action widget --- -->
+  <section class="widget">
+   <div class="container">
+     <div class="widgetinfo">
+       <p class="text-white">Experience how frictionless operations can transform profitability of your laboratory</p>
+     </div>
+   </div>
+ </section>
+
+  <!---- Testemonials --- -->
+  <!-- <section class="testemonials pt-5">
+   <div class="container">
+    <div class="section_title my-4"><p class="front">Testemonials</p></div>
+    <h5 class="text-center mb-5">What Our Customers Says</h5>
+    <owl-carousel-o [options]="usersay">
+      <ng-template carouselSlide>
+        <div class="clientsay m-3">
+          <div class="clientimg"><img src="../../assets/images/user.png" class="rounded-circle"></div>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry</p>
+          <div class="clientname"><h3>Nishant Sharma</h3> <p>Delhi</p></div>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="clientsay m-3">
+          <div class="clientimg"><img src="../../assets/images/user.png" class="rounded-circle"></div>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry</p>
+          <div class="clientname"><h3>Nishant Sharma</h3> <p>Delhi</p></div>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="clientsay m-3">
+          <div class="clientimg"><img src="../../assets/images/user.png" class="rounded-circle"></div>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry</p>
+          <div class="clientname"><h3>Nishant Sharma</h3> <p>Delhi</p></div>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="clientsay m-3">
+          <div class="clientimg"><img src="../../assets/images/user.png" class="rounded-circle"></div>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry</p>
+          <div class="clientname"><h3>Nishant Sharma</h3> <p>Delhi</p></div>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="clientsay m-3">
+          <div class="clientimg"><img src="../../assets/images/user.png" class="rounded-circle"></div>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry</p>
+          <div class="clientname"><h3>Nishant Sharma</h3> <p>Delhi</p></div>
+        </div>
+      </ng-template>
+    </owl-carousel-o>
+    </div>
+  </section>   -->
+
+  <!-------------- Blog Section --------------- -->
+  <!-- <section class="blog py-5">
+   <div class="container">
+    <div class="section_title mb-5"><p class="front">Blogs</p></div>
+    <owl-carousel-o [options]="blogpost">
+      <ng-template carouselSlide>
+        <div class="blogitems">
+          <div class="blogimg"><a href="#"><img src="../../../assets/images/post-1.jpg"></a></div>
+          <div class="d-flex justify-content-between dateinfo pt-3 px-3">
+            <p class="font-weight-bold"><i class="bi bi-calendar mr-2"></i> 4 October 2015</p>
+            <p class="font-weight-bold"><i class="bi bi-person mr-2"></i> By John Deo</p>
+          </div>
+          <h5 class="px-3">Inspiration of UX design</h5>
+          <p class="px-3">Later, when I would meet Binna and learn about his Port Douglas, I’d think back to these modern and contemporary canvases.</p>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="blogitems">
+          <div class="blogimg"> <a href="#"><img src="../../../assets/images/post-3.jpg"></a></div>
+          <div class="d-flex justify-content-between dateinfo pt-3 px-3">
+            <p class="font-weight-bold"><i class="bi bi-calendar mr-2"></i> 4 October 2015</p>
+            <p class="font-weight-bold"><i class="bi bi-person mr-2"></i> By John Deo</p>
+          </div>
+          <h5 class="px-3">Inspiration of UX design</h5>
+          <p class="px-3">Later, when I would meet Binna and learn about his Port Douglas, I’d think back to these modern and contemporary canvases.</p>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="blogitems">
+          <div class="blogimg"> <a href="#"><img src="../../../assets/images/post-2.jpg"></a></div>
+          <div class="d-flex justify-content-between dateinfo pt-3 px-3">
+            <p class="font-weight-bold"><i class="bi bi-calendar mr-2"></i> 4 October 2015</p>
+            <p class="font-weight-bold"><i class="bi bi-person mr-2"></i> By John Deo</p>
+          </div>
+          <h5 class="px-3">Inspiration of UX design</h5>
+          <p class="px-3">Later, when I would meet Binna and learn about his Port Douglas, I’d think back to these modern and contemporary canvases.</p>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="blogitems">
+          <div class="blogimg"> <a href="#"><img src="../../../assets/images/post-3.jpg"></a></div>
+          <div class="d-flex justify-content-between dateinfo pt-3 px-3">
+            <p class="font-weight-bold"><i class="bi bi-calendar mr-2"></i> 4 October 2015</p>
+            <p class="font-weight-bold"><i class="bi bi-person mr-2"></i> By John Deo</p>
+          </div>
+          <h5 class="px-3">Inspiration of UX design</h5>
+          <p class="px-3">Later, when I would meet Binna and learn about his Port Douglas, I’d think back to these modern and contemporary canvases.</p>
+        </div>
+      </ng-template>
+    </owl-carousel-o>
+    </div>
+  </section> -->
+  
+ <!-- <section class="subscribe py-5 text-center">
+   <div class="container">
+     <h3>Subscribe Our News Letter</h3>
+     <div class="subscribeform">
+       <input type="text" placeholder="Email-ID">
+       <button>Submit</button>
+     </div>
+   </div>
+ </section> -->

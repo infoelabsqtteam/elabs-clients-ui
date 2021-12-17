@@ -1,0 +1,78 @@
+// Date Picker
+.mat-form-field {background:$white;}
+.mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;padding:$zero !important;}
+.mat-form-field-appearance-outline .mat-form-field-infix {border:$no;padding:.68em $zero !important;}
+.mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {top:$size5 !important;font-size:$size11;}
+.mat-form-field-appearance-outline .mat-form-field-flex {padding-right:$size2 !important;}
+.mat-form-field-appearance-outline .mat-form-field-outline, .mat-form-field-appearance-outline .mat-form-field-outline-thick{color:$inputbordercolor !important;}
+.mat-form-field-appearance-outline:not(.mat-form-field-disabled) .mat-form-field-flex:hover .mat-form-field-outline {opacity:$one !important;}
+.mat-form-field-appearance-outline:not(.mat-form-field-disabled) .mat-form-field-flex:hover .mat-form-field-outline-thick {opacity:$zero !important;display:$no;}
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {border-width:$size1 !important;}
+.mat-form-field.mat-focused .mat-form-field-label {color:inherit !important;}
+.mat-form-field-appearance-outline .mat-select-arrow-wrapper {transform:translateY(0%) !important;}
+.filter-clear-button{position:$absolute;top:$size9;cursor:$pointer;color:$colorred;border:1px solid $colorred;width:$size15;height:$size15;border-radius:$per50;line-height:$size12;text-align:$center;right:$size5;opacity:0.6;}
+
+
+.mat-icon-button:focus {outline:$zero;}
+input.mat-input-element {font-size:$size13;}
+
+// Module Popup
+.cdk-global-overlay-wrapper{z-index:$zindex1000!important}
+.modal.fade{background:rgba($black,0.5)}
+.cdk-overlay-container{z-index:$zindex2000!important}
+.modal-backdrop{z-index:$zindex998!important}
+.modal{z-index:$zindex999!important}
+.modal.fade.in .modal-dialog {transform:inherit !important;}
+.modal-dialog-full-width {max-width: 98%!important;}
+.modal-dialog {border-radius:10px;
+    .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
+    .mat-form-field-label {color:#7f7f7f;font-size:11px;transform:translateY(6px);}
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75);font-size:$size14;}
+    .mat-form-field-label > * {background:$white;padding-right:$size8;}
+
+    .modal-content {/*overflow:visible !important;min-height:450px;*/
+        .grid-button {width:$size25;height:$size25;line-height:$size30;margin:$size3;}
+    }
+    .modal-header {background:$popupheadingbg;margin-bottom:$size20;min-height:$size55;}
+    .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;}
+    .fileuploadbtn {position:$absolute !important;right:$size8;top:$size8;color:$color999 !important;width:auto;height:auto;line-height:20px;
+        &:hover, &:focus {outline:$no !important;}
+    }
+    .mat-error {margin-top:$size15;}
+    .icon-button {padding:$zero!important;height:$size25;width:$size25;display:block;border-radius:100%;background:#274058;display:inline-block;}
+    .list-of-string-button {position:absolute;top:2px;right:2px;}
+    .input-field-icon {position:absolute;top:6px;right:6px;} 
+    .mat-checkbox-layout {display:inherit!important;line-height:2.2!important;}
+    .mat-checkbox-layout .mat-checkbox-label {font-size:12px!important;line-height:13px!important;white-space:pre-line!important;}
+    .form-label {display:block;background:#efefef;padding:8px 10px!important;border:none;font-size:16px;border-radius:5px;margin-top:20px!important;}
+
+    .tree_view_class {position:absolute;white-space:nowrap;font-size:11px;border-radius:5px;top:-7px;right:5px;}
+}
+.colorplate {width:$size100;margin: 5px 5px 0px;
+  input {border:none; width:100%;}
+}
+
+.mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option, .mat-option {font-weight:400;height:2em !important;}
+
+
+.nobg .form-label {background:$no !important;font-size:$size14;}
+
+
+.example-tree {
+    .mat-tree-node {position:relative;}
+    .mat-icon-button {width:30px;height:30px;line-height:30px;margin:0 10px;}
+    // .plusicon {position:absolute;right:0px;top:5px;}
+    li {
+        background:#efefef;border-radius:5px;margin-bottom:10px !important;
+    }
+}
+.fileNameTooltip {
+    white-space: pre-line;
+  }
+
+
+
+
+
+
+

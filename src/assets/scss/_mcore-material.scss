@@ -1,0 +1,83 @@
+/// Scrolling Style
+::-webkit-scrollbar{width:$size10;height:$size10}
+::-webkit-scrollbar-track{background:$color12;border-radius:$size10}
+::-webkit-scrollbar-thumb{background:$color888;border-radius:$size10}
+::-webkit-scrollbar-thumb:hover{background:$color555}
+
+
+
+header {position:sticky;top:0;z-index:10;
+    .navbar-toggler-icon {position:relative;background-image:none !important;}
+    .navbar-toggler-icon:after {content:"\f0c9";position:absolute;font-family:"Font Awesome 5 Free";font-weight:900;top:5px;right:5px;color:#fff;}
+    .navbar {box-shadow:$no;background:$headerbg;
+        .navbar-brand {width:$size150;
+         img {max-width:100%;}
+        }
+        .nav-link{
+            font-size:.9em;font-weight:$fw-500;text-transform:$capitalize;font-family:$montserrat;color:$navtxtcolor !important;
+            &:focus, &:hover {outline:$no;color:$navtxthovercolor !important;}
+            .mat-button-focus-overlay {display:$no;}
+            i {margin-left:-5px;font-size:$size20;position:$relative;top:-1px;}
+        }
+    }
+    .infoicon span{font-size:$size25;margin-top:$size5;cursor:$pointer;color:$headericon;
+     &:hover {color:$headericonhover;}
+    }
+}
+
+/// Material Dropdown menu
+.moremenulist.mat-menu-panel {margin-top:7px;border-radius:0px 0px 4px 4px;
+    .mat-menu-content .mat-button {
+        font-size:13px;width:100%;text-align:left;
+        &:focus {outline:$no;}
+    }
+    .mat-menu-content:not(:empty) {padding-top:0;padding-bottom:0;}
+}
+.moremenulist.userlogin {max-width:120px;}
+
+// Dropdown menu
+.userlogin.dropdown-toggle:after {display:none !important;}
+.dropdown.open.show {
+    .dropdown-toggle, .dropdown-toggle:hover {background:$activebg;color:$activecolor !important}
+}
+.dropdown.show .dropdown-menu{
+    max-height:80vh;overflow-x:hidden;border-radius:0 0 4px 4px;padding:0px;
+    a {font-family:Roboto,sans-serif;font-size:.87em;font-weight:400;border-bottom:1px solid hsla(0,0%,80%,.42);padding:5px 10px;
+     // &:hover, &:focus {background:rgba($activebg, 0.2);color:rgba($activecolor, 0.5) !important}
+    }
+}
+
+/// shortcut information popup
+.shortkey {
+    .keyinfo {max-height:500px;}
+    .table {
+        td {padding:5px 30px;}
+    }
+    .closebtn {position:absolute;right:-10px;top:-10px;height:30px;width:30px;background:#fff;border-radius:50%;font-size:18px;box-shadow:0 2px 20px 0 rgb(0 0 0 / 30%)}
+}
+
+
+.colorbox {width:25px;height:25px;display:inline-block;vertical-align:middle;margin-right:6px;border-radius:100%;}
+.colorcode {display:inline-block;vertical-align:middle;}
+
+
+
+// File Upload Css
+.dropzone{border:2px dashed $color5;background:$white;border-radius:$size6;cursor:$pointer;min-height:$size150;padding:$size20}
+.dropzone .dz-message{text-align:$center;margin:$rem2 $zero}
+.dropzone input{opacity:$zero;position:$absolute;z-index:$two;width:$per100;height:$per100;top:$zero;left:$zero;cursor:$pointer}
+.fileover{animation:shake 1s;animation-iteration-count:infinite;border:1px solid #00f}
+.hz-scroll{display:$block;overflow-x:$auto;white-space:$nowrap}
+
+
+
+
+
+
+
+
+
+
+
+
+

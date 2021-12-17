@@ -1,0 +1,38 @@
+
+<div mdbModal #shortcutinfo="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
+aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
+
+<div class="modal-dialog shortkey">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h3 class="modal-title font-weight-bold m-0">Short Cut List</h3>
+        <button (click)="close()" class="closebtn" [matTooltip]="'Close Model (ALT + C)'" [matTooltipPosition]="'above'"><span>&times;</span></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="table-responsive table keyinfo">
+          <table class="table w-100">
+            <tbody>
+              <tr><td><strong>Short Cut Name</strong></td><td><strong>Short Cut</strong></td></tr>
+              <tr><td>Add</td><td>ALT + A</td></tr>
+              <tr><td>Edit</td><td>SHIFT + CTRL + E</td></tr>
+              <tr><td>Save</td><td>ALT + S</td></tr>
+              <tr><td>Reset</td><td>ALT + R</td></tr>
+              <tr><td>Update</td><td>ALT + U</td></tr>
+              <tr><td>Open Shortcut Model</td><td>ALT + O</td></tr>
+              <tr><td>Home Nav Active</td><td>ALT + H</td></tr>
+              <tr><td>Home Nav Deactive</td><td>ALT + R</td></tr>
+              <tr><td>Table Tabs Change</td><td>ALT + T</td></tr>
+              <tr><td>Next Pagination</td><td>ALT + N</td></tr>
+              <tr><td>Previous Pagination</td><td>ALT + P</td></tr>
+              <tr><td>Download</td><td>ALT + CTRL + D</td></tr>
+              <tr><td>Table Right Side Pannel</td><td>ALT + I</td></tr>
+              <tr><td>Close / Cancel</td><td>ALT + C</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
