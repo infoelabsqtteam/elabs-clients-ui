@@ -1,0 +1,113 @@
+<div style="background: url(assets/img/pexels-public-domain-pictures-60022.jpg);height: 100vh;background-size:cover ;">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    
+                    <!-- <div class="text-center">
+                        <img src="assets/img/1.png"/>
+                    </div> -->
+                    <mat-card style="text-align: center;opacity: 90%;" >
+                            <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white" >
+                                <img class="w-75 mat-card-image m-0" mat-card-image src="assets/img/logo.png" alt="E-Labsl logo">
+                            </mat-card-title>
+                        <mat-divider></mat-divider>
+                        <mat-card-content>
+                            <div class="text-center w-75 m-auto">
+                                <h4 class="text-dark-50 text-center mt-2">Sign In</h4>
+                            </div>
+
+                            <form class="example-form" #f="ngForm">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>E-MAIL ID</mat-label>
+                                    <input matInput placeholder="E-Mail" name="email" ngModel required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" name="password" ngModel required (keyup.enter)="onSignIn(f)">
+                                    <!--button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button-->                                    
+                                </mat-form-field> 
+                                <div>
+                                    <mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint>
+                                </div>                                                             
+                              </form>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <div class="row justify-content-center ">
+                                <button mat-raised-button color="primary" style="width:35%!important" type="submit" (click)="onSignIn(f)" class="hover1">Log In</button>
+                            </div>
+                        </mat-card-actions>
+                        <!-- <div class="row mt-3">
+                            <div class="col-12 text-center">
+                                <button mat-raised-button type="submit" [routerLink]="['/signup']" >Create New Account</button>
+                                <p class="text-dark">Don't have an account? <a [routerLink]="['/signup']" class="text-dark ml-1"><b>Sign Up</b></a></p>
+                            </div> 
+                        </div> -->
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<!-- 
+<div class="login-background">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container">
+            <div class="row justify-content-center" style="position:relative;">
+                <div class="col-lg-5">
+                    <div class="card">
+
+                        <div class="card-header pt-2 pb-2 text-center">
+                            <a href="#">
+                                <span><img src="assets/img/login-logo.png" alt="" width="100%"></span>
+                            </a>
+                        </div>
+
+                        <div class="card-body p-4">
+
+                            <div class="text-center w-75 m-auto">
+                                <h4 class="text-dark-50 text-center mt-0 font-weight-bold">Sign In</h4>
+                            </div>
+
+                            <form (ngSubmit)="onSignIn(f)" #f="ngForm">
+                                <div class="form-group">
+                                    <label for="log-emailaddress">Email address</label>
+                                    <input type="email" id="email" name="email" ngModel class="form-control" placeholder="Enter your email" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <a href="javascript: void(0);" [routerLink]="['/fpwd']" class="text-muted float-right"><small>Forgot your password?</small></a>
+                                    <label for="log-password">Password</label>
+                                    <input type="password" id="password" name="password" ngModel class="form-control" placeholder="Enter your password" required>
+
+                                </div>
+
+                                <div class="form-group mb-0 text-center">
+                                    <button class="btn btn-primary" type="submit" [disabled]="!f.valid"> Log In </button>
+                                    <button mat-raised-button color="primary">Primary</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <p class="text-muted">Don't have an account? <a href="javascript: void(0);" [routerLink]="['/signup']" class="text-muted ml-1"><b>Sign Up</b></a></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

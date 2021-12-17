@@ -1,0 +1,1306 @@
+<div class="modal-content" [formGroup]="templateForm" *ngIf="tableFields.length > 0" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
+    <!--Header-->
+    <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
+        <div class="form-tab">
+            <span *ngIf="multipleFormCollection.length == '0'">          
+                <h3 class="modal-title m-0 text-uppercase" [ngClass]="{'active': checkActiveTab(form),'d-none':checkFormTab(form),'d-block' : checkFormTabShow(form)}"  *ngFor="let form of forms| keyvalue;let i = index" (click)="changeNewForm(form.key,i)">{{form.value.label}}</h3>
+            </span> 
+            <span *ngIf="multipleFormCollection.length > '0'">          
+                <h4 class="modal-title m-0" [ngClass]="{'active': true}" >{{form.label}}</h4>
+            </span>  
+            <!-- <div *ngFor="let form of forms| keyvalue">
+                <button (click)="changeNewForm(form.key)">{{form.value.label}}</button>
+            </div> -->
+        </div>
+        <p class="m-0" *ngIf="pdfViewListData.length > 0">
+            <a class="mr-1" *ngFor="let pdf of pdfViewListData" (click)="changePdfView(pdf)">{{pdf.fileName || pdf.rollName}}</a>
+        </p>
+        <a class="h5 m-0 closebtb" (click)="closeModal()" [matTooltip]="'Close (ALT + C)'" [matTooltipPosition]="'above'"><span>×</span></a>
+    </div>
+    <div class="modal-body pb-2 pt-1 mt-0 px-4">
+        <div class="row">
+            <div [ngClass]="checkFormType()?'col-lg-8':'col-lg-12'"> 
+                <div class="row" *ngIf="handleDisabeIf()">
+                    <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="getDivClass(tableField)" [id]="tableField._id"  >
+                        <div *ngIf="tableField.type == 'text'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name">                              
+	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name"> 
+                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'email'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput type="email" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name">
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.email">
+                                        Email must be a valid email address
+                                    </mat-error>
+                            </mat-form-field>                            
+                        </div>
+                        <div *ngIf="tableField.type == 'gst_number'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name"> 
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error>
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.invalidGSTNumber">
+                                    {{ tableField.label | titlecase}} is <strong>invalidGSTNumber</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'api'">
+                            <div class="w-100 position-relative">
+                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name"> 
+                                    <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                        {{ tableField.label | titlecase}} is <strong>required</strong>
+                                    </mat-error>
+                                    <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.invalidGSTNumber">
+                                        {{ tableField.label | titlecase}} is <strong>invalidGSTNumber</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                                <a class="text-white input-field-icon" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors == null && fieldApiValMsg != ''" [matTooltip]="fieldApiValMsg" [matTooltipPosition]="'above'">
+                                    <span *ngIf="fieldApiValidaton == 'Active'" class="material-icons-outlined text-success">done</span>
+                                    <span *ngIf="fieldApiValidaton != 'Active' && fieldApiValidaton != ''" class="material-icons-outlined text-danger">close</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'password'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name">
+                                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'date'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc(tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
+                                <mat-datepicker #picker2 color="primary" ></mat-datepicker>
+                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'daterange'">
+                            <mat-form-field appearance="outline">
+                                <mat-label>{{tableField.label}}</mat-label>
+                                <mat-date-range-input [formGroup]="tableField.field_name" [rangePicker]="picker" [id]="tableField._id+'_'+tableField.field_name">
+                                    <input matStartDate formControlName="start" placeholder="Start date">
+                                    <input matEndDate formControlName="end" placeholder="End date">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>  
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'time'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
+                                    readonly [id]="tableField._id+'_'+tableField.field_name">
+                                <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div> 
+                        <div *ngIf="tableField.type == 'radio'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-12 px-0">
+                                    <div class="form-label px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                </div>
+                            </div>
+                            <div class="row m-0 w-100" *ngIf="tableField.datatype == 'key_value'">
+                                <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)" >
+                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <div class="row m-0 w-100" *ngIf="tableField.datatype != 'key_value'">
+                                <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)">
+                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'image'">
+                            <img [src]="tableField.etc_fields.image_source" class="w-100">
+                        </div>
+                        <div *ngIf="tableField.type == 'number'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput type="number" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc(tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name">
+                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" > 
+                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name">          
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error>
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].hasError('max')">
+                                Maximum of {{ tableField.max_length }} characters
+                                </mat-error>
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].hasError('minlength')">
+                                Minimum of {{ tableField.min_length }} characters
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'mobile'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input  [mask]="tableField.mask" matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" maxlength="20" OnlyNumber="true" [id]="tableField._id+'_'+tableField.field_name">
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'color'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input  [mask]="tableField.mask" matInput type="color" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name">
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'input_with_color'">
+                           <div class="d-flex position-relative">
+                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" (change)="colorchange(tableField, colortxt.value)" #colortxt [value]="colortype.value">                              
+                                </mat-form-field>
+                                <div class="colorplate"><input type="color" #colortype [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'textarea'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <textarea matInput [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></textarea>
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>                      
+                        <div *ngIf="tableField.type == 'dropdown'">
+                            <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                    </mat-option>
+                                    <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
+                                </mat-select>
+                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error> -->
+                            </mat-form-field>
+
+
+
+                            <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                    <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                </mat-select>
+                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                    {{ tableField.label | titlecase}} is <strong>required</strong>
+                                </mat-error> -->
+                            </mat-form-field>
+                            
+                            <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'key_value'">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                    <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'typeahead'">
+                            <div class="w-100 position-relative" *ngIf="tableField.datatype != 'chips'">
+                                <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
+                                    <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                    <input type="text" [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
+                                        [matAutocomplete]="first" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,false)" [displayWith]="getOptionText">
+                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                        <mat-option *ngIf="tableField.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                    </mat-autocomplete>                                  
+                                    <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                        {{ tableField.label | titlecase}} is <strong>required</strong>
+                                    </mat-error>
+                                    <mat-error class="text-danger" *ngIf="tableField.datatype == 'object' && templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.invaliData">
+                                        {{ tableField.label | titlecase}} is <strong>invalidData</strong>
+                                    </mat-error>
+                                    <mat-error class="text-danger" *ngIf="tableField.datatype == 'text' && templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.validDataText">
+                                        {{ tableField.label | titlecase}} is <strong>invalidData</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')">
+                                    <mdb-icon fas icon="plus"></mdb-icon>
+                                </button>
+                            </div>
+                            <div class="w-100 position-relative" *ngIf="tableField.datatype == 'chips'">
+                                <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
+                                    <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                    <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                        <mat-chip *ngFor="let item of custmizedFormValueData('',tableField); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
+                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                        </mat-chip>
+                                        <input type="text" #chipsInput [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
+                                            [matAutocomplete]="first" [matChipInputFor]="chipList"
+                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                        <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,true,chipsInput)" [displayWith]="getOptionText">
+                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                            <mat-option *ngIf="tableField.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-chip-list>
+                                    <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                        {{ tableField.label | titlecase}} is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>                                
+                            </div>
+
+                            <div *ngIf="tableField.datatype == 'list_of_object'">
+                                <div *ngIf="checkCustmizedFormValueData('',tableField)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData('',tableField); let i = index" cdkDrag>
+                                        <p class="m-0">{{ getddnDisplayVal(item) }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="tableField.type == 'list_of_checkbox'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-12 px-0">
+                                    <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
+                                </div>
+                            </div>
+                            <div class="row" [formArrayName]="tableField.field_name">
+                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field]; let i = index">
+                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{getddnDisplayVal(order)}}</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'checkbox'">
+                            <mat-checkbox color="primary" class="example-margin" [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)">{{ tableField.label | titlecase}}</mat-checkbox>
+                        </div>
+                        <div *ngIf="tableField.type == 'list_of_string'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100"  *ngIf="tableField.datatype == 'chips' || tableField.datatype == 'chips_with_mask'">
+                                <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <mat-chip *ngFor="let item of custmizedFormValueData('',tableField); let i = index" cdkDrag [selectable]="selectable"
+                                            [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')">
+                                            {{getddnDisplayVal(item)}}
+                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                    </mat-chip>
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" *ngIf="tableField.datatype == 'chips'" [id]="tableField._id+'_'+tableField.field_name">
+                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'chips_with_mask'" [id]="tableField._id+'_'+tableField.field_name">
+                                </mat-chip-list >
+                            </mat-form-field>
+
+                            <div class="w-100 position-relative d-flex" *ngIf="tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
+                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                    <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                    
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" (keyup)="setValue('',tableField,false)" class="pr-4" *ngIf="tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name"/> 
+                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)"  [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" (keyup)="setValue('',tableField,false)" [id]="tableField._id+'_'+tableField.field_name"> 
+                                    <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                        {{ tableField.label | titlecase}} is <strong>required</strong>
+                                    </mat-error>                                   
+                                </mat-form-field> 
+                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                            </div> 
+
+
+
+                            <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
+                                <div *ngIf="checkCustmizedFormValueData('',tableField)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData('',tableField); let i = index" cdkDrag>
+                                        <p>{{item}} <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
+                            <div class="row">
+                                <div class="col-lg-12 px-0">
+                                    <div class="px-0 py-1 mb-2 ml-3 mt-2 form-label">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                </div>
+                            </div>
+                            <div class="row" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null">
+                                <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
+                                    <div *ngIf="fields.type == 'text'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                           
+                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" *ngIf="fields.datatype != 'first_cap'" [id]="fields._id+'_'+fields.field_name">               
+                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" appTitleCase *ngIf="fields.datatype == 'first_cap'" [id]="fields._id+'_'+fields.field_name">
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'password'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'email'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                            <input matInput type="email" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                        </mat-form-field>                            
+                                    </div>
+                                    <div *ngIf="fields.type == 'gst_number'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                            <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
+                                                {{ fields.label | titlecase}} is <strong>required</strong>
+                                            </mat-error>
+                                            <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.invalidGSTNumber">
+                                                {{ fields.label | titlecase}} is <strong>invalidGSTNumber</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'api'">
+                                        <div class="w-100 position-relative">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                                <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
+                                                    {{ fields.label | titlecase}} is <strong>required</strong>
+                                                </mat-error>
+                                                <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.invalidGSTNumber">
+                                                    {{ fields.label | titlecase}} is <strong>invalidGSTNumber</strong>
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <a class="text-white input-field-icon" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors == null && fieldApiValMsg != ''" [matTooltip]="fieldApiValMsg" [matTooltipPosition]="'above'">
+                                                <span *ngIf="fieldApiValidaton == 'Active'" class="material-icons-outlined text-success h5">done</span>
+                                                <span *ngIf="fieldApiValidaton != 'Active' && fieldApiValidaton != ''" class="material-icons-outlined text-danger h5">close</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="fields.type == 'date'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <input matInput [matDatepicker]="picker2" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'time'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly>
+                                            <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'number'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <input matInput type="number" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" (keyup)="inputOnChangeFunc(fields)" *ngIf="fields.datatype != 'text' && fields.datatype != 'numberOnly'" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [minlength]="fields.min_length" [maxlength]="fields.max_length" NumberOnly="true" *ngIf="fields.datatype == 'text'" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" NumberOnly="true" (keyup)="inputOnChangeFunc(fields)" *ngIf="fields.datatype == 'numberOnly'" [id]="fields._id+'_'+fields.field_name">
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'dropdown'">
+                                        <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" [id]="fields._id+'_'+fields.field_name" >
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                    {{getddnDisplayVal(staticValue)}}
+                                                </mat-option>
+                                                <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype != 'object' && fields.datatype != 'key_value'">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  [id]="fields._id+'_'+fields.field_name">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                    {{getddnDisplayVal(staticValue)}}
+                                                </mat-option>
+                                                <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'key_value'">
+                                            <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                            <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  [id]="fields._id+'_'+fields.field_name">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                    {{getddnDisplayVal(staticValue)}}
+                                                </mat-option>
+                                                <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'typeahead'">
+                                        <div class="w-100 position-relative d-flex" *ngIf="fields.datatype != 'chips'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                <mat-label>{{fields.label}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <input type="text" [placeholder]="fields.label"   aria-label="Number" matInput [formControlName]="fields.field_name" [matAutocomplete]="first"
+                                                    (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
+                                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,false)" [displayWith]="getOptionText">
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                    <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
+                                                <mdb-icon fas icon="plus"></mdb-icon>
+                                            </button>
+                                        </div>
+                                        <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <mat-chip *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
+                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                    </mat-chip>
+                                                    <input type="text" #chipsInput [placeholder]="fields.label" [required]="fields.is_mandatory && fields.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="fields.field_name"
+                                                        [matAutocomplete]="first" [matChipInputFor]="chipList"
+                                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
+                                                    <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,true,chipsInput)" [displayWith]="getOptionText">
+                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                        <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-chip-list>
+                                            </mat-form-field>                                
+                                        </div>
+
+                                        <div *ngIf="fields.datatype == 'list_of_object'">
+                                            <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
+                                                    <p>{{ getddnDisplayVal(item) }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                </div>                                                
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div *ngIf="fields.type == 'list_of_checkbox'">
+                                        <div class="row">
+                                            <div class="col-lg-12 px-0">
+                                                <div class="card-header border-0  px-2 py-1 mb-1">{{ fields.label | titlecase}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row" [formArrayName]="fields.field_name">
+                                            <div class="col-lg-3" *ngFor="let order of staticData[fields.ddn_field]; let i = index">
+                                                <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ getddnDisplayVal(order) }}</mat-checkbox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="fields.type == 'checkbox'">
+                                        <mat-checkbox color="primary" class="example-margin" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(fields)">{{ fields.label | titlecase}}</mat-checkbox>
+                                    </div>
+                                    <div *ngIf="fields.type == 'list_of_string'">
+                                        <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips' || fields.datatype == 'chips_with_mask'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100"  >
+                                                <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <mat-chip *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag [selectable]="selectable"
+                                                            [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')">
+                                                            {{getddnDisplayVal(item)}}
+                                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                    </mat-chip>
+                                                    <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
+                                                    <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
+                                                </mat-chip-list>
+                                            </mat-form-field>   
+                                        </div>
+                                        <div class="w-100 position-relative" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
+                                            </mat-form-field>
+                                            <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                        </div>
+
+                                        <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
+                                            <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
+                                                    <p class="m-0 small">{{item}} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div *ngIf="fields.type == 'html'">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="card-header border-0 ">{{ fields.label | titlecase}}</div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <angular-editor [formControlName]="fields.field_name" [config]="editorConfig"></angular-editor>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="fields.type == 'tree_view_selection'">
+                                        <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
+                                            <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                            <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  >
+                                                <mat-option *ngFor="let data of treeViewData[fields.field_name]" [value]="data">
+                                                    {{getddnDisplayVal(data)}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView('',fields)">Tree View</span>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'textarea'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                            <textarea matInput [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name"></textarea>                
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="fields.type == 'file'">
+                                        <button class="btn bg-cerulean btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled">{{fields.label}}</button> 
+                                        <!-- list of attachment files -->
+                                        <div *ngIf="dataListForUpload[fields.field_name] && dataListForUpload[fields.field_name].length > 0">
+                                            <table mdbTable small="true" bordered="true">
+                                                <thead class="black white-text">
+                                                    <tr>
+                                                        <th class="black" *ngFor="let head of ['Name', 'Type', 'Action']" scope="col">{{head}} </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr mdbTableCol *ngFor="let file of dataListForUpload[fields.field_name]; let i = index">
+                                                        <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
+                                                        <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
+                                                        <td>
+                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
+                                                            <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>                           
+                                    </div> 
+                                    <div *ngIf="fields.type == 'input_with_uploadfile'">
+                                        <div class="w-100 position-relative">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name">
+                                            </mat-form-field>
+                                            <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(tableField,fields)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList(tableField,fields)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
+                                                ></button>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="fields.type == 'radio'">
+                                        <div class="row m-0 w-100">
+                                            <div class="col-lg-12 px-0">
+                                                <div class="card-header border-0  px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-0 w-100" *ngIf="fields.datatype == 'key_value'">
+                                            <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(fields)">
+                                                <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <div class="row m-0 w-100" *ngIf="fields.datatype != 'key_value'">
+                                            <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(fields)">
+                                                <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3'" *ngIf="tableField.type == 'list_of_fields'">
+                                    <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="setValue('',tableField,false)"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
+                                    <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
+                                </div>
+                            </div>
+                            <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
+                                <div class="col-lg-12 table-responsive table without-filter" *ngIf="custmizedFormValue[tableField.field_name]">
+                                    <table class="table-bordered table-striped table-hover" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%" style="text-align: center">Action</th>
+                                                <th *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(item) ? 'd-none' : ''">{{item.label}}</th>                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let listOfField of custmizedFormValue[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
+                                                <td class="px-1" style="text-align: center">
+                                                    <a mdbBtn floating="true" size="sm" (click)="editListOfFiedls(listOfField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                                    <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,listOfField,'delete')" mdbWavesEffect class="grid-button btn-danger text-white" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
+                                                </td>
+                                                <td *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(item) ? 'd-none' : ''" (click)="showListOfFieldData(listOfField, item)" [innerHtml]="showListFieldValue(listOfField, item)"></td>                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype == 'key_value'">
+                                <div class="col-lg-12 table-responsive table without-filter" *ngIf="custmizedFormValue[tableField.field_name]">
+                                    <table class="table-bordered table-striped table-hover" *ngIf="checkObjectSize(custmizedFormValue[tableField.field_name])">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%" style="text-align: center">Action</th>
+                                                <th *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid ? 'd-none' : ''">{{item.label}}</th>                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let myobject of custmizedFormValue[tableField.field_name] | keyvalue" [ngClass]="myobject.value.status == 'I' ? 'd-none':''">
+                                                <td class="px-1" style="text-align: center"> 
+                                                    <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',myobject.key,'',tableField,{},'delete')" mdbWavesEffect class="grid-button btn-danger text-white" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                                        
+                                                </td>
+                                                <td  [innerHtml]="myobject.key"></td>
+                                                <td  [innerHtml]="getddnDisplayVal(myobject.value)"></td>                                       
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'html'">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <angular-editor [formControlName]="tableField.field_name" [config]="editorConfig"></angular-editor>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'mini-html'">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <angular-editor [formControlName]="tableField.field_name" [config]="minieditorConfig"></angular-editor>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'tree_view_selection'">
+                            <div class="position-relative">
+                                <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory">
+                                        <mat-option *ngFor="let data of treeViewData[tableField.field_name]" [value]="data">
+                                            {{getddnDisplayVal(data)}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <a href="javascript:void(0)" class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_sup'" (click)="openTreeView('',tableField)">Tree View</a>
+                                </mat-form-field>
+                           </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'dropdown_on_tree_view_selection'">
+                            <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory">
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                </mat-select>
+                                <span class="tree_view_class cursor-pointer" (click)="openTreeView('',tableField)">Tree View</span>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'grid_selection_vertical'">
+                            <div class="row card-header border-0 px-2 py-0 mb-1 m-0 w-100">
+                                <div class="col-lg-6 px-0 grid-selection-title">
+                                    <div class="">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                </div>
+                                <div class="col-lg-6 px-0">
+                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">keyboard_arrow_down</span></button>
+                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">reviews</span></button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 table-responsive  py-2" >
+                                    <table mdbTable class="z-depth-1">
+                                        <tbody>
+                                        <tr *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
+                                            <td >{{ fieldName.label | titlecase}}</td>
+                                            <td *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index">
+                                                    <span disabled *ngIf="fieldName.type=='checkbox'" >
+                                                        <mat-checkbox color="primary"[checked]="data[fieldName.field_name]" disabled></mat-checkbox>
+                                                    </span>
+                                                <span *ngIf="fieldName.type!='checkbox'"  [innerHtml]="getValueForGrid(fieldName,data)"></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'grid_selection'">
+                            <div class="px-0 py-1 mb-3 mt-2 form-label d-flex justify-content-between">
+                                <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                <div class="grid-selection-buttons">
+                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">keyboard_arrow_down</span></button>
+                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">reviews</span></button>
+                                </div>
+                            </div>                            
+                            <div class="" *ngIf="custmizedFormValue[tableField.field_name]">
+                                <div class="table-responsive table">
+                                    <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="custmizedFormValue[tableField.field_name].length > 0">
+                                        <thead>
+                                            <tr> 
+                                                <th *ngIf="!updateMode"></th>                               
+                                                <th *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                            <tr *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag cdkDragLockAxis="y">
+                                                <td *ngIf="!updateMode">
+                                                    <div class="example-handle" cdkDragHandle>
+                                                        <svg width="16px" fill="currentColor" viewBox="0 0 24 24">
+                                                          <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                                          <path d="M0 0h24v24H0z" fill="none"></path>
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                                                    <span disabled *ngIf="fieldName.type=='checkbox'" >
+                                                        <mat-checkbox color="primary" 
+                                                            [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
+                                                    </span>
+                                                    <span *ngIf="fieldName.type!='checkbox'" [innerHtml]="getValueForGrid(fieldName,data)"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'tabular_data_selector'"> 
+                            <div class="row">
+                                <div class="col-lg-12 px-0">
+                                    <div class="card-header border-0  px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                </div>
+                            </div>           
+                            
+                            <div class="row" style="height: 300px;">
+                                <div class="col-lg-6 table-responsive py-2 h-100">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name]">
+                                        <table mdbTable class="z-depth-1" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
+                                            <thead>
+                                                <tr>                                
+                                                    <th *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index">
+                                                    <td *ngFor="let fieldName of tableField.gridColumns"><span  [innerHtml]="getValueForGrid(fieldName,data)" ></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 table-responsive py-2 h-100" >
+                                    <table mdbTable class="z-depth-1" *ngIf="staticData[tableField.ddn_field]">
+                                        <thead>
+                                            <tr>  
+                                                <th><mat-checkbox  color="primary" aria-label="Select All" [checked]="isChecked(tableField.ddn_field)" [indeterminate]="isIndeterminate(tableField.ddn_field)" (change)="$event ? toggleAll($event,tableField) : null">Select All</mat-checkbox></th>                              
+                                                <th *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let data of copyStaticData[tableField.ddn_field]; let i = index">
+                                                <td><mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                                                    (change)="$event ? toggle(i, $event,tableField) : null"
+                                                    [checked]="data.selected">
+                                                    </mat-checkbox></td>
+                                                <td *ngFor="let fieldName of tableField.gridColumns"><span  [innerHtml]="getValueForGrid(fieldName,data)" ></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'drag_drop'">
+                            <!-- <div class="row">
+                                <div class="col-lg-12 px-0">
+                                    <div class="card-header border-0 font-weight-bold px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                </div>
+                            </div> -->
+                            <div cdkDropListGroup class="row">
+                                <div class="col-lg-6">
+                                <div class="card-header border-0 font-italic px-2 py-1 mb-1">{{ tableField.label | titlecase }}</div> 
+                                <div
+                                    cdkDropList
+                                    [cdkDropListData]="custmizedFormData(tableField)"
+                                    class="example-list row m-0 w-100"
+                                    (cdkDropListDropped)="drop($event)">                                    
+                                    <mat-card  class="example-box" *ngFor="let item of custmizedFormData(tableField)" cdkDrag> <span *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="getValueForGrid(field,item)"></span> </mat-card>
+                                </div>
+                                </div>
+                            
+                                <div class="col-lg-6">
+                                <div class="card-header border-0 font-italic px-2 py-1 mb-1">Select From Below (drag & drop to selection list)</div>                            
+                                <div
+                                    cdkDropList
+                                    [cdkDropListData]="copyStaticData[tableField.ddn_field]"
+                                    class="example-list row m-0 w-100"
+                                    (cdkDropListDropped)="drop($event)">
+                                    <mat-card  class="example-box example-box-right" *ngFor="let item of copyStaticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="getValueForGrid(field,item)"></span></mat-card>                                    
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'label'">
+                            <div class="row">
+                                <div class="col-lg-12 px-0">
+                                    <div class="px-0 py-1 mb-2 ml-3 mt-2 form-label">{{ tableField.label | titlecase}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'button'">
+                            <button mdbBtn type="button" size="sm" class="btn-public rounded bg-cerulean text-white" (click)="partialDataSave(tableField.onclick, tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button>
+                        </div>
+                        <div *ngIf="tableField.type == 'file'">
+                            <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button> 
+                            <!-- list of attachment files -->
+                            <div *ngIf="dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
+                                <table mdbTable small="true" bordered="true">
+                                    <thead class="black white-text">
+                                        <tr>
+                                            <th class="black" *ngFor="let head of ['Name', 'Type', 'Action']" scope="col">{{head}} </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr mdbTableCol *ngFor="let file of dataListForUpload[tableField.field_name]; let i = index">
+                                            <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
+                                            <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
+                                            <td>
+                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,tableField.field_name)"></mdb-icon>
+                                                <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                           
+                        </div> 
+                        <div *ngIf="tableField.type == 'input_with_uploadfile'">
+                            <div class="w-100 position-relative">
+                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" >
+                                    <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
+                                        {{ tableField.label | titlecase}} is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                                <button mat-icon-button class="fileuploadbtn" (click)="uploadModal('',tableField)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList('',tableField)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
+                                    ></button>
+                            </div>
+                        </div> 
+                        <div *ngIf="tableField.type == 'html_view'">
+                            <!-- <div [innerHtml]="copyStaticData[tableField.ddn_field]"></div>  -->
+                            <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                          
+                        </div>
+                        <div *ngIf="tableField.type == 'pdf_view'">
+                            <div *ngIf="pdfViewLink != ''">
+                                <ngx-extended-pdf-viewer [base64Src]="pdfViewLink"  height="58vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer>
+                                <!-- list of attachment files -->
+                                <div *ngIf="copyStaticData[tableField.ddn_field] && copyStaticData[tableField.ddn_field].length > 0">
+                                    <table mdbTable small="true" bordered="true">
+                                        <thead class="black white-text">
+                                            <tr>
+                                                <th *ngFor="let head of ['Name']" scope="col">{{head}} </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr mdbTableCol *ngFor="let file of copyStaticData[tableField.ddn_field]; let i = index">
+                                                <th scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)"><a (click)="changePdfView(file)">{{file.fileName || file.rollName}}</a></th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div> 
+                            </div>                          
+                        </div>
+                        <mat-vertical-stepper [linear]="isLinear" #stepper *ngIf="tableField.type == 'stepper' && tableField.list_of_fields != null">
+                            <mat-step *ngFor="let step of tableField.list_of_fields; let j = index" [stepControl]="templateForm.get(step.field_name)">
+                                <ng-template matStepLabel>{{step.label}}</ng-template>
+                                <div class="row" [formGroupName]="step.field_name" *ngIf="step.list_of_fields != null">
+                                    <div  *ngFor="let fields of step.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
+                                        <div *ngIf="fields.type == 'text'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>                                           
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" *ngIf="fields.datatype != 'first_cap'" [id]="fields._id+'_'+fields.field_name">               
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" appTitleCase *ngIf="fields.datatype == 'first_cap'" [id]="fields._id+'_'+fields.field_name">
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'password'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'email'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput type="email" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            </mat-form-field>                            
+                                        </div>
+                                        <div *ngIf="fields.type == 'date'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput [matDatepicker]="picker2" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'time'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly [id]="fields._id+'_'+fields.field_name">
+                                                <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'number'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <input matInput type="number" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" (keyup)="inputOnChangeFunc(fields)" *ngIf="fields.datatype != 'numberOnly' && fields.datatype != 'mask'" [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [minlength]="fields.min_length" [maxlength]="fields.max_length" NumberOnly="true" *ngIf="fields.datatype == 'numberOnly'" [id]="fields._id+'_'+fields.field_name"> 
+                                                <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'mask'" [id]="fields._id+'_'+fields.field_name"> 
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'dropdown'">
+                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
+                                                <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" [id]="fields._id+'_'+fields.field_name" >
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                        {{getddnDisplayVal(staticValue)}}
+                                                    </mat-option>
+                                                    <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype != 'object' && fields.datatype != 'key_value'">
+                                                <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  [id]="fields._id+'_'+fields.field_name">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                        {{getddnDisplayVal(staticValue)}}
+                                                    </mat-option>
+                                                    <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'key_value'">
+                                                <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  [id]="fields._id+'_'+fields.field_name">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                        {{getddnDisplayVal(staticValue)}}
+                                                    </mat-option>
+                                                    <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'typeahead'">
+                                            <div class="w-100 position-relative d-flex" *ngIf="fields.datatype != 'chips'">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                    <mat-label>{{fields.label}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                    <input type="text" [placeholder]="fields.label"   aria-label="Number" matInput [formControlName]="fields.field_name" [matAutocomplete]="first"
+                                                        (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
+                                                    <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,false)" [displayWith]="getOptionText">
+                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                        <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
+                                                    <mdb-icon fas icon="plus"></mdb-icon>
+                                                </button>
+                                            </div>
+                                            <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                    <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                    <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                        <mat-chip *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
+                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                        </mat-chip>
+                                                        <input type="text" #chipsInput [placeholder]="fields.label" [required]="fields.is_mandatory && fields.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="fields.field_name"
+                                                            [matAutocomplete]="first" [matChipInputFor]="chipList"
+                                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
+                                                        <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,true,chipsInput)" [displayWith]="getOptionText">
+                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                            <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-chip-list>
+                                                </mat-form-field>                                
+                                            </div>
+
+                                            <div *ngIf="fields.datatype == 'list_of_object'">
+                                                <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
+                                                        <p class="m-0 small">{{ getddnDisplayVal(item) }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                    </div>                                                
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div *ngIf="fields.type == 'list_of_checkbox'">
+                                            <div class="row">
+                                                <div class="col-lg-12 px-0">
+                                                    <div class="card-header border-0  px-2 py-1 mb-1">{{ fields.label | titlecase}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row" [formArrayName]="fields.field_name">
+                                                <div class="col-lg-3" *ngFor="let order of staticData[fields.ddn_field]; let i = index">
+                                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ getddnDisplayVal(order) }}</mat-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="fields.type == 'checkbox'">
+                                            <mat-checkbox color="primary" class="example-margin" [formControlName]="fields.field_name">{{ fields.label | titlecase}}</mat-checkbox>
+                                        </div>
+                                        <div *ngIf="fields.type == 'list_of_string'">
+                                            <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips' || fields.datatype == 'chips_with_mask'">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100"  >
+                                                    <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                    <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,step,fields)">
+                                                        <mat-chip *ngFor="let item of custmizedFormValueData(step,fields); let i = index" cdkDrag [selectable]="selectable"
+                                                                [removable]="removable" (removed)="openModal('confirm-modal',i,step,fields,item,'delete')">
+                                                                {{getddnDisplayVal(item)}}
+                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                        </mat-chip>
+                                                        <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
+                                                        <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
+                                                    </mat-chip-list>
+                                                </mat-form-field>   
+                                            </div>
+                                            <div class="w-100 position-relative" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                    <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                    <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" (keyup)="setValue(step,fields,false)">
+                                                </mat-form-field>
+                                                <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="isEnable(step.field_name,fields.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                            </div>
+                                            <!-- <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
+                                                <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <div class="row border-bottom typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
+                                                        <div class="col-lg-9">
+                                                            <p class="m-0 small">{{item}}</p>
+                                                        </div>
+                                                        <div class="col-lg-3 text-right pr-0 pl-0">                        
+                                                            <a class="btn-sm btn-danger m-0 small text-white" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                        <div *ngIf="fields.type == 'html'">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="card-header border-0 ">{{ fields.label | titlecase}}</div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <angular-editor [formControlName]="fields.field_name" [config]="editorConfig"></angular-editor>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="fields.type == 'tree_view_selection'">
+                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  >
+                                                    <mat-option *ngFor="let data of treeViewData[step.field_name][fields.field_name]" [value]="data">
+                                                        {{getddnDisplayVal(data)}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView(step,fields)">Tree View</span>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'dropdown_on_tree_view_selection'">
+                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
+                                                <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue(step,fields,false)" >
+                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                                </mat-select>
+                                                <span class="tree_view_class cursor-pointer" (click)="openTreeView(step,fields)">Tree View</span>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fields.type == 'grid_selection'"> 
+                                            <div class="row card-header border-0 px-2 py-0 mb-1 m-0 w-100">
+                                                <div class="col-lg-6 px-0 grid-selection-title">
+                                                    <div class="">{{ fields.label | titlecase}} <span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                                </div>
+                                                <div class="col-lg-6 px-0">
+                                                    <button *ngIf="fields.datatype != 'grid_review'" (click)="setValue(step,fields,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">keyboard_arrow_down</span></button>
+                                                    <button *ngIf="custmizedFormValue[fields.field_name] && custmizedFormValue[fields.field_name].length > 0 && fields.datatype == 'grid_review'" (click)="reviewParameters(fields,custmizedFormValue[fields.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">reviews</span></button>
+                                                </div>
+                                            </div>                            
+                                            <div class="row" *ngIf="custmizedFormValue[fields.field_name]">
+                                                <div class="col-lg-12 table-responsive py-2" >
+                                                    <table mdbTable class="z-depth-1" *ngIf="custmizedFormValue[fields.field_name].length > 0">
+                                                        <thead>
+                                                            <tr>                                
+                                                                <th *ngFor="let fieldName of fields.gridColumns" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let data of custmizedFormValue[fields.field_name]; let i = index">
+                                                                <td *ngFor="let fieldName of fields.gridColumns">
+                                                                    <span disabled *ngIf="fieldName.type=='checkbox'" >
+                                                                        <mat-checkbox color="primary" 
+                                                                            [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
+                                                                    </span>
+                                                                    <span *ngIf="fieldName.type!='checkbox'"  [innerHtml]="getValueForGrid(fieldName,data)"></span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="fields.type == 'file'">
+                                            <button class="btn bg-cerulean btn-rounded btn-sm waves-light" (click)="uploadModal('',fields)" mdbWavesEffect [disabled]="fields.is_disabled">{{fields.label}}</button> 
+                                            <!-- list of attachment files -->
+                                            <div *ngIf="dataListForUpload[fields.field_name] && dataListForUpload[fields.field_name].length > 0">
+                                                <table mdbTable small="true" bordered="true">
+                                                    <thead class="black white-text">
+                                                        <tr>
+                                                            <th class="black" *ngFor="let head of ['Name', 'Type', 'Action']" scope="col">{{head}} </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr mdbTableCol *ngFor="let file of dataListForUpload[fields.field_name]; let i = index">
+                                                            <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
+                                                            <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
+                                                            <td>
+                                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
+                                                                <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>                           
+                                        </div> 
+                                        <div *ngIf="fields.type == 'input_with_uploadfile'">
+                                            <div class="w-100 position-relative">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                    <mat-label>{{ fields.label | titlecase}}</mat-label>
+                                                    <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name">
+                                                </mat-form-field>
+                                                <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(step,fields)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList(step,fields)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
+                                                    ></button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="fields.type == 'radio'">
+                                            <div class="row m-0 w-100">
+                                                <div class="col-lg-12 px-0">
+                                                    <div class="card-header border-0  px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row m-0 w-100" *ngIf="fields.datatype == 'key_value'">
+                                                <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(fields)">
+                                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                                </mat-radio-group>
+                                            </div>
+                                            <div class="row m-0 w-100" *ngIf="fields.datatype != 'key_value'">
+                                                <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(fields)">
+                                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                                </mat-radio-group>
+                                            </div>
+                                        </div>
+                                    </div>                                        
+                                </div>
+                                <button mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect matStepperPrevious *ngIf="j != 0">Back</button>
+                                <button mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect matStepperNext *ngIf="tableField.list_of_fields.length-1 != j">Next</button>
+                                <span *ngFor="let action_button of formFieldButtons; let i=index" >            <span [ngClass]="getButtonDivClass(action_button)" [id]="action_button._id" *ngIf="tableField.list_of_fields.length-1 == j">            
+                                        <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
+                                    </span>
+                                </span>
+                                <mat-spinner diameter="25" *ngIf="!dataSaveInProgress && tableField.list_of_fields.length-1 == j"></mat-spinner>
+                            </mat-step>                            
+                          </mat-vertical-stepper>
+                        <div *ngIf="tableField.type == 'gmap'">
+                            <!-- <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput (keydown.enter)="$event.preventDefault()" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControlName]="tableField.field_name">
+                            </mat-form-field> -->
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
+                              </div>
+                            <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
+                                <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                                  ></agm-marker>
+                            </agm-map>
+                        </div>
+                        <div *ngIf="tableField.type == 'step_progress_bar'">
+                            <div class="row">
+                                <div class="col-lg-12 px-0">
+                                    <div class="px-0 py-1 my-2 ml-3 mr-2 form-label">{{ tableField.label | titlecase}}</div>
+                                    <button [matTooltip]="'Refresh'" [matTooltipPosition]="'above'" mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshApiCall(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
+                                </div>
+                            </div>
+                            <div class="stepper-wrapper">
+                                <div class="stepper-item completed" *ngFor="let progress of staticData[tableField.ddn_field]" [ngClass]="{completed : progress.status == 'complete',active : progress.status == 'progress',cancel : progress.status == 'cancel',hold: progress.status == 'hold'}">
+                                    <div class="step-counter" [matTooltip]="progress.label +' '+progress.status"
+                                    [matTooltipClass]="'tooltip-'+progress.status" [matTooltipPosition]="'above'">
+                                        <span *ngIf="progress.status == 'pending'"></span>
+                                        <span class="material-icons" *ngIf="progress.status == 'complete'">done</span>
+                                        <span class="material-icons" *ngIf="progress.status == 'progress'">change_history</span>
+                                    </div>
+                                    <div class="step-name">
+                                        <p *ngIf="progress.label" class="m-0">{{progress.label}}</p>
+                                        <p *ngIf="progress.date" class="m-0">{{progress.date}}</p>
+                                        <p *ngIf="progress.info" class="m-0">{{progress.info}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div [ngClass]="checkFormType()?'col-lg-4':'d-none'">
+                <div *ngFor="let tableField of tableFields; let i = index" [id]="tableField.field_name+'_'+tableField.type">
+                    <div *ngIf="tableField.type == 'info_html'">
+                        <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                          
+                    </div>                           
+                </div>
+            </div>
+        </div>
+    </div>        
+    <!--Footer-->
+    <div class="modal-footer py-0 row m-0 w-100" *ngIf="!isStepper">
+        <span *ngFor="let action_button of formFieldButtons; let i=index" [ngClass]="getButtonDivClass(action_button)" [id]="action_button._id">
+            <div *ngIf="action_button.type == 'dropdown'" >
+                <mat-form-field appearance="outline" class="w-100" *ngIf="action_button.datatype == 'object'">
+                    <mat-label>{{ action_button.label | titlecase}}</mat-label>
+                    <mat-select [compareWith]="compareObjects" [formControlName]="action_button.field_name" (selectionChange)="setValue('',action_button,false)" [required]="action_button.is_mandatory" >
+                        <mat-option *ngFor="let staticValue of staticData[action_button.ddn_field]" [value]="staticValue">
+                            {{getddnDisplayVal(staticValue)}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error class="text-danger" *ngIf="templateFormControl[action_button.field_name].touched && templateFormControl[action_button.field_name].errors?.required">
+                        {{ action_button.label | titlecase}} is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="w-100" *ngIf="action_button.datatype != 'object'">
+                    <mat-label>{{ action_button.label | titlecase}}</mat-label>
+                    <mat-select [formControlName]="action_button.field_name" (selectionChange)="setValue('',action_button,false)" [required]="action_button.is_mandatory">
+                        <mat-option *ngFor="let staticValue of staticData[action_button.ddn_field]" [value]="staticValue">
+                            {{getddnDisplayVal(staticValue)}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error class="text-danger" *ngIf="templateFormControl[action_button.field_name].touched && templateFormControl[action_button.field_name].errors?.required">
+                        {{ action_button.label | titlecase}} is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="noshadow rounded bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
+        </span>               
+        <mat-spinner diameter="40" *ngIf="!dataSaveInProgress" class="custom-spinner"></mat-spinner>
+        <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button>
+        <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formDeleteBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Delete</button>
+        <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formResetBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Reset</button>
+    </div>
+</div>
+<app-confirm-modal id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
+<app-tree-view-modal id="tree-view-modal" (treeViewResponce)="treeViewResponce($event)"></app-tree-view-modal>
+<app-grid-selection-modal id="grid-selection-modal" (gridSelectionResponce)="gridSelectionResponce($event)"></app-grid-selection-modal>
+<app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
+<app-file-upload-modal id="file-upload-modal" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-preview-modal id="form-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>

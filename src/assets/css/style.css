@@ -1,0 +1,110 @@
+body {
+  font-size: 16px !important;
+  line-height: 20px !important;
+  font-weight: 400 !important ;
+  font-family: 'DINProRegular' !important;
+}
+
+@font-face {
+    font-family: 'DINProRegular';
+    src: url;
+    src: url('../fonts/DINProRegular.eot') format('embedded-opentype'),
+         url('../fonts/DINProRegular.woff2') format('woff2'),
+         url('../fonts/DINProRegular.woff') format('woff'),
+         url('../fonts/DINProRegular.ttf') format('truetype'),
+         url('../fonts/DINProRegular.svg#DINProRegular') format('svg');
+}
+@font-face {
+  font-family: 'DINProBold';
+  src: url('../fonts/DINProBold.eot');
+  src: url('../fonts/DINProBold.eot') format('embedded-opentype'),
+       url('../fonts/DINProBold.woff2') format('woff2'),
+       url('../fonts/DINProBold.woff') format('woff'),
+       url('../fonts/DINProBold.ttf') format('truetype'),
+       url('../fonts/DINProBold.svg#DINProBold') format('svg');
+}
+
+button:focus, input:focus, textarea:focus, select:focus {outline:none;}
+ul,ol,li {margin:0;padding:0;list-style:none;}
+img {max-width:100%;}
+a, a:hover {text-decoration:none;}
+button {border:none;}
+.card {background:#fff;border-radius:5px;border:none;box-shadow:0px 0px 20px 0px rgb(44 101 144 / 10%);}
+
+
+.section_title{position:relative;display:flex;justify-content:center;margin-bottom:50px;}
+.section_title .front{font:48px/60px DINProRegular;color:#444;padding-bottom:25px;position:relative;margin:0;}
+.section_title .front:after {content:"";position:absolute;bottom:5px;width:90px;height:2px;background:#016be3;margin:auto;left:0;right:0;}
+
+
+/*-- Header --*/
+.navbar {box-shadow:none !important;}
+.navbar-nav .nav-link {font-family: 'DINProRegular';font-size:15px;color:#555;margin-left:10px;}
+.navbar-nav .nav-link.login {width:90px;height:32px;background:#ffc522;border-radius:10px;color:#fff;text-align:center;line-height:16px;}
+.dropdown-menu .dropdown-item:hover {background:#77bbe8;}
+/*-- Banner --*/
+.banner {padding:50px 0 0;}
+.banner h3 {font-family:'DINProBold';font-size:42px;font-weight:bold;color:#231f20;}
+.banner span {display:block;}
+.banner p {font-size:16px;line-height:24px;}
+.banner button {background:#ffc522;border:1px solid #ffc522;color:#fff;font-family:'DINProBold';}
+
+
+/*--Solutions  --*/
+.solutionsitems ul {margin:0;padding:0;list-style:none; text-align:center;}
+.solutionsitems li {cursor:pointer;margin:8px;width:125px;display:inline-block;height:120px;vertical-align:top;padding:15px 0;background-color:#fff;border-radius:7px;box-shadow:0 0 8px rgb(0 0 0 / 15%);transition:all 0.3s ease-in-out;}
+.solutionsitems li img {width:50px;}
+.solutionsitems li span {margin:10px;font-size:14px;display:block;color:#7f7f7f;line-height:16px;}
+.solutionsitems li:hover {transform:translate3d(0,-10px,0);box-shadow:0 0 20px rgb(0 0 0 / 20%);}
+
+/*--Services --*/
+.services p {font-size:17px;color:#575757;line-height:27px;padding-bottom:5px;margin:0;}
+.services h3 {color:#444;font-size:24px;font-family:'DINProBold';margin-bottom:15px;}
+/* .services .readmore {font-size:16px;color:#016be3;padding:10px 0;vertical-align:middle;}
+.services .readmore i {padding-left:5px;font-size:15px;} */
+.services ul {margin:15px;}
+.services ul li {font-size:16px;margin:10px 0;color:#555;display:flex;align-items:center;}
+.services ul li i {margin-right:10px;opacity:0.7;}
+.services img {transition:transform .2s;}
+.services img:hover {transform: scale(1.1);}
+
+/*-- Testimonial  --*/
+.clientsay {background:#f6f6f6;padding:20px;border-radius:5px;text-align:center;transition:all 0.5s;}
+.clientsay:hover {box-shadow:0 0 20px rgb(0 0 0 / 20%);}
+.clientimg {width:120px;height:120px;margin:10px auto;position:relative;}
+.clientimg:after {content:"\f10e";position:absolute;right:0;bottom:0;background:#77bbe8;width:35px;height:35px;border-radius:100%;padding:5px;font-family:"Font Awesome 5 Free";font-weight:900;color:#fff;line-height:30px;}
+.clientname {padding:20px 0 0;position:relative;margin-top:25px;}
+.clientname:after {content:"";position:absolute;left:0;right:0;top:0;border-top:5px solid #77bce8;width:70px;margin:auto;}
+.clientname h3 {color:#6e6e6e;font-weight:bold;font-size:20px;}
+.clientname p {margin:0;font-size:16px;}
+
+/*-- Home Page Blog Post  --*/
+.blogitems {border-right:8px solid #e3e3e3;border-bottom:8px solid #e3e3e3;}
+.blogitems .dateinfo p {color:#328ef6;font-size:13px;}
+
+/*--Action Widget  --*/
+.widget {padding:100px 0;font-family:'DINProBold';background:url(../images/actionbg.jpg) no-repeat;background-size:cover;background-attachment:fixed; position:relative;}
+.widget:after {content:"";position:absolute;left:0;top:0;background:rgba(119,188,232,0.6);width:100%;height:100%;}
+.widgetinfo {position:relative;z-index:2;text-align:center;max-width:885px;margin:auto;color:#fff;}
+.widgetinfo p {font-size:40px;line-height:60px;margin:0;}
+
+
+/*-- Subscribe  --*/
+.subscribe {background:#77bce8;}
+.subscribeform {max-width:510px;margin:auto;}
+.subscribe h3 {font-family:'DINProBold';font-size:43px;color:#fff;margin-bottom:30px;}
+.subscribe input {width:100%;height:48px;padding:10px;border:none;border-radius:10px;margin-bottom:30px;font-size:20px;}
+.subscribe button {min-width:185px;height:40px;background:#f9d074;border-radius:10px;color:#fff;text-align:center;font-size:26px;}
+
+
+
+/*-- Solutions InnerPage  --*/
+
+
+@media (min-width: 1200px){
+.container, .container-lg, .container-md, .container-sm, .container-xl {max-width:1170px;}
+}
+
+@media (max-width: 1199px){ 
+  .navbar-nav .nav-link {margin:0;padding:5px;}
+}

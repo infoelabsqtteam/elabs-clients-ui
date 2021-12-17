@@ -1,0 +1,25 @@
+:root{
+    --progress-bar-complete-color:#55b776;
+    --progress-bar-progress-color:#ffff00;
+    --progress-bar-pending-color:#ccc;
+    --progress-bar-cancel-color:#FF0000;
+    --progress-bar-hold-color:#ffa500;
+    --white-color:#fff;
+    --black-color:#000;
+}
+.stepper-wrapper{margin-top:$auto;display:$dflex;justify-content:space-between;margin-bottom:$size20}
+.stepper-item{position:$relative;display:$dflex;flex-direction:column;align-items:$center;flex:$one}
+.stepper-item::after{position:$absolute;content:"";border-bottom:2px solid var(--progress-bar-pending-color);width:$per100;top:$size15;left:$per50;z-index:2}
+.stepper-item .step-counter{position:$relative;z-index:5;display:$dflex;justify-content:$center;align-items:$center;width:$size30;height:$size30;border-radius:$per50;background:var(--white-color);margin-bottom:$size6;border:2px solid;border-color:var(--progress-bar-pending-color);color:var(--black-color)}
+.stepper-item.active{font-weight:$fw-700}
+.stepper-item.active .step-counter{background-color:var(--white-color);border-color:var(--progress-bar-progress-color);color:var(--progress-bar-progress-color)}
+.stepper-item.hold .step-counter{background-color:var(--white-color);border-color:var(--progress-bar-hold-color);color:var(--progress-bar-hold-color)}
+.stepper-item.cancel .step-counter{background-color:var(--white-color);border-color:var(--progress-bar-cancel-color);color:var(--progress-bar-cancel-color)}
+.stepper-item.completed .step-counter{background-color:var(--white-color);border-color:var(--progress-bar-complete-color);color:var(--progress-bar-complete-color)}
+.stepper-item.completed::after{position:$absolute;content:"";border-bottom:2px solid var(--progress-bar-complete-color);width:$per100;top:$size15;left:$per50;z-index:3}
+.stepper-item:first-child::before{content:none}.stepper-item:last-child::after{content:none}.stepper-item .step-counter .material-icons{font-weight:$fw-700;font-size:$size15!important}
+.step-name{text-align:$center}
+.tooltip-complete{background:var(--progress-bar-complete-color)}
+.tooltip-progress{background:var(--progress-bar-progress-color)}
+.tooltip-pending{background:var(--progress-bar-pending-color)}
+.step-name p{font-size:$size12;line-height:1.2!important}

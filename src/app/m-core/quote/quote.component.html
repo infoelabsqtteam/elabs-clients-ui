@@ -1,0 +1,643 @@
+<div *ngIf="isInfoFeild">
+    <section class="bg-white mt-5">
+
+
+
+        <mat-horizontal-stepper labelPosition="bottom" #stepper>
+            <mat-step>
+                <form>
+                    <ng-template matStepLabel>Fill out your name</ng-template>
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <button class="custombtn" type="button" mdbBtn size="sm" [disabled]="!quoteForm.valid" mdbWavesEffect matStepperNext>Next</button>
+                        </div>
+                    </div>
+
+
+                    <div class="h-100 py-1">
+                        <div class="container h-100">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h1>Enter Your Information</h1>
+                                </div>
+                            </div>
+                            <form [formGroup]="quoteForm">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>First Name</mat-label>
+                                            <input matInput placeholder="Enter First Name" formControlName="first_name">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Last Name</mat-label>
+                                            <input matInput placeholder="Enter Last Name" formControlName="last_name">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Email</mat-label>
+                                            <input matInput placeholder="Enter Email" formControlName="email">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Company</mat-label>
+                                            <input matInput placeholder="Enter Company Name" formControlName="company">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Phone</mat-label>
+                                            <input type="number" matInput placeholder="Enter Phone Number" formControlName="phone">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h1>Address</h1>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Address</mat-label>
+                                            <input matInput placeholder="Enter Address" formControlName="address">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Address 2</mat-label>
+                                            <input matInput placeholder="Enter Another Address" formControlName="address2">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>City</mat-label>
+                                            <input matInput placeholder="Enter City" formControlName="city">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>State</mat-label>
+                                            <input matInput placeholder="Enter Phone Number" formControlName="state">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Zip</mat-label>
+                                            <input matInput placeholder="Enter Zip Code" formControlName="zip">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Country</mat-label>
+                                            <input matInput placeholder="Enter Phone Number" formControlName="country">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <button class="custombtn" type="button" mdbBtn size="sm" [disabled]="!quoteForm.valid" mdbWavesEffect matStepperNext>Next</button>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div>
+                        <button mat-button>Next</button>
+                    </div> -->
+                </form>
+            </mat-step>
+            <mat-step>
+                <form>
+                    <ng-template matStepLabel>Describe Your Product</ng-template>
+                    <div class="d-flex justify-content-between pt-2 mb-4">
+                        <button class="custombtn" mat-button matStepperPrevious>Back</button>
+                        <button class="custombtn" mat-button matStepperNext>Next</button>
+                    </div>
+                    <mat-form-field class="w-100">
+                        <mat-label>Please select department</mat-label>
+                        <mat-select (selectionChange)="onDepartmentChange($event)">
+                            <mat-option *ngFor="let list of departmentsList" [value]="list">{{list.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Select Product</ng-template>
+                <div class="d-flex justify-content-between pt-4">
+                    <button class="custombtn" mat-button matStepperPrevious>Back</button>
+                    <button class="custombtn" mat-button matStepperNext>Next</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 border-right">
+
+
+                        <!-- <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let item of categoryDataList; let i =index" data-toggle="collapse" data-target="#demo">{{item.name}}
+                            <ul class="list-group list-group-flush" *ngIf="item.subCategory.length > 0">
+                                <li class="list-group-item" *ngFor="let item1 of item.subCategory">
+                                    {{item1}}
+                                </li>
+                            </ul>
+                        </li>
+                      </ul>
+                      <div id="demo" class="collapse">
+                          hello
+                      </div> -->
+
+                        <mat-tree [dataSource]="dataSource11" [treeControl]="treeControl" class="example-tree">
+                            <!-- This is the tree node template for leaf nodes -->
+                            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                                <li class="mat-tree-node">
+                                    <!-- use a disabled button to provide padding for tree leaf -->
+                                    <button mat-icon-button></button> {{node.name}}
+                                </li>
+                            </mat-tree-node>
+                            <!-- This is the tree node template for expandable nodes -->
+                            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                                <li>
+                                    <div class="mat-tree-node">
+                                        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                                <mat-icon class="mat-icon-rtl-mirror">
+                                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                </mat-icon>
+                              </button><span (click)="logNode(node)"> {{node.name}}</span>
+                                    </div>
+                                    <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                                        <ng-container matTreeNodeOutlet></ng-container>
+                                    </ul>
+                                </li>
+                            </mat-nested-tree-node>
+                        </mat-tree>
+
+
+
+
+                    </div>
+                    <div class="col-lg-8">
+
+                        <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8 w-100">
+
+
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Action">
+                                <th mat-header-cell *matHeaderCellDef> Action </th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <!-- <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect [ngClass]="selectedButton[element.position] ? ''" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button> -->
+                                    <button type="button" style="width: 100px;" matStepperNext (click)="selectProduct(element)" class="btn btn-sm">select</button>
+                                </td>
+                            </ng-container>
+
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                        </table>
+
+
+                    </div>
+                </div>
+
+                <!-- <div class="d-flex justify-content-between pt-5">
+                    <button class="custombtn" mat-button matStepperPrevious>Back</button>
+                    <button class="custombtn" mat-button matStepperNext>Next</button>
+                </div> -->
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Select Testing Method</ng-template>
+                <div class="d-flex justify-content-between pt-2 mb-4">
+                    <button class="custombtn" mat-button matStepperPrevious>Back</button>
+                    <button class="custombtn" mat-button matStepperNext>Next</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-8">
+
+                        <table mat-table [dataSource]="selectedDepartment.regulations" class="mat-elevation-z8 w-100">
+
+
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="All Parameters">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <!-- <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect [ngClass]="selectedButton[element.position] ? ''" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button> -->
+                                    <button type="button" matStepperNext (click)="selecTestMethod('ALL',element)" class="btn btn-sm">All Parameters</button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Partial">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <!-- <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect [ngClass]="selectedButton[element.position] ? ''" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button> -->
+                                    <button type="button" matStepperNext (click)="selecTestMethod('PARTIALS',element)" class="btn btn-sm"> Partials</button>
+                                </td>
+                            </ng-container>
+
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsTest"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsTest;"></tr>
+                        </table>
+
+
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button class="custombtn" mat-button matStepperNext>Next</button>
+                </div>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Select Testing Parameters</ng-template>
+                <div class="d-flex justify-content-between pt-2 mb-4">
+                    <button class="custombtn" mat-button matStepperPrevious>Back</button>
+                    <button class="custombtn" mat-button matStepperNext (click)="setSelectedTestParam()">Next</button>
+                </div>
+                <!-- <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button class="custombtn" mat-button matStepperNext (click)="setSelectedTestParam()">Next</button>
+                </div> -->
+                <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-8">
+
+                        <table mat-table [dataSource]="testParameters" class="mat-elevation-z8 w-100">
+
+
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="selected">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <mat-checkbox [checked]="element.selected" (change)="onTestChange($event, i)"></mat-checkbox>
+                                    <!-- <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect [ngClass]="selectedButton[element.position] ? ''" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button> -->
+                                    <!-- <button type="button" matStepperNext (click)="selecTestMethod('ALL',element)" class="btn btn-sm">All Parameters</button> -->
+                                </td>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="Partial">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect [ngClass]="selectedButton[element.position] ? ''" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button>
+                            <button type="button" matStepperNext (click)="selecTestMethod('PARTIALS',element)" class="btn btn-sm"> Partials</button>
+                            </td>
+                            </ng-container> -->
+
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsTestParam"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsTestParam;"></tr>
+                        </table>
+
+
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Review And Confirm</ng-template>
+                <div class="d-flex justify-content-between pt-2 mb-4">
+                    <button class="custombtn" mat-button matStepperPrevious>Back</button>
+                </div>
+
+                <mat-card class="h-100 py-1">
+                    <div class="container h-100">
+                        <div class="row d-flex justify-content-between">
+                            <h1>Confirm all information</h1>
+                            <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect (click)="saveAllInfo()">Submit</button>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" id="editInfo">
+                                <div class="row">
+                                    <h2>General Information</h2>
+                                </div>
+                                <div>
+                                    {{this.quoteForm.get('first_name').value}} {{ this.quoteForm.get('last_name').value}}
+                                </div>
+                                <div class="d-flex flex-row">
+                                    {{this.quoteForm.get('email').value}}
+                                    <mat-icon class="ml-3" (click)="updateInfo()">edit</mat-icon>
+                                </div>
+                                <div>
+                                    {{this.quoteForm.get('company').value}}
+                                </div>
+                                <div>
+                                    {{this.quoteForm.get('phone').value}}
+                                </div>
+                            </div>
+                            <div class="col-lg-6" id="editInfo">
+                                <div>
+                                    <h2>Mailing Information</h2>
+                                </div>
+                                <div>
+                                    {{this.quoteForm.get('address').value}}
+                                </div>
+                                <div class="d-flex flex-row">
+                                    {{this.quoteForm.get('city').value}}, {{ this.quoteForm.get('state').value}}
+                                    <mat-icon class="ml-3" (click)="updateInfo()">edit</mat-icon>
+                                </div>
+                                <div>
+                                    {{this.quoteForm.get('zip').value}}
+                                </div>
+                                <div>
+                                    {{this.quoteForm.get('country').value}}
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- <div class="row mt-3">
+                            <h1>Selected Tests</h1>
+                        </div>
+                        <div class="row">
+                            <ul class="list-group w-100">
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-0" *ngFor="let item of selectedDataList">{{item.name}}
+                                    <span>{{item.weight}}</span>
+                                    <span>{{item.symbol}}</span>
+                                    <button class="btn customColor btn-sm" (click)="removeFromList(item)">Remove</button>
+                                </li>
+                            </ul>
+                        </div> -->
+                    </div>
+                </mat-card>
+
+                <mat-card class="h-100 py-1">
+                    <div class="container h-100">
+                        <div class="row">
+                            <div class="col-lg-4" id="editInfo">
+                                <div class="row">
+                                    <h2>Product Information</h2>
+                                </div>
+                                <div>
+                                    {{this.selectedDepartment.name}}
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4" id="editInfo">
+                                <div>
+                                    <h2>Selected Product</h2>
+                                </div>
+                                <div>
+                                    {{this.selectedProduct.name}}
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-4" id="editInfo">
+                                <div>
+                                    <h2>Selected Test Method</h2>
+                                </div>
+                                <div>
+                                    {{this.selectedTestMethod.name}}
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <!--    <div class="row mt-3">
+                        <h1>Selected Tests</h1>
+                    </div>
+                    <div class="row">
+                        <ul class="list-group w-100">
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-0" *ngFor="let item of selectedDataList">{{item.name}}
+                                <span>{{item.weight}}</span>
+                                <span>{{item.symbol}}</span>
+                                <button class="btn customColor btn-sm" (click)="removeFromList(item)">Remove</button>
+                            </li>
+                        </ul>
+                    </div> -->
+                    </div>
+                </mat-card>
+
+                <mat-card class="h-100 py-1">
+                    <div class="container h-100">
+                        <div class="row">
+                            <div class="col-lg-6" id="editInfo">
+                                <div class="row">
+                                    <h2>Selected Test Parameter</h2>
+                                </div>
+                                <div *ngFor="let item of selectedTestParams">
+                                    {{item.name}}
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6" id="editInfo"></div>
+
+                        </div>
+                        <!--    <div class="row mt-3">
+                        <h1>Selected Tests</h1>
+                    </div>
+                    <div class="row">
+                        <ul class="list-group w-100">
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-0" *ngFor="let item of selectedDataList">{{item.name}}
+                                <span>{{item.weight}}</span>
+                                <span>{{item.symbol}}</span>
+                                <button class="btn customColor btn-sm" (click)="removeFromList(item)">Remove</button>
+                            </li>
+                        </ul>
+                    </div> -->
+                    </div>
+                </mat-card>
+            </mat-step>
+        </mat-horizontal-stepper>
+
+
+
+
+    </section>
+</div>
+
+
+<div *ngIf="isOtpFeilds">
+    <section style="height: calc(100vh);">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+
+                <mat-card style="text-align: center;">
+                    <mat-card-title>
+                        <img class="w-25" mat-card-image src="assets/img/template_logo.png" alt="ITC logo">
+                    </mat-card-title>
+                    <mat-divider></mat-divider>
+                    <mat-card-content>
+                        <div class="text-center w-75 m-auto">
+                            <h4 class="text-dark-50 text-center mt-2 font-weight-bold">OTP Verification</h4>
+                        </div>
+
+                        <div *ngIf="enterNoForOtp">
+                            <form class="example-form">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Phone</mat-label>
+                                    <input matInput placeholder="E-Mail" name="email">
+                                </mat-form-field>
+                                <div class="row justify-content-center ">
+                                    <button mat-raised-button color="primary" type="submit" (click)="sendOtp()">Send OTP</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div *ngIf="!enterNoForOtp">
+                            <form class="example-form">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>VERIFICATION CODE</mat-label>
+                                    <input matInput placeholder="Verification Code">
+                                    <mat-hint align="end"><a class="text-muted">Resend Verification Code?</a></mat-hint>
+                                </mat-form-field>
+                                <div class="row justify-content-center ">
+                                    <button mat-raised-button color="primary" type="submit" (click)="gotoGridData()">Verify & Next</button>
+                                </div>
+                            </form>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+
+
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<div *ngIf="isGrid">
+    <div class="d-flex justify-content-between">
+        <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search test...">
+        </mat-form-field>
+        <h4 class="pr-3 my-auto">Total Selected <span class="bg-light px-3 py-1" *ngIf="selectedDataList"> {{selectedDataList.length}}</span></h4>
+        <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect (click)="review()">Review & Submit</button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-100">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Branch </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef> Category </th>
+            <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="symbol">
+            <th mat-header-cell *matHeaderCellDef> Class </th>
+            <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+                <!-- <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect [ngClass]="selectedButton[element.position] ? ''" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button> -->
+                <button type="button" style="width: 100px;" class="btn btn-sm" [ngClass]="selectedButton[element.position] ? 'btn-light' : 'customColor'" (click)="enableDisableRule(element)">{{selectedButton[element.position] ? 'Remove' : 'Add'}}</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+</div>
+
+<div *ngIf="conformDetails">
+    <section style="height: calc(100vh - 124px);">
+        <mat-card class="h-100 py-1">
+            <div class="container h-100">
+                <div class="row d-flex justify-content-between">
+                    <h1>Confirm all information</h1>
+                    <button type="button" mdbBtn size="sm" color="info" mdbWavesEffect (click)="saveAllInfo()">Submit</button>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-6" id="editInfo">
+                        <div class="row">
+                            <h2>General Information</h2>
+                        </div>
+                        <div>
+                            {{this.quoteForm.get('first_name').value}} {{ this.quoteForm.get('last_name').value}}
+                        </div>
+                        <div class="d-flex flex-row">
+                            {{this.quoteForm.get('email').value}}
+                            <mat-icon class="ml-3" (click)="updateInfo()">edit</mat-icon>
+                        </div>
+                        <div>
+                            {{this.quoteForm.get('company').value}}
+                        </div>
+                        <div>
+                            {{this.quoteForm.get('phone').value}}
+                        </div>
+                    </div>
+                    <div class="col-lg-6" id="editInfo">
+                        <div>
+                            <h2>Mailing Information</h2>
+                        </div>
+                        <div>
+                            {{this.quoteForm.get('address').value}}
+                        </div>
+                        <div class="d-flex flex-row">
+                            {{this.quoteForm.get('city').value}}, {{ this.quoteForm.get('state').value}}
+                            <mat-icon class="ml-3" (click)="updateInfo()">edit</mat-icon>
+                        </div>
+                        <div>
+                            {{this.quoteForm.get('zip').value}}
+                        </div>
+                        <div>
+                            {{this.quoteForm.get('country').value}}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <h1>Selected Tests</h1>
+                </div>
+                <div class="row">
+                    <ul class="list-group w-100">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-0" *ngFor="let item of selectedDataList">{{item.name}}
+                            <span>{{item.weight}}</span>
+                            <span>{{item.symbol}}</span>
+                            <button class="btn customColor btn-sm" (click)="removeFromList(item)">Remove</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </mat-card>
+
+    </section>
+</div>
