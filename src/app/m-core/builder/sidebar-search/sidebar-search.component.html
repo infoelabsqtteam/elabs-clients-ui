@@ -1,0 +1,21 @@
+<div class="search-sidebar">
+    <div class="select-filter-type mb-1">
+        <select class="form-control form-control-sm" [(ngModel)]="filter.filterType">
+            <option [value]="column.field_name" *ngFor="let column of filterGridColumns; let i = index" [selected]="i == 0">{{column.label}}</option>
+        </select>
+    </div>
+    <div class="search-input">
+        <input type="tel" class="form-control form-control-sm" [placeholder]="'Search...'"  [(ngModel)]="filter.search" (keyup)="searchData()">
+    </div>
+    <div class="content-area">
+        <div *ngFor="let item of data" class="mb-1 px-1 py-2 mr-1 hover" (click)="selectContact(item)" [ngClass]="item._id == selectedContact._id?'activeContact':''" style="border-bottom: 1px solid silver;cursor: pointer;">
+            <h1 class="m-0" *ngIf="item && item.first_name && item.last_name">{{item.first_name}}&nbsp;{{item.last_name}}</h1>
+            <h1 class="m-0" *ngIf="item && item.name">{{item.name}} 
+                <span *ngIf="item.source && item.source.name">({{item.source.name}})</span>
+            </h1>
+            <p class="m-0" *ngIf="item.phone">{{item.phone}}</p>
+            <p class="m-0" *ngIf="item && item.lead && item.lead.name">{{item.lead.name}}</p>
+            <small *ngIf="item && item.city">{{item.city}}</small>
+        </div>
+    </div>
+</div>

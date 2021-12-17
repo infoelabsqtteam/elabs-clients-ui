@@ -1,0 +1,81 @@
+.vertical-sub{
+    vertical-align: sub;
+}
+.breadcrumb-item+.breadcrumb-item::before {
+    font-family: "Material Design Icons";
+}
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: #ced4da;
+    content: ">";
+}
+.breadcrumb{
+    background-color: inherit;
+}
+.breadcrumb .btn{
+    box-shadow: inherit;
+}
+.breadcrumb .btn:hover{
+    box-shadow: inherit;
+}
+.breadcrumb .dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 0.255em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.4em solid!important;
+    border-right: 0.4em solid transparent!important;
+    border-bottom: 0;
+    border-left: 0.4em solid transparent!important;
+}
+.breadcrumb .dropdown-menu{
+    top:-30px;
+}
+
+
+.more-details .dropdown-toggle::after {
+    display: none;
+}
+.more-details .dropdown-menu{
+    left: inherit;
+}
+.profile-dropdown i, .profile-dropdown span {
+    vertical-align: middle;
+    font-size: .9rem;
+}
+.dropdown-menu .dropdown-item{
+    padding: .375rem 1.5rem;
+}
+
+.file-grid-view{
+	height: 150px;
+	position: relative;
+}
+.file-grid-view .file-img-col{
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	overflow: hidden;
+	top:0;
+	left: 0;
+}
+.file-grid-view .file-img-col .doc-img{
+	width: 100%;
+}
+.file-grid-view .file-img-col .doc-xls{
+	webkit-box-shadow: 0 0 6px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 0 6px 0 rgba(0,0,0,0.12);
+    margin: 6% 7% 0 7%;
+    width: 86%;
+}
+.icon-img-ext-size{
+	width: 30px;
+}
+.icon-ext-size{
+	width: 22px;
+}
+.document-scroll{
+    overflow: auto;
+    max-height: 95%;
+}

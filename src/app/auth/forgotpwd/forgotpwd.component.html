@@ -1,0 +1,133 @@
+<!-- <div  style="background: url(assets/img/pexels-public-domain-pictures-60022.jpg);height: 100vh;background-size:cover ;">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    
+                    <mat-card style="text-align: center;opacity: 90%;">
+                        <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-cerulean" >
+                            <img class="w-75 mat-card-image m-0" mat-card-image src="assets/img/1.png" alt="E-Labs logo">
+                        </mat-card-title>
+                        <mat-divider></mat-divider>
+                        <mat-card-content>
+                            <div class="text-center w-75 m-auto">
+                                <h4 class="text-dark-50 text-center mt-2 font-weight-bold">Reset Password</h4>
+                            </div>
+
+                          <div *ngIf="resetPwd">
+                            <form class="example-form" [formGroup]="fForm" (ngSubmit)="onResetPwd()">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>E-MAIL</mat-label>
+                                    <input matInput placeholder="E-Mail" name="email" formControlName="email">
+                                </mat-form-field>
+                                <div class="row justify-content-center ">
+                                    <button mat-raised-button color="primary" type="submit">Reset Password</button>
+                                </div>
+                              </form>
+                          </div>
+
+                          <div *ngIf="!resetPwd">
+                            <form class="example-form" [formGroup]="vForm" (ngSubmit)="onVerifyPwd()">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>VERIFICATION CODE</mat-label>
+                                    <input matInput placeholder="Verification Code" formControlName="verifyCode">
+                                    <mat-hint align="end"><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                <div class="row justify-content-center ">
+                                    <button mat-raised-button color="primary" type="submit">Save New Password</button>
+                                </div>
+                              </form>
+                          </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <p class="text-dark">Already have account? <a [routerLink]="['/signin']" class="text-dark ml-1"><b>Log In</b></a></p>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> -->
+
+
+
+
+
+<section class="hero-section-2" id="home" style="background: url(assets/img/bg-1.png) center center;">
+    <div class="container">
+      <div class="row vertical-content justify-content-center">
+        <div class="col-lg-6">
+          <div class="hero-wrapper mb-4" >
+            <!-- <p class="font-16 text-uppercase">Discover Invoza Today</p>
+            <h1 class="hero-title mb-4">Make your Site Amazing & Unique with <span class="text-primary">Invoza</span>
+            </h1>
+
+            <p>To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine
+              occidental</p> -->
+              <p><img src="assets/images/logo.png" alt=""></p>
+              <!-- <h1 class="hero-title mb-1 heading-color" >E-Labs GenNext Automation for Labs</h1>
+              <h2 class="text-color-custom">Deliver More, Deliver Excellence</h2> -->
+
+            <!-- <div class="mt-4">
+              <a href="javascript: void(0);" class="btn btn-primary mt-2 mr-2">Get Started</a>
+              <a href="javascript: void(0);" class="btn btn-success mt-2 mr-2">Learn more</a>
+            </div> -->
+          </div>
+
+        </div>
+
+        <div class="col-lg-4 offset-lg-2">
+          <div class="card mx-auto p-4 rounded mt-lg-0">
+            <div class="text-center">
+              <p class="text-muted mb-2 font-13 text-uppercase">Welcome To E-Labs</p>
+              <!-- <h5 class="form-title mb-4">Get 30 Days Free Trial</h5> -->
+            </div>
+            <form *ngIf="resetPwd" class="registration-form"[formGroup]="fForm">
+              <div class="form-group mb-4">
+                <label class="font-15">Your Email*</label>
+                <input type="email" class="form-control" id="email" placeholder="" name="email" formControlName="email">
+              </div>
+              
+              <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onResetPwd()">Reset Password</button>
+            </form>
+
+            <form *ngIf="!resetPwd" class="registration-form" [formGroup]="vForm">
+                <div class="form-group mb-4">
+                  <label class="font-15">VERIFICATION CODE</label>
+                  <input type="email" class="form-control" id="email" placeholder="" name="email" formControlName="verifyCode">
+                  <mat-hint align="end"><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="font-15">PASSWORD</label>
+                    <input type="password" class="form-control" id="password" placeholder="" name="password" formControlName="password">
+                  </div>
+                
+                <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onVerifyPwd()">Save New Password</button>
+              </form>
+
+            <div class="row mt-2 text-muted">
+                <div class="col-lg-12">
+                    <h4 [routerLink]="['/signin']">Already have account? <a><b> Log In</b></a></h4>
+                </div>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+    <!-- end container -->
+  </section>

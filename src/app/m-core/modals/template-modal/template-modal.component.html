@@ -1,0 +1,27 @@
+<div mdbModal #templateModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content" >
+      <!--Header-->
+      <div class="modal-header py-2">
+        <h4 class="modal-title m-0" >{{templateName}}</h4>
+        <button type="button" class="close py-3 py-2" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body py-1" >
+        <app-apeda-format [id]='objectData' *ngIf="templateName == 'APEDA'"></app-apeda-format>
+        <app-ayurvedic-form [id]='objectData' *ngIf="templateName == 'AYURVEDIC'"></app-ayurvedic-form>
+        <app-bis-form [id]='objectData' *ngIf="templateName == 'BIS'"></app-bis-form>
+        <app-eic-format [id]='objectData' *ngIf="templateName == 'EIC'"></app-eic-format>
+        <app-environment-form [id]='objectData' *ngIf="templateName == 'ENVIRONMENT'"></app-environment-form>
+        <app-pharma-form [id]='objectData' *ngIf="templateName == 'PHARMA'"></app-pharma-form>
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect (click)="modifyTemplate()">save</button>        
+      </div>
+    </div>
+  </div>
+</div>
