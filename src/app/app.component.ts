@@ -1,4 +1,4 @@
-import { Component, OnInit ,HostListener } from '@angular/core';
+import { Component, OnInit ,HostListener, Inject } from '@angular/core';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from '../aws-exports';
@@ -10,7 +10,9 @@ import { ModelService } from './services/model/model.service';
 import { CommonFunctionService } from './services/common-utils/common-function.service';
 import { LoaderService } from './services/loader/loader.service';
 import { ApiService } from './services/api/api.service';
+import { EnvService } from './services/env/env.service';
 
+import { BreadcrumbModule } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-root',
@@ -35,8 +37,14 @@ export class AppComponent implements OnInit {
     private modelService:ModelService,
     private commonfunctionService:CommonFunctionService,
     public loaderService:LoaderService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private envService: EnvService,
+    
+
   ) {
+   
+    this.envService.setDinamicallyHost();
+
     const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
     object["pageNo"] = 0;
     object["pageSize"] = 25;
@@ -67,7 +75,7 @@ export class AppComponent implements OnInit {
 
   
   ngOnInit() {
-    
+    this.envService.setDinamicallyHost();    
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
       //   console.log("Navigation Start :-"+event.url)
@@ -166,4 +174,6 @@ export class AppComponent implements OnInit {
   appSettingModalResponce(event){
     console.log(event);
   }
+
+  
 }

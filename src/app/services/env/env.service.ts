@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Common } from '../../shared/enums/common.enum';
 import { EndPoint } from '../../shared/enums/end-point.enum';
 import { environment } from '../../../environments/environment';
@@ -6,6 +6,9 @@ import { CommonFunctionService } from '../common-utils/common-function.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { StorageTokenStatus } from 'src/app/shared/enums/storage-token-status.enum';
 import { CoreFunctionService } from '../common-utils/core-function/core-function.service';
+
+import { DOCUMENT } from '@angular/common';
+import { serverHostList } from './serverHostList'
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,8 @@ export class EnvService {
 
   constructor(
     private storageService: StorageService,
-    private coreFunctionService:CoreFunctionService
+    private coreFunctionService:CoreFunctionService,
+    @Inject(DOCUMENT) private document: Document,
   ) { }
 
   setHostNameDinamically(host:string){
@@ -35,7 +39,9 @@ export class EnvService {
     if(this.coreFunctionService.isNotBlank(host)){
       baseUrl = this.getHostNameDinamically()
     }else{
-      baseUrl = environment.serverhost
+      // baseUrl = environment.serverhost
+      baseUrl = this.getHostName();
+      this.setDinamicallyHost();
     }
     return baseUrl;
   }
@@ -96,5 +102,40 @@ export class EnvService {
     }
     return false;
   }
+
+
+
+
+
+
+  setDinamicallyHost(){
+    let setHostName = this.getHostNameDinamically();
+    let serverHostName = this.getHostName()
+    if(serverHostName != '' && serverHostName != setHostName) {
+      const hostName = serverHostName +'/rest/';
+      this.setHostNameDinamically(hostName);      
+    }
+  }
+  
+  getHostName(){
+    let hostname = this.document.location.hostname;
+    let serverHostName = '';    
+    if(serverHostList && serverHostList.length > 0){
+      for (let index = 0; index < serverHostList.length; index++) {
+        const element = serverHostList[index];
+        if(hostname == element.clientEndpoint){
+          serverHostName = element.serverEndpoint;
+          break;
+        }        
+      }
+    }
+    return serverHostName;
+  }
+
+
+
+
+
+
 
 }
