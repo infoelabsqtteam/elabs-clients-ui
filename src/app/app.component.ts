@@ -4,7 +4,6 @@ import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 
 import { StorageService } from './services/storage/storage.service';
-import * as appConstant from './shared/app.constants';
 import { DataShareService } from './services/data-share/data-share.service';
 import { ModelService } from './services/model/model.service';
 import { CommonFunctionService } from './services/common-utils/common-function.service';
