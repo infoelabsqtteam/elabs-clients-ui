@@ -1,10 +1,10 @@
 import { Component,Input ,OnInit } from '@angular/core';
 import { Form, FormGroup, NgForm,FormBuilder,FormControl, Validators } from '@angular/forms';
-import * as appConstant from '../../shared/app.constants';
 import { HostListener } from '@angular/core';
 import { Router,ActivatedRoute   } from '@angular/router';
 import { StorageService} from '../../services/storage/storage.service';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
+import { EnvService } from 'src/app/services/env/env.service';
 
 @Component({
   selector: 'app-resetpwd',
@@ -19,11 +19,11 @@ export class ResetpwdComponent implements OnInit {
   resetForm:FormGroup;
 
   constructor(
-    private router: Router,
     private activeRouter :ActivatedRoute,
     private storageService: StorageService,
     private formBuilder: FormBuilder,
-    private authService:AuthService 
+    private authService:AuthService,
+    private envService:EnvService 
   ) {
     
   }
@@ -51,7 +51,7 @@ export class ResetpwdComponent implements OnInit {
     const password = this.resetForm.value.password;
     const session = this.storageService.getResetNewPasswordSession();
     const payload = {
-      appId:appConstant.appId,
+      appId:this.envService.getAppId(),
       data :{ username: userName, password: password, idToken: session }
     }
     this.authService.ResetPass(payload);    

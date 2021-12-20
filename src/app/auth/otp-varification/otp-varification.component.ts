@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
-import * as appConstants from '../../shared/app.constants';
+import { EnvService } from 'src/app/services/env/env.service';
 
 @Component({
   selector: 'app-otp-varification',
@@ -13,11 +13,10 @@ export class OtpVarificationComponent implements OnInit {
 
   OtpVarify: FormGroup;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute, 
+  constructor( 
     private routers: ActivatedRoute,
-    private authService:AuthService
+    private authService:AuthService,
+    private envService:EnvService
     ) { }
 
   ngOnInit(): void {
@@ -40,7 +39,7 @@ export class OtpVarificationComponent implements OnInit {
     });
   }
   onVerifyAccWithOtp() {    
-    const payload = { appName: appConstants.appName, data:this.OtpVarify.value };
+    const payload = { appName: this.envService.getAppName(), data:this.OtpVarify.value };
     this.authService.OtpVarify(payload);
   }
   resendCode(){

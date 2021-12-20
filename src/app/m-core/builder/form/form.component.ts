@@ -8,7 +8,6 @@ import { ModalService } from '../../modals/modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-import * as appConstants from './../../../shared/app.constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { isArray } from 'util';
@@ -22,6 +21,7 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { table } from 'console';
 import * as e from 'express';
+import { Common } from 'src/app/shared/enums/common.enum';
 
 
 @Component({
@@ -521,7 +521,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
-    if(appConstants.googleMapInForm){
+    if(Common.GOOGLE_MAP_IN_FORM){
       this.mapsAPILoader.load().then(() => {      
         this.geoCoder = new google.maps.Geocoder;
         if(this.longitude == 0 && this.latitude == 0){
