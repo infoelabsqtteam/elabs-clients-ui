@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
-import * as AppConstants from './../../shared/app.constants';
 import { StorageService } from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
@@ -9,6 +8,7 @@ import { solution } from './menu';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
+import { EnvService } from "src/app/services/env/env.service";
 
 @Component({
   selector: 'app-header-landing-page',
@@ -51,11 +51,10 @@ export class HeaderLandingPageComponent implements OnInit {
   constructor(
     private router: Router, 
     private storageService: StorageService,
-    private permissionService:PermissionService, 
-    private commonFunctionService: CommonFunctionService,
     private modalService: ModalService,
     private dataShareService:DataShareService,
-    private authService:AuthService
+    private authService:AuthService,
+    private envService:EnvService
     ) {
         this.subscription =  this.dataShareService.currentPage.subscribe(
         (data: any) => {
@@ -158,7 +157,7 @@ export class HeaderLandingPageComponent implements OnInit {
         }else{
             this.logedin = false;       
             const payload = {
-            appName: AppConstants.appName,
+            appName: this.envService.getAppName(),
             data:{
                 accessToken:this.storageService.GetAccessToken()
             }
@@ -240,7 +239,7 @@ setMenuData(menuData){
         this.authService.GetUserInfoFromToken(idToken);
     }else{        
         const payload = {
-        appName: AppConstants.appName,
+        appName: this.envService.getAppName(),
         data:{
             accessToken:this.storageService.GetAccessToken()
         }

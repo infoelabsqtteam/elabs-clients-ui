@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm,FormGroup, FormControl, Validators } from '@angular/forms';
-import * as appConstant from '../../shared/app.constants';
 import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
+import { EnvService } from 'src/app/services/env/env.service';
 
 
 
@@ -20,7 +20,8 @@ export class SigninComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService:AuthService
+    private authService:AuthService,
+    private envService:EnvService
     ) {
     
   }
@@ -40,7 +41,7 @@ export class SigninComponent implements OnInit {
     const value = this.signInForm.getRawValue();
     const email = value.email;
     const password = value.password;
-    this.authService.TrySignin({ username: email, password: password, appName: appConstant.appName })   
+    this.authService.TrySignin({ username: email, password: password, appName: this.envService.getAppName() })   
   }
 
   @HostListener('window:popstate', ['$event'])

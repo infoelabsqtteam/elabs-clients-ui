@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, switchMap, take, finalize } from 'rxjs/operators';
 import { StorageService } from './../services/storage/storage.service';
-import * as appConstant from './../shared/app.constants';
 import { LoaderService } from '../services/loader/loader.service';
 import { EnvService } from '../services/env/env.service';
 import { AuthService } from '../services/api/auth/auth.service';
@@ -32,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
             const url = req.url; 
             if (!url.startsWith(this.envService.baseUrl('AUTH_SIGNOUT'))) {
                 const payload = {
-                    appName: appConstant.appName,
+                    appName: this.envService.getAppName(),
                     data: {
                         accessToken: this.storageService.GetAccessToken()
                     }
