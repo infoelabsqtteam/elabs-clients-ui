@@ -2,10 +2,9 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import {ModalService} from '../../../m-core/modals/modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { NgForm } from '@angular/forms';
-import * as appConstant from '../../../shared/app.constants';
-import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
+import { EnvService } from 'src/app/services/env/env.service';
 
 
 @Component({
@@ -21,9 +20,8 @@ export class SigninModalComponent implements OnInit {
   
   constructor(
     private modalService: ModalService, 
-    private el: ElementRef,
-    private router: Router,
-    private authService:AuthService
+    private authService:AuthService,
+    private envService:EnvService
     ) { }
 
   ngOnInit() {
@@ -38,7 +36,7 @@ export class SigninModalComponent implements OnInit {
   onSignIn(form: NgForm) {
     const email = form.value.email;
     const password = form.value.password;
-    this.authService.TrySignin({ username: email, password: password, appName: appConstant.appName })
+    this.authService.TrySignin({ username: email, password: password, appName: this.envService.getAppName() })
   }
 
   showModal(alert){

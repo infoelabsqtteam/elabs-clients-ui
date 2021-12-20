@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { StorageService } from '../../services/storage/storage.service';
 import { ModalService } from '../../m-core/modals/modal.service';
-import * as appConstants from '../../shared/app.constants';
 import { CoreFunctionService } from '../common-utils/core-function/core-function.service';
 
 import { CustomvalidationService } from '../customvalidation/customvalidation.service';
@@ -17,6 +16,7 @@ import {
 import { isArray } from 'util';
 import { NotificationService } from '../notify/notification.service';
 import { ApiService } from '../api/api.service';
+import { EnvService } from '../env/env.service';
 
 
 @Injectable({
@@ -41,7 +41,8 @@ export class CommonFunctionService {
     private http: HttpClient,
     private notificationService:NotificationService,
     private apiService:ApiService,
-    private coreFunctionService:CoreFunctionService
+    private coreFunctionService:CoreFunctionService,
+    private envService:EnvService
     ) {
     this.userInfo = this.storageService.GetUserInfo();
   }
@@ -2149,7 +2150,7 @@ export class CommonFunctionService {
 
   gotoHomePage() {
     const payload = {
-      appName: appConstants.appName,
+      appName: this.envService.getAppName(),
       data: {
         accessToken: this.storageService.GetAccessToken()
       }

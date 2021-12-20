@@ -111,7 +111,7 @@ export class EnvService {
   setDinamicallyHost(){
     let setHostName = this.getHostNameDinamically();
     let serverHostName = this.getHostName()
-    if(serverHostName != '' && serverHostName != setHostName) {
+    if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
       this.setHostNameDinamically(hostName);      
     }

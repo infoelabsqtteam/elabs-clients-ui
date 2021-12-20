@@ -5,9 +5,9 @@ import { ApiService } from '../api.service';
 import { StorageService } from '../../storage/storage.service';
 import { Router } from '@angular/router';
 import { DataShareService } from '../../data-share/data-share.service';
-import * as appConstants from '../../../shared/app.constants';
 import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
+import { Common } from 'src/app/shared/enums/common.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -137,7 +137,7 @@ export class AuthService {
         if(respData['error']){
           this.notificationService.notify("bg-danger", respData['error']);
         }else{
-            if(appConstants.varify_with_otp){
+            if(Common.VERIFY_WITH_OTP){
                 this.notificationService.notify("bg-success", "Otp Sent to your mobile number !!!");
                 const username = payload.data.username;
                 this.router.navigate(['/otp_varify/'+username]);                           
@@ -236,7 +236,7 @@ export class AuthService {
   }
   //function created for - change password
   changePassword(authData){
-    let api = appConstants.BaseUrl.getBaseUrl('AUTH_CHANGE_PASSWORD')
+    let api = this.envService.getAuthApi('AUTH_CHANGE_PASSWORD')
     this.http.post(api + authData.appName, this.encryptionService.encryptRequest({password: authData.password, new_password: authData.new_password,accessToken:authData.accessToken })).subscribe(
       (data) => {
         if (data && data.hasOwnProperty('success')) {

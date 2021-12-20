@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject, Output, EventEmitter , Input,OnChanges,SimpleChanges} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
-import * as AppConstants from '../../../shared/app.constants';
 import { StorageService } from '../../../services/storage/storage.service';
 import { PermissionService } from '../../../services/permission/permission.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { ApiService } from '../../../services/api/api.service';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { EnvService } from 'src/app/services/env/env.service';
 
 @Component({
   selector: 'app-topbar',
@@ -34,7 +34,8 @@ export class TopbarComponent implements OnInit, OnChanges {
       private notificationService: NotificationService,
       private dataShareService:DataShareService,
       private apiService:ApiService,
-      private authService:AuthService
+      private authService:AuthService,
+      private envService:EnvService
 ) {
     this.AllModuleList = this.storageService.GetModules();
    }
@@ -134,13 +135,13 @@ goToVdr(){
    */
   
   logout() {
-      const payload = {
-          appName: AppConstants.appName,
-          data:{
-              accessToken:this.storageService.GetAccessToken()
-          }
-      }
-      this.authService.Logout(payload);
+    const payload = {
+        appName: this.envService.getAppName(),
+        data:{
+            accessToken:this.storageService.GetAccessToken()
+        }
+    }
+    this.authService.Logout(payload);
   }
   getCurrentMenu(){
     const currentMenu = this.storageService.GetActiveMenu();

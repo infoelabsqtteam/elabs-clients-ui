@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, HostListener,AfterViewInit } from "@angular/core";
 import { Router } from '@angular/router';
-import * as AppConstants from './../../shared/app.constants';
 import { StorageService } from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
@@ -9,6 +8,8 @@ import { ModelService } from "src/app/services/model/model.service";
 import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
 import { NotificationService } from "src/app/services/notify/notification.service";
+import { EnvService } from "src/app/services/env/env.service";
+import { Common } from "src/app/shared/enums/common.enum";
 
 
 @Component({
@@ -86,7 +87,8 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         private apiService:ApiService,
         private modelService: ModelService,
         private authService:AuthService,
-        private notificationService:NotificationService
+        private notificationService:NotificationService,
+        private envService:EnvService
     ) {
         
 
@@ -223,7 +225,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             }else{ 
                 this.logedin = false;       
                 const payload = {
-                appName: AppConstants.appName,
+                appName: this.envService.getAppName(),
                 data:{
                     accessToken:this.storageService.GetAccessToken()
                 }
@@ -301,7 +303,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     }
     navigateSigninPage() {
         this.logoPath = '../../assets/images/logo.png';
-        let loginType = AppConstants.AUTH_TYPE;
+        let loginType:any = Common.AUTH_TYPE;
         if (loginType == 'ADMIN') {
             this.router.navigate(['admin'])
         } else {
@@ -393,7 +395,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     }
     logOut() {
         const payload = {
-            appName: AppConstants.appName,
+            appName: this.envService.getAppName(),
             data: {
                 accessToken: this.storageService.GetAccessToken()
             }
@@ -495,7 +497,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             this.authService.GetUserInfoFromToken(idToken);
         }else{        
             const payload = {
-            appName: AppConstants.appName,
+            appName: this.envService.getAppName(),
             data:{
                 accessToken:this.storageService.GetAccessToken()
             }
