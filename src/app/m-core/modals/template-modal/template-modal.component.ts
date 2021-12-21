@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { ModalService } from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 
 import {FormGroup, FormControl} from '@angular/forms';
+import { ModelService } from 'src/app/services/model/model.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class TemplateModalComponent implements OnInit {
   objectData:any={};
   campaignOne: FormGroup;
   campaignTwo: FormGroup;
-  constructor(private modalService: ModalService, private el: ElementRef) { 
+  constructor(private modalService: ModelService, private el: ElementRef) { 
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();

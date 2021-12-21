@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { ModalService } from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { ApiService } from 'src/app/services/api/api.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-preview-modal',
@@ -30,7 +30,7 @@ export class PreviewModalComponent implements OnInit, AfterViewInit {
 
 
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef, 
     private commonFunctionService: CommonFunctionService,
     private dataShareService:DataShareService,

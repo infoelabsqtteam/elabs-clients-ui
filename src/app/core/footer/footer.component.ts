@@ -9,13 +9,14 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 })
 export class FooterComponent implements OnInit {
 
-  currentPage:boolean = true;
-  menuBoxHome:boolean = true;
+  currentPage:boolean = false;
+  menuBoxHome:boolean = false;
   subscription:any;
 
   constructor(
     private dataShareService:DataShareService
   ) { 
+    this.setpage(this.dataShareService.getCurrentPage());
     this.subscription = this.dataShareService.currentPage.subscribe(
         (data: any) => {
             this.setpage(data);

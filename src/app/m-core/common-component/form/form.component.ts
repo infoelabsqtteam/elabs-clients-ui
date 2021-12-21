@@ -4,7 +4,6 @@ import { DOCUMENT } from '@angular/common';
 import { StorageService } from '../../../services/storage/storage.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { PermissionService } from '../../../services/permission/permission.service';
-import { ModalService } from '../../modals/modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
@@ -271,7 +270,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private storageService: StorageService,
     private permissionService:PermissionService,
     private commonFunctionService:CommonFunctionService, 
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private router: Router,
     private routers: ActivatedRoute,
     @Inject(DOCUMENT) document,
@@ -1688,7 +1687,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           "selectedData":this.custmizedFormValue[field.field_name],
           "object": this.getFormValue(true)
         }
-        this.modalService.openGridSelection('grid-selection-modal', gridModalData);
+        this.modalService.open('grid-selection-modal', gridModalData);
         break;
       default:
         break;
@@ -1792,6 +1791,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
           case 'calculate_automotive_quotation':          
           calFormValue = this.commonFunctionService.calculate_quotation(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;
+          case 'calculate_lims_invoice':          
+          calFormValue = this.commonFunctionService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
       
@@ -3190,7 +3193,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         
     return tobedesabled;
   }  
-  showFormModal(object){
+  showModal(object){
     this.custmizedFormValue = {}    
     this.formModal.show();
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input } from '@angular/core';
-import { ModalService } from '../../modals/modal.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { StorageService} from '../../../services/storage/storage.service';
 import { PermissionService } from '../../../services/permission/permission.service';
@@ -7,6 +6,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@ang
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-grid-card-view',
@@ -49,7 +49,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
   exportExcelSubscription;
 
   constructor(
-    private ModalService:ModalService,
+    private ModalService:ModelService,
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
     private permissionService: PermissionService,
@@ -286,7 +286,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     if(this.tableFields.length > 0){
       let formData = {}
-      this.ModalService.openFormModal('form-modal',formData)
+      this.ModalService.open('form-modal',formData)
     }else{
       this.notificationService.notify('text-danger','Fields are not available ?')
     }

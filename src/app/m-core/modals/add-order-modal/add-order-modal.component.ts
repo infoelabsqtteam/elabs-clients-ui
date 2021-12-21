@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, } from '@angular/core';
-import { ModalService } from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-add-order-modal',
@@ -13,7 +13,7 @@ export class AddOrderModalComponent implements OnInit {
   @Output() addOrderModalResponce = new EventEmitter();
   @ViewChild('addOrderModal') public addOrderModal: ModalDirective;
 
-  constructor(private modalService: ModalService) { }
+  constructor(private modalService: ModelService) { }
 
   ngOnInit(): void {
     let modal = this;
@@ -24,7 +24,7 @@ export class AddOrderModalComponent implements OnInit {
     this.modalService.remove(this.id);
     this.modalService.add(this);
   }
-  showAddOrderModal(){
+  showModal(){
     this.addOrderModal.show();
   }
   closeModal(){

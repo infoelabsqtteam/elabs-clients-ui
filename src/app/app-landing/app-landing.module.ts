@@ -42,6 +42,8 @@ import { ComplianceComponent } from './services/compliance/compliance.component'
 import { IntegrationsComponent } from './services/integrations/integrations.component';
 import { SecuredCloudComponent } from './services/secured-cloud/secured-cloud.component';
 import { DownloadReportComponent } from './download-report/download-report.component';
+import { FormModelModule } from '../m-core/modals/form-model.module';
+import { CommonComponentModule } from '../m-core/common-component/common-component.module';
 
 @NgModule({
     declarations: [
@@ -86,7 +88,9 @@ import { DownloadReportComponent } from './download-report/download-report.compo
         MDBBootstrapModule.forRoot(),     
         McoreModule,
         CarouselModule,
-        CoreModule
+        CoreModule,
+        FormModelModule,
+        CommonComponentModule
     ]
 
 })

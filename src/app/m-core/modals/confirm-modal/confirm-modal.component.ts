@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-confirm-modal',
@@ -22,7 +22,7 @@ export class ConfirmModalComponent implements OnInit {
   @ViewChild('alertModal') public alertModal: ModalDirective; 
 
 
-  constructor(private modalService: ModalService, private el: ElementRef) {
+  constructor(private modalService: ModelService, private el: ElementRef) {
     this.element = el.nativeElement;
    }
 

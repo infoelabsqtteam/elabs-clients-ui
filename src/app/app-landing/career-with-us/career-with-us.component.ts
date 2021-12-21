@@ -1,12 +1,12 @@
 import { Component, HostListener, Input, OnInit ,OnDestroy} from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModalService } from '../../m-core/modals/modal.service';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { StorageService} from '../../services/storage/storage.service';
 import { ApiService } from '../../services/api/api.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { PublicApiService } from 'src/app/services/api/public-api/public-api.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class CareerWithUsComponent implements OnInit,OnDestroy {
 
   constructor(
     private router: Router,
-    private modalService: ModalService,
+    private modalService: ModelService,
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
     private apiService:ApiService,
@@ -142,7 +142,7 @@ if(this.noticeDocument.length > 0){
   applyForJob(formname){
     this.formName = formname;
     let formData = {}
-    this.modalService.openFormModal('form-modal',formData)
+    this.modalService.open('form-modal',formData)
   }
   addAndUpdateResponce(element) {
     console.log(element)

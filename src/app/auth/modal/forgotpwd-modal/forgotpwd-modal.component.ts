@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from '../../../m-core/modals/modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-forgotpwd-modal',
@@ -29,7 +29,7 @@ export class ForgotpwdModalComponent implements OnInit {
 
   
   constructor(
-      private modalService: ModalService, 
+      private modalService: ModelService, 
       private el: ElementRef,
       private router: Router,
       private route: ActivatedRoute, 

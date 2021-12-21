@@ -1,9 +1,9 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-import {ModalService} from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import { DataShareService } from '../../../services/data-share/data-share.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 interface FoodNode {
   code:string;
@@ -63,7 +63,7 @@ export class TreeViewModalComponent implements OnInit,OnDestroy {
   @ViewChild('treeViewModal') public treeViewModal: ModalDirective; 
 
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef,
     private dataShareService:DataShareService
   ) {
@@ -113,7 +113,7 @@ export class TreeViewModalComponent implements OnInit,OnDestroy {
     }
   }
 
-  showTreeViewModal(alert){    
+  showModal(alert){    
     this.data=this.staticData[alert.data];
     this.fieldName = alert.fieldName;
     this.ddnfieldName = alert.ddnFieldName;

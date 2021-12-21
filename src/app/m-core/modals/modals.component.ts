@@ -1,5 +1,4 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from './modal.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
@@ -8,6 +7,7 @@ import { isArray } from 'util';
 import { ApiService } from '../../services/api/api.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-modals',
@@ -39,7 +39,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
   @ViewChild('basicTableModal') basicTableModal: ModalDirective;
   
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef,
     private formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
