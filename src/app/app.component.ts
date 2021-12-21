@@ -11,7 +11,6 @@ import { LoaderService } from './services/loader/loader.service';
 import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
 
-import { BreadcrumbModule } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-root',
@@ -173,6 +172,4 @@ export class AppComponent implements OnInit {
   appSettingModalResponce(event){
     console.log(event);
   }
-
-  
 }

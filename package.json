@@ -45,6 +45,7 @@
     "ag-grid-community": "^22.1.1",
     "agm-direction": "^0.8.9",
     "angular-bootstrap-md": "^9.3.1",
+    "angular-google-charts": "^2.2.2",
     "angular-svg-icon": "^10.0.0",
     "animate.css": "~3.7.2",
     "apexcharts": "^3.29.0",

@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from '../../../m-core/modals/modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
+import { ModelService } from 'src/app/services/model/model.service';
 import { EnvService } from 'src/app/services/env/env.service';
 
 
@@ -19,7 +19,7 @@ export class SigninModalComponent implements OnInit {
 
   
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private authService:AuthService,
     private envService:EnvService
     ) { }

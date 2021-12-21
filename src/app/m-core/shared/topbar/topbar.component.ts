@@ -135,13 +135,13 @@ goToVdr(){
    */
   
   logout() {
-    const payload = {
-        appName: this.envService.getAppName(),
-        data:{
-            accessToken:this.storageService.GetAccessToken()
-        }
-    }
-    this.authService.Logout(payload);
+      const payload = {
+          appName: this.envService.getAppName(),
+          data:{
+              accessToken:this.storageService.GetAccessToken()
+          }
+      }
+      this.authService.Logout(payload);
   }
   getCurrentMenu(){
     const currentMenu = this.storageService.GetActiveMenu();

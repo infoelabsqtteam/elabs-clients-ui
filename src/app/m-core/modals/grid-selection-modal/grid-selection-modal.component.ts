@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-import {ModalService} from '../modal.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-grid-selection-modal',
@@ -32,7 +32,7 @@ export class GridSelectionModalComponent implements OnInit {
   
 
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef,
     private CommonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
@@ -196,7 +196,7 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
 
-  showGridViewSelectionModal(alert){ 
+  showModal(alert){ 
     this.selecteData = [];  
     this.selecteData = alert.selectedData; 
     this.field = alert.field;

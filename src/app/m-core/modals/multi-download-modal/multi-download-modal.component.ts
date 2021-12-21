@@ -1,11 +1,10 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from '../modal.service';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service'
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { ApiService } from 'src/app/services/api/api.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-multi-download-modal',
@@ -29,7 +28,7 @@ export class MultiDownloadModalComponent implements OnInit,OnDestroy {
   @ViewChild('multiDownModal') multiDownModal: ModalDirective;
   
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef,
     private formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,

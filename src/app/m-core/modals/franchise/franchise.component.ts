@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { StorageService} from '../../../services/storage/storage.service';
 import { ApiService } from '../../../services/api/api.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-franchise',
@@ -35,7 +35,7 @@ export class FranchiseComponent implements OnInit {
   constructor(
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService,
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef, 
     private apiService:ApiService
   ) {
@@ -108,7 +108,7 @@ export class FranchiseComponent implements OnInit {
     }
   }
 
-  showFranchiseModal(alert){
+  showModal(alert){
     this.franchiseModal.show()
     this.alertData = alert.data;
       

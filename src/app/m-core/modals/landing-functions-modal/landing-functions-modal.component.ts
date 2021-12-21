@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModalService } from '../modal.service';
 import { Router } from '@angular/router';
+import { ModelService } from 'src/app/services/model/model.service';
 
 
 @Component({
@@ -291,7 +291,7 @@ export class LandingFunctionsModalComponent implements OnInit {
     
   ]
 
-  constructor(private modalService: ModalService,  private router: Router) { }
+  constructor(private modalService: ModelService,  private router: Router) { }
 
   ngOnInit(): void {
     let modal = this;
@@ -303,7 +303,7 @@ export class LandingFunctionsModalComponent implements OnInit {
     this.modalService.add(this);
   }
 
-  showLandingFunctionModal(dataIndex){
+  showModal(dataIndex){
     this.index = dataIndex.index;
     this.data = this.dataList[this.index]
     this.landingFunctionModal.show();
