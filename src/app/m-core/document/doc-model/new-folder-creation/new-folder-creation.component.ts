@@ -44,6 +44,9 @@ export class NewFolderCreationComponent implements OnInit {
     this.createFolderResponce.emit(false);
   }
   close(){
+    this.renameFileExt = '';
+    this.renameText = '';
+    this.folderName = "";
     this.createFolderModal.hide();
   }
   createNewFolder(){

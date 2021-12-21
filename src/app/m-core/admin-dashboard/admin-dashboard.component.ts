@@ -30,19 +30,38 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   public chartColors:any = {};
   public chartOptions:any = {};
   public chartLegend:any = {};
+  public chartTitle:any = {};
+
+  googleChart:any = {
+
+  title : 'First Check google Chart',
+   type : 'OrgChart',
+   data : [
+      [{v:'Mike', f:'Mike<div style="color:red; font-style:italic">President</div>'},
+         '', 'The President'],
+      [{v:'Jim', f:'Jim<div style="color:red; font-style:italic">Vice President</div>'},
+         'Mike', 'VP'],
+        [{v:'swatantra',f:'swatantra'},'Mike',''],
+      ['Alice', 'Mike', ''],
+      ['Bob', 'Jim', 'Bob Sponge'],
+      ['Carol', 'Bob', '']
+   ],
+   columnNames : ["Name","Manager","Tooltip"],
+   options : {   
+      allowHtml: true
+   },
+   width : 550,
+   height : 400,
+  }
   
   
 
   // bread crumb items
   breadCrumbItems: Array<{}>;
-
   revenueChart: ChartType;
   salesAnalytics: ChartType;
   sparklineEarning: ChartType;
   sparklineMonthly: ChartType;
-  
-  
-
   latitude: number;
   longitude: number;
   zoom: number;
@@ -73,6 +92,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   elements:any=[];
   gridDataSubscription;
   staticDataSubscription;
+  dashletDataSubscription;
   constructor(
     public formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
@@ -91,6 +111,9 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
+    this.dashletDataSubscription = this.dataShareService.dashletData.subscribe(data =>{
+      this.setDashLetData(data);
+    })
     this.getPage(1)    
 
     }
@@ -102,6 +125,9 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     }
     if(this.staticDataSubscription){
       this.staticDataSubscription.unsubscribe();
+    }
+    if(this.dashletDataSubscription){
+      this.dashletDataSubscription.unsubscribe();
     }
   }
 
@@ -122,6 +148,9 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
         this.chartColors[key]=JSON.parse(JSON.stringify(this.dashletData[key]['colors']));
         this.chartLegend[key]=JSON.parse(JSON.stringify(this.dashletData[key]['legend']));
         this.chartOptions[key]=JSON.parse(JSON.stringify(this.dashletData[key]['options']));
+        if(this.dashletData[key]['title']){
+          this.chartTitle[key]=JSON.parse(JSON.stringify(this.dashletData[key]['title']));
+        }        
       })
     }
   }

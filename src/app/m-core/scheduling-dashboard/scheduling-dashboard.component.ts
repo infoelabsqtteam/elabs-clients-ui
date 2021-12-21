@@ -2,12 +2,12 @@ import { Component, OnInit,OnDestroy } from '@angular/core';
 import { chardData,tableData,progressReportData,reportData } from './chartJson';
 import { countDownTimerConfigModel, countDownTimerTexts, CountdownTimerService } from 'ngx-timer';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import { ModalService } from '../modals/modal.service';
 import { StorageService} from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
 import { ApiService } from '../../services/api/api.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 
 @Component({
@@ -41,7 +41,7 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
   constructor(
     private countDownService:CountdownTimerService,
     private commonFunctionService:CommonFunctionService,
-    private ModalService:ModalService,
+    private ModalService:ModelService,
     private storageService: StorageService, 
     private permissionService: PermissionService,
     private apiService:ApiService,
@@ -166,11 +166,11 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
   
   addOrder(){
     const addOrder = {}
-    this.ModalService.openAddOrder('add-order-modal',addOrder);
+    this.ModalService.open('add-order-modal',addOrder);
   }
   addNewForm(){
     let formData = {}
-    this.ModalService.openFormModal('form-modal',formData)
+    this.ModalService.open('form-modal',formData)
   }
   addOrderModalResponce(event){
     alert(event);

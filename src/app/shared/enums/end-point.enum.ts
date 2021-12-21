@@ -43,11 +43,12 @@ export enum EndPoint {
     MOVE_FOLDER_CHILD = "vdrn/getch",
     UPLOAD_DOC_FILE = "vdrn/crtfl/e",
     CREATE_FOLDER = "vdrn/crtfd/e",
-    GET_FOLDER_BY_KEY = "vdrn/getchbk",
+    GET_CHILD_FOLDER_BY_KEY = "vdrn/getchbk",
     GET_DOC_AUDIT = "vdrn/getAudit/",
     DOC_FILE_DOWNLOAD = "vdrn/getfl/download",
     DOC_FILE_VIEW = "vdrn/getfl/view",
     DOC_DELETE = "vdrn/fo/",
-    DOC_SHARE = "vdrn/shr"
+    DOC_SHARE = "vdrn/shr",
+    GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey"
 
 }

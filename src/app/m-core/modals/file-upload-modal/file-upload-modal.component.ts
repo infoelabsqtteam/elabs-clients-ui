@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModalService } from '../modal.service';
+import { ModelService } from 'src/app/services/model/model.service';
 import { StorageService } from '../../../services/storage/storage.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class FileUploadModalComponent implements OnInit {
   uploadFile: boolean = false;
   files: any[] = [];
 
-  constructor(private modalService: ModalService, private el: ElementRef,private storageService: StorageService) { }
+  constructor(private modalService: ModelService, private el: ElementRef,private storageService: StorageService) { }
 
   ngOnInit(): void {
     let modal = this;

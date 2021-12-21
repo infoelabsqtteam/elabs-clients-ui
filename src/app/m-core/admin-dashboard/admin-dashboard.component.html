@@ -44,7 +44,7 @@
             </div>
           </div>
             <div class="card-body">
-              <canvas mdbChart
+              <canvas mdbChart *ngIf="item.package_name == 'chart_js'"
                   [chartType]="chartType[item.call_back_field]"
                   [datasets]="chartDatasets[item.call_back_field]"
                   [labels]="chartLabels[item.call_back_field]"
@@ -53,10 +53,19 @@
                   [legend]="chartLegend[item.call_back_field]"
                   (chartHover)="chartHover($event)"
                   (chartClick)="chartClicked($event)">
-              </canvas>
+              </canvas> 
+              <google-chart *ngIf="item.package_name == 'google_chart' && chartTitle[item.call_back_field]"
+                [title]="chartTitle[item.call_back_field]"
+                [type]="chartType[item.call_back_field]"
+                [data]="chartDatasets[item.call_back_field]"
+                [columns]="chartLabels[item.call_back_field]"
+                [options]="chartOptions[item.call_back_field]"
+              >
+              </google-chart>             
             </div>
         </div>
     </div>
+    
   </div>
   <!-- <div class="row">
     <div class="col-lg-12">

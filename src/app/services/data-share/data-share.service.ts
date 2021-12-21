@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 export class DataShareService {
   sharedData:EventEmitter<any> = new EventEmitter();
   currentPage: EventEmitter<any> = new EventEmitter();
+  currentpage:string = '';
   staticData: EventEmitter<any> = new EventEmitter<any>(null);
   setStaticData={};
   gridData: EventEmitter<any> = new EventEmitter<any>(null);
@@ -53,12 +54,14 @@ export class DataShareService {
   sendCurrentPage(responce) { 
     if(responce != undefined && responce != null){
       this.currentPage.emit(responce);
+      this.currentpage = responce;
     }else{
       this.currentPage.emit('HOME');
+      this.currentpage = 'HOME';
     }      
   }
   getCurrentPage(){
-    return this.currentPage;
+    return this.currentpage;
   }
 
   shareData(responce:any){

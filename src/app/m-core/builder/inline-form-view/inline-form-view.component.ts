@@ -2,12 +2,12 @@ import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetec
 import { StorageService} from '../../../services/storage/storage.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { PermissionService } from '../../../services/permission/permission.service';
-import { ModalService } from '../../modals/modal.service';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-inline-form-view',
@@ -39,7 +39,7 @@ export class InlineFormViewComponent implements OnInit {
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private permissionService: PermissionService, 
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private formBuilder: FormBuilder, 
     private router: Router, 
     private datePipe: DatePipe,

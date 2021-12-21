@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter } from '@angular/core';
-
-
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { ModalService } from '../../modals/modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
+import { ModelService } from 'src/app/services/model/model.service';
 
 
 @Component({
@@ -26,7 +24,7 @@ export class FormModalComponent implements OnInit {
 
   
   @ViewChild('formModal') public formModal: ModalDirective;
-  constructor(private commonFunctionService:CommonFunctionService, private modalService: ModalService) {}
+  constructor(private commonFunctionService:CommonFunctionService, private modalService: ModelService) {}
 
   ngOnInit(): void {
     let modal = this;
@@ -38,7 +36,7 @@ export class FormModalComponent implements OnInit {
     this.modalService.add(this);
     
   }
-  showFormModal(object){ 
+  showModal(object){ 
     this.formModal.show();
     this.checkModalClass = true;
   }

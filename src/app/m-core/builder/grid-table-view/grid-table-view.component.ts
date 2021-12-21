@@ -5,12 +5,12 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } fr
 import { StorageService} from '../../../services/storage/storage.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { PermissionService } from '../../../services/permission/permission.service';
-import { ModalService } from '../../modals/modal.service';
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { KeyCode} from '../../../shared/enums/keycodes.enum';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ModelService } from 'src/app/services/model/model.service';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -264,7 +264,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private permissionService: PermissionService, 
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private formBuilder: FormBuilder, 
     private router: Router, 
     private datePipe: DatePipe,
@@ -730,7 +730,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //   }
       // });
       let formData = {}
-      this.modalService.openFormModal('form-modal',formData)
+      this.modalService.open('form-modal',formData)
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
     }
