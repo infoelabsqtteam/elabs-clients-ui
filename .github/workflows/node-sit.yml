@@ -2,7 +2,6 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Angular CI with Node - SIT
-
 on:
   push:
     branches: [ sit ]
@@ -50,7 +49,7 @@ jobs:
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E2YD9VQ0GCK2IJ --paths '/*'
 
-  # Deploy Sanskar
+  # Deploy Sanskar SIT
     - name: Clean up existing deployment - Sanskar
       run: aws s3 rm s3://sit-sanskar.e-labs.ai --recursive
 
@@ -60,3 +59,12 @@ jobs:
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E2DM82H0I1K8V0 --paths '/*'
   
+  # Deploy ITL Sit
+    - name: Clean up existing deployment - Sanskar
+      run: aws s3 rm s3://itllabs.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://itllabs.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E35I1KJPO9P1V0 --paths '/*'
