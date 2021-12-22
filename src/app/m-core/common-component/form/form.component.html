@@ -546,6 +546,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div *ngIf="fields.type == 'html_editor'">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div *ngIf="fields.type == 'tree_view_selection'">
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
@@ -682,6 +692,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div *ngIf="tableField.type == 'html_editor'">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="tableField.field_name" [init]="tinymceConfig"></editor>
+                                </div>
+                            </div>
+                        </div>
                         <div *ngIf="tableField.type == 'tree_view_selection'">
                             <div class="position-relative">
                                 <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
@@ -736,8 +756,8 @@
                             <div class="px-0 py-1 mb-3 mt-2 form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons">
-                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">keyboard_arrow_down</span></button>
-                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">reviews</span></button>
+                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">keyboard_arrow_down</span></button>
+                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons" >reviews</span></button>
                                 </div>
                             </div>                            
                             <div class="" *ngIf="custmizedFormValue[tableField.field_name]">
@@ -1101,6 +1121,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div *ngIf="fields.type == 'html_editor'">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div *ngIf="fields.type == 'tree_view_selection'">
                                             <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
@@ -1127,8 +1157,8 @@
                                                     <div class="">{{ fields.label | titlecase}} <span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                                 </div>
                                                 <div class="col-lg-6 px-0">
-                                                    <button *ngIf="fields.datatype != 'grid_review'" (click)="setValue(step,fields,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">keyboard_arrow_down</span></button>
-                                                    <button *ngIf="custmizedFormValue[fields.field_name] && custmizedFormValue[fields.field_name].length > 0 && fields.datatype == 'grid_review'" (click)="reviewParameters(fields,custmizedFormValue[fields.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">reviews</span></button>
+                                                    <button *ngIf="fields.datatype != 'grid_review'" (click)="setValue(step,fields,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateForm.get(tableField.field_name)['controls'][fields.field_name].disabled"><span class="material-icons">keyboard_arrow_down</span></button>
+                                                    <button *ngIf="custmizedFormValue[fields.field_name] && custmizedFormValue[fields.field_name].length > 0 && fields.datatype == 'grid_review'" (click)="reviewParameters(fields,custmizedFormValue[fields.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateForm.get(tableField.field_name)['controls'][fields.field_name].disabled"><span class="material-icons">reviews</span></button>
                                                 </div>
                                             </div>                            
                                             <div class="row" *ngIf="custmizedFormValue[fields.field_name]">

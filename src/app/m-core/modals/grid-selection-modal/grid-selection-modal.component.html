@@ -23,13 +23,14 @@
                         </tr>
                     </thead>
                     <tbody>
+
+
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
-                            <td *ngIf="preSelectedData" class="text-center">
-                              <span *ngIf="data.selected" class="material-icons" (click)="refreshRowWithMasterData(i)">edit</span>
-                              <mat-checkbox color="primary" (click)="$event.stopPropagation()"
-                                (change)="$event ? toggle(data, $event, i) : null"
-                                [checked]="data.selected">
-                                </mat-checkbox>
+                            <td class="text-center">
+                                <div class="checkeditmode">
+                                  <mat-checkbox *ngIf="preSelectedData" color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected"> </mat-checkbox>
+                                  <span *ngIf="data.selected" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
+                                </div>
                               </td>
 
                             <td *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
