@@ -13,6 +13,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {NgxPrintModule} from 'ngx-print';
 import { NgxTimerModule } from 'ngx-timer';
 import { MomentDateModule } from '@angular/material-moment-adapter';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 
 const packages = [
@@ -28,7 +29,8 @@ const packages = [
   NgxPaginationModule,
   NgxPrintModule,
   NgxTimerModule,
-  MomentDateModule  
+  MomentDateModule,
+  EditorModule  
 ]
 
 @NgModule({
