@@ -9,7 +9,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { GoogleMapsModule } from "@angular/google-maps";
 import {NgxPaginationModule} from 'ngx-pagination';
-
+import { CarouselModule } from 'ngx-owl-carousel-o';
 import {NgxPrintModule} from 'ngx-print';
 import { NgxTimerModule } from 'ngx-timer';
 import { MomentDateModule } from '@angular/material-moment-adapter';
@@ -30,7 +30,8 @@ const packages = [
   NgxPrintModule,
   NgxTimerModule,
   MomentDateModule,
-  EditorModule  
+  EditorModule,
+  CarouselModule  
 ]
 
 @NgModule({

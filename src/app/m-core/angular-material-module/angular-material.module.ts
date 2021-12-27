@@ -31,6 +31,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatMenuModule} from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const modules =[
   MatCardModule,
@@ -61,7 +62,8 @@ const modules =[
   MatAutocompleteModule,
   DragDropModule,
   MatFormFieldModule,      
-  MatMenuModule
+  MatMenuModule,
+  MatSnackBarModule
 ]
 
 @NgModule({

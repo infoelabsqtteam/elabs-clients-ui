@@ -24,7 +24,7 @@ export class McoreComponent implements OnInit {
     const menuType =  this.storageService.GetMenuType();
     if(menuType == 'Horizontal'){
       this.layoutType = LAYOUT_HORIZONTAL; 
-      //this.layoutType = LAYOUT_VERTICAL;
+     // this.layoutType = LAYOUT_VERTICAL;
     }else{
       this.layoutType = LAYOUT_VERTICAL; 
     }       
@@ -42,6 +42,13 @@ export class McoreComponent implements OnInit {
    */
   isHorizontalLayoutRequested() {
     return this.layoutType === LAYOUT_HORIZONTAL;
+  }
+  
+  shortcutinfoResponce(responce){
+    console.log(responce);
+  }
+  chartModalResponce(responce){
+    console.log(responce);
   }
   
 

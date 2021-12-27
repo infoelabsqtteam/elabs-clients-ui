@@ -485,7 +485,7 @@ export class CommonFunctionService {
           if(element.api_params_criteria && element.api_params_criteria != ''){
             criteria =  element.api_params_criteria;
           }
-          staticModal = this.getPaylodWithCriteria(element.api_params,call_back_field,criteria,{});  
+          staticModal = this.getPaylodWithCriteria(element.api_params,call_back_field,criteria,object?object:{});  
           if(element.adkey && element.adkey != '' && element.adkey != null){
             staticModal['adkeys'] = element.adkey;
             staticModalGroup.push(staticModal);
@@ -509,7 +509,7 @@ export class CommonFunctionService {
           if(element.api_params_criteria && element.api_params_criteria != ''){
             criteria =  element.api_params_criteria;
           }
-          const staticModal = this.getPaylodWithCriteria(element.api_params,call_back_field,criteria,{});        
+          const staticModal = this.getPaylodWithCriteria(element.api_params,call_back_field,criteria,object?object:{});        
           
           staticModalGroup.push(staticModal);
         }

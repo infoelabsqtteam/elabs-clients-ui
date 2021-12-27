@@ -1024,7 +1024,7 @@ export class DriveHomeComponent implements OnInit {
 			// this.store.dispatch(
 			//  	new VdrActions.GetViewLink(files)
 			//  )
-		} else if (exten == 'png' || exten || 'jpg') {
+		} else if (exten == 'png' || exten == 'jpg') {
 			this.viewFileType = 'image';
 			this.docApiService.GetDocFileViewLink(files);
 		} else {

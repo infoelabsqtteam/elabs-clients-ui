@@ -3165,7 +3165,7 @@ case 'populate_fields_for_report_for_new_order_flow':
 
           case "calculateAutomotiveLimsQuotation":
             this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
-              element["qty"] = this.templateForm.getRawValue()["qty"];
+              // element["qty"] = this.templateForm.getRawValue()["qty"];
               this.commonFunctionService.calculateNetAmount(element, {field_name: "qty"},"calculateQuotationParameterAmountForAutomotiveLims");
             });
               // this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](this.getFormValue(true), this.curTreeViewField)); 

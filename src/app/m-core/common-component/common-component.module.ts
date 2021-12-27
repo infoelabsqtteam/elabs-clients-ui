@@ -9,10 +9,12 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { AgmCoreModule } from '@agm/core';
 import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
+import { ChartComponent } from './chart/chart.component';
 
 
 const components = [
-  FormComponent
+  FormComponent,
+  ChartComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {

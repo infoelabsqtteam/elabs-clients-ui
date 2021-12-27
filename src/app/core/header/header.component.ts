@@ -140,9 +140,9 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     shortcutinfo() {
         this.modelService.open('shortcutinfo_model',{})
     }
-    shortcutinfoResponce(responce){
-
-    }
+    chartModel() {
+        this.modelService.open('chart_model',{})
+      }
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
@@ -504,5 +504,5 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             }
             this.authService.SessionExpired(payload);
         }
-    }    
+    }   
 }
