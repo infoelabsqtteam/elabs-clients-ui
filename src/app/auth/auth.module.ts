@@ -1,9 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { McoreModule } from '../m-core/m-core.module';
-
-
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import { AuthRoutingModule } from './auth-routing.module';
@@ -14,6 +9,8 @@ import { AdminComponent } from './admin/admin.component';
 import { ResetpwdComponent } from './resetpwd/resetpwd.component';
 import { OtpVarificationComponent } from './otp-varification/otp-varification.component';
 import { CreatepwdComponent } from './createpwd/createpwd.component';
+import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
+import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
 
 
 @NgModule({
@@ -28,12 +25,10 @@ import { CreatepwdComponent } from './createpwd/createpwd.component';
        CreatepwdComponent
 ],
     imports:[
-    McoreModule,
-        FormsModule,
         AuthRoutingModule,
-        ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
-        CommonModule,
+        AngularMaterialModule,
+        AngularCommonModule
         ]
     
 })

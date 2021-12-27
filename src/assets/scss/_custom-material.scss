@@ -34,7 +34,9 @@ input.mat-input-element {font-size:$size13;}
         .grid-button {width:$size25;height:$size25;line-height:$size30;margin:$size3;}
     }
     .modal-header {background:$popupheadingbg;margin-bottom:$size20;min-height:$size55;}
-    .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;}
+    .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;
+        &:focus {outline:none;border:none;}
+    }
     .fileuploadbtn {position:$absolute !important;right:$size8;top:$size8;color:$color999 !important;width:auto;height:auto;line-height:20px;
         &:hover, &:focus {outline:$no !important;}
     }

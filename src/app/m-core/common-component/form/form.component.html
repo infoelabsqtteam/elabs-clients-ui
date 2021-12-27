@@ -25,8 +25,8 @@
                         <div *ngIf="tableField.type == 'text'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
-	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name">                              
+	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name"> 
                                 <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error> -->
@@ -35,8 +35,10 @@
                         <div *ngIf="tableField.type == 'email'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="email" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
-                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.email">Email must be a valid email address</mat-error>
+                                <input matInput type="email" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name">
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.email">
+                                        Email must be a valid email address
+                                    </mat-error>
                             </mat-form-field>                            
                         </div>
                         <div *ngIf="tableField.type == 'gst_number'">
@@ -728,8 +730,8 @@
                                     <div class="">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 </div>
                                 <div class="col-lg-6 px-0">
-                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">keyboard_arrow_down</span></button>
-                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">reviews</span></button>
+                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">keyboard_arrow_down</span></button>
+                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
                                 </div>
                             </div>
                             <div class="row">

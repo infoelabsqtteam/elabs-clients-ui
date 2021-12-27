@@ -35,7 +35,7 @@ export class AuthService {
         this.apiService.resetTempData();
         this.apiService.resetGridData();
         this.envService.setRequestType('PUBLIC');
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/home_page']);
         this.notificationService.notify("bg-info","Log out Successful.");                
         this.dataShareService.restSettingModule('logged_out');
       },
@@ -74,9 +74,9 @@ export class AuthService {
           const menuType = this.storageService.GetMenuType()
           this.dataShareService.restSettingModule('logged_in');
           if(menuType == 'Horizontal'){
-              this.router.navigate(['/home']);
-              //this.router.navigate(['/dashboard']);
-              // this.router.navigate(['/scheduling-dashboard']);
+               this.router.navigate(['/home']);
+              // this.router.navigate(['/dashboard']);
+              //this.router.navigate(['/scheduling-dashboard']);
           }else{
               this.router.navigate(['/dashboard']);
           } 
