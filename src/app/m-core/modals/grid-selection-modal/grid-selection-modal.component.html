@@ -83,7 +83,7 @@
                 <table *ngIf="field.type == 'grid_selection_vertical'" class="table-bordered table-striped table-hover">
                     <tbody>
                     <tr>
-                        <td *ngIf="preSelectedData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></td>
+                        <td *ngIf="selectGridData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></td>
                         <td *ngFor="let data of gridData|filter:data; let i = index" class="text-center" >
                             <mat-checkbox color="primary" (click)="$event.stopPropagation()"(change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected">
                             </mat-checkbox>
