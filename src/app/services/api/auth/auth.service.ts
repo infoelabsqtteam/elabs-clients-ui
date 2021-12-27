@@ -122,6 +122,8 @@ export class AuthService {
                 this.notificationService.notify("bg-danger", "User Not Confirmed ");
             } else if (respData["error"] == "user_name_password_does_not_match") {
                 this.notificationService.notify("bg-danger", "Username password does not match ");
+            }else {
+              this.notificationService.notify("bg-danger", "Username password does not match ");
             }
         }
       },
