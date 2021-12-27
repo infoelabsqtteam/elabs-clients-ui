@@ -1350,91 +1350,94 @@ export class CommonFunctionService {
       return templateValue;
 
   }
+ 
   calculate_lims_invoice(templateValue,lims_segment, field: any) {
-let	surcharge	=0;
-let	igst_percent	=0;
-let	gst_percent	=0;
-let	sez_percent	=0;
-let	gross_amount	=0;
-let	discount_percent	=0;
-let	discount_amount	=0;
-let	taxable_amount	=0;
-let	gst_amount	=0;
-let	cgst_amount	=0;
-let	sgst_amount	=0;
-let	igst_amount	=0;
-let	tax_amount	=0;
-let	sez_amount	=0;
-let	net_amount	=0;
-let	net_payble	=0;
-
-
-    if (this.coreFunctionService.isNotBlank(templateValue['items_list']) && templateValue['items_list'].length > 0) {
-      templateValue['items_list'].forEach(element => {
-        if(this.coreFunctionService.isNotBlank(element.gross_amount)){
-          gross_amount=gross_amount+element.gross_amount
+    let	surcharge	=0;
+    let	igst_percent	=0;
+    let	gst_percent	=0;
+    let	sez_percent	=0;
+    let	gross_amount	=0;
+    let	discount_percent	=0;
+    let	discount_amount	=0;
+    let	taxable_amount	=0;
+    let	gst_amount	=0;
+    let	cgst_amount	=0;
+    let	sgst_amount	=0;
+    let	igst_amount	=0;
+    let	tax_amount	=0;
+    let	sez_amount	=0;
+    let	net_amount	=0;
+    let	net_payble	=0;
+    
+    
+        if (this.coreFunctionService.isNotBlank(templateValue['items_list']) && templateValue['items_list'].length > 0) {
+          templateValue['items_list'].forEach(element => {
+            if(this.coreFunctionService.isNotBlank(element.total)){
+              // gross_amount=gross_amount+element.gross_amount
+              gross_amount=gross_amount+element.total
+            }
+            if(this.coreFunctionService.isNotBlank(element.sampling_charge)){
+              // surcharge=surcharge+element.surcharge
+              surcharge=surcharge+element.sampling_charge
+            }
+            if(this.coreFunctionService.isNotBlank(element["info.discount_amount"])){
+              discount_amount=discount_amount+element["info.discount_amount"]
+            }
+            if(this.coreFunctionService.isNotBlank(element.net_amount)){
+              net_amount=net_amount+element.net_amount
+            }
+              taxable_amount=net_amount+surcharge;
+          });
         }
-        if(this.coreFunctionService.isNotBlank(element.surcharge)){
-          surcharge=surcharge+element.surcharge
+        let tax_type = templateValue['tax_type'];
+        let tax_percentage = 0;
+        if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
+          tax_percentage = templateValue.tax_percentage;
         }
-        if(this.coreFunctionService.isNotBlank(element.discount_amount)){
-          discount_amount=discount_amount+element.discount_amount
+    
+        switch(tax_type){
+            case "GST" :
+             gst_amount = taxable_amount * tax_percentage/100;
+             gst_percent=tax_percentage;
+             cgst_amount = gst_amount/2;
+             sgst_amount = gst_amount/2;
+             net_payble = taxable_amount+gst_amount;
+             tax_amount=gst_amount;
+    
+              break;
+            case "IGST" :
+              igst_amount = taxable_amount * tax_percentage/100;
+              igst_percent=tax_percentage;
+              net_payble = taxable_amount+igst_amount;
+              tax_amount=igst_amount;
+            break;
+              default :  
+    
         }
-        if(this.coreFunctionService.isNotBlank(element.net_amount)){
-          net_amount=net_amount+element.net_amount
-        }
-          taxable_amount=net_amount+surcharge;
-      });
-    }
-    let tax_type = templateValue['tax_type'];
-    let tax_percentage = 0;
-    if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
-      tax_percentage = templateValue.tax_percentage;
-    }
-
-    switch(tax_type){
-        case "GST" :
-         gst_amount = taxable_amount * tax_percentage/100;
-         gst_percent=tax_percentage;
-         cgst_amount = gst_amount/2;
-         sgst_amount = gst_amount/2;
-         net_payble = taxable_amount+gst_amount;
-         tax_amount=gst_amount;
-
-          break;
-        case "IGST" :
-          igst_amount = taxable_amount * tax_percentage/100;
-          igst_percent=tax_percentage;
-          net_payble = taxable_amount+igst_amount;
-          tax_amount=igst_amount;
-        break;
-          default :  
-
-    }
-      if(gross_amount>0){
-        discount_percent = this.getDecimalAmount(100*discount_amount/gross_amount);
+          if(gross_amount>0){
+            discount_percent = this.getDecimalAmount(100*discount_amount/gross_amount);
+          }
+          let total ={};
+          total['surcharge'] = this.getDecimalAmount(surcharge);
+          total['igst_percent'] = this.getDecimalAmount(igst_percent);
+          total['gst_percent'] = this.getDecimalAmount(gst_percent);
+          total['sez_percent'] = this.getDecimalAmount(sez_percent);
+          total['gross_amount'] = this.getDecimalAmount(gross_amount);
+          total['discount_percent'] = this.getDecimalAmount(discount_percent);
+          total['discount_amount'] = this.getDecimalAmount(discount_amount);
+          total['taxable_amount'] = this.getDecimalAmount(taxable_amount);
+          total['gst_amount'] = this.getDecimalAmount(gst_amount);
+          total['cgst_amount'] = this.getDecimalAmount(cgst_amount);
+          total['sgst_amount'] = this.getDecimalAmount(sgst_amount);
+          total['igst_amount'] = this.getDecimalAmount(igst_amount);
+          total['tax_amount'] = this.getDecimalAmount(tax_amount);
+          total['sez_amount'] = this.getDecimalAmount(sez_amount);
+          total['net_amount'] = this.getDecimalAmount(net_amount);
+          total['net_payble'] = this.getDecimalAmount(net_payble);
+    
+          templateValue['total_amount'] = total;
+          return templateValue;
       }
-      let total ={};
-      total['surcharge'] = this.getDecimalAmount(surcharge);
-      total['igst_percent'] = this.getDecimalAmount(igst_percent);
-      total['gst_percent'] = this.getDecimalAmount(gst_percent);
-      total['sez_percent'] = this.getDecimalAmount(sez_percent);
-      total['gross_amount'] = this.getDecimalAmount(gross_amount);
-      total['discount_percent'] = this.getDecimalAmount(discount_percent);
-      total['discount_amount'] = this.getDecimalAmount(discount_amount);
-      total['taxable_amount'] = this.getDecimalAmount(taxable_amount);
-      total['gst_amount'] = this.getDecimalAmount(gst_amount);
-      total['cgst_amount'] = this.getDecimalAmount(cgst_amount);
-      total['sgst_amount'] = this.getDecimalAmount(sgst_amount);
-      total['igst_amount'] = this.getDecimalAmount(igst_amount);
-      total['tax_amount'] = this.getDecimalAmount(tax_amount);
-      total['sez_amount'] = this.getDecimalAmount(sez_amount);
-      total['net_amount'] = this.getDecimalAmount(net_amount);
-      total['net_payble'] = this.getDecimalAmount(net_payble);
-
-      templateValue['total_amount'] = total;
-      return templateValue;
-  }
 
 
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
