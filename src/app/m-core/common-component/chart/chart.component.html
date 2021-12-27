@@ -1,0 +1,70 @@
+<div class="row" [formGroup]="dashboardFilter" *ngIf="elements.length >0">      
+    <div class="col-lg-6" *ngFor="let item of elements; let j = index">
+        <div class="card">
+          <div *ngIf="item.list_of_fields && item.list_of_fields.length >0">
+            <div *ngFor="let field of item.list_of_fields">
+              <div *ngIf="field.type == 'list_of_fields' || field.type == 'group_of_fields'">
+                <div *ngIf="field.list_of_fields && field.list_of_fields.length > 0">
+                  <div class="row mt-2 ml-1"  [formGroupName]="item.name">
+                    <div  *ngFor="let fields of field.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
+                      <div *ngIf="fields.type == 'dropdown'">
+                          <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
+                              <mat-label>{{ fields.label | titlecase}}</mat-label>
+                              <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" >
+                                  <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                      {{getddnDisplayVal(staticValue)}}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype != 'object' && fields.datatype != 'key_value'">
+                              <mat-label>{{ fields.label | titlecase}}</mat-label>
+                              <mat-select [formControlName]="fields.field_name"   >
+                                  <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                      {{getddnDisplayVal(staticValue)}}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'key_value'">
+                              <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                              <mat-select [formControlName]="fields.field_name"   >
+                                  <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                      {{getddnDisplayVal(staticValue)}}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                      </div>
+                    </div>
+                    <button class="btn btn-primary" (click)="dashletFilter(j)" >Filter</button>
+                  </div>
+                </div>
+                
+              </div>
+                
+            </div>
+          </div>
+            <div class="card-body">
+              <canvas mdbChart *ngIf="item.package_name == 'chart_js'"
+                  [chartType]="chartType[item.call_back_field]"
+                  [datasets]="chartDatasets[item.call_back_field]"
+                  [labels]="chartLabels[item.call_back_field]"
+                  [colors]="chartColors[item.call_back_field]"
+                  [options]="chartOptions[item.call_back_field]"
+                  [legend]="chartLegend[item.call_back_field]"
+                  (chartHover)="chartHover($event)"
+                  (chartClick)="chartClicked($event)">
+              </canvas> 
+              <google-chart *ngIf="item.package_name == 'google_chart' && chartTitle[item.call_back_field]"
+                [title]="chartTitle[item.call_back_field]"
+                [type]="chartType[item.call_back_field]"
+                [data]="chartDatasets[item.call_back_field]"
+                [columns]="chartLabels[item.call_back_field]"
+                [options]="chartOptions[item.call_back_field]"
+              >
+              </google-chart>             
+            </div>
+        </div>
+    </div>    
+</div>
+<div *ngIf="elements.length == 0">
+  <p class="text-center"><span>Dashlet Master not available in this application.</span></p>
+</div>

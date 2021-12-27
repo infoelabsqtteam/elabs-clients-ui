@@ -48,6 +48,7 @@
       </ul> 
 
       <ul class="navbar-nav ml-auto nav-flex-icons d-flex align-items-center" *ngIf="showUserAccount">
+        <li class="nav-item avatar mr-3" (click)="chartModel()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">bar_chart</span></a></li>
         <li class="nav-item avatar mr-3" (click)="shortcutinfo()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">info</span></a></li>
         <li class="nav-item avatar dropdown" dropdown>
           <a href="javascript:void(0)" dropdownToggle mdbWavesEffect class="nav-link dropdown-toggle userlogin waves-light"><img src="../../assets/img/profile.jpg" alt="" class="img-fluid rounded-circle" width="30"></a>
@@ -63,4 +64,4 @@
 
 
 </header>
-<app-shortcutinfo id="shortcutinfo_model" (shortcutinfoResponce)="shortcutinfoResponce($event)"></app-shortcutinfo>
+

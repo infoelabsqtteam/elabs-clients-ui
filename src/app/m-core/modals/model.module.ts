@@ -17,6 +17,9 @@ import { PdfViewerModalComponent } from './pdf-viewer-modal/pdf-viewer-modal.com
 import { MultiDownloadModalComponent } from './multi-download-modal/multi-download-modal.component';
 import { FileViewsModalComponent } from './file-views-modal/file-views-modal.component';
 import { CommunicationDataModalComponent } from './communication-data-modal/communication-data-modal.component';
+import { SettingModalComponent } from './setting-modal/setting-modal.component';
+import { ShortcutinfoComponent } from './shortcutinfo/shortcutinfo.component';
+import { LandingFunctionsModalComponent } from './landing-functions-modal/landing-functions-modal.component';
 
 import { BisFormComponent } from '../report-form/bis-form/bis-form.component';
 import { PharmaFormComponent } from '../report-form/pharma-form/pharma-form.component';
@@ -47,8 +50,10 @@ const models = [
   AyurvedicFormComponent,
   EnvironmentFormComponent,
   ApedaFormatComponent,
-  EicFormatComponent
-  
+  EicFormatComponent,
+  SettingModalComponent,
+  LandingFunctionsModalComponent,
+  ShortcutinfoComponent  
 ]
 
 @NgModule({

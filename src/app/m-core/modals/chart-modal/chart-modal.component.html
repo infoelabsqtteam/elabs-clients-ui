@@ -1,18 +1,17 @@
-<div mdbModal #chartModel="mdbModal" class="modal fade right"  tabindex="-1" role="dialog"
+<div mdbModal #chartModel="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: false, ignoreBackdropClick: true}">
-  <div class="modal-dialog modal-full-height modal-right modal-notify modal-info" role="document">
+  <div class="modal-dialog modal-dialog-full-width modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <!--Header-->
       <div class="modal-header">
-        <p class="heading lead">Application Setting</p>
-
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
-          <span aria-hidden="true" class="white-text">×</span>
-        </button>
+        <p class="heading lead m-0">Chart Module</p>
+        <button type="button" class="closebtb" data-dismiss="modal" (click)="close()"><span>×</span></button>
       </div>
 
       <!--Body-->
-      <div class="modal-body"></div>
+      <div class="modal-body">
+        <app-chart [isShow]="isShow"></app-chart>
+      </div>
     </div>
   </div>
 </div>

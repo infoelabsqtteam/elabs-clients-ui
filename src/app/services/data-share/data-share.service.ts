@@ -47,6 +47,7 @@ export class DataShareService {
   applicationSetting:EventEmitter<any> = new EventEmitter<any>();
   fieldDinamicResponce:EventEmitter<any> = new EventEmitter<any>();
   checkValidation:EventEmitter<any> = new EventEmitter<any>();
+  dashletMaster:EventEmitter<any> = new EventEmitter<any>();
   
 
   constructor() { }
@@ -76,6 +77,9 @@ export class DataShareService {
   }
   shareGridData(gridData:any){
     this.gridData.emit(gridData);
+  }
+  shareDashletMaster(responce){
+    this.dashletMaster.emit(responce)
   }
   shareMenuData(menuData:any){
     this.menu.emit(menuData);

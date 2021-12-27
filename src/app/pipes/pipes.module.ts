@@ -1,15 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { SortPipe } from './sort.pipe';
+import { SortingPipePipe } from './sorting-pipe.pipe';
+import { SortPipe }  from './sort.pipe';
 
-
+const pipes = [
+  SortingPipePipe,
+  SortPipe
+]
 
 @NgModule({
-  declarations: [],
+  declarations: pipes,
   imports: [
     CommonModule
   ],
-  exports:[],
+  exports:pipes
 })
 export class PipesModule {
   static forRoot() {

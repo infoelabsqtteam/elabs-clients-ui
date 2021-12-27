@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Output, EventEmitter , Input,OnChanges,SimpleChanges} from '@angular/core';
+import { Component, OnInit, Inject, Output, EventEmitter , Input,OnChanges,SimpleChanges, HostListener} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { StorageService } from '../../../services/storage/storage.service';
@@ -8,6 +8,7 @@ import { ApiService } from '../../../services/api/api.service';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-topbar',
@@ -25,6 +26,11 @@ export class TopbarComponent implements OnInit, OnChanges {
   public menuData: any=[];
   AllModuleList:any=[];
 
+  header2 = false;
+  @HostListener('window:keyup.alt.o') onCtrlO(){
+      this.shortcutinfo();
+  }
+
   // tslint:disable-next-line: max-line-length
   constructor(
     @Inject(DOCUMENT) private document: any, 
@@ -35,7 +41,8 @@ export class TopbarComponent implements OnInit, OnChanges {
       private dataShareService:DataShareService,
       private apiService:ApiService,
       private authService:AuthService,
-      private envService:EnvService
+      private envService:EnvService,
+      private modelService:ModelService
 ) {
     this.AllModuleList = this.storageService.GetModules();
    }
@@ -150,5 +157,11 @@ goToVdr(){
     }else{
       return;
     }       
-}
+  }
+  shortcutinfo() {
+    this.modelService.open('shortcutinfo_model',{})
+  }
+  chartModel() {
+    this.modelService.open('chart_model',{})
+  }
 }

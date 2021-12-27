@@ -18,7 +18,9 @@
                 <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover">
                     <thead>
                         <tr>
-                            <th *ngIf="preSelectedData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></th>
+                            <th *ngIf="grid_row_seelction" class="text-center">
+                              <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
+                            </th>
                             <th *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="heading" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
                         </tr>
                     </thead>
@@ -26,10 +28,10 @@
 
 
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
-                            <td class="text-center">
+                            <td class="text-center" *ngIf="grid_row_seelction">
                                 <div class="checkeditmode">
-                                  <mat-checkbox *ngIf="preSelectedData" color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected"> </mat-checkbox>
-                                  <span *ngIf="data.selected" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
+                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected"> </mat-checkbox>
+                                  <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
                                 </div>
                               </td>
 

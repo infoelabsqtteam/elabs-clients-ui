@@ -33,7 +33,7 @@ export enum EndPoint {
     GET_FORM_PUBLIC = 'get_form',
     GET_FILE = "rpts/get_file",
     RESET_PASSWORD = "login/cnp",
-    GET_DASHLET_DATA = "rpts/get_dashlet_data",
+    GET_DASHLET_DATA = "generic/retrieve/dashlet_data",
     OTP_VARIFICATION = "login/confirmUserWithToken/",
     GET_COMPARE_DATA = "mig/send_menu_by_module/",
     GET_QR_CODE = "rpts/qrGen/",
