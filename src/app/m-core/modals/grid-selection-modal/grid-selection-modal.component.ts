@@ -253,22 +253,14 @@ export class GridSelectionModalComponent implements OnInit {
       });
     }
     this.gridSelectionResponce.emit(this.selectedData);
-    this.gridViewModalSelection.hide();
-    this.gridData=[];
-    this.selectedData = [];
-    this.selecteData=[];    
-    // const fieldName = {
-    //   "field" : this.field.ddn_field
-    // }
-    // this.store.dispatch(
-    //   new CusTemGenAction.ResetStaticData(fieldName)
-    // )
+    this.closeModal();
   }
 
   closeModal(){
     this.gridData=[];
     this.selectedData = [];
     this.selecteData=[];
+    this.data = '';
     this.gridViewModalSelection.hide();
   }
 
