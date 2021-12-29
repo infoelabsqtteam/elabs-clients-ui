@@ -605,8 +605,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if (exportExcelLink != '' && exportExcelLink != null && this.downloadClick != '') {
       let link = document.createElement('a');
       link.setAttribute('type', 'hidden');
-      const exportLink = link['exportExcelLink'];
-      const file = new Blob([exportLink], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const file = new Blob([exportExcelLink], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const url = window.URL.createObjectURL(file);
       link.href = url;
       link.download = this.downloadClick;
