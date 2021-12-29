@@ -231,6 +231,7 @@ setMenuData(menuData){
     const menuType = this.storageService.GetMenuType()
     if(menuType == 'Horizontal'){
         this.router.navigate(['/home']);
+        //this.router.navigate(['/dashboard']);
     }else{
         this.router.navigate(['/dashboard']);
     }      

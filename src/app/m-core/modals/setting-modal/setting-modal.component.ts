@@ -42,7 +42,6 @@ export class SettingModalComponent implements OnInit {
         this.envService.setHostNameDinamically('');
         this.getHostData()
       }
-
     })
     this.hostDataSubscription = this.dataShareService.hostData.subscribe(data =>{
       this.setHostData(data);
@@ -61,16 +60,11 @@ export class SettingModalComponent implements OnInit {
     
   }
   getHostData(){
+    const data = this.commonFunctionService.getPaylodWithCriteria('host_master','',[],{});
+    data['pageNo'] = 0;
+    data['pageSize'] = 100;
     const getSortData = {
-      data: {
-        crList: [],
-        refCode: this.storageService.getRefCode(),
-        key2: this.storageService.getAppId(),
-        log: this.storageService.getUserLog(),
-        value: 'host_master',
-        pageNo: 0,
-        pageSize: 100
-      },
+      data: data,
       path: null
     }
     this.apiService.GetHostName(getSortData)
