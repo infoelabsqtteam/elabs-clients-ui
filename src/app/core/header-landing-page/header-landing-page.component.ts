@@ -17,7 +17,6 @@ import { EnvService } from "src/app/services/env/env.service";
 })
 export class HeaderLandingPageComponent implements OnInit {
 
-      
 
     @Input() public pageName;
     solutions:any=[];
@@ -44,7 +43,7 @@ export class HeaderLandingPageComponent implements OnInit {
     currentPage:any;
     subscription: any;
     menuDataSubscription;
-    logoPath = '../../assets/images/logo.png'
+    logoPath = ''
     
     logedin:boolean=false;
 
@@ -69,6 +68,9 @@ export class HeaderLandingPageComponent implements OnInit {
             this.setMenuData(menu);
         })
         this.solutions = solution;
+
+
+        this.logoPath = this.envService.getLogoPath();
     }
 
   ngOnInit() {
@@ -341,10 +343,10 @@ getUserColorCode(n) {
     let element = document.querySelector('.navbar');
     if(element && element.clientHeight){
         if (window.pageYOffset > element.clientHeight) {
-            this.logoPath = '../../assets/img/2.png';
+           // this.logoPath = '../../assets/img/2.png';
             element.classList.add('navbar-inverse', 'shadow');
         } else {
-            this.logoPath = '../../assets/images/logo.png';
+          //  this.logoPath = '../../assets/images/logo.png';
             element.classList.remove('navbar-inverse', 'shadow');
         }
 
@@ -359,7 +361,7 @@ getUserColorCode(n) {
       else if(this.currentPage == 'HOME2'){
         let element = document.querySelector('.navbar');
         element.classList.add('navbar-inverse', 'shadow');
-        this.logoPath = '../../assets/img/2.png';
+      //  this.logoPath = '../../assets/img/2.png';
         return 'fixed-top'
       }
       else{
@@ -370,7 +372,7 @@ getUserColorCode(n) {
     gotoStaticMenu(menu) {
         if (menu == 'home_page') {
             this.dataShareService.sendCurrentPage('HOME')
-            this.logoPath = '../../assets/images/logo.png';
+           // this.logoPath = '../../assets/images/logo.png';
             let element = document.querySelector('.navbar');
             element.classList.remove('navbar-inverse', 'shadow');
         }
