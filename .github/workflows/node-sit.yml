@@ -39,7 +39,7 @@ jobs:
     - name: Building
       run: ng build --configuration=${{ secrets.ENVIRONMENT_SIT }}
      
-    # Deploy InventLands    
+  # Deploy InventLands    
     - name: Clean up existing deployment - InventLands
       run: aws s3 rm s3://testlims.inventlands.com --recursive
 
@@ -68,3 +68,14 @@ jobs:
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E35I1KJPO9P1V0 --paths '/*'
+      
+    
+  # Deploy HardGoodLabs Sit
+    - name: Clean up existing deployment - Sanskar
+      run: aws s3 rm s3://hardgoodslabs.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://hardgoodslabs.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E2JPRR8Q5U69KC --paths '/*'
