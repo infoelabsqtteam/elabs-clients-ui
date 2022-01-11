@@ -15,6 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    ########################### Elabs Aws - ###########################
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -59,3 +60,24 @@ jobs:
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id EZM8OSIIJIZIC --paths '/*'
+      
+########################### Medicea Aws - ###########################
+  # Medicea Aws
+    - name: Configure AWS credentials Medicea
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEDICEA }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEDICEA }}
+        aws-region: ${{ secrets.REGION }}
+    
+    
+
+  # Deploy  Asc Group Prod
+    - name: Clean up existing deployment - Asc Group - Medicea
+      run: aws s3 rm s3://erp.ascgroup.in --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://erp.ascgroup.in
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E2TSEGTFACTBCI --paths '/*'      
