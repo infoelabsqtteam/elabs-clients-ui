@@ -62,7 +62,7 @@ jobs:
       run: aws cloudfront create-invalidation --distribution-id E2DM82H0I1K8V0 --paths '/*'
   
   # Deploy ITL Sit
-    - name: Clean up existing deployment - Sanskar
+    - name: Clean up existing deployment - ITL
       run: aws s3 rm s3://itllabs.e-labs.ai --recursive
 
     - name: Upload data
@@ -73,7 +73,7 @@ jobs:
       
     
   # Deploy HardGoodLabs Sit
-    - name: Clean up existing deployment - Sanskar
+    - name: Clean up existing deployment - HardGoodLabs
       run: aws s3 rm s3://hardgoodslabs.e-labs.ai --recursive
 
     - name: Upload data
