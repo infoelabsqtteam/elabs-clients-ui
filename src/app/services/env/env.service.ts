@@ -16,6 +16,7 @@ import { serverHostList } from './serverHostList'
 export class EnvService {
 
   HOST_NAME : string = 'HOST_NAME';
+  PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
   requestType: any = '';
 
 
@@ -33,6 +34,22 @@ export class EnvService {
     return localStorage.getItem(this.HOST_NAME);
   }
 
+
+
+  setLogoPath(path:string){
+    localStorage.setItem(this.PROJECT_FOLDER_NAME, path);
+  }
+
+  getLogoPath(){
+    return localStorage.getItem(this.PROJECT_FOLDER_NAME);
+  }
+
+
+
+
+
+
+
   getBaseUrl(){
     let baseUrl = '';
     const host = this.getHostNameDinamically();
@@ -40,7 +57,7 @@ export class EnvService {
       baseUrl = this.getHostNameDinamically()
     }else{
       // baseUrl = environment.serverhost
-      baseUrl = this.getHostName();
+      baseUrl = this.getHostKeyValue('serverEndpoint') +'/rest/';
       this.setDinamicallyHost();
     }
     return baseUrl;
@@ -110,29 +127,30 @@ export class EnvService {
 
   setDinamicallyHost(){
     let setHostName = this.getHostNameDinamically();
-    let serverHostName = this.getHostName()
+    let serverHostName = this.getHostKeyValue('serverEndpoint');
+    let projectFolderName = this.getHostKeyValue('folder');
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
-      this.setHostNameDinamically(hostName);      
+      const path = 'assets/img/logo/' + projectFolderName + '/';
+      this.setHostNameDinamically(hostName);
+      this.setLogoPath(path);   
     }
   }
   
-  getHostName(){
+  getHostKeyValue(keyName){
     let hostname = this.document.location.hostname;
-    let serverHostName = '';    
+    let value = '';    
     if(serverHostList && serverHostList.length > 0){
       for (let index = 0; index < serverHostList.length; index++) {
         const element = serverHostList[index];
         if(hostname == element.clientEndpoint){
-          serverHostName = element.serverEndpoint;
+          value = element[keyName];
           break;
         }        
       }
     }
-    return serverHostName;
+    return value;
   }
-
-
 
 
 

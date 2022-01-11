@@ -1,6 +1,6 @@
 <header class="position-sticky" *ngIf="fullHeader">
   <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark py-2" [containerInside]="false">
-    <mdb-navbar-brand><a class="navbar-brand"><img src="assets/images/logo2.png" alt="Elabs" width="120px"></a></mdb-navbar-brand>
+    <mdb-navbar-brand><a class="navbar-brand"><img [src]="logoPath" alt="Elabs" width="120px"></a></mdb-navbar-brand>
     <links *ngIf="menuBoxHome">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active"><button mat-button class="nav-link" [routerLink]="['/home_page']">Home</button></li>

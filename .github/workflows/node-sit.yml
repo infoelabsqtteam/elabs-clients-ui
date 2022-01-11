@@ -14,7 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Configure AWS credentials
+    ########################### Elabs Aws - ###########################
+    # Elabs Aws
+    - name: Configure AWS credentials Elabs
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -39,7 +41,7 @@ jobs:
     - name: Building
       run: ng build --configuration=${{ secrets.ENVIRONMENT_SIT }}
      
-    # Deploy InventLands    
+  # Deploy InventLands    
     - name: Clean up existing deployment - InventLands
       run: aws s3 rm s3://testlims.inventlands.com --recursive
 
@@ -68,3 +70,36 @@ jobs:
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E35I1KJPO9P1V0 --paths '/*'
+      
+    
+  # Deploy HardGoodLabs Sit
+    - name: Clean up existing deployment - Sanskar
+      run: aws s3 rm s3://hardgoodslabs.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://hardgoodslabs.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E2JPRR8Q5U69KC --paths '/*'
+
+
+########################### Medicea Aws - ###########################
+  # Medicea Aws
+    - name: Configure AWS credentials Medicea
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEDICEA }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEDICEA }}
+        aws-region: ${{ secrets.REGION }}
+    
+    
+
+  # Deploy  Asc Group Sit
+    - name: Clean up existing deployment - Asc Group - Medicea
+      run: aws s3 rm s3://test.ascgroup.in --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://test.ascgroup.in
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E1U1RL73RJW4LA --paths '/*'

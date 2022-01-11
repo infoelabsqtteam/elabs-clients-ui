@@ -18,12 +18,13 @@ export class SigninComponent implements OnInit {
   appName: string;
   signInForm:FormGroup;
 
+  logoPath = ''
   constructor(
     private router: Router,
     private authService:AuthService,
     private envService:EnvService
     ) {
-    
+      this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
   }
 
 
