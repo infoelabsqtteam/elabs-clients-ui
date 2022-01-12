@@ -17,14 +17,15 @@ export class SigninComponent implements OnInit {
   @Input() public pageName;
   appName: string;
   signInForm:FormGroup;
-
-  logoPath = ''
+  template:string = "temp1";
+  logoPath = '';
   constructor(
     private router: Router,
     private authService:AuthService,
     private envService:EnvService
     ) {
       this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+      this.template = this.envService.getTemplateName();
   }
 
 

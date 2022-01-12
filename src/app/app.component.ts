@@ -55,7 +55,11 @@ export class AppComponent implements OnInit {
       this.applicationSettingSubscription = this.dataShareService.applicationSetting.subscribe(
         data =>{
         //  console.log(data)
-        this.setApplicationSetting(data.data)
+        const themeSettingDate = data.data;
+        if(themeSettingDate && themeSettingDate.length > 0) {
+          const settingObj = themeSettingDate[0];
+          this.envService.setApplicationSetting(settingObj);
+        }
         })
     }
    
@@ -144,7 +148,6 @@ export class AppComponent implements OnInit {
         document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
         document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
         document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
-
       }
     }
   }

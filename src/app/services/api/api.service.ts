@@ -252,7 +252,7 @@ constructor(
   }    
   GetDashletData(payload:any){
     let api = this.envService.getApi('GET_DASHLET_DATA');
-    this.http.post(api + '/' + payload._id, payload).subscribe(
+    this.http.post(api + '/' + payload._id, payload.data).subscribe(
       (respData) => {
           let currentStaticData=[];
           let getDashletData = this.dataShareService.getDashletData();

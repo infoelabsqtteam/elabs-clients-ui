@@ -19,7 +19,7 @@
                                     <img data-dz-thumbnail src="assets/img/ic-file.png" class="avatar-sm rounded" alt="">
                                 </div>
                                 <div class="col pl-0">
-                                    <a href="javascript:void(0);" class="text-muted font-weight-bold">{{ file?.fileName }}</a>
+                                    <a href="javascript:void(0);" class="text-muted font-weight-bold" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</a>
                                     <!-- <p class="mb-0">{{ formatBytes(file?.size,2) }}</p> -->
                                     <!-- <app-progress [progress]="file?.progress" *ngIf="uploadFile"></app-progress> -->
                                 </div>

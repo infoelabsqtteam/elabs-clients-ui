@@ -38,6 +38,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   staticDataSubscription;
   dashletDataSubscription;
 
+  filterValue:any = [];
+  filteredDashboardData:any = [];
+
   constructor(
     public formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
@@ -61,6 +64,29 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.getPage(1)   
 
   }
+
+  
+  filterchart() {
+    this.filteredDashboardData = [];
+    if(this.filterValue && this.filterValue.length > 0) {
+      this.filterValue.forEach(element => {
+        const index = this.commonFunctionService.getIndexInArrayById(this.elements, element);
+        this.filteredDashboardData.push(this.elements[index]);
+      });
+
+      // for (let index = 0; index < this.elements.length; index++) {
+      //   const element = this.elements[index];
+      //   if(element._id == this.filterValue) {
+      //     this.filteredDashboardData.push(element);
+      //     break;
+      //   }
+      // }
+    } else {
+      this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
+    }
+    
+  }
+
 
   ngOnChanges(changes: SimpleChanges) {
     if(this.isShow){
@@ -103,41 +129,28 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   setGridData(gridData){
     if (gridData.data && gridData.data.length > 0) {
       this.elements = JSON.parse(JSON.stringify(gridData.data));
+      this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
       if(this.checkGetDashletData && this.elements.length > 0){
         this.checkGetDashletData = false;
         let forControl = {};
         let formField = [];
         if(this.elements.length > 0){
           this.elements.forEach(dashlet => {
-            if(dashlet.list_of_fields && dashlet.list_of_fields.length > 0){
-              dashlet.list_of_fields.forEach(field => {                    
-                    formField.push(field);
-                    switch(field.type){
-                      case "group_of_fields":
-                        const list_of_fields = {};
-                        const groupField = {
-                          "field_name":dashlet.name
-                        }
-                        if (field.list_of_fields.length > 0) {
-                          field.list_of_fields.forEach((data) => {
-                            let modifyData = JSON.parse(JSON.stringify(data));
-                            modifyData.parent = field.field_name;
-                            //show if handling
-                                                
-                            if(field.type == 'list_of_fields'){
-                              modifyData.is_mandatory=false;
-                            }
-                            this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
-                          });
-                        }
-                        this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
-                                         
-                        break;
-                    }
-                  
-                
+            if(dashlet.fields && dashlet.fields.length > 0){
+              const groupField = {
+                "field_name":dashlet.name
+              }
+              const list_of_fields = {};
+              dashlet.fields.forEach(field => {                    
+                formField.push(field);
+                switch(field.type){                        
+                  default:
+                    this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
+                    break;
+                }   
               });
-            }               
+              this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
+            }                 
             
           });
           if(formField.length > 0){
@@ -152,9 +165,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
           if (forControl) {
             this.dashboardFilter = this.formBuilder.group(forControl);              
           }
-          this.elements.forEach(element => {
-            this.apiService.GetDashletData(element);
-          });
+          this.getDashletData(this.elements);
         }            
       }          
     } else {
@@ -206,6 +217,26 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   chartClicked(e){}
   compareObjects(o1: any, o2: any): boolean {
     return o1._id === o2._id;
+  }
+  getDashletData(elements){
+    if(elements && elements.length > 0){
+      elements.forEach(element => {
+        let value = this.dashboardFilter.getRawValue();
+        const filterData = value[element.name];
+        let object = {}
+        if(filterData){
+          object = filterData;
+        }
+        const data = {
+          "data": object
+        }
+        const payload={
+          "_id" : element._id,
+          "data" : data
+        }
+        this.apiService.GetDashletData(payload);
+      });
+    }
   }
 
 }

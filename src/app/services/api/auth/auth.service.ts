@@ -8,6 +8,7 @@ import { DataShareService } from '../../data-share/data-share.service';
 import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
 import { Common } from 'src/app/shared/enums/common.enum';
+import { serverHostList } from '../../env/serverHostList';
 
 @Injectable({
   providedIn: 'root'
