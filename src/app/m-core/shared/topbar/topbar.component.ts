@@ -26,7 +26,9 @@ export class TopbarComponent implements OnInit, OnChanges {
   public menuData: any=[];
   AllModuleList:any=[];
 
-  header2 = false;
+  logoPath = ''
+
+  header2 = true;
   @HostListener('window:keyup.alt.o') onCtrlO(){
       this.shortcutinfo();
   }
@@ -45,6 +47,7 @@ export class TopbarComponent implements OnInit, OnChanges {
       private modelService:ModelService
 ) {
     this.AllModuleList = this.storageService.GetModules();
+    this.logoPath = this.envService.getLogoPath() + "logo.png";
    }
 
   @Output() mobileMenuButtonClicked = new EventEmitter();

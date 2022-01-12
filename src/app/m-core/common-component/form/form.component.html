@@ -44,13 +44,21 @@
                         <div *ngIf="tableField.type == 'gst_number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name"> 
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" (change)="setValue('',tableField,false)"> 
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.invalidGSTNumber">
                                     {{ tableField.label | titlecase}} is <strong>invalidGSTNumber</strong>
                                 </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="tableField.type == 'po_number'">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" pattern="^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$">
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">{{ tableField.label | titlecase}} is <strong>required</strong></mat-error>
+                                <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.pattern">{{ tableField.label | titlecase}} is <strong>Invalid</strong></mat-error>
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'api'">
@@ -335,7 +343,7 @@
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
                             <div class="row">
                                 <div class="col-lg-12 px-0">
-                                    <div class="px-0 py-1 mb-2 ml-3 mt-2 form-label">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                    <div class="px-0 py-1 mb-2 mx-3 mt-2 form-label">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 </div>
                             </div>
                             <div class="row" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null">
@@ -490,12 +498,12 @@
 
                                     </div>
                                     <div *ngIf="fields.type == 'list_of_checkbox'">
-                                        <div class="row">
+                                        <div class="row w-100 m-0">
                                             <div class="col-lg-12 px-0">
-                                                <div class="card-header border-0  px-2 py-1 mb-1">{{ fields.label | titlecase}}</div>
+                                                <div class="card-header border-0 px-1 py-1 my-2">{{ fields.label | titlecase}}</div>
                                             </div>
                                         </div>
-                                        <div class="row" [formArrayName]="fields.field_name">
+                                        <div class="row w-100 m-0" [formArrayName]="fields.field_name">
                                             <div class="col-lg-3" *ngFor="let order of staticData[fields.ddn_field]; let i = index">
                                                 <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ getddnDisplayVal(order) }}</mat-checkbox>
                                             </div>
@@ -870,7 +878,7 @@
                         <div *ngIf="tableField.type == 'label'">
                             <div class="row">
                                 <div class="col-lg-12 px-0">
-                                    <div class="px-0 py-1 mb-2 ml-3 mt-2 form-label">{{ tableField.label | titlecase}}</div>
+                                    <div class="px-0 py-1 mb-2 mx-3 mt-2 form-label">{{ tableField.label | titlecase}}</div>
                                 </div>
                             </div>
                         </div>

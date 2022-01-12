@@ -20,6 +20,8 @@ import { AngularCommonModule } from '../m-core/angular-common/angular-common.mod
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
 import { FormModelModule } from '../m-core/modals/form-model.module';
 import { ModelModule } from '../m-core/modals/model.module';
+import { PageNotFoundComponent } from './error/page-not-found.component';
+import { VerifyFailedComponent } from './error/verify-failed.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { ModelModule } from '../m-core/modals/model.module';
         HeaderLandingPageComponent,
         SigninModalComponent,
         SignupModalComponent,
-        ForgotpwdModalComponent
+        ForgotpwdModalComponent,
+        PageNotFoundComponent,
+        VerifyFailedComponent,
         ],
         imports :[
             AppRoutingModule,

@@ -1376,12 +1376,12 @@ export class CommonFunctionService {
               // gross_amount=gross_amount+element.gross_amount
               gross_amount=gross_amount+element.total
             }
-            if(this.coreFunctionService.isNotBlank(element.sampling_charge)){
+            if(this.coreFunctionService.isNotBlank(element.sampling_charge)) {
               // surcharge=surcharge+element.surcharge
               surcharge=surcharge+element.sampling_charge
             }
-            if(this.coreFunctionService.isNotBlank(element["info.discount_amount"])){
-              discount_amount=discount_amount+element["info.discount_amount"]
+            if(this.coreFunctionService.isNotBlank(element.discount_amount)){
+              discount_amount=discount_amount+element.discount_amount
             }
             if(this.coreFunctionService.isNotBlank(element.net_amount)){
               net_amount=net_amount+element.net_amount

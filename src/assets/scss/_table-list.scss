@@ -48,6 +48,13 @@
         }
     }
 }
+.checkeditmode {display:flex;padding:0 5px;
+    .grid-button.material-icons {font-size:14px;line-height:25px;cursor:pointer;}
+
+}
+
+
+.tablist {padding-right:150px;}
 
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
@@ -102,3 +109,5 @@
 
 
 .one-line-text {text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.grid-filter .form-control-sm {min-width:170px;}
+
