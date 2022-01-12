@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataShareService } from '../../services/data-share/data-share.service';
+import { EnvService } from 'src/app/services/env/env.service';
 
 
 @Component({
@@ -12,10 +13,13 @@ export class FooterComponent implements OnInit {
   currentPage:boolean = false;
   menuBoxHome:boolean = false;
   subscription:any;
+  template:string = "temp1";
 
   constructor(
-    private dataShareService:DataShareService
-  ) { 
+    private dataShareService:DataShareService,
+    private envService:EnvService
+  ) {
+    this.template = this.envService.getTemplateName();
     this.setpage(this.dataShareService.getCurrentPage());
     this.subscription = this.dataShareService.currentPage.subscribe(
         (data: any) => {

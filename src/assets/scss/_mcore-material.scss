@@ -4,7 +4,13 @@
 ::-webkit-scrollbar-thumb{background:$color888;border-radius:$size10}
 ::-webkit-scrollbar-thumb:hover{background:$color555}
 
-
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 900;
+    src: url(/fonts.gstatic.com/s/montserrat/v18/JTURjIg1_i6t8kCHKm45_epG3gTD_u50.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
 
 header {position:sticky;top:0;z-index:10;
     .navbar-toggler-icon {position:relative;background-image:none !important;}
@@ -20,7 +26,7 @@ header {position:sticky;top:0;z-index:10;
             i {margin-left:-5px;font-size:$size20;position:$relative;top:-1px;}
         }
     }
-    .infoicon span{font-size:$size25;margin-top:$size5;cursor:$pointer;color:$headericon;
+    .infoicon span{font-size:$size25;cursor:$pointer;color:$headericon;
      &:hover {color:$headericonhover;}
     }
 }
@@ -38,7 +44,7 @@ header {position:sticky;top:0;z-index:10;
 // Dropdown menu
 .userlogin.dropdown-toggle:after {display:none !important;}
 .dropdown.open.show {
-    .dropdown-toggle, .dropdown-toggle:hover {background:$activebg;color:$activecolor !important}
+    .dropdown-toggle, .dropdown-toggle:hover {background:$activebg;}
 }
 .dropdown.show .dropdown-menu{
     max-height:80vh;overflow-x:hidden;border-radius:0 0 4px 4px;padding:0px;
@@ -71,10 +77,14 @@ header {position:sticky;top:0;z-index:10;
 
 
 
-
-
-
-
+.dashboardtitle {position:absolute;left:15px;}
+.chartfilteroption{margin:30px 40px 0;min-width:100% !important;}
+.notfound {max-width:520px;width:100%;line-height:1.4;text-align:center;margin:auto;padding-top:100px;
+    h3 {font-family:cabin,sans-serif;position:relative;font-size:16px;font-weight:700;color:#262626;margin:0;}
+    h1 {font-family:montserrat,sans-serif !important;font-size:200px !important;font-weight:900 !important;color:#262626;letter-spacing:-40px !important;margin-left:-50px !important;line-height:200px !important;
+        span {text-shadow:-8px 0 0 #fff !important;}
+    }
+}
 
 
 

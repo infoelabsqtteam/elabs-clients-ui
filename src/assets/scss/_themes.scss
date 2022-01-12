@@ -2,13 +2,14 @@
 .sec-title:before, .sec-title .dotted-box .dotted, .service-block-two .inner-box .lower-content .link:before, .page-title .content-box .title-box:before, .theme-btn-two, .ngx-pagination .current, .float, .page-title .content-box .title-box .dotted-box .dotted{background:$themecolor!important}
 
 
-.theme-color3, .copyright{background:$themecolor!important;color:$white!important}
+.theme-color3, .copyright{background:$footerbg!important;color:$white!important}
 
 
 .modal-footer .btn-outline-primary,  .modal-footer .btn-outline-primary.active, .modal-footer
 .btn-outline-primary:active, .modal-footer .btn-outline-primary:active:focus, .btn-outline-primary:focus, .modal-footer .btn-outline-primary:hover {border:2px solid $themecolor!important; color:$themecolor!important;}
 
-.activetxt {background:rgba($themecolor, 0.2) !important}
+.activetxt {background:var(--activebg) !important}
+
 
 // Button Color
 .bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;

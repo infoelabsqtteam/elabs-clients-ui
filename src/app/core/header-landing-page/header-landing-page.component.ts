@@ -17,6 +17,7 @@ import { EnvService } from "src/app/services/env/env.service";
 })
 export class HeaderLandingPageComponent implements OnInit {
 
+      
 
     @Input() public pageName;
     solutions:any=[];
@@ -70,7 +71,7 @@ export class HeaderLandingPageComponent implements OnInit {
         this.solutions = solution;
 
 
-        this.logoPath = this.envService.getLogoPath();
+        this.logoPath = this.envService.getLogoPath() + "logo.png";
     }
 
   ngOnInit() {

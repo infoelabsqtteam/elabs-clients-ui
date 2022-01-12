@@ -8,7 +8,7 @@ import { StorageTokenStatus } from 'src/app/shared/enums/storage-token-status.en
 import { CoreFunctionService } from '../common-utils/core-function/core-function.service';
 
 import { DOCUMENT } from '@angular/common';
-import { serverHostList } from './serverHostList'
+import { serverHostList } from './serverHostList';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,7 @@ export class EnvService {
 
   HOST_NAME : string = 'HOST_NAME';
   PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
+  TEMP_NAME:string = "TEMP_NAME";
   requestType: any = '';
 
 
@@ -129,11 +130,19 @@ export class EnvService {
     let setHostName = this.getHostNameDinamically();
     let serverHostName = this.getHostKeyValue('serverEndpoint');
     let projectFolderName = this.getHostKeyValue('folder');
+    let menuType = this.getHostKeyValue('menu_type');
+    let giolocation = this.getHostKeyValue('google_map');
+    let tempName = this.getHostKeyValue('temp_name');
+    let themedata = this.getHostKeyValue('theme_setting');
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
       const path = 'assets/img/logo/' + projectFolderName + '/';
       this.setHostNameDinamically(hostName);
-      this.setLogoPath(path);   
+      this.setLogoPath(path); 
+      this.storageService.SetMenuType(menuType);
+      this.setGoogleLocation(giolocation); 
+      this.setTempName(tempName);
+      this.setApplicationSetting(themedata);
     }
   }
   
@@ -151,6 +160,53 @@ export class EnvService {
     }
     return value;
   }
+
+
+setGoogleLocation(giolocation){
+  (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
+}
+setTempName(temp){
+  localStorage.setItem(this.TEMP_NAME,temp);
+}
+getTemplateName(){
+  const template:string=localStorage.getItem(this.TEMP_NAME);
+  return template;
+}
+
+setApplicationSetting(settingObj) {
+    if(settingObj.header_bg_color != "" ) {
+      document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
+      document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
+      document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
+      document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
+      document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
+      document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
+      document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
+      document.documentElement.style.setProperty('--footerbg', settingObj.footer_bg);
+      document.documentElement.style.setProperty('--themecolor', settingObj.theme_color);
+      document.documentElement.style.setProperty('--activebg', settingObj.active_bg_color);
+    } 
+
+    //   if(settingObj.header_bg_color != "" ) {
+//     document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
+//   } else if (settingObj.header_txt_color != "") {
+//     document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
+//   }else if (settingObj.header_txt_hover_color != "") {
+//     document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
+//   }else if (settingObj.header_icon_color != "") {
+//     document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
+//   }else if (settingObj.header_icon_hover_color != "") {
+//     document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
+//   }else if (settingObj.btn_color != "") {
+//     document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
+//   } else if (settingObj.btn_hover_color != "") {
+//     document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
+//   }
+// }
+
+  }
+
+
 
 
 

@@ -13,6 +13,7 @@ import { SchedulingDashboardComponent } from './scheduling-dashboard/scheduling-
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { DriveHomeComponent } from './document/drive-home/drive-home.component';
+import { PageNotFoundComponent } from '../core/error/page-not-found.component';
 
 
 const elabsRoutes : Routes = [
@@ -28,7 +29,8 @@ const elabsRoutes : Routes = [
                 { path : 'home', component:HomeComponent},
                 { path : 'dashboard', component:AdminDashboardComponent},
                 { path : 'diff_html', component:DiffHtmlComponent},
-                { path : 'vdr', component: DriveHomeComponent }
+                { path : 'vdr', component: DriveHomeComponent },
+                { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
             ],
             runGuardsAndResolvers: 'always'
         },

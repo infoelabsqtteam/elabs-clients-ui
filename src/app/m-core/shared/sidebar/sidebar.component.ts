@@ -20,7 +20,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   menuItems = [];
   AllModuleList:any=[];
   modal:any='';
-  sidebar2 = false;
+  sidebar2 = true;
    
   @Output() moduleSelect = new EventEmitter();
 
