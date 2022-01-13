@@ -1,6 +1,6 @@
 
 export const serverHostList =  [
-    { "clientEndpoint": "localhost", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+    { "clientEndpoint": "localhost2", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
         "header_txt_color": "",
@@ -99,7 +99,7 @@ export const serverHostList =  [
         "active_bg_color": ""
       }
     },
-    { "clientEndpoint": "hardgoodslabs.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "Hardgoodslabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+    { "clientEndpoint": "demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "Demolab", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "",
         "header_txt_color": "",
@@ -186,7 +186,7 @@ export const serverHostList =  [
           "active_bg_color": "#e0f0e1"
         }
     },
-    { "clientEndpoint": "dev-qualiteklab.e-labs.ai", "serverEndpoint": "https://devserverqualiteklab.e-labs.ai",  "title": "qualiteklab", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "qualitek",
+    { "clientEndpoint": "dev-qualiteklab.e-labs.ai", "serverEndpoint": "https://devserverqualiteklab.e-labs.ai",  "title": "Qualiteklab", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "qualitek",
         "theme_setting": {
           "header_bg_color": "#fcfcfc",
           "header_txt_color": "",

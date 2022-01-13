@@ -78,7 +78,6 @@ export class AppComponent implements OnInit {
   
   ngOnInit() {
     this.favIcon.href = this.envService.getLogoPath() + "favicon.ico";
-    // this.titleService.setTitle("Gautam");
     this.titleService.setTitle(this.envService.getPageTitle());
     this.envService.setDinamicallyHost();    
     this.router.events.subscribe(event =>{
