@@ -15,13 +15,90 @@ export const serverHostList =  [
       }
     },
 
-    { "clientEndpoint": "lims.inventlands.com", "serverEndpoint": "https://prodinventlandserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
-    { "clientEndpoint": "testlims.inventlands.com", "serverEndpoint": "https://testinventlandserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
-    { "clientEndpoint": "sit-sanskar.e-labs.ai", "serverEndpoint": "https://sitsanskarserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
-    { "clientEndpoint": "sanskar.e-labs.ai", "serverEndpoint": "https://prodsanskarserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
-    { "clientEndpoint": "itllabs.e-labs.ai", "serverEndpoint": "https://serveritllabs.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
-    { "clientEndpoint": "hardgoodslabs.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
-    { "clientEndpoint": "demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
+    { "clientEndpoint": "lims.inventlands.com", "serverEndpoint": "https://prodinventlandserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
+    { "clientEndpoint": "testlims.inventlands.com", "serverEndpoint": "https://testinventlandserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
+    { "clientEndpoint": "sit-sanskar.e-labs.ai", "serverEndpoint": "https://sitsanskarserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
+    { "clientEndpoint": "sanskar.e-labs.ai", "serverEndpoint": "https://prodsanskarserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
+    { "clientEndpoint": "itllabs.e-labs.ai", "serverEndpoint": "https://serveritllabs.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
+    { "clientEndpoint": "hardgoodslabs.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
     { "clientEndpoint": "test.ascgroup.in", "serverEndpoint": "https://sitserverascgroup.e-labs.ai","google_map": "false", "menu_type":"Vertical", "folder": "asc-group", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
