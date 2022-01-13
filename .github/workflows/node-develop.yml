@@ -4,7 +4,7 @@
 name: Angular CI with Node - DEVELOp
 on:
   push:
-    branches: [ develop1 ]
+    branches: [ develop ]
 
 jobs:
   build:
