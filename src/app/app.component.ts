@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener, Inject } from '@angular/core';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from '../aws-exports';
-
+import {Title} from "@angular/platform-browser";
 import { StorageService } from './services/storage/storage.service';
 import { DataShareService } from './services/data-share/data-share.service';
 import { ModelService } from './services/model/model.service';
@@ -26,8 +26,10 @@ export class AppComponent implements OnInit {
   showHideSetting:boolean = false;
   applicationSettingSubscription
 
+  favIcon: HTMLLinkElement = document.querySelector('#favIcon');
 
   constructor(
+    private titleService:Title,
     private router: Router,
     private routers:ActivatedRoute, 
     private storageService: StorageService, 
@@ -40,9 +42,7 @@ export class AppComponent implements OnInit {
     
 
   ) {
-   
     this.envService.setDinamicallyHost();
-
     const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
     object["pageNo"] = 0;
     object["pageSize"] = 25;
@@ -77,6 +77,9 @@ export class AppComponent implements OnInit {
 
   
   ngOnInit() {
+    this.favIcon.href = this.envService.getLogoPath() + "favicon.ico";
+    // this.titleService.setTitle("Gautam");
+    this.titleService.setTitle(this.envService.getPageTitle());
     this.envService.setDinamicallyHost();    
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
@@ -134,22 +137,6 @@ export class AppComponent implements OnInit {
     // }
     
     Amplify.configure(awsconfig);
-  }
-
-
-  setApplicationSetting(data) {
-    if(data && data.length > 0) {
-      const settingObj = data[0];
-      if(settingObj.header_bg_color != "") {
-        document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
-        document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
-        document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
-        document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
-        document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
-        document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
-        document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
-      }
-    }
   }
 
   redirectToHomePage(){

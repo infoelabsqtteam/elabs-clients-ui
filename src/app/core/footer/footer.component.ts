@@ -19,7 +19,7 @@ export class FooterComponent implements OnInit {
     private dataShareService:DataShareService,
     private envService:EnvService
   ) {
-    this.template = this.envService.getTemplateName();
+    this.pageloded();
     this.setpage(this.dataShareService.getCurrentPage());
     this.subscription = this.dataShareService.currentPage.subscribe(
         (data: any) => {
@@ -33,7 +33,7 @@ export class FooterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    this.pageloded();
   }
   setpage(res){
     switch(res){
@@ -60,5 +60,7 @@ export class FooterComponent implements OnInit {
           
     }
   }
-
+  pageloded(){
+    this.template = this.envService.getTemplateName();
+  }
 }

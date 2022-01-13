@@ -24,13 +24,13 @@ export class SigninComponent implements OnInit {
     private authService:AuthService,
     private envService:EnvService
     ) {
-      this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-      this.template = this.envService.getTemplateName();
+      this.pageloded();
   }
 
 
   ngOnInit() {
     this.initForm();
+    this.pageloded();
   }
   initForm() {
     this.signInForm = new FormGroup({
@@ -51,4 +51,11 @@ export class SigninComponent implements OnInit {
    
     this.router.navigate(['home_page'])
   }
+
+
+  pageloded(){
+    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+    this.template = this.envService.getTemplateName();
+  }
+
 }
