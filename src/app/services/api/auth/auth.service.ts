@@ -36,7 +36,7 @@ export class AuthService {
         this.apiService.resetTempData();
         this.apiService.resetGridData();
         this.envService.setRequestType('PUBLIC');
-        this.router.navigate(['/home_page']);
+        this.router.navigate(['/signin']);
         this.notificationService.notify("bg-info","Log out Successful.");                
         this.dataShareService.restSettingModule('logged_out');
       },
@@ -54,7 +54,7 @@ export class AuthService {
         this.apiService.resetTempData();
         this.apiService.resetGridData();
         this.envService.setRequestType('PUBLIC');
-        this.router.navigate(['/home_page']);
+        this.router.navigate(['/signin']);
         this.notificationService.notify("bg-info", "Session Expired, Kindly Login Again.");
         this.dataShareService.restSettingModule('logged_out');
       },
