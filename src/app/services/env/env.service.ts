@@ -18,6 +18,7 @@ export class EnvService {
   HOST_NAME : string = 'HOST_NAME';
   PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
   TEMP_NAME:string = "TEMP_NAME";
+  PAGE_TITLE:string = "PAGE_TITLE";
   requestType: any = '';
 
 
@@ -46,9 +47,13 @@ export class EnvService {
   }
 
 
+  setPageTitle(title:string){
+    localStorage.setItem(this.PAGE_TITLE, title);
+  }
 
-
-
+  getPageTitle(){
+    return localStorage.getItem(this.PAGE_TITLE);
+  }
 
 
   getBaseUrl(){
@@ -134,6 +139,7 @@ export class EnvService {
     let giolocation = this.getHostKeyValue('google_map');
     let tempName = this.getHostKeyValue('temp_name');
     let themedata = this.getHostKeyValue('theme_setting');
+    let pageTitle = this.getHostKeyValue('title');
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
       const path = 'assets/img/logo/' + projectFolderName + '/';
@@ -143,6 +149,7 @@ export class EnvService {
       this.setGoogleLocation(giolocation); 
       this.setTempName(tempName);
       this.setApplicationSetting(themedata);
+      this.setPageTitle(pageTitle);
     }
   }
   

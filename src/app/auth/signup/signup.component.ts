@@ -31,13 +31,13 @@ export class SignupComponent implements OnInit {
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
       })
-      this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-      this.template = this.envService.getTemplateName();
+      this.pageloded();
      }
     
 
   ngOnInit() {
     this.initForm();
+    this.pageloded();
   }
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
@@ -79,5 +79,9 @@ export class SignupComponent implements OnInit {
     else{
       return true;
     }
+  }
+  pageloded(){
+    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+    this.template = this.envService.getTemplateName();
   }
 }

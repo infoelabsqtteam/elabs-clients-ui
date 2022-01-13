@@ -33,12 +33,12 @@ export class ForgotPwdComponent implements OnInit {
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
       })
-      this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-      this.template = this.envService.getTemplateName();
+      this.pageloded();
     }
 
   ngOnInit() {
     this.initForm();
+    this.pageloded();
   }
   setAppName(data){
     if (data.appName && data.appName.hasOwnProperty("appName")) {
@@ -73,5 +73,9 @@ export class ForgotPwdComponent implements OnInit {
     const payload = { appName: this.appName, data: { username: this.username, verif_code: code, password: password } };
     this.authService.SaveNewPassword(payload);
     this.router.navigate(['/signin']);
+  }
+  pageloded(){
+    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+    this.template = this.envService.getTemplateName();
   }
 }
