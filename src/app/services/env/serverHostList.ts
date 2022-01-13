@@ -21,6 +21,7 @@ export const serverHostList =  [
     { "clientEndpoint": "sanskar.e-labs.ai", "serverEndpoint": "https://prodsanskarserver.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
     { "clientEndpoint": "itllabs.e-labs.ai", "serverEndpoint": "https://serveritllabs.e-labs.ai","google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
     { "clientEndpoint": "hardgoodslabs.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
+    { "clientEndpoint": "demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1"},
     { "clientEndpoint": "test.ascgroup.in", "serverEndpoint": "https://sitserverascgroup.e-labs.ai","google_map": "false", "menu_type":"Vertical", "folder": "asc-group", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
