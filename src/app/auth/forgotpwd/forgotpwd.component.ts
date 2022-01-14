@@ -19,7 +19,7 @@ export class ForgotPwdComponent implements OnInit {
   resetPwd: boolean = true;
   appName: string;
   appNameSubscription;
-
+  title = "";
   template:string = "temp1";
   logoPath = '';
 
@@ -77,5 +77,6 @@ export class ForgotPwdComponent implements OnInit {
   pageloded(){
     this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
     this.template = this.envService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
   }
 }

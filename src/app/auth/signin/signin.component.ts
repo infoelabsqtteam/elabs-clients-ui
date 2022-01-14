@@ -19,6 +19,7 @@ export class SigninComponent implements OnInit {
   signInForm:FormGroup;
   template:string = "temp1";
   logoPath = '';
+  title = "";
   constructor(
     private router: Router,
     private authService:AuthService,
@@ -56,6 +57,7 @@ export class SigninComponent implements OnInit {
   pageloded(){
     this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
     this.template = this.envService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
   }
 
 }
