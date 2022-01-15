@@ -115,16 +115,16 @@
   <div class="copyright py-3" *ngIf="currentPage">
     <div class="container">
       <div class="row" *ngIf="template == 'temp1'">
-        <div class="col-md-6"><p class="m-0 text-white">© Copyright 2021 | E-labs</p></div>
+        <div class="col-md-6"><p class="m-0 text-white">© Copyright 2021 | {{title}}</p></div>
         <div class="col-md-6 text-md-right"> <a href="javascript:void(0)">Terms</a> | <a href="javascript:void(0)">Privacy &amp; Policy</a> | <a href="javascript:void(0)">Sitemap</a> </div>
       </div>
 
-      <div class="row" *ngIf="template == 'qualitek'">
+      <div class="row" *ngIf="template == 'temp3'">
         <div class="col-md-6"><p class="text-white m-0">(&copy;) 2021 All Rights Reserved Qualitek Labs. Website Designed By E-Labs.</p></div>
         <div class="col-md-6"><div class="text-md-right"><a [routerLink]="['/home_page']" class="text-white">Powered by E-Labs.ai</a></div></div>
       </div>
 
-      <div class="row" *ngIf="template == 'itclabs'">
+      <div class="row" *ngIf="template == 'temp2'">
           <div class="col-md-6"><p class="text-white m-0">Copyright © 2020 ITC Lab. All Rights Reserved.</p></div>
           <div class="col-md-6">
               <div class="text-md-right footer-links d-none d-md-block">
