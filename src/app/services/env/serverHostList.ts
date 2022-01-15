@@ -1,6 +1,6 @@
 
 export const serverHostList =  [
-    { "clientEndpoint": "localhost", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+    { "clientEndpoint": "localhost2", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
         "header_txt_color": "",
@@ -15,7 +15,7 @@ export const serverHostList =  [
       }
     },
 
-    { "clientEndpoint": "lims.inventlands.com", "serverEndpoint": "https://prodinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+    { "clientEndpoint": "localhost", "serverEndpoint": "https://prodinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type":"Horizontal", "folder": "inventlands", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "",
         "header_txt_color": "",
@@ -29,7 +29,7 @@ export const serverHostList =  [
         "active_bg_color": ""
       }
     },
-    { "clientEndpoint": "testlims.inventlands.com", "serverEndpoint": "https://testinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+    { "clientEndpoint": "testlims.inventlands.com", "serverEndpoint": "https://testinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type":"Horizontal", "folder": "inventlands", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "",
         "header_txt_color": "",
