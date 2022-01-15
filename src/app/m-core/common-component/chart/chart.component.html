@@ -19,12 +19,13 @@
           <div class="w-100"><h3 class="m-0">{{item.name}}</h3></div>
           <div class="w-100 d-flex align-items-center justify-content-end">
               <div *ngIf="item.fields && item.fields.length >0">
-                <div class="row mt-1 mr-2" [formGroupName]="item.name">
+                <div class="row mt-1"  [formGroupName]="item.name">
                   <div *ngFor="let field of item.fields; let i = index" [ngClass]="getDivClass(field)" [id]="field._id">
                     <div *ngIf="field.type == 'dropdown'">
                         <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'object'">
                             <mat-label>{{ field.label | titlecase}}</mat-label>
                             <mat-select [compareWith]="compareObjects" [formControlName]="field.field_name" >
+                                <mat-option></mat-option>
                                 <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
                                     {{getddnDisplayVal(staticValue)}}
                                 </mat-option>
@@ -33,6 +34,7 @@
                         <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype != 'object' && field.datatype != 'key_value'">
                             <mat-label>{{ field.label | titlecase}}</mat-label>
                             <mat-select [formControlName]="field.field_name"   >
+                                <mat-option></mat-option>
                                 <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
                                     {{getddnDisplayVal(staticValue)}}
                                 </mat-option>
@@ -41,11 +43,24 @@
                         <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'key_value'">
                             <mat-label>{{ field.label | titlecase}}<span *ngIf="field.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                             <mat-select [formControlName]="field.field_name"   >
+                                <mat-option></mat-option>
                                 <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
                                     {{getddnDisplayVal(staticValue)}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </div>
+                    <div *ngIf="field.type == 'typeahead'">
+                      <div class="w-100 position-relative" *ngIf="field.datatype != 'chips'">
+                          <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="field.datatype != 'list_of_object' ? 'w-100' : ''">
+                              <mat-label>{{field.label}} <span *ngIf="field.is_mandatory && field.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                              <input type="text" [placeholder]="field.label" [required]="field.is_mandatory && field.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="field.field_name"
+                                  [matAutocomplete]="first" (keyup)="updateData($event,item,field)" [id]="field._id+'_'+field.field_name">
+                              <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete"  [displayWith]="getOptionText">
+                                  <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                              </mat-autocomplete>
+                          </mat-form-field>
+                      </div>
                     </div>
                   </div>
                   <button mat-flat-button color="primary" (click)="dashletFilter(j)" style="line-height:10px;">Filter</button>
@@ -53,33 +68,22 @@
               </div>
           </div>
       </div>
-
-
-
-
       <div class="card-body">
-        <ng-container>
-              <canvas mdbChart *ngIf="item.package_name == 'chart_js'" [chartType]="chartType[item.call_back_field]"
-                [datasets]="chartDatasets[item.call_back_field]" [labels]="chartLabels[item.call_back_field]"
-                [colors]="chartColors[item.call_back_field]" [options]="chartOptions[item.call_back_field]"
-                [legend]="chartLegend[item.call_back_field]" (chartHover)="chartHover($event)"
-                (chartClick)="chartClicked($event)">
-              </canvas>
-              <google-chart *ngIf="item.package_name == 'google_chart' && chartTitle[item.call_back_field]"
-                [title]="chartTitle[item.call_back_field]" [type]="chartType[item.call_back_field]"
-                [data]="chartDatasets[item.call_back_field]" [columns]="chartLabels[item.call_back_field]"
-                [options]="chartOptions[item.call_back_field]">
-              </google-chart>
-        </ng-container>
+        <canvas mdbChart *ngIf="item.package_name == 'chart_js'" [chartType]="chartType[item.call_back_field]"
+          [datasets]="chartDatasets[item.call_back_field]" [labels]="chartLabels[item.call_back_field]"
+          [colors]="chartColors[item.call_back_field]" [options]="chartOptions[item.call_back_field]"
+          [legend]="chartLegend[item.call_back_field]" (chartHover)="chartHover($event)"
+          (chartClick)="chartClicked($event)">
+        </canvas>
+        <google-chart *ngIf="item.package_name == 'google_chart' && chartTitle[item.call_back_field]"
+          [title]="chartTitle[item.call_back_field]" [type]="chartType[item.call_back_field]"
+          [data]="chartDatasets[item.call_back_field]" [columns]="chartLabels[item.call_back_field]"
+          [options]="chartOptions[item.call_back_field]">
+        </google-chart>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
 
 <div *ngIf="elements.length == 0">
   <p class="text-center"><span>Dashlet Master not available in this application.</span></p>
