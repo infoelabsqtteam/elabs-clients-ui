@@ -33,10 +33,12 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   elements:any=[];
   staticData: any = {};
   copyStaticData:any={};
+  typeAheadData:any=[];
 
   gridDataSubscription;
   staticDataSubscription;
   dashletDataSubscription;
+  typeaheadDataSubscription;
 
   filterValue:any = [];
   filteredDashboardData:any = [];
@@ -60,6 +62,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     })
     this.dashletDataSubscription = this.dataShareService.dashletData.subscribe(data =>{
       this.setDashLetData(data);
+    })
+    this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
+      this.setTypeaheadData(data);
     })
     this.getPage(1)   
 
@@ -104,6 +109,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     }
     if(this.dashletDataSubscription){
       this.dashletDataSubscription.unsubscribe();
+    }
+    if(this.typeaheadDataSubscription){
+      this.typeaheadDataSubscription.unsubscribe();
     }
   }
 
@@ -180,6 +188,13 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       }) 
     }
   }
+  setTypeaheadData(typeAheadData){
+    if (typeAheadData.length > 0) {
+      this.typeAheadData = typeAheadData;
+    } else {
+      this.typeAheadData = [];
+    }
+  }
   getDataForGrid(){    
     const data = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','',[],'');
     data['pageNo'] = this.pageNumber - 1;
@@ -196,11 +211,13 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.getDataForGrid();
   }
   dashletFilter(index){
+    const element = [];
     const ele = JSON.parse(JSON.stringify(this.elements[index]));
     let value = this.dashboardFilter.getRawValue();
     const filterData = value[ele.name];
     ele[ele.name] = filterData;
-    this.apiService.GetDashletData(ele);
+    element.push(ele);
+    this.getDashletData(element);
   }
 
    getddnDisplayVal(val) {
@@ -211,7 +228,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     // if(!this.commonFunctionService.showIf(field,this.templateForm.getRawValue())){
     //   return "d-none"
     // }
-    return this.commonFunctionService.getDivClass(field);
+    return this.commonFunctionService.getDivClass(field,[]);
   }
   chartHover(e){}
   chartClicked(e){}
@@ -220,15 +237,21 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   }
   getDashletData(elements){
     if(elements && elements.length > 0){
+      let value = this.dashboardFilter.getRawValue();
       elements.forEach(element => {
-        let value = this.dashboardFilter.getRawValue();
-        const filterData = value[element.name];
+        const fields = element.fields;        
+        const filterData = this.getSingleCardFilterValue(element,value);
+        let crList = [];
+        if(fields && fields.length > 0){
+          crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
+        }        
         let object = {}
         if(filterData){
           object = filterData;
         }
         const data = {
-          "data": object
+          "data": object,
+          "crList":crList
         }
         const payload={
           "_id" : element._id,
@@ -238,5 +261,36 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       });
     }
   }
-
+  getSingleCardFilterValue(field,object){
+    let value = {};
+    if (object && object[field.name]) {
+      value = object[field.name]
+    }
+    return value;
+  }
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
+  }
+  updateData(event, parentfield, field) {
+    if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
+      return false;
+    }    
+    let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
+    this.callTypeaheadData(field,objectValue); 
+  }
+  callTypeaheadData(field,objectValue){
+    this.clearTypeaheadData();   
+    const payload = [];
+    const params = field.api_params;
+    const criteria = field.api_params_criteria;
+    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    this.apiService.GetTypeaheadData(payload);    
+  }
+  clearTypeaheadData() {
+    this.apiService.clearTypeaheadData();
+  }
 }

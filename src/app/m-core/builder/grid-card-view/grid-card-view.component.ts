@@ -489,7 +489,8 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
       delete data.key1;
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
-      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,this.filterForm);
+      const value = this.filterForm.getRawValue();
+      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
       if(filtewCrlist.length > 0){
         filtewCrlist.forEach(element => {
           data.crList.push(element);
@@ -569,7 +570,8 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid;    
-    this.commonFunctionService.getfilterCrlist(this.headElements,this.filterForm).forEach(element => {
+    const value = this.filterForm.getRawValue();
+    this.commonFunctionService.getfilterCrlist(this.headElements,value).forEach(element => {
       data.crList.push(element);
     });
     const getFilterData = {
