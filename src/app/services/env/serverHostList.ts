@@ -1,6 +1,6 @@
 
 export const serverHostList =  [
-    { "clientEndpoint": "localhost2", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
+    { "clientEndpoint": "localhost", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
         "header_txt_color": "",
@@ -129,7 +129,7 @@ export const serverHostList =  [
     },
     
 
-    { "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type":"Horizontal", "folder": "itclabs", "temp_name": "itclabs",
+    { "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type":"Horizontal", "folder": "itclabs", "temp_name": "temp2",
     "theme_setting": {
       "header_bg_color": "#665852",
       "header_txt_color": "#ffffff",
@@ -142,7 +142,7 @@ export const serverHostList =  [
       "theme_color": "#665852",
       "active_bg_color": "#e0dedc"
     }},
-    { "clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false","menu_type":"Horizontal", "folder": "itclabs", "temp_name": "itclabs",
+    { "clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false","menu_type":"Horizontal", "folder": "itclabs", "temp_name": "temp2",
       "theme_setting": {
         "header_bg_color": "#665852",
         "header_txt_color": "#ffffff",
@@ -158,7 +158,7 @@ export const serverHostList =  [
     },
 
 
-    { "clientEndpoint": "qualiteklab.e-labs.ai", "serverEndpoint": "https://serverqualiteklab.e-labs.ai", "title": "Qualiteklab", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "qualitek",
+    { "clientEndpoint": "qualiteklab.e-labs.ai", "serverEndpoint": "https://serverqualiteklab.e-labs.ai", "title": "Qualitek Labs", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "temp3",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
         "header_txt_color": "",
@@ -172,7 +172,7 @@ export const serverHostList =  [
         "active_bg_color": "#e0f0e1"
       }
     },
-    { "clientEndpoint": "uat-qualiteklab.e-labs.ai", "serverEndpoint": "https://uatserverqualiteklab.e-labs.ai", "title": "Qualiteklab", "google_map": "false", "menu_type":"Horizontal", "folder": "qualitek", "temp_name": "qualitek",
+    { "clientEndpoint": "uat-qualiteklab.e-labs.ai", "serverEndpoint": "https://uatserverqualiteklab.e-labs.ai", "title": "Qualitek Labs", "google_map": "false", "menu_type":"Horizontal", "folder": "qualitek", "temp_name": "temp3",
         "theme_setting": {
           "header_bg_color": "#fcfcfc",
           "header_txt_color": "",
@@ -186,7 +186,7 @@ export const serverHostList =  [
           "active_bg_color": "#e0f0e1"
         }
     },
-    { "clientEndpoint": "dev-qualiteklab.e-labs.ai", "serverEndpoint": "https://devserverqualiteklab.e-labs.ai",  "title": "Qualiteklab", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "qualitek",
+    { "clientEndpoint": "dev-qualiteklab.e-labs.ai", "serverEndpoint": "https://devserverqualiteklab.e-labs.ai",  "title": "Qualitek Labs", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "temp3",
         "theme_setting": {
           "header_bg_color": "#fcfcfc",
           "header_txt_color": "",
