@@ -102,7 +102,25 @@ jobs:
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E1J8ZCT2XHAVH1 --paths '/*'
 
+  # Deploy HiTech Labs Sit
+    - name: Clean up existing deployment - Qualitek Labs
+      run: aws s3 rm s3://sit-hitech.e-labs.ai --recursive
 
+    - name: Upload data
+      run: aws s3 sync dist s3://sit-hitech.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E3ABDVFOAJOYY2 --paths '/*'
+      
+  # Deploy Aalbiosciences Labs Sit
+    - name: Clean up existing deployment - Aalbiosciences Labs
+      run: aws s3 rm s3://sit-aalbiosciences.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://sit-aalbiosciences.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E93C4BOS49CLH --paths '/*'
 ########################### Medicea Aws - ###########################
   # Medicea Aws
     - name: Configure AWS credentials Medicea
