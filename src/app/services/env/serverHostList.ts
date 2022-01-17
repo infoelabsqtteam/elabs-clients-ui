@@ -29,7 +29,20 @@ export const serverHostList =  [
         "active_bg_color": ""
       }
     },
-
+    { "clientEndpoint": "app.medicea.in", "serverEndpoint": "https://servermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type":"Horizontal", "folder": "medicea", "temp_name": "temp1","redirect_url":"",
+      "theme_setting": {
+        "header_bg_color": "",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "",
+        "theme_color": "",
+        "active_bg_color": ""
+      }
+    },
     { "clientEndpoint": "lims.inventlands.com", "serverEndpoint": "https://prodinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type":"Horizontal", "folder": "inventlands", "temp_name": "temp1", "redirect_url":"",
       "theme_setting": {
         "header_bg_color": "",
