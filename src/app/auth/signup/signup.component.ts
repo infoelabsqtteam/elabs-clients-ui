@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators,FormBuilder, EmailValidator } from '
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
-
+import { EnvService } from 'src/app/services/env/env.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,24 +15,29 @@ export class SignupComponent implements OnInit {
   signUpForm: FormGroup;
   appName: string;
   appNameSubscription;
+  title = "";
+  template:string = "temp1";
 
+  logoPath = ''
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private fb:FormBuilder,
     private authService:AuthService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private envService:EnvService
     ) {
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
       })
-
+      this.pageloded();
      }
     
 
   ngOnInit() {
     this.initForm();
+    this.pageloded();
   }
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
@@ -74,5 +79,10 @@ export class SignupComponent implements OnInit {
     else{
       return true;
     }
+  }
+  pageloded(){
+    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+    this.template = this.envService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
   }
 }

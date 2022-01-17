@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     currentPage: any;
     logedin:boolean=false;
 
-    logoPath = '../../assets/images/logo.png'
+    logoPath = ''
     private myData: any;
 
     activeclass = false;
@@ -91,7 +91,8 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         private envService:EnvService
     ) {
         
-
+        this.logoPath = this.envService.getLogoPath() + "logo.png";
+        
         this.subscription =  this.dataShareService.currentPage.subscribe(
             (data: any) => {
                 this.setpage(data);
@@ -140,9 +141,9 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     shortcutinfo() {
         this.modelService.open('shortcutinfo_model',{})
     }
-    shortcutinfoResponce(responce){
-
-    }
+    chartModel() {
+        this.modelService.open('chart_model',{})
+      }
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
@@ -302,7 +303,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
       this.router.navigate(['createpwd']);
     }
     navigateSigninPage() {
-        this.logoPath = '../../assets/images/logo.png';
+       // this.logoPath = '../../assets/images/logo.png';
         let loginType:any = Common.AUTH_TYPE;
         if (loginType == 'ADMIN') {
             this.router.navigate(['admin'])
@@ -428,10 +429,10 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     let element = document.querySelector('.navbar');
     if(element && element.clientHeight){
         if (window.pageYOffset > element.clientHeight) {
-            this.logoPath = '../../assets/img/2.png';
+           // this.logoPath = '../../assets/img/2.png';
             element.classList.add('navbar-inverse', 'shadow');
         } else {
-            this.logoPath = '../../assets/images/logo.png';
+           // this.logoPath = '../../assets/images/logo.png';
             element.classList.remove('navbar-inverse', 'shadow');
         }
 
@@ -446,7 +447,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
       else if(this.currentPage == 'HOME2'){
         let element = document.querySelector('.navbar');
         element.classList.add('navbar-inverse', 'shadow');
-        this.logoPath = '../../assets/img/2.png';
+      //  this.logoPath = '../../assets/img/2.png';
         return 'fixed-top'
       }
       else{
@@ -457,7 +458,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     gotoStaticMenu(menu) {
         if (menu == 'home_page') {
             this.dataShareService.sendCurrentPage('HOME')
-            this.logoPath = '../../assets/images/logo.png';
+          //  this.logoPath = '../../assets/images/logo.png';
             let element = document.querySelector('.navbar');
             element.classList.remove('navbar-inverse', 'shadow');
         }
@@ -504,5 +505,5 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             }
             this.authService.SessionExpired(payload);
         }
-    }    
+    }   
 }

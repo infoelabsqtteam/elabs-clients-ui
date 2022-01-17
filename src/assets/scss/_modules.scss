@@ -5,7 +5,7 @@
 
 .modulelist .moduleitem {
     border:$whiteborder; border-radius:$size5;transition:$transition1;height:$per100;
-    &:hover, &:focus {background:rgba($themecolor, 0.1);border:$hoverborder;outline:$zero !important;}
+    &:hover, &:focus {background:var(--activebg);border:$hoverborder;outline:$zero !important;}
     .moduleicon {width:$size55;
         img {width:$size55;}
     }

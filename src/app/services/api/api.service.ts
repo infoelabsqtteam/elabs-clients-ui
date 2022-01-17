@@ -95,6 +95,17 @@ constructor(
   resetGridData(){
     this.dataShareService.shareGridData([])
   }
+  getDashletMster(payload){
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+      (respData) => {
+          this.dataShareService.shareDashletMaster(respData)
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
   GetTempMenu(payload){
     let api = this.envService.getApi('GET_CUSTOM_TEMPLATE');
     this.http.post(api, payload).subscribe(
@@ -241,7 +252,7 @@ constructor(
   }    
   GetDashletData(payload:any){
     let api = this.envService.getApi('GET_DASHLET_DATA');
-    this.http.post(api + '/' + payload._id, payload).subscribe(
+    this.http.post(api + '/' + payload._id, payload.data).subscribe(
       (respData) => {
           let currentStaticData=[];
           let getDashletData = this.dataShareService.getDashletData();

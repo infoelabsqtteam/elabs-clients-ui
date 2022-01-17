@@ -16,6 +16,7 @@ export class DocDataShareService {
   docFileViewLink:EventEmitter<any>= new EventEmitter<any>(null);
   docDeleteResponce:EventEmitter<any>= new EventEmitter<any>(null);
   docShareResponce:EventEmitter<any>= new EventEmitter<any>(null);
+  folder:EventEmitter<any>= new EventEmitter<any>(null);
 
   constructor() { }
 
@@ -51,5 +52,8 @@ export class DocDataShareService {
   }
   setDocShareResponce(responce){
     this.docShareResponce.emit(responce);
+  }
+  setFolderData(responce){
+    this.folder.emit(responce);
   }
 }

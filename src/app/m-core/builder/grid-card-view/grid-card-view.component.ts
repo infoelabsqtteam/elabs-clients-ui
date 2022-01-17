@@ -1,5 +1,4 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input } from '@angular/core';
-import { ModalService } from '../../modals/modal.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { StorageService} from '../../../services/storage/storage.service';
 import { PermissionService } from '../../../services/permission/permission.service';
@@ -7,6 +6,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@ang
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-grid-card-view',
@@ -49,7 +49,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
   exportExcelSubscription;
 
   constructor(
-    private ModalService:ModalService,
+    private ModalService:ModelService,
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
     private permissionService: PermissionService,
@@ -243,8 +243,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     if (exportExcelLink != '' && exportExcelLink != null && this.downloadClick != '') {
       let link = document.createElement('a');
       link.setAttribute('type', 'hidden');
-      const exportLink = link['exportExcelLink'];
-      const file = new Blob([exportLink], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const file = new Blob([exportExcelLink], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const url = window.URL.createObjectURL(file);
       link.href = url;
       link.download = this.downloadClick;
@@ -286,7 +285,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     if(this.tableFields.length > 0){
       let formData = {}
-      this.ModalService.openFormModal('form-modal',formData)
+      this.ModalService.open('form-modal',formData)
     }else{
       this.notificationService.notify('text-danger','Fields are not available ?')
     }
@@ -490,7 +489,8 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
       delete data.key1;
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
-      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,this.filterForm);
+      const value = this.filterForm.getRawValue();
+      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
       if(filtewCrlist.length > 0){
         filtewCrlist.forEach(element => {
           data.crList.push(element);
@@ -570,7 +570,8 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid;    
-    this.commonFunctionService.getfilterCrlist(this.headElements,this.filterForm).forEach(element => {
+    const value = this.filterForm.getRawValue();
+    this.commonFunctionService.getfilterCrlist(this.headElements,value).forEach(element => {
       data.crList.push(element);
     });
     const getFilterData = {

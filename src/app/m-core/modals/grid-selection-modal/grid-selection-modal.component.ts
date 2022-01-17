@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-import {ModalService} from '../modal.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
+import { ModelService } from 'src/app/services/model/model.service';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-grid-selection-modal',
@@ -20,7 +21,8 @@ export class GridSelectionModalComponent implements OnInit {
   listOfGridFieldName:any =[]; 
   field:any={};
   editeMode:boolean=false;
-  preSelectedData:boolean = true;
+  grid_row_seelction:boolean = false;
+  grid_row_refresh_icon:boolean = false;
   data:any='';
   staticDataSubscriber;
   parentObject={};
@@ -32,7 +34,7 @@ export class GridSelectionModalComponent implements OnInit {
   
 
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef,
     private CommonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
@@ -196,7 +198,7 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
 
-  showGridViewSelectionModal(alert){ 
+  showModal(alert){ 
     this.selecteData = [];  
     this.selecteData = alert.selectedData; 
     this.field = alert.field;
@@ -205,11 +207,9 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if(alert.field.onchange_api_params == "" || alert.field.onchange_api_params == null){
       this.gridData = JSON.parse(JSON.stringify(alert.selectedData));
-      this.preSelectedData = false;
     }
     else{
       this.gridData = [];
-      this.preSelectedData = true;
     }
     if(this.field.gridColumns && this.field.gridColumns.length > 0){
       this.field.gridColumns.forEach(field => {
@@ -228,10 +228,21 @@ export class GridSelectionModalComponent implements OnInit {
     }else{
       this.notificationService.notify("bg-danger","Grid Columns are not available In This Field.")
     }
+    if(this.field && this.field.grid_row_selection){
+      this.grid_row_seelction = true;
+    }else{
+      this.grid_row_seelction = false;
+    }
+    if(this.field && this.field.grid_row_refresh_icon){
+      this.grid_row_refresh_icon = true;
+    }else{
+      this.grid_row_refresh_icon = false;
+    }
+    
   }
   selectGridData(){
     this.selectedData = [];
-    if(this.preSelectedData == false){
+    if(this.grid_row_seelction == false){
       this.selectedData = [...this.gridData];
     }
     else{
@@ -242,22 +253,14 @@ export class GridSelectionModalComponent implements OnInit {
       });
     }
     this.gridSelectionResponce.emit(this.selectedData);
-    this.gridViewModalSelection.hide();
-    this.gridData=[];
-    this.selectedData = [];
-    this.selecteData=[];    
-    // const fieldName = {
-    //   "field" : this.field.ddn_field
-    // }
-    // this.store.dispatch(
-    //   new CusTemGenAction.ResetStaticData(fieldName)
-    // )
+    this.closeModal();
   }
 
   closeModal(){
     this.gridData=[];
     this.selectedData = [];
     this.selecteData=[];
+    this.data = '';
     this.gridViewModalSelection.hide();
   }
 

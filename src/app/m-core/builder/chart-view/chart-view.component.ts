@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { StorageService} from '../../../services/storage/storage.service';
 import { PermissionService } from '../../../services/permission/permission.service';
-import { ModalService } from '../../modals/modal.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-chart-view',
@@ -22,7 +22,7 @@ export class ChartViewComponent implements OnInit {
   chartDataSubscription;
   
   constructor(
-    private ModalService:ModalService,
+    private ModalService:ModelService,
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
     private permissionService: PermissionService,

@@ -2,9 +2,11 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
     <div class="modal-content" >
       <!--Header-->
-      <div class="modal-header justify-content-center">
-        <h3 class="modal-title m-0 text-uppercase">{{ coloumName }}</h3>
-        <a class="py-1 mr-4" (click)="editeField()" *ngIf="editeMode"><mdb-icon fas icon="edit"></mdb-icon></a>
+      <div class="modal-header justify-content-between">
+        <div class="d-flex align-items-center">
+          <button mat-icon-button class="mr-2" (click)="editeField()" *ngIf="editeMode"><mdb-icon fas icon="edit"></mdb-icon></button>
+          <h3 class="modal-title m-0 text-uppercase">{{ coloumName }}</h3>
+        </div>
         <a class="h5 m-0 closebtb" (click)="closeModal()" data-dismiss="modal" [matTooltip]="'Close (ALT + C)'" [matTooltipPosition]="'above'"><span>×</span></a>
       </div>
       <!--Body-->

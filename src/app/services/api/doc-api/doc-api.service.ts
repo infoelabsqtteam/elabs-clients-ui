@@ -109,7 +109,7 @@ export class DocApiService {
     )
   }
   GetFolderByKey(payload){
-    let api = this.envService.getApi('GET_FOLDER_BY_KEY');
+    let api = this.envService.getApi('GET_CHILD_FOLDER_BY_KEY');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setVdrData(respData['success']);        
@@ -174,7 +174,7 @@ export class DocApiService {
     this.docDataShare.setDocDeleteResponce(null);
   }
   GetBackFoldersByKey(payload){
-    let api = this.envService.getApi('GET_FOLDER_BY_KEY');
+    let api = this.envService.getApi('GET_CHILD_FOLDER_BY_KEY');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setMoveFolderChildData(respData);
@@ -201,6 +201,17 @@ export class DocApiService {
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setDocShareResponce(respData);
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+  getFoderByKey(payload){
+    let api = this.envService.getApi('GET_FOLDER_BY_KEY');
+    this.http.post(api, payload).subscribe(
+      (respData) =>{
+        this.docDataShare.setFolderData(respData['success']);
       },
       (error)=>{
         console.log(error);

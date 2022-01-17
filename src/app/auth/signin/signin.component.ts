@@ -17,18 +17,21 @@ export class SigninComponent implements OnInit {
   @Input() public pageName;
   appName: string;
   signInForm:FormGroup;
-
+  template:string = "temp1";
+  logoPath = '';
+  title = "";
   constructor(
     private router: Router,
     private authService:AuthService,
     private envService:EnvService
     ) {
-    
+      this.pageloded();
   }
 
 
   ngOnInit() {
     this.initForm();
+    this.pageloded();
   }
   initForm() {
     this.signInForm = new FormGroup({
@@ -49,4 +52,12 @@ export class SigninComponent implements OnInit {
    
     this.router.navigate(['home_page'])
   }
+
+
+  pageloded(){
+    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+    this.template = this.envService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
+  }
+
 }

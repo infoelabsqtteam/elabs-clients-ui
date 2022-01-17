@@ -1,5 +1,5 @@
 // Date Picker
-.mat-form-field {background:$white;}
+.mat-form-field {background:$white;margin-bottom:5px;}
 .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;padding:$zero !important;}
 .mat-form-field-appearance-outline .mat-form-field-infix {border:$no;padding:.68em $zero !important;}
 .mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {top:$size5 !important;font-size:$size11;}
@@ -16,6 +16,10 @@
 .mat-icon-button:focus {outline:$zero;}
 input.mat-input-element {font-size:$size13;}
 
+.login2 .mat-form-field-appearance-outline .mat-form-field-label {margin-top:6px;font-size:11px;}
+
+
+
 // Module Popup
 .cdk-global-overlay-wrapper{z-index:$zindex1000!important}
 .modal.fade{background:rgba($black,0.5)}
@@ -26,7 +30,9 @@ input.mat-input-element {font-size:$size13;}
 .modal-dialog-full-width {max-width: 98%!important;}
 .modal-dialog {border-radius:10px;
     .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
+    .card-header .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;}
     .mat-form-field-label {color:#7f7f7f;font-size:11px;transform:translateY(6px);}
+    .mat-form-field-label .filterlabel {font-size:13px;position:relative;top:2px;}
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75);font-size:$size14;}
     .mat-form-field-label > * {background:$white;padding-right:$size8;}
 
@@ -34,11 +40,13 @@ input.mat-input-element {font-size:$size13;}
         .grid-button {width:$size25;height:$size25;line-height:$size30;margin:$size3;}
     }
     .modal-header {background:$popupheadingbg;margin-bottom:$size20;min-height:$size55;}
-    .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;}
+    .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;
+        &:focus {outline:none;border:none;}
+    }
     .fileuploadbtn {position:$absolute !important;right:$size8;top:$size8;color:$color999 !important;width:auto;height:auto;line-height:20px;
         &:hover, &:focus {outline:$no !important;}
     }
-    .mat-error {margin-top:$size15;}
+    .mat-error {margin-top:$size12;}
     .icon-button {padding:$zero!important;height:$size25;width:$size25;display:block;border-radius:100%;background:#274058;display:inline-block;}
     .list-of-string-button {position:absolute;top:2px;right:2px;}
     .input-field-icon {position:absolute;top:6px;right:6px;} 

@@ -4,6 +4,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { StorageTokenStatus } from 'src/app/shared/enums/storage-token-status.enum';
+import { EnvService } from '../env/env.service';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +20,7 @@ export class StorageService {
   EXPIRY_IN:any= 'EXPIRY_IN';
   USER_KEY: string = 'USER';
   ACTIVE_MENU: string = 'MENU';
+  MENU_TYPE: string = 'MENU_TYPE';
   ID_TOKEN_EXPIRY_TIME: string = 'ID_TOKEN_EXPIRY_TIME';
   REFRESH_TOKEN_EXPIRY_TIME:string='REFRESH_TOKEN_EXPIRY_TIME';
   userInfo: any;
@@ -25,6 +29,8 @@ export class StorageService {
   refreshTokenAge:any=2505600000 //refresh token age 29 days
   appName:any = environment.appName;
   packDetails: any = {};
+  
+  
   
   constructor(private http: HttpClient) { }
 
@@ -186,16 +192,31 @@ export class StorageService {
     }    
   }
   GetMenuType(){
-    const obj = JSON.parse(localStorage.getItem(this.USER_KEY));
-    if(obj && obj[this.appName]){
-      if(obj[this.appName].menu_type){
-        return obj[this.appName].menu_type
+    // const obj = JSON.parse(localStorage.getItem(this.USER_KEY));
+    // if(obj && obj[this.appName]){
+    //   if(obj[this.appName].menu_type){
+    //     return obj[this.appName].menu_type
+    //   }
+    //   else{
+    //     return null;
+    //   }
+    // } 
+    const menu_Type = JSON.parse(localStorage.getItem(this.MENU_TYPE));
+    if(menu_Type){
+        return menu_Type;
       }
       else{
         return null;
-      }
-    }    
+    }
   }
+
+
+  SetMenuType(menu_Type) {
+    localStorage.setItem(this.MENU_TYPE, JSON.stringify(menu_Type));
+  }
+
+
+
   getUserLog() {
     const userObj = JSON.parse(localStorage.getItem(this.USER_KEY));
     if(userObj && userObj[this.appName]){

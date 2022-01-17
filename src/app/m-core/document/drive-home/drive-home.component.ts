@@ -79,6 +79,7 @@ export class DriveHomeComponent implements OnInit {
     private docFileDownloadSubscription;
     private docFileViewSubscription;
     private docDeleteSubscription;
+	private docFoderSubscription;
 
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
@@ -116,6 +117,9 @@ export class DriveHomeComponent implements OnInit {
         this.docDeleteSubscription = this.docDataShareService.docDeleteResponce.subscribe(del =>{
             this.docDelete(del);
         })
+		this.docFoderSubscription = this.docDataShareService.folder.subscribe(data => {
+			this.setFolder(data);
+		})
 		this.userInfo = this.storageService.GetUserInfo();
 		this.rootDataCall();
 		
@@ -196,6 +200,12 @@ export class DriveHomeComponent implements OnInit {
             this.childFiles = [];
         }
     }
+	setFolder(folder){
+		if(folder && folder._id){
+			this.vdrprentfolder = folder;
+			this.showNewFolderAndUploadDropdown = true;
+		}
+	}
     setMoveFolderData(moveFolderData){
         if (moveFolderData && moveFolderData.length > 0) {
             this.moveFolderChildren = [];
@@ -343,6 +353,7 @@ export class DriveHomeComponent implements OnInit {
 		this.vdrprentfolder = [];
 		this.pathList = [];
 		this.currentSelectedPath = '';
+		this.pathKey = '';
 		this.showNewFolderAndUploadDropdown = false;
 		this.rootDataCall();
 	}
@@ -388,7 +399,11 @@ export class DriveHomeComponent implements OnInit {
 			const key = this.pathList[i];
 			this.pathKey = this.pathKey.concat(key + '/');
 		}
-		this.vdrprentfolder = [];
+		this.showNewFolderAndUploadDropdown = false;
+		this.vdrprentfolder = {};
+		if(this.pathKey != ''){
+			this.docApiService.getFoderByKey(this.pathKey);
+		}
 		this.getPathList();
 		const serachByKey = {
 			key: this.pathKey,
@@ -585,7 +600,9 @@ export class DriveHomeComponent implements OnInit {
 	/******************************************** New Folder function Start ******************************/
 	createNewFolder() {
 		const object = {
-			renameInput : false
+			renameInput : false,
+			renameText : '',
+			renameFileExt : ''
 		}
 		this.modelService.open('createNewfolder',object);
 		if (!this.vdrprentfolder.folder) {
@@ -1007,7 +1024,7 @@ export class DriveHomeComponent implements OnInit {
 			// this.store.dispatch(
 			//  	new VdrActions.GetViewLink(files)
 			//  )
-		} else if (exten == 'png' || exten || 'jpg') {
+		} else if (exten == 'png' || exten == 'jpg') {
 			this.viewFileType = 'image';
 			this.docApiService.GetDocFileViewLink(files);
 		} else {

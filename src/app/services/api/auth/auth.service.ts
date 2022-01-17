@@ -8,6 +8,7 @@ import { DataShareService } from '../../data-share/data-share.service';
 import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
 import { Common } from 'src/app/shared/enums/common.enum';
+import { serverHostList } from '../../env/serverHostList';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class AuthService {
         this.apiService.resetTempData();
         this.apiService.resetGridData();
         this.envService.setRequestType('PUBLIC');
-        this.router.navigate(['/home_page']);
+        this.router.navigate(['/signin']);
         this.notificationService.notify("bg-info", "Session Expired, Kindly Login Again.");
         this.dataShareService.restSettingModule('logged_out');
       },
@@ -74,9 +75,9 @@ export class AuthService {
           const menuType = this.storageService.GetMenuType()
           this.dataShareService.restSettingModule('logged_in');
           if(menuType == 'Horizontal'){
-              this.router.navigate(['/home']);
-              //this.router.navigate(['/dashboard']);
-              // this.router.navigate(['/scheduling-dashboard']);
+               this.router.navigate(['/home']);
+              // this.router.navigate(['/dashboard']);
+              //this.router.navigate(['/scheduling-dashboard']);
           }else{
               this.router.navigate(['/dashboard']);
           } 
@@ -122,6 +123,8 @@ export class AuthService {
                 this.notificationService.notify("bg-danger", "User Not Confirmed ");
             } else if (respData["error"] == "user_name_password_does_not_match") {
                 this.notificationService.notify("bg-danger", "Username password does not match ");
+            }else {
+              this.notificationService.notify("bg-danger", "Username password does not match ");
             }
         }
       },

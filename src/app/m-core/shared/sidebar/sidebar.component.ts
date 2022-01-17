@@ -20,6 +20,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   menuItems = [];
   AllModuleList:any=[];
   modal:any='';
+  sidebar2 = true;
    
   @Output() moduleSelect = new EventEmitter();
 
@@ -35,7 +36,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.AllModuleList = this.storageService.GetModules();
-    
     this.initialize();
   }
 

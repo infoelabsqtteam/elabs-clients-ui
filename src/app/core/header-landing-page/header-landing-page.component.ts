@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { StorageService } from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import {ModalService} from '../../m-core/modals/modal.service';
 import { solution } from './menu';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
+import { ModelService } from "src/app/services/model/model.service";
 import { EnvService } from "src/app/services/env/env.service";
 
 @Component({
@@ -44,14 +44,14 @@ export class HeaderLandingPageComponent implements OnInit {
     currentPage:any;
     subscription: any;
     menuDataSubscription;
-    logoPath = '../../assets/images/logo.png'
+    logoPath = ''
     
     logedin:boolean=false;
 
   constructor(
     private router: Router, 
     private storageService: StorageService,
-    private modalService: ModalService,
+    private modalService: ModelService,
     private dataShareService:DataShareService,
     private authService:AuthService,
     private envService:EnvService
@@ -69,6 +69,9 @@ export class HeaderLandingPageComponent implements OnInit {
             this.setMenuData(menu);
         })
         this.solutions = solution;
+
+
+        this.logoPath = this.envService.getLogoPath() + "logo.png";
     }
 
   ngOnInit() {
@@ -231,6 +234,7 @@ setMenuData(menuData){
     const menuType = this.storageService.GetMenuType()
     if(menuType == 'Horizontal'){
         this.router.navigate(['/home']);
+        //this.router.navigate(['/dashboard']);
     }else{
         this.router.navigate(['/dashboard']);
     }      
@@ -340,10 +344,10 @@ getUserColorCode(n) {
     let element = document.querySelector('.navbar');
     if(element && element.clientHeight){
         if (window.pageYOffset > element.clientHeight) {
-            this.logoPath = '../../assets/img/2.png';
+           // this.logoPath = '../../assets/img/2.png';
             element.classList.add('navbar-inverse', 'shadow');
         } else {
-            this.logoPath = '../../assets/images/logo.png';
+          //  this.logoPath = '../../assets/images/logo.png';
             element.classList.remove('navbar-inverse', 'shadow');
         }
 
@@ -358,7 +362,7 @@ getUserColorCode(n) {
       else if(this.currentPage == 'HOME2'){
         let element = document.querySelector('.navbar');
         element.classList.add('navbar-inverse', 'shadow');
-        this.logoPath = '../../assets/img/2.png';
+      //  this.logoPath = '../../assets/img/2.png';
         return 'fixed-top'
       }
       else{
@@ -369,7 +373,7 @@ getUserColorCode(n) {
     gotoStaticMenu(menu) {
         if (menu == 'home_page') {
             this.dataShareService.sendCurrentPage('HOME')
-            this.logoPath = '../../assets/images/logo.png';
+           // this.logoPath = '../../assets/images/logo.png';
             let element = document.querySelector('.navbar');
             element.classList.remove('navbar-inverse', 'shadow');
         }
@@ -379,12 +383,4 @@ getUserColorCode(n) {
 
         this.router.navigate([menu])
     }
-
-
-
-
-
-
-
-
 }

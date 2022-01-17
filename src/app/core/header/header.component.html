@@ -1,7 +1,7 @@
 <header class="position-sticky" *ngIf="fullHeader">
   
-  <mdb-navbar SideClass="navbar navbar-expand-lg py-2" [containerInside]="false">
-    <mdb-navbar-brand><a class="navbar-brand"><img src="assets/images/logo2.png" alt="" width="120px"></a></mdb-navbar-brand>    
+  <mdb-navbar SideClass="navbar navbar-expand-lg py-0" [containerInside]="false">
+    <mdb-navbar-brand><a class="navbar-brand"><img [src]="logoPath" alt=""></a></mdb-navbar-brand>    
     <links class="d-flex" *ngIf="menuBoxHome">
       <ul class="navbar-nav ml-auto ">
         <li class="nav-item"><a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/home_page']" routerLinkActive="router-link-active">Home</a></li>
@@ -48,6 +48,7 @@
       </ul> 
 
       <ul class="navbar-nav ml-auto nav-flex-icons d-flex align-items-center" *ngIf="showUserAccount">
+        <li class="nav-item avatar mr-3" (click)="chartModel()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">bar_chart</span></a></li>
         <li class="nav-item avatar mr-3" (click)="shortcutinfo()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">info</span></a></li>
         <li class="nav-item avatar dropdown" dropdown>
           <a href="javascript:void(0)" dropdownToggle mdbWavesEffect class="nav-link dropdown-toggle userlogin waves-light"><img src="../../assets/img/profile.jpg" alt="" class="img-fluid rounded-circle" width="30"></a>
@@ -63,4 +64,4 @@
 
 
 </header>
-<app-shortcutinfo id="shortcutinfo_model" (shortcutinfoResponce)="shortcutinfoResponce($event)"></app-shortcutinfo>
+

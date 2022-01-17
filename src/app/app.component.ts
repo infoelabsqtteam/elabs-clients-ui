@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener, Inject } from '@angular/core';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from '../aws-exports';
-
+import {Title} from "@angular/platform-browser";
 import { StorageService } from './services/storage/storage.service';
 import { DataShareService } from './services/data-share/data-share.service';
 import { ModelService } from './services/model/model.service';
@@ -11,7 +11,6 @@ import { LoaderService } from './services/loader/loader.service';
 import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
 
-import { BreadcrumbModule } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-root',
@@ -27,8 +26,10 @@ export class AppComponent implements OnInit {
   showHideSetting:boolean = false;
   applicationSettingSubscription
 
+  favIcon: HTMLLinkElement = document.querySelector('#favIcon');
 
   constructor(
+    private titleService:Title,
     private router: Router,
     private routers:ActivatedRoute, 
     private storageService: StorageService, 
@@ -41,22 +42,23 @@ export class AppComponent implements OnInit {
     
 
   ) {
-   
-    this.envService.setDinamicallyHost();
-
-    const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
-    object["pageNo"] = 0;
-    object["pageSize"] = 25;
-    const payload = {
-      "path": null,
-      "data": object
-    }
-    this.apiService.getAplicationsThemeSetting(payload);
+    // const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
+    // object["pageNo"] = 0;
+    // object["pageSize"] = 25;
+    // const payload = {
+    //   "path": null,
+    //   "data": object
+    // }
+    // this.apiService.getAplicationsThemeSetting(payload);
     if(this.dataShareService.applicationSetting != undefined){
       this.applicationSettingSubscription = this.dataShareService.applicationSetting.subscribe(
         data =>{
         //  console.log(data)
-        this.setApplicationSetting(data.data)
+        const themeSettingDate = data.data;
+        if(themeSettingDate && themeSettingDate.length > 0) {
+          const settingObj = themeSettingDate[0];
+          this.envService.setApplicationSetting(settingObj);
+        }
         })
     }
    
@@ -73,8 +75,7 @@ export class AppComponent implements OnInit {
    }
 
   
-  ngOnInit() {
-    this.envService.setDinamicallyHost();    
+  ngOnInit() {        
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
       //   console.log("Navigation Start :-"+event.url)
@@ -133,29 +134,13 @@ export class AppComponent implements OnInit {
     Amplify.configure(awsconfig);
   }
 
-
-  setApplicationSetting(data) {
-    if(data && data.length > 0) {
-      const settingObj = data[0];
-      if(settingObj.header_bg_color != "") {
-        document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
-        document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
-        document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
-        document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
-        document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
-        document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
-        document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
-
-      }
-    }
-  }
-
   redirectToHomePage(){
     this.storageService.removeDataFormStorage();
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
-    this.router.navigate(['signin'])
+    this.loadPage();
+    this.router.navigate(['signin'])    
   }
 
   @HostListener("window:onbeforeunload",["$event"])
@@ -173,6 +158,9 @@ export class AppComponent implements OnInit {
   appSettingModalResponce(event){
     console.log(event);
   }
-
-  
+  loadPage(){
+    this.favIcon.href = this.envService.getLogoPath() + "favicon.ico";
+    this.titleService.setTitle(this.envService.getPageTitle());
+    this.envService.setDinamicallyHost();
+  }
 }

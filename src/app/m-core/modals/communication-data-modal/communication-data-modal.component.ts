@@ -1,10 +1,10 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import {ModalService} from '../modal.service';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {MatAccordion} from '@angular/material/expansion';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
+import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
   selector: 'app-communication-data-modal',
@@ -38,7 +38,7 @@ export class CommunicationDataModalComponent implements OnInit,OnDestroy {
 
 
   constructor(
-    private modalService: ModalService, 
+    private modalService: ModelService, 
     private el: ElementRef, 
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,

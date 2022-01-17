@@ -1,26 +1,28 @@
-
 import { NgModule } from '@angular/core';
 import { AppLandingRoutingModule } from './app-landing-routing.module';
-import { McoreModule } from '../m-core/m-core.module';
 import { AppLandingComponent } from './app-landing.component';
 import { MDBBootstrapModule  } from 'angular-bootstrap-md';
+
+
+import { CoreModule } from '../core/core.module';
+import { FormModelModule } from '../m-core/modals/form-model.module';
+import { CommonComponentModule } from '../m-core/common-component/common-component.module';
+import { ModelModule } from '../m-core/modals/model.module';
+import { AllPackageModule } from '../m-core/all-package/all-package.module';
+import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
+import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
+
 import { HomePageComponent } from './home-page/home-page.component';
 import { CareerWithUsComponent } from './career-with-us/career-with-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
-import { LandingFunctionsModalComponent } from '../m-core/modals/landing-functions-modal/landing-functions-modal.component';
-import { FranchiseComponent } from '../m-core/modals/franchise/franchise.component';
-
-import { CoreModule } from '../core/core.module';
 import { CustomerPortalComponent } from './solution/customer-portal/customer-portal.component';
 import { SalesManagemntComponent } from './solution/sales-managemnt/sales-managemnt.component';
-
 import { MachineInterfaceComponent } from './solution/machine-interface/machine-interface.component';
 import { BlogComponent } from './blog/blog.component';
 import { BlogDetailsComponent } from './blog/blog-details/blog-details.component';
 import { CaseStudyComponent } from './case-study/case-study.component';
 import { SummaryComponent } from './summary/summary.component';
 import { TestemonialsComponent } from './testemonials/testemonials.component';
-import { CarouselModule } from 'ngx-owl-carousel-o';
 import { SolutionMenuComponent } from './solution/solution-menu/solution-menu.component';
 import { PlatformComponent } from './solution/platform/platform.component';
 import { SecurityComponent } from './solution/security/security.component';
@@ -43,13 +45,15 @@ import { IntegrationsComponent } from './services/integrations/integrations.comp
 import { SecuredCloudComponent } from './services/secured-cloud/secured-cloud.component';
 import { DownloadReportComponent } from './download-report/download-report.component';
 
+
+
+
 @NgModule({
     declarations: [
     	AppLandingComponent,
         HomePageComponent,
         CareerWithUsComponent,
         ContactUsComponent,
-        LandingFunctionsModalComponent,
         PlatformComponent,
         SecurityComponent,
         CustomerPortalComponent,        
@@ -71,7 +75,6 @@ import { DownloadReportComponent } from './download-report/download-report.compo
         CaseStudyComponent,
         SummaryComponent,
         TestemonialsComponent,
-        FranchiseComponent,
         SolutionMenuComponent,
         SolutionMenuMobileComponent,
         AnalyticsComponent,
@@ -81,12 +84,17 @@ import { DownloadReportComponent } from './download-report/download-report.compo
         SecuredCloudComponent,
         DownloadReportComponent
     ],
-    imports: [        
+    imports: [ 
         AppLandingRoutingModule,
-        MDBBootstrapModule.forRoot(),     
-        McoreModule,
-        CarouselModule,
-        CoreModule
+        MDBBootstrapModule.forRoot(), 
+        CoreModule,
+        FormModelModule,
+        CommonComponentModule,
+        ModelModule,
+        AllPackageModule,
+        FormModelModule,
+        AngularMaterialModule,
+        AngularCommonModule
     ]
 
 })

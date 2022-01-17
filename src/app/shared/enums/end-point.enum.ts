@@ -33,7 +33,7 @@ export enum EndPoint {
     GET_FORM_PUBLIC = 'get_form',
     GET_FILE = "rpts/get_file",
     RESET_PASSWORD = "login/cnp",
-    GET_DASHLET_DATA = "rpts/get_dashlet_data",
+    GET_DASHLET_DATA = "generic/retrieve/dashlet_data",
     OTP_VARIFICATION = "login/confirmUserWithToken/",
     GET_COMPARE_DATA = "mig/send_menu_by_module/",
     GET_QR_CODE = "rpts/qrGen/",
@@ -43,11 +43,12 @@ export enum EndPoint {
     MOVE_FOLDER_CHILD = "vdrn/getch",
     UPLOAD_DOC_FILE = "vdrn/crtfl/e",
     CREATE_FOLDER = "vdrn/crtfd/e",
-    GET_FOLDER_BY_KEY = "vdrn/getchbk",
+    GET_CHILD_FOLDER_BY_KEY = "vdrn/getchbk",
     GET_DOC_AUDIT = "vdrn/getAudit/",
     DOC_FILE_DOWNLOAD = "vdrn/getfl/download",
     DOC_FILE_VIEW = "vdrn/getfl/view",
     DOC_DELETE = "vdrn/fo/",
-    DOC_SHARE = "vdrn/shr"
+    DOC_SHARE = "vdrn/shr",
+    GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey"
 
 }
