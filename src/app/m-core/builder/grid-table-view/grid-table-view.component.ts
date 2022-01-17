@@ -948,7 +948,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     this.pageNumber = 1;
-    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm,this.selectContact);
+    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     this.apiService.getGridData(pagePayload);
     // this.getDataForGrid();
   }
