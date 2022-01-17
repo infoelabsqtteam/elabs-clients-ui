@@ -1,7 +1,7 @@
 <header class="position-sticky" *ngIf="fullHeader">
   
   <mdb-navbar SideClass="navbar navbar-expand-lg py-0" [containerInside]="false">
-    <mdb-navbar-brand><a class="navbar-brand"><img [src]="logoPath" alt=""></a></mdb-navbar-brand>    
+    <mdb-navbar-brand><a class="navbar-brand py-2"><img [src]="logoPath" alt=""></a></mdb-navbar-brand>    
     <links class="d-flex" *ngIf="menuBoxHome">
       <ul class="navbar-nav ml-auto ">
         <li class="nav-item"><a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/home_page']" routerLinkActive="router-link-active">Home</a></li>
