@@ -169,48 +169,56 @@ export class EnvService {
   }
 
 
-setGoogleLocation(giolocation){
-  (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
-}
-setTempName(temp){
-  localStorage.setItem(this.TEMP_NAME,temp);
-}
-getTemplateName(){
-  const template:string=localStorage.getItem(this.TEMP_NAME);
-  return template;
-}
-
-setApplicationSetting(settingObj) {
-        if(settingObj.header_bg_color != "" ) {
-          document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
-        }
-        if (settingObj.header_txt_color != "") {
-          document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
-        }
-        if (settingObj.header_txt_hover_color != "") {
-          document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
-        }
-        if (settingObj.header_icon_color != "") {
-          document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
-        }
-        if (settingObj.header_icon_hover_color != "") {
-          document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
-        }
-        if (settingObj.btn_color != "") {
-          document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
-        }
-        if (settingObj.btn_hover_color != "") {
-          document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
-        }
-        if (settingObj.footer_bg != "") {
-          document.documentElement.style.setProperty('--footerbg', settingObj.footer_bg);
-        }
-        if (settingObj.theme_color != "") {
-          document.documentElement.style.setProperty('--themecolor', settingObj.theme_color);
-        }
-        if (settingObj.active_bg_color != "") {
-          document.documentElement.style.setProperty('--activebg', settingObj.active_bg_color);
-        }
-    }
+  setGoogleLocation(giolocation){
+    (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
   }
+  setTempName(temp){
+    localStorage.setItem(this.TEMP_NAME,temp);
+  }
+  getTemplateName(){
+    const template:string=localStorage.getItem(this.TEMP_NAME);
+    return template;
+  }
+
+  setApplicationSetting(settingObj) {
+      if(settingObj.header_bg_color != "" ) {
+        document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
+      }
+      if (settingObj.header_txt_color != "") {
+        document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
+      }
+      if (settingObj.header_txt_hover_color != "") {
+        document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
+      }
+      if (settingObj.header_icon_color != "") {
+        document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
+      }
+      if (settingObj.header_icon_hover_color != "") {
+        document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
+      }
+      if (settingObj.btn_color != "") {
+        document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
+      }
+      if (settingObj.btn_hover_color != "") {
+        document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
+      }
+      if (settingObj.footer_bg != "") {
+        document.documentElement.style.setProperty('--footerbg', settingObj.footer_bg);
+      }
+      if (settingObj.theme_color != "") {
+        document.documentElement.style.setProperty('--themecolor', settingObj.theme_color);
+      }
+      if (settingObj.active_bg_color != "") {
+        document.documentElement.style.setProperty('--activebg', settingObj.active_bg_color);
+      }
+  }
+  checkRedirectionUrl(){
+    let redirectURL = '';
+    const url = this.getHostKeyValue('redirect_url')
+    if(url){
+      redirectURL = url;
+    }
+    return redirectURL;
+  }
+}
 

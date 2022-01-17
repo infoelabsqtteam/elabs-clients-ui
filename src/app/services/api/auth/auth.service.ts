@@ -36,7 +36,7 @@ export class AuthService {
         this.apiService.resetTempData();
         this.apiService.resetGridData();
         this.envService.setRequestType('PUBLIC');
-        this.router.navigate(['/signin']);
+        this.logOutRedirection();
         this.notificationService.notify("bg-info","Log out Successful.");                
         this.dataShareService.restSettingModule('logged_out');
       },
@@ -54,7 +54,7 @@ export class AuthService {
         this.apiService.resetTempData();
         this.apiService.resetGridData();
         this.envService.setRequestType('PUBLIC');
-        this.router.navigate(['/signin']);
+        this.logOutRedirection();
         this.notificationService.notify("bg-info", "Session Expired, Kindly Login Again.");
         this.dataShareService.restSettingModule('logged_out');
       },
@@ -62,6 +62,13 @@ export class AuthService {
         this.notificationService.notify("bg-danger", error.message);
       }
     )
+  }
+  logOutRedirection(){
+    if (this.envService.checkRedirectionUrl()) {
+      window.location.href = this.envService.checkRedirectionUrl();
+    }else{      
+      this.router.navigate(['/signin']);
+    }
   }
   GetUserInfoFromToken(payload:any){
     let api = this.envService.getAuthApi('GET_USER_PERMISSION');

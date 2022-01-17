@@ -31,35 +31,35 @@ import { TestemonialsComponent } from './testemonials/testemonials.component';
 import { DownloadReportComponent } from './download-report/download-report.component';
 
 const appLandingRoutes : Routes = [
-        {path: '', component: AppLandingComponent, children:[ 
-            {path: 'home_page', component: HomePageComponent},
-            {path: 'career-with-us', component: CareerWithUsComponent},
-            {path: 'contact-us', component: ContactUsComponent}, 
-            {path: 'platform', component: PlatformComponent},            
-            {path: 'security', component: SecurityComponent},
-            {path: 'customer-portal', component:CustomerPortalComponent},
-            {path: 'sales-management', component:SalesManagemntComponent},
-            {path:'machine-interface',component:MachineInterfaceComponent},
-            {path: 'operations-management', component: OperationsManagementComponent},
-            {path: 'testing-process-automation', component: TestingProcessAutomationComponent},
-            {path: 'quality-management', component: QualityManagementComponent},
-            {path: 'document-library', component: DataLibraryComponent},
-            {path: 'contracts', component: ContractsComponent},
-            {path: 'payroll-management', component: PayrollManagementComponent},
-            {path:'hr-management', component:HrManagementComponent},
-            {path:'procurement', component:ProcurementComponent},
-            {path:'inventory',component:InventoryComponent},
-            {path:'shelf-life-study',component:RemnantSampleComponent},
-            {path:'incident-management',component:IncidentManagementComponent},            
-            {path:'blog', component:BlogComponent},
-            {path:'blog/details/:id', component:BlogDetailsComponent},
-            {path:'case-study',component:CaseStudyComponent},
-            {path:'summary',component:SummaryComponent},
-            {path:'testemonials',component:TestemonialsComponent},
-            { path: 'download-manual-report', component: DownloadReportComponent },
+        // {path: '', component: AppLandingComponent, children:[ 
+        //     {path: 'home_page', component: HomePageComponent},
+        //     {path: 'career-with-us', component: CareerWithUsComponent},
+        //     {path: 'contact-us', component: ContactUsComponent}, 
+        //     {path: 'platform', component: PlatformComponent},            
+        //     {path: 'security', component: SecurityComponent},
+        //     {path: 'customer-portal', component:CustomerPortalComponent},
+        //     {path: 'sales-management', component:SalesManagemntComponent},
+        //     {path:'machine-interface',component:MachineInterfaceComponent},
+        //     {path: 'operations-management', component: OperationsManagementComponent},
+        //     {path: 'testing-process-automation', component: TestingProcessAutomationComponent},
+        //     {path: 'quality-management', component: QualityManagementComponent},
+        //     {path: 'document-library', component: DataLibraryComponent},
+        //     {path: 'contracts', component: ContractsComponent},
+        //     {path: 'payroll-management', component: PayrollManagementComponent},
+        //     {path:'hr-management', component:HrManagementComponent},
+        //     {path:'procurement', component:ProcurementComponent},
+        //     {path:'inventory',component:InventoryComponent},
+        //     {path:'shelf-life-study',component:RemnantSampleComponent},
+        //     {path:'incident-management',component:IncidentManagementComponent},            
+        //     {path:'blog', component:BlogComponent},
+        //     {path:'blog/details/:id', component:BlogDetailsComponent},
+        //     {path:'case-study',component:CaseStudyComponent},
+        //     {path:'summary',component:SummaryComponent},
+        //     {path:'testemonials',component:TestemonialsComponent},
+        //     { path: 'download-manual-report', component: DownloadReportComponent },
             
-           ]
-        },
+        //    ]
+        // },
     ];
 
 @NgModule({
