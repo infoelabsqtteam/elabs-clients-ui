@@ -145,7 +145,7 @@ export class GmapViewComponent implements OnInit,OnDestroy {
       const filterValue = {"user":value}
       this.filterForm['value']=filterValue;
     }    
-    const pagePayload = this.commonFunctionService.getPage(1,this.tab,this.currentMenu,this.headElements,this.filterForm,this.selectContact);
+    const pagePayload = this.commonFunctionService.getPage(1,this.tab,this.currentMenu,this.headElements,this.filterForm.getrawvalue(),this.selectContact);
     this.apiService.getGridData(pagePayload);
     this.headElements=[]
     this.filterForm={};

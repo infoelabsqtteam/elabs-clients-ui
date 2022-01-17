@@ -873,7 +873,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         leadId = contact['lead']._id;
       }
     }
-    const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm,leadId)
+    const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';
