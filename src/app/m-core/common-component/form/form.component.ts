@@ -579,7 +579,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
-    if(Common.GOOGLE_MAP_IN_FORM){
+    if(Common.GOOGLE_MAP_IN_FORM == "true"){
       this.mapsAPILoader.load().then(() => {      
         this.geoCoder = new google.maps.Geocoder;
         if(this.longitude == 0 && this.latitude == 0){
