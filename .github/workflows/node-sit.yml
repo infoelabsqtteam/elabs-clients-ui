@@ -112,8 +112,8 @@ jobs:
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E3ABDVFOAJOYY2 --paths '/*'
       
-  # Deploy Qualitek Labs Sit
-    - name: Clean up existing deployment - Qualitek Labs
+  # Deploy Aalbiosciences Labs Sit
+    - name: Clean up existing deployment - Aalbiosciences Labs
       run: aws s3 rm s3://sit-aalbiosciences.e-labs.ai --recursive
 
     - name: Upload data
