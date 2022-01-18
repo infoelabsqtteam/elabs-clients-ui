@@ -44,20 +44,21 @@ jobs:
      
   # Deploy ItcLabs    
     - name: Clean up existing deployment - ItcLabs Dev
-      run: aws s3 rm s3://uat-itclabs.e-labs.ai --recursive
+      run: aws s3 rm s3://uat.itclabs.e-labs.ai --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://uat-itclabs.e-labs.ai
+      run: aws s3 sync dist s3://uat.itclabs.e-labs.ai
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E1I2UAZVQD0JGH --paths '/*'
 
   # Deploy Qualitek Labs
     - name: Clean up existing deployment - Qualitek Labs
-      run: aws s3 rm s3://uat-qualiteklab.e-labs.ai --recursive
+      run: aws s3 rm s3://uat.qualiklab.e-labs.ai --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://uat-qualiteklab.e-labs.ai
+      run: aws s3 sync dist s3://uat.qualiklab.e-labs.ai
+
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E16WIGP6AQRARO --paths '/*'
