@@ -1,5 +1,5 @@
 
-<div class="row d-flex align-items-center justify-content-end mb-3">
+<div class="row mb-3">
   <div class="col-sm-4">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label class="filterlabel">Chart List</mat-label>
@@ -11,54 +11,69 @@
 </div>
 
 <div class="row" [formGroup]="dashboardFilter" *ngIf="filteredDashboardData.length >0">
-  <div class="col-lg-6" *ngFor="let item of filteredDashboardData; let j = index">
+  <div class="col-lg-4" *ngFor="let item of filteredDashboardData; let j = index">
     <div class="card">
-      
+      <div class="card-header m-0 p-2">
+          <div *ngIf="item.fields && item.fields.length >0">
+            <div class="row no-gutters mt-1 d-flex align-items-center justify-content-end" [formGroupName]="item.name">
+              <div *ngFor="let field of item.fields; let i = index" [ngClass]="getDivClass(field)" [id]="field._id">
 
-      <div class="card-header d-flex align-items-center justify-content-between m-0 no-gutters">
-          <div class="w-100"><h3 class="m-0">{{item.name}}</h3></div>
-          <div class="w-100 d-flex align-items-center justify-content-end">
-              <div *ngIf="item.fields && item.fields.length >0">
-                <div class="row mt-1 mr-2" [formGroupName]="item.name">
-                  <div *ngFor="let field of item.fields; let i = index" [ngClass]="getDivClass(field)" [id]="field._id">
-                    <div *ngIf="field.type == 'dropdown'">
-                        <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'object'">
-                            <mat-label>{{ field.label | titlecase}}</mat-label>
-                            <mat-select [compareWith]="compareObjects" [formControlName]="field.field_name" >
-                                <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
-                                    {{getddnDisplayVal(staticValue)}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype != 'object' && field.datatype != 'key_value'">
-                            <mat-label>{{ field.label | titlecase}}</mat-label>
-                            <mat-select [formControlName]="field.field_name"   >
-                                <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
-                                    {{getddnDisplayVal(staticValue)}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'key_value'">
-                            <mat-label>{{ field.label | titlecase}}<span *ngIf="field.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                            <mat-select [formControlName]="field.field_name"   >
-                                <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
-                                    {{getddnDisplayVal(staticValue)}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                  </div>
-                  <button mat-flat-button color="primary" (click)="dashletFilter(j)" style="line-height:10px;">Filter</button>
+
+                <div *ngIf="field.type == 'date'">
+                  <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>{{ field.label | titlecase}}</mat-label>
+                      <input matInput [matDatepicker]="picker2" [min]="field.minDate" [max]="field.maxDate" [required]="field.is_mandatory" [formControlName]="field.field_name" [id]="field._id+'_'+field.field_name">
+                      <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
+                      <mat-datepicker #picker2 color="primary" ></mat-datepicker>
+                  </mat-form-field>
                 </div>
+
+                <div *ngIf="field.type == 'daterange'">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>{{field.label}}</mat-label>
+                      <mat-date-range-input [formGroupName]="field.field_name" [rangePicker]="picker" [id]="field._id+'_'+field.field_name">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker>  
+                  </mat-form-field>                 
+                </div>
+
+
+
+                <div *ngIf="field.type == 'dropdown'">
+                    <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'object'">
+                        <mat-label>{{ field.label | titlecase}}</mat-label>
+                        <mat-select [compareWith]="compareObjects" [formControlName]="field.field_name" >
+                            <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype != 'object' && field.datatype != 'key_value'">
+                        <mat-label>{{ field.label | titlecase}}</mat-label>
+                        <mat-select [formControlName]="field.field_name"   >
+                            <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'key_value'">
+                        <mat-label>{{ field.label | titlecase}}<span *ngIf="field.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                        <mat-select [formControlName]="field.field_name"   >
+                            <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
               </div>
+              <button mat-icon-button color="primary" (click)="dashletFilter(j)"><mat-icon>filter_list</mat-icon></button>
+            </div>
           </div>
       </div>
 
 
 
-
-      <div class="card-body">
-        <ng-container>
+      <h3 class="m-0 px-2 pt-3 pb-0 charttitle">{{item.name}}</h3>
+      <div class="card-body p-2">
+        <ng-container *ngIf="!chartTable">
               <canvas mdbChart *ngIf="item.package_name == 'chart_js'" [chartType]="chartType[item.call_back_field]"
                 [datasets]="chartDatasets[item.call_back_field]" [labels]="chartLabels[item.call_back_field]"
                 [colors]="chartColors[item.call_back_field]" [options]="chartOptions[item.call_back_field]"
@@ -71,6 +86,25 @@
                 [options]="chartOptions[item.call_back_field]">
               </google-chart>
         </ng-container>
+        <ng-container *ngIf="chartTable">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Chart Name</th>
+                <th>Chart Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{item.name}}</td>
+                <td>
+                  <p>{{item.datasets}}</p>
+                  <p>{{item.options}}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -81,6 +115,4 @@
 
 
 
-<div *ngIf="elements.length == 0">
-  <p class="text-center"><span>Dashlet Master not available in this application.</span></p>
-</div>
+<div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>

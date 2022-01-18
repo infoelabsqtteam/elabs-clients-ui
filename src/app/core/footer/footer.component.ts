@@ -14,6 +14,7 @@ export class FooterComponent implements OnInit {
   menuBoxHome:boolean = false;
   subscription:any;
   template:string = "temp1";
+  title = "";
 
   constructor(
     private dataShareService:DataShareService,
@@ -62,5 +63,6 @@ export class FooterComponent implements OnInit {
   }
   pageloded(){
     this.template = this.envService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
   }
 }

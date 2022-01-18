@@ -1,4 +1,4 @@
-.service-block-two .inner-box .lower-content .link a i, .form-tab h4.active, .form-tab h3.active, .mat-form-field.mat-focused.mat-primary .mat-select-arrow{color:$themetext!important}
+.service-block-two .inner-box .lower-content .link a i, .form-tab h4.active, .mat-form-field.mat-focused.mat-primary .mat-select-arrow{color:$themetext!important}
 .sec-title:before, .sec-title .dotted-box .dotted, .service-block-two .inner-box .lower-content .link:before, .page-title .content-box .title-box:before, .theme-btn-two, .ngx-pagination .current, .float, .page-title .content-box .title-box .dotted-box .dotted{background:$themecolor!important}
 
 
@@ -19,5 +19,11 @@
 
 
 
-
+.dropdownmenu {margin-top:15px;min-height:0px;
+  mat-icon {font-size:16px;margin-right:5px !important;line-height:30px;width:auto;height:auto;}
+  .mat-menu-content:not(:empty) {padding:0px;}
+  button {height:auto;line-height:30px;font-size:13px;
+      &:focus {outline:none;}
+  }
+}
 

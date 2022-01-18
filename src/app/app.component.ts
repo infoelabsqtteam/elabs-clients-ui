@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   applicationSettingSubscription
 
   favIcon: HTMLLinkElement = document.querySelector('#favIcon');
+  themeName:any = '';
 
   constructor(
     private titleService:Title,
@@ -42,15 +43,14 @@ export class AppComponent implements OnInit {
     
 
   ) {
-    this.envService.setDinamicallyHost();
-    const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
-    object["pageNo"] = 0;
-    object["pageSize"] = 25;
-    const payload = {
-      "path": null,
-      "data": object
-    }
-    this.apiService.getAplicationsThemeSetting(payload);
+    // const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
+    // object["pageNo"] = 0;
+    // object["pageSize"] = 25;
+    // const payload = {
+    //   "path": null,
+    //   "data": object
+    // }
+    // this.apiService.getAplicationsThemeSetting(payload);
     if(this.dataShareService.applicationSetting != undefined){
       this.applicationSettingSubscription = this.dataShareService.applicationSetting.subscribe(
         data =>{
@@ -76,10 +76,8 @@ export class AppComponent implements OnInit {
    }
 
   
-  ngOnInit() {
-    this.favIcon.href = this.envService.getLogoPath() + "favicon.ico";
-    this.titleService.setTitle(this.envService.getPageTitle());
-    this.envService.setDinamicallyHost();    
+  ngOnInit() {  
+    this.themeName = this.envService.getPageThmem();
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
       //   console.log("Navigation Start :-"+event.url)
@@ -143,7 +141,8 @@ export class AppComponent implements OnInit {
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
-    this.router.navigate(['signin'])
+    this.loadPage();
+    this.router.navigate(['signin'])    
   }
 
   @HostListener("window:onbeforeunload",["$event"])
@@ -160,5 +159,10 @@ export class AppComponent implements OnInit {
   }
   appSettingModalResponce(event){
     console.log(event);
+  }
+  loadPage(){
+    this.favIcon.href = this.envService.getLogoPath() + "favicon.ico";
+    this.titleService.setTitle(this.envService.getPageTitle());
+    this.envService.setDinamicallyHost();
   }
 }
