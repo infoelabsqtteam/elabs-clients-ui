@@ -85,7 +85,7 @@ export const serverHostList =  [
         "active_bg_color": ""
       }
     },
-    { "clientEndpoint": "sanskar.e-labs.ai", "serverEndpoint": "https://prodsanskarserver.e-labs.ai", "title": "Sanskar", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1", "redirect_url":"",
+    { "clientEndpoint": "lims-sanskar.e-labs.ai", "serverEndpoint": "https://prodsanskarserver.e-labs.ai", "title": "Sanskar", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1", "redirect_url":"",
       "theme_setting": {
         "header_bg_color": "",
         "header_txt_color": "",
