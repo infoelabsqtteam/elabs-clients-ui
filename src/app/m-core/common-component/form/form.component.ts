@@ -1576,18 +1576,41 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       case "dropdown":
         if(!add){
-          if(parentfield != ''){
-            const value = formValue[parentfield.field_name][field.field_name]  
+          let value:any='';
+          if(parentfield != ''){            
+            if(field.multi_select){
+              const fValue:any = formValue[parentfield.field_name][field.field_name];
+              if(fValue && fValue.length > 0){
+                fValue.forEach(element => {
+                  if(element == "add_new"){
+                    value = "add_new";
+                  }
+                });
+              }
+            }else{
+              value = formValue[parentfield.field_name][field.field_name];              
+            } 
             if(value == "add_new"){
-              (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");
               this.storeFormDetails(parentfield,field);
-            }
-          }else{  
-            const value = formValue[field.field_name]; 
+              (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");              
+            }             
+          }else{ 
+            if(field.multi_select){
+              const fValue:any = formValue[field.field_name];
+              if(fValue && fValue.length > 0){
+                fValue.forEach(element => {
+                  if(element == "add_new"){
+                    value = "add_new";
+                  }
+                });
+              }
+            }else{
+              value = formValue[field.field_name];               
+            } 
             if(value == "add_new"){
-              this.templateForm.controls[field.field_name].setValue('');
               this.storeFormDetails(parentfield,field);
-            }
+              this.templateForm.controls[field.field_name].setValue('');              
+            }            
           }
         }
         break;
@@ -1797,12 +1820,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
     let objectValue:string = "";
+    let supporting_field_type = "";
     if(typeof formValue[field.field_name] == 'object'){
       if('COMPLETE_OBJECT' in formValue[field.field_name]){
         objectValue =formValue[field.field_name]["COMPLETE_OBJECT"];
         delete formValue[field.field_name]["COMPLETE_OBJECT"]
         this.selectedRow = objectValue;
         this.complete_object_payload_mode = true;
+        supporting_field_type = "COMPLETE_OBJECT";
       } 
       if('FORM_FIELDS' in formValue[field.field_name]){
         objectValue =formValue[field.field_name]["FORM_FIELDS"];
@@ -1814,10 +1839,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       if(objectValue != '' && typeof objectValue == 'object'){
         this.updateDataOnFormField(objectValue);   
-        this.getStaticDataWithDependentData();     
+        if(supporting_field_type == "COMPLETE_OBJECT") {
+          this.getStaticDataWithDependentData();     
+        }    
       }      
     }  
-    else   if(parentfield!=undefined && typeof formValue[parentfield.field_name][field.field_name] == 'object'){
+    else if(parentfield && typeof formValue[parentfield.field_name][field.field_name] == 'object'){
       if('COMPLETE_OBJECT' in formValue[parentfield.field_name][field.field_name]){
         objectValue =formValue[parentfield.field_name][field.field_name]["COMPLETE_OBJECT"];
         delete formValue[parentfield.field_name][field.field_name]["COMPLETE_OBJECT"]
@@ -1825,13 +1852,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.complete_object_payload_mode = true;
       } 
       if('FORM_FIELDS' in formValue[parentfield.field_name][field.field_name]){
-        objectValue =formValue[parentfield.field_name][field.field_name];
+        objectValue =formValue[parentfield.field_name][field.field_name]["FORM_FIELDS"];
         delete formValue[parentfield.field_name][field.field_name]["FORM_FIELDS"]
       }
      if(objectValue != '' && typeof objectValue == 'object'){
 
-      Object.keys(objectValue).forEach((key,value) => {
-        (<FormGroup>this.templateForm.controls[parentfield.key]).controls[field.field_name].patchValue(value);
+      Object.keys(objectValue).forEach(key => {
+        (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[key].patchValue(objectValue[key]);
       });
         // this.updateDataOnFormField(objectValue);   
         // this.getStaticDataWithDependentData();     
@@ -2078,7 +2105,8 @@ case 'populate_fields_for_report_for_new_order_flow':
     // if(!this.commonFunctionService.showIf(field,this.templateForm.getRawValue())){
     //   return "d-none"
     // }
-    return this.commonFunctionService.getDivClass(field);
+    const fieldsLangth = this.tableFields.length;
+    return this.commonFunctionService.getDivClass(field,fieldsLangth);
   }
   getButtonDivClass(field){
     return this.commonFunctionService.getButtonDivClass(field);
@@ -3083,6 +3111,7 @@ case 'populate_fields_for_report_for_new_order_flow':
   }
   resetForm(){
     //this.formGroupDirective.resetForm();
+    this.setPreviousFormTargetFieldData();
     this.donotResetField();
     this.templateForm.reset()
     if(Object.keys(this.donotResetFieldLists).length > 0){
@@ -4046,11 +4075,13 @@ case 'populate_fields_for_report_for_new_order_flow':
       previousFormFocusFieldValue = nextFormData[this.previousFormFocusField.add_new_target_field];
     }
     const parentfield = formCollecition['parent_field'];
-    if(parentfield != ''){
-       (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[this.previousFormFocusField.field_name].patchValue(previousFormFocusFieldValue);       
-    }else{      
-      this.templateForm.get(this.previousFormFocusField.field_name).setValue(previousFormFocusFieldValue);
-    }    
+    if(!this.previousFormFocusField.multi_select){
+      if(parentfield != ''){
+        (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[this.previousFormFocusField.field_name].patchValue(previousFormFocusFieldValue);       
+      }else{      
+        this.templateForm.get(this.previousFormFocusField.field_name).setValue(previousFormFocusFieldValue);
+      } 
+    }   
     switch (formCollecition['current_field'].type) {
       case "typeahead":
         this.callTypeaheadData(formCollecition['current_field'],this.getFormValue(false));
@@ -4069,7 +4100,35 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(this.multipleFormCollection.length > 0){
       nextFormData = this.multipleFormCollection[this.multipleFormCollection.length -1];
     }
-    this.updateDataOnFormField(nextFormData['next_form_data']);
+    let data = nextFormData['next_form_data']
+    this.updateDataOnFormField(data);
+    let nextFormFocusedFieldname = '';
+    for (let key in data) {
+      nextFormFocusedFieldname = key;
+      break;
+    }
+    if (this.tableFields && this.tableFields.length > 0) {
+      for (let i = 0; i < this.tableFields.length; i++) {
+        const element = this.tableFields[i];
+        if(nextFormFocusedFieldname == element.field_name){
+          this.previousFormFocusField = element;
+          break;
+        }        
+      }
+    }
+  }
+  setPreviousFormTargetFieldData(){
+    if(this.multipleFormCollection.length > 0){
+      const previousFormIndex = this.multipleFormCollection.length - 1;
+      const previousFormData = this.multipleFormCollection[previousFormIndex];
+      const previousFormField = previousFormData.current_field;
+      const targateFieldName = previousFormField.add_new_target_field;
+      const formData = previousFormData.next_form_data;
+      const currentFormValue = this.getFormValue(true)
+      const currentTargetFieldValue = currentFormValue[targateFieldName]
+      formData[targateFieldName] = currentTargetFieldValue;
+      this.multipleFormCollection[previousFormIndex]['next_form_data'] = formData;
+    }
   }
 
 

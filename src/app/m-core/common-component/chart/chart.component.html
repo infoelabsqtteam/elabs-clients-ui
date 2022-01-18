@@ -86,33 +86,10 @@
                 [options]="chartOptions[item.call_back_field]">
               </google-chart>
         </ng-container>
-        <ng-container *ngIf="chartTable">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Chart Name</th>
-                <th>Chart Data</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{item.name}}</td>
-                <td>
-                  <p>{{item.datasets}}</p>
-                  <p>{{item.options}}</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </ng-container>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
 
 
 <div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>

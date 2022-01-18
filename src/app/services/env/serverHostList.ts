@@ -7,10 +7,12 @@ export const serverHostList =  [
         "header_icon_color": "",
         "header_icon_hover_color": "",
         "btn_color": "",
-        "btn_hover_color": "",
+        "btn_hover_color": "", 
         "footer_bg": "#77bce8",
         "theme_color": "#77bce8",
-        "active_bg_color": "#e4f2fa"
+        "active_bg_color": "#e4f2fa",
+        "popup_header_bg": "",
+        "form_label_bg": "",
       }
   },
 
@@ -24,7 +26,9 @@ export const serverHostList =  [
         "btn_hover_color": "",
         "footer_bg": "",
         "theme_color": "",
-        "active_bg_color": ""
+        "active_bg_color": "",
+        "popup_header_bg": "",
+        "form_label_bg": "",
       }
     },
     { "clientEndpoint": "app.medicea.in", "serverEndpoint": "https://servermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type":"Horizontal", "medicea": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url":"", "theme_setting": {

@@ -873,7 +873,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         leadId = contact['lead']._id;
       }
     }
-    const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm,leadId)
+    const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';
@@ -898,7 +898,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       delete data.key1;
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
-      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,this.filterForm);
+      const value = this.filterForm.getRawValue();
+      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
       if(filtewCrlist.length > 0){
         filtewCrlist.forEach(element => {
           data.crList.push(element);
@@ -924,9 +925,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   onSort(columnObject) {
     const columnName = this.orderBy + columnObject.field_name;
+    const value = this.filterForm.getRawValue();
     const getSortData = {
       data: {
-        crList: this.commonFunctionService.getfilterCrlist(this.headElements,this.filterForm),
+        crList: this.commonFunctionService.getfilterCrlist(this.headElements,value),
         refCode: this.userInfo.refCode,
         key2: this.storageService.getAppId(),
         log: this.storageService.getUserLog(),
@@ -946,7 +948,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     this.pageNumber = 1;
-    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm,this.selectContact);
+    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     this.apiService.getGridData(pagePayload);
     // this.getDataForGrid();
   }

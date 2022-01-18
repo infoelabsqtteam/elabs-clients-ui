@@ -30,11 +30,11 @@ export class ChartModalComponent implements OnInit {
   }
   showModal(data:any){
     this.chartModel.show();
-    // this.isShow = true;
+    this.isShow = true;
   }
   close(){
     this.chartModel.hide();
-    // this.isShow = false;
+    this.isShow = false;
   }
 
 }
