@@ -197,6 +197,20 @@ export const serverHostList =  [
         "form_label_bg": "",
       }
     },
+    { "clientEndpoint": "lims.itclabs.com", "serverEndpoint": "https://serveritclabs.itclabs.com", "title": "Itclabs", "google_map": "false","menu_type":"Horizontal", "folder": "itclabs", "temp_name": "temp2", "redirect_url":"",
+      "theme_setting": {
+        "header_bg_color": "#665852",
+        "header_txt_color": "#ffffff",
+        "header_txt_hover_color": "",
+        "header_icon_color": "#ffffff",
+        "header_icon_hover_color": "#ffffff",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "#212121",
+        "theme_color": "#665852",
+        "active_bg_color": "#e0dedc"
+      }
+    },
 
 
     { "clientEndpoint": "qualiteklab.e-labs.ai", "serverEndpoint": "https://serverqualiteklab.e-labs.ai", "title": "Qualitek Labs", "google_map": "false","menu_type":"Vertical", "folder": "qualitek", "temp_name": "temp3", "theme": "theme1", "redirect_url":"", "theme_setting": {
