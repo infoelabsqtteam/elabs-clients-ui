@@ -2134,7 +2134,6 @@ case 'populate_fields_for_report_for_new_order_flow':
       }else{
         typeaheadTextControl = this.templateForm.controls[field.field_name];
       }  
-      typeaheadTextControl = this.templateForm.controls[field.field_name];
       if(objectValue[field.field_name] == null || objectValue[field.field_name] == '' || objectValue[field.field_name] == undefined){
         if(field.is_mandatory){
           typeaheadTextControl.setErrors({ required: true });
