@@ -155,8 +155,20 @@ export const serverHostList =  [
         "active_bg_color": "#e4f2fa"
       }
     },
-    
-
+    { "clientEndpoint": "erp.ascgroup.in", "serverEndpoint": "https://prodserverascgroup.e-labs.ai", "title": "ASC group", "google_map": "false", "menu_type":"Vertical", "folder": "asc-group", "temp_name": "temp1", "redirect_url":"",
+      "theme_setting": {
+        "header_bg_color": "#fcfcfc",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "#77bce8",
+        "theme_color": "#77bce8",
+        "active_bg_color": "#e4f2fa"
+      }
+    },
     { "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type":"Horizontal", "folder": "itclabs", "temp_name": "temp2", "redirect_url":"",
     "theme_setting": {
       "header_bg_color": "#665852",
