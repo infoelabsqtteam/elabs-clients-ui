@@ -10,6 +10,18 @@ import * as _moment from 'moment';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
 
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
+
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -19,7 +31,7 @@ import * as _moment from 'moment';
     // `MatMomentDateModule` in your applications root module. We provide it at the component level
     // here, due to limitations of our example generation script.
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
-    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
   ],
 })
 export class ChartComponent implements OnInit, OnDestroy, OnChanges {
@@ -53,7 +65,6 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   filterValue:any = [];
   filteredDashboardData:any = [];
-  chartTable = false;
   minDate: Date;
   maxDate: Date;
 
@@ -84,6 +95,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
     this.maxDate = new Date(currentYear + 1, 11, 31); 
+
   }
 
   
@@ -329,4 +341,5 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
+  
 }

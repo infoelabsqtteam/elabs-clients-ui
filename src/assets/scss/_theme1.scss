@@ -9,12 +9,14 @@
           .mat-form-field-label {color:#00000099;font-size:13px;}
           .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;}
           .mat-error {margin-top:15px;}
+          .filterbtn {background:var(--formLabelBg);
+            .mat-button-wrapper {display:flex;align-items:center;}
+          }
         //   .icon-button {height:16px;width:16px;top:8px;background:var(--buttonColor);
         //     i {font-size:9px;}
         //   }
         
     }
-
     .mat-form-field-appearance-outline .mat-form-field-outline, .mat-form-field-appearance-outline .mat-form-field-outline-thick {color:#0000001F !important;}
     .mat-form-field-appearance-outline .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-end, .mat-form-field-appearance-outline .mat-form-field-outline-gap,
     .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
