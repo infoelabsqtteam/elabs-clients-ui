@@ -2,7 +2,9 @@
 <!-- <div *ngIf="loaderService.isLoading | async" class="api_loader_call">
     <mat-spinner diameter="40" class="custom-spinner" ></mat-spinner>
 </div> -->
-<router-outlet></router-outlet>
+<section [class]="themeName">
+    <router-outlet></router-outlet>
+</section>
 <!-- <app-footer></app-footer> -->
 <app-setting-modal id="app-setting-modal" (appSettingModalResponce)="appSettingModalResponce($event)"></app-setting-modal>
 <a (click)="openSettingModel()" class="setting-icon" *ngIf="showHideSetting">
