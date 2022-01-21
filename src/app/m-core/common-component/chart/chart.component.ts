@@ -4,12 +4,35 @@ import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import * as _moment from 'moment';
+// import {default as _rollupMoment} from 'moment';
+// const moment = _rollupMoment || _moment;
 
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css']
+  styleUrls: ['./chart.component.css'],
+  providers: [
+    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
+    // `MatMomentDateModule` in your applications root module. We provide it at the component level
+    // here, due to limitations of our example generation script.
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
+  ],
 })
 export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
@@ -42,6 +65,8 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   filterValue:any = [];
   filteredDashboardData:any = [];
+  minDate: Date;
+  maxDate: Date;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -67,6 +92,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       this.setTypeaheadData(data);
     })
     this.getPage(1)   
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 100, 0, 1);
+    this.maxDate = new Date(currentYear + 1, 11, 31); 
 
   }
 
@@ -151,7 +179,27 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
               const list_of_fields = {};
               dashlet.fields.forEach(field => {                    
                 formField.push(field);
-                switch(field.type){                        
+                switch(field.type){ 
+                  case "date":
+                    field['minDate'] = this.minDate
+                    field['maxDate'] = this.maxDate;
+                    this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
+                      break; 
+                  case "daterange":
+                    const date_range = {};
+                    let list_of_dates = [
+                      {field_name : 'start'},
+                      {field_name : 'end'}
+                    ]
+                    if (list_of_dates.length > 0) {
+                      list_of_dates.forEach((data) => {
+                        
+                        this.commonFunctionService.createFormControl(date_range, data, '', "text")
+                      });
+                    }
+                    this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
+                    break; 
+                                            
                   default:
                     this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
                     break;
@@ -293,4 +341,5 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
+  
 }

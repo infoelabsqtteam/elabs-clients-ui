@@ -86,6 +86,7 @@ export class CommonApiService {
         }
     ) 
   }
+  
   GetCategory(payload){
     let api = this.envService.getApi('GET_CUSTOM_TEMPLATE');
     this.http.post(api, payload).subscribe(
