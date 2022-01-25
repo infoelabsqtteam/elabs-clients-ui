@@ -58,9 +58,10 @@ export class SignupComponent implements OnInit {
     const password = this.signUpForm.value.password;
     const name = this.signUpForm.value.name;
     const mobile = "+91" + this.signUpForm.value.mobile;
-    const payload = { appName: this.appName, data: { username: email, email: email, password: password, name: name, phone_number: mobile } }
-    this.authService.TrySignup(payload);
-    this.router.navigate(['/signin']);
+    const hostName = this.envService.getHostName('origin');
+    const domain = hostName + "/#/verify";
+    const payload = {email: email, password: password, name: name, mobileNumber: mobile, domain:domain }
+    this.authService.Signup(payload);
   }
 
   initForm() {

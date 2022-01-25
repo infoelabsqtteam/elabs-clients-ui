@@ -75,7 +75,7 @@ export class AuthService {
     const reqBody = { key: payload };
     this.http.post(api, reqBody).subscribe(
       (respData:any) =>{
-        if (respData && respData.authenticated === "true") {
+        if (respData && respData.user) {
           this.storageService.SetUserInfo(respData);
           this.storageService.GetUserInfo();
           this.envService.setRequestType('PRIVATE');
@@ -140,6 +140,39 @@ export class AuthService {
       }
     )
   }
+  Signin(payload:any){
+    let api = this.envService.getAuthApi('AU_SIGNIN');
+    this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
+      (respData:any) =>{
+        if(respData && respData['token']){
+            //console.log(respData["success"].authenticationResult);
+            const cognitoIdToken = respData['token'];
+            // const cognitoRefreshToken = respData["success"].authenticationResult.refreshToken;
+            // const cognitoAccessToken = respData["success"].authenticationResult.accessToken;
+            const cognitoExpiresIn = 86400;
+            this.storageService.setExpiresIn(cognitoExpiresIn);
+            this.storageService.SetIdToken(cognitoIdToken);                        
+            //this.storageService.SetRefreshToken(cognitoRefreshToken);
+            //this.storageService.SetAccessToken(cognitoAccessToken);
+            this.notificationService.notify("bg-success", " Login  Successful.");
+            this.dataShareService.setAuthentication(true);
+            this.GetUserInfoFromToken(cognitoIdToken);
+
+        } else if (respData.hasOwnProperty('error')) {
+            if (respData["error"] == "not_confirmed") {
+                this.notificationService.notify("bg-danger", "User Not Confirmed ");
+            } else if (respData["error"] == "user_name_password_does_not_match") {
+                this.notificationService.notify("bg-danger", "Username password does not match ");
+            }else {
+              this.notificationService.notify("bg-danger", "Username password does not match ");
+            }
+        }
+      },
+      (error)=>{
+        this.notificationService.notify("bg-danger", error.message);
+      }
+    )
+  }
   TrySignup(payload:any){
     let api = this.envService.getAuthApi('AUTH_SIGNUP');
     this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
@@ -156,6 +189,35 @@ export class AuthService {
                 this.router.navigate(['/signin']);
             }
         }
+      },
+      (error)=>{
+        this.notificationService.notify("bg-danger", error.message);
+      }
+    )
+  }
+  Signup(payload:any){
+    let api = this.envService.getAuthApi('AU_SIGNUP');
+    this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
+      (respData) =>{
+        if(respData && respData['message'] == 'User registered successfully'){
+          this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
+          this.router.navigate(['/signin']);
+
+        } else if(respData && respData['message']){
+          this.notificationService.notify("bg-success", respData['message']);
+        }
+        // if(respData['error']){
+        //   this.notificationService.notify("bg-danger", respData['error']);
+        // }else{
+        //     if(Common.VERIFY_WITH_OTP){
+        //         this.notificationService.notify("bg-success", "Otp Sent to your mobile number !!!");
+        //         const username = payload.data.username;
+        //         this.router.navigate(['/otp_varify/'+username]);                           
+        //     }else{
+        //         this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
+        //         this.router.navigate(['/signin']);
+        //     }
+        // }
       },
       (error)=>{
         this.notificationService.notify("bg-danger", error.message);
@@ -179,7 +241,7 @@ export class AuthService {
   }
   TryForgotPassword(payload:any){
     let api = this.envService.getAuthApi('AUTH_FORGET_PASSWORD');
-    this.http.post(api + payload.appName, this.encryptionService.encryptRequest({ username: payload.username })).subscribe(
+    this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
       (respData) =>{
         if (respData && respData.hasOwnProperty('success')) {
           this.notificationService.notify("bg-info", "Verification Code Sent.");
@@ -263,5 +325,19 @@ export class AuthService {
         }
     ) 
   }
+  userVarify(payload){
+    let api = this.envService.getAuthApi('USER_VARIFY');
+    this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
+      (respData) =>{
+        if(respData && respData['message'] == "User has been verified successfully"){
+          this.notificationService.notify("bg-success", respData['message']);
+        }
+      },
+      (error)=>{
+        this.notificationService.notify("bg-danger", error.message);
+      }
+    )
+  }
+  
 
 }
