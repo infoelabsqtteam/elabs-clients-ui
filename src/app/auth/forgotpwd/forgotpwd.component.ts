@@ -70,9 +70,9 @@ export class ForgotPwdComponent implements OnInit {
   onVerifyPwd() {
     const code = this.vForm.value.verifyCode;
     const password = this.vForm.value.password;
-    const payload = { appName: this.appName, data: { username: this.username, verif_code: code, password: password } };
+    const payload = { email: this.username, code: code, newPassword: password };
     this.authService.SaveNewPassword(payload);
-    this.router.navigate(['/signin']);
+    
   }
   pageloded(){
     this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
