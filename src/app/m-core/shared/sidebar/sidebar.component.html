@@ -1,0 +1,61 @@
+<div class="vertical-menu sidenav" [ngClass]="sidebar2 ? 'header2 bg-white' : ''">
+  <div class="row w-100 m-0 sidefilter">
+    <div class="col-lg-12"><input type="text" class="form-control form-control-sm mb-4 mt-2" [(ngModel)]="modal" [placeholder]="'Type Modal...'"/></div>
+  </div>
+
+  <perfect-scrollbar>
+    <div id="sidebar-menu">
+
+
+      <div class="metismenu list-unstyled header2" id="side-menu" #sideMenu *ngIf="sidebar2">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index">
+            <mat-expansion-panel-header  *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
+              <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="25"> <span class="ml-2"> {{ item.title }}</span></mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul *ngIf="hasMenu(item)" class="sub-menu" aria-expanded="false">
+              <li *ngFor="let subitem of item.menu_list">
+                <a *ngIf="!hasSubMenu(subitem)" class="side-nav-link-ref menu1" [attr.data-parent]="subitem.parentId"  (click)="getTemplateData(item,subitem)"> {{ subitem.label }} </a>
+                <a *ngIf="hasSubMenu(subitem)" class="side-nav-link-a-ref menu1" [attr.data-parent]="subitem.parentId"> {{ subitem.label }} </a>
+                <ul *ngIf="hasSubMenu(subitem)" class="sub-menu mm-collapse submenu2" aria-expanded="false">
+                  <li *ngFor="let subSubitem of subitem.submenu">
+                    <a [attr.data-parent]="subSubitem.parentId" class="side-nav-link-ref menu2" (click)="getTemplateData(item,subSubitem)"> {{ subSubitem.label }}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+
+      <ul class="metismenu list-unstyled" id="side-menu" #sideMenu *ngIf="!sidebar2">
+        <ng-container *ngFor="let item of AllModuleList|filter:modal; let i = index">
+          <li >
+            <a *ngIf="hasMenu(item)" href="javascript:void(0);" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
+              <div class="res-circle mr-2" [style.background-color]="item.color"><div class="circle-txt text-white"><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="25"></div></div>
+              <span> {{ item.title }}</span>
+            </a>
+            <a *ngIf="!hasMenu(item)" href="javascript:void(0);" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
+              <div class="res-circle mr-2" [style.background-color]="item.color"><div class="circle-txt text-white"><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="25"></div></div>
+              <span> {{ item.title }}</span>
+            </a>
+            <ul *ngIf="hasMenu(item)" class="sub-menu" aria-expanded="false">
+              <li *ngFor="let subitem of item.menu_list">
+                <a *ngIf="!hasSubMenu(subitem)" class="side-nav-link-ref"[attr.data-parent]="subitem.parentId"  (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
+                <a *ngIf="hasSubMenu(subitem)" class="side-nav-link-a-ref right-arrow" href="javascript:void(0);"[attr.data-parent]="subitem.parentId">{{ subitem.label }}</a>
+                <ul *ngIf="hasSubMenu(subitem)" class="sub-menu mm-collapse" aria-expanded="false">
+                  <li *ngFor="let subSubitem of subitem.submenu">
+                    <a [attr.data-parent]="subSubitem.parentId" class="side-nav-link-ref" (click)="getTemplateData(item,subSubitem)"> {{ subSubitem.label }}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
+      </ul>
+
+    </div>
+  </perfect-scrollbar>
+</div>
+

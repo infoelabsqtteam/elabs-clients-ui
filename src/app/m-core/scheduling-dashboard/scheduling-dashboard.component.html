@@ -1,0 +1,44 @@
+<section>
+    <div class="py-2 border-bottom text-center">
+        <button  type="button" mdbBtn  size="sm" class="waves-light bg-cerulean text-white" mdbWavesEffect (click)="addNewForm()">Add More Jobs</button>
+    </div>
+</section>
+<section >
+    <div  class="row">
+        <div *ngFor="let item of getJobSchedulesData;let i = index" class="col-xl-3 col-md-6 my-4">
+            <mdb-card  cascade="true" class="cascading-admin-card card card-cascade">
+                <div class="card card-cascade">
+                    <div  class="admin-up">
+                        <div  class="box bg-cerulean">{{item.run_duration}} hrs</div>
+                        
+                        <div  class="data">
+                            <p >Job ID-{{ item.name }}({{ item.serialId }})</p>
+                        </div>
+                    </div>
+                    <mdb-card-body  class="card-body-cascade card-body">
+                        <div  class="progress">
+                            <div  aria-valuemax="100" aria-valuemin="0" class="progress-bar text-cerulean" role="progressbar" [style.background-color]="item.progress_color" [style.width]="progressWidth(item.parameter_limit,item.quotation_param_methods)">{{progressText(item.parameter_limit,item.quotation_param_methods)}}</div>
+                        </div>
+                        <p *ngIf="item.quotation_param_methods !='' && item.quotation_param_methods != null">
+                            <span  class="card-text comma" *ngFor="let paramter of item.quotation_param_methods">{{ paramter.parameter.name }}</span>
+                        </p>
+                        <div class="text-right my-1">
+                            <a  class="mr-2 text-cerulean" (click)="addPlay('TEST_IN_PROGRESS',i)"><mdb-icon fas icon="play"></mdb-icon></a>
+                            <a  class="mr-2 text-cerulean" (click)="addPlay('RESULT_AWAITED',i)"><mdb-icon fas icon="stop"></mdb-icon></a>
+                            <a  class="mr-2 text-cerulean" (click)="showParameters(item,i)"><mdb-icon fas icon="folder"></mdb-icon></a>
+                            <!-- <a  class="mr-2 text-cerulean" (click)="addNewForm()"><mdb-icon fas icon="eye"></mdb-icon></a> -->
+                            <a  class="mr-2 text-cerulean" (click)="openModal('confirm-modal-schedule',i,{},'delete')"><mdb-icon fas icon="trash"></mdb-icon></a>
+                            <a  class="mr-2 text-danger" (click)="addPlay('ERROR_WHILE_TESTING',i)"><mdb-icon fas icon="times-circle"></mdb-icon></a>                            
+                            <a  class="text-cerulean" (click)="editedRowData(i)"><mdb-icon fas icon="plus"></mdb-icon></a>
+                        </div>
+                        <div><i class="float-left" [style.color]="item.status_color">{{ item.job_status | titlecase }}</i><i class="float-right">{{ item.scheduled_date | date:"dd/MM/yy" }} {{ item.scheduled_time }}</i></div>
+                    </mdb-card-body>
+                </div>
+            </mdb-card>
+        </div>             
+    </div>
+</section>
+<app-add-order-modal id="add-order-modal" (addOrderModalResponce)="addOrderModalResponce($event)"></app-add-order-modal>
+<app-confirm-modal id="confirm-modal-schedule" (alertResponce)="alertResponce($event)"></app-confirm-modal>
+<app-form-modal  id="form-modal" [tabIndex]="selectTabIndex" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)"  ></app-form-modal>
+<app-modals id="basic-modal" (responceData)="responceData($event)"></app-modals>

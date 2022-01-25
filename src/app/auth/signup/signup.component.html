@@ -1,0 +1,128 @@
+<section *ngIf="template == 'temp1'" class="hero-section-2" class="hero-section-2 signup" id="home" style="background: url(assets/img/bg-1.png) center center;">
+    <div class="container">
+        <div class="row vertical-content justify-content-center">
+            <div class="col-lg-6"><div class="hero-wrapper mb-4"><p><img [src]="logoPath" alt=""></p></div></div>
+            <div class="col-lg-4 offset-lg-2">
+                <div class="card mx-auto p-4 rounded mt-lg-0">
+                    <div class="text-center"><p class="text-muted mb-2 font-13 text-uppercase">Welcome To {{title}}</p></div>
+                    <form class="registration-form" [formGroup]="signUpForm">
+                        <div class="form-group mb-4">
+                            <label class="font-15">Full Name</label>
+                            <input type="text" class="form-control" id="email" placeholder="" formControlName="name" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="font-15">Email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="" formControlName="email" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="font-15">PASSWORD</label>
+                            <input type="password" class="form-control" id="email" placeholder="" formControlName="password" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="font-15">Mobile</label>
+                            <input type="tel" class="form-control" id="email" placeholder="" formControlName="mobile" required>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!signUpForm.valid" (click)="onSignUp()">Sign Up</button>
+                    </form>
+                    <div class="row mt-2 text-muted"><div class="col-lg-12"><h4 [routerLink]="['/signin']">Already have account? <a><b> Log In</b></a></h4></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section *ngIf="template == 'temp3'" style="background: url(assets/img/pexels-public-domain-pictures-60022.jpg);height: 100vh;background-size:cover ;">
+    <div class="container py-5  mat-typography login2">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <mat-card style="text-align: center;opacity: 90%;">
+                    <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white"><img [src]="logoPath"alt=""></mat-card-title>
+                        <mat-divider></mat-divider>
+                        <mat-card-content>
+                            <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2">Sign Up</h4></div>
+                            <form class="example-form" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Full Name</mat-label>
+                                    <input matInput placeholder="Enter your name" formControlName="name">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Email address</mat-label>
+                                    <input matInput placeholder="Enter your Email" formControlName="email">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'"
+                                        placeholder="Enter your password" formControlName="password">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Mobile</mat-label>
+                                    <input matInput placeholder="Enter your mobile no." formControlName="mobile">
+                                </mat-form-field>
+
+                                <div class="row justify-content-center ">
+                                    <button [disabled]="checkValidation()" class="hover1" mat-raised-button color="primary" type="submit" style="width: 35%;"> Sign Up</button>
+                                </div>
+                            </form>
+                        </mat-card-content>
+                </mat-card>
+                <div class="row mt-3"><div class="col-12 text-center"><p class="text-dark">Already have account? <a [routerLink]="['/signin']" class="text-dark ml-1"><b>Log In</b></a></p></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+<section *ngIf="template == 'temp2'" style="background: url(assets/img/itc-login-bg.jpg);height: 100vh;background-size:cover ;">
+    <div class="account-pages pt-5 pb-5">
+        <div class="container mat-typography login2">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <mat-card style="text-align: center;opacity: 90%;">
+                        <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="ITC logo"></mat-card-title>                        <mat-divider></mat-divider>
+                        <mat-card-content>
+                            <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center pt-2">Sign Up</h4></div>
+                            <form class="example-form" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Full Name</mat-label>
+                                    <input matInput placeholder="Enter your name" formControlName="name">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Email address</mat-label>
+                                    <input matInput placeholder="Enter your Email" formControlName="email">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" formControlName="password">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Mobile</mat-label>
+                                    <input matInput placeholder="Enter your mobile no." formControlName="mobile">
+                                </mat-form-field>
+                                <div class="row justify-content-center"><button [disabled]="checkValidation()" class="hover1" mat-raised-button color="primary" type="submit" style="width: 35%;"> Sign Up</button></div>
+                            </form>
+                        </mat-card-content>
+                    </mat-card>
+                    <div class="row mt-3"><div class="col-12 text-center"><p class="text-dark">Already have account? <a [routerLink]="['/signin']" class="text-dark ml-1"><b>Log In</b></a></p></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

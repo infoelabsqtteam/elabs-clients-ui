@@ -1,0 +1,17 @@
+<div mdbModal #chartModel="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: false, ignoreBackdropClick: true}">
+  <div class="modal-dialog modal-dialog-full-width modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header mb-3">
+        <p class="heading lead m-0">Dashboard</p>
+        <button type="button" class="closebtb" data-dismiss="modal" (click)="close()"><span>×</span></button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body pt-0 mat-typography">
+        <app-chart [isShow]="isShow"></app-chart>
+      </div>
+    </div>
+  </div>
+</div>

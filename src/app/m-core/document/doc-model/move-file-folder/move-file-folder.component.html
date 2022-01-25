@@ -1,0 +1,41 @@
+
+<div mdbModal #moveFileFolderModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3> <span (click)="back()" class="material-icons-outlined">arrow_back</span>
+                <!-- <i (click)="back()" class="uil-arrow-left"></i> -->
+            </h3>
+            <h4 class="modal-title mx-auto" id="standard-modalLabel">Move to</h4>
+            <button type="button" class="close" (click)="moveModalClose()" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+            <div *ngFor="let child of moveFolderChildren; let i = index" class="col-lg-12">
+                <div class="border-bottom  mr-2">
+                    <a href="javascript:void(0);" class="d-block text-dark p-2" (dblclick)="openMoveModalFolder(child)" (click)="setClickedMoveModalRow(i,child)" [ngClass]="i == selectedRows ? 'bg-light text-primary':''">
+                        <div class="row">
+                            <div [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'">
+                                <i class="mdi mdi-folder h4 mr-2"></i>{{child.rollName}}
+                            </div>
+                            <!-- <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
+              <p class="m-0">{{child.id}}</p>
+            </div> -->
+                            <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
+                                <p class="m-0"> <span></span></p>
+                            </div>
+                            <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'">
+                                <p class="m-0">-</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="moveModalClose()">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="selectedRows == -1" (click)="moveDocument()">Move</button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+</div>

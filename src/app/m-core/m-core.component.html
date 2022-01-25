@@ -1,0 +1,9 @@
+<div class="mat-typography">
+    <!-- vertical layout -->
+    <app-vertical *ngIf="isVerticalLayoutRequested()"></app-vertical>
+
+    <!-- horizontal layout -->
+    <app-horizontal *ngIf="isHorizontalLayoutRequested()"></app-horizontal>
+</div>
+<app-shortcutinfo id="shortcutinfo_model" (shortcutinfoResponce)="shortcutinfoResponce($event)" ></app-shortcutinfo>
+<app-chart-modal id="chart_model" (chartModalResponce)="chartModalResponce($event)" ></app-chart-modal>

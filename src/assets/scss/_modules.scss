@@ -1,0 +1,25 @@
+.searchfilter {
+    input {padding-left:$size55;}
+    .searchicon {position:$absolute;left:$size15;top:$size8;opacity:0.8;}
+}
+
+.modulelist .moduleitem {
+    border:$whiteborder; border-radius:$size5;transition:$transition1;height:$per100;
+    &:hover, &:focus {background:var(--activebg);border:$hoverborder;outline:$zero !important;}
+    .moduleicon {width:$size55;
+        img {width:$size55;}
+    }
+    .moduleinfo {max-width:200px;}
+    h2 {font-size:$size16;line-height:$size22;margin-bottom:$size5;overflow:hidden;text-overflow:ellipsis;}
+    p {font-size:$size13;line-height:$size20 !important;overflow:hidden;text-overflow:ellipsis;}
+    .mat-button-focus-overlay { display:$no;}
+}
+
+
+
+
+@media only screen and (max-width:380px) {
+    .modulelist .moduleitem {padding:0px;}
+    .modulelist .moduleitem .moduleinfo {max-width:170px;}
+}
+

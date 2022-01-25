@@ -1,0 +1,13 @@
+.custom-text-color {
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.custom-font {
+    color: rgb(53, 125, 213);
+    font-size: 17px;
+    font-weight: 500;
+}

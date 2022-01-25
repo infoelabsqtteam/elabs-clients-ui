@@ -1,0 +1,96 @@
+<section>
+    <div class="row w-100 m-0">
+        <div class="col-lg-12 mt-2">
+            <mat-card class="mb-2 pb-0 bg-aluminium">
+                <div class="text-white px-2 mat-card-image bg-yellow mb-0 d-block">
+                    <mat-card-title class="mb-0 py-2">
+                        <h3 class="m-0 text-white d-inline pl-2">{{ tab.label }}<span>({{total}})</span></h3>  
+                        <button *ngIf="elements.length > 0" mdbBtn type="button"   size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 bg-cerulean text-white float-right">Export
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button *ngIf="tableFields.length > 0" mdbBtn type="button"  size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 ml-2 bg-cerulean text-white float-right">Add New</button> 
+                        <div class="d-inline float-right" [formGroup]="filterForm" *ngIf="headElements.length > 0">                            
+                            <div *ngFor="let head of headElements; let i = index">
+                                <div *ngIf="head.type == 'Text' && filterFieldName == head.field_name" class="position-relative">
+                                    <input class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyFilter()" [placeholder]="head.label">
+                                    <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-text" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                </div>
+                            </div>
+                        </div>                        
+                    </mat-card-title>                                         
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</section>
+<section >
+    <div  class="row m-0 w-100">
+        <div *ngFor="let item of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" class="col-xl-3 col-md-6 my-4">
+            <mdb-card  cascade="true" class="cascading-admin-card card card-cascade" *ngIf="current_selected_menu == 'job_schedules'" >
+                <div class="card card-cascade cursor-pointer" (dblclick)="editedRowData(i,'UPDATE')">
+                    <div  class="admin-up">
+                        <div  class="box bg-cerulean">{{item.run_duration}} hrs</div>
+                        
+                        <div  class="data">
+                            <p >Job ID-{{ item.name }}({{ item.serialId }})</p>
+                        </div>
+                    </div>
+                    <mdb-card-body  class="card-body-cascade card-body">
+                        <div  class="progress">
+                            <div  aria-valuemax="100" aria-valuemin="0" class="progress-bar text-cerulean" role="progressbar" [style.background-color]="item.progress_color" [style.width]="progressWidth(item.parameter_limit,item.quotation_param_methods)">{{progressText(item.parameter_limit,item.quotation_param_methods)}}</div>
+                        </div>
+                        <p *ngIf="item.quotation_param_methods !='' && item.quotation_param_methods != null">
+                            <span  class="card-text comma" *ngFor="let paramter of item.quotation_param_methods">{{ paramter.parameter.name }}</span>
+                        </p>
+                        <div class="text-right my-1">                            
+                            <a  class="mr-2 text-cerulean" *ngFor="let btn of action_buttons" (click)="gridButtonAction(item,i,btn)" [title]="btn.label">
+                                <span class="material-icons" [ngClass]="getActionButtonClass(btn)">{{ btn.field_class }}</span>
+                            </a>
+                            <!-- <a  class="mr-2 text-cerulean" (click)="addPlay('RESULT_AWAITED',i)"><mdb-icon fas icon="stop"></mdb-icon></a>
+                            <a  class="mr-2 text-cerulean" (click)="showParameters(item,i)"><mdb-icon fas icon="folder"></mdb-icon></a> -->
+                            <!-- <a  class="mr-2 text-cerulean" (click)="addNewForm()"><mdb-icon fas icon="eye"></mdb-icon></a> -->
+                            <!-- <a  class="mr-2 text-cerulean" (click)="openModal('confirm-modal-schedule',i,{},'delete','Do you really want to delete these records?','Are Your Sure ?')"><mdb-icon fas icon="trash"></mdb-icon></a>
+                            <a  class="mr-2 text-danger" (click)="addPlay('ERROR_WHILE_TESTING',i)"><mdb-icon fas icon="times-circle"></mdb-icon></a>                            
+                            <a  class="text-cerulean" (click)="editedRowData(i)"><mdb-icon fas icon="plus"></mdb-icon></a> -->
+                        </div>
+                        <div><i class="float-left" [style.color]="item.status_color">{{ item.job_status | titlecase }}</i><i class="float-right">{{ item.scheduled_date | date:"dd/MM/yy" }} {{ item.scheduled_time }}</i></div>
+                    </mdb-card-body>
+                </div>
+            </mdb-card>
+            <mdb-card  cascade="true" class="cascading-admin-card card card-cascade" *ngIf="current_selected_menu != 'job_schedules'">
+                <div class="card card-cascade cursor-pointer" (dblclick)="editedRowData(i,'UPDATE')">
+                    <div  class="admin-up">
+                        <div  class="box bg-cerulean px-4"></div>
+                        
+                        <div  class="data">
+                            <p >{{ item.label }}</p>
+                        </div>
+                    </div>
+                    <mdb-card-body  class="card-body-cascade card-body">
+                        <div class="my-1 mx-1">
+                            <a  class="mr-2 text-cerulean" (click)="clickOnGridElement(headElements[2],item,i)">TABS({{numberOfTabs(item)}})</a>                           
+                        </div>
+                        <div><i class="float-left text-cerulean"  *ngIf="item.status == 'A'">Active</i><i class="float-left text-danger"  *ngIf="item.status == 'I'">Inactive</i></div>
+                    </mdb-card-body>
+                </div>
+            </mdb-card>
+        </div>             
+    </div>
+</section>
+<section>
+    <div class="row m-0 w-100">
+        <div class="col-lg-12 text-center mt-0">
+            <mat-card class="mb-2 pb-0 bg-aluminium rounded-top-0">
+                <div class="text-white px-2 mat-card-image  mb-0 d-block">
+                    <mat-card-content class="mb-0 py-2">
+                        <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls> 
+                    </mat-card-content>                                         
+                </div>
+            </mat-card>
+            <!-- <div class="spinner" [ngClass]="{ 'hidden': !loading }"></div> -->            
+        </div>
+    </div>
+</section>
+<app-form-modal  id="form-modal" [tabIndex]="selectTabIndex" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName' [selectContact]='selectContactAdd'></app-form-modal>
+<app-modals id="basic-modal" (responceData)="responceData($event)"></app-modals>
+<app-confirm-modal id="confirm-modal-schedule" (alertResponce)="alertResponce($event)"></app-confirm-modal>
