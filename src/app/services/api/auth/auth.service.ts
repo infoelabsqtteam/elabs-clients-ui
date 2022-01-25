@@ -28,40 +28,46 @@ export class AuthService {
 
 
   Logout(payload:any){
-    let api = this.envService.getAuthApi('AUTH_SIGNOUT');
-    this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
-      (respData) =>{
-        this.storageService.removeDataFormStorage(); 
-        this.apiService.resetMenuData();
-        this.apiService.resetTempData();
-        this.apiService.resetGridData();
-        this.envService.setRequestType('PUBLIC');
-        this.logOutRedirection();
-        this.notificationService.notify("bg-info","Log out Successful.");                
-        this.dataShareService.restSettingModule('logged_out');
-      },
-      (error)=>{
-        this.notificationService.notify("bg-danger", error.message);
-      }
-    )
+    // let api = this.envService.getAuthApi('AUTH_SIGNOUT');
+    // this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
+    //   (respData) =>{
+    //     this.resetData();
+    //     this.notificationService.notify("bg-info","Log out Successful.");                
+    //     this.dataShareService.restSettingModule('logged_out');
+    //   },
+    //   (error)=>{
+    //     this.notificationService.notify("bg-danger", error.message);
+    //   }
+    // )
+    this.resetData();
+    this.logOutRedirection();
+    this.notificationService.notify("bg-info","Log out Successful.");                
+    this.dataShareService.restSettingModule('logged_out');
   }
   SessionExpired(payload:any){
-    let api = this.envService.getAuthApi('AUTH_SIGNOUT');
-    this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
-      (respData) =>{
-        this.storageService.removeDataFormStorage();                
-        this.apiService.resetMenuData();
-        this.apiService.resetTempData();
-        this.apiService.resetGridData();
-        this.envService.setRequestType('PUBLIC');
-        this.logOutRedirection();
-        this.notificationService.notify("bg-info", "Session Expired, Kindly Login Again.");
-        this.dataShareService.restSettingModule('logged_out');
-      },
-      (error)=>{
-        this.notificationService.notify("bg-danger", error.message);
-      }
-    )
+    // let api = this.envService.getAuthApi('AUTH_SIGNOUT');
+    // this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
+    //   (respData) =>{
+    //     this.resetData();
+    //     this.notificationService.notify("bg-info", "Session Expired, Kindly Login Again.");
+    //     this.dataShareService.restSettingModule('logged_out');
+    //   },
+    //   (error)=>{
+    //     this.notificationService.notify("bg-danger", error.message);
+    //   }
+    // )
+    this.resetData();
+    this.logOutRedirection();
+    this.notificationService.notify("bg-info", "Session Expired, Kindly Login Again.");
+    this.dataShareService.restSettingModule('logged_out');
+  }
+  resetData(){
+    this.storageService.removeDataFormStorage();                
+    this.apiService.resetMenuData();
+    this.apiService.resetTempData();
+    this.apiService.resetGridData();
+    this.envService.setRequestType('PUBLIC');
+    
   }
   logOutRedirection(){
     if (this.envService.checkRedirectionUrl()) {
@@ -69,6 +75,10 @@ export class AuthService {
     }else{      
       this.router.navigate(['/signin']);
     }
+  }
+  gotToSigninPage(){
+    this.resetData()
+    this.router.navigate(['/signin']);
   }
   GetUserInfoFromToken(payload:any){
     let api = this.envService.getAuthApi('GET_USER_PERMISSION');
@@ -242,13 +252,17 @@ export class AuthService {
   TryForgotPassword(payload:any){
     let api = this.envService.getAuthApi('AUTH_FORGET_PASSWORD');
     this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
-      (respData) =>{
-        if (respData && respData.hasOwnProperty('success')) {
-          this.notificationService.notify("bg-info", "Verification Code Sent.");
-          this.dataShareService.setAuthentication(true);
-        } else if (respData.hasOwnProperty('error')) {
-            this.notificationService.notify("bg-danger", respData['message']);
+      (respData) =>{        
+        if(respData && respData['message']){
+          this.notificationService.notify("bg-success", respData['message']);
+          //this.dataShareService.setAuthentication(true);
         }
+        // if (respData && respData.hasOwnProperty('success')) {
+        //   this.notificationService.notify("bg-info", "Verification Code Sent.");
+        //   this.dataShareService.setAuthentication(true);
+        // } else if (respData.hasOwnProperty('error')) {
+        //     this.notificationService.notify("bg-danger", respData['message']);
+        // }
 
       },
       (error)=>{
@@ -258,14 +272,18 @@ export class AuthService {
   }
   SaveNewPassword(payload:any){
     let api = this.envService.getAuthApi('AUTH_RESET_PASSWORD');
-    this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
+    this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
       (respData) =>{
-        if (respData && respData.hasOwnProperty('success')) {
-            this.notificationService.notify("bg-info", "New Password changed successfully.");
-            this.dataShareService.setAuthentication(true);
-        } else if (respData.hasOwnProperty('error')) {
-            this.notificationService.notify("bg-danger", respData['message']);
+        if(respData && respData['message']){
+          this.notificationService.notify("bg-success", respData['message']);          
         }
+        this.router.navigate(['/signin']);
+        // if (respData && respData.hasOwnProperty('success')) {
+        //     this.notificationService.notify("bg-info", "New Password changed successfully.");
+        //     this.dataShareService.setAuthentication(true);
+        // } else if (respData.hasOwnProperty('error')) {
+        //     this.notificationService.notify("bg-danger", respData['message']);
+        // }
       },
       (error)=>{
         this.notificationService.notify("bg-danger", error.message);
@@ -274,7 +292,7 @@ export class AuthService {
   }
   ResetPass(payload:any){
     let api = this.envService.getAuthApi('RESET_PASSWORD');
-    this.http.post(api+'/'+payload.appId,this.encryptionService.encryptRequest(payload.data)).subscribe(
+    this.http.post(api,this.encryptionService.encryptRequest(payload)).subscribe(
       (respData) =>{
         if (respData && respData.hasOwnProperty('success')) {                        
             this.notificationService.notify("bg-success", " New Password Set  Successfully.");
@@ -307,18 +325,22 @@ export class AuthService {
     console.log(payload);
   }
   //function created for - change password
-  changePassword(authData){
+  changePassword(payload){
     let api = this.envService.getAuthApi('AUTH_CHANGE_PASSWORD')
-    this.http.post(api + authData.appName, this.encryptionService.encryptRequest({password: authData.password, new_password: authData.new_password,accessToken:authData.accessToken })).subscribe(
-      (data) => {
-        if (data && data.hasOwnProperty('success')) {
-          this.notificationService.notify("bg-info", "Password changed successfully.");
-          this.router.navigate(['signin']);
-      }
-       else if (data.hasOwnProperty('error'))
-        {
-          this.notificationService.notify("bg-danger", data['message']);
+    this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
+      (respData) => {
+        if(respData && respData['message']){
+          this.notificationService.notify("bg-success", respData['message']);
+          this.gotToSigninPage();
         }
+      //   if (data && data.hasOwnProperty('success')) {
+      //     this.notificationService.notify("bg-info", "Password changed successfully.");
+      //     this.router.navigate(['signin']);
+      // }
+      //  else if (data.hasOwnProperty('error'))
+      //   {
+      //     this.notificationService.notify("bg-danger", data['message']);
+      //   }
         },
       (error) => {
           console.log(error);
@@ -338,6 +360,4 @@ export class AuthService {
       }
     )
   }
-  
-
 }
