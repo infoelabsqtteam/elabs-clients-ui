@@ -14,7 +14,8 @@ export const serverHostList =  [
         "active_bg_color": "#e4f2fa"
       }
     },
-    { "clientEndpoint": "drugs.medicea.in", "serverEndpoint": "https://sitservermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type":"Horizontal", "folder": "medicea", "temp_name": "temp1","redirect_url":"http://test.medicea.in/#/search",
+
+    { "clientEndpoint": "drugs.medicea.in", "serverEndpoint": "https://sitservermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type":"Horizontal", "folder": "medicea", "temp_name": "temp1","redirect_url":"",
       "theme_setting": {
         "header_bg_color": "",
         "header_txt_color": "",
@@ -251,5 +252,64 @@ export const serverHostList =  [
           "active_bg_color": "#e0f0e1"
         }
       },
+      { "clientEndpoint": "sit-hitech.e-labs.ai", "serverEndpoint": "https://sithitechserver.e-labs.ai",  "title": "Hitech Sit", "google_map": "false","menu_type":"Horizontal", "folder": "hitech", "temp_name": "temp3", "redirect_url":"",
+      "theme_setting": {
+        "header_bg_color": "#fcfcfc",
+        "header_txt_color": "",
+        "header_txt_hover_color": "",
+        "header_icon_color": "",
+        "header_icon_hover_color": "",
+        "btn_color": "",
+        "btn_hover_color": "",
+        "footer_bg": "#232324",
+        "theme_color": "#1d9527",
+        "active_bg_color": "#e0f0e1"
+      }
+    },
+
+    { "clientEndpoint": "lims-hitech.e-labs.ai", "serverEndpoint": "https://prodhitechserver.e-labs.ai",  "title": "Hitech Prod", "google_map": "false","menu_type":"Horizontal", "folder": "hitech", "temp_name": "temp3", "redirect_url":"",
+    "theme_setting": {
+      "header_bg_color": "#fcfcfc",
+      "header_txt_color": "",
+      "header_txt_hover_color": "",
+      "header_icon_color": "",
+      "header_icon_hover_color": "",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "#232324",
+      "theme_color": "#1d9527",
+      "active_bg_color": "#e0f0e1"
+    }
+  },
+
+  { "clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai",  "title": "Bioscience Sit", "google_map": "false","menu_type":"Horizontal", "folder": "bioscience", "temp_name": "temp3", "redirect_url":"",
+  "theme_setting": {
+    "header_bg_color": "#fcfcfc",
+    "header_txt_color": "",
+    "header_txt_hover_color": "",
+    "header_icon_color": "",
+    "header_icon_hover_color": "",
+    "btn_color": "",
+    "btn_hover_color": "",
+    "footer_bg": "#232324",
+    "theme_color": "#1d9527",
+    "active_bg_color": "#e0f0e1"
+  }
+},
+
+{ "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai",  "title": "Bioscience Prod", "google_map": "false","menu_type":"Horizontal", "folder": "bioscience", "temp_name": "temp3", "redirect_url":"",
+"theme_setting": {
+  "header_bg_color": "#fcfcfc",
+  "header_txt_color": "",
+  "header_txt_hover_color": "",
+  "header_icon_color": "",
+  "header_icon_hover_color": "",
+  "btn_color": "",
+  "btn_hover_color": "",
+  "footer_bg": "#232324",
+  "theme_color": "#1d9527",
+  "active_bg_color": "#e0f0e1"
+}
+},
         
   ]
