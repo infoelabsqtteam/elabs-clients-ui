@@ -154,7 +154,7 @@ export class EnvService {
   }
   
   getHostKeyValue(keyName){
-    let hostname = this.document.location.hostname;
+    let hostname = this.getHostName('hostname');
     let value = '';    
     if(serverHostList && serverHostList.length > 0){
       for (let index = 0; index < serverHostList.length; index++) {
@@ -166,6 +166,9 @@ export class EnvService {
       }
     }
     return value;
+  }
+  getHostName(key){
+    return this.document.location[key];
   }
 
 

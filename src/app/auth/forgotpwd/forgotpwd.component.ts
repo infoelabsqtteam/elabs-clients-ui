@@ -48,7 +48,7 @@ export class ForgotPwdComponent implements OnInit {
 
   onResetPwd() {
     this.username = this.fForm.value.email;
-    this.authService.TryForgotPassword({ appName: this.appName, username: this.username });
+    this.authService.TryForgotPassword(this.username );
     this.resetPwd = false;
 
   }

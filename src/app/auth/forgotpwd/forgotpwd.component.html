@@ -8,19 +8,19 @@
             <form *ngIf="resetPwd" class="registration-form"[formGroup]="fForm">
               <div class="form-group mb-4">
                 <label class="font-15">Your Email*</label>
-                <input type="email" class="form-control" id="email" placeholder="" name="email" formControlName="email">
+                <input type="email" class="form-control" placeholder="" formControlName="email">
               </div>
               <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onResetPwd()">Reset Password</button>
             </form>
             <form *ngIf="!resetPwd" class="registration-form" [formGroup]="vForm">
                 <div class="form-group mb-4">
                   <label class="font-15">VERIFICATION CODE</label>
-                  <input type="email" class="form-control" id="email" placeholder="" name="email" formControlName="verifyCode">
+                  <input type="text" class="form-control"  placeholder=""  formControlName="verifyCode">
                   <mat-hint><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
                 </div>
                 <div class="form-group mb-3">
                     <label class="font-15">PASSWORD</label>
-                    <input type="password" class="form-control" id="password" placeholder="" name="password" formControlName="password">
+                    <input type="password" class="form-control"  placeholder="" formControlName="password">
                   </div>
                 <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onVerifyPwd()">Save New Password</button>
               </form>
@@ -47,7 +47,7 @@
                                 <form class="example-form" [formGroup]="fForm" (ngSubmit)="onResetPwd()">
                                     <mat-form-field appearance="outline" class="w-100">
                                         <mat-label>E-MAIL</mat-label>
-                                        <input matInput placeholder="E-Mail" name="email" formControlName="email">
+                                        <input matInput placeholder="E-Mail"  formControlName="email">
                                     </mat-form-field>
                                     <div class="row justify-content-center "><button mat-raised-button color="primary" type="submit">Reset Password</button></div>
                                 </form>
@@ -101,7 +101,7 @@
                               <form class="example-form" [formGroup]="fForm" (ngSubmit)="onResetPwd()">
                                   <mat-form-field appearance="outline" class="w-100">
                                       <mat-label>E-MAIL</mat-label>
-                                      <input matInput placeholder="E-Mail" name="email" formControlName="email">
+                                      <input matInput placeholder="E-Mail" formControlName="email">
                                   </mat-form-field>
                                   <div class="row justify-content-center "><button mat-raised-button color="primary" type="submit">Reset Password</button></div>
                               </form>

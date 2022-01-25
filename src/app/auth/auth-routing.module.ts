@@ -15,9 +15,7 @@ const authRoutes : Routes = [
             ]},
     {path:'signin',component:SigninComponent},
     {path:'fpwd',component:ForgotPwdComponent},
-    {path:'verify',component:VerifyComponent, children:[
-        {path: ':username', component: VerifyComponent},
-    ]},
+    {path:'verify/:code/:user',component:VerifyComponent},
     {path:'admin',component:AdminComponent},
     {path:'resetpwd/:username',component:ResetpwdComponent},
     {path:'otp_varify/:username',component:OtpVarificationComponent},

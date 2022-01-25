@@ -1,6 +1,6 @@
 
 export const serverHostList =  [
-    { "clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1", "redirect_url":"http://localhost:4200/#/search",
+    { "clientEndpoint": "localhost", "serverEndpoint": "https://sitservermedicea.medicea.in", "title": "Elabs", "google_map": "false", "menu_type":"Horizontal", "folder": "elabs-client", "temp_name": "temp1", "redirect_url":"",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
         "header_txt_color": "",
@@ -14,7 +14,6 @@ export const serverHostList =  [
         "active_bg_color": "#e4f2fa"
       }
     },
-
     { "clientEndpoint": "drugs.medicea.in", "serverEndpoint": "https://sitservermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type":"Horizontal", "folder": "medicea", "temp_name": "temp1","redirect_url":"http://test.medicea.in/#/search",
       "theme_setting": {
         "header_bg_color": "",
@@ -155,8 +154,6 @@ export const serverHostList =  [
         "active_bg_color": "#e4f2fa"
       }
     },
-    
-
     { "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type":"Horizontal", "folder": "itclabs", "temp_name": "temp2", "redirect_url":"",
     "theme_setting": {
       "header_bg_color": "#665852",
@@ -198,8 +195,6 @@ export const serverHostList =  [
         "active_bg_color": "#e0dedc"
       }
     },
-
-
     { "clientEndpoint": "qualiteklab.e-labs.ai", "serverEndpoint": "https://serverqualiteklab.e-labs.ai", "title": "Qualitek Labs", "google_map": "false","menu_type":"Horizontal", "folder": "qualitek", "temp_name": "temp3", "redirect_url":"",
       "theme_setting": {
         "header_bg_color": "#fcfcfc",
