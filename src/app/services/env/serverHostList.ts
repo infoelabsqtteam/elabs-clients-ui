@@ -256,5 +256,20 @@ export const serverHostList =  [
           "active_bg_color": "#e0f0e1"
         }
       },
+	{
+    "clientEndpoint": "bbsr-lims.qualiteklab.com", "serverEndpoint": "https://bbsr-lims.qualiteklab.com", "title": "BBSR-Qualitek Lab", "google_map": "false", "menu_type": "Horizontal", "folder": "bbsr-qualitek", "temp_name": "temp1","redirect_url":"",
+    "theme_setting": {
+      "header_bg_color": "#fcfcfc",
+      "header_txt_color": "",
+      "header_txt_hover_color": "",
+      "header_icon_color": "",
+      "header_icon_hover_color": "",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "#77bce8",
+      "theme_color": "#77bce8",
+      "active_bg_color": "#e4f2fa"
+		}
+	},
         
-  ]
+ ]
