@@ -17,6 +17,7 @@ export class SigninComponent implements OnInit {
   @Input() public pageName;
   appName: string;
   signInForm:FormGroup;
+  showpasswrd = false;
   template:string = "temp1";
   logoPath = '';
   title = "";
@@ -58,6 +59,10 @@ export class SigninComponent implements OnInit {
     this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
     this.template = this.envService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
+  }
+
+  showpassword() {
+    this.showpasswrd = !this.showpasswrd;
   }
 
 }
