@@ -27,7 +27,7 @@ body {font-family:$roboto;font-size:13px;}
             .mat-button-focus-overlay {display:$no;}
         }
         button {
-            mat-icon {font-size:18px;opacity:0.7;}
+            mat-icon {font-size:18px;opacity:0.7;color:var(--headericon)}
         }
     }
 }
