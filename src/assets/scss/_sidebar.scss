@@ -25,7 +25,7 @@
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
     ul {
         li {
-            a {
+            a {font-family:$roboto;
                 color:#74788d;position:$relative;font-size:$size14;padding:$size8 $size20;  
                 &:hover{color:$white}
             }

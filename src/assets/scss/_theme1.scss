@@ -24,7 +24,8 @@
     .mat-form-field-appearance-outline .mat-form-field-infix {padding:0.9em 0 !important;}
     .list-of-string-button {top:5px;}
     // .mat-select-arrow {content:url('../../assets/img/svg-icon/dropdown.svg');width:20px;height:15px;border:none;}
-    .charttitle {line-height:20px;}
+    .mat-expansion-panel-header {font-size:13px;}
+    .charttitle {line-height:20px;font-family:$roboto;}
     .mat-form-field {margin-bottom:12px;}
     .btn.btn-sm.filebtn {height:36px;padding:2px 10px;font-size:13px;
         &:hover {background:var(--buttonColor) !important;}
