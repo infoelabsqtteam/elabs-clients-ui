@@ -44,7 +44,7 @@ export class SigninComponent implements OnInit {
     const value = this.signInForm.getRawValue();
     const email = value.email;
     const password = value.password;
-    this.authService.Signin({ email: email, password: password })   
+    this.authService.Signin({ userId: email, password: password })   
   }
 
   @HostListener('window:popstate', ['$event'])
