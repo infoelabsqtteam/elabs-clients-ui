@@ -1,7 +1,7 @@
 
 export const serverHostList = [
   {
-    "clientEndpoint": "localhost2", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "http://localhost:4200/#/search",
+    "clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "http://localhost:4200/#/search",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -172,7 +172,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "localhost", "serverEndpoint": "https://sitserverascgroup.e-labs.ai", "title": "ASC group", "google_map": "false", "menu_type": "Vertical", "folder": "asc-group", "temp_name": "temp1", "theme": "theme1", "redirect_url": "",
+    "clientEndpoint": "test.ascgroup.in", "serverEndpoint": "https://sitserverascgroup.e-labs.ai", "title": "ASC group", "google_map": "false", "menu_type": "Vertical", "folder": "asc-group", "temp_name": "temp1", "theme": "theme1", "redirect_url": "",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
