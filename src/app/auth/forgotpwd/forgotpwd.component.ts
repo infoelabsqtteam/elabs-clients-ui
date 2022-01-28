@@ -70,7 +70,7 @@ export class ForgotPwdComponent implements OnInit {
   onVerifyPwd() {
     const code = this.vForm.value.verifyCode;
     const password = this.vForm.value.password;
-    const payload = { email: this.username, code: code, newPassword: password };
+    const payload = { userId: this.username, code: code, newPassword: password };
     this.authService.SaveNewPassword(payload);
     
   }
