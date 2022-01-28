@@ -14,9 +14,15 @@
                             <label class="font-15">Email address</label>
                             <input type="email" class="form-control" id="email" placeholder="" formControlName="email" required>
                         </div>
-                        <div class="form-group mb-4">
+                        <div class="form-group mb-4 password">
                             <label class="font-15">PASSWORD</label>
-                            <input type="password" class="form-control" id="email" placeholder="" formControlName="password" required>
+                            <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" placeholder="" formControlName="password" required>
+                            <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                        </div>
+                        <div class="form-group mb-4 password repassword">
+                            <label class="font-15">CONFORM PASSWORD</label>
+                            <input type="password" class="form-control" placeholder="" formControlName="confirmPassword" required>
+                            <small class="text-danger" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                         </div>
                         <div class="form-group mb-4">
                             <label class="font-15">Mobile</label>
