@@ -166,7 +166,7 @@ button {border:none;}
 .contact-area{padding-left:$size70}
 .contact-area form{margin-top:$size60}
 .contact-area input,.contact-area textarea{position:$relative;width:$per100;height:$size50;color:$color777;padding:$size10 $size25;background:#f4f4f4;display:$block;border:$size1 solid #ececec}
-button,input,select,textarea{font-family:$roboto}
+button,input,select,textarea{font-family:$roboto !important}
 .contact-area textarea{height:$size190;resize:$no}
 .contact-area button{width:$per100;height:$size50}
 

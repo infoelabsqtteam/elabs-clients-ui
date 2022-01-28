@@ -10,8 +10,8 @@
         img {width:$size55;}
     }
     .moduleinfo {max-width:200px;}
-    h2 {font-size:$size16;line-height:$size22;margin-bottom:$size5;overflow:hidden;text-overflow:ellipsis;}
-    p {font-size:$size13;line-height:$size20 !important;overflow:hidden;text-overflow:ellipsis;}
+    h2 {font-size:$size16;line-height:$size22;margin-bottom:$size5;overflow:hidden;text-overflow:ellipsis;font-family:$roboto;}
+    p {font-size:$size13;line-height:$size20 !important;overflow:hidden;text-overflow:ellipsis;font-family:$roboto;}
     .mat-button-focus-overlay { display:$no;}
 }
 
