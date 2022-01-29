@@ -81,6 +81,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.storageService.removeDataFormStorage();
         const getFormData = {
           data: payloaddata,
+          _id:key1
         }
         getFormData.data=data;
         this.apiService.GetForm(getFormData);

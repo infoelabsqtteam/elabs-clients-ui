@@ -652,7 +652,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setForm(){
-    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && this.currentMenu != undefined){
+    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
+      if(this.currentMenu == undefined){
+        this.currentMenu = {};
+      }
       this.currentMenu['name'] = this.form.details.collection_name;
     }
     if(this.form){
@@ -2434,7 +2437,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         }
       })
     } 
-    if(this.selectContact != ''){
+    if(this.selectContact != '' && this.selectContact != undefined){
       let selectContactObject = {}
       let account={};
       let contact={};
@@ -2463,7 +2466,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
        
     valueOfForm = this.updateMode || this.complete_object_payload_mode ? selectedRow : modifyFormValue;
-    if(this.routers.snapshot.params["key1"]){
+    if(this.routers.snapshot.params["key1"] && !this.complete_object_payload_mode){
       const index = JSON.stringify(this.routers.snapshot.params["key1"]);
       if(index != ''){
         valueOfForm['obj'] = this.routers.snapshot.params["action"];
@@ -2478,7 +2481,10 @@ case 'populate_fields_for_report_for_new_order_flow':
   getSavePayloadData() {
     this.getSavePayload = false;
     this.submitted = true;
-    let hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'add')
+    let hasPermission;
+    if(this.currentMenu && this.currentMenu.name){
+      hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'add')
+    }
     if(this.updateMode){
       hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'edit')
     }
