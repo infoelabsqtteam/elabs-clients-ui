@@ -92,7 +92,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         private modelService: ModelService,
         private authService:AuthService,
         private notificationService:NotificationService,
-        private envService:EnvService
+        public envService:EnvService
     ) {
         
         this.logoPath = this.envService.getLogoPath() + "logo.png";

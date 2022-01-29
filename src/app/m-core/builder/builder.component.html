@@ -33,7 +33,7 @@
         <div *ngIf="grid_view_mode == 'chartView' && tabs.length > 0">
             <app-chart-view [selectTabIndex]='selectTabIndex' ></app-chart-view>    
         </div>
-        <div *ngIf="grid_view_mode == 'inlineFormView' && tabs.length > 0">
+        <div *ngIf="grid_view_mode == 'inlineFormView'">
             <app-inline-form-view [selectTabIndex]='selectTabIndex' ></app-inline-form-view>   
         </div>
          <div *ngIf="grid_view_mode == 'chatView' && tabs.length > 0">
