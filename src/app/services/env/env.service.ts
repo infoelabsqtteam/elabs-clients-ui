@@ -19,6 +19,7 @@ export class EnvService {
   PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
   TEMP_NAME:string = "TEMP_NAME";
   PAGE_TITLE:string = "PAGE_TITLE";
+  VERIFY_TYPE:string = "VERIFY_TYPE";
   requestType: any = '';
 
 
@@ -36,8 +37,6 @@ export class EnvService {
     return localStorage.getItem(this.HOST_NAME);
   }
 
-
-
   setLogoPath(path:string){
     localStorage.setItem(this.PROJECT_FOLDER_NAME, path);
   }
@@ -53,6 +52,13 @@ export class EnvService {
 
   getPageTitle(){
     return localStorage.getItem(this.PAGE_TITLE);
+  }
+
+  setVerifyType(type){
+    localStorage.setItem(this.VERIFY_TYPE, type);
+  }
+  getVerifyType(){
+    return localStorage.getItem(this.VERIFY_TYPE);
   }
 
 
@@ -126,11 +132,6 @@ export class EnvService {
     return false;
   }
 
-
-
-
-
-
   setDinamicallyHost(){
     let setHostName = this.getHostNameDinamically();
     let serverHostName = this.getHostKeyValue('serverEndpoint');
@@ -140,6 +141,7 @@ export class EnvService {
     let tempName = this.getHostKeyValue('temp_name');
     let themedata = this.getHostKeyValue('theme_setting');
     let pageTitle = this.getHostKeyValue('title');
+    let verify_type = this.getHostKeyValue('varify_mode');
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
       const path = 'assets/img/logo/' + projectFolderName + '/';
@@ -150,6 +152,9 @@ export class EnvService {
       this.setTempName(tempName);
       this.setApplicationSetting(themedata);
       this.setPageTitle(pageTitle);
+      if(verify_type){
+        this.setVerifyType(verify_type);
+      }      
     }
   }
   
