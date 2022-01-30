@@ -210,8 +210,13 @@ export class AuthService {
     this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
       (respData) =>{
         if(respData && respData['message'] == 'User registered successfully'){
-          this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
-          this.router.navigate(['/signin']);
+          if(this.envService.getVerifyType() == 'mobile'){
+            // this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
+            this.router.navigate(['otp_varify'+'/'+payload.userId]);
+          }else{
+            this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
+            this.router.navigate(['/signin']);
+          }
 
         } else if(respData && respData['message']){
           this.notificationService.notify("bg-success", respData['message']);
@@ -331,7 +336,7 @@ export class AuthService {
       (respData) => {
         if(respData && respData['message']){
           this.notificationService.notify("bg-success", respData['message']);
-          this.gotToSigninPage();
+          this.Logout("");
         }
       //   if (data && data.hasOwnProperty('success')) {
       //     this.notificationService.notify("bg-info", "Password changed successfully.");
@@ -353,6 +358,9 @@ export class AuthService {
       (respData) =>{
         if(respData && respData['message'] == "User has been verified successfully"){
           this.notificationService.notify("bg-success", respData['message']);
+          if(this.envService.getVerifyType() == 'mobile'){
+            this.router.navigate(['signin']);
+          }
         }
       },
       (error)=>{
