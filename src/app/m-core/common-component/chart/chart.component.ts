@@ -6,6 +6,7 @@ import { DataShareService } from 'src/app/services/data-share/data-share.service
 import { EnvService } from 'src/app/services/env/env.service';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { ModalDirective } from 'angular-bootstrap-md';
 import * as _moment from 'moment';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
@@ -37,7 +38,7 @@ export const MY_DATE_FORMATS = {
 export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() isShow: string;
-
+  @ViewChild('basicModal') public basicModal: ModalDirective;
   public chartType:any = {};
   public chartDatasets:any = {};
   public chartLabels:any = {};
@@ -67,6 +68,8 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   filteredDashboardData:any = [];
   minDate: Date;
   maxDate: Date;
+
+  dashboardItem:any;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -106,14 +109,6 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
         const index = this.commonFunctionService.getIndexInArrayById(this.elements, element);
         this.filteredDashboardData.push(this.elements[index]);
       });
-
-      // for (let index = 0; index < this.elements.length; index++) {
-      //   const element = this.elements[index];
-      //   if(element._id == this.filterValue) {
-      //     this.filteredDashboardData.push(element);
-      //     break;
-      //   }
-      // }
     } else {
       this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
     }
@@ -258,9 +253,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.pageNumber = page;
     this.getDataForGrid();
   }
-  dashletFilter(index){
+  dashletFilter(item){
     const element = [];
-    const ele = JSON.parse(JSON.stringify(this.elements[index]));
+    const ele = JSON.parse(JSON.stringify(item));
     let value = this.dashboardFilter.getRawValue();
     const filterData = value[ele.name];
     ele[ele.name] = filterData;
@@ -340,6 +335,20 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   }
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
+  }
+
+  close(){
+    this.basicModal.hide();
+    this.dashboardItem = '';
+    this.dashboardFilter.reset();
+  }
+  showModal(data:any){
+    this.dashboardItem = data;
+    this.basicModal.show();
+  }
+  
+  reset(){
+    this.dashboardFilter.reset();
   }
   
 }
