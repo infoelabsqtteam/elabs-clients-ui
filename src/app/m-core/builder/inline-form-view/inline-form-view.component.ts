@@ -110,6 +110,8 @@ export class InlineFormViewComponent implements OnInit {
       this.apiService.GetTempData(payload);
       this.getPage(1);
     }
+    const form = this.dataShareService.getDinamicForm();
+    this.setDinamicForm(form)
     
   }
 

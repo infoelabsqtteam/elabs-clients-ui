@@ -51,9 +51,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     private envService:EnvService
   ) { 
 
-    if(this.envService.getRequestType() == 'PUBLIC'){
-      this.envService.setRequestType('PRIVATE');
-    }
+    // if(this.envService.getRequestType() == 'PUBLIC'){
+    //   this.envService.setRequestType('PRIVATE');
+    // }
     this.gridDataSubscription = this.dataShareService.dashletMaster.subscribe(data =>{
       this.setGridData(data);
     })
