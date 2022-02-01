@@ -658,13 +658,21 @@ export class CommonFunctionService {
     let reg = new RegExp("(\\[)(.*?)(\\])");
 
     let matcher = template.match(reg);
+    let group = reg.exec(template);
+    console.log(matcher.groups);
 
     let listMatches = [];
-    listMatches.push(matcher[2]);
-    let valueObj = null;
-    let details = matcher[2];
-    let valueString = this.getStringValue(details, ja);
-    template = template.replace("[" + matcher[2] + "]", valueString);
+    // while(matcher.find){
+      listMatches.push(matcher[2]);
+    // }
+   
+    listMatches.forEach(element => {
+      let valueObj = null;
+      let details = matcher[2];
+      let valueString = this.getStringValue(details, ja);
+      template = template.replace("[" + matcher[2] + "]", valueString);
+    });
+   
     return template;
   }
 

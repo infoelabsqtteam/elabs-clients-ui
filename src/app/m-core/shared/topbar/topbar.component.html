@@ -1,5 +1,5 @@
 <header id="page-topbar">
-  <div class="navbar-header">
+  <div class="navbar-header navbar">
     <div class="d-flex">
         <div class="d-flex" *ngIf="!header2">
           <div class="navbar-brand-box"><a href="/" class="logo logo-light"><span class="logo-lg"><img [src]="logoPath" width="100px" alt=""></span></a></div>
@@ -33,10 +33,10 @@
 
 
 
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
       <ul class="m-0">
-        <li class="mr-2 mt-2" (click)="chartModel()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">bar_chart</span></a></li>
-        <li class="mr-2 mt-2" (click)="shortcutinfo()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">info</span></a></li>
+        <li class="mr-2 mt-2" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
+        <li class="mr-2 mt-2" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
       </ul>
       <div class="dropdown d-inline-block user-dropdown user" ngbDropdown>
         <button type="button" ngbDropdownToggle class="btn header-item waves-effect px-2 py-0" data-toggle="dropdown"><img class="profilepic" src="assets/img/profile.jpg" alt="Header Avatar"></button>
