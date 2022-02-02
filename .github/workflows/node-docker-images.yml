@@ -34,7 +34,7 @@ jobs:
       run: env  
 
     - name: Get VERSION
-      run: echo "VERSION=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+      run: echo "VERSION=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
       
     - name: Get Availability
       run: echo "Availability=RC" >> $GITHUB_ENV
@@ -43,7 +43,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: elabs-client
-        IMAGE_TAG: $VERSION-$GITHUB_RUN_NUMBER-$Availability
+      #  IMAGE_TAG: $VERSION-$GITHUB_RUN_NUMBER-$Availability -> not working
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION-$GITHUB_RUN_NUMBER-$Availability .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION-$GITHUB_RUN_NUMBER-$Availability
