@@ -50,9 +50,13 @@
                 <input matInput placeholder="E-Mail" formControlName="email">
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="w-100 mb-3">
+              <mat-form-field appearance="outline" class="w-100 mb-3 password">
                 <mat-label>PASSWORD</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                <button mat-icon-button (click)="showpassword()">
+                  <mat-icon *ngIf="!showpasswrd">visibility</mat-icon>
+                  <mat-icon *ngIf="showpasswrd">visibility_off</mat-icon>
+                </button>
               </mat-form-field>
               <div><mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint></div>
             </form>
@@ -87,9 +91,13 @@
                                   <mat-label>E-MAIL ID</mat-label>
                                   <input matInput placeholder="E-Mail" formControlName="email">
                               </mat-form-field>
-                              <mat-form-field appearance="outline" class="w-100 mb-3">
+                              <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                   <mat-label>PASSWORD</mat-label>
-                                  <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                                  <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                                  <button mat-icon-button (click)="showpassword()">
+                                    <mat-icon *ngIf="!showpasswrd">visibility</mat-icon>
+                                    <mat-icon *ngIf="showpasswrd">visibility_off</mat-icon>
+                                  </button>
                               </mat-form-field>
                               <div><mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint></div>
                           </form>

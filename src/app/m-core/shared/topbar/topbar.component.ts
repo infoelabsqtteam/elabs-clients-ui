@@ -26,7 +26,11 @@ export class TopbarComponent implements OnInit, OnChanges {
   public menuData: any=[];
   AllModuleList:any=[];
 
-  logoPath = ''
+  logoPath = '';
+  public userInfo: any;
+  public userName: any;
+  public userEmail: any;
+  public userFirstLetter: any;
 
   header2 = true;
   @HostListener('window:keyup.alt.o') onCtrlO(){
@@ -48,6 +52,19 @@ export class TopbarComponent implements OnInit, OnChanges {
 ) {
     this.AllModuleList = this.storageService.GetModules();
     this.logoPath = this.envService.getLogoPath() + "logo.png";
+
+    if (this.storageService.GetUserInfo()) {
+          this.userInfo = this.storageService.GetUserInfo();
+          this.userName = this.userInfo.name;
+          this.userEmail = this.userInfo.email;
+          if (this.userName && this.userName != null) {
+              this.userFirstLetter = this.userName.charAt(0).toUpperCase()
+          } else {
+              if (this.userInfo.email && this.userInfo.email != null) {
+                  this.userFirstLetter = this.userInfo.email.toUpperCase()
+              }
+          }
+      }
    }
 
   @Output() mobileMenuButtonClicked = new EventEmitter();
