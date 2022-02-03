@@ -105,8 +105,14 @@
   textarea {border:none;background:#efefef;padding:10px;border-radius:5px;min-height:200px;resize:none;width:100%;font-size:18px;}
 }
 
+
 // Inline-Form Styles
 .inline-form {
+  .modal-header {justify-content:start !important;background:var(--popupHeaderBg);padding:8px 20px;margin-bottom:10px;
+    .modal-title {font-weight:500;}
+    .closebtb {display:none;}
+  }
+  
   .form-label {padding:5px 10px;min-height:auto;background:var(--popupHeaderBg);margin:20px 0;border-radius:5px;}
   .mat-icon-button {width:20px;height:20px;flex-shrink:0;line-height:20px;
     .material-icons {font-size:18px;}
@@ -116,5 +122,6 @@
     .mat-radio-button {margin-right:15px;}
   }
   .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75) !important;}
-  .modal-footer {border:none;border-radius:5px;}
+  .modal-footer {border:none;border-radius:0 0 5px 5px;background:var(--popupHeaderBg);}
 }
+
