@@ -40,24 +40,13 @@
         <li class="nav-item avatar mx-1">
           <button mat-icon-button [matMenuTriggerFor]="beforeMenu" ><img src="assets/img/profile.jpg" alt="" width="25px"></button>
           <mat-menu #beforeMenu="matMenu" xPosition="before" class="dropdownmenu">
-            <button mat-menu-item (click)="goToEditeProfile('profile')">My account</button>
+            <button mat-menu-item>My account</button>
             <button mat-menu-item>Name: {{userName}}</button>
             <button mat-menu-item>Email: {{userEmail}}</button>
             <button mat-menu-item (click)="logout()">Log out</button>
           </mat-menu>
         </li>
       </ul>
-      <!-- <div class="dropdown d-inline-block user-dropdown user" ngbDropdown>
-        <button type="button" ngbDropdownToggle class="btn header-item waves-effect px-2 py-0" data-toggle="dropdown"><img class="profilepic" src="assets/img/profile.jpg" alt="Header Avatar"></button>
-        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-          <a class="dropdown-item" href="javascript: void(0);"><span class="material-icons"> perm_identity </span> Profile</a>
-          <a class="dropdown-item" href="javascript: void(0);"><span class="material-icons"> account_balance_wallet </span> My Wallet</a>
-          <a class="dropdown-item d-block" href="javascript: void(0);"><span class="badge badge-success float-right mt-1">11</span><span class="material-icons"> settings </span> Settings</a>
-          <a class="dropdown-item" href="javascript: void(0);"><span class="material-icons"> lock_open </span> Lock screen</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" href="javascript: void(0);" (click)="logout()"><span class="material-icons">power_settings_new </span>Logout</a>
-        </div>
-      </div>       -->
     </div>
   </div>
 </header>
