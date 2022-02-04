@@ -11,6 +11,7 @@
     .navbar-header .navbar{box-shadow:$no!important}
     .user.dropdown.show .dropdown-menu{opacity:$one!important;right:$zero;left:$inherit!important}
     .user .dropdown-toggle::after{content:''!important;border:$no!important}
+    .topmenu {max-width:84%;}
 }
 
 .logindropdown {max-width:200px !important;margin-top:10px;

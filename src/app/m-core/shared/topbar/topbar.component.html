@@ -1,6 +1,6 @@
 <header id="page-topbar">
   <div class="navbar-header navbar">
-    <div class="d-flex">
+    <div class="d-flex topmenu">
         <div class="d-flex" *ngIf="!header2">
           <div class="navbar-brand-box"><a href="/" class="logo logo-light"><span class="logo-lg"><img [src]="logoPath" width="100px" alt=""></span></a></div>
           <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect m-0" id="vertical-menu-btn" (click)="toggleMobileMenu($event)"><span class="material-icons">sort</span></button>
@@ -33,7 +33,7 @@
 
 
 
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center toplogin">
       <ul class="m-0 d-flex">
         <li class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
         <li class="nav-item avatar mx-1" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
