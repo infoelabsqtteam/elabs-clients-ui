@@ -69,6 +69,9 @@ export class CommonFunctionService {
       case "list":
         forControl[field.field_name] = this.formBuilder.array(object, this.validator(field))
         break;
+        case 'checkbox':
+          forControl[field.field_name] = new FormControl({ value: object, disabled: disabled }, this.validator(field))
+          break;
       case "text":
         switch (field.type) {
           case "gst_number":
@@ -119,6 +122,9 @@ export class CommonFunctionService {
             validator.push(Validators.required)
           }
           break;
+          case 'checkbox':
+          validator.push(Validators.requiredTrue)
+
         default:
           validator.push(Validators.required)
           break;
