@@ -376,7 +376,27 @@ export class CommonFunctionService {
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
-              }else{
+              }else if (element.multi_select && element.datatype == "object"){
+               let fvalue = '';
+               const value = formValue[element.field_name];
+               if(value && value.length > 0){
+                 value.forEach((vl,i) => {
+                   if((value.length - 1) == i){
+                      fvalue = fvalue + vl;
+                   }else{
+                      fvalue = fvalue + vl + ":";
+                   }
+                 });
+               }
+               filterList.push(
+                {
+                    "fName": element.field_name,
+                    "fValue": fvalue,
+                    "operator": "in"
+                  }
+                )
+              }
+              else{
                 filterList.push(
                   {
                     "fName": element.field_name,
