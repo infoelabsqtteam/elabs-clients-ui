@@ -696,7 +696,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.checkBoxFieldListValue.push(element);
               break;
             case "checkbox":
-              this.commonFunctionService.createFormControl(forControl, element, false, "text")
+              this.commonFunctionService.createFormControl(forControl, element, false, "checkbox")
               break; 
             case "date":
               let currentYear = new Date().getFullYear();
