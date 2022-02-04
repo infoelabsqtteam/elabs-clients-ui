@@ -37,9 +37,6 @@
     </div>
 </section>
 
-
-
-
 <section *ngIf="template == 'temp3'" style="background: url(assets/img/pexels-public-domain-pictures-60022.jpg);height: 100vh;background-size:cover ;">
     <div class="container py-5  mat-typography login2">
         <div class="row justify-content-center">
@@ -49,31 +46,33 @@
                         <mat-divider></mat-divider>
                         <mat-card-content>
                             <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2">Sign Up</h4></div>
-                            <form class="example-form" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
-                                <mat-form-field appearance="outline" class="w-100">
+                            <form class="example-form" [formGroup]="signUpForm">
+                                <mat-form-field appearance="outline" class="w-100 mb-3">
                                     <mat-label>Full Name</mat-label>
                                     <input matInput placeholder="Enter your name" formControlName="name">
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-100">
+                                <mat-form-field appearance="outline" class="w-100 mb-3">
                                     <mat-label>Email address</mat-label>
                                     <input matInput placeholder="Enter your Email" formControlName="email">
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-100">
+                                <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                     <mat-label>PASSWORD</mat-label>
-                                    <input matInput [type]="hide ? 'password' : 'text'"
-                                        placeholder="Enter your password" formControlName="password">
+                                    <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
+                                    <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-100">
+                                <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
+                                    <mat-label>CONFORM PASSWORD</mat-label>
+                                    <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
+                                    <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" class="w-100 mb-3">
                                     <mat-label>Mobile</mat-label>
                                     <input matInput placeholder="Enter your mobile no." formControlName="mobile">
                                 </mat-form-field>
-
-                                <div class="row justify-content-center ">
-                                    <button [disabled]="checkValidation()" class="hover1" mat-raised-button color="primary" type="submit" style="width: 35%;"> Sign Up</button>
-                                </div>
+                                <div class="row justify-content-center"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
                             </form>
                         </mat-card-content>
                 </mat-card>
@@ -82,13 +81,6 @@
         </div>
     </div>
 </section>
-
-
-
-
-
-
-
 
 
 
@@ -101,27 +93,35 @@
                         <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="ITC logo"></mat-card-title>                        <mat-divider></mat-divider>
                         <mat-card-content>
                             <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center pt-2">Sign Up</h4></div>
-                            <form class="example-form" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
-                                <mat-form-field appearance="outline" class="w-100">
+                            <form class="example-form" [formGroup]="signUpForm">
+                                <mat-form-field appearance="outline" class="w-100 mb-3">
                                     <mat-label>Full Name</mat-label>
                                     <input matInput placeholder="Enter your name" formControlName="name">
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-100">
+                                <mat-form-field appearance="outline" class="w-100 mb-3">
                                     <mat-label>Email address</mat-label>
                                     <input matInput placeholder="Enter your Email" formControlName="email">
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-100">
+                                <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                     <mat-label>PASSWORD</mat-label>
-                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" formControlName="password">
+                                    <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
+                                    <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-100">
+                                <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
+                                    <mat-label>CONFORM PASSWORD</mat-label>
+                                    <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
+                                    <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100 mb-3">
                                     <mat-label>Mobile</mat-label>
                                     <input matInput placeholder="Enter your mobile no." formControlName="mobile">
                                 </mat-form-field>
-                                <div class="row justify-content-center"><button [disabled]="checkValidation()" class="hover1" mat-raised-button color="primary" type="submit" style="width: 35%;"> Sign Up</button></div>
+
+                                <div class="row justify-content-center"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
                             </form>
                         </mat-card-content>
                     </mat-card>
