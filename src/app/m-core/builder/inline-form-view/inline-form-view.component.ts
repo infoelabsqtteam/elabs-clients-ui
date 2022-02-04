@@ -8,11 +8,26 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@ang
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { ModelService } from 'src/app/services/model/model.service';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
 
 @Component({
   selector: 'app-inline-form-view',
   templateUrl: './inline-form-view.component.html',
-  styleUrls: ['./inline-form-view.component.css']
+  styleUrls: ['./inline-form-view.component.css'],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class InlineFormViewComponent implements OnInit {
 
