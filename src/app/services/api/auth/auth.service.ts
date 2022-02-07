@@ -179,7 +179,11 @@ export class AuthService {
         }
       },
       (error)=>{
-        this.notificationService.notify("bg-danger", error.message);
+        if(error && error.status == 403){
+          this.notificationService.notify("bg-danger", "Username password does not match.");
+        }else{
+          this.notificationService.notify("bg-danger", error.message);
+        }
       }
     )
   }
@@ -348,7 +352,11 @@ export class AuthService {
       //   }
         },
       (error) => {
-          console.log(error);
+        if(error && error.status == 403){
+          this.notificationService.notify("bg-danger", "Invalid current password.");
+        }else{
+          this.notificationService.notify("bg-danger", error.message);
+        }
         }
     ) 
   }
