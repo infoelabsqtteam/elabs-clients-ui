@@ -1,6 +1,6 @@
 <header id="page-topbar">
-  <div class="navbar-header">
-    <div class="d-flex">
+  <div class="navbar-header navbar">
+    <div class="d-flex topmenu">
         <div class="d-flex" *ngIf="!header2">
           <div class="navbar-brand-box"><a href="/" class="logo logo-light"><span class="logo-lg"><img [src]="logoPath" width="100px" alt=""></span></a></div>
           <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect m-0" id="vertical-menu-btn" (click)="toggleMobileMenu($event)"><span class="material-icons">sort</span></button>
@@ -12,7 +12,7 @@
         </div>
 
 
-          <nav class="navbar navbar-expand-lg navbar-dark bg-white" style="z-index: 101;">
+          <nav class="navbar navbar-expand-lg navbar-dark" style="z-index: 101;">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <links class="d-flex justify-content-around w-100">
               <ul class="navbar-nav mr-auto my-auto" *ngIf="menuData.length > 0">
@@ -33,22 +33,20 @@
 
 
 
-    <div class="d-flex">
-      <ul class="m-0">
-        <li class="mr-2 mt-2" (click)="chartModel()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">bar_chart</span></a></li>
-        <li class="mr-2 mt-2" (click)="shortcutinfo()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">info</span></a></li>
+    <div class="d-flex align-items-center toplogin">
+      <ul class="m-0 d-flex">
+        <li class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
+        <li class="nav-item avatar mx-1" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
+        <li class="nav-item avatar mx-1">
+          <button mat-icon-button [matMenuTriggerFor]="beforeMenu" ><img src="assets/img/profile.jpg" alt="" width="25px"></button>
+          <mat-menu #beforeMenu="matMenu" xPosition="before" class="dropdownmenu">
+            <button mat-menu-item>My account</button>
+            <button mat-menu-item>Name: {{userName}}</button>
+            <button mat-menu-item>Email: {{userEmail}}</button>
+            <button mat-menu-item (click)="logout()">Log out</button>
+          </mat-menu>
+        </li>
       </ul>
-      <div class="dropdown d-inline-block user-dropdown user" ngbDropdown>
-        <button type="button" ngbDropdownToggle class="btn header-item waves-effect px-2 py-0" data-toggle="dropdown"><img class="profilepic" src="assets/img/profile.jpg" alt="Header Avatar"></button>
-        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-          <a class="dropdown-item" href="javascript: void(0);"><span class="material-icons"> perm_identity </span> Profile</a>
-          <a class="dropdown-item" href="javascript: void(0);"><span class="material-icons"> account_balance_wallet </span> My Wallet</a>
-          <a class="dropdown-item d-block" href="javascript: void(0);"><span class="badge badge-success float-right mt-1">11</span><span class="material-icons"> settings </span> Settings</a>
-          <a class="dropdown-item" href="javascript: void(0);"><span class="material-icons"> lock_open </span> Lock screen</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" href="javascript: void(0);" (click)="logout()"><span class="material-icons">power_settings_new </span>Logout</a>
-        </div>
-      </div>      
     </div>
   </div>
 </header>

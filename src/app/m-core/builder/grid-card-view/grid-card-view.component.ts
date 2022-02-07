@@ -7,11 +7,26 @@ import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
 
 @Component({
   selector: 'app-grid-card-view',
   templateUrl: './grid-card-view.component.html',
-  styleUrls: ['./grid-card-view.component.css']
+  styleUrls: ['./grid-card-view.component.css'],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
   elements:any=[];

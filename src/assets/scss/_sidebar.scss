@@ -11,6 +11,7 @@
     .navbar-header .navbar{box-shadow:$no!important}
     .user.dropdown.show .dropdown-menu{opacity:$one!important;right:$zero;left:$inherit!important}
     .user .dropdown-toggle::after{content:''!important;border:$no!important}
+    .topmenu {max-width:84%;}
 }
 
 .logindropdown {max-width:200px !important;margin-top:10px;
@@ -25,7 +26,7 @@
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
     ul {
         li {
-            a {
+            a {font-family:$roboto;
                 color:#74788d;position:$relative;font-size:$size14;padding:$size8 $size20;  
                 &:hover{color:$white}
             }

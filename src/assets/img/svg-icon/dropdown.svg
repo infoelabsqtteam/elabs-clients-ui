@@ -1,0 +1,7 @@
+<svg id="Component_1" data-name="Component 1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Rectangle_1" data-name="Rectangle 1" fill="#fff" stroke="#707070" stroke-width="1" opacity="0">
+    <rect width="24" height="24" stroke="none"/>
+    <rect x="0.5" y="0.5" width="23" height="23" fill="none"/>
+  </g>
+  <path id="Icon_awesome-caret-right" data-name="Icon awesome-caret-right" d="M0,27.047V8.953a1.406,1.406,0,0,1,2.4-.994l9.047,9.047a1.406,1.406,0,0,1,0,1.989L2.4,28.041A1.406,1.406,0,0,1,0,27.047Z" transform="translate(30 6.07) rotate(90)" fill="#8f8f8f"/>
+</svg>

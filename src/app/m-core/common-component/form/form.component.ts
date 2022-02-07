@@ -652,7 +652,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setForm(){
-    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && this.currentMenu != undefined){
+    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
+      if(this.currentMenu == undefined){
+        this.currentMenu = {};
+      }
       this.currentMenu['name'] = this.form.details.collection_name;
     }
     if(this.form){
@@ -693,7 +696,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.checkBoxFieldListValue.push(element);
               break;
             case "checkbox":
-              this.commonFunctionService.createFormControl(forControl, element, false, "text")
+              this.commonFunctionService.createFormControl(forControl, element, false, "checkbox")
               break; 
             case "date":
               let currentYear = new Date().getFullYear();
@@ -1229,6 +1232,33 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         if(this.isStepper){
           this.stepper.reset();
+        }
+
+        if(this.envService.getRequestType() == 'PUBLIC'){
+          this.complete_object_payload_mode = false;
+          let _id = this.saveResponceData["_id"];
+          if(this.coreFunctionService.isNotBlank(this.form["details"]) && this.coreFunctionService.isNotBlank(this.form["details"]["on_success_url_key"] != "")){
+            let public_key = this.form["details"]["on_success_url_key"]
+            const data = {
+              "obj":public_key,
+              "key":_id,
+              "key1": "key2",
+              "key2" : "key3",
+            }
+            let payloaddata = {};
+            this.storageService.removeDataFormStorage();
+            const getFormData = {
+              data: payloaddata,
+              _id:_id
+            }
+            getFormData.data=data;
+            this.apiService.GetForm(getFormData);
+            let navigation_url = "template/"+public_key+"/"+_id+"/ie09/cnf00v";
+            this.router.navigate([navigation_url]);
+          }else{
+            this.router.navigate(["home_page"]);
+          }
+         
         }
         
         //this.close()
@@ -2434,7 +2464,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         }
       })
     } 
-    if(this.selectContact != ''){
+    if(this.selectContact != '' && this.selectContact != undefined){
       let selectContactObject = {}
       let account={};
       let contact={};
@@ -2463,7 +2493,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
        
     valueOfForm = this.updateMode || this.complete_object_payload_mode ? selectedRow : modifyFormValue;
-    if(this.routers.snapshot.params["key1"]){
+    if(this.routers.snapshot.params["key1"] && !this.complete_object_payload_mode){
       const index = JSON.stringify(this.routers.snapshot.params["key1"]);
       if(index != ''){
         valueOfForm['obj'] = this.routers.snapshot.params["action"];
@@ -2478,7 +2508,10 @@ case 'populate_fields_for_report_for_new_order_flow':
   getSavePayloadData() {
     this.getSavePayload = false;
     this.submitted = true;
-    let hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'add')
+    let hasPermission;
+    if(this.currentMenu && this.currentMenu.name){
+      hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'add')
+    }
     if(this.updateMode){
       hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'edit')
     }
@@ -2560,6 +2593,20 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     this.checkForDownloadReport = true;
     this.apiService.GetFileData(downloadReportFromData);
+  }
+
+  publicDownloadReport(){
+    this.checkForDownloadReport = true;
+    let publicDownloadReportFromData = {};
+    let payload = {};
+    if(this.coreFunctionService.isNotBlank(this.selectedRow["_id"]) && this.coreFunctionService.isNotBlank(this.selectedRow["value"])){
+      publicDownloadReportFromData["_id"] = this.selectedRow["_id"];
+      publicDownloadReportFromData["value"] = this.selectedRow["value"];
+      payload["_id"] = this.selectedRow["_id"];
+      payload["data"] = publicDownloadReportFromData;
+      this.apiService.GetFileData(payload);
+    }
+
   }
 
   editedRowData(object) {
@@ -3543,6 +3590,9 @@ case 'populate_fields_for_report_for_new_order_flow':
         case "download_report":
           this.downloadReport();
           break;
+        case "public_download_report":
+          this.publicDownloadReport();
+          break;
         case "reset":
           this.createFormgroup = true;
           this.getTableField = true;
@@ -3563,6 +3613,9 @@ case 'populate_fields_for_report_for_new_order_flow':
           break;
         case "send_email":
           this.saveFormData();
+          break;
+        case "redirect_to_home_page":
+          this.router.navigate(['home_page'])
           break;
         default:
           this.partialDataSave(action_button.onclick,null)

@@ -18,6 +18,7 @@ export class EnvService {
   HOST_NAME : string = 'HOST_NAME';
   PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
   TEMP_NAME:string = "TEMP_NAME";
+  TEMP_THEME:string = "TEMP_THEME";
   PAGE_TITLE:string = "PAGE_TITLE";
   VERIFY_TYPE:string = "VERIFY_TYPE";
   requestType: any = '';
@@ -59,6 +60,15 @@ export class EnvService {
   }
   getVerifyType(){
     return localStorage.getItem(this.VERIFY_TYPE);
+  }
+
+
+  setPageTheme(theme:string){
+    localStorage.setItem(this.TEMP_THEME, theme);
+  }
+
+  getPageThmem(){
+    return localStorage.getItem(this.TEMP_THEME);
   }
 
 
@@ -137,6 +147,7 @@ export class EnvService {
     let serverHostName = this.getHostKeyValue('serverEndpoint');
     let projectFolderName = this.getHostKeyValue('folder');
     let menuType = this.getHostKeyValue('menu_type');
+    let tempTheme = this.getHostKeyValue('theme');
     let giolocation = this.getHostKeyValue('google_map');
     let tempName = this.getHostKeyValue('temp_name');
     let themedata = this.getHostKeyValue('theme_setting');
@@ -155,6 +166,7 @@ export class EnvService {
       if(verify_type){
         this.setVerifyType(verify_type);
       }      
+      this.setPageTheme(tempTheme);
     }
   }
   
@@ -218,6 +230,12 @@ export class EnvService {
       }
       if (settingObj.active_bg_color != "") {
         document.documentElement.style.setProperty('--activebg', settingObj.active_bg_color);
+      }
+      if (settingObj.popup_header_bg != "") {
+        document.documentElement.style.setProperty('--popupHeaderBg', settingObj.popup_header_bg);
+      }
+      if (settingObj.form_label_bg != "") {
+        document.documentElement.style.setProperty('--formLabelBg', settingObj.form_label_bg);
       }
   }
   checkRedirectionUrl(){
