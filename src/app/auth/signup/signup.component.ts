@@ -63,7 +63,7 @@ export class SignupComponent implements OnInit {
     const name = this.signUpForm.value.name;
     const mobile = this.signUpForm.value.mobile;
     const hostName = this.envService.getHostName('origin');
-    const domain = hostName + "/verify";
+    const domain = hostName + "/#/verify";
     let userId = "";
     if(this.envService.getVerifyType() == "mobile"){
       userId = mobile;
