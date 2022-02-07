@@ -125,3 +125,14 @@
   .modal-footer {border:none;border-radius:0 0 5px 5px;background:var(--popupHeaderBg);}
 }
 
+.labelwithfiled {
+  // .labeltitle {max-width:200px;min-width:200px;}
+  // .labelfiled {margin:5px 0;}
+  .mat-form-field-appearance-standard .mat-form-field-flex {padding-top:0;}
+  .mat-form-field-infix {padding:0.4em 0;}
+  .mat-form-field-label {font-size:13px;}
+
+
+  
+}
+.mat-select-panel {margin-top:35px !important;}
