@@ -1442,8 +1442,14 @@ export class CommonFunctionService {
         if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
           tax_percentage = templateValue.tax_percentage;
         }
-    
-        switch(tax_type){
+         
+        if((tax_type==null || tax_type==undefined || tax_type=='NA') && tax_percentage==0)
+        {
+          net_payble = taxable_amount;
+        }
+        else
+        {
+          switch(tax_type){
             case "GST" :
              gst_amount = taxable_amount * tax_percentage/100;
              gst_percent=tax_percentage;
@@ -1461,6 +1467,7 @@ export class CommonFunctionService {
             break;
               default :  
     
+        }
         }
           if(gross_amount>0){
             discount_percent = this.getDecimalAmount(100*discount_amount/gross_amount);
