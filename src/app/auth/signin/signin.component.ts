@@ -36,16 +36,22 @@ export class SigninComponent implements OnInit {
   }
   initForm() {
     this.signInForm = new FormGroup({
-      'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      //'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      'userId': new FormControl('', [Validators.required]),
       'password': new FormControl('', [Validators.required])
     });
   }
 
   onSignIn() {
     const value = this.signInForm.getRawValue();
-    const email = value.email;
+    let userId = value.userId;
     const password = value.password;
-    this.authService.TrySignin({ username: email, password: password, appName: this.envService.getAppName() })   
+    if(this.envService.getVerifyType() == "mobile"){
+      userId =  value.userId;
+    }else{
+      userId =  value.userId;
+    }
+    this.authService.Signin({ userId: userId, password: password })   
   }
 
   @HostListener('window:popstate', ['$event'])

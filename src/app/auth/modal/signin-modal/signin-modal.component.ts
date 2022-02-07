@@ -36,7 +36,7 @@ export class SigninModalComponent implements OnInit {
   onSignIn(form: NgForm) {
     const email = form.value.email;
     const password = form.value.password;
-    this.authService.TrySignin({ username: email, password: password, appName: this.envService.getAppName() })
+    this.authService.Signin({ email: email, password: password})
   }
 
   showModal(alert){
