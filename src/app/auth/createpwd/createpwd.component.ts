@@ -73,7 +73,7 @@ export class CreatepwdComponent implements OnInit
     // this.confirmpwd=val3;
     if(newpwd==confirmpwd)
     {  
-      this.authService.changePassword({password: oldpwd,new_password:newpwd,accessToken: this.storageService.GetAccessToken() });
+      this.authService.changePassword({currentPassword: oldpwd,newPassword:newpwd,confirmNewPassword:confirmpwd });
       // this.store.dispatch(new AuthActions.ChangePassword({password: oldpwd,new_password:newpwd,accessToken: this.storageService.GetAccessToken() }))
     }
     else
