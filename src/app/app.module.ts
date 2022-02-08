@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { DatePipe,CurrencyPipe,TitleCasePipe,HashLocationStrategy, Location, LocationStrategy } from '@angular/common'
+import { DatePipe,CurrencyPipe,TitleCasePipe,HashLocationStrategy, Location, LocationStrategy, PathLocationStrategy } from '@angular/common'
 import { HttpClientModule,HttpClientXsrfModule,HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';

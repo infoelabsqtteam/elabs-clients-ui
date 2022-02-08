@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="emailVarify">
     <div class="col-xs-12">
         <form [formGroup]="verifyForm" (ngSubmit)="onVerify()">
             <div class="row">
@@ -32,6 +32,5 @@
                 </div>
             </div>
         </form>
-    </div>
-    
+    </div>    
 </div>
