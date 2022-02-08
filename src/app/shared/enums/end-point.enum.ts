@@ -14,6 +14,9 @@ export enum EndPoint {
     SAVE_QUOTE = "ins/save/request_qoute",
     AUTH_SIGNIN = "login/si/",
     AUTH_SIGNUP = "login/su/",
+    AU_SIGNIN = "login/signIn",
+    AU_SIGNUP = "login/signUp",
+    USER_VARIFY = "login/verify",
     AUTH_SIGNOUT = "login/signOut/",
     AUTH_FORGET_PASSWORD = "login/fp/",
     AUTH_RESET_PASSWORD = "login/rp/",
@@ -49,6 +52,6 @@ export enum EndPoint {
     DOC_FILE_VIEW = "vdrn/getfl/view",
     DOC_DELETE = "vdrn/fo/",
     DOC_SHARE = "vdrn/shr",
-    GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey"
-
+    GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey",
+    GIT_VERSION = "git/version"
 }

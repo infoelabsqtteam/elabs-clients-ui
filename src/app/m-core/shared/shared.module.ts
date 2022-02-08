@@ -18,6 +18,7 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { StatComponent } from './stat/stat.component';
+import { AngularMaterialModule } from '../../m-core/angular-material-module/angular-material.module';
 
 
 
@@ -35,7 +36,8 @@ import { StatComponent } from './stat/stat.component';
     CoreModule,
     MDBBootstrapModule.forRoot(),
     LeafletModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    AngularMaterialModule
   ],
   exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,LeafletModule,Ng2SearchPipeModule,NgbDropdownModule],
   providers: []
