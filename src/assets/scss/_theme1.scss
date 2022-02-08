@@ -1,0 +1,40 @@
+.theme1 {
+  .modal {font-family:$roboto !important;
+        .modal-header{height:$size50;padding:$size10;min-height:$auto;background:var(--popupHeaderBg);margin-bottom:$size15;border:$no;
+            h3 {font-size:$size20;color:#242424;font-family:$roboto;}
+            .closebtb {width:$size28;height:$size28;background:$white;line-height:$size28;top:$size12;}
+            .bg-cerulean{background:var(--buttonColor) !important;width:120px;height:35px;border-radius:4px !important;margin:0 0 0 20px;font-size:14px;}
+        }
+        .form-label {background:var(--formLabelBg);color:#3B3B3B;font-family:$roboto;}
+        .mat-form-field-label {color:#00000099;font-size:13px;}
+        .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;}
+        .mat-error {margin-top:15px;}
+        .filterbtn {background:var(--formLabelBg);
+          .mat-button-wrapper {display:flex;align-items:center;}
+        }
+        .modal-footer {height:$size50;padding:$size10;min-height:$auto;background:var(--popupHeaderBg);border:$no;
+          .btn.btn-sm {margin:0 10px;}
+        }
+      
+  }
+    .mat-form-field-appearance-outline .mat-form-field-outline, .mat-form-field-appearance-outline .mat-form-field-outline-thick {color:#0000001F !important;}
+    .mat-form-field-appearance-outline .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-end, .mat-form-field-appearance-outline .mat-form-field-outline-gap,
+    .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+    .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {border-width:2px !important;}
+    .mat-form-field-appearance-outline .mat-form-field-infix {padding:0.9em 0 !important;}
+    .list-of-string-button {top:5px;}
+    // .mat-select-arrow {content:url('../../assets/img/svg-icon/dropdown.svg');width:20px;height:15px;border:none;}
+    .mat-expansion-panel-header {font-size:13px;}
+    .charttitle {line-height:20px;font-family:$roboto;}
+    .mat-form-field {margin-bottom:12px;}
+    .btn.btn-sm.filebtn {height:36px;padding:2px 10px;font-size:13px;
+        &:hover {background:var(--buttonColor) !important;}
+    }
+    .btn-primary {background:var(--buttonColor) !important;}
+    .sliderrange {width:100%;
+        .mat-slider-horizontal {height:auto;min-width:100%;}
+    }
+    @media (min-width: 992px){
+      .modal-lg, .modal-xl {max-width:1200px;}
+    }
+}

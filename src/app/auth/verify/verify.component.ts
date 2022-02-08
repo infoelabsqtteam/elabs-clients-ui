@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 
 @Component({
@@ -11,15 +11,32 @@ import { AuthService } from 'src/app/services/api/auth/auth.service';
 export class VerifyComponent implements OnInit {
   username: string;
   verifyForm: FormGroup;
+  emailVarify:boolean = true;
   constructor(
-    private route: ActivatedRoute,
+    private routers: ActivatedRoute,
     private authServie:AuthService
   ) { }
 
   ngOnInit() {
     //console.log(this.route.snapshot.queryParamMap.get("username"));
-    this.username=this.route.snapshot.queryParamMap.get("username");
-    this.initForm();
+    //this.username=this.route.snapshot.queryParamMap.get("username");
+    this.routers.paramMap.subscribe(params => {
+      let code = '';
+      let user = '';
+      code = params.get('code'); 
+      user = params.get('user');  
+      if(code && user){
+        let payload = {
+          "code":code,
+          "user":user
+        }
+        this.emailVarify = false;
+        this.authServie.userVarify(payload);
+      }    
+    });
+    if(this.emailVarify){
+      this.initForm();
+    }    
   }
 
   onVerify(){

@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   applicationSettingSubscription
 
   favIcon: HTMLLinkElement = document.querySelector('#favIcon');
+  themeName:any = '';
 
   constructor(
     private titleService:Title,
@@ -75,7 +76,8 @@ export class AppComponent implements OnInit {
    }
 
   
-  ngOnInit() {        
+  ngOnInit() {  
+    this.themeName = this.envService.getPageThmem();
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
       //   console.log("Navigation Start :-"+event.url)

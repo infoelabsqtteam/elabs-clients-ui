@@ -60,3 +60,13 @@ jobs:
       
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E2DMYDKCSUDLCI --paths '/*'    
+
+# Deploy BBRS Qualitek Labs
+    - name: Clean up existing deployment - Qualitek BBSR Labs
+      run: aws s3 rm s3://bbsr-lims.qualiteklab.com --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://bbsr-lims.qualiteklab.com
+      
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
