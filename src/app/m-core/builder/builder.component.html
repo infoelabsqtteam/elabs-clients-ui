@@ -35,6 +35,7 @@
         </div>
         <div *ngIf="grid_view_mode == 'inlineFormView'">
             <app-inline-form-view class="inline-form" [selectTabIndex]='selectTabIndex' ></app-inline-form-view>   
+            <!--app-inline-form-view [selectTabIndex]='selectTabIndex' ></app-inline-form-view-->   
         </div>
          <div *ngIf="grid_view_mode == 'chatView' && tabs.length > 0">
             <app-chat-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact'></app-chat-view>   
