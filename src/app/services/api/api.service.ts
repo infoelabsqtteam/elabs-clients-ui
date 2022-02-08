@@ -450,10 +450,16 @@ constructor(
   }
   
 
-
-  gitVersion(payload){
+  gitVersion(payload) {
     let api = this.envService.getApi('GIT_VERSION');
-    return this.http.post(api, payload)
+    this.http.get<any>(api).subscribe(
+      (respData) => {
+        this.dataShareService.setGitVersion(respData);
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
   }
 
 }
