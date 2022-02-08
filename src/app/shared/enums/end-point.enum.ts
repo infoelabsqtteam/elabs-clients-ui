@@ -49,6 +49,6 @@ export enum EndPoint {
     DOC_FILE_VIEW = "vdrn/getfl/view",
     DOC_DELETE = "vdrn/fo/",
     DOC_SHARE = "vdrn/shr",
-    GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey"
-
+    GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey",
+    GIT_VERSION = "git/version"
 }

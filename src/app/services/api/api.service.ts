@@ -449,4 +449,11 @@ constructor(
     )
   }
   
+
+
+  gitVersion(payload){
+    let api = this.envService.getApi('GIT_VERSION');
+    return this.http.post(api, payload)
+  }
+
 }

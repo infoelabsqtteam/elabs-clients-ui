@@ -207,14 +207,10 @@
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
                                 </mat-select>
                                 <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
-                                    <!-- <mat-option></mat-option> -->
                                     <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
                                     </mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
                                 </mat-select>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                             </mat-form-field>
 
 
@@ -974,11 +970,10 @@
                             <div class="col-md-4 labelfiled">
                                 <mat-form-field class="w-100" *ngIf="tableField.datatype == 'object'" disableOptionCentering panelClass="configdropdown">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
                                         <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
                                         </mat-option>
-                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
                                         <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
@@ -987,22 +982,19 @@
                                 </mat-form-field>
                                 <mat-form-field class="w-100" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
                                         <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
-                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-select>
-                                    <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
+                                    <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
                                         <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
-                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field class="w-100" *ngIf="tableField.datatype == 'key_value'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="optiondropdown">
+                                    <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
                                         <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
-                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
