@@ -3617,6 +3617,10 @@ case 'populate_fields_for_report_for_new_order_flow':
         case "redirect_to_home_page":
           this.router.navigate(['home_page'])
           break;
+        case "add":
+          this.setListoffieldData();
+          this.close();
+          break;
         default:
           this.partialDataSave(action_button.onclick,null)
           break;
@@ -4081,12 +4085,12 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.apiService.getStatiData(payload);
   }
   
-  storeFormDetails(parent_field:any,field:any){
+  storeFormDetails(parent_field:any,field:any,index?){
     let targetFieldName ={}
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
       targetFieldName[field.add_new_target_field] = this.lastTypeaheadTypeValue
     }    
-    const form = {
+    let form = {
       "collection_name":this.currentMenu.name,
       "data":this.getFormValue(true),
       "form":this.form,
@@ -4095,16 +4099,52 @@ case 'populate_fields_for_report_for_new_order_flow':
       "next_form_data":targetFieldName,
       "updateMode" : this.updateMode
     }
+    if(field && field.type == "list_of_fields"){
+      form['index'] = index;
+    }
     this.multipleFormCollection.push(form);
     let id = '';
-    if(field.add_new_form && field.add_new_form._id){
-      id = field.add_new_form._id;
-    }
-    const params = "form"
-    const criteria = ["_id;eq;"+id+";STATIC"]
-    const payload = this.commonFunctionService.getPaylodWithCriteria(params,'',criteria,{});
-    this.apiService.GetNestedForm(payload);
-    this.addNewRecord = false;
+    if(field && field.type == "list_of_fields"){
+      if(field.list_of_fields && field.list_of_fields.length > 0){
+        let form = {
+          "details": {
+              "class": "",
+              "collection_name":"",
+              "bulk_update":false
+              },
+          "tab_list_buttons": [
+              {
+                  "label": "Add",
+                  "onclick": {
+                          "api": "add", 
+                          "action_name": "", 
+                          "close_form_on_succes": false
+                      },
+                  "type": "button",
+                  "field_name": "save",
+                  "api_params": "",
+                  "show_if":"",
+                  "disable_if":""
+              }
+          ],
+          "tableFields": field.list_of_fields,
+          "api_params": null,
+          "label": field.lable
+          }
+        this.loadNextForm(form);
+      }else{
+
+      }
+    }else{
+      if(field.add_new_form && field.add_new_form._id){
+        id = field.add_new_form._id;
+      }
+      const params = "form"
+      const criteria = ["_id;eq;"+id+";STATIC"]
+      const payload = this.commonFunctionService.getPaylodWithCriteria(params,'',criteria,{});
+      this.apiService.GetNestedForm(payload);
+      this.addNewRecord = false;
+    }    
   }
   previousFormFocusField:any = {};
   loadPreviousForm(){
@@ -4127,7 +4167,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       previousFormFocusFieldValue = nextFormData[this.previousFormFocusField.add_new_target_field];
     }
     const parentfield = formCollecition['parent_field'];
-    if(!this.previousFormFocusField.multi_select){
+    if(!this.previousFormFocusField.multi_select && this.previousFormFocusField.type != 'list_of_fields'){
       if(parentfield != ''){
         (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[this.previousFormFocusField.field_name].patchValue(previousFormFocusFieldValue);       
       }else{      
@@ -4182,6 +4222,29 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.multipleFormCollection[previousFormIndex]['next_form_data'] = formData;
     }
   }
+  setListoffieldData(){
+    const previousFormIndex = this.multipleFormCollection.length - 1;
+    const previousFormCollection = this.multipleFormCollection[previousFormIndex];
+    const previousFormField = previousFormCollection.current_field;
+    const currentFormValue = this.getFormValue(true)
+    const fieldName = previousFormField.field_name;
+    const previousformData = previousFormCollection.data;
+    let updateMode = previousFormCollection['updateMode'];
+    let fieldData = previousformData[fieldName]
+    let index = previousFormCollection['index'];
+    if(isArray(fieldData)){
+      if(updateMode){
+        fieldData[index] = currentFormValue;
+      }else{
+        fieldData.push(currentFormValue);
+      }
+    }else{
+      fieldData = [];
+      fieldData.push(currentFormValue);
+    }
+    previousformData[fieldName] = fieldData;
+    this.multipleFormCollection[previousFormIndex]['data'] = previousformData;    
+  }
 
 
   colorchange(tableField:any, colorval:string) {
@@ -4208,6 +4271,12 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(api != ''){
       this.apiService.fieldDinamicApi(api,payload);
     }
+  }
+  addListOfFields(field){
+    this.storeFormDetails("",field);
+  }
+  updateListofFields(field,index){
+    this.storeFormDetails("",field,index);
   }
 
 }

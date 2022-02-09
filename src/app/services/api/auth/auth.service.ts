@@ -181,6 +181,8 @@ export class AuthService {
       (error)=>{
         if(error && error.status == 403){
           this.notificationService.notify("bg-danger", "Username password does not match.");
+        }else if(error && error.error && error.error.message){
+          this.notificationService.notify("bg-danger", error.error.message);
         }else{
           this.notificationService.notify("bg-danger", error.message);
         }
@@ -354,10 +356,12 @@ export class AuthService {
       (error) => {
         if(error && error.status == 403){
           this.notificationService.notify("bg-danger", "Invalid current password.");
+        }if(error && error.error && error.error.message){
+          this.notificationService.notify("bg-danger", error.error.message);
         }else{
           this.notificationService.notify("bg-danger", error.message);
         }
-        }
+      }
     ) 
   }
   userVarify(payload){
