@@ -91,6 +91,7 @@ export class AuthService {
           this.envService.setRequestType('PRIVATE');
           const menuType = this.storageService.GetMenuType()
           this.dataShareService.restSettingModule('logged_in');
+          this.apiService.gitVersion('');
           if(menuType == 'Horizontal'){
                this.router.navigate(['/home']);
               // this.router.navigate(['/dashboard']);
