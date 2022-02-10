@@ -1399,7 +1399,11 @@ export class CommonFunctionService {
 
   }
  
-  calculate_lims_invoice(templateValue,lims_segment, field: any) {
+  calculate_lims_invoice(templateValue,lims_segment, calculate_on_field: any) {
+   
+    if(calculate_on_field == null || calculate_on_field == ''){
+      calculate_on_field = 'items_list';
+    }
     let	surcharge	=0;
     let	igst_percent	=0;
     let	gst_percent	=0;
@@ -1418,8 +1422,8 @@ export class CommonFunctionService {
     let	net_payble	=0;
     
     
-        if (this.coreFunctionService.isNotBlank(templateValue['items_list']) && templateValue['items_list'].length > 0) {
-          templateValue['items_list'].forEach(element => {
+        if (this.coreFunctionService.isNotBlank(templateValue[calculate_on_field]) && templateValue[calculate_on_field].length > 0) {
+          templateValue[calculate_on_field].forEach(element => {
             if(this.coreFunctionService.isNotBlank(element.total)){
               // gross_amount=gross_amount+element.gross_amount
               gross_amount=gross_amount+element.total
@@ -1493,6 +1497,10 @@ export class CommonFunctionService {
           templateValue['total_amount'] = total;
           return templateValue;
       }
+
+  calculate_lims_invoice_with_po_items(templateValue,lims_segment, calculate_on_field: any){
+    return this.calculate_lims_invoice(templateValue,lims_segment, 'po_items')
+  }
 
 
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){

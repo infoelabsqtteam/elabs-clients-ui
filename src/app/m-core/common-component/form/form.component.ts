@@ -1846,7 +1846,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.commonFunctionService.autopopulateFields(this.templateForm);
             break;
         default:
-          break;
+          this.inputOnChangeFunc(field);
       }
     }
     let objectValue:string = "";
@@ -1959,6 +1959,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(calFormValue);
           break;
       
+          case 'calculate_lims_invoice_with_po_items':
+           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
+            this.updateDataOnFormField(val);
+            break;
+
       //   case 'quote_amount_via_sample_no':
       //       calFormValue = this.commonFunctionService.quote_amount_via_sample_no(tamplateFormValue,this.custmizedFormValue['quotation_param_methods']);
       //       this.updateDataOnFormField(calFormValue);
