@@ -19,7 +19,7 @@ import { PageNotFoundComponent } from '../core/error/page-not-found.component';
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
                 { path : 'template', component:BuilderComponent } ,
-                { path : 'template/:action/:key1/:key2/:key3', component:BuilderComponent },
+                { path : 'pbl/:action/:key1/:key2/:key3', component:BuilderComponent },
                 { path : 'sort', component: SortTestComponent },
                 { path : 'Navigation', component: NavigationComponent },
                 { path : 'permissions', component: PermissionsComponent },

@@ -3611,6 +3611,9 @@ case 'populate_fields_for_report_for_new_order_flow':
         case "cancel":
           this.closeModal();
           break;
+        case "close":
+          this.close();
+          break;
         case "send_email":
           this.saveFormData();
           break;
@@ -3618,8 +3621,7 @@ case 'populate_fields_for_report_for_new_order_flow':
           this.router.navigate(['home_page'])
           break;
         case "add":
-          this.setListoffieldData();
-          this.close();
+          this.setListoffieldData();          
           break;
         default:
           this.partialDataSave(action_button.onclick,null)
@@ -4087,12 +4089,24 @@ case 'populate_fields_for_report_for_new_order_flow':
   
   storeFormDetails(parent_field:any,field:any,index?){
     let targetFieldName ={}
+    let formData = this.getFormValue(true);
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
       targetFieldName[field.add_new_target_field] = this.lastTypeaheadTypeValue
+    }else if(field && field.type == "list_of_fields" && index != undefined && index >= 0){
+        let currentFiedldData = formData[field.field_name];
+        targetFieldName = currentFiedldData[index];
+      // const listOfFields = field.list_of_fields;
+      // let element:any = {}
+      // if(listOfFields && listOfFields.length > 0){
+      //   element = listOfFields[0]
+      // }
+      // if(element && element.field_name){
+      //   targetFieldName[element.field_name] = "";
+      // }      
     }    
     let form = {
       "collection_name":this.currentMenu.name,
-      "data":this.getFormValue(true),
+      "data":formData,
       "form":this.form,
       "parent_field":parent_field,
       "current_field":field,
@@ -4105,7 +4119,19 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.multipleFormCollection.push(form);
     let id = '';
     if(field && field.type == "list_of_fields"){
+      let buttonLabel = "";
+      if(index != undefined && index >= 0){
+        buttonLabel = 'Update';
+      }else{
+        buttonLabel = 'Add';
+      }
       if(field.list_of_fields && field.list_of_fields.length > 0){
+        let fieldList:any = JSON.parse(JSON.stringify(field.list_of_fields));
+        if(fieldList && fieldList.length > 0 && index == undefined){
+          let curField = JSON.parse(JSON.stringify(field));
+          curField['add_list_field'] = 'add';
+          fieldList.push(curField);
+        }
         let form = {
           "details": {
               "class": "",
@@ -4114,7 +4140,7 @@ case 'populate_fields_for_report_for_new_order_flow':
               },
           "tab_list_buttons": [
               {
-                  "label": "Add",
+                  "label": buttonLabel,
                   "onclick": {
                           "api": "add", 
                           "action_name": "", 
@@ -4125,11 +4151,24 @@ case 'populate_fields_for_report_for_new_order_flow':
                   "api_params": "",
                   "show_if":"",
                   "disable_if":""
-              }
+              },
+              {
+                "label": "Close",
+                "onclick": {
+                        "api": "close", 
+                        "action_name": "", 
+                        "close_form_on_succes": false
+                    },
+                "type": "button",
+                "field_name": "",
+                "api_params": "",
+                "show_if":"",
+                "disable_if":""
+            }
           ],
-          "tableFields": field.list_of_fields,
+          "tableFields": fieldList,
           "api_params": null,
-          "label": field.lable
+          "label": field.label
           }
         this.loadNextForm(form);
       }else{
@@ -4173,7 +4212,10 @@ case 'populate_fields_for_report_for_new_order_flow':
       }else{      
         this.templateForm.get(this.previousFormFocusField.field_name).setValue(previousFormFocusFieldValue);
       } 
-    }   
+    } 
+    if(this.previousFormFocusField.type == 'list_of_fields'){
+      this.previousFormFocusField = {};
+    }  
     switch (formCollecition['current_field'].type) {
       case "typeahead":
         this.callTypeaheadData(formCollecition['current_field'],this.getFormValue(false));
@@ -4227,13 +4269,13 @@ case 'populate_fields_for_report_for_new_order_flow':
     const previousFormCollection = this.multipleFormCollection[previousFormIndex];
     const previousFormField = previousFormCollection.current_field;
     const currentFormValue = this.getFormValue(true)
+    delete currentFormValue[previousFormField.field_name];
     const fieldName = previousFormField.field_name;
     const previousformData = previousFormCollection.data;
-    let updateMode = previousFormCollection['updateMode'];
     let fieldData = previousformData[fieldName]
     let index = previousFormCollection['index'];
     if(isArray(fieldData)){
-      if(updateMode){
+      if(index != undefined && index >= 0){
         fieldData[index] = currentFormValue;
       }else{
         fieldData.push(currentFormValue);
@@ -4241,9 +4283,16 @@ case 'populate_fields_for_report_for_new_order_flow':
     }else{
       fieldData = [];
       fieldData.push(currentFormValue);
+    }     
+     
+    if(index != undefined && index >= 0){
+      this.close();
+    }else{
+      this.custmizedFormValue[previousFormField.field_name] = fieldData;
+      this.templateForm.reset();  
     }
-    previousformData[fieldName] = fieldData;
-    this.multipleFormCollection[previousFormIndex]['data'] = previousformData;    
+    previousformData[fieldName] = this.custmizedFormValue[previousFormField.field_name];
+    this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
   }
 
 

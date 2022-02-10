@@ -95,7 +95,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         public envService:EnvService
     ) {
         
-        this.logoPath = this.envService.getLogoPath() + "logo.png";
+        this.logoPath = this.storageService.getLogoPath() + "logo.png";
         
         this.subscription =  this.dataShareService.currentPage.subscribe(
             (data: any) => {
