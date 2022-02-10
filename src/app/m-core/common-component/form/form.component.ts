@@ -1954,6 +1954,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.commonFunctionService.calculate_quotation(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
+          case 'calculate_po_row_item':          
+          calFormValue = this.commonFunctionService.calculate_po_row_item(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;
+          case 'update_invoice_total_on_custom_field':          
+          calFormValue = this.commonFunctionService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;
+      
           case 'calculate_lims_invoice':          
           calFormValue = this.commonFunctionService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
