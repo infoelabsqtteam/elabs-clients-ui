@@ -1942,6 +1942,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let toatl = 0;
       let update_field = "";
       let tamplateFormValue = this.getFormValue(true);
+      let tamplateFormValue1 = this.getFormValue(false);
+      let tamplateFormValue3 = this.custmizedFormValue;
       let calFormValue = {};
       let list_of_populated_fields = [];
       switch (field.onchange_function_param) {        
@@ -1955,7 +1957,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(calFormValue);
           break;
           case 'calculate_po_row_item':          
-          calFormValue = this.commonFunctionService.calculate_po_row_item(tamplateFormValue,"automotive" ,field);
+          calFormValue = this.commonFunctionService.calculate_po_row_item(tamplateFormValue1,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
           case 'update_invoice_total_on_custom_field':          
@@ -1969,7 +1971,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
       
           case 'calculate_lims_invoice_with_po_items':
-           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
+           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue3,"","");
             this.updateDataOnFormField(val);
             break;
 
@@ -2306,6 +2308,9 @@ case 'populate_fields_for_report_for_new_order_flow':
                   break;
               }
             }
+          }
+          if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
+           this.inputOnChangeFunc(field);
           }
           
         }        
