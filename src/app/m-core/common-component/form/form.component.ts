@@ -1846,7 +1846,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.commonFunctionService.autopopulateFields(this.templateForm);
             break;
         default:
-          break;
+          this.inputOnChangeFunc(field);
       }
     }
     let objectValue:string = "";
@@ -1942,6 +1942,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let toatl = 0;
       let update_field = "";
       let tamplateFormValue = this.getFormValue(true);
+      let tamplateFormValue1 = this.getFormValue(false);
+      let tamplateFormValue3 = this.custmizedFormValue;
       let calFormValue = {};
       let list_of_populated_fields = [];
       switch (field.onchange_function_param) {        
@@ -1954,11 +1956,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.commonFunctionService.calculate_quotation(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
+          case 'calculate_po_row_item':          
+          calFormValue = this.commonFunctionService.calculate_po_row_item(tamplateFormValue1,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;
+          case 'update_invoice_total_on_custom_field':          
+          calFormValue = this.commonFunctionService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;
+      
           case 'calculate_lims_invoice':          
           calFormValue = this.commonFunctionService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
       
+          case 'calculate_lims_invoice_with_po_items':
+           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
+            this.updateDataOnFormField(val);
+            break;
+
       //   case 'quote_amount_via_sample_no':
       //       calFormValue = this.commonFunctionService.quote_amount_via_sample_no(tamplateFormValue,this.custmizedFormValue['quotation_param_methods']);
       //       this.updateDataOnFormField(calFormValue);
@@ -2292,6 +2308,9 @@ case 'populate_fields_for_report_for_new_order_flow':
                   break;
               }
             }
+          }
+          if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
+           this.inputOnChangeFunc(field);
           }
           
         }        
@@ -3962,10 +3981,11 @@ case 'populate_fields_for_report_for_new_order_flow':
             let value;
             if(object != null && object != ''){
               value = object;
+              this.templateForm.controls[element.field_name].setValue(value)
             }else{
               value = 0;
             }
-            this.templateForm.controls[element.field_name].setValue(value)
+           
             break;
           case "gmap":
               if(formValue['longitude']){
