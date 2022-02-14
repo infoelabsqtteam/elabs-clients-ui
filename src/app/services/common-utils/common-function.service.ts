@@ -1449,7 +1449,7 @@ update_invoice_total_on_custom_field(templateValue,lims_segment, field: any){
  if(gross_amount){
   switch(field.field_name){
     case 'discount_percent': 
-          if(discount_percent){
+          if(discount_percent!=0){
             discount_amount = gross_amount*discount_percent/100;
           }else{
           discount_amount = 0;
@@ -1495,9 +1495,11 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   let	igst_percent	=0;
   let	gst_percent	=0;
   let	sez_percent	=0;
-
-  let tax_type = templateValue['tax_type'];
+  let cgst_percent=0;
+  let sgst_percent=0;
   let tax_percentage = 0;
+  let tax_type = templateValue['tax_type'];
+  
   if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
     tax_percentage = templateValue.tax_percentage;
   }
@@ -1512,10 +1514,14 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
       case "GST" :
        gst_amount = taxable_amount * tax_percentage/100;
        gst_percent=tax_percentage;
+       cgst_percent = gst_percent/2;
+       sgst_percent= gst_percent/2;
        cgst_amount = gst_amount/2;
        sgst_amount = gst_amount/2;
        net_payble = taxable_amount+gst_amount;
        tax_amount=gst_amount;
+       igst_amount=0;
+       igst_percent=0;
 
         break;
       case "IGST" :
@@ -1523,7 +1529,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
         igst_percent=tax_percentage;
         net_payble = taxable_amount+igst_amount;
         tax_amount=igst_amount;
-      break;
+        break;
         default :  
 
   }
@@ -1535,6 +1541,9 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     total['surcharge'] = this.getDecimalAmount(surcharge);
     total['igst_percent'] = this.getDecimalAmount(igst_percent);
     total['gst_percent'] = this.getDecimalAmount(gst_percent);
+    total['cgst_percent'] = this.getDecimalAmount(cgst_percent);
+    total['sgst_percent'] = this.getDecimalAmount(sgst_percent);
+    
     total['sez_percent'] = this.getDecimalAmount(sez_percent);
     total['gross_amount'] = this.getDecimalAmount(gross_amount);
     total['discount_percent'] = this.getDecimalAmount(discount_percent);
