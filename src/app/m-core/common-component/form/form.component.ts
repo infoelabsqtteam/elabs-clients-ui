@@ -1971,7 +1971,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
       
           case 'calculate_lims_invoice_with_po_items':
-           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue3,"","");
+           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
             this.updateDataOnFormField(val);
             break;
 
