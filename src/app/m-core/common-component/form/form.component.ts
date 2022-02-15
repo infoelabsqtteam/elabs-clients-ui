@@ -1758,6 +1758,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   updateCustmizedValue[childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);;
                 })
               }
+              if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
+                this.checkBoxFieldListValue.forEach(listofcheckboxfield => {
+                  const fieldName = listofcheckboxfield.field_name;
+                  if (this.staticData[listofcheckboxfield.ddn_field] && formValue[field.field_name][fieldName]) {                    
+                    const listOfCheckboxData = [];
+                    let data = formValue[field.field_name][fieldName];                    
+                    let currentData = this.staticData[listofcheckboxfield.ddn_field];
+                    if(data && data.length > 0){
+                      data.forEach((data, i) => {
+                        if (data) {
+                          listOfCheckboxData.push(currentData[i]);
+                        }
+                      });
+                    }
+                    updateCustmizedValue[this.listOfFieldsUpdateIndex][fieldName] = listOfCheckboxData;                    
+                  }
+                });
+              }
               // pending for review by vikash (to)
               this.custmizedFormValue[field.field_name] =   updateCustmizedValue; 
               this.custmizedFormValue[keyName] = {}
@@ -1790,6 +1808,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                 
                   listOfFieldData[childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
                 })
+              }
+              if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
+                this.checkBoxFieldListValue.forEach(listofcheckboxfield => {
+                  const fieldName = listofcheckboxfield.field_name;
+                  if (this.staticData[listofcheckboxfield.ddn_field] && formValue[field.field_name][fieldName]) {                    
+                    const listOfCheckboxData = [];
+                    let data = formValue[field.field_name][fieldName];                    
+                    let currentData = this.staticData[listofcheckboxfield.ddn_field];
+                    if(data && data.length > 0){
+                      data.forEach((data, i) => {
+                        if (data) {
+                          listOfCheckboxData.push(currentData[i]);
+                        }
+                      });
+                    }
+                    listOfFieldData[fieldName] = listOfCheckboxData;                    
+                  }
+                });
               }
               custmizedFormValue.push(listOfFieldData);
               this.custmizedFormValue[field.field_name] = custmizedFormValue;
@@ -2435,11 +2471,13 @@ case 'populate_fields_for_report_for_new_order_flow':
               }
             }
             let currentData = this.staticData[element.ddn_field];
-            data.forEach((data, i) => {
-              if (data) {
-                listOfCheckboxData.push(currentData[i]);
-              }
-            });
+            if(data && data.length > 0){
+              data.forEach((data, i) => {
+                if (data) {
+                  listOfCheckboxData.push(currentData[i]);
+                }
+              });
+            }
             if (this.updateMode || this.complete_object_payload_mode) {
               if(element.parent){
                 selectedRow[element.parent][element.field_name] = listOfCheckboxData;
@@ -2869,6 +2907,12 @@ case 'populate_fields_for_report_for_new_order_flow':
             }
           }
       case "list_of_string":
+      case "list_of_checkbox":
+        if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
+          return '<i class="fa fa-eye text-pointer"></i>';
+        } else {
+          return '-';
+        }      
       default:
         if (item.display_name && item.display_name != "") {
           return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
@@ -2895,6 +2939,9 @@ case 'populate_fields_for_report_for_new_order_flow':
           }          
           break;
       case "list_of_string":
+      case "list_of_checkbox":
+        this.viewModal('form_basic-modal', value, item,false);
+        break;      
       default:
         break;
     } 
@@ -2938,9 +2985,11 @@ case 'populate_fields_for_report_for_new_order_flow':
   editListOfFiedls(object,index){
     this.listOfFieldUpdateMode = true;
     this.listOfFieldsUpdateIndex = index;
+    
     this.tableFields.forEach(element => {
       switch (element.type) {        
         case "list_of_fields":
+          this.templateForm.get(element.field_name).reset(); 
           if (element.list_of_fields.length > 0) {
             element.list_of_fields.forEach((data) => {
               switch (data.type) {                
@@ -2957,6 +3006,29 @@ case 'populate_fields_for_report_for_new_order_flow':
                   } else {
                     (<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
                   }
+                  break;
+                case "list_of_checkbox":
+                  let checkboxListValue = [];
+                  if(this.staticData && this.staticData[data.ddn_field] && this.staticData[data.ddn_field].length > 0){
+                    this.staticData[data.ddn_field].forEach((value, i) => {                      
+                      let arrayData = object[data.field_name];                        
+                      let selected = false;
+                      if (arrayData != undefined && arrayData != null) {
+                        for (let index = 0; index < arrayData.length; index++) {
+                          if (this.checkObjecOrString(value) == this.checkObjecOrString(arrayData[index])) {
+                            selected = true;
+                            break;
+                          }
+                        }
+                      }
+                      if (selected) {
+                        checkboxListValue.push(true);
+                      } else {
+                        checkboxListValue.push(false);
+                      }               
+                    });
+                  }
+                  (<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(checkboxListValue);
                   break;                
                 default:
                   (<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
