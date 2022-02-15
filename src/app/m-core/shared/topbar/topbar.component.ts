@@ -294,4 +294,7 @@ goToVdr(){
   chartModel() {
     this.modelService.open('chart_model',{})
   }
+  gitInfo() {
+    this.modelService.open('git_version',{})
+  }
 }
