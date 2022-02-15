@@ -10,6 +10,7 @@ import { CommonFunctionService } from './services/common-utils/common-function.s
 import { LoaderService } from './services/loader/loader.service';
 import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
+import { StorageTokenStatus } from './shared/enums/storage-token-status.enum';
 
 
 @Component({
@@ -77,7 +78,7 @@ export class AppComponent implements OnInit {
 
   
   ngOnInit() {  
-    this.themeName = this.envService.getPageThmem();
+    this.themeName = this.storageService.getPageThmem();
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
       //   console.log("Navigation Start :-"+event.url)
@@ -91,7 +92,7 @@ export class AppComponent implements OnInit {
         }
         if (
           event.id === 1 &&
-          event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/template")
+          event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl")
         ) {
           this.redirectToHomePageWithStorage();
         }
@@ -142,7 +143,16 @@ export class AppComponent implements OnInit {
   }
   redirectToHomePageWithStorage(){
     this.loadPage();
-    this.router.navigate(['signin'])    
+    if (this.storageService != null && this.storageService.GetIdToken() != null) {
+        const idToken = this.storageService.GetIdToken();
+        if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
+          this.router.navigate(['home'])   
+        }else{
+          this.router.navigate(['signin']) 
+        }
+      }else{
+        this.router.navigate(['signin']) 
+      }
   }
 
   @HostListener("window:onbeforeunload",["$event"])
@@ -161,8 +171,8 @@ export class AppComponent implements OnInit {
     console.log(event);
   }
   loadPage(){
-    this.favIcon.href = this.envService.getLogoPath() + "favicon.ico";
-    this.titleService.setTitle(this.envService.getPageTitle());
+    this.favIcon.href = this.storageService.getLogoPath() + "favicon.ico";
+    this.titleService.setTitle(this.storageService.getPageTitle());
     this.envService.setDinamicallyHost();
   }
 }

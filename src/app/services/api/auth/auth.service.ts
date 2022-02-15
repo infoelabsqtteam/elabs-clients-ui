@@ -182,6 +182,8 @@ export class AuthService {
       (error)=>{
         if(error && error.status == 403){
           this.notificationService.notify("bg-danger", "Username password does not match.");
+        }else if(error && error.error && error.error.message){
+          this.notificationService.notify("bg-danger", error.error.message);
         }else{
           this.notificationService.notify("bg-danger", error.message);
         }
@@ -215,7 +217,7 @@ export class AuthService {
     this.http.post(api, this.encryptionService.encryptRequest(payload)).subscribe(
       (respData) =>{
         if(respData && respData['message'] == 'User registered successfully'){
-          if(this.envService.getVerifyType() == 'mobile'){
+          if(this.storageService.getVerifyType() == 'mobile'){
             // this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
             this.router.navigate(['otp_varify'+'/'+payload.userId]);
           }else{
@@ -265,6 +267,7 @@ export class AuthService {
       (respData) =>{        
         if(respData && respData['message']){
           this.notificationService.notify("bg-success", respData['message']);
+          this.dataShareService.setForgot('reset');
           //this.dataShareService.setAuthentication(true);
         }
         // if (respData && respData.hasOwnProperty('success')) {
@@ -276,7 +279,11 @@ export class AuthService {
 
       },
       (error)=>{
-        this.notificationService.notify("bg-danger", error.message);
+        if(error && error.error && error.error.message){
+          this.notificationService.notify("bg-danger", error.error.message);
+        }else{
+          this.notificationService.notify("bg-danger", error.message);
+        }        
       }
     )
   }
@@ -355,10 +362,12 @@ export class AuthService {
       (error) => {
         if(error && error.status == 403){
           this.notificationService.notify("bg-danger", "Invalid current password.");
+        }else if(error && error.error && error.error.message){
+          this.notificationService.notify("bg-danger", error.error.message);
         }else{
           this.notificationService.notify("bg-danger", error.message);
         }
-        }
+      }
     ) 
   }
   userVarify(payload){
@@ -367,7 +376,7 @@ export class AuthService {
       (respData) =>{
         if(respData && respData['message'] == "User has been verified successfully"){
           this.notificationService.notify("bg-success", respData['message']);
-          if(this.envService.getVerifyType() == 'mobile'){
+          if(this.storageService.getVerifyType() == 'mobile'){
             this.router.navigate(['signin']);
           }
         }

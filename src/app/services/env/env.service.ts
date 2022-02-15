@@ -15,12 +15,6 @@ import { serverHostList } from './serverHostList';
 })
 export class EnvService {
 
-  HOST_NAME : string = 'HOST_NAME';
-  PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
-  TEMP_NAME:string = "TEMP_NAME";
-  TEMP_THEME:string = "TEMP_THEME";
-  PAGE_TITLE:string = "PAGE_TITLE";
-  VERIFY_TYPE:string = "VERIFY_TYPE";
   requestType: any = '';
 
 
@@ -30,53 +24,13 @@ export class EnvService {
     @Inject(DOCUMENT) private document: Document,
   ) { }
 
-  setHostNameDinamically(host:string){
-    localStorage.setItem(this.HOST_NAME, host);
-  }
-
-  getHostNameDinamically(){
-    return localStorage.getItem(this.HOST_NAME);
-  }
-
-  setLogoPath(path:string){
-    localStorage.setItem(this.PROJECT_FOLDER_NAME, path);
-  }
-
-  getLogoPath(){
-    return localStorage.getItem(this.PROJECT_FOLDER_NAME);
-  }
-
-
-  setPageTitle(title:string){
-    localStorage.setItem(this.PAGE_TITLE, title);
-  }
-
-  getPageTitle(){
-    return localStorage.getItem(this.PAGE_TITLE);
-  }
-
-  setVerifyType(type){
-    localStorage.setItem(this.VERIFY_TYPE, type);
-  }
-  getVerifyType(){
-    return localStorage.getItem(this.VERIFY_TYPE);
-  }
-
-
-  setPageTheme(theme:string){
-    localStorage.setItem(this.TEMP_THEME, theme);
-  }
-
-  getPageThmem(){
-    return localStorage.getItem(this.TEMP_THEME);
-  }
 
 
   getBaseUrl(){
     let baseUrl = '';
-    const host = this.getHostNameDinamically();
+    const host = this.storageService.getHostNameDinamically();
     if(this.coreFunctionService.isNotBlank(host)){
-      baseUrl = this.getHostNameDinamically()
+      baseUrl = this.storageService.getHostNameDinamically()
     }else{
       // baseUrl = environment.serverhost
       baseUrl = this.getHostKeyValue('serverEndpoint') +'/rest/';
@@ -143,7 +97,7 @@ export class EnvService {
   }
 
   setDinamicallyHost(){
-    let setHostName = this.getHostNameDinamically();
+    let setHostName = this.storageService.getHostNameDinamically();
     let serverHostName = this.getHostKeyValue('serverEndpoint');
     let projectFolderName = this.getHostKeyValue('folder');
     let menuType = this.getHostKeyValue('menu_type');
@@ -156,17 +110,17 @@ export class EnvService {
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
       const path = 'assets/img/logo/' + projectFolderName + '/';
-      this.setHostNameDinamically(hostName);
-      this.setLogoPath(path); 
+      this.storageService.setHostNameDinamically(hostName);
+      this.storageService.setLogoPath(path); 
       this.storageService.SetMenuType(menuType);
       this.setGoogleLocation(giolocation); 
-      this.setTempName(tempName);
+      this.storageService.setTempName(tempName);
       this.setApplicationSetting(themedata);
-      this.setPageTitle(pageTitle);
+      this.storageService.setPageTitle(pageTitle);
       if(verify_type){
-        this.setVerifyType(verify_type);
+        this.storageService.setVerifyType(verify_type);
       }      
-      this.setPageTheme(tempTheme);
+      this.storageService.setPageTheme(tempTheme);
     }
   }
   
@@ -191,13 +145,6 @@ export class EnvService {
 
   setGoogleLocation(giolocation){
     (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
-  }
-  setTempName(temp){
-    localStorage.setItem(this.TEMP_NAME,temp);
-  }
-  getTemplateName(){
-    const template:string=localStorage.getItem(this.TEMP_NAME);
-    return template;
   }
 
   setApplicationSetting(settingObj) {
