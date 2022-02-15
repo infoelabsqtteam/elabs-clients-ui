@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone, HostListener } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
@@ -70,6 +70,10 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   maxDate: Date;
 
   dashboardItem:any;
+
+  @HostListener('window:keyup.alt.c') onCtrC(){
+    this.close();
+  }
 
   constructor(
     public formBuilder: FormBuilder,

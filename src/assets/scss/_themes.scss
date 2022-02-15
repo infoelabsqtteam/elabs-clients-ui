@@ -15,7 +15,7 @@
 .bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;
   &:hover {background:$buttonHovercolor !important;transition:all 1s;}
 }
-.chartbody {max-height:230px;min-height:230px !important;overflow-y:scroll;}
+.chartbody {max-height:250px;min-height:250px !important;overflow-y:scroll;}
 .optiondropdown {margin:30px 10px 0;min-width:100% !important;}
 .filteroption {margin:30px 30px 0;}
 .dropdownmenu {margin-top:15px;min-height:0px;
