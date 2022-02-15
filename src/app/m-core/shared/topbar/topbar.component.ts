@@ -63,6 +63,11 @@ export class TopbarComponent implements OnInit, OnChanges {
       this.shortcutinfo();
   }
 
+  @HostListener('window:keyup.alt.control.c') onCtrlChart(){
+    this.chartModel();
+  }
+
+
   // tslint:disable-next-line: max-line-length
   constructor(
     @Inject(DOCUMENT) private document: any, 

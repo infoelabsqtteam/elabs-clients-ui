@@ -68,7 +68,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         this.shortcutinfo();
     }
 
-    @HostListener('window:keyup.shift.c') onCtrlChart(){
+    @HostListener('window:keyup.alt.control.c') onCtrlChart(){
         this.chartModel();
     }
     
