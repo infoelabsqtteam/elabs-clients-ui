@@ -49,6 +49,7 @@ export class DataShareService {
   checkValidation:EventEmitter<any> = new EventEmitter<any>();
   dashletMaster:EventEmitter<any> = new EventEmitter<any>();
   gitVirsion:EventEmitter<any> = new EventEmitter<any>();
+  forgot:EventEmitter<any> = new EventEmitter<any>();
   
 
   constructor() { }
@@ -200,5 +201,8 @@ export class DataShareService {
   }
   setGitVersion(responce){
     this.gitVirsion.emit(responce);
+  }
+  setForgot(responce){
+    this.forgot.emit(responce);
   }
 }
