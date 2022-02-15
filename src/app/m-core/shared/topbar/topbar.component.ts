@@ -77,7 +77,7 @@ export class TopbarComponent implements OnInit, OnChanges {
       private modelService:ModelService
 ) {
     this.AllModuleList = this.storageService.GetModules();
-    this.logoPath = this.envService.getLogoPath() + "logo.png";
+    this.logoPath = this.storageService.getLogoPath() + "logo.png";
     this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe( data =>{
       if(data && data['git.build.version']){
         this.gitVersion = data['git.build.version'];

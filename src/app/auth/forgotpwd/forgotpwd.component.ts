@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 import { EnvService } from '../../services/env/env.service';
 
 
@@ -22,16 +23,23 @@ export class ForgotPwdComponent implements OnInit {
   title = "";
   template:string = "temp1";
   logoPath = '';
+  forGotSubscription:any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private authService:AuthService,
     private dataShareService:DataShareService,
-    private envService:EnvService
+    private envService:EnvService,
+    private storageService:StorageService
     ) { 
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
+      })
+      this.forGotSubscription = this.dataShareService.forgot.subscribe(data =>{
+        if(data == "reset"){
+          this.resetPwd = false;
+        }
       })
       this.pageloded();
     }
@@ -49,8 +57,6 @@ export class ForgotPwdComponent implements OnInit {
   onResetPwd() {
     this.username = this.fForm.value.userId;
     this.authService.TryForgotPassword(this.username);
-    this.resetPwd = false;
-
   }
 
   initForm() {
@@ -75,8 +81,8 @@ export class ForgotPwdComponent implements OnInit {
     
   }
   pageloded(){
-    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-    this.template = this.envService.getTemplateName();
+    this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
+    this.template = this.storageService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
   }
 }

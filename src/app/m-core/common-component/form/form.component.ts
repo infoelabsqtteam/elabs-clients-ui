@@ -1741,7 +1741,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         };
         if (checkValue == 0) {
           if(this.listOfFieldsUpdateIndex != -1){
-            if(this.updateMode){
+            //if(this.updateMode){
               let updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
               Object.keys(formValue[field.field_name]).forEach(key => {
                 updateCustmizedValue[this.listOfFieldsUpdateIndex][key] = formValue[field.field_name][key];
@@ -1761,11 +1761,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               // pending for review by vikash (to)
               this.custmizedFormValue[field.field_name] =   updateCustmizedValue; 
               this.custmizedFormValue[keyName] = {}
-            }else{
-              const updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
-              updateCustmizedValue[this.listOfFieldsUpdateIndex] = JSON.parse(JSON.stringify(formValue[field.field_name]))
-              this.custmizedFormValue[field.field_name] =   updateCustmizedValue  ;          
-            }
+            // }else{
+            //   const updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
+            //   updateCustmizedValue[this.listOfFieldsUpdateIndex] = JSON.parse(JSON.stringify(formValue[field.field_name]))
+            //   this.custmizedFormValue[field.field_name] =   updateCustmizedValue  ;  
+            //   const keyName=field.field_name+'_'+field.type;
+            //   this.custmizedFormValue[keyName] = {}        
+            // }
             this.refreshListofField(field,false);            
           }else{
             if(field.datatype == 'key_value'){
@@ -2882,14 +2884,14 @@ case 'populate_fields_for_report_for_new_order_flow':
     switch (item.type) {
       case "typeahead":
           if(item.datatype == "list_of_object"){  
-            const editemode = false;    
-            value['gridColumns'] = [
-              {
-                "field_name":"label",
-                "label":"Field Label"
-              }
-            ];      
-            this.viewModal('form_basic-modal', value, item.label,editemode);
+            // const editemode = false;    
+            // value['gridColumns'] = [
+            //   {
+            //     "field_name":"label",
+            //     "label":item.label
+            //   }
+            // ];      
+            this.viewModal('form_basic-modal', value, item,false);
           }          
           break;
       case "list_of_string":
@@ -3567,7 +3569,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     value['data'] = JSON.parse(JSON.stringify(data));
     value['gridColumns']=fields.gridColumns;
     const editemode = true;    
-    this.viewModal('form_basic-modal', value, fields.label,editemode); 
+    this.viewModal('form_basic-modal', value, fields,editemode); 
   } 
 
   checkObjectSize(object){
