@@ -58,6 +58,7 @@
             <button mat-menu-item (click)="goToEditeProfile('profile')">My account</button>
             <button mat-menu-item>Name: {{userName}}</button>
             <button mat-menu-item>Email: {{userEmail}}</button>
+            <button mat-menu-item (click)="gitInfo()">Version: {{gitVersion}} <mat-icon class="ml-2">info</mat-icon></button>
             <button mat-menu-item (click)="logOut()">Log out</button>
           </mat-menu>
         </li>
