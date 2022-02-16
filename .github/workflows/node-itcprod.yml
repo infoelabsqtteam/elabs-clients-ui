@@ -5,7 +5,7 @@ name: Angular CI with Node - Prod
 
 on:
   push:
-    branches: [ prod ]
+    branches: [ itcprod ]
 
 jobs:
   build:
@@ -41,23 +41,12 @@ jobs:
     - name: Building
       run: ng build --configuration=${{ secrets.ENVIRONMENT_PRODUCTION }}
      
-
-  # Deploy Qualitek Labs
-    - name: Clean up existing deployment - Qualitek Labs
-      run: aws s3 rm s3://lims.qualiteklab.com --recursive
-
-    - name: Upload data
-      run: aws s3 sync dist s3://lims.qualiteklab.com
-      
-    - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2DMYDKCSUDLCI --paths '/*'    
-
-# Deploy BBRS Qualitek Labs
-    - name: Clean up existing deployment - Qualitek BBSR Labs
-      run: aws s3 rm s3://bbsr-lims.qualiteklab.com --recursive
+ # Deploy ItcLabs    
+    - name: Clean up existing deployment - ItcLabs Dev
+      run: aws s3 rm s3://lims.itclabs.com --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://bbsr-lims.qualiteklab.com
-      
+      run: aws s3 sync dist s3://lims.itclabs.com
+
     - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
+      run: aws cloudfront create-invalidation --distribution-id E2VR8P8C4U5JQ8 --paths '/*'
