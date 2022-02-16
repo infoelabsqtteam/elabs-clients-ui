@@ -39,6 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     public userInfo: any;
     public userColorCode: any;
     public userName: any;
+    public userEmail: any;
     public userFirstLetter: any;
     public custmizedUserName: any;
     public menuData: any = [];
@@ -67,7 +68,10 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         this.shortcutinfo();
     }
 
-
+    @HostListener('window:keyup.shift.c') onCtrlChart(){
+        this.chartModel();
+    }
+    
     @HostListener('window:keyup.enter') onCtrlenter(){
         if(this.activeclass) {
             this.goToMOdule();
@@ -88,7 +92,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         private modelService: ModelService,
         private authService:AuthService,
         private notificationService:NotificationService,
-        private envService:EnvService
+        public envService:EnvService
     ) {
         
         this.logoPath = this.envService.getLogoPath() + "logo.png";
@@ -208,7 +212,8 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         if (this.loginUserIcon) {
             if (this.storageService.GetUserInfo()) {
                 this.userInfo = this.storageService.GetUserInfo();
-                this.userName = this.userInfo.first_name;
+                this.userName = this.userInfo.name;
+                this.userEmail = this.userInfo.email;
                 if (this.userName && this.userName != null) {
                     this.userFirstLetter = this.userName.charAt(0).toUpperCase()
                 } else {

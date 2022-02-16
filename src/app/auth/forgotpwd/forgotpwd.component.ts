@@ -47,8 +47,8 @@ export class ForgotPwdComponent implements OnInit {
   }
 
   onResetPwd() {
-    this.username = this.fForm.value.email;
-    this.authService.TryForgotPassword({ appName: this.appName, username: this.username });
+    this.username = this.fForm.value.userId;
+    this.authService.TryForgotPassword(this.username);
     this.resetPwd = false;
 
   }
@@ -56,11 +56,11 @@ export class ForgotPwdComponent implements OnInit {
   initForm() {
     this.username = "";
     this.fForm = new FormGroup({
-      'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      'userId': new FormControl('', [Validators.required]),
     });
     this.vForm = new FormGroup({
       'verifyCode': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
+      'password': new FormControl('', [Validators.required]),
     });
   }
 
@@ -70,9 +70,9 @@ export class ForgotPwdComponent implements OnInit {
   onVerifyPwd() {
     const code = this.vForm.value.verifyCode;
     const password = this.vForm.value.password;
-    const payload = { appName: this.appName, data: { username: this.username, verif_code: code, password: password } };
+    const payload = { userId: this.username, code: code, newPassword: password };
     this.authService.SaveNewPassword(payload);
-    this.router.navigate(['/signin']);
+    
   }
   pageloded(){
     this.logoPath = this.envService.getLogoPath() + "logo-signin.png";

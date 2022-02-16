@@ -12,15 +12,24 @@ import { EnvService } from 'src/app/services/env/env.service';
 export class OtpVarificationComponent implements OnInit {
 
   OtpVarify: FormGroup;
+  isVerify:boolean = false;
+
+  title = "";
+  template:string = "temp1";
+
+  logoPath = ''
 
   constructor( 
     private routers: ActivatedRoute,
     private authService:AuthService,
     private envService:EnvService
-    ) { }
+    ) { 
+      this.pageloded();
+    }
 
   ngOnInit(): void {
     this.initForm();
+    this.pageloded();
     this.routers.paramMap.subscribe(params => {
       let username = '';
       username = params.get('username'); 
@@ -37,12 +46,26 @@ export class OtpVarificationComponent implements OnInit {
       'username': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
       'verif_code': new FormControl('', [Validators.required])
     });
+    if(this.envService.getVerifyType() == "mobile"){
+      this.isVerify = true;
+    }else{
+      this.isVerify = false;
+    }
   }
-  onVerifyAccWithOtp() {    
-    const payload = { appName: this.envService.getAppName(), data:this.OtpVarify.value };
-    this.authService.OtpVarify(payload);
+  onVerifyAccWithOtp() { 
+    const value  = this.OtpVarify.getRawValue(); 
+    const user = value['username'];
+    const code = value['verif_code'];  
+    const payload = {"user":user,"code":code};
+    //this.authService.OtpVarify(payload);
+    this.authService.userVarify(payload);
   }
   resendCode(){
     console.log('resend otp!');
+  }
+  pageloded(){
+    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
+    this.template = this.envService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
   }
 }

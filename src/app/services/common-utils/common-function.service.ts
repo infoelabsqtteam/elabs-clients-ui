@@ -69,6 +69,9 @@ export class CommonFunctionService {
       case "list":
         forControl[field.field_name] = this.formBuilder.array(object, this.validator(field))
         break;
+        case 'checkbox':
+          forControl[field.field_name] = new FormControl({ value: object, disabled: disabled }, this.validator(field))
+          break;
       case "text":
         switch (field.type) {
           case "gst_number":
@@ -119,6 +122,9 @@ export class CommonFunctionService {
             validator.push(Validators.required)
           }
           break;
+          case 'checkbox':
+          validator.push(Validators.requiredTrue)
+
         default:
           validator.push(Validators.required)
           break;
@@ -370,7 +376,27 @@ export class CommonFunctionService {
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
-              }else{
+              }else if (element.multi_select && element.datatype == "object"){
+               let fvalue = '';
+               const value = formValue[element.field_name];
+               if(value && value.length > 0){
+                 value.forEach((vl,i) => {
+                   if((value.length - 1) == i){
+                      fvalue = fvalue + vl;
+                   }else{
+                      fvalue = fvalue + vl + ":";
+                   }
+                 });
+               }
+               filterList.push(
+                {
+                    "fName": element.field_name,
+                    "fValue": fvalue,
+                    "operator": "in"
+                  }
+                )
+              }
+              else{
                 filterList.push(
                   {
                     "fName": element.field_name,
@@ -638,13 +664,21 @@ export class CommonFunctionService {
     let reg = new RegExp("(\\[)(.*?)(\\])");
 
     let matcher = template.match(reg);
+    let group = reg.exec(template);
+    console.log(matcher.groups);
 
     let listMatches = [];
-    listMatches.push(matcher[2]);
-    let valueObj = null;
-    let details = matcher[2];
-    let valueString = this.getStringValue(details, ja);
-    template = template.replace("[" + matcher[2] + "]", valueString);
+    // while(matcher.find){
+      listMatches.push(matcher[2]);
+    // }
+   
+    listMatches.forEach(element => {
+      let valueObj = null;
+      let details = matcher[2];
+      let valueString = this.getStringValue(details, ja);
+      template = template.replace("[" + matcher[2] + "]", valueString);
+    });
+   
     return template;
   }
 
@@ -1408,8 +1442,14 @@ export class CommonFunctionService {
         if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
           tax_percentage = templateValue.tax_percentage;
         }
-    
-        switch(tax_type){
+         
+        if((tax_type==null || tax_type==undefined || tax_type=='NA') && tax_percentage==0)
+        {
+          net_payble = taxable_amount;
+        }
+        else
+        {
+          switch(tax_type){
             case "GST" :
              gst_amount = taxable_amount * tax_percentage/100;
              gst_percent=tax_percentage;
@@ -1427,6 +1467,7 @@ export class CommonFunctionService {
             break;
               default :  
     
+        }
         }
           if(gross_amount>0){
             discount_percent = this.getDecimalAmount(100*discount_amount/gross_amount);

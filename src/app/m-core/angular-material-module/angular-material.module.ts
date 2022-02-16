@@ -32,6 +32,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatMenuModule} from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatSliderModule} from '@angular/material/slider';
+
 
 const modules =[
   MatCardModule,
@@ -63,7 +65,8 @@ const modules =[
   DragDropModule,
   MatFormFieldModule,      
   MatMenuModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatSliderModule
 ]
 
 @NgModule({
