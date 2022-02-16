@@ -28,6 +28,7 @@ import { EnvironmentFormComponent } from '../report-form/environment-form/enviro
 import { ApedaFormatComponent } from '../report-form/apeda-format/apeda-format.component';
 import { EicFormatComponent } from '../report-form/eic-format/eic-format.component';
 import { AllPackageModule } from '../all-package/all-package.module';
+import { GitVersionComponent } from './git-version/git-version.component';
 
 
 
@@ -53,7 +54,8 @@ const models = [
   EicFormatComponent,
   SettingModalComponent,
   LandingFunctionsModalComponent,
-  ShortcutinfoComponent  
+  ShortcutinfoComponent,
+  GitVersionComponent
 ]
 
 @NgModule({

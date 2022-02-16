@@ -58,6 +58,8 @@ export class McoreComponent implements OnInit {
   chartModalResponce(responce){
     console.log(responce);
   }
-  
+  gitModalResponce(responce){
+    console.log(responce);
+  }
 
 }
