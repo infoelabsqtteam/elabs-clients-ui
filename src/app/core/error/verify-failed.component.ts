@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EnvService } from "src/app/services/env/env.service";
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-verify-failed',
@@ -26,8 +27,11 @@ import { EnvService } from "src/app/services/env/env.service";
 export class VerifyFailedComponent implements OnInit {
 
   logoPath = ''
-  constructor(private envService:EnvService) {
-    this.logoPath = this.envService.getLogoPath() + "logo.png";
+  constructor(
+    private envService:EnvService,
+    private storageService:StorageService
+    ) {
+    this.logoPath = this.storageService.getLogoPath() + "logo.png";
   }
 
   ngOnInit(): void {

@@ -47,6 +47,8 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     public aboutUsDropDown: any;
     currentPage: any;
     logedin:boolean=false;
+    gitVersionSubscription:any;
+    gitVersion: any;
 
     logoPath = ''
     private myData: any;
@@ -68,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         this.shortcutinfo();
     }
 
-    @HostListener('window:keyup.shift.c') onCtrlChart(){
+    @HostListener('window:keyup.alt.control.c') onCtrlChart(){
         this.chartModel();
     }
     
@@ -95,7 +97,12 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         public envService:EnvService
     ) {
         
-        this.logoPath = this.envService.getLogoPath() + "logo.png";
+        this.logoPath = this.storageService.getLogoPath() + "logo.png";
+        this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe( data =>{
+            if(data && data['git.build.version']){
+              this.gitVersion = data['git.build.version'];
+            }
+        })
         
         this.subscription =  this.dataShareService.currentPage.subscribe(
             (data: any) => {
@@ -510,5 +517,8 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             }
             this.authService.SessionExpired(payload);
         }
-    }   
+    }
+    gitInfo() {
+        this.modelService.open('git_version',{})
+    }  
 }

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-otp-varification',
@@ -22,7 +23,8 @@ export class OtpVarificationComponent implements OnInit {
   constructor( 
     private routers: ActivatedRoute,
     private authService:AuthService,
-    private envService:EnvService
+    private envService:EnvService,
+    private storageService:StorageService
     ) { 
       this.pageloded();
     }
@@ -46,7 +48,7 @@ export class OtpVarificationComponent implements OnInit {
       'username': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
       'verif_code': new FormControl('', [Validators.required])
     });
-    if(this.envService.getVerifyType() == "mobile"){
+    if(this.storageService.getVerifyType() == "mobile"){
       this.isVerify = true;
     }else{
       this.isVerify = false;
@@ -64,8 +66,8 @@ export class OtpVarificationComponent implements OnInit {
     console.log('resend otp!');
   }
   pageloded(){
-    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-    this.template = this.envService.getTemplateName();
+    this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
+    this.template = this.storageService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
   }
 }

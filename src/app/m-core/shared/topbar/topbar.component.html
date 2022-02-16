@@ -40,71 +40,15 @@
         <li class="nav-item avatar mx-1">
           <button mat-icon-button [matMenuTriggerFor]="beforeMenu" ><img src="assets/img/profile.jpg" alt="" width="25px"></button>
           <mat-menu #beforeMenu="matMenu" xPosition="before" class="dropdownmenu">
-            <button mat-menu-item>My account</button>
-            <button mat-menu-item>Name: {{userName}}</button>
-            <button mat-menu-item>Email: {{userEmail}}</button>
-            <button mat-menu-item>Version: {{gitVersion}} <mat-icon class="ml-2" (click)="basicModal.show()">info</mat-icon></button>
-            <button mat-menu-item (click)="logout()">Log out</button>
+            <button mat-menu-item><mat-icon class="mr-2">manage_accounts</mat-icon> My account</button>
+            <button mat-menu-item><mat-icon class="mr-2">person_outline</mat-icon> Name: {{userName}}</button>
+            <button mat-menu-item><mat-icon class="mr-2">alternate_email</mat-icon> Email: {{userEmail}}</button>
+            <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
+            <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>
+            <button mat-menu-item (click)="logout()"><mat-icon class="mr-2">power_settings_new</mat-icon> Log out</button>
           </mat-menu>
         </li>
       </ul>
     </div>
   </div>
 </header>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg shortkey" style="width:800px;">
-    <div class="modal-content">
-      <div class="modal-header border-0 m-0">
-        <h4 class="modal-title font-weight-bold m-0">Information</h4>
-        <button (click)="basicModal.hide()" class="closebtn"><span>&times;</span></button>
-      </div>
-      <div class="modal-body p-0">
-        <div class="table-responsive table keyinfo">
-          <table class="table w-100">
-            <tbody>
-              <tr><td style="width:200px;"><strong>Version</strong></td><td><strong>{{gitVersion}}</strong></td></tr>
-              <tr><td><strong>Branch</strong></td><td><strong>{{gitbranch}}</strong></td></tr>
-              <tr><td><strong>Build Host</strong></td><td><strong>{{gitbuild}}</strong></td></tr>
-              <tr><td><strong>Build Number</strong></td><td><strong>{{gitnumber}}</strong></td></tr>
-              <tr><td><strong>Build Number Unique</strong></td><td><strong>{{gitunique}}</strong></td></tr>
-              <tr><td><strong>Build Time</strong></td><td><strong>{{gittime}}</strong></td></tr>
-              <tr><td><strong>Build User Email</strong></td><td><strong>{{gitemail}}</strong></td></tr>
-              <tr><td><strong>Build User Name</strong></td><td><strong>{{gitname}}</strong></td></tr>
-              <tr><td><strong>Closest Tag Commit Count</strong></td><td><strong>{{gitcount}}</strong></td></tr>
-              <tr><td><strong>Closest Tag Name</strong></td><td><strong>{{gitTagName}}</strong></td></tr>
-              <tr><td><strong>Commit Id</strong></td><td><strong>{{gitId}}</strong></td></tr>
-              <tr><td><strong>Commit Id Abbrev</strong></td><td><strong>{{gitAbbrev}}</strong></td></tr>
-              <tr><td><strong>Commit Id Describe</strong></td><td><strong>{{gitdescribe}}</strong></td></tr>
-              <tr><td><strong>Commit Id Describe-short</strong></td><td><strong>{{gitDescribeShort}}</strong></td></tr>
-              <tr><td><strong>Commit Message Full</strong></td><td><strong>{{gitmessage}}</strong></td></tr>
-              <tr><td><strong>Commit Message Short</strong></td><td><strong>{{gitSortMsg}}</strong></td></tr>
-              <tr><td><strong>Commit Time</strong></td><td><strong>{{gitCommitTime}}</strong></td></tr>
-              <tr><td><strong>Commit User Email</strong></td><td><strong>{{gitCommitEmail}}</strong></td></tr>
-              <tr><td><strong>Commit User Name</strong></td><td><strong>{{gitCommitUser}}</strong></td></tr>
-              <tr><td><strong>Dirty</strong></td><td><strong>{{gitdirty}}</strong></td></tr>
-              <tr><td><strong>Local Branch Ahead</strong></td><td><strong>{{gitahead}}</strong></td></tr>
-              <tr><td><strong>local Branch Behind</strong></td><td><strong>{{gitbehind}}</strong></td></tr>
-              <tr><td><strong>Remote Origin Url</strong></td><td><strong>{{gitOriginUrl}}</strong></td></tr>
-              <tr><td><strong>Tags</strong></td><td><strong>{{gittags}}</strong></td></tr>
-              <tr><td><strong>Total Commit Count</strong></td><td><strong>{{gitCommitCount}}</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>

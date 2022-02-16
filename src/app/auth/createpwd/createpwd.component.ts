@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../../services/storage/storage.service';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { EnvService } from 'src/app/services/env/env.service';
 
 @Component({
   selector: 'app-createpwd',
@@ -19,15 +20,18 @@ export class CreatepwdComponent implements OnInit
   newpwd: any;
   confirmpwd: any;
   oldpwd: string;
-    
+  template:string = "temp1";
+  logoPath = '';
+  title = ""; 
 
   constructor(
     private router: Router,
     private storageService:StorageService,
     private authService:AuthService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private envService:EnvService,
   ) {
-    
+    this.pageloded();
   }
   ngOnInit(): void {
    
@@ -88,5 +92,12 @@ export class CreatepwdComponent implements OnInit
          {
              this.router.navigate(['/home']);             //changed- to user dashboard
           }
+
+
+    pageloded(){
+      this.logoPath = this.storageService.getLogoPath() + "logo.png";
+      this.template = this.storageService.getTemplateName();
+      this.title = this.envService.getHostKeyValue('title');
+    }
 
   }
