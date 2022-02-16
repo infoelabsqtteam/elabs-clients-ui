@@ -5,7 +5,7 @@ name: Angular CI with Node - Prod
 
 on:
   push:
-    branches: [ medicea-prod ]
+    branches: [ itcprod ]
 
 jobs:
   build:
@@ -41,12 +41,12 @@ jobs:
     - name: Building
       run: ng build --configuration=${{ secrets.ENVIRONMENT_PRODUCTION }}
      
-  # Deploy Medicea App    
-    - name: Clean up existing deployment - Medicea App
-      run: aws s3 rm s3://app.medicea.in --recursive
+ # Deploy ItcLabs    
+    - name: Clean up existing deployment - ItcLabs Dev
+      run: aws s3 rm s3://lims.itclabs.com --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://app.medicea.in
+      run: aws s3 sync dist s3://lims.itclabs.com
 
     - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id EQ8YH2PYATWGD --paths '/*'
+      run: aws cloudfront create-invalidation --distribution-id E2VR8P8C4U5JQ8 --paths '/*'

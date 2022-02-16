@@ -41,15 +41,6 @@ jobs:
     - name: Building
       run: ng build --configuration=${{ secrets.ENVIRONMENT_PRODUCTION }}
      
-      # Deploy ItcLabs    
-    - name: Clean up existing deployment - ItcLabs Dev
-      run: aws s3 rm s3://lims.itclabs.com --recursive
-
-    - name: Upload data
-      run: aws s3 sync dist s3://lims.itclabs.com
-
-    - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2VR8P8C4U5JQ8 --paths '/*'
 
   # Deploy Qualitek Labs
     - name: Clean up existing deployment - Qualitek Labs
