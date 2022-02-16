@@ -15,12 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    ########################### Elabs Aws - ###########################
-    - name: Configure AWS credentials
+    ########################### Medicea Aws - ###########################
+      # Medicea Aws
+    - name: Configure AWS credentials Medicea
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEDICEA }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEDICEA }}
         aws-region: ${{ secrets.REGION }}
         
     - name: Set up Node
