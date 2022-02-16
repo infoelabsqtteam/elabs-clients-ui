@@ -69,7 +69,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "app.medicea.in", "serverEndpoint": "https://servermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type": "Horizontal", "folder": "medicea", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "clientEndpoint": "app.medicea.in", "serverEndpoint": "https://servermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type": "Horizontal", "folder": "medicea", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "mobile",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
