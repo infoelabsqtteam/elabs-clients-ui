@@ -34,13 +34,14 @@ export class SettingModalComponent implements OnInit {
     private coreFunctionService:CoreFunctionService
   ) { 
 
-    this.getHostData();
+    //this.getHostData();
 
     this.settingModelRestSubscription = this.dataShareService.settingData.subscribe(data =>{
       if(data == "logged_out"){
         this.hostName = '';
         this.envService.setHostNameDinamically('');
-        this.getHostData()
+        // this.getHostData()
+        this.envService.setDinamicallyHost();
       }
     })
     this.hostDataSubscription = this.dataShareService.hostData.subscribe(data =>{

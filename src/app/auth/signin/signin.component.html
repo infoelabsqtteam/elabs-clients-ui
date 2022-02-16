@@ -7,12 +7,16 @@
           <div class="text-center"><p class="text-muted mb-2 font-13 text-uppercase">Welcome To {{title}}</p></div>
           <form class="registration-form" [formGroup]="signInForm">
             <div class="form-group mb-4">
-              <label class="font-15">Your Email*</label>
-              <input type="email" class="form-control" formControlName="email" placeholder="">
+              <label class="font-15">Your UserId*</label>
+              <input type="text" class="form-control" formControlName="userId" placeholder="">
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group password mb-3">
               <label class="font-15">Password*</label>
-              <input type="password" class="form-control" formControlName="password" placeholder="">
+              <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" formControlName="password" placeholder="" >
+              <button mat-icon-button (click)="showpassword()" tabindex="-1">
+                <mat-icon *ngIf="!showpasswrd">visibility</mat-icon>
+                <mat-icon *ngIf="showpasswrd">visibility_off</mat-icon>
+              </button>
             </div>
             <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onSignIn()"[disabled]="!signInForm.valid">Login</button>
           </form>
@@ -42,13 +46,17 @@
             <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2">Sign In</h4></div>
             <form class="example-form" [formGroup]="signInForm">
               <mat-form-field appearance="outline" class="w-100 mb-3">
-                <mat-label>E-MAIL ID</mat-label>
-                <input matInput placeholder="E-Mail" formControlName="email">
+                <mat-label>UserId</mat-label>
+                <input matInput placeholder="E-Mail" formControlName="userId">
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="w-100 mb-3">
+              <mat-form-field appearance="outline" class="w-100 mb-3 password">
                 <mat-label>PASSWORD</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                <button mat-icon-button (click)="showpassword()" tabindex="-1">
+                  <mat-icon *ngIf="!showpasswrd">visibility</mat-icon>
+                  <mat-icon *ngIf="showpasswrd">visibility_off</mat-icon>
+                </button>
               </mat-form-field>
               <div><mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint></div>
             </form>
@@ -80,12 +88,16 @@
                           <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center pt-2">Sign In</h4></div>
                           <form class="example-form" [formGroup]="signInForm">
                               <mat-form-field appearance="outline" class="w-100 mb-3">
-                                  <mat-label>E-MAIL ID</mat-label>
-                                  <input matInput placeholder="E-Mail" formControlName="email">
+                                  <mat-label>UserId</mat-label>
+                                  <input matInput placeholder="E-Mail" formControlName="userId">
                               </mat-form-field>
-                              <mat-form-field appearance="outline" class="w-100 mb-3">
+                              <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                   <mat-label>PASSWORD</mat-label>
-                                  <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                                  <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
+                                  <button mat-icon-button (click)="showpassword()" tabindex="-1">
+                                    <mat-icon *ngIf="!showpasswrd">visibility</mat-icon>
+                                    <mat-icon *ngIf="showpasswrd">visibility_off</mat-icon>
+                                  </button>
                               </mat-form-field>
                               <div><mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint></div>
                           </form>

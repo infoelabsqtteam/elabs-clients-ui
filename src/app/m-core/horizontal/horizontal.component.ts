@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataShareService } from '../../services/data-share/data-share.service';
-
+import { EnvService } from 'src/app/services/env/env.service';
 
 @Component({
   selector: 'app-horizontal',
@@ -10,13 +10,18 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 export class HorizontalComponent implements OnInit {
 
   constructor(
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private envService:EnvService
   ) { 
     
   }
 
   ngOnInit(): void {
-    this.dataShareService.sendCurrentPage('MODULE');
+    if(this.envService.getRequestType() == 'PUBLIC'){
+      this.dataShareService.sendCurrentPage('HOME4')
+    }else{
+      this.dataShareService.sendCurrentPage('MODULE');
+    }
   }
 
 

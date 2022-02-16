@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { CustomvalidationService } from '../../services/customvalidation/customvalidation.service';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +18,7 @@ export class SignupComponent implements OnInit {
   appNameSubscription;
   title = "";
   template:string = "temp1";
-
+  showpasswrd = false;
   logoPath = ''
 
   constructor(
@@ -26,7 +27,8 @@ export class SignupComponent implements OnInit {
     private fb:FormBuilder,
     private authService:AuthService,
     private dataShareService:DataShareService,
-    private envService:EnvService
+    private envService:EnvService,
+    private customValidationService: CustomvalidationService
     ) {
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
@@ -34,6 +36,7 @@ export class SignupComponent implements OnInit {
       this.pageloded();
      }
     
+
 
   ngOnInit() {
     this.initForm();
@@ -56,11 +59,19 @@ export class SignupComponent implements OnInit {
 
     const email = this.signUpForm.value.email;
     const password = this.signUpForm.value.password;
+    const confirmPassword = this.signUpForm.value.password;
     const name = this.signUpForm.value.name;
-    const mobile = "+91" + this.signUpForm.value.mobile;
-    const payload = { appName: this.appName, data: { username: email, email: email, password: password, name: name, phone_number: mobile } }
-    this.authService.TrySignup(payload);
-    this.router.navigate(['/signin']);
+    const mobile = this.signUpForm.value.mobile;
+    const hostName = this.envService.getHostName('origin');
+    const domain = hostName + "/#/verify";
+    let userId = "";
+    if(this.envService.getVerifyType() == "mobile"){
+      userId = mobile;
+    }else{
+      userId = email;
+    }
+    const payload = {email: email, password: password, name: name, mobileNumber: mobile, domain:domain,userId:userId }
+    this.authService.Signup(payload);
   }
 
   initForm() {
@@ -68,8 +79,10 @@ export class SignupComponent implements OnInit {
       'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
       'mobile': new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
       'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
+      'confirmPassword': new FormControl("", Validators.required),
       'name': new FormControl('', Validators.required),
-    });
+    },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }
+    );
   }
 
   checkValidation(){
@@ -84,5 +97,8 @@ export class SignupComponent implements OnInit {
     this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
     this.template = this.envService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
+  }
+  showpassword() {
+    this.showpasswrd = !this.showpasswrd;
   }
 }
