@@ -1497,6 +1497,41 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     return gridColumns;
   }
+
+  checkDataAlreadyAddedInListOrNot(primary_key,incomingData,alreadyDataAddedlist){
+    if(alreadyDataAddedlist == undefined){
+      alreadyDataAddedlist = [];
+    }
+    let alreadyExist = "false";
+    if(typeof incomingData == 'object'){
+      alreadyDataAddedlist.forEach(element => {
+        if(element._id == incomingData._id){
+          alreadyExist =  "true";
+        }
+      });
+    }
+    else if(typeof incomingData == 'string'){
+      alreadyDataAddedlist.forEach(element => {
+        if(typeof element == 'string'){
+          if(element == incomingData){
+            alreadyExist =  "true";
+          }
+        }else{
+          if(element[primary_key] == incomingData){
+            alreadyExist =  "true";
+          }
+        }
+      
+      });
+    }else{
+      alreadyExist =  "false";
+    }
+    if(alreadyExist == "true"){
+      return true;
+    }else{
+      return false;
+    }
+  }
   
   setValue(parentfield,field, add,event?) {
 
@@ -1505,31 +1540,42 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "list_of_string":
         if (add) {
           if(parentfield != ''){
-            const custmizedKey = this.custmizedKey(parentfield);            
-            if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
-            if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
-            const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
-            if(formValue[parentfield.field_name][field.field_name] != '' && formValue[parentfield.field_name][field.field_name] != null){
-              custmizedFormValueParant.push(formValue[parentfield.field_name][field.field_name])            
-              this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
+            const custmizedKey = this.custmizedKey(parentfield);   
+            const value = formValue[parentfield.field_name][field.field_name]
+            if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
+              this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+            }else{
+              if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
+              if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
+              const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
+              if(value != '' && value != null){
+                custmizedFormValueParant.push(value)            
+                this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
+              }
+              if(event){
+                event.value = '';
+              }
+              (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");
+              this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
             }
-            if(event){
-              event.value = '';
-            }
-            (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");
-            this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
+            
           }else{
-            if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
-            const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-            if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
-              custmizedFormValue.push(formValue[field.field_name])
-              this.custmizedFormValue[field.field_name] = custmizedFormValue;
+            const value = formValue[field.field_name];
+            if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
+              this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+            }else{
+              if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
+              const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
+              if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
+                custmizedFormValue.push(formValue[field.field_name])
+                this.custmizedFormValue[field.field_name] = custmizedFormValue;
+              }
+              if(event){
+                event.value = '';
+              }
+              this.templateForm.controls[field.field_name].setValue("");
+              this.tempVal[field.field_name + "_add_button"] = true;
             }
-            if(event){
-              event.value = '';
-            }
-            this.templateForm.controls[field.field_name].setValue("");
-            this.tempVal[field.field_name + "_add_button"] = true;
           }  
         } else {
           if(parentfield != ''){
@@ -1552,28 +1598,37 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if (add) {
             if(parentfield != ''){
               const value = formValue[parentfield.field_name][field.field_name]
-              const custmizedKey = this.custmizedKey(parentfield);            
-              if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
-              if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
-              const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
-              custmizedFormValueParant.push(value)            
-              this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
-              if(event){
-                event.value = '';
+              const custmizedKey = this.custmizedKey(parentfield);
+              if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
+                this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+              }else{
+                if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
+                if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
+                const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
+                custmizedFormValueParant.push(value)            
+                this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
+                if(event){
+                  event.value = '';
+                }
+                (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");
+                this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
               }
-              (<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");
-              this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
+              
             }else{
               const value = formValue[field.field_name];
-              if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
-              const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-              custmizedFormValue.push(value)
-              this.custmizedFormValue[field.field_name] = custmizedFormValue;
-              if(event){
-                event.value = '';
-              }             
-              this.templateForm.controls[field.field_name].setValue('');
-              this.tempVal[field.field_name + "_add_button"] = true;
+                if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
+                  this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+                }else{
+                  if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
+                  const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
+                  custmizedFormValue.push(value)
+                  this.custmizedFormValue[field.field_name] = custmizedFormValue;
+                  if(event){
+                    event.value = '';
+                  }             
+                  this.templateForm.controls[field.field_name].setValue('');
+                  this.tempVal[field.field_name + "_add_button"] = true;
+                }
             }  
           }else {
             if(parentfield != ''){
@@ -1726,6 +1781,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
                   return;
                 }
+
               }
               break;        
             default:
@@ -1736,6 +1792,18 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 }
               }
               break;
+          }
+
+
+          if(element.primary_key_for_list){
+            let primary_key_field_name = element.field_name;
+            let primary_key_field_value = formValue[field.field_name][element.field_name];
+            let list = this.custmizedFormValue[field.field_name];
+            let alreadyAdded = this.checkDataAlreadyAddedInListOrNot(primary_key_field_name,primary_key_field_value,list);
+            if(alreadyAdded){
+              this.notificationService.notify('bg-danger','Entered value for '+element.label+' is already added. !!!');
+              return;
+            }
           }
           
         };
@@ -1827,6 +1895,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   }
                 });
               }
+              
               custmizedFormValue.push(listOfFieldData);
               this.custmizedFormValue[field.field_name] = custmizedFormValue;
               // if (field.onchange_api_params && field.onchange_call_back_field) {
@@ -2900,6 +2969,13 @@ case 'populate_fields_for_report_for_new_order_flow':
               return '-';
             }
           }else if(item.datatype == "object"){
+            if (item.display_name && item.display_name != "") {
+              return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
+            } else {
+              return listOfField[item.field_name];
+            }
+          }
+          else if(item.datatype == "text"){
             if (item.display_name && item.display_name != "") {
               return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
             } else {
@@ -4056,8 +4132,8 @@ case 'populate_fields_for_report_for_new_order_flow':
             if(object != null && object != ''){
               value = object;
               this.templateForm.controls[element.field_name].setValue(value)
-            }else{
-              value = 0;
+            }else if(object == 0){
+              this.templateForm.controls[element.field_name].setValue(value)
             }
            
             break;
