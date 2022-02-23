@@ -1,0 +1,48 @@
+// .report-form {background:#c8dbee;margin:0 -15px -20px;height:100vh;
+//   .reportview {background:rgba(0,0,0,0.2);min-height:200px;border-radius:5px;padding:10px;}
+//   select {width:100%;height:25px;font-size:12px;background:none;border:1px solid #ccc;color:#fff;border-radius:5px;padding:0 5px;margin:5px 0;}
+//   select option {color:#999}
+//   input {width:100%;height:25px;font-size:12px;background:none;border:1px solid #ccc;color:#fff;border-radius:5px;padding:0 5px;margin:5px 0;}
+//   input::placeholder{color:#fff;}
+//   .rpt-btn {color:#fff;min-width:auto;line-height:30px;background:rgba(0,0,0,0.1);}
+//   button:focus {outline:none;border:none;}
+//   .chipsdata {min-height:140px;}
+//   .chips {padding:5px 25px 5px 15px;position:relative;background:rgba(0,0,0,0.2);margin:3px;border-radius:25px;font-size:11px;color:#fff;cursor:pointer;
+//     .mat-icon {position:absolute;right:-5px;top:5px;font-size:12px;opacity:0.7;}
+//   }
+//   .reportbtn {border:1px solid #fff;color:#fff;
+//     &:focus {border:1px solid #fff;}
+//   }
+//   .table-dark {background:rgba(0,0,0,0.3);}
+//   .table-dark th, .table-dark td, .table-dark thead th {border-color:#fff;}
+//   .table thead th {border-bottom:none;}
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.report-form {
+  .reportview {background:#fff;min-height:200px;border-radius:5px;padding:10px;box-shadow:0 0 20px #dedede;}
+  select {width:100%;height:25px;font-size:12px;background:none;border:1px solid #ddd;color:#555;border-radius:5px;padding:0 5px;margin:5px 0;}
+  input {width:100%;height:25px;font-size:12px;background:none;border:1px solid #ddd;color:#555;border-radius:5px;padding:0 5px;margin:5px 0;}
+  input::placeholder{color:#555;}
+  .rpt-btn {color:#555;min-width:auto;line-height:30px;background:#f8f8f8;}
+  button:focus {outline:none;border:none;}
+  .chipsdata {min-height:140px;}
+  .chips {padding:5px 25px 5px 15px;position:relative;background:rgb(170 170 170 / 20%);margin:3px;border-radius:25px;font-size:11px;color:#555;cursor:pointer;
+    .mat-icon {position:absolute;right:-5px;top:5px;font-size:12px;opacity:0.7;}
+  }
+  .reportbtn {border:1px solid #ddd;color:#555;
+    &:focus {border:1px solid #ddd;}
+  }
+}
