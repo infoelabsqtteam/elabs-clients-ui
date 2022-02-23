@@ -159,7 +159,7 @@ export class CommonFunctionService {
       "value": params,
       "log": this.storageService.getUserLog(),
       "crList": [],
-      "module": this.storageService.getAppId(),
+      "module": this.storageService.getModule(),
       "tab": tab
     }
     if(data_template){
@@ -783,18 +783,21 @@ export class CommonFunctionService {
     }
   }
   getTemData(tempName) {
-    const getTemplates = {
-      crList: [{
-        "fName": "name",
-        "fValue": tempName,
-        "operator": "eq"
-      }],
-      key2: this.storageService.getAppId(),
-      refCode: this.getRefcode(),
-      log: this.storageService.getUserLog(),
-      value: "form_template"
-    }
-    return getTemplates;
+    const params = "form_template";
+    const criteria = ["name;eq;"+tempName+";STATIC"];
+    const payload = this.getPaylodWithCriteria(params,'',criteria,{});
+    // const getTemplates = {
+    //   crList: [{
+    //     "fName": "name",
+    //     "fValue": tempName,
+    //     "operator": "eq"
+    //   }],
+    //   key2: this.storageService.getAppId(),
+    //   refCode: this.getRefcode(),
+    //   log: this.storageService.getUserLog(),
+    //   value: "form_template"
+    // }
+    return payload;
   }
   sanitizeObject(tableFields, formValue, validatField,formValueWithCust?) {
     for (let index = 0; index < tableFields.length; index++) {
@@ -1968,7 +1971,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
                   data['rate_per_injection'] = 0;
                 }
               let offeringRate=data['rate_per_injection']-dis_amt;
-              this.calculatePharamaParameterAmount(data, offeringRate, quantity);
+              this.calculatePharamaParameterAmount(data, offeringRate, quantity,incoming_field);
             }else{
               effectiveTotal = gross_amount-dis_amt;
                 net_amount =effectiveTotal;
@@ -2091,10 +2094,18 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   this.sanitizeParameterAmount(data);
   }
 
-  calculatePharamaParameterAmount(data, offer_rate, quantity,){
+  calculatePharamaParameterAmount(data, offer_rate, quantity,field_name?){
     let gross_amount =  this.calculateParameterAmtOnInjection(data,data["rate_per_injection"],quantity)
     let effectiveTotal = this.calculateParameterAmtOnInjection(data,offer_rate,quantity)
     let dis_amt = gross_amount-effectiveTotal;
+    switch (field_name){
+      case 'discount_amount':
+      effectiveTotal = gross_amount-data['discount_amount'];
+      dis_amt = data['discount_amount'];
+      break;
+      default:
+
+    }
     let discount_percent = 0;
     if(gross_amount > 0){
       discount_percent = (dis_amt/gross_amount)*100;

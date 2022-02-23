@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }  
   GoToSelectedModule(module){
-    this.storageService.setAppId(module.name); 
+    this.storageService.setModule(module.name); 
     this.dataShareService.sendCurrentPage('DASHBOARD')
     const menuSearchModule = { "value": "menu", key2: module.name }
     //this.store.dispatch(new MenuActios.GetTempMenu(menuSearchModule))
