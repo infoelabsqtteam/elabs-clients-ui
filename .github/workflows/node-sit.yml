@@ -121,6 +121,17 @@ jobs:
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E93C4BOS49CLH --paths '/*'
+
+  # Deploy  E-Labs Sit
+    - name: Clean up existing deployment E-Labs Sit
+      run: aws s3 rm s3://sit.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://sit.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id EZM0K7OD4LOQC --paths '/*'
+
 ########################### Medicea Aws - ###########################
   # Medicea Aws
     - name: Configure AWS credentials Medicea
