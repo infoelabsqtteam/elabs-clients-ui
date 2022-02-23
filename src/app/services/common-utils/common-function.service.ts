@@ -159,7 +159,7 @@ export class CommonFunctionService {
       "value": params,
       "log": this.storageService.getUserLog(),
       "crList": [],
-      "module": this.storageService.getAppId(),
+      "module": this.storageService.getModule(),
       "tab": tab
     }
     if(data_template){
@@ -806,18 +806,21 @@ export class CommonFunctionService {
     }
   }
   getTemData(tempName) {
-    const getTemplates = {
-      crList: [{
-        "fName": "name",
-        "fValue": tempName,
-        "operator": "eq"
-      }],
-      key2: this.storageService.getAppId(),
-      refCode: this.getRefcode(),
-      log: this.storageService.getUserLog(),
-      value: "form_template"
-    }
-    return getTemplates;
+    const params = "form_template";
+    const criteria = ["name;eq;"+tempName+";STATIC"];
+    const payload = this.getPaylodWithCriteria(params,'',criteria,{});
+    // const getTemplates = {
+    //   crList: [{
+    //     "fName": "name",
+    //     "fValue": tempName,
+    //     "operator": "eq"
+    //   }],
+    //   key2: this.storageService.getAppId(),
+    //   refCode: this.getRefcode(),
+    //   log: this.storageService.getUserLog(),
+    //   value: "form_template"
+    // }
+    return payload;
   }
   sanitizeObject(tableFields, formValue, validatField,formValueWithCust?) {
     for (let index = 0; index < tableFields.length; index++) {
