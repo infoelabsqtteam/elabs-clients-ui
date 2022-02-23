@@ -62,5 +62,16 @@ jobs:
 
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E16WIGP6AQRARO --paths '/*'
+
+  # Deploy E-Labs UAT
+    - name: Clean up existing deployment - E-Labs UAT
+      run: aws s3 rm s3://uat.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://uat.e-labs.ai
+
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E1UAXLIY9JGH8Q --paths '/*'
   
  
