@@ -159,7 +159,7 @@ export class CommonFunctionService {
       "value": params,
       "log": this.storageService.getUserLog(),
       "crList": [],
-      "module": this.storageService.getAppId(),
+      "module": this.storageService.getModule(),
       "tab": tab
     }
     if(data_template){
