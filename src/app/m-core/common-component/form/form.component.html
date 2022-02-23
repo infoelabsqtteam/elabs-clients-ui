@@ -136,7 +136,7 @@
                                 </mat-radio-group>
                             </div>
                             <div class="row m-0 w-100" *ngIf="tableField.datatype != 'key_value'">
-                                <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)">
+                                <mat-radio-group aria-label="Select an option" [required]="true"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)">
                                     <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
                                 </mat-radio-group>
                             </div>
