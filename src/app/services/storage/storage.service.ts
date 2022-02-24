@@ -36,10 +36,18 @@ export class StorageService {
   TEMP_THEME:string = "TEMP_THEME";
   PAGE_TITLE:string = "PAGE_TITLE";
   VERIFY_TYPE:string = "VERIFY_TYPE";
+  MODULE:string = "MODULE";
   
   
   
   constructor(private http: HttpClient) { }
+
+  setModule(module:string){
+    localStorage.setItem("MODULE",module);
+  }
+  getModule(){
+    return localStorage.getItem('MODULE');
+  }
 
   setAppId(appId:string){
     localStorage.setItem('appId', appId);
@@ -53,6 +61,7 @@ export class StorageService {
       return localStorage.getItem('appId')
     }
   }
+
   setExpiresIn(expiry: any){
     let expiryTime = (expiry - 300)*1000
     localStorage.setItem(this.EXPIRY_IN, JSON.stringify(expiryTime));

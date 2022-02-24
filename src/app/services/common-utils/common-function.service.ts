@@ -159,7 +159,7 @@ export class CommonFunctionService {
       "value": params,
       "log": this.storageService.getUserLog(),
       "crList": [],
-      "module": this.storageService.getAppId(),
+      "module": this.storageService.getModule(),
       "tab": tab
     }
     if(data_template){
@@ -323,6 +323,14 @@ export class CommonFunctionService {
           } else {
             return false;
           }
+          case 'nin':
+            if (!(condition[2].split(":")).includes(setValue)) {
+              return true;
+            } else {
+              return false;
+            }
+      
+       
         case 'gte':
           return parseFloat(setValue) >= parseFloat(condition[2]);
         case 'lte':
@@ -747,11 +755,26 @@ export class CommonFunctionService {
         }
 
       case "color":
-        
+        break;
         case "pattern":
           if(object != null){
             return this.getConvertedString(object,field.field_name);
           }
+
+          case "reference_names":
+            if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
+              let name = '';
+              for(let i=0 ;i<value.length; i++){
+                if(this.coreFunctionService.isNotBlank(value[i]['name'])){
+                  name = name+', '+value[i]['name'];
+                }
+              }
+              if(name.length > 1){
+                name = name.substring(2);
+              }
+              return name;
+            }
+          
 
 
       default: return value;
@@ -783,18 +806,21 @@ export class CommonFunctionService {
     }
   }
   getTemData(tempName) {
-    const getTemplates = {
-      crList: [{
-        "fName": "name",
-        "fValue": tempName,
-        "operator": "eq"
-      }],
-      key2: this.storageService.getAppId(),
-      refCode: this.getRefcode(),
-      log: this.storageService.getUserLog(),
-      value: "form_template"
-    }
-    return getTemplates;
+    const params = "form_template";
+    const criteria = ["name;eq;"+tempName+";STATIC"];
+    const payload = this.getPaylodWithCriteria(params,'',criteria,{});
+    // const getTemplates = {
+    //   crList: [{
+    //     "fName": "name",
+    //     "fValue": tempName,
+    //     "operator": "eq"
+    //   }],
+    //   key2: this.storageService.getAppId(),
+    //   refCode: this.getRefcode(),
+    //   log: this.storageService.getUserLog(),
+    //   value: "form_template"
+    // }
+    return payload;
   }
   sanitizeObject(tableFields, formValue, validatField,formValueWithCust?) {
     for (let index = 0; index < tableFields.length; index++) {
@@ -828,6 +854,9 @@ export class CommonFunctionService {
           case "number":
             if (!Number(formValue[element.field_name])) {
               formValue[element.field_name] = 0;
+            }
+            if(this.applicableForValidation(element) && formValue[element.field_name]<=0){
+              return {'msg':' ' +element.label + ' should be greater than 0. !!!'}
             }
             break
           default:

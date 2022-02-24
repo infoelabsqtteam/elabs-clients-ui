@@ -116,7 +116,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
 }
 setAppId(module){
-  this.storageService.setAppId(module.name);
+  this.storageService.setModule(module.name);
 }
 
 }
