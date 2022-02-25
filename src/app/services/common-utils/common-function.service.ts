@@ -336,13 +336,13 @@ export class CommonFunctionService {
         case 'lte':
           return parseFloat(setValue) <= parseFloat(condition[2]);
         case 'exists':
-          if (setValue != null && setValue != undefined && setValue != '') {
+          if (setValue != null && setValue != undefined && setValue != '' && setValue != 'null') {
             return true;
           } else {
             return false;
           }
         case 'notexist':
-          if (setValue == null || setValue == undefined || setValue == '') {
+          if (setValue == null || setValue == undefined || setValue == '' || setValue == 'null') {
             return true;
           } else {
             return false;
@@ -415,6 +415,23 @@ export class CommonFunctionService {
               }
             }
             break;
+            case "number":
+              if(formValue && formValue[element.field_name] != ''){              
+                if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+                  element.api_params_criteria.forEach(cri => {
+                    criteria.push(cri)
+                  });
+                }else{
+                  filterList.push(
+                    {
+                      "fName": element.field_name,
+                      "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                      "operator": "eq"
+                    }
+                  )
+                }
+              }
+              break;
           case "typeahead":
             if(formValue && formValue[element.field_name] != ''){ 
               filterList.push(
@@ -436,6 +453,23 @@ export class CommonFunctionService {
                 filterList.push(
                   {
                     "fName": element.field_name,
+                    "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                    "operator": "stwic"
+                  }
+                )
+              }
+            }
+            break;
+            case "reference_names":
+            if(formValue && formValue[element.field_name] != ''){              
+              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+                element.api_params_criteria.forEach(cri => {
+                  criteria.push(cri)
+                });
+              }else{
+                filterList.push(
+                  {
+                    "fName": element.field_name+".name",
                     "fValue": this.getddnDisplayVal(formValue[element.field_name]),
                     "operator": "stwic"
                   }
