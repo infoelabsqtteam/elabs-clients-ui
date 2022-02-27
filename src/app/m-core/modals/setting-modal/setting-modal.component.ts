@@ -34,13 +34,14 @@ export class SettingModalComponent implements OnInit {
     private coreFunctionService:CoreFunctionService
   ) { 
 
-    this.getHostData();
+    //this.getHostData();
 
     this.settingModelRestSubscription = this.dataShareService.settingData.subscribe(data =>{
       if(data == "logged_out"){
         this.hostName = '';
-        this.envService.setHostNameDinamically('');
-        this.getHostData()
+        this.storageService.setHostNameDinamically('');
+        // this.getHostData()
+        this.envService.setDinamicallyHost();
       }
     })
     this.hostDataSubscription = this.dataShareService.hostData.subscribe(data =>{
@@ -97,7 +98,7 @@ export class SettingModalComponent implements OnInit {
     if(this.hostName && this.hostName['host']){
       hostName = this.hostName['host']+'/rest/';
     }
-    this.envService.setHostNameDinamically(hostName);
+    this.storageService.setHostNameDinamically(hostName);
     this.close();
   }
   setHostData(data:any){

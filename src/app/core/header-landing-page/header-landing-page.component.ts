@@ -71,7 +71,7 @@ export class HeaderLandingPageComponent implements OnInit {
         this.solutions = solution;
 
 
-        this.logoPath = this.envService.getLogoPath() + "logo.png";
+        this.logoPath = this.storageService.getLogoPath() + "logo.png";
     }
 
   ngOnInit() {

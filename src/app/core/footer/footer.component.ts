@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class FooterComponent implements OnInit {
 
   constructor(
     private dataShareService:DataShareService,
-    private envService:EnvService
+    private envService:EnvService,
+    private storageService:StorageService
   ) {
     this.pageloded();
     this.setpage(this.dataShareService.getCurrentPage());
@@ -62,7 +64,7 @@ export class FooterComponent implements OnInit {
     }
   }
   pageloded(){
-    this.template = this.envService.getTemplateName();
+    this.template = this.storageService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
   }
 }

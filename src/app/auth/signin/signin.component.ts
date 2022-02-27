@@ -4,6 +4,7 @@ import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 
 
@@ -17,13 +18,15 @@ export class SigninComponent implements OnInit {
   @Input() public pageName;
   appName: string;
   signInForm:FormGroup;
+  showpasswrd = false;
   template:string = "temp1";
   logoPath = '';
   title = "";
   constructor(
     private router: Router,
     private authService:AuthService,
-    private envService:EnvService
+    private envService:EnvService,
+    private storageService:StorageService
     ) {
       this.pageloded();
   }
@@ -35,16 +38,22 @@ export class SigninComponent implements OnInit {
   }
   initForm() {
     this.signInForm = new FormGroup({
-      'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      //'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      'userId': new FormControl('', [Validators.required]),
       'password': new FormControl('', [Validators.required])
     });
   }
 
   onSignIn() {
     const value = this.signInForm.getRawValue();
-    const email = value.email;
+    let userId = value.userId;
     const password = value.password;
-    this.authService.TrySignin({ username: email, password: password, appName: this.envService.getAppName() })   
+    if(this.storageService.getVerifyType() == "mobile"){
+      userId =  value.userId;
+    }else{
+      userId =  value.userId;
+    }
+    this.authService.Signin({ userId: userId, password: password })   
   }
 
   @HostListener('window:popstate', ['$event'])
@@ -55,9 +64,13 @@ export class SigninComponent implements OnInit {
 
 
   pageloded(){
-    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-    this.template = this.envService.getTemplateName();
+    this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
+    this.template = this.storageService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
+  }
+
+  showpassword() {
+    this.showpasswrd = !this.showpasswrd;
   }
 
 }

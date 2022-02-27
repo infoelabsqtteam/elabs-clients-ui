@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService } from 'src/app/services/api/api.service';
 import { ModelService } from 'src/app/services/model/model.service';
@@ -14,6 +14,10 @@ export class ChartModalComponent implements OnInit {
   @Output() chartModalResponce = new EventEmitter();
   @ViewChild('chartModel') public chartModel: ModalDirective;
   isShow:boolean=false;
+
+  @HostListener('window:keyup.alt.c') onCtrC(){
+    this.close();
+  }
 
   constructor(
     private modalService: ModelService

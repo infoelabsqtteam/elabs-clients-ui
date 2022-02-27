@@ -1,7 +1,9 @@
 <header class="position-sticky" *ngIf="fullHeader">
-  
-  <mdb-navbar SideClass="navbar navbar-expand-lg py-0" [containerInside]="false">
-    <mdb-navbar-brand><a class="navbar-brand py-2"><img [src]="logoPath" alt=""></a></mdb-navbar-brand>    
+  <mdb-navbar SideClass="navbar navbar-expand-lg py-2" [containerInside]="false">
+    <mdb-navbar-brand><a class="navbar-brand py-2"><img [src]="logoPath" alt=""></a></mdb-navbar-brand> 
+    
+    
+
     <links class="d-flex" *ngIf="menuBoxHome">
       <ul class="navbar-nav ml-auto ">
         <li class="nav-item"><a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/home_page']" routerLinkActive="router-link-active">Home</a></li>
@@ -36,32 +38,33 @@
 
     <links *ngIf="menuBoxDashboard || showUserAccount" class="d-flex justify-content-around w-100">
       <ul class="navbar-nav mr-auto my-auto" *ngIf="menuBoxDashboard">
-        <li class="nav-item"><a href="javascript:void(0)" class="nav-link waves-light text-dark" [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'" [ngClass]="activeclass ? 'selectedclass' : ''" mdbWavesEffect (click)="goToMOdule()"  *ngIf="menuBoxDashboard" #tooltip="matTooltip" matTooltip="Press B">Home</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" class="nav-link" [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'" [ngClass]="activeclass ? 'selectedclass' : ''" mdbWavesEffect (click)="goToMOdule()"  *ngIf="menuBoxDashboard" #tooltip="matTooltip" matTooltip="Press B">Home</a></li>
         <!-- Dropdown -->
         <li class="nav-item dropdown" dropdown *ngFor="let menu of menuData" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
-          <a href="javascript:void(0)" class="nav-link waves-light text-dark" mdbWavesEffect *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateData(menu)" #tooltip="matTooltip" matTooltip="Press Ctrl + c">{{ menu.label }}</a>
-          <a href="javascript:void(0)" dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light text-dark" mdbWavesEffect *ngIf="menu.submenu && menu.submenu != null"  (click)="activeLinkD(menu.label,false)">{{ menu.label }}</a>
+          <a href="javascript:void(0)" class="nav-link" mdbWavesEffect *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateData(menu)" #tooltip="matTooltip" matTooltip="Press Ctrl + c">{{ menu.label }}</a>
+          <a href="javascript:void(0)" dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle" mdbWavesEffect *ngIf="menu.submenu && menu.submenu != null"  (click)="activeLinkD(menu.label,false)">{{ menu.label }}</a>
           <span *ngIf="menu.submenu && menu.submenu != null" class="dropdown-menu dropdown dropdown-primary">
-            <div *dropdownMenu><a href="javascript:void(0)" class="dropdown-item waves-light" mdbWavesEffect *ngFor="let submenu of menu.submenu" (click)="getTemplateData(submenu)">{{ submenu.label }}</a></div>
+            <div *dropdownMenu><a href="javascript:void(0)" class="dropdown-item" mdbWavesEffect *ngFor="let submenu of menu.submenu" (click)="getTemplateData(submenu)">{{ submenu.label }}</a></div>
           </span>
         </li>
       </ul> 
 
       <ul class="navbar-nav ml-auto nav-flex-icons d-flex align-items-center" *ngIf="showUserAccount">
-        <li class="nav-item avatar mr-3" (click)="chartModel()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">bar_chart</span></a></li>
-        <li class="nav-item avatar mr-3" (click)="shortcutinfo()"><a href="javascript:void(0)" class="infoicon"><span class="material-icons">info</span></a></li>
-        <li class="nav-item avatar dropdown" dropdown>
-          <a href="javascript:void(0)" dropdownToggle mdbWavesEffect class="nav-link dropdown-toggle userlogin waves-light"><img src="../../assets/img/profile.jpg" alt="" class="img-fluid rounded-circle" width="30"></a>
-          <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary">
-            <a href="javascript:void(0)" class="dropdown-item waves-light p-1" mdbWavesEffect (click)="goToEditeProfile('profile')">My account</a>
-            <a href="javascript:void(0)" class="dropdown-item waves-light p-1" mdbWavesEffect (click)="logOut()">Log out</a>
-          </div>
+        <li class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
+        <li class="nav-item avatar mx-1" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
+        <li class="nav-item avatar mx-1">
+          <button mat-icon-button [matMenuTriggerFor]="beforeMenu" ><img src="assets/img/profile.jpg" alt="" width="25px"></button>
+          <mat-menu #beforeMenu="matMenu" xPosition="before" class="dropdownmenu">
+            <button mat-menu-item><mat-icon class="mr-2">manage_accounts</mat-icon> My account</button>
+            <button mat-menu-item><mat-icon class="mr-2">person_outline</mat-icon> Name: {{userName}}</button>
+            <button mat-menu-item><mat-icon class="mr-2">alternate_email</mat-icon> Email: {{userEmail}}</button>
+            <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
+            <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>
+            <button mat-menu-item (click)="logOut()"><mat-icon class="mr-2">power_settings_new</mat-icon> Log out</button>
+          </mat-menu>
         </li>
       </ul>
-
     </links>
   </mdb-navbar>
-
-
 </header>
 

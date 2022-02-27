@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-otp-varification',
@@ -12,15 +13,25 @@ import { EnvService } from 'src/app/services/env/env.service';
 export class OtpVarificationComponent implements OnInit {
 
   OtpVarify: FormGroup;
+  isVerify:boolean = false;
+
+  title = "";
+  template:string = "temp1";
+
+  logoPath = ''
 
   constructor( 
     private routers: ActivatedRoute,
     private authService:AuthService,
-    private envService:EnvService
-    ) { }
+    private envService:EnvService,
+    private storageService:StorageService
+    ) { 
+      this.pageloded();
+    }
 
   ngOnInit(): void {
     this.initForm();
+    this.pageloded();
     this.routers.paramMap.subscribe(params => {
       let username = '';
       username = params.get('username'); 
@@ -37,12 +48,26 @@ export class OtpVarificationComponent implements OnInit {
       'username': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
       'verif_code': new FormControl('', [Validators.required])
     });
+    if(this.storageService.getVerifyType() == "mobile"){
+      this.isVerify = true;
+    }else{
+      this.isVerify = false;
+    }
   }
-  onVerifyAccWithOtp() {    
-    const payload = { appName: this.envService.getAppName(), data:this.OtpVarify.value };
-    this.authService.OtpVarify(payload);
+  onVerifyAccWithOtp() { 
+    const value  = this.OtpVarify.getRawValue(); 
+    const user = value['username'];
+    const code = value['verif_code'];  
+    const payload = {"user":user,"code":code};
+    //this.authService.OtpVarify(payload);
+    this.authService.userVarify(payload);
   }
   resendCode(){
     console.log('resend otp!');
+  }
+  pageloded(){
+    this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
+    this.template = this.storageService.getTemplateName();
+    this.title = this.envService.getHostKeyValue('title');
   }
 }

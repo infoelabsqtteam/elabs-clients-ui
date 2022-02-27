@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EnvService } from "src/app/services/env/env.service";
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-verify-failed',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   <div class="account-pages pt-5 pb-5 notfound">
         <div class="justify-content-center">
             <mat-card style="text-align:center;opacity:90%;">
-                <mat-card-title class="mb-3 py-3"><img src="assets/img/logo.png" alt="E-Labs logo"></mat-card-title>
+                <mat-card-title class="mb-3 py-3 errorlogo"><img [src]="logoPath" alt="E-Labs logo"></mat-card-title>
                 <mat-card-content>
                     <h3 class="text-uppercase text-danger">Oops! Verification Failed</h3>
                     <h1><span>4</span><span>0</span><span>0</span></h1>
@@ -24,7 +26,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerifyFailedComponent implements OnInit {
 
-  constructor() { }
+  logoPath = ''
+  constructor(
+    private envService:EnvService,
+    private storageService:StorageService
+    ) {
+    this.logoPath = this.storageService.getLogoPath() + "logo.png";
+  }
 
   ngOnInit(): void {
   }

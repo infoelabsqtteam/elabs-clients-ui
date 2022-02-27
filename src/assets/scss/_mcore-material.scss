@@ -4,6 +4,8 @@
 ::-webkit-scrollbar-thumb{background:$color888;border-radius:$size10}
 ::-webkit-scrollbar-thumb:hover{background:$color555}
 
+body {font-family:$roboto;font-size:13px;}
+
 @font-face {
     font-family: 'Montserrat';
     font-style: normal;
@@ -12,22 +14,21 @@
     unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
   }
 
-header {position:sticky;top:0;z-index:10;
+  header {position:sticky;top:0;z-index:10;
     .navbar-toggler-icon {position:relative;background-image:none !important;}
     .navbar-toggler-icon:after {content:"\f0c9";position:absolute;font-family:"Font Awesome 5 Free";font-weight:900;top:5px;right:5px;color:#fff;}
     .navbar {box-shadow:$no;background:$headerbg;
         .navbar-brand {width:$size150;
-         img {max-width:100%;}
+            img {max-width:100%;}
         }
         .nav-link{
-            font-size:.9em;font-weight:$fw-500;text-transform:$capitalize;font-family:$montserrat;color:$navtxtcolor !important;
-            &:focus, &:hover {outline:$no;color:$navtxthovercolor !important;}
+            color:$navtxtcolor;font-size:13px;font-weight:500;
+            &:focus, &:hover {outline:$no;color:$navtxthovercolor;}
             .mat-button-focus-overlay {display:$no;}
-            i {margin-left:-5px;font-size:$size20;position:$relative;top:-1px;}
         }
-    }
-    .infoicon span{font-size:$size25;cursor:$pointer;color:$headericon;
-     &:hover {color:$headericonhover;}
+        button {
+            mat-icon {font-size:18px;opacity:0.7;color:var(--headericon)}
+        }
     }
 }
 
@@ -74,10 +75,9 @@ header {position:sticky;top:0;z-index:10;
 .dropzone input{opacity:$zero;position:$absolute;z-index:$two;width:$per100;height:$per100;top:$zero;left:$zero;cursor:$pointer}
 .fileover{animation:shake 1s;animation-iteration-count:infinite;border:1px solid #00f}
 .hz-scroll{display:$block;overflow-x:$auto;white-space:$nowrap}
+.errorlogo {width:120px;margin:0 auto;}
 
 
-
-.dashboardtitle {position:absolute;left:15px;}
 .chartfilteroption{margin:30px 40px 0;min-width:100% !important;}
 .notfound {max-width:520px;width:100%;line-height:1.4;text-align:center;margin:auto;padding-top:100px;
     h3 {font-family:cabin,sans-serif;position:relative;font-size:16px;font-weight:700;color:#262626;margin:0;}
