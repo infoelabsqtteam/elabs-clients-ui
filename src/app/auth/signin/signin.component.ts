@@ -4,6 +4,7 @@ import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 
 
@@ -24,7 +25,8 @@ export class SigninComponent implements OnInit {
   constructor(
     private router: Router,
     private authService:AuthService,
-    private envService:EnvService
+    private envService:EnvService,
+    private storageService:StorageService
     ) {
       this.pageloded();
   }
@@ -46,7 +48,7 @@ export class SigninComponent implements OnInit {
     const value = this.signInForm.getRawValue();
     let userId = value.userId;
     const password = value.password;
-    if(this.envService.getVerifyType() == "mobile"){
+    if(this.storageService.getVerifyType() == "mobile"){
       userId =  value.userId;
     }else{
       userId =  value.userId;
@@ -62,8 +64,8 @@ export class SigninComponent implements OnInit {
 
 
   pageloded(){
-    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-    this.template = this.envService.getTemplateName();
+    this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
+    this.template = this.storageService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
   }
 

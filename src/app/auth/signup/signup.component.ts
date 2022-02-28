@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 import { CustomvalidationService } from '../../services/customvalidation/customvalidation.service';
 
 @Component({
@@ -28,7 +29,8 @@ export class SignupComponent implements OnInit {
     private authService:AuthService,
     private dataShareService:DataShareService,
     private envService:EnvService,
-    private customValidationService: CustomvalidationService
+    private customValidationService: CustomvalidationService,
+    private storageService:StorageService
     ) {
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
@@ -65,7 +67,7 @@ export class SignupComponent implements OnInit {
     const hostName = this.envService.getHostName('origin');
     const domain = hostName + "/#/verify";
     let userId = "";
-    if(this.envService.getVerifyType() == "mobile"){
+    if(this.storageService.getVerifyType() == "mobile"){
       userId = mobile;
     }else{
       userId = email;
@@ -94,8 +96,8 @@ export class SignupComponent implements OnInit {
     }
   }
   pageloded(){
-    this.logoPath = this.envService.getLogoPath() + "logo-signin.png";
-    this.template = this.envService.getTemplateName();
+    this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
+    this.template = this.storageService.getTemplateName();
     this.title = this.envService.getHostKeyValue('title');
   }
   showpassword() {

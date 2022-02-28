@@ -29,10 +29,25 @@ export class StorageService {
   refreshTokenAge:any=2505600000 //refresh token age 29 days
   appName:any = environment.appName;
   packDetails: any = {};
+
+  HOST_NAME : string = 'HOST_NAME';
+  PROJECT_FOLDER_NAME: string = 'PROJECT_FOLDER_NAME';
+  TEMP_NAME:string = "TEMP_NAME";
+  TEMP_THEME:string = "TEMP_THEME";
+  PAGE_TITLE:string = "PAGE_TITLE";
+  VERIFY_TYPE:string = "VERIFY_TYPE";
+  MODULE:string = "MODULE";
   
   
   
   constructor(private http: HttpClient) { }
+
+  setModule(module:string){
+    localStorage.setItem("MODULE",module);
+  }
+  getModule(){
+    return localStorage.getItem('MODULE');
+  }
 
   setAppId(appId:string){
     localStorage.setItem('appId', appId);
@@ -46,6 +61,7 @@ export class StorageService {
       return localStorage.getItem('appId')
     }
   }
+
   setExpiresIn(expiry: any){
     let expiryTime = (expiry - 300)*1000
     localStorage.setItem(this.EXPIRY_IN, JSON.stringify(expiryTime));
@@ -504,6 +520,54 @@ export class StorageService {
         this.packDetails.unit = 'Strip(s)';
     }
     return this.packDetails;
+  }
+
+  setHostNameDinamically(host:string){
+    localStorage.setItem(this.HOST_NAME, host);
+  }
+
+  getHostNameDinamically(){
+    return localStorage.getItem(this.HOST_NAME);
+  }
+
+  setLogoPath(path:string){
+    localStorage.setItem(this.PROJECT_FOLDER_NAME, path);
+  }
+
+  getLogoPath(){
+    return localStorage.getItem(this.PROJECT_FOLDER_NAME);
+  }
+
+
+  setPageTitle(title:string){
+    localStorage.setItem(this.PAGE_TITLE, title);
+  }
+
+  getPageTitle(){
+    return localStorage.getItem(this.PAGE_TITLE);
+  }
+
+  setVerifyType(type){
+    localStorage.setItem(this.VERIFY_TYPE, type);
+  }
+  getVerifyType(){
+    return localStorage.getItem(this.VERIFY_TYPE);
+  }
+
+
+  setPageTheme(theme:string){
+    localStorage.setItem(this.TEMP_THEME, theme);
+  }
+
+  getPageThmem(){
+    return localStorage.getItem(this.TEMP_THEME);
+  }
+  setTempName(temp){
+    localStorage.setItem(this.TEMP_NAME,temp);
+  }
+  getTemplateName(){
+    const template:string=localStorage.getItem(this.TEMP_NAME);
+    return template;
   }
 
 
