@@ -18,7 +18,7 @@
                 <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover">
                     <thead>
                         <tr>
-                            <th *ngIf="grid_row_seelction" class="text-center">
+                            <th *ngIf="grid_row_selection" class="text-center">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
                             <th *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="heading" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
@@ -28,7 +28,7 @@
 
 
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
-                            <td class="text-center" *ngIf="grid_row_seelction">
+                            <td class="text-center" *ngIf="grid_row_selection">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
                                   <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected"> </mat-checkbox>
                                   <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
@@ -82,7 +82,7 @@
                 </table>
                 <table *ngIf="field.type == 'grid_selection_vertical'" class="table-bordered table-striped table-hover">
                     <tbody>
-                    <tr>
+                    <tr *ngIf="grid_row_selection">
                         <td *ngIf="selectGridData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></td>
                         <td *ngFor="let data of gridData|filter:data; let i = index" class="text-center" >
                             <mat-checkbox color="primary" (click)="$event.stopPropagation()"(change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected">

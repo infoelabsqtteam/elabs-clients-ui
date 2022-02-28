@@ -21,7 +21,7 @@ export class GridSelectionModalComponent implements OnInit {
   listOfGridFieldName:any =[]; 
   field:any={};
   editeMode:boolean=false;
-  grid_row_seelction:boolean = false;
+  grid_row_selection:boolean = false;
   grid_row_refresh_icon:boolean = false;
   data:any='';
   staticDataSubscriber;
@@ -229,9 +229,9 @@ export class GridSelectionModalComponent implements OnInit {
       this.notificationService.notify("bg-danger","Grid Columns are not available In This Field.")
     }
     if(this.field && this.field.grid_row_selection){
-      this.grid_row_seelction = true;
+      this.grid_row_selection = true;
     }else{
-      this.grid_row_seelction = false;
+      this.grid_row_selection = false;
     }
     if(this.field && this.field.grid_row_refresh_icon){
       this.grid_row_refresh_icon = true;
@@ -242,7 +242,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
   selectGridData(){
     this.selectedData = [];
-    if(this.grid_row_seelction == false){
+    if(this.grid_row_selection == false){
       this.selectedData = [...this.gridData];
     }
     else{
