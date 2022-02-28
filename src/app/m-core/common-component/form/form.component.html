@@ -350,13 +350,13 @@
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
-                                <div class="grid-selection-buttons">                            
+                                <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object_with_popup'">                            
                                     <div class="grid-selection-buttons" *ngIf="tableField.type == 'list_of_fields' && !tableField.add_list_field && tableField.add_list_field != 'add'">
                                         <button class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.type != 'list_of_fields'">
+                            <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.type != 'list_of_fields' && tableField.datatype != 'list_of_object_with_popup'">
                                 <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
                                     <div *ngIf="fields.type == 'text'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
