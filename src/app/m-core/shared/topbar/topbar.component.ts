@@ -33,35 +33,17 @@ export class TopbarComponent implements OnInit, OnChanges {
   public userFirstLetter: any;
   gitVersionSubscription:any;
   gitVersion: any;
-  gitbranch: any;
-  gitbuild: any;
-  gitnumber: any;
-  gitunique: any;
-  gittime: any;
-  gitemail: any;
-  gitname: any;
-  gitcount: any;
-  gitTagName: any;
-  gitId: any;
-  gitAbbrev: any;
-  gitdescribe: any;
-  gitDescribeShort: any;
-  gitmessage: any;
-  gitSortMsg: any;
-  gitCommitTime: any;
-  gitCommitEmail: any;
-  gitCommitUser: any;
-  gitdirty: any;
-  gitahead: any;
-  gitbehind: any;
-  gitOriginUrl: any;
-  gittags: any;
-  gitCommitCount: any;
+  
 
   header2 = true;
   @HostListener('window:keyup.alt.o') onCtrlO(){
       this.shortcutinfo();
   }
+
+  @HostListener('window:keyup.alt.control.c') onCtrlChart(){
+    this.chartModel();
+  }
+
 
   // tslint:disable-next-line: max-line-length
   constructor(
@@ -82,79 +64,6 @@ export class TopbarComponent implements OnInit, OnChanges {
       if(data && data['git.build.version']){
         this.gitVersion = data['git.build.version'];
       }
-      if(data && data['git.branch']){
-        this.gitbranch = data['git.branch'];
-      }
-      if(data && data['git.build.host']){
-        this.gitbuild = data['git.build.host'];
-      }
-      if(data && data['git.build.number']){
-        this.gitnumber = data['git.build.number'];
-      }
-      if(data && data['git.build.number.unique']){
-        this.gitunique = data['git.build.number.unique'];
-      }
-      if(data && data['git.build.time']){
-        this.gittime = data['git.build.time'];
-      }
-      if(data && data['git.build.user.email']){
-        this.gitemail = data['git.build.user.email'];
-      }
-      if(data && data['git.build.user.name']){
-        this.gitname = data['git.build.user.name'];
-      }
-      if(data && data['git.closest.tag.commit.count']){
-        this.gitcount = data['git.closest.tag.commit.count'];
-      }
-      if(data && data['git.closest.tag.name']){
-        this.gitTagName = data['git.closest.tag.name'];
-      }
-      if(data && data['git.commit.id']){
-        this.gitId = data['git.commit.id'];
-      }
-      if(data && data['git.commit.id.abbrev']){
-        this.gitAbbrev = data['git.commit.id.abbrev'];
-      }
-      if(data && data['git.commit.id.describe']){
-        this.gitdescribe = data['git.commit.id.describe'];
-      }
-      if(data && data['git.commit.id.describe-short']){
-        this.gitDescribeShort = data['git.commit.id.describe-short'];
-      }
-      if(data && data['git.commit.message.full']){
-        this.gitmessage = data['git.commit.message.full'];
-      }
-      if(data && data['git.commit.message.short']){
-        this.gitSortMsg = data['git.commit.message.short'];
-      }
-      if(data && data['git.commit.time']){
-        this.gitCommitTime = data['git.commit.time'];
-      }
-      if(data && data['git.commit.user.email']){
-        this.gitCommitEmail = data['git.commit.user.email'];
-      }
-      if(data && data['git.commit.user.name']){
-        this.gitCommitUser = data['git.commit.user.name'];
-      }
-      if(data && data['git.dirty']){
-        this.gitdirty = data['git.dirty'];
-      }
-      if(data && data['git.local.branch.ahead']){
-        this.gitahead = data['git.local.branch.ahead'];
-      }
-      if(data && data['git.local.branch.behind']){
-        this.gitbehind = data['git.local.branch.behind'];
-      }
-      if(data && data['git.remote.origin.url']){
-        this.gitOriginUrl = data['git.remote.origin.url'];
-      }
-      if(data && data['git.tags']){
-        this.gittags = data['git.tags'];
-      }
-      if(data && data['git.total.commit.count']){
-        this.gitCommitCount = data['git.total.commit.count'];
-      }
-
     })
 
 
@@ -288,5 +197,8 @@ goToVdr(){
   }
   chartModel() {
     this.modelService.open('chart_model',{})
+  }
+  gitInfo() {
+    this.modelService.open('git_version',{})
   }
 }

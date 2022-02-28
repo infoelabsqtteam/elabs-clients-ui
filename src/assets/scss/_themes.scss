@@ -15,7 +15,7 @@
 .bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;
   &:hover {background:$buttonHovercolor !important;transition:all 1s;}
 }
-.chartbody {max-height:230px;min-height:230px !important;overflow-y:scroll;}
+.chartbody {max-height:250px;min-height:250px !important;overflow-y:scroll;}
 .optiondropdown {margin:30px 10px 0;min-width:100% !important;}
 .filteroption {margin:30px 30px 0;}
 .dropdownmenu {margin-top:15px;min-height:0px;
@@ -131,9 +131,18 @@
   .mat-form-field-appearance-standard .mat-form-field-flex {padding-top:0;}
   .mat-form-field-infix {padding:0.4em 0;}
   .mat-form-field-label {font-size:13px;}
-
-
-  
 }
+.uploadimg {width:120px;height:120px;object-fit:cover;}
 .configdropdown {margin-top:25px !important;}
 .auto-populate-text-primary .mat-input-element,.auto-populate-text-primary .mat-select-value,.auto-populate-text-primary .mat-select-disabled,.auto-populate-text-primary .mat-input-disabled,.auto-populate-text-primary .mat-autocomplete-trigger,.auto-populate-text-primary .mat-form-field-autofill-control,.auto-populate-text-primary .ng-untouched,.auto-populate-text-primary .ng-pristine,.auto-populate-text-primary .cdk-text-field-autofill-monitored,.auto-populate-text-primary s.mat-input-element:disabled{color:blue!important;}
+.gitversionmodel {line-height:25px;
+  .table-responsive {max-height:500px;font-family:"Roboto Condensed", sans-serif;font-weight:500;}
+}
+.angular-editor-wrapper {
+  ul {padding:0 10px;
+    li {list-style:disc;}
+  }
+  ol {padding:0 10px;
+    li {list-style:number;}
+  }
+}

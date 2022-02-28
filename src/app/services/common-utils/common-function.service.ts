@@ -159,7 +159,7 @@ export class CommonFunctionService {
       "value": params,
       "log": this.storageService.getUserLog(),
       "crList": [],
-      "module": this.storageService.getAppId(),
+      "module": this.storageService.getModule(),
       "tab": tab
     }
     if(data_template){
@@ -323,18 +323,26 @@ export class CommonFunctionService {
           } else {
             return false;
           }
+          case 'nin':
+            if (!(condition[2].split(":")).includes(setValue)) {
+              return true;
+            } else {
+              return false;
+            }
+      
+       
         case 'gte':
           return parseFloat(setValue) >= parseFloat(condition[2]);
         case 'lte':
           return parseFloat(setValue) <= parseFloat(condition[2]);
         case 'exists':
-          if (setValue != null && setValue != undefined && setValue != '') {
+          if (setValue != null && setValue != undefined && setValue != '' && setValue != 'null') {
             return true;
           } else {
             return false;
           }
         case 'notexist':
-          if (setValue == null || setValue == undefined || setValue == '') {
+          if (setValue == null || setValue == undefined || setValue == '' || setValue == 'null') {
             return true;
           } else {
             return false;
@@ -407,6 +415,23 @@ export class CommonFunctionService {
               }
             }
             break;
+            case "number":
+              if(formValue && formValue[element.field_name] != ''){              
+                if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+                  element.api_params_criteria.forEach(cri => {
+                    criteria.push(cri)
+                  });
+                }else{
+                  filterList.push(
+                    {
+                      "fName": element.field_name,
+                      "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                      "operator": "eq"
+                    }
+                  )
+                }
+              }
+              break;
           case "typeahead":
             if(formValue && formValue[element.field_name] != ''){ 
               filterList.push(
@@ -428,6 +453,23 @@ export class CommonFunctionService {
                 filterList.push(
                   {
                     "fName": element.field_name,
+                    "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                    "operator": "stwic"
+                  }
+                )
+              }
+            }
+            break;
+            case "reference_names":
+            if(formValue && formValue[element.field_name] != ''){              
+              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+                element.api_params_criteria.forEach(cri => {
+                  criteria.push(cri)
+                });
+              }else{
+                filterList.push(
+                  {
+                    "fName": element.field_name+".name",
                     "fValue": this.getddnDisplayVal(formValue[element.field_name]),
                     "operator": "stwic"
                   }
@@ -747,11 +789,26 @@ export class CommonFunctionService {
         }
 
       case "color":
-        
+        break;
         case "pattern":
           if(object != null){
             return this.getConvertedString(object,field.field_name);
           }
+
+          case "reference_names":
+            if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
+              let name = '';
+              for(let i=0 ;i<value.length; i++){
+                if(this.coreFunctionService.isNotBlank(value[i]['name'])){
+                  name = name+', '+value[i]['name'];
+                }
+              }
+              if(name.length > 1){
+                name = name.substring(2);
+              }
+              return name;
+            }
+          
 
 
       default: return value;
@@ -783,18 +840,21 @@ export class CommonFunctionService {
     }
   }
   getTemData(tempName) {
-    const getTemplates = {
-      crList: [{
-        "fName": "name",
-        "fValue": tempName,
-        "operator": "eq"
-      }],
-      key2: this.storageService.getAppId(),
-      refCode: this.getRefcode(),
-      log: this.storageService.getUserLog(),
-      value: "form_template"
-    }
-    return getTemplates;
+    const params = "form_template";
+    const criteria = ["name;eq;"+tempName+";STATIC"];
+    const payload = this.getPaylodWithCriteria(params,'',criteria,{});
+    // const getTemplates = {
+    //   crList: [{
+    //     "fName": "name",
+    //     "fValue": tempName,
+    //     "operator": "eq"
+    //   }],
+    //   key2: this.storageService.getAppId(),
+    //   refCode: this.getRefcode(),
+    //   log: this.storageService.getUserLog(),
+    //   value: "form_template"
+    // }
+    return payload;
   }
   sanitizeObject(tableFields, formValue, validatField,formValueWithCust?) {
     for (let index = 0; index < tableFields.length; index++) {
@@ -828,6 +888,9 @@ export class CommonFunctionService {
           case "number":
             if (!Number(formValue[element.field_name])) {
               formValue[element.field_name] = 0;
+            }
+            if(this.applicableForValidation(element) && formValue[element.field_name]<=0){
+              return {'msg':' ' +element.label + ' should be greater than 0. !!!'}
             }
             break
           default:
@@ -1405,23 +1468,12 @@ export class CommonFunctionService {
       calculate_on_field = 'items_list';
     }
     let	surcharge	=0;
-    let	igst_percent	=0;
-    let	gst_percent	=0;
-    let	sez_percent	=0;
     let	gross_amount	=0;
     let	discount_percent	=0;
     let	discount_amount	=0;
     let	taxable_amount	=0;
-    let	gst_amount	=0;
-    let	cgst_amount	=0;
-    let	sgst_amount	=0;
-    let	igst_amount	=0;
-    let	tax_amount	=0;
-    let	sez_amount	=0;
     let	net_amount	=0;
-    let	net_payble	=0;
-    
-    
+   
         if (this.coreFunctionService.isNotBlank(templateValue[calculate_on_field]) && templateValue[calculate_on_field].length > 0) {
           templateValue[calculate_on_field].forEach(element => {
             if(this.coreFunctionService.isNotBlank(element.total)){
@@ -1437,66 +1489,161 @@ export class CommonFunctionService {
             }
             if(this.coreFunctionService.isNotBlank(element.net_amount)){
               net_amount=net_amount+element.net_amount
+            }else{
+              net_amount=net_amount+element.total
             }
               taxable_amount=net_amount+surcharge;
           });
         }
-        let tax_type = templateValue['tax_type'];
-        let tax_percentage = 0;
-        if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
-          tax_percentage = templateValue.tax_percentage;
-        }
-         
-        if((tax_type==null || tax_type==undefined || tax_type=='NA') && tax_percentage==0)
-        {
-          net_payble = taxable_amount;
-        }
-        else
-        {
-          switch(tax_type){
-            case "GST" :
-             gst_amount = taxable_amount * tax_percentage/100;
-             gst_percent=tax_percentage;
-             cgst_amount = gst_amount/2;
-             sgst_amount = gst_amount/2;
-             net_payble = taxable_amount+gst_amount;
-             tax_amount=gst_amount;
-    
-              break;
-            case "IGST" :
-              igst_amount = taxable_amount * tax_percentage/100;
-              igst_percent=tax_percentage;
-              net_payble = taxable_amount+igst_amount;
-              tax_amount=igst_amount;
-            break;
-              default :  
-    
-        }
-        }
-          if(gross_amount>0){
-            discount_percent = this.getDecimalAmount(100*discount_amount/gross_amount);
-          }
-          let total ={};
-          total['surcharge'] = this.getDecimalAmount(surcharge);
-          total['igst_percent'] = this.getDecimalAmount(igst_percent);
-          total['gst_percent'] = this.getDecimalAmount(gst_percent);
-          total['sez_percent'] = this.getDecimalAmount(sez_percent);
-          total['gross_amount'] = this.getDecimalAmount(gross_amount);
-          total['discount_percent'] = this.getDecimalAmount(discount_percent);
-          total['discount_amount'] = this.getDecimalAmount(discount_amount);
-          total['taxable_amount'] = this.getDecimalAmount(taxable_amount);
-          total['gst_amount'] = this.getDecimalAmount(gst_amount);
-          total['cgst_amount'] = this.getDecimalAmount(cgst_amount);
-          total['sgst_amount'] = this.getDecimalAmount(sgst_amount);
-          total['igst_amount'] = this.getDecimalAmount(igst_amount);
-          total['tax_amount'] = this.getDecimalAmount(tax_amount);
-          total['sez_amount'] = this.getDecimalAmount(sez_amount);
-          total['net_amount'] = this.getDecimalAmount(net_amount);
-          total['net_payble'] = this.getDecimalAmount(net_payble);
-    
-          templateValue['total_amount'] = total;
-          return templateValue;
+        this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+         return templateValue;
       }
+
+
+update_invoice_total_on_custom_field(templateValue,lims_segment, field: any){
+    let total =templateValue['total_amount'];
+    let	surcharge	=total['surcharge'];
+    let	gross_amount	=total['gross_amount'];
+    let	discount_percent	=total['discount_percent'];
+    let	discount_amount=	total['discount_amount'];
+    let	taxable_amount=	total['taxable_amount'];
+    let	net_amount	=total['net_amount'];
+   
+ if(gross_amount){
+  switch(field.field_name){
+    case 'discount_percent': 
+          if(discount_percent!=0){
+            discount_amount = gross_amount*discount_percent/100;
+          }else{
+          discount_amount = 0;
+          }
+    break;
+    case 'surcharge': 
+    if(!surcharge){
+       surcharge = 0;
+    }
+break;
+    case 'discount_amount': 
+          if(discount_amount){   
+             discount_percent = discount_amount*100/gross_amount;
+          }else{
+            discount_percent=0;
+          }
+    break;
+ }
+}else{
+
+  discount_percent=0;
+  discount_amount=0;
+}
+
+  net_amount =gross_amount-discount_amount;
+  taxable_amount = gross_amount-discount_amount+surcharge;
+  this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+       
+  return templateValue;
+ }
+
+
+update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount){
+  let	gst_amount	=0;
+  let	cgst_amount	=0;
+  let	sgst_amount	=0;
+  let	igst_amount	=0;
+  let	tax_amount	=0;
+  let	sez_amount	=0;
+
+  let	net_payble	=0;
+  
+  let	igst_percent	=0;
+  let	gst_percent	=0;
+  let	sez_percent	=0;
+  let cgst_percent=0;
+  let sgst_percent=0;
+  let tax_percentage = 0;
+  let tax_type = templateValue['tax_type'];
+  
+  if(this.coreFunctionService.isNotBlank(templateValue.tax_percentage)){
+    tax_percentage = templateValue.tax_percentage;
+  }
+   
+  if((tax_type==null || tax_type==undefined || tax_type=='NA') && tax_percentage==0)
+  {
+    net_payble = taxable_amount;
+  }
+  else
+  {
+    switch(tax_type){
+      case "GST" :
+       gst_amount = taxable_amount * tax_percentage/100;
+       gst_percent=tax_percentage;
+       cgst_percent = gst_percent/2;
+       sgst_percent= gst_percent/2;
+       cgst_amount = gst_amount/2;
+       sgst_amount = gst_amount/2;
+       net_payble = taxable_amount+gst_amount;
+       tax_amount=gst_amount;
+       igst_amount=0;
+       igst_percent=0;
+
+        break;
+      case "IGST" :
+        igst_amount = taxable_amount * tax_percentage/100;
+        igst_percent=tax_percentage;
+        net_payble = taxable_amount+igst_amount;
+        tax_amount=igst_amount;
+        break;
+        default :  
+
+  }
+  }
+    if(gross_amount>0){
+      discount_percent = this.getDecimalAmount(100*discount_amount/gross_amount);
+    }
+    let total ={};
+    total['surcharge'] = this.getDecimalAmount(surcharge);
+    total['igst_percent'] = this.getDecimalAmount(igst_percent);
+    total['gst_percent'] = this.getDecimalAmount(gst_percent);
+    total['cgst_percent'] = this.getDecimalAmount(cgst_percent);
+    total['sgst_percent'] = this.getDecimalAmount(sgst_percent);
+    
+    total['sez_percent'] = this.getDecimalAmount(sez_percent);
+    total['gross_amount'] = this.getDecimalAmount(gross_amount);
+    total['discount_percent'] = this.getDecimalAmount(discount_percent);
+    total['discount_amount'] = this.getDecimalAmount(discount_amount);
+    total['taxable_amount'] = this.getDecimalAmount(taxable_amount);
+    total['gst_amount'] = this.getDecimalAmount(gst_amount);
+    total['cgst_amount'] = this.getDecimalAmount(cgst_amount);
+    total['sgst_amount'] = this.getDecimalAmount(sgst_amount);
+    total['igst_amount'] = this.getDecimalAmount(igst_amount);
+    total['tax_amount'] = this.getDecimalAmount(tax_amount);
+    total['sez_amount'] = this.getDecimalAmount(sez_amount);
+    total['net_amount'] = this.getDecimalAmount(net_amount);
+    total['net_payble'] = this.getDecimalAmount(net_payble);
+
+    templateValue['total_amount'] = total;
+    return templateValue;
+  
+}
+
+      calculate_po_row_item(templateValue,lims_segment, calculate_on_field: any){
+        var po_items = templateValue['po_items'];
+
+        var qty= po_items['qty'];
+        var cost= po_items['cost'];
+        if(qty && cost){ 
+          po_items['total'] = qty*cost;
+        }else{
+          po_items['total'] =0;
+        }
+        po_items['discount_amount'] =0;
+        po_items['net_amount'] = po_items['total'];
+        templateValue['po_items']=po_items;
+
+      return templateValue;
+       
+      }
+
 
   calculate_lims_invoice_with_po_items(templateValue,lims_segment, calculate_on_field: any){
     return this.calculate_lims_invoice(templateValue,lims_segment, 'po_items')
@@ -1884,7 +2031,7 @@ export class CommonFunctionService {
                   data['rate_per_injection'] = 0;
                 }
               let offeringRate=data['rate_per_injection']-dis_amt;
-              this.calculatePharamaParameterAmount(data, offeringRate, quantity);
+              this.calculatePharamaParameterAmount(data, offeringRate, quantity,incoming_field);
             }else{
               effectiveTotal = gross_amount-dis_amt;
                 net_amount =effectiveTotal;
@@ -2007,10 +2154,18 @@ export class CommonFunctionService {
   this.sanitizeParameterAmount(data);
   }
 
-  calculatePharamaParameterAmount(data, offer_rate, quantity,){
+  calculatePharamaParameterAmount(data, offer_rate, quantity,field_name?){
     let gross_amount =  this.calculateParameterAmtOnInjection(data,data["rate_per_injection"],quantity)
     let effectiveTotal = this.calculateParameterAmtOnInjection(data,offer_rate,quantity)
     let dis_amt = gross_amount-effectiveTotal;
+    switch (field_name){
+      case 'discount_amount':
+      effectiveTotal = gross_amount-data['discount_amount'];
+      dis_amt = data['discount_amount'];
+      break;
+      default:
+
+    }
     let discount_percent = 0;
     if(gross_amount > 0){
       discount_percent = (dis_amt/gross_amount)*100;

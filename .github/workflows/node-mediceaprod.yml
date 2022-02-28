@@ -5,7 +5,7 @@ name: Angular CI with Node - Prod
 
 on:
   push:
-    branches: [ prod ]
+    branches: [ medicea-prod ]
 
 jobs:
   build:
@@ -15,12 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    ########################### Elabs Aws - ###########################
-    - name: Configure AWS credentials
+    ########################### Medicea Aws - ###########################
+      # Medicea Aws
+    - name: Configure AWS credentials Medicea
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEDICEA }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEDICEA }}
         aws-region: ${{ secrets.REGION }}
         
     - name: Set up Node
@@ -41,23 +42,12 @@ jobs:
     - name: Building
       run: ng build --configuration=${{ secrets.ENVIRONMENT_PRODUCTION }}
      
-
-  # Deploy Qualitek Labs
-    - name: Clean up existing deployment - Qualitek Labs
-      run: aws s3 rm s3://lims.qualiteklab.com --recursive
-
-    - name: Upload data
-      run: aws s3 sync dist s3://lims.qualiteklab.com
-      
-    - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2DMYDKCSUDLCI --paths '/*'    
-
-# Deploy BBRS Qualitek Labs
-    - name: Clean up existing deployment - Qualitek BBSR Labs
-      run: aws s3 rm s3://bbsr-lims.qualiteklab.com --recursive
+  # Deploy Medicea App    
+    - name: Clean up existing deployment - Medicea App
+      run: aws s3 rm s3://app.medicea.in --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://bbsr-lims.qualiteklab.com
-      
+      run: aws s3 sync dist s3://app.medicea.in
+
     - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
+      run: aws cloudfront create-invalidation --distribution-id EQ8YH2PYATWGD --paths '/*'

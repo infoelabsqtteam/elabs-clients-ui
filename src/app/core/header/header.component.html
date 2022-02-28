@@ -55,10 +55,12 @@
         <li class="nav-item avatar mx-1">
           <button mat-icon-button [matMenuTriggerFor]="beforeMenu" ><img src="assets/img/profile.jpg" alt="" width="25px"></button>
           <mat-menu #beforeMenu="matMenu" xPosition="before" class="dropdownmenu">
-            <button mat-menu-item (click)="goToEditeProfile('profile')">My account</button>
-            <button mat-menu-item>Name: {{userName}}</button>
-            <button mat-menu-item>Email: {{userEmail}}</button>
-            <button mat-menu-item (click)="logOut()">Log out</button>
+            <button mat-menu-item><mat-icon class="mr-2">manage_accounts</mat-icon> My account</button>
+            <button mat-menu-item><mat-icon class="mr-2">person_outline</mat-icon> Name: {{userName}}</button>
+            <button mat-menu-item><mat-icon class="mr-2">alternate_email</mat-icon> Email: {{userEmail}}</button>
+            <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
+            <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>
+            <button mat-menu-item (click)="logOut()"><mat-icon class="mr-2">power_settings_new</mat-icon> Log out</button>
           </mat-menu>
         </li>
       </ul>
