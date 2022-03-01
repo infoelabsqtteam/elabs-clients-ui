@@ -356,7 +356,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.type != 'list_of_fields' && tableField.datatype != 'list_of_object_with_popup'">
+                            <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.datatype != 'list_of_object_with_popup'">
                                 <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
                                     <div *ngIf="fields.type == 'text'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -1453,6 +1453,7 @@
         <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formDeleteBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Delete</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formResetBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Reset</button>
+        <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="enableNextButton" (click)="nextForm()" [matTooltip]="'Next Form'" [matTooltipPosition]="'above'">Next</button>
     </div>
 </div>
 <app-confirm-modal id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
