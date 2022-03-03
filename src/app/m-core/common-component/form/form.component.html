@@ -892,7 +892,7 @@
                         </div>
                         <div *ngIf="tableField.type == 'label'">
                             <div class="row">
-                                <div class="col-lg-12"><div class="form-label">{{ tableField.label | titlecase}}</div></div>
+                                <div class="col-lg-12"><div class="form-label" [style.background-color]="tableField.background_color" [style.color]="tableField.color">{{ tableField.label | titlecase}}</div></div>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'button'">
