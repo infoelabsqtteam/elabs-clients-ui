@@ -117,7 +117,7 @@
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
-                                    readonly [id]="tableField._id+'_'+tableField.field_name">
+                                    readonly [id]="tableField._id+'_'+tableField.field_name" [format]="getTimeFormat(tableField)">
                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                                 <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
@@ -413,7 +413,7 @@
                                     <div *ngIf="fields.type == 'date'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [matDatepicker]="picker2" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput [matDatepicker]="picker2" [min]="fields.minDate" [max]="fields.maxDate"  [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                             <mat-datepicker #picker2 color="primary"></mat-datepicker>
                                         </mat-form-field>
@@ -421,7 +421,7 @@
                                     <div *ngIf="fields.type == 'time'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly>
+                                            <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly [format]="getTimeFormat(fields)">
                                             <ngx-material-timepicker #picker></ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
@@ -643,7 +643,7 @@
                                     </div>
                                     <div *ngIf="fields.type == 'label'">
                                         <div class="row">
-                                            <div class="col-lg-12"><div class="form-label">{{ fields.label | titlecase}}</div></div>
+                                            <div class="col-lg-12"><div class="form-label" [style.background-color]="fields.background_color" [style.color]="fields.color">{{ fields.label | titlecase}}</div></div>
                                         </div>
                                     </div>
                                 </div>

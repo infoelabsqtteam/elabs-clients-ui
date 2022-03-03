@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit,SimpleChange, ElementRef,NgZone, HostListener} from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
-import { DOCUMENT } from '@angular/common'; 
+import { DOCUMENT, DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common'; 
 import { StorageService } from '../../../services/storage/storage.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { PermissionService } from '../../../services/permission/permission.service';
@@ -255,6 +255,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   public fieldApiValMsg:string='';
   public nextFormData:any ={};
 
+  public style:string  = 'width: 100px, height: 100px, backgroundColor: cornflowerblue';
+
   staticDataSubscriber;
   gridDataSubscription;
   tempDataSubscription;
@@ -279,6 +281,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private router: Router,
     private routers: ActivatedRoute,
     @Inject(DOCUMENT) document,
+    private datePipe: DatePipe,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private apiService:ApiService,
@@ -776,6 +779,37 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, [], "list")
                         this.checkBoxFieldListValue.push(modifyData);
                         break;
+                      case "date":
+                        let currentYear = new Date().getFullYear();
+                        if(data.datatype == 'object'){
+                          this.minDate = new Date();
+                          if(data.etc_fields && data.etc_fields != null){
+                            if(data.etc_fields.minDate){
+                              if(data.etc_fields.minDate == '-1'){
+                                this.minDate = new Date(currentYear - 100, 0, 1);
+                              }else{
+                                this.minDate.setDate(new Date().getDate() - Number(data.etc_fields.minDate));
+                              }
+                            }
+                          }
+                          this.maxDate = new Date();
+                          if(data.etc_fields && data.etc_fields != null){
+                            if(data.etc_fields.maxDate){
+                              if(data.etc_fields.maxDate == '-1'){
+                                this.maxDate = new Date(currentYear + 1, 11, 31);
+                              }else{
+                                this.maxDate.setDate(new Date().getDate() + Number(data.etc_fields.maxDate));
+                              }
+                            }
+                          }
+                        }else{
+                          this.minDate = new Date(currentYear - 100, 0, 1);
+                          this.maxDate = new Date(currentYear + 1, 11, 31);
+                        }                  
+                        data['minDate'] = this.minDate
+                        data['maxDate'] = this.maxDate;
+                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
+                        break; 
                     
                       default:
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
@@ -2455,48 +2489,92 @@ case 'populate_fields_for_report_for_new_order_flow':
     let valueOfForm = {};
     if (this.updateMode || this.complete_object_payload_mode){      
       this.tableFields.forEach(element => {
-        if(element.type == 'stepper'){
-          element.list_of_fields.forEach(step => {
-            if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
-              step.list_of_fields.forEach(data => {
-                selectedRow[data.field_name] = formValue[step.field_name][data.field_name]
-                if(data.tree_view_object && data.tree_view_object.field_name != ""){                  
-                  const treeViewField = data.tree_view_object.field_name;
-                  selectedRow[treeViewField] = formValue[step.field_name][treeViewField]
-                }
-              });
-            }
-          });          
-        }else{
-          selectedRow[element.field_name] = formValue[element.field_name]
-        }
-        if(element.type == 'gmap'){
-          selectedRow['latitude'] = this.latitude;
-          selectedRow['longitude'] = this.longitude;
-          selectedRow['address'] = this.address;
+        switch (element.type) {
+          case 'stepper':
+            element.list_of_fields.forEach(step => {
+              if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
+                step.list_of_fields.forEach(data => {
+                  selectedRow[data.field_name] = formValue[step.field_name][data.field_name]
+                  if(data.tree_view_object && data.tree_view_object.field_name != ""){                  
+                    const treeViewField = data.tree_view_object.field_name;
+                    selectedRow[treeViewField] = formValue[step.field_name][treeViewField]
+                  }
+                });
+              }
+            });
+            break;
+          case 'group_of_fields':
+            element.list_of_fields.forEach(data => {
+              switch (data.type) {
+                case 'date':
+                  if(data && data.date_format && data.date_format != ''){
+                    selectedRow[element.field_name][data.field_name] = this.datePipe.transform(selectedRow[element.field_name][data.field_name],data.date_format);
+                  }            
+                  break;
+              
+                default:
+                  break;
+              }
+            });
+            break;
+          case 'gmap':
+            selectedRow['latitude'] = this.latitude;
+            selectedRow['longitude'] = this.longitude;
+            selectedRow['address'] = this.address;
+            break;
+          case 'date':
+            if(element && element.date_format && element.date_format != ''){
+              selectedRow[element.field_name] = this.datePipe.transform(selectedRow[element.field_name],element.date_format);
+            }            
+            break;
+          default:
+            selectedRow[element.field_name] = formValue[element.field_name];
+            break;
         }
       });
     }else{
       this.tableFields.forEach(element => {
-        if(element.type == 'stepper'){
-          element.list_of_fields.forEach(step => {
-            if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
-              step.list_of_fields.forEach(data => {
-                modifyFormValue[data.field_name] = formValue[step.field_name][data.field_name]
-                if(data.tree_view_object && data.tree_view_object.field_name != ""){                  
-                  const treeViewField = data.tree_view_object.field_name;
-                  modifyFormValue[treeViewField] = formValue[step.field_name][treeViewField]
-                }
-              });
-            }
-          });          
-        }else{
-          modifyFormValue = formValue;
-        }
-        if(element.type == 'gmap'){
-          modifyFormValue['latitude'] = this.latitude;
-          modifyFormValue['longitude'] = this.longitude;
-          modifyFormValue['address'] = this.address;
+        switch (element.type) {
+          case 'stepper':
+            element.list_of_fields.forEach(step => {
+              if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
+                step.list_of_fields.forEach(data => {
+                  modifyFormValue[data.field_name] = formValue[step.field_name][data.field_name]
+                  if(data.tree_view_object && data.tree_view_object.field_name != ""){                  
+                    const treeViewField = data.tree_view_object.field_name;
+                    modifyFormValue[treeViewField] = formValue[step.field_name][treeViewField]
+                  }
+                });
+              }
+            });
+            break;
+          case 'group_of_fields':
+            element.list_of_fields.forEach(data => {
+              switch (data.type) {
+                case 'date':
+                  if(data && data.date_format && data.date_format != ''){
+                    modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(modifyFormValue[element.field_name][data.field_name],data.date_format);
+                  }            
+                  break;
+              
+                default:
+                  break;
+              }
+            });
+            break;
+          case 'gmap':
+            modifyFormValue['latitude'] = this.latitude;
+            modifyFormValue['longitude'] = this.longitude;
+            modifyFormValue['address'] = this.address;
+            break;
+          case 'date':
+            if(element && element.date_format && element.date_format != ''){
+              modifyFormValue[element.field_name] = this.datePipe.transform(modifyFormValue[element.field_name],element.date_format);
+            }            
+            break;
+          default:
+            modifyFormValue = formValue;
+            break;
         }
       });
     }
@@ -4309,12 +4387,15 @@ case 'populate_fields_for_report_for_new_order_flow':
   
   storeFormDetails(parent_field:any,field:any,index?){
     let targetFieldName ={}
+    let updateMode =  this.updateMode;
     let formData = this.getFormValue(true);
     if(field && field.form_field_name){
       const nextFormReference = {
         '_id':this.nextFormData._id
       }
       formData[field.form_field_name] = nextFormReference;
+      targetFieldName = formData[field.field_name]
+      updateMode = true;
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
       targetFieldName[field.add_new_target_field] = this.lastTypeaheadTypeValue
@@ -4337,7 +4418,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       "parent_field":parent_field,
       "current_field":field,
       "next_form_data":targetFieldName,
-      "updateMode" : this.updateMode
+      "updateMode" : updateMode
     }
     if(field && field.type == "list_of_fields"){
       form['index'] = index;
@@ -4501,11 +4582,13 @@ case 'populate_fields_for_report_for_new_order_flow':
       const previousFormIndex = this.multipleFormCollection.length - 1;
       const previousFormData = this.multipleFormCollection[previousFormIndex];
       const previousFormField = previousFormData.current_field;
-      const targateFieldName = previousFormField.add_new_target_field;
       const formData = previousFormData.next_form_data;
-      const currentFormValue = this.getFormValue(true)
-      const currentTargetFieldValue = currentFormValue[targateFieldName]
-      formData[targateFieldName] = currentTargetFieldValue;
+      if(previousFormField && previousFormField.add_new_target_field){
+        const targateFieldName = previousFormField.add_new_target_field;          
+        const currentFormValue = this.getFormValue(true)
+        const currentTargetFieldValue = currentFormValue[targateFieldName]
+        formData[targateFieldName] = currentTargetFieldValue;
+      }      
       this.multipleFormCollection[previousFormIndex]['next_form_data'] = formData;
     }
   }
@@ -4594,5 +4677,15 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.enableNextButton = false;
     }    
   }
+  getTimeFormat(field){
+    if(field && field.time_format && field.time_format != ''){
+      return Number(field.time_format);
+    }else{
+      return Number('12');
+    }    
+  }
+  
+  
+  
 
 }
