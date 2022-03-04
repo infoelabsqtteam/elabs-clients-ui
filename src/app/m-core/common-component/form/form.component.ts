@@ -4268,8 +4268,9 @@ case 'populate_fields_for_report_for_new_order_flow':
                 value = object;
                 this.templateForm.controls[element.field_name].setValue(value)
               }else if(object == 0){
+                value = object;
                 this.templateForm.controls[element.field_name].setValue(value)
-            });
+             }
             break;            
             case "gmap":
                 if(formValue['longitude']){
