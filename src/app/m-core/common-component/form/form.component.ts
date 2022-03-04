@@ -653,6 +653,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }else if(this.tab.forms != null && this.tab.forms != undefined ){            
           this.forms = this.tab.forms;
           this.form = this.commonFunctionService.getForm(this.forms,this.formName)
+          if(this.formName == 'clone_object'){
+            this.form['api_params'] = "QTMP:CLONE_OBJECT";
+          }
           this.setForm();         
         }else{
           this.form = {};
@@ -4266,9 +4269,8 @@ case 'populate_fields_for_report_for_new_order_flow':
                 this.templateForm.controls[element.field_name].setValue(value)
               }else if(object == 0){
                 this.templateForm.controls[element.field_name].setValue(value)
-              }
-            
-              break;
+            });
+            break;            
             case "gmap":
                 if(formValue['longitude']){
                   this.longitude = formValue['longitude'];
