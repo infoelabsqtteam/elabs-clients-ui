@@ -53,12 +53,13 @@ jobs:
         aws-region: ${{ secrets.REGION }}
 
 
-  # Deploy Medicea Drugs    
-    - name: Clean up existing deployment - Medicea Drugs
-      run: aws s3 rm s3://drugs.medicea.in --recursive
+  # Deploy  Asc Group Sit
+    - name: Clean up existing deployment - Asc Group - Medicea
+      run: aws s3 rm s3://test.ascgroup.in --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://drugs.medicea.in
+      run: aws s3 sync dist s3://test.ascgroup.in
 
     - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2YW4AXN7CN5Y1 --paths '/*'
+      run: aws cloudfront create-invalidation --distribution-id E1U1RL73RJW4LA --paths '/*'
+
