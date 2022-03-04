@@ -11,6 +11,7 @@ import { OtpVarificationComponent } from './otp-varification/otp-varification.co
 import { CreatepwdComponent } from './createpwd/createpwd.component';
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
 import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
+import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { AngularCommonModule } from '../m-core/angular-common/angular-common.mod
         AdminComponent,
         ResetpwdComponent,
         OtpVarificationComponent,
-        CreatepwdComponent
+        CreatepwdComponent,
+        UnsubscribeComponent
     ],
     imports: [
         AuthRoutingModule,

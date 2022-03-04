@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
         }
         if (
           event.id === 1 &&
-          event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl")
+          event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/report-form")
         ) {
           this.redirectToHomePageWithStorage();
         }

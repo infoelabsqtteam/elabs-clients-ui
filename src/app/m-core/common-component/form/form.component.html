@@ -117,7 +117,7 @@
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
-                                    readonly [id]="tableField._id+'_'+tableField.field_name">
+                                    readonly [id]="tableField._id+'_'+tableField.field_name" [format]="getTimeFormat(tableField)">
                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                                 <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
@@ -348,10 +348,15 @@
 
                         </div>
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
-                            <div class="row">
-                                <div class="col-lg-12"><div class="form-label">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div></div>
+                            <div class="form-label d-flex justify-content-between">
+                                <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object_with_popup'">                            
+                                    <div class="grid-selection-buttons" *ngIf="tableField.type == 'list_of_fields' && !tableField.add_list_field && tableField.add_list_field != 'add'">
+                                        <button class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null">
+                            <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.datatype != 'list_of_object_with_popup'">
                                 <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
                                     <div *ngIf="fields.type == 'text'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -408,7 +413,7 @@
                                     <div *ngIf="fields.type == 'date'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [matDatepicker]="picker2" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput [matDatepicker]="picker2" [min]="fields.minDate" [max]="fields.maxDate"  [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                             <mat-datepicker #picker2 color="primary"></mat-datepicker>
                                         </mat-form-field>
@@ -416,7 +421,7 @@
                                     <div *ngIf="fields.type == 'time'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly>
+                                            <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly [format]="getTimeFormat(fields)">
                                             <ngx-material-timepicker #picker></ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
@@ -636,6 +641,11 @@
                                             </mat-radio-group>
                                         </div>
                                     </div>
+                                    <div *ngIf="fields.type == 'label'">
+                                        <div class="row">
+                                            <div class="col-lg-12"><div class="form-label" [style.background-color]="fields.background_color" [style.color]="fields.color">{{ fields.label | titlecase}}</div></div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3'" *ngIf="tableField.type == 'list_of_fields'">
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="setValue('',tableField,false)"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
@@ -653,8 +663,8 @@
                                         </thead>
                                         <tbody>
                                             <tr *ngFor="let listOfField of custmizedFormValue[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
-                                                <td class="px-1" style="text-align: center">
-                                                    <a mdbBtn floating="true" size="sm" (click)="editListOfFiedls(listOfField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                                <td class="px-1" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">
+                                                    <a  mdbBtn floating="true" size="sm" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,listOfField,'delete')" mdbWavesEffect class="grid-button btn-danger text-white" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                                                 </td>
                                                 <td *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(item) ? 'd-none' : ''" (click)="showListOfFieldData(listOfField, item)" [innerHtml]="showListFieldValue(listOfField, item)"></td>                                                
@@ -882,7 +892,7 @@
                         </div>
                         <div *ngIf="tableField.type == 'label'">
                             <div class="row">
-                                <div class="col-lg-12"><div class="form-label">{{ tableField.label | titlecase}}</div></div>
+                                <div class="col-lg-12"><div class="form-label" [style.background-color]="tableField.background_color" [style.color]="tableField.color">{{ tableField.label | titlecase}}</div></div>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'button'">
@@ -962,48 +972,6 @@
                                 </mat-form-field>
                             </div>
                         </div>
-
-
-
-                        <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_dropdown'">
-                            <div class="col-md-2 labeltitle"><strong>{{ tableField.label | titlecase}} :</strong></div>
-                            <div class="col-md-4 labelfiled">
-                                <mat-form-field class="w-100" *ngIf="tableField.datatype == 'object'" disableOptionCentering panelClass="configdropdown">
-                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
-                                        <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <mat-form-field class="w-100" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
-                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
-                                        <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
-                                    </mat-select>
-                                    <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <mat-form-field class="w-100" *ngIf="tableField.datatype == 'key_value'">
-                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
-                                        <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-
-
-
-
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_file'">
                             <div class="col-md-2 labeltitle"><strong>{{tableField.label}} :</strong></div>
                             <div class="col-md-4 labelfiled">
@@ -1027,17 +995,12 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_checkbox'">
                             <div class="col-md-2 labeltitle"><strong>{{ tableField.label | titlecase}} :</strong></div>
                             <div class="col-md-4 labelfiled">
                                 <mat-checkbox color="primary" [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)">{{ tableField.label | titlecase}}</mat-checkbox>
                             </div>
                         </div>
-
-
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_radio'">
                             <div class="col-md-2 labeltitle"><strong>{{ tableField.label | titlecase}} :</strong></div>
                             <div class="col-md-4 labelfiled">
@@ -1054,8 +1017,164 @@
                               
                             </div>
                         </div>
-
-
+                        <div class="d-flex align-items-center labelwithfiled datewithtime" *ngIf="tableField.type == 'date_with_time'">
+                            <div class="labeltitle mr-4">{{ tableField.label | titlecase}} :</div>
+                            <div class="labelfiled dateinfo">
+                                <mat-form-field appearance="fill" class="w-100 m-0">
+                                    <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc(tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2 color="primary" ></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="labelfiled timeinfo ml-3">
+                                <mat-form-field appearance="fill" class="w-100 m-0">
+                                    <mat-label>Time</mat-label>
+                                    <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
+                                        readonly [id]="tableField._id+'_'+tableField.field_name">
+                                    <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_dropdown'">
+                            <div class="labeltitle mr-4">{{ tableField.label | titlecase}} :</div>
+                            <div class="labelfiled">
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'object'" disableOptionCentering panelClass="configdropdown">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'key_value'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="labelwithfiled" *ngIf="tableField.type == 'schedule_dropdown'">
+                            <div class="labelfiled">
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'object'" disableOptionCentering panelClass="configdropdown">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'key_value'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center" *ngIf="tableField.type == 'schedulenumber'">
+                            <div class="labeltitle mr-4">{{ tableField.label | titlecase}} :</div>
+                            <div class="labelfiled mr-2">
+                                <mat-form-field appearance="fill" class="w-100 m-0">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <input matInput type="number" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc(tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name">
+                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" > 
+                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name">          
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="" *ngIf="tableField.type == 'monthdropdown'">
+                            <div class="labelfiled">
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'object'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="schedulemenu">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        </mat-option>
+                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="schedulemenu">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        </mat-option>
+                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="schedulemenu">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="schedulemenu">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'key_value'">
+                                    <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                    <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="schedulemenu">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                        <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="labelwithfiled daybutton" *ngIf="tableField.type == 'day_radio'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-12 px-0">
+                                    <div class="form-label px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                </div>
+                            </div>
+                            <div class="row m-0 w-100" *ngIf="tableField.datatype == 'key_value'">
+                                <mat-radio-group [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)" >
+                                    <mat-radio-button color="primary" class="p-2" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}} </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <div class="row m-0 w-100" *ngIf="tableField.datatype != 'key_value'">
+                                <mat-radio-group [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc(tableField)">
+                                    <mat-radio-button color="primary" class="p-2" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}} </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div *ngIf="tableField.type == 'scheduletext'">
+                            <mat-form-field appearance="fill" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
+	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                            </mat-form-field>
+                        </div>
 
 
 
@@ -1448,6 +1567,7 @@
         <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formDeleteBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Delete</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formResetBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Reset</button>
+        <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="enableNextButton" (click)="nextForm()" [matTooltip]="'Next Form'" [matTooltipPosition]="'above'">Next</button>
     </div>
 </div>
 <app-confirm-modal id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
