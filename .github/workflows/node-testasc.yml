@@ -4,7 +4,7 @@
 name: Angular CI with Node - SIT
 on:
   push:
-    branches: [ testsit ]
+    branches: [ testasc ]
 
 jobs:
   build:
