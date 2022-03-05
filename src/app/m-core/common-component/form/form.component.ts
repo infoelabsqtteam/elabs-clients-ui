@@ -560,6 +560,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.disableIfFieldList=[];
     this.canUpdateIfFieldList=[];
     this.custmizedFormValue = {};
+    this.dataListForUpload = {};
+    this.checkBoxFieldListValue = [];
     this.selectedRow = {}
     this.formFieldButtons=[];
     this.list_of_fields = [];
