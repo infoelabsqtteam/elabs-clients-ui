@@ -264,6 +264,9 @@
                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')">
                                     <mdb-icon fas icon="plus"></mdb-icon>
                                 </button>
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !isEnable('',tableField.field_name, 'add_button')"  (click)="updateAddNewField('',tableField)" >
+                                    <mdb-icon fas icon="edit"></mdb-icon>
+                                </button>
                             </div>
                             <div class="w-100 position-relative" *ngIf="tableField.datatype == 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
@@ -478,6 +481,9 @@
                                             </mat-form-field>
                                             <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
                                                 <mdb-icon fas icon="plus"></mdb-icon>
+                                            </button>
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="fields.add_new_enabled && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !isEnable(tableField.field_name,fields.field_name, 'add_button')"  (click)="updateAddNewField(tableField,fields)">
+                                                <mdb-icon fas icon="edit"></mdb-icon>
                                             </button>
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">

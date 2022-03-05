@@ -171,7 +171,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   bulkupdates:boolean = false;
 
 
-  
+  updateAddNew:boolean = false;
   hide = true;
   isLinear:boolean=true;
   isStepper:boolean = false;
@@ -626,6 +626,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
         this.elements = gridData.data
+        if(this.updateAddNew){
+          this.updateAddNew=false;
+          this.editedRowData(this.elements[0]);
+        }
       }
     }
   }
@@ -4685,6 +4689,28 @@ case 'populate_fields_for_report_for_new_order_flow':
     }    
   }
   
+  updateAddNewField(parent,child){
+    this.storeFormDetails(parent,child);
+    const formValue = this.templateForm.getRawValue();
+    let fieldValue:any = '';
+    if(parent != ''){
+      fieldValue = formValue[parent.field_name][child.field_name];
+    }else{
+      fieldValue = formValue[child.field_name];
+    }    
+    if(fieldValue && fieldValue._id && fieldValue._id != ''){
+      console.log(fieldValue._id);
+      const params = child.api_params;
+      if(params && params != ''){
+        const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
+        const crList = this.commonFunctionService.getCriteriaList(criteria,{});
+        const payload = this.commonFunctionService.getDataForGrid(1,{},{'name':params},[],{},'');
+        payload.data.crList = crList;
+        this.apiService.getGridData(payload);
+      }          
+      this.updateAddNew = true;
+    }
+  }
   
   
 
