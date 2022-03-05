@@ -895,7 +895,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
       }
       delete data.log;
-      delete data.key1;
+      delete data.key;
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
       const value = this.filterForm.getRawValue();

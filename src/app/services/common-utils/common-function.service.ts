@@ -154,7 +154,7 @@ export class CommonFunctionService {
       tab = tabName.name;
     }
     let staticModal = {
-      "key1": this.getRefcode(),
+      "key": this.getRefcode(),
       "key2": this.storageService.getAppId(),
       "value": params,
       "log": this.storageService.getUserLog(),
@@ -692,7 +692,7 @@ export class CommonFunctionService {
 
   getValueForGrid(field, object) {
     let value = '';
-    if (field.field_name != undefined && field.field_name != null && field.field_name != '') {
+    if (field && field.field_name != undefined && field.field_name != null && field.field_name != '') {
       value = this.getObjectValue(field.field_name, object)
     }
     if (!field.type) field.type = "Text";
@@ -2664,6 +2664,11 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
   }
   return getFilterData;
 }
+setPageNumverAndSize(payload,page,){
+  payload['pageNo'] = page - 1;
+  payload['pageSize'] = this.itemNumOfGrid; 
+  return payload;
+}
 getPage(page: number,tab,currentMenu,headElements,filterForm,selectContact) {  
  return this.getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact);
 }
@@ -2674,10 +2679,12 @@ isGridFieldExist(tab,fieldName){
   return false;
 }
 
-getIndexInArrayById(array,id){
+getIndexInArrayById(array,id,key?){
   let index = -1;
   array.forEach((element,i) => {
-    if(element._id == id){
+    if(element._id && element._id == id){
+      index = i;
+    }else if(element[key] && element[key] == id){
       index = i;
     }
   });
@@ -2704,5 +2711,51 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return data;
   }
 
+  checkDataAlreadyAddedInListOrNot(primary_key,incomingData,alreadyDataAddedlist){
+    if(alreadyDataAddedlist == undefined){
+      alreadyDataAddedlist = [];
+    }
+    let alreadyExist = "false";
+    if(typeof incomingData == 'object'){
+      alreadyDataAddedlist.forEach(element => {
+        if(element._id && element._id == incomingData._id){
+          alreadyExist =  "true";
+        }else if(element[primary_key] && element[primary_key] == incomingData){
+          alreadyExist =  "true";
+        }
+      });
+    }
+    else if(typeof incomingData == 'string'){
+      alreadyDataAddedlist.forEach(element => {
+        if(typeof element == 'string'){
+          if(element == incomingData){
+            alreadyExist =  "true";
+          }
+        }else{
+          if(element[primary_key] == incomingData){
+            alreadyExist =  "true";
+          }
+        }
+      
+      });
+    }else{
+      alreadyExist =  "false";
+    }
+    if(alreadyExist == "true"){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
+  getOperatorSymbol(operator){
+    switch (operator) {
+      case 'eq':
+        return '=';
+      default:
+        return '=';
+    }
+  }
 
 }

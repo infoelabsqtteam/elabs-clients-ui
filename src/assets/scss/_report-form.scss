@@ -32,17 +32,22 @@
 
 
 .report-form {
-  .reportview {background:#fff;min-height:200px;border-radius:5px;padding:10px;box-shadow:0 0 20px #dedede;}
-  select {width:100%;height:25px;font-size:12px;background:none;border:1px solid #ddd;color:#555;border-radius:5px;padding:0 5px;margin:5px 0;}
-  input {width:100%;height:25px;font-size:12px;background:none;border:1px solid #ddd;color:#555;border-radius:5px;padding:0 5px;margin:5px 0;}
-  input::placeholder{color:#555;}
-  .rpt-btn {color:#555;min-width:auto;line-height:30px;background:#f8f8f8;}
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {transform:translateY(-12px) scale(0.75);}
+  .mat-select {font-size:13px;}
+  .reportview {background:#f5f5f5;min-height:200px;border-radius:5px;padding:10px;}
   button:focus {outline:none;border:none;}
   .chipsdata {min-height:140px;}
-  .chips {padding:5px 25px 5px 15px;position:relative;background:rgb(170 170 170 / 20%);margin:3px;border-radius:25px;font-size:11px;color:#555;cursor:pointer;
-    .mat-icon {position:absolute;right:-5px;top:5px;font-size:12px;opacity:0.7;}
-  }
+  .chips {padding:5px 25px 5px 15px;position:relative;background:rgb(170 170 170 / 20%);margin:3px;border-radius:25px;font-size:11px;color:#555;cursor:pointer;display:inline-block;overflow:hidden;
+    .mat-icon.del {position:absolute;right:-5px;top:8px;font-size:12px;opacity:0.7;}
+    .mat-icon.edit {position:relative;font-size:12px;opacity:0.7;text-align:center;width:auto;height:auto;margin:0px 5px 0 15px;vertical-align:middle;}
+}
   .reportbtn {border:1px solid #ddd;color:#555;
     &:focus {border:1px solid #ddd;}
+  }
+  .table th, .table td {padding:2px 0.75rem;vertical-align:middle;}
+}
+.reportformgrid {
+  .mat-icon-button {width:30px;height:30px;line-height:30px;
+    mat-icon {font-size:15px;}
   }
 }

@@ -61,5 +61,6 @@ export class McoreComponent implements OnInit {
   gitModalResponce(responce){
     console.log(responce);
   }
+ 
 
 }
