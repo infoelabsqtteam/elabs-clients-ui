@@ -77,8 +77,7 @@ export class AppComponent implements OnInit {
    }
 
   
-  ngOnInit() {  
-    this.themeName = this.storageService.getPageThmem();
+  ngOnInit() {     
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
       //   console.log("Navigation Start :-"+event.url)
@@ -98,7 +97,6 @@ export class AppComponent implements OnInit {
         }
       }      
    })
-
    
   
 
@@ -174,5 +172,6 @@ export class AppComponent implements OnInit {
     this.favIcon.href = this.storageService.getLogoPath() + "favicon.ico";
     this.titleService.setTitle(this.storageService.getPageTitle());
     this.envService.setDinamicallyHost();
+    this.themeName = this.storageService.getPageThmem();
   }
 }
