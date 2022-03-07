@@ -1,0 +1,173 @@
+<section class="report-form">
+    <div class="container-fluid">
+
+        <div class="row py-4">
+            <div class="col-md-2" [formGroup]="reportForm">
+                <div class="reportview pt-4">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Collection Name</mat-label>
+                        <mat-select (selectionChange)="setValue({'field_name':'collection_name'})"
+                            [formControlName]="'collection_name'">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let data of staticData['collection_name']; let i = index" [value]="data"
+                                [innerHtml]="getddnDisplayVal(data)">
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Name</mat-label>
+                        <mat-select (selectionChange)="setValue({'field_name':'name'})" [formControlName]="'name'">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let field of fields; let i = index" [value]="field"
+                                [innerHtml]="getddnDisplayVal(field)">
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Operator</mat-label>
+                        <mat-select [formControlName]="'operator'" disableOptionCentering panelClass="optiondropdown">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let staticValue of operaters | keyvalue" [value]="staticValue.key"
+                                [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div *ngIf="field.type == 'date'">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Value</mat-label>
+                            <input matInput [matDatepicker]="picker2" [formControlName]="'value'">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="field.type == 'text'">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Value</mat-label>
+                            <input matInput type="text" [formControlName]="'value'">
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="field.type == 'number'">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Value</mat-label>
+                            <input matInput type="text" [formControlName]="'value'">
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="field.type == 'textarea'">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Value</mat-label>
+                            <input matInput type="text" [formControlName]="'value'">
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="field.type == 'dropdown'">
+                        <mat-form-field appearance="outline" class="w-100"
+                            *ngIf="field.datatype != 'object' && field.datatype != 'key_value'">
+                            <mat-label>Value</mat-label>
+                            <mat-select [formControlName]="'value'">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let field of staticData[field.ddn_field]; let i = index"
+                                    [value]="field" [innerHtml]="getddnDisplayVal(field)">
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="w-100" *ngIf="field.datatype == 'key_value'">
+                            <mat-label>Value</mat-label>
+                            <mat-select [formControlName]="'value'">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let staticValue of staticData[field.ddn_field]| keyvalue"
+                                    [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)">
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+
+
+                        <mat-form-field appearance="outline" class="w-100" *ngIf="field.datatype == 'object'">
+                            <mat-label>Value</mat-label>
+                            <mat-select [compareWith]="compareObjects" [formControlName]="'value'">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let staticValue of staticData[field.ddn_field]"
+                                    [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="btn-group d-flex justify-content-end mt-3">
+                        <button mat-button class="clearbtn mr-4" (click)="clear()">Clear</button>
+                        <button mat-button class="addbtn" [disabled]="checkValidator()"
+                            (click)="addCrlist()">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="reportview p-4">
+                    <div class="chipsdata">
+                        <span class="chips" *ngFor="let chips of crList; let i = index">
+                            <span [innerHtml]="getChipsValue(chips)"></span>
+                            <!-- <mat-icon class="edit" (click)="editchips(i)">edit</mat-icon> -->
+                            <mat-icon class="del" (click)="dropchips(i)">cancel</mat-icon>
+                        </span>
+                    </div>
+                    <div class="btn-group mt-2 d-flex justify-content-end">
+                        <button mat-button class="clearbtn mr-4" [disabled]="submitValidator()"
+                            (click)="resetConfirm()">Reset</button>
+                        <button mat-flat-button class="addbtn" [disabled]="submitValidator()"
+                            (click)="submitdata()">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="reportview">
+                    <button mat-button class="w-100 reportbtn mb-3" [disabled]="submitValidator()"
+                        (click)="savemodal()">
+                        {{updatemode ? "Upadte Query" : "Save Query"}} </button>
+                    <button mat-button class="w-100 reportbtn mb-3" (click)="loadquerymodal()">Load Query</button>
+                    <button mat-button class="w-100 reportbtn mb-3" [disabled]="!(gridData.length > 0)"
+                        (click)="exportExcel()">Download Excel</button>
+                    <button mat-button class="w-100 reportbtn">Schedule</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row py-4 px-0">
+            <table class="table table-striped table-bordered" style="font-size:12px;"
+                *ngIf="columns && columns.length > 0 && gridData.length > 0">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" *ngFor="let data of columns;">{{data.label}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of gridData; let j = index">
+                        <th scope="row">{{j + 1}}</th>
+                        <td *ngFor="let elId of columns; let j = index">
+                            <div class="grid-data">
+                                <span [innerHtml]="getValueForGrid(elId,data)"
+                                    [matTooltip]="getValueForGridTooltip(elId,data)"
+                                    [matTooltipPosition]="'above'"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="gridData.length == 0">
+                        <td class="text-center">
+                            <div class="py-3 font-weight-bold">No Records Found !!!</div>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<app-confirm-modal id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
+<app-report-save-query id="savequery-modal" [saveQurydata]="mySaveQueryData" [mode]="updatemode" [fields]="fields"
+    (saveQueryResponce)="saveQueryResponce($event)"></app-report-save-query>
+<app-report-load-query id="loadquery-modal" [loadQuerydata]="myLoadQueryData" [fields]="fields"
+    (loadQueryResponce)="loadQueryResponce($event)"></app-report-load-query>

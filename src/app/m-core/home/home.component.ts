@@ -85,7 +85,10 @@ export class HomeComponent implements OnInit, OnDestroy {
           const menu = this.menuData[defaultmenuIndex];
           if(menu.name == "document_library"){
             this.router.navigate(['vdr']);
-          }else{
+          }else if(menu.name == "report"){
+            this.router.navigate(['report']);
+          }
+          else{
             this.storageService.SetActiveMenu(this.menuData[defaultmenuIndex]);              
             this.apiService.resetTempData();
             this.apiService.resetGridData();

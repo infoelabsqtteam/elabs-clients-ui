@@ -15,6 +15,8 @@ export class ConfirmModalComponent implements OnInit {
   private element: any;
   bodyMessage:any='Body Message';
   headerMessage:any='Header Message';
+  yesButtonLabel:any='';
+  noButtonLabel:any = '';
   
 
   @Input() id: string;
@@ -41,6 +43,8 @@ export class ConfirmModalComponent implements OnInit {
     this.alertData = alert.data;
     this.bodyMessage = alert.bodyMessage;
     this.headerMessage = alert.headerMessage
+    this.yesButtonLabel = alert.yesButtonText ? alert.yesButtonText : '';
+    this.noButtonLabel = alert.noButtonText ? alert.noButtonText : '';
     if(alert.type == 'info'){     
       this.icon_name = "info-circle";
       this.class_name = "info";
@@ -64,6 +68,20 @@ export class ConfirmModalComponent implements OnInit {
   cancel(){
     this.alertModal.hide();
     this.alertResponce.emit(false);
+  }
+  yesButtonText(){
+    if(this.yesButtonLabel != ''){
+      return this.yesButtonLabel;
+    }else{
+      return 'Ok';
+    }
+  }
+  noButtonText(){
+    if(this.noButtonLabel != ''){
+      return this.noButtonLabel;
+    }else{
+      return 'Cancel';
+    }
   }
 
 }

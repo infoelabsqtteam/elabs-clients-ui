@@ -31,8 +31,6 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { GitVersionComponent } from './git-version/git-version.component';
 
 
-
-
 const models = [
   ModalsComponent,
   ConfirmModalComponent,
@@ -55,7 +53,7 @@ const models = [
   SettingModalComponent,
   LandingFunctionsModalComponent,
   ShortcutinfoComponent,
-  GitVersionComponent
+  GitVersionComponent,
 ]
 
 @NgModule({
