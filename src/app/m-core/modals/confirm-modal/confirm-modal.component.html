@@ -9,9 +9,9 @@
             </div>           
             <div class="modal-footer justify-content-center">
                 <a type="button" mdbBtn [color]="class_name" outline="true" *ngIf="class_name == 'primary'" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect (click)="ok()">Delete</a>
-                <a type="button" mdbBtn [color]="class_name" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect data-dismiss="modal" (click)="cancel()">Cancel</a>
+                <a type="button" mdbBtn [color]="class_name" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect data-dismiss="modal" (click)="cancel()" [innerHtml]="noButtonText()"></a>
                 
-                <a type="button" mdbBtn [color]="class_name" *ngIf="class_name == 'success' || class_name == 'info'" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect data-dismiss="modal" (click)="ok()">Ok</a>
+                <a type="button" mdbBtn [color]="class_name" *ngIf="class_name == 'success' || class_name == 'info'" class="waves-effect noshadow rounded btn-sm mx-2" mdbWavesEffect data-dismiss="modal" (click)="ok()" [innerHtml]="yesButtonText()"></a>
             </div>
         </div>    
     </div>

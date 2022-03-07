@@ -14,8 +14,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { DriveHomeComponent } from './document/drive-home/drive-home.component';
 import { PageNotFoundComponent } from '../core/error/page-not-found.component';
-import { ReportComponent } from '../m-core/report/report.component';
-
+import { ReportFormComponent } from './report/report-form/report-form.component';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
@@ -31,7 +30,7 @@ const elabsRoutes : Routes = [
                 { path : 'dashboard', component:AdminDashboardComponent},
                 { path : 'diff_html', component:DiffHtmlComponent},
                 { path : 'vdr', component: DriveHomeComponent },
-                { path: 'report', component: ReportComponent},
+                { path : 'report', component: ReportFormComponent },
                 { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
             ],
             runGuardsAndResolvers: 'always'

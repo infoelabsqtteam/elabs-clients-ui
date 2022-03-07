@@ -29,8 +29,7 @@ import { ApedaFormatComponent } from '../report-form/apeda-format/apeda-format.c
 import { EicFormatComponent } from '../report-form/eic-format/eic-format.component';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { GitVersionComponent } from './git-version/git-version.component';
-import { ReportSaveQueryComponent } from './report-save-query/report-save-query.component';
-import { ReportLoadQueryComponent } from './report-load-query/report-load-query.component';
+
 
 const models = [
   ModalsComponent,
@@ -55,8 +54,6 @@ const models = [
   LandingFunctionsModalComponent,
   ShortcutinfoComponent,
   GitVersionComponent,
-  ReportSaveQueryComponent,
-  ReportLoadQueryComponent
 ]
 
 @NgModule({

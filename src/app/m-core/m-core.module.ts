@@ -40,8 +40,7 @@ import { VerticalComponent } from './vertical/vertical.component';
 import { HorizontalComponent } from './horizontal/horizontal.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { AngularCommonModule } from './angular-common/angular-common.module';
-import { ReportComponent } from './report/report.component';
-
+import { ReportModule } from './report/report.module';
 
 
 
@@ -76,7 +75,7 @@ const maskConfig: Partial<IConfig> = {
         SidebarSearchComponent, 
         ChatViewComponent,          
         GmapViewComponent, 
-        DiffHtmlComponent, ReportComponent
+        DiffHtmlComponent
     ],
     imports: [      
         McoreRoutingModule,        
@@ -96,7 +95,8 @@ const maskConfig: Partial<IConfig> = {
         FormModelModule,
         AllPackageModule,
         PipesModule,
-        AngularCommonModule      
+        AngularCommonModule,
+        ReportModule
     ]
 
 })

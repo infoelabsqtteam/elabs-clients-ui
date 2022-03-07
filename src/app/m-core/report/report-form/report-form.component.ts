@@ -5,7 +5,7 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { PermissionService } from 'src/app/services/permission/permission.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
-import { StorageService} from '../../services/storage/storage.service';
+import { StorageService} from '../../../services/storage/storage.service';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { ModelService } from "src/app/services/model/model.service";
 import { exists } from 'fs';
@@ -26,16 +26,14 @@ export const MY_DATE_FORMATS = {
 };
 
 @Component({
-  selector: 'app-report',
-  templateUrl: './report.component.html',
+  selector: 'app-report-form',
+  templateUrl: './report-form.component.html',
   styles: [
-  ],
-  providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
-export class ReportComponent implements OnInit {
+export class ReportFormComponent implements OnInit {
 
+  
   reportForm: FormGroup;
   staticDataSubscription:any;
   staticData = [];
@@ -272,13 +270,14 @@ export class ReportComponent implements OnInit {
     this.resetForm();
     this.reportForm.get('collection_name').setValue(collectionValue);
   }
-  // alertResponce(responce) {
-  //   if (responce) {
-  //     this.reset();      
-  //   } else {
-  //    this.reset(); 
-  //   }
-  // }
+
+  alertResponce(responce) {
+    if (responce) {
+      this.reset(); 
+    } else {     
+     this.savemodal();   
+    }
+  }
  
   reset() {
     this.resetForm();
@@ -300,6 +299,18 @@ export class ReportComponent implements OnInit {
   private resetForm() {
     this.reportForm.reset();
   }
+
+  resetConfirm(){
+    const alertData = {
+      "type": 'info',
+      "bodyMessage": 'Reset This Query!',
+      "headerMessage": 'Are You Sure ?',
+      "yesButtonText": 'Yes',
+      "noButtonText" : 'No'
+    }
+    this.modelService.open('confirm-modal',alertData);
+  }
+  
 
   submitdata() {
     const payload = this.getQuery();

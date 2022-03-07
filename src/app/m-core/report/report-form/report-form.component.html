@@ -4,9 +4,6 @@
         <div class="row py-4">
             <div class="col-md-2" [formGroup]="reportForm">
                 <div class="reportview pt-4">
-                    <!-- <select (change)="setValue($event)"> 
-                        <option ></option>
-                    </select> -->
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Collection Name</mat-label>
                         <mat-select (selectionChange)="setValue({'field_name':'collection_name'})"
@@ -26,9 +23,6 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- <select>
-                        <option *ngFor="let data of datalist">{{data.val}}</option>
-                    </select> -->
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Operator</mat-label>
                         <mat-select [formControlName]="'operator'" disableOptionCentering panelClass="optiondropdown">
@@ -97,15 +91,15 @@
                         </mat-form-field>
 
                     </div>
-                    <div class="btn-group d-flex justify-content-end">
-                        <button mat-button class="rpt-btn mr-4" (click)="clear()">Clear</button>
-                        <button mat-button class="rpt-btn" color="primary" [disabled]="checkValidator()"
+                    <div class="btn-group d-flex justify-content-end mt-3">
+                        <button mat-button class="clearbtn mr-4" (click)="clear()">Clear</button>
+                        <button mat-button class="addbtn" [disabled]="checkValidator()"
                             (click)="addCrlist()">Add</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="reportview">
+                <div class="reportview p-4">
                     <div class="chipsdata">
                         <span class="chips" *ngFor="let chips of crList; let i = index">
                             <span [innerHtml]="getChipsValue(chips)"></span>
@@ -113,23 +107,23 @@
                             <mat-icon class="del" (click)="dropchips(i)">cancel</mat-icon>
                         </span>
                     </div>
-                    <div class="btn-group mt-2 d-flex justify-content-start">
-                        <button mat-button class="rpt-btn mr-4" [disabled]="submitValidator()"
-                            (click)="reset()">Reset</button>
-                        <button mat-flat-button color="primary" [disabled]="submitValidator()"
+                    <div class="btn-group mt-2 d-flex justify-content-end">
+                        <button mat-button class="clearbtn mr-4" [disabled]="submitValidator()"
+                            (click)="resetConfirm()">Reset</button>
+                        <button mat-flat-button class="addbtn" [disabled]="submitValidator()"
                             (click)="submitdata()">Submit</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="reportview">
-                    <button mat-button class="w-100 reportbtn my-1" [disabled]="submitValidator()"
+                    <button mat-button class="w-100 reportbtn mb-3" [disabled]="submitValidator()"
                         (click)="savemodal()">
                         {{updatemode ? "Upadte Query" : "Save Query"}} </button>
-                    <button mat-button class="w-100 reportbtn my-1" (click)="loadquerymodal()">Load Query</button>
-                    <button mat-button class="w-100 reportbtn my-1" [disabled]="!(gridData.length > 0)"
+                    <button mat-button class="w-100 reportbtn mb-3" (click)="loadquerymodal()">Load Query</button>
+                    <button mat-button class="w-100 reportbtn mb-3" [disabled]="!(gridData.length > 0)"
                         (click)="exportExcel()">Download Excel</button>
-                    <button mat-button class="w-100 reportbtn my-1">Schedule</button>
+                    <button mat-button class="w-100 reportbtn">Schedule</button>
                 </div>
             </div>
         </div>
@@ -172,7 +166,7 @@
 
 
 
-<!-- <app-confirm-modal id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal> -->
+<app-confirm-modal id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
 <app-report-save-query id="savequery-modal" [saveQurydata]="mySaveQueryData" [mode]="updatemode" [fields]="fields"
     (saveQueryResponce)="saveQueryResponce($event)"></app-report-save-query>
 <app-report-load-query id="loadquery-modal" [loadQuerydata]="myLoadQueryData" [fields]="fields"
