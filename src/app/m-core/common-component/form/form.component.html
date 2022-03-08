@@ -663,7 +663,7 @@
                                     <table class="table-bordered table-striped table-hover one-line-text" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr>
-                                                <th width="10%" style="text-align: center">Action</th>
+                                                <th width="10%" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">Action</th>
                                                 <th *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(item) ? 'd-none' : ''">{{item.label}}</th>                                                
                                             </tr>
                                         </thead>
@@ -1571,7 +1571,7 @@
             <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="noshadow rounded bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
         </span>               
         <mat-spinner diameter="40" *ngIf="!dataSaveInProgress" class="custom-spinner"></mat-spinner>
-        <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button>
+        <!-- <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button> -->
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formDeleteBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Delete</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formResetBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Reset</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="enableNextButton" (click)="nextForm()" [matTooltip]="'Next Form'" [matTooltipPosition]="'above'">Next</button>
