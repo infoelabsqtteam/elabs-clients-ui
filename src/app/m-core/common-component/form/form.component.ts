@@ -171,7 +171,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   bulkupdates:boolean = false;
 
 
-  
+  updateAddNew:boolean = false;
   hide = true;
   isLinear:boolean=true;
   isStepper:boolean = false;
@@ -628,6 +628,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
         this.elements = gridData.data
+        if(this.updateAddNew){
+          this.updateAddNew=false;
+          this.editedRowData(this.elements[0]);
+        }
       }
     }
   }
@@ -4404,9 +4408,14 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
       targetFieldName[field.add_new_target_field] = this.lastTypeaheadTypeValue
-    }else if(field && field.type == "list_of_fields" && index != undefined && index >= 0){
-        let currentFiedldData = formData[field.field_name];
+    }else if(field && field.type == "list_of_fields"){
+      let currentFiedldData = formData[field.field_name];
+      if(index != undefined && index >= 0){        
         targetFieldName = currentFiedldData[index];
+      }else {
+        targetFieldName = currentFiedldData;
+      }
+        
       // const listOfFields = field.list_of_fields;
       // let element:any = {}
       // if(listOfFields && listOfFields.length > 0){
@@ -4465,7 +4474,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                   "disable_if":""
               },
               {
-                "label": "Close",
+                "label": "Ok",
                 "onclick": {
                         "api": "close", 
                         "action_name": "", 
@@ -4561,11 +4570,16 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.form = form;
     this.resetFlagsForNewForm();
     this.setForm();
-    let nextFormData = {}
+    let nextFormData:any = {}
     if(this.multipleFormCollection.length > 0){
       nextFormData = this.multipleFormCollection[this.multipleFormCollection.length -1];
     }
     let data = nextFormData['next_form_data']
+    if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['current_field']['type'] == 'list_of_fields' && nextFormData['index'] == undefined){
+      const fieldName = nextFormData['current_field']['field_name'];
+      this.custmizedFormValue[fieldName] = data;
+      data = {};
+    }
     this.updateDataOnFormField(data);
     let nextFormFocusedFieldname = '';
     for (let key in data) {
@@ -4605,7 +4619,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     const fieldName = previousFormField.field_name;
     delete currentFormValue[fieldName];    
     const previousformData = previousFormCollection.data;
-    if(previousFormField && previousFormField.type && previousFormField.type == 'list_of_field'){
+    if(previousFormField && previousFormField.type && previousFormField.type == 'list_of_fields'){
       let fieldData = previousformData[fieldName]
       let index = previousFormCollection['index'];
       if(isArray(fieldData)){
@@ -4620,13 +4634,17 @@ case 'populate_fields_for_report_for_new_order_flow':
       }     
       
       if(index != undefined && index >= 0){
+        this.custmizedFormValue[fieldName] = fieldData;
+        previousformData[fieldName] = this.custmizedFormValue[fieldName];
+        this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
         this.close();
       }else{
         this.custmizedFormValue[fieldName] = fieldData;
+        previousformData[fieldName] = this.custmizedFormValue[fieldName];
+        this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
         this.templateForm.reset();  
       }
-      previousformData[fieldName] = this.custmizedFormValue[fieldName];
-      this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
+      
     }else{
       previousformData[fieldName] = currentFormValue;
       this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
@@ -4690,6 +4708,28 @@ case 'populate_fields_for_report_for_new_order_flow':
     }    
   }
   
+  updateAddNewField(parent,child){
+    this.storeFormDetails(parent,child);
+    const formValue = this.templateForm.getRawValue();
+    let fieldValue:any = '';
+    if(parent != ''){
+      fieldValue = formValue[parent.field_name][child.field_name];
+    }else{
+      fieldValue = formValue[child.field_name];
+    }    
+    if(fieldValue && fieldValue._id && fieldValue._id != ''){
+      console.log(fieldValue._id);
+      const params = child.api_params;
+      if(params && params != ''){
+        const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
+        const crList = this.commonFunctionService.getCriteriaList(criteria,{});
+        const payload = this.commonFunctionService.getDataForGrid(1,{},{'name':params},[],{},'');
+        payload.data.crList = crList;
+        this.apiService.getGridData(payload);
+      }          
+      this.updateAddNew = true;
+    }
+  }
   
   
 

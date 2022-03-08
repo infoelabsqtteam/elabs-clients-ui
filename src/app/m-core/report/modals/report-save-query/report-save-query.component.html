@@ -1,0 +1,28 @@
+<div mdbModal #saveModal="mdbModal" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header border-0 m-0">
+            <h4 class="modal-title font-weight-bold m-0">Save Query</h4>
+            <button class="closebtn" (click)="close()"><span>&times;</span></button>
+          </div>
+          
+          <div class="modal-body report-form" [formGroup]="saveQueryForm">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Name of report</mat-label>
+                <input matInput type="text" [formControlName]="'name'">                              
+            </mat-form-field>
+    
+            <div class="chipsdata">
+                <span class="chips" *ngFor="let chips of crList; let i = index">
+                    <span [innerHtml]="getChipsValue(chips)"></span>
+                    <mat-icon class="del" (click)="dropchips(i)">cancel</mat-icon>
+                </span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button mat-button class="rpt-btn mr-4" [disabled]="checkquerysaveValidator()" (click)="close()">Cancel</button>
+            <button mat-flat-button color="primary" [disabled]="checkquerysaveValidator()" (click)="saveQuery()">Submit</button>
+          </div>
+        </div>
+      </div>
+  </div>
