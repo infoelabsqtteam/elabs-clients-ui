@@ -1,4 +1,3 @@
-
 export const serverHostList = [
   {
     "clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",

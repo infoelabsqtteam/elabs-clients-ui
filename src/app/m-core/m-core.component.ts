@@ -53,13 +53,14 @@ export class McoreComponent implements OnInit {
   }
   
   shortcutinfoResponce(responce){
-    console.log(responce);
+    // console.log(responce);
   }
   chartModalResponce(responce){
-    console.log(responce);
+    // console.log(responce);
   }
   gitModalResponce(responce){
-    console.log(responce);
+    // console.log(responce);
   }
+ 
 
 }

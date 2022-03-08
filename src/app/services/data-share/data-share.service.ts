@@ -52,6 +52,7 @@ export class DataShareService {
   forgot:EventEmitter<any> = new EventEmitter<any>();
   nextFormData:EventEmitter<any> = new EventEmitter<any>();
   
+  getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -208,5 +209,8 @@ export class DataShareService {
   }
   setNextFormData(responce){
     this.nextFormData.emit(responce);
+  }
+  setReportLoadGridData(responce){
+    this.getReportLoadData.emit(responce);
   }
 }
