@@ -3476,7 +3476,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
        payload['data'] = list;
       this.apiService.DynamicApiCall(payload);
-      console.log();
+      //console.log();
       
     }
 
@@ -4529,7 +4529,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.resetFlagsForNewForm();
     this.setForm();
     const data = formCollecition['data'];
-    console.log(data);
+    //console.log(data);
     this.updateDataOnFormField(data);
     this.currentMenu['name'] = formCollecition['collection_name'];
     this.previousFormFocusField = formCollecition['current_field']; 
@@ -4731,7 +4731,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         fieldValue = formValue[child.field_name];
       }    
       if(fieldValue && fieldValue._id && fieldValue._id != ''){
-        console.log(fieldValue._id);
+        //console.log(fieldValue._id);
         const params = child.api_params;
         if(params && params != ''){
           const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
