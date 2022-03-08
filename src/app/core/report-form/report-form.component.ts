@@ -13,7 +13,8 @@ export class ReportFormComponent implements OnInit {
 
   staticDataSubscription:any;
   staticData = [];
-  datalist:any = [];
+  datalist:any=[];
+
   chipsData = ['data1', 'data 2', 'data 3']
   
 
