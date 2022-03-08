@@ -634,6 +634,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       }
     }
+    if(this.updateAddNew){
+      this.updateAddNew=false;
+    }
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0 && this.getTableField) {
@@ -4569,10 +4572,13 @@ case 'populate_fields_for_report_for_new_order_flow':
   loadNextForm(form: any){    
     this.form = form;
     this.resetFlagsForNewForm();
-    this.setForm();
+    this.setForm();    
     let nextFormData:any = {}
     if(this.multipleFormCollection.length > 0){
       nextFormData = this.multipleFormCollection[this.multipleFormCollection.length -1];
+    }
+    if(this.updateAddNew){
+      this.getNextFormData(nextFormData);
     }
     let data = nextFormData['next_form_data']
     if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['current_field']['type'] == 'list_of_fields' && nextFormData['index'] == undefined){
@@ -4710,24 +4716,38 @@ case 'populate_fields_for_report_for_new_order_flow':
   
   updateAddNewField(parent,child){
     this.storeFormDetails(parent,child);
-    const formValue = this.templateForm.getRawValue();
-    let fieldValue:any = '';
-    if(parent != ''){
-      fieldValue = formValue[parent.field_name][child.field_name];
+    this.updateAddNew = true;
+    
+  }
+  getNextFormData(formData){
+    if(formData && formData['parent_field'] && formData['current_field'] && formData['data']){
+      let parent = formData['parent_field'];
+      let child = formData['current_field'];
+      let formValue = formData['data'];
+      let fieldValue:any = '';
+      if(parent != ''){
+        fieldValue = formValue[parent.field_name][child.field_name];
+      }else{
+        fieldValue = formValue[child.field_name];
+      }    
+      if(fieldValue && fieldValue._id && fieldValue._id != ''){
+        console.log(fieldValue._id);
+        const params = child.api_params;
+        if(params && params != ''){
+          const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
+          const crList = this.commonFunctionService.getCriteriaList(criteria,{});
+          const payload = this.commonFunctionService.getDataForGrid(1,{},{'name':params},[],{},'');
+          payload.data.crList = crList;
+          this.apiService.getGridData(payload);
+          this.updateAddNew = true;
+        }else{
+          this.updateAddNew = false;
+        }     
+      }else{
+        this.updateAddNew = false;
+      }
     }else{
-      fieldValue = formValue[child.field_name];
-    }    
-    if(fieldValue && fieldValue._id && fieldValue._id != ''){
-      console.log(fieldValue._id);
-      const params = child.api_params;
-      if(params && params != ''){
-        const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
-        const crList = this.commonFunctionService.getCriteriaList(criteria,{});
-        const payload = this.commonFunctionService.getDataForGrid(1,{},{'name':params},[],{},'');
-        payload.data.crList = crList;
-        this.apiService.getGridData(payload);
-      }          
-      this.updateAddNew = true;
+      this.updateAddNew = false;
     }
   }
   
