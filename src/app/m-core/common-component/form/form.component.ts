@@ -254,6 +254,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   public fieldApiValidaton:string = '';
   public fieldApiValMsg:string='';
   public nextFormData:any ={};
+  public onchangeNextForm:boolean = false;
 
   public style:string  = 'width: 100px, height: 100px, backgroundColor: cornflowerblue';
 
@@ -379,9 +380,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.setFileDownloadUrl(data);
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
-      if(!this.enableNextButton && data && data.data && data.data.length > 0){
+      if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
         this.enableNextButton = true;
         this.nextFormData = data.data[0];
+      }else if(this.onchangeNextForm && data && data.data && data.data.length > 0){
+        this.onchangeNextForm = false;        
+        this.nextFormData = data.data[0];
+        this.openNextForm(false);
       }
     })
     if(this.dataShareService && this.dataShareService.fieldDinamicResponce){
@@ -631,6 +636,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(this.updateAddNew){
           this.updateAddNew=false;
           this.editedRowData(this.elements[0]);
+          this.apiService.resetGridData();
         }
       }
     }
@@ -1194,50 +1200,54 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
 
-      this.checkBoxFieldListValue.forEach(element => {
-        let checkCreatControl:any;
-        if(element.parent){
-          checkCreatControl = this.templateForm.get(element.parent).get(element.field_name);
-        }else{
-          checkCreatControl = this.templateForm.get(element.field_name);
-        }      
-        if (this.staticData[element.ddn_field] && checkCreatControl.controls && checkCreatControl.controls.length == 0) {
-          let checkArray: FormArray;
-          if(element.parent){
-            checkArray= this.templateForm.get(element.parent).get(element.field_name) as FormArray;
-          }else{
-            checkArray= this.templateForm.get(element.field_name) as FormArray;
-          }
-          this.staticData[element.ddn_field].forEach((data, i) => {
-            if(this.updateMode){
-              let arrayData;
-              if(element.parent){
-                arrayData = this.selectedRow[element.parent][element.field_name];
-              }else{
-                arrayData = this.selectedRow[element.field_name]
-              }
-              let selected = false;
-              if (arrayData != undefined && arrayData != null) {
-                for (let index = 0; index < arrayData.length; index++) {
-                  if (this.checkObjecOrString(data) == this.checkObjecOrString(arrayData[index])) {
-                    selected = true;
-                    break;
-                  }
-                }
-              }
-              if (selected) {
-                checkArray.push(new FormControl(true));
-              } else {
-                checkArray.push(new FormControl(false));
-              }
-            }else{
-              checkArray.push(new FormControl(false));
-            }                
-          });
-        }
-      });
+      this.setCheckboxFileListValue();
     }
   }
+  setCheckboxFileListValue() {
+    this.checkBoxFieldListValue.forEach(element => {
+      let checkCreatControl: any;
+      if (element.parent) {
+        checkCreatControl = this.templateForm.get(element.parent).get(element.field_name);
+      } else {
+        checkCreatControl = this.templateForm.get(element.field_name);
+      }
+      if (this.staticData[element.ddn_field] && checkCreatControl.controls && checkCreatControl.controls.length == 0) {
+        let checkArray: FormArray;
+        if (element.parent) {
+          checkArray = this.templateForm.get(element.parent).get(element.field_name) as FormArray;
+        } else {
+          checkArray = this.templateForm.get(element.field_name) as FormArray;
+        }
+        this.staticData[element.ddn_field].forEach((data, i) => {
+          if (this.updateMode) {
+            let arrayData;
+            if (element.parent) {
+              arrayData = this.selectedRow[element.parent][element.field_name];
+            } else {
+              arrayData = this.selectedRow[element.field_name];
+            }
+            let selected = false;
+            if (arrayData != undefined && arrayData != null) {
+              for (let index = 0; index < arrayData.length; index++) {
+                if (this.checkObjecOrString(data) == this.checkObjecOrString(arrayData[index])) {
+                  selected = true;
+                  break;
+                }
+              }
+            }
+            if (selected) {
+              checkArray.push(new FormControl(true));
+            } else {
+              checkArray.push(new FormControl(false));
+            }
+          } else {
+            checkArray.push(new FormControl(false));
+          }
+        });
+      }
+    });
+  }
+
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
       if (saveFromDataRsponce.success && saveFromDataRsponce.success != '' && this.showNotify) {
@@ -1715,6 +1725,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(value == "add_new"){
                 this.templateForm.controls[field.field_name].setValue('');
                 this.storeFormDetails(parentfield,field);
+              }else if(field.datatype == 'object' && field.onchange_get_next_form){
+                this.onchangeNextForm = true;
+                const reqCriteria = ["_id;eq;" + value._id + ";STATIC"];
+                const reqParams = field.api_params;
+                this.getDataForNextForm(reqParams,reqCriteria);
               }else{           
                 this.tempVal[field.field_name + "_add_button"] = false;
               }
@@ -2860,29 +2875,29 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.updateDataOnFormField(this.selectedRow);
     this.getStaticDataWithDependentData();    
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
-
-      this.checkBoxFieldListValue.forEach(element => {
-        if (this.staticData[element.ddn_field]) {
-          const arrayData = this.selectedRow[element.field_name];
-          const checkArray: FormArray = this.templateForm.get(element.field_name) as FormArray;
-          this.staticData[element.ddn_field].forEach((data, i) => {
-            let selected = false;
-            if (arrayData != undefined && arrayData != null) {
-              for (let index = 0; index < arrayData.length; index++) {
-                if (this.checkObjecOrString(data) == this.checkObjecOrString(arrayData[index])) {
-                  selected = true;
-                  break;
-                }
-              }
-            }
-            if (selected) {
-              checkArray.push(new FormControl(true));
-            } else {
-              checkArray.push(new FormControl(false));
-            }
-          });
-        }
-      });
+      this.setCheckboxFileListValue();
+      // this.checkBoxFieldListValue.forEach(element => {
+      //   if (this.staticData[element.ddn_field]) {
+      //     const arrayData = this.selectedRow[element.field_name];
+      //     const checkArray: FormArray = this.templateForm.get(element.field_name) as FormArray;
+      //     this.staticData[element.ddn_field].forEach((data, i) => {
+      //       let selected = false;
+      //       if (arrayData != undefined && arrayData != null) {
+      //         for (let index = 0; index < arrayData.length; index++) {
+      //           if (this.checkObjecOrString(data) == this.checkObjecOrString(arrayData[index])) {
+      //             selected = true;
+      //             break;
+      //           }
+      //         }
+      //       }
+      //       if (selected) {
+      //         checkArray.push(new FormControl(true));
+      //       } else {
+      //         checkArray.push(new FormControl(false));
+      //       }
+      //     });
+      //   }
+      // });
     }
   }
   getStaticDataWithDependentData(){
@@ -4196,7 +4211,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       }
                       break;
                     case "list_of_checkbox":
-                      this.templateForm.get(element.field_name).get(data.field_name).setValue([])
+                      this.templateForm.get(element.field_name).get(data.field_name).patchValue([])
                       if(element.parent){
                         this.selectedRow[element.parent] = {}
                         this.selectedRow[element.parent][element.field_name] = ChildFieldData;
@@ -4262,7 +4277,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                         //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(gvalue);
                       break;
                     case "list_of_checkbox":
-                      this.templateForm.get(step.field_name).get(data.field_name).setValue([])
+                      this.templateForm.get(step.field_name).get(data.field_name).patchValue([])
                       //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue([]);
                       break;
                     default:
@@ -4516,17 +4531,21 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.getNextFormById(id);
       this.addNewRecord = false;
       if(!this.enableNextButton && field && field.find_child_form){
-        const reqCriteria = ["collection.name;eq;"+this.currentMenu.name+";STATIC"]
+        const reqCriteria = ["collection.name;eq;" + this.currentMenu.name + ";STATIC"];
         const reqParams = 'scheduled_task_form';
-        const request = this.commonFunctionService.getDataForGrid(1,{},{'name':reqParams},[],{},'')
-        const crList = this.commonFunctionService.getCriteriaList(reqCriteria,{});
-        request.data.crList = crList;
-        this.apiService.getNextFormData(request);
+        this.getDataForNextForm(reqParams,reqCriteria);
       }      
     }    
   }
   previousFormFocusField:any = {};
   focusFieldParent:any={};
+  private getDataForNextForm(reqParams,reqCriteria) {    
+    const request = this.commonFunctionService.getDataForGrid(1, {}, { 'name': reqParams }, [], {}, '');
+    const crList = this.commonFunctionService.getCriteriaList(reqCriteria, {});
+    request.data.crList = crList;
+    this.apiService.getNextFormData(request);
+  }
+
   private getNextFormById(id: string) {
     const params = "form";
     const criteria = ["_id;eq;" + id + ";STATIC"];
@@ -4705,20 +4724,24 @@ case 'populate_fields_for_report_for_new_order_flow':
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
-      const form = this.nextFormData.formName;
-      const field_name = this.nextFormData.field_name;
-      const form_field_name = this.nextFormData.form_field_name;
-      const field = {
-        'add_new_form': form,
-        'add_next_form_button':true,
-        'field_name':  field_name, 
-        'type':'hidden',
-        'form_field_name':form_field_name
-      }
-      this.storeFormDetails('',field);
+      this.openNextForm(true);
       this.enableNextButton = false;
     }    
   }
+  openNextForm(next) {
+    const form = this.nextFormData.formName;
+    const field_name = this.nextFormData.field_name;
+    const form_field_name = this.nextFormData.form_field_name;
+    const field = {
+      'add_new_form': form,
+      'add_next_form_button': next,
+      'field_name': field_name,
+      'type': 'hidden',
+      'form_field_name': form_field_name
+    };
+    this.storeFormDetails('', field);
+  }
+
   getTimeFormat(field){
     if(field && field.time_format && field.time_format != ''){
       return Number(field.time_format);
@@ -4733,9 +4756,15 @@ case 'populate_fields_for_report_for_new_order_flow':
     
   }
   getNextFormData(formData){
-    if(formData && formData['parent_field'] && formData['current_field'] && formData['data']){
-      let parent = formData['parent_field'];
-      let child = formData['current_field'];
+    if(formData){
+      let parent:any = '';
+      let child:any = '';
+      if(formData['parent_field']){
+        parent = formData['parent_field'];
+      }
+      if(formData['current_field']){
+        child = formData['current_field'];
+      }
       let formValue = formData['data'];
       let fieldValue:any = '';
       if(parent != ''){
