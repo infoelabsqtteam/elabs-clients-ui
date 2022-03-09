@@ -448,6 +448,20 @@ constructor(
         }
     )
   }
+
+  getNextFormData(payload) {
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+      (respData) => {
+        if(JSON.stringify(respData) != "{}"){ 
+          this.dataShareService.setNextFormData(respData)
+        }
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
+  }
   
 
   gitVersion(payload) {
