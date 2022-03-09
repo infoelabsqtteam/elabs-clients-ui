@@ -1418,6 +1418,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   focusField(parent,key){
     const  id = key._id + "_" + key.field_name;
     let field:any = {};
+    if(parent == ''){
+      if(this.focusFieldParent && this.focusFieldParent.field_name && this.focusFieldParent.field_name != ''){
+        parent = this.focusFieldParent;
+      }
+    }
     if(parent != ""){
       field = this.templateForm.get(parent.field_name).get(key.field_name);
     }else{
@@ -1427,7 +1432,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.checkFormFieldAutfocus = false;
       if(this.previousFormFocusField && this.previousFormFocusField._id){
         this.previousFormFocusField = {};
+        this.focusFieldParent={};
       }
+    }else if(field == undefined){
+      this.previousFormFocusField = {};
+      this.focusFieldParent={};
     }
     const invalidControl = document.getElementById(id);
     if(invalidControl != null){
@@ -1439,24 +1448,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if(this.previousFormFocusField && this.previousFormFocusField._id){
         this.focusField("",this.previousFormFocusField)        
       }else{
-        for (const key of this.tableFields) {
-          if(key.type == "stepper"){
-            if(key.list_of_fields && key.list_of_fields != null && key.list_of_fields.length > 0){
-              for (const step of key.list_of_fields) {
-                if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
-                  for (const field of step.list_of_fields) {
-                    if (field.field_name) {
-                      this.focusField(step,field);  
-                      break;
+        if(this.previousFormFocusField == undefined || this.previousFormFocusField._id == undefined){
+          for (const key of this.tableFields) {
+            if(key.type == "stepper"){
+              if(key.list_of_fields && key.list_of_fields != null && key.list_of_fields.length > 0){
+                for (const step of key.list_of_fields) {
+                  if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
+                    for (const field of step.list_of_fields) {
+                      if (field.field_name) {
+                        this.focusField(step,field);  
+                        break;
+                      }
                     }
-                  }
-                }                
+                  }                
+                }
               }
-            }
-          }else if (key.field_name) {
-            this.focusField("",key);  
-            break;
-          }              
+            }else if (key.field_name) {
+              this.focusField("",key);  
+              break;
+            }              
+          }
         }
       }
     }
@@ -3476,7 +3487,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
        payload['data'] = list;
       this.apiService.DynamicApiCall(payload);
-      console.log();
+      //console.log();
       
     }
 
@@ -4515,6 +4526,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     }    
   }
   previousFormFocusField:any = {};
+  focusFieldParent:any={};
   private getNextFormById(id: string) {
     const params = "form";
     const criteria = ["_id;eq;" + id + ";STATIC"];
@@ -4529,11 +4541,12 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.resetFlagsForNewForm();
     this.setForm();
     const data = formCollecition['data'];
-    console.log(data);
+    //console.log(data);
     this.updateDataOnFormField(data);
     this.currentMenu['name'] = formCollecition['collection_name'];
     this.previousFormFocusField = formCollecition['current_field']; 
     this.updateMode = formCollecition['updateMode'];
+    this.focusFieldParent = formCollecition['parent_field'];
     if(this.updateMode){
       this.selectedRow = data;
     }
@@ -4731,7 +4744,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         fieldValue = formValue[child.field_name];
       }    
       if(fieldValue && fieldValue._id && fieldValue._id != ''){
-        console.log(fieldValue._id);
+        //console.log(fieldValue._id);
         const params = child.api_params;
         if(params && params != ''){
           const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
