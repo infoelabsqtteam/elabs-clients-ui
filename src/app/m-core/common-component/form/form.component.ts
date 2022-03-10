@@ -11,7 +11,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { isArray } from 'util';
 import { MapsAPILoader } from '@agm/core';
-import {COMMA, ENTER, TAB, SPACE} from '@angular/cdk/keycodes';
+import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { ModelService } from 'src/app/services/model/model.service';
@@ -21,6 +21,7 @@ import { CoreFunctionService } from 'src/app/services/common-utils/core-function
 import { table } from 'console';
 import * as e from 'express';
 import { Common } from 'src/app/shared/enums/common.enum';
+import { PageEvent } from '@angular/material/paginator';
 declare var tinymce: any;
 
 
@@ -1730,6 +1731,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 const reqCriteria = ["_id;eq;" + value._id + ";STATIC"];
                 const reqParams = field.api_params;
                 this.getDataForNextForm(reqParams,reqCriteria);
+                this.tempVal[field.field_name + "_add_button"] = false;
               }else{           
                 this.tempVal[field.field_name + "_add_button"] = false;
               }
@@ -4429,7 +4431,8 @@ case 'populate_fields_for_report_for_new_order_flow':
     let formData = this.getFormValue(true);
     if(field && field.form_field_name){
       const nextFormReference = {
-        '_id':this.nextFormData._id
+        '_id':this.nextFormData._id,
+        'name':this.nextFormData.name
       }
       formData[field.form_field_name] = nextFormReference;
       targetFieldName = formData[field.field_name]
@@ -4618,7 +4621,10 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.custmizedFormValue[fieldName] = data;
       data = {};
     }
-    this.updateDataOnFormField(data);
+    if(this.editedRowIndex >= 0){
+      this.getStaticDataWithDependentData();
+    }
+    this.updateDataOnFormField(data);    
     let nextFormFocusedFieldname = '';
     for (let key in data) {
       nextFormFocusedFieldname = key;
@@ -4685,6 +4691,9 @@ case 'populate_fields_for_report_for_new_order_flow':
       
     }else{
       previousformData[fieldName] = currentFormValue;
+      if(!this.enableNextButton){
+        this.enableNextButton = true;
+      }
       this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
       this.close();
     } 
@@ -4751,9 +4760,24 @@ case 'populate_fields_for_report_for_new_order_flow':
   }
   
   updateAddNewField(parent,child){
-    this.storeFormDetails(parent,child);
-    this.updateAddNew = true;
-    
+    if(child && child.onchange_get_next_form){
+      let fieldValue:any = '';
+      if(parent != ''){
+        fieldValue = this.templateForm.get(parent.field_name).get(child.field_name).value;
+      }else{
+        fieldValue = this.templateForm.get(child.field_name).value;
+      }
+      if(fieldValue && fieldValue._id && fieldValue._id != ''){
+        this.onchangeNextForm = true;
+        const reqCriteria = ["_id;eq;" + fieldValue._id + ";STATIC"];
+        const reqParams = child.api_params;
+        this.getDataForNextForm(reqParams,reqCriteria);
+        this.tempVal[child.field_name + "_add_button"] = false;
+      }
+    }else{
+      this.storeFormDetails(parent,child);
+      this.updateAddNew = true;
+    }    
   }
   getNextFormData(formData){
     if(formData){
