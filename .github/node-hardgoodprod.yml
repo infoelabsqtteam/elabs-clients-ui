@@ -1,0 +1,52 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Angular CI with Node - Prod
+
+on:
+  push:
+    branches: [ hardgoodprod ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    ########################### Elabs Aws - ###########################
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.REGION }}
+        
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '${{ secrets.NODE_VERSION }}'
+    
+    - name: Installing source NPM dependencies...
+      run: npm install
+      
+    - name: Installing Angular
+      run: npm install -g @angular/cli
+    
+    
+    - name: Set Node Options
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
+    
+    - name: Building
+      run: ng build --configuration=${{ secrets.ENVIRONMENT_PRODUCTION }}
+
+  # Deploy HardGoodLabs Sit
+    - name: Clean up existing deployment - HardGoodLabs hardgoodslabs.e-labs.ai
+      run: aws s3 rm s3://yourhg.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://yourhg.e-labs.ai
+
+    - name: Clean up cache
+      run: aws cloudfront create-invalidation --distribution-id E2JPRR8Q5U69KC --paths '/*'
