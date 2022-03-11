@@ -71,17 +71,6 @@ jobs:
     - name: Clean up cache
       run: aws cloudfront create-invalidation --distribution-id E35I1KJPO9P1V0 --paths '/*'
       
-    
-  # Deploy HardGoodLabs Sit
-    - name: Clean up existing deployment - HardGoodLabs hardgoodslabs.e-labs.ai
-      run: aws s3 rm s3://yourhg.e-labs.ai --recursive
-
-    - name: Upload data
-      run: aws s3 sync dist s3://yourhg.e-labs.ai
-
-    - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2JPRR8Q5U69KC --paths '/*'
-
   # Deploy Itc Labs Sit
     - name: Clean up existing deployment - itclabs.e-labs.ai
       run: aws s3 rm s3://itclabs.e-labs.ai --recursive
