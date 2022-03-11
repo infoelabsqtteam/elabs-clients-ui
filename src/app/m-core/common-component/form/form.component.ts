@@ -3479,7 +3479,8 @@ case 'populate_fields_for_report_for_new_order_flow':
           const controls:any = this.templateForm.get(element.field_name)['controls'];
           if(controls && controls.length > 0){
             controls.forEach((child,i) => {
-              this.templateForm.get(element.field_name).get(i).setValue(false);
+              controls.at(i).patchValue(false);
+              //this.templateForm.get(element.field_name).at(i).patchValue(false);
               //(<FormArray>this.templateForm.controls[element.field_name]).controls[i].patchValue(false);
             });
           }
