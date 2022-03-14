@@ -29,8 +29,7 @@
                             <mat-option *ngFor="let staticValue of operaters | keyvalue" [value]="staticValue.key"
                                 [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
                         </mat-select>
-                    </mat-form-field>
-                    
+                    </mat-form-field>                
                     
                     <div *ngIf="field.type == 'date'">
                         <mat-form-field appearance="outline" class="w-100">
