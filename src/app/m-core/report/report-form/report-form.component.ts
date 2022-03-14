@@ -90,17 +90,14 @@ export class ReportFormComponent implements OnInit {
   ) { 
     this.exportExcelSubscription = this.dataShareServices.exportExcelLink.subscribe(data =>{
       this.setExportExcelLink(data);
-    }
-    
-    
-    )
+    });
     this.gridDataSubscription = this.dataShareServices.gridData.subscribe(data =>{
       if(data.data && data.data.length > 0){
         this.gridData= data.data;
       } else {
         this.gridData = [];
       }
-    })
+    });
 
     this.staticDataSubscription = this.dataShareServices.staticData.subscribe( data =>{
       this.staticData = data;
