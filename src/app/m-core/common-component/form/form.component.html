@@ -1212,6 +1212,9 @@
 	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                             </mat-form-field>
                         </div>
+
+
+
                         <mat-vertical-stepper [linear]="isLinear" #stepper *ngIf="tableField.type == 'stepper' && tableField.list_of_fields != null">
                             <mat-step *ngFor="let step of tableField.list_of_fields; let j = index" [stepControl]="templateForm.get(step.field_name)">
                                 <ng-template matStepLabel>{{step.label}}</ng-template>
