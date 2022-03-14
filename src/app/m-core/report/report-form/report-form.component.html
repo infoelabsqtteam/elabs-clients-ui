@@ -34,7 +34,7 @@
                     <div *ngIf="field.type == 'date'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
-                            <input matInput [matDatepicker]="picker2" [formControlName]="'value'">
+                            <input matInput [matDatepicker]="picker2" [formControlName]="'value'" autocomplete="off">
                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                             <mat-datepicker #picker2 color="primary"></mat-datepicker>
                         </mat-form-field>
@@ -42,19 +42,19 @@
                     <div *ngIf="field.type == 'text'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
-                            <input matInput type="text" [formControlName]="'value'">
+                            <input matInput type="text" [formControlName]="'value'" autocomplete="off">
                         </mat-form-field>
                     </div>
                     <div *ngIf="field.type == 'number'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
-                            <input matInput type="text" [formControlName]="'value'">
+                            <input matInput type="text" [formControlName]="'value'" autocomplete="off">
                         </mat-form-field>
                     </div>
                     <div *ngIf="field.type == 'textarea'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
-                            <input matInput type="text" [formControlName]="'value'">
+                            <input matInput type="text" [formControlName]="'value'" autocomplete="off">
                         </mat-form-field>
                     </div>
                     <div *ngIf="field.type == 'dropdown'">

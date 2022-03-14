@@ -121,7 +121,7 @@
 
 
 
-button:focus, input:focus, textarea:focus, select:focus {outline:none;}
+button:focus, input:focus, textarea:focus, select:focus {outline:none !important;}
 ul,ol,li {margin:0;padding:0;list-style:none;}
 img {max-width:100%;}
 a, a:hover {text-decoration:none;}

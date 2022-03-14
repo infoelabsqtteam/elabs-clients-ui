@@ -44,7 +44,7 @@
                         <div *ngIf="tableField.type == 'gst_number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" (change)="setValue('',tableField,false)"> 
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" (change)="setValue('',tableField,false)" autocomplete="off"> 
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -56,7 +56,7 @@
                         <div *ngIf="tableField.type == 'po_number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" pattern="^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$">
+                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" pattern="^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$" autocomplete="off">
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">{{ tableField.label | titlecase}} is <strong>required</strong></mat-error>
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.pattern">{{ tableField.label | titlecase}} is <strong>Invalid</strong></mat-error>
                             </mat-form-field>
@@ -65,7 +65,7 @@
                             <div class="w-100 position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name"> 
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>
@@ -147,9 +147,9 @@
                         <div *ngIf="tableField.type == 'number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="number" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc(tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name">
-                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" > 
-                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name">          
+                                <input matInput type="number" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc(tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">          
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -164,7 +164,7 @@
                         <div *ngIf="tableField.type == 'mobile'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input  [mask]="tableField.mask" matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" maxlength="20" OnlyNumber="true" [id]="tableField._id+'_'+tableField.field_name">
+                                <input  [mask]="tableField.mask" matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" maxlength="20" OnlyNumber="true" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -246,7 +246,7 @@
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
                                     <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                     <input type="text" [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
-                                        [matAutocomplete]="first" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                        [matAutocomplete]="first" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                     <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,false)" [displayWith]="getOptionText">
                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
@@ -322,8 +322,8 @@
                                             {{getddnDisplayVal(item)}}
                                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                     </mat-chip>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" *ngIf="tableField.datatype == 'chips'" [id]="tableField._id+'_'+tableField.field_name">
-                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'chips_with_mask'" [id]="tableField._id+'_'+tableField.field_name">
+                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" *ngIf="tableField.datatype == 'chips'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'chips_with_mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                 </mat-chip-list >
                             </mat-form-field>
 
@@ -965,10 +965,6 @@
                                 </div> 
                             </div>                          
                         </div>
-
-
-
-
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_text'">
                             <div class="col-md-2 labeltitle"><strong>{{ tableField.label | titlecase}} :</strong></div>
                             <div class="col-md-4 labelfiled">
