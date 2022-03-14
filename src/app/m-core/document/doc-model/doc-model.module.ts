@@ -7,6 +7,8 @@ import { MoveFileFolderComponent } from './move-file-folder/move-file-folder.com
 import { DocFileUploadComponent } from './doc-file-upload/doc-file-upload.component';
 import { DocViewModelComponent } from './doc-view-model/doc-view-model.component';
 import { DocFolderUploadComponent } from './doc-folder-upload/doc-folder-upload.component';
+import { AngularMaterialModule } from '../../angular-material-module/angular-material.module';
+
 
 const models = [
   NewFolderCreationComponent,
@@ -21,7 +23,8 @@ const models = [
     CommonModule,
     MDBBootstrapModule.forRoot(),
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    AngularMaterialModule
   ],
   declarations: models,
   exports:models

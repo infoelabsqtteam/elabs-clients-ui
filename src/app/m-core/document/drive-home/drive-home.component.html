@@ -1,1140 +1,987 @@
-<div class="row border-bottom">
-  <div class="col-lg-6 pt-2">
-      <nav aria-label="breadcrumb" class="py-2">
-          <ol class="breadcrumb mb-0 py-0">
-              <li class="breadcrumb-item"><a href="javascript:void(0);" class="text-secondary font-weight-bold" (click)="getHome()">Document Library</a></li>
-              <li class="breadcrumb-item" *ngFor="let bredcrumb of pathList| slice:1; let i = index"><a href="javascript:void(0);" class="text-secondary" (click)="getBredCrumbData(i)">{{ bredcrumb }}</a></li>
-              <li class="breadcrumb-item active" aria-current="page" *ngIf="currentSelectedPath != ''">{{ currentSelectedPath }}</li>
-              <div class="dropdown" dropdown *ngIf="showNewFolderAndUploadDropdown">
-                  <button dropdownToggle mdbWavesEffect type="button" class="dropdown-toggle btn btn-none py-0 px-2 m-0" ><span></span></button>
-                  <div *dropdownMenu class="dropdown-menu dropdown-menu-left dropdown-menu-animated topbar-dropdown-menu profile-dropdown w-auto p-0" role="menu">
-                      <a href="javascript:void(0);"  (click)="createNewFolder()" class="dropdown-item notify-item border-bottom py-2">
-                          <i class="mdi mdi-folder-plus mr-1"></i>
-                          <span>New Folder</span>
-                      </a>
+<section class="d-flex align-items-center justify-content-between border-bottom py-3 breadcrumbhead">
+    <div class="breadcrumbmenu">
+        <button mat-button class="documentmenu mr-2" (click)="getHome()">Document Library</button>
+        <button mat-button class="activebreadcruem mr-2" *ngFor="let bredcrumb of pathList| slice:1; let i = index"><span (click)="getBredCrumbData(i)">{{ bredcrumb }}</span></button>
+        <button mat-button class="activebreadcruem mr-2" [matMenuTriggerFor]="menu" *ngIf="currentSelectedPath != ''">{{ currentSelectedPath }} <mat-icon>arrow_drop_down</mat-icon></button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="createNewFolder()">New Folder</button>
+            <button mat-menu-item (click)="fileUploadModal()">Upload Files</button>
+        </mat-menu>
+    </div>
+    <div class="gridviewmenu d-flex align-items-center">
+        <div [ngClass]="selectionAny ? 'd-inline':'d-none'">
+            <!-- <button mat-icon-button [ngClass]="selectedRowFile ? 'd-inline':'d-none'" (click)="viewFile(vdrprentfolder);recentData('')" placement="bottom" ngbTooltip="Preview"><mat-icon>visibility</mat-icon></button> -->
+            <button mat-icon-button [matMenuTriggerFor]="beforeMenu"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #beforeMenu="matMenu" xPosition="before">
+                <!-- <button mat-menu-item class="breadicon" *ngIf="hideRightClickMove" (click)="moveModalOpen()"><mat-icon>drive_file_move</mat-icon> Move to</button> -->
+                <button mat-menu-item class="breadicon" *ngIf="hideRightClickMove" (click)="openRenameModal()"><mat-icon>drive_file_rename_outline</mat-icon> Rename</button>
+                <button mat-menu-item  class="breadicon"(click)="showDeatailsGrid()"><mat-icon>info</mat-icon> View details</button>
+                <button mat-menu-item class="breadicon" *ngIf="selectedRowFile" (click)="download()"><mat-icon>file_download</mat-icon> Download</button>
+            </mat-menu>
+        </div>
+        <button mat-icon-button color="primary" (click)="changeGridView()">
+            <mat-icon [ngClass]="documentViewList ? '': 'd-none'">view_list</mat-icon>
+            <mat-icon [ngClass]="documentViewList ? 'd-none': ''">grid_view</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="showDeatailsGrid()"><mat-icon>info</mat-icon></button>
+    </div>
+</section>
 
-                      <!-- item-->
-                      <a href="javascript:void(0);"  (click)="fileUploadModal()" class="dropdown-item notify-item py-2">
-                          <i class="uil-file-upload mr-1"></i>
-                          <span>Upload Files</span>
-                      </a>
 
-                      <!-- item-->
-                      <!-- <a href="javascript:void(0);" (click)="folderUploadModel()" class="dropdown-item notify-item">
-                          <i class="mdi mdi-folder-upload mr-1"></i>
-                          <span>Upload Folder</span>
-                      </a> -->
-                  </div>
-                  <!-- <a href="javascript:void(0)" dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light text-white" mdbWavesEffect *ngIf="menu.submenu && menu.submenu != null" (click)="activeLinkD(menu.label,false)">{{ menu.label }}</a>
-                    <span *ngIf="menu.submenu && menu.submenu != null"></span>
-                    <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
-                        <a href="javascript:void(0)" class="dropdown-item waves-light p-1"  mdbWavesEffect  *ngFor="let submenu of menu.submenu" (click)="getTemplateData(submenu)">{{ submenu.label }}</a>
+
+<section class="vdrsection">
+    <div class="row">
+        <div [ngClass]="docDetailActivity ? 'col-lg-9':'col-lg-12'">
+            <div class="document-scroll table-responsive">
+                <div class="row w-100" [hidden]="!QuickAccess">
+                    <div class="col-lg-3 d-block " (click)="showQuickAccess()" data-toggle="collapse" data-target="#demo"> <h5 class=" pb-2 ">Search result</h5></div>
+                    <div class="col-lg-9"></div>
+                </div>
+                <div class="row w-100" id="demo" [hidden]="!QuickAccess">
+                    <div class="col-lg-3" *ngFor="let doc of searchDocumentFiles; let i = index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="[doc,i]">
+                        <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark"
+                            (click)="setClickedRow(i,true,doc, 'FromsearchData')" (dblclick)="viewFile(doc)"
+                            [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'">
+                            <div class="border-bottom file-grid-view">
+                                <div class="file-img-col bg-light"><img src="{{ getFileImageForFolders(doc.fileExt) }}" alt="" class="doc-xls"></div>
+                            </div>
+                            <div class="px-1 py-2">
+                                <p class="m-0 text-secondary h6"><img src="{{ getFileExtentionForFolderExplore(doc.fileExt) }}" alt="" class="icon-ext-size mr-1">{{doc.rollName}}</p>
+                                <p class="m-0 pl-2"><small class="text-muted">{{doc.fileExt}}</small></p>
+                            </div>
+                        </a>
                     </div>
-                    </span>  -->
-              </div>
-          </ol>
-      </nav>
 
-  </div>
-  <div class="col-lg-6 text-right">
-      <div [ngClass]="selectionAny ? 'd-inline':'d-none'">
-
-          <!-- <a class="pr-3 py-1" href="javascript: void(0);" placement="bottom" ngbTooltip="Get shareable link">
-              <span class="material-icons-outlined  h3 text-secondary align-middle">link</span>
-          </a>
-          <a class="pr-3 py-1" href="javascript: void(0);" (click)="shareDocument()" placement="bottom" ngbTooltip="Share 'Work Expirience'">
-              <span class="material-icons-outlined h3 text-secondary align-middle">person_add</span>
-          </a> -->
-          <a class="pr-3 py-1" href="javascript: void(0);" [ngClass]="selectedRowFile ? 'd-inline':'d-none'" (click)="viewFile(vdrprentfolder);recentData('')" placement="bottom" ngbTooltip="Preview">
-              <span class="material-icons-outlined  h4 text-secondary align-middle">visibility</span>
-          </a>
-          <div class="d-inline dropdown more-details" dropdown>
-              <a href="javascript:void(0)" dropdownToggle  type="button" class="pr-2 py-1 border-right mr-2 dropdown-toggle waves-light pt-2">
-                <span class="material-icons-outlined h4 text-secondary align-middle">more_vert</span>
-              </a>
-              <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary  dropdown-menu-animated topbar-dropdown-menu profile-dropdown w-auto p-0">
-                  <!-- item-->
-                  <a href="javascript:void(0);" *ngIf="hideRightClickMove" class="dropdown-item notify-item py-2" (click)="moveModalOpen()">
-                      <span class="material-icons-outlined mr-1">drive_file_move</span>
-                      <span>Move to</span>
-                  </a>
-                  <a href="javascript:void(0);" *ngIf="hideRightClickMove" (click)="openRenameModal()" class="dropdown-item notify-item border-bottom py-2">
-                      <span class="material-icons-outlined mr-1">drive_file_rename_outline</span>
-                      <span>Rename</span>
-                  </a>
-
-                  <!-- item-->
-                  <a href="javascript:void(0);" (click)="showDeatailsGrid()" class="dropdown-item notify-item py-2">
-                      <span class="material-icons-outlined mr-1">info</span>
-                      <span>View details</span>
-                  </a>
-
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item notify-item" *ngIf="selectedRowFile" (click)="download()">
-                      <span class="material-icons-outlined mr-1">file_download</span>
-                      <span>Download</span>
-                  </a>
-              </div>
-          </div>
-      </div>
-      <a href="javascript: void(0);" class="pr-2 py-1" (click)="changeGridView()">
-          <!-- <i class="mdi mdi-view-grid h3 text-secondary align-middle" [ngClass]="documentViewList ? 'd-none': ''" placement="bottom" ngbTooltip="Grid View"></i>
-          <i class="mdi mdi-view-headline h3 text-secondary align-middle" [ngClass]="documentViewList ? '': 'd-none'" placement="bottom" ngbTooltip="List View"></i> -->
-          <span class="material-icons-outlined  h3 text-secondary align-middle" [ngClass]="documentViewList ? '': 'd-none'">view_list</span>                
-            <span class="material-icons-outlined  h3 text-secondary align-middle" [ngClass]="documentViewList ? 'd-none': ''">grid_view</span>
-      </a>
-      <a class="pr-2 py-1" href="javascript: void(0);" (click)="showDeatailsGrid()">
-          <span class="material-icons-outlined h3 text-secondary align-middle">info</span>
-      </a>
-  </div>
-</div>
-<div class="row">
-  <div class="" style="height: 75vh" [ngClass]="docDetailActivity ? 'col-lg-7':'col-lg-12'">
-      <div class="p-2 document-scroll table-responsive">
-          <div class="row w-100" [hidden]="!QuickAccess">
-              <div class="col-lg-3 d-block " (click)="showQuickAccess()" data-toggle="collapse" data-target="#demo">
-                  <h5 class=" pb-2 ">Search result</h5>
-              </div>
-              <div class="col-lg-9"></div>
-          </div>
-          <div class="row w-100" id="demo" [hidden]="!QuickAccess">
-              <div class="col-lg-3" *ngFor="let doc of searchDocumentFiles; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[doc,i]">
-                  <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark" (click)="setClickedRow(i,true,doc, 'FromsearchData')" (dblclick)="viewFile(doc)" [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'">
-                      <div class="border-bottom file-grid-view">
-                          <div class="file-img-col bg-light">
-                              <img src="{{ getFileImageForFolders(doc.fileExt) }}" alt="" class="doc-xls">
-                          </div>
-                      </div>
-                      <div class="px-1 py-2">
-                          <p class="m-0 text-secondary h6"><img src="{{ getFileExtentionForFolderExplore(doc.fileExt) }}" alt="" class="icon-ext-size mr-1">{{doc.rollName}}</p>
-                          <p class="m-0 pl-2"><small class="text-muted">{{doc.fileExt}}</small></p>
-                      </div>
-                  </a>
-              </div>
-              <!-- <div class="col-lg-3">
-                  <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark">
-                      <div class="border-bottom file-grid-view">
-                          <div class="file-img-col bg-light">
-                              <img src="../../assets/img/avatar-1.jpg" alt="" class="doc-img">
-                          </div>
-                      </div>
-                      <div class="px-1 py-2">
-                          <p class="m-0 text-secondary h6"><img src="../../assets/img/photo.png" alt="" class="icon-img-ext-size mr-1">Bugs Sheet - Swatantra</p>
-                          <p class="m-0 pl-2"><small class="text-muted">With faded secondary text</small></p>
-                      </div>
-                  </a>
-              </div>
-              <div class="col-lg-3">
-                  <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark">
-                      <div class="border-bottom file-grid-view">
-                          <div class="file-img-col bg-light">
-                              <img src="../../assets/img/xls.png" alt="" class="doc-xls">
-                          </div>
-                      </div>
-                      <div class="px-1 py-2">
-                          <p class="m-0 text-secondary h6"><img src="../../assets/img/doc-icon.png" alt="" class="icon-ext-size mr-1">Bugs Sheet - Swatantra</p>
-                          <p class="m-0 pl-1"><small class="text-muted">With faded secondary text</small></p>
-                      </div>
-                  </a>
-              </div>
-              <div class="col-lg-3">
-                  <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark">
-                      <div class="border-bottom file-grid-view">
-                          <div class="file-img-col bg-light">
-                              <img src="../../assets/img/xls.png" alt="" class="doc-xls">
-                          </div>
-                      </div>
-                      <div class="px-1 py-2">
-                          <p class="m-0 text-secondary h6"><img src="../../assets/img/pdf-icon.png" alt="" class="icon-ext-size mr-1">Bugs Sheet - Swatantra</p>
-                          <p class="m-0 pl-1"><small class="text-muted">With faded secondary text</small></p>
-                      </div>
-                  </a>
-              </div> -->
-          </div>
-          <div *ngFor="let vdr of searchDocumentFolders ; let i = index" [hidden]="!QuickAccess" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
-              <div [ngClass]="documentViewList ? 'border mb-2 rounded':'border-bottom  mr-2'">
-                  <a href="javascript:void(0);" class="d-block text-dark p-2" (dblclick)="openFolder(vdr, 'FromsearchData')" (click)="setClickedRow(i,false,vdr)" [ngClass]="i == selectedRow ? 'bg-light text-primary':''" appDnd (fileDropped)="onFileDropped($event,true,vdr)">
-                      <div class="row">
-                          <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" aria-hidden="true" (change)="fileBrowseHandler($event.target.files)" />
-                          <div [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'">
-                              <i class="mdi mdi-folder h4 mr-2"></i>{{vdr.rollName}}
-                          </div>
-                          <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                              <p class="m-0">{{vdr.id}}</p>
-                          </div>
-                          <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                              <p class="m-0"> <span></span></p>
-                          </div>
-                          <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'">
-                              <p class="m-0">-</p>
-                          </div>
-                      </div>
-                  </a>
-              </div>
-          </div>
-
-          <div *ngIf="QuickAccess && SearchDocument && SearchDocument.length <= 0">
-              <h2> No Result Found </h2>
-          </div>
-
-
-          <div class="row w-100" *ngIf="!QuickAccess">
-              <div class="col-lg-12 " [ngClass]="documentViewList ? 'd-block':'d-none'" *ngIf="childFolders.length > 0">
-                  <h5 class=" pb-2">Folders</h5>
-              </div>
-              <div class="col-lg-12 " [ngClass]="documentViewList ? 'd-none':'d-block'">
-                  <div class="row" [ngClass]="documentViewList ? '':'border-bottom py-2 mr-2'">
-                      <div class="col-lg-4">
-                          <h5>Name</h5>
-                      </div>
-                      <div class="col-lg-3">
-                          <h5>Last Modified</h5>
-                      </div>
-                      <div class="col-lg-2">
-                          <h5>File Size</h5>
-                      </div>
-                      <div class="col-lg-3">
-                          <h5>Chat</h5>
-                      </div>
-                  </div>
-              </div>
-
-              <div *ngFor="let vdr of childFolders ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
-                  <div [ngClass]="documentViewList ? 'border mb-2 rounded':'border-bottom  mr-2'">
-                      <a href="javascript:void(0);" class="d-block text-dark p-2" (dblclick)="openFolder(vdr, null)" (click)="setClickedRow(i,false,vdr)" [ngClass]="i == selectedRow ? 'bg-light text-primary':''" appDnd (fileDropped)="onFileDropped($event,true,vdr)">
-                          <div class="row">
-                              <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" aria-hidden="true" (change)="fileBrowseHandler($event.target.files)" />
-                              <div [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'">
-                                  <span class="material-icons-outlined h4 m-0 mr-2 vertical-sub" >folder</span>{{vdr.rollName}}
-                              </div>
-                              <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                                  <p class="m-0">{{vdr.id}}</p>
-                              </div>
-                              <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                                  <p class="m-0"> <span></span></p>
-                              </div>
-                              <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'">
-                                  <p class="m-0">-</p>
-                              </div>
-                          </div>
-                      </a>
-                  </div>
-              </div>
-              <!-- <div *ngFor="let folder of folders; let i = index"  [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
-        <div [ngClass]="documentViewList ? 'border mb-2 rounded':'border-bottom  mr-2'">
-          <a href="javascript:void(0);" class="d-block text-dark p-2"  (click)="setClickedRow(i, false)" [ngClass]="i == selectedRow ? 'bg-light':''">
-            <div class="row" >
-              <div  [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'">
-                <i class="mdi mdi-folder h4 mr-2"></i>{{folder.folName}}
-              </div>
-              <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                <p class="m-0">{{folder.owner}}</p>
-              </div>
-              <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                <p class="m-0">{{folder.mfDate}} <span>{{folder.owner}}</span></p>
-              </div>
-              <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'">
-                <p class="m-0">-</p>
-              </div>
-            </div>	
-          </a>
-        </div>									
-      </div> -->
-          </div>
-
-
-          <div class="row w-100" appDnd (fileDropped)="onFileDropped($event,true,null)" *ngIf="!QuickAccess">
-              <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" aria-hidden="true" (change)="fileBrowseHandler($event.target.files)" />
-              <div class="col-lg-12" [ngClass]="documentViewList ? 'd-block':'d-none'" *ngIf="childFiles.length > 0">
-                  <h5 class=" pb-2">Files</h5>
-              </div>
-              <div *ngFor="let child of childFiles ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[child,i]" [ngClass]="{'col-lg-3':docDetailActivity && documentViewList,'col-lg-2':documentViewList && !docDetailActivity,'col-lg-12':!documentViewList}">
-                  <div [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'" *ngIf="!child.folder">
-                      <div [ngClass]="documentViewList ? 'border rounded mb-2':'border-bottom py-2 mr-2'">
-                          <a href="javascript:void(0);" (click)="setClickedRow(i,true,child)" class=" d-block  text-dark" (dblclick)="viewFile(child)">
-                              <div class="row">
-                                  <div [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'">
-                                      <div class="border-bottom file-grid-view" [ngClass]="documentViewList ? '':'d-none'">
-                                          <div class="file-img-col bg-light" *ngIf="!child.folder">
-                                              <img src="{{ getFileImageForFolders(child.fileExt) }}" alt="" class="doc-xls">
-                                          </div>
-                                      </div>
-                                      <div [ngClass]="documentViewList ? 'px-1 py-2':''" *ngIf="!child.folder">
-                                          <p class="m-0 text-secondary h6"><img src="{{ getFileExtentionForFolderExplore(child.fileExt) }}" alt="" class="icon-ext-size mr-1">{{ child.rollName }}</p>
-                                          <!-- <p class="m-0 pl-1" [ngClass]="documentViewList ? '':'d-none'"><small class="text-muted">{{child.rollName}}</small></p> -->
-                                      </div>
-
-
-                                  </div>
-                                  <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                                      <p class="m-0">{{child.mfDate}} <span>{{child.owner}}</span></p>
-                                  </div>
-                                  <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'">
-                                      <p class="m-0 text-uppercase">{{child.fileSize}}</p>
-                                  </div>
-                                  <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                                      <i class="mdi mdi-message-text-outline" (click)="chatList()"></i>
-                                  </div>
-                                  <!-- <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                  <p class="m-0">{{child.rollName}}</p>
-                </div> -->
-
-                              </div>
-                          </a>
-                      </div>
-                  </div>
-              </div>
-
-              <!-- <div *ngFor="let file of docfiless | filter:SearchDocument; let i = index" [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'" [contextMenu]="basicMenu" [contextMenuSubject]="[file,i]" >
-        <div  [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'">
-          <div [ngClass]="documentViewList ? 'border rounded mb-2':'border-bottom py-2 mr-2'">
-            <a href="javascript:void(0);" (click)="setClickedRow(i,true,file)" class=" d-block  text-dark"  >
-              <div class="row">
-                <div  [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'">			
-                    <div class="border-bottom file-grid-view" [ngClass]="documentViewList ? '':'d-none'">
-                      <div class="file-img-col bg-light">
-                        <img src="../../assets/img/{{file.fileImg}}" alt="" class="doc-xls">
-                      </div>
+                </div>
+                <div *ngFor="let vdr of searchDocumentFolders ; let i = index" [hidden]="!QuickAccess"
+                    [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]"
+                    [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
+                    <div [ngClass]="documentViewList ? 'border mb-2 rounded':'border-bottom  mr-2'">
+                        <a href="javascript:void(0);" class="d-block text-dark p-2"
+                            (dblclick)="openFolder(vdr, 'FromsearchData')" (click)="setClickedRow(i,false,vdr)"
+                            [ngClass]="i == selectedRow ? 'bg-light text-primary':''" appDnd
+                            (fileDropped)="onFileDropped($event,true,vdr)">
+                            <div class="row">
+                                <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" (change)="fileBrowseHandler($event.target.files)" />
+                                <div [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'"><i class="mdi mdi-folder h4 mr-2"></i>{{vdr.rollName}}</div>
+                                <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0">{{vdr.id}}</p></div>
+                                <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0"> <span></span></p></div>
+                                <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'"><p class="m-0">-</p></div>
+                            </div>
+                        </a>
                     </div>
-                    <div  [ngClass]="documentViewList ? 'px-1 py-2':''">
-                      <p class="m-0 text-secondary h6"><img src="../../assets/img/{{file.extIcon}}" alt=""  class="icon-ext-size mr-1">{{file.filName}} <span [ngClass]="documentViewList ? 'd-none':''">.{{file.extention}}</span></p>
-                      <p class="m-0 pl-1 border-bottom" [ngClass]="documentViewList ? '':'d-none'"><small class="text-muted">{{file.fileDetail}}</small></p>
-                      <p class="m-0 mhover text-secondary d-inline" (click)="chatList()">Comments...</p>
-                    </div>
-                  
                 </div>
-                
-                <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                  <p class="m-0">{{file.mfDate}} <span>{{file.owner}}</span></p>
-                </div>
-                <div [ngClass]="documentViewList ? 'd-none':'col-lg-2'">
-                  <p class="m-0 text-uppercase">{{file.fileSize}}</p>
-                </div>
-                <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'">
-                  <i class="mdi mdi-message-text-outline" (click)="chatList()"></i>
-                </div>
-              </div>
-            </a>
-          </div>						
-        </div>					
-      </div>				 -->
-          </div>
 
-      </div>
-  </div>
-  <div class=" border-left" style="height: 75vh" [ngClass]="docDetailActivity ? 'col-lg-5':'d-none'">
-      <div class="row  py-1">
-          <div class="col-lg-10 col-10">
-              <h4 *ngIf="vdrprentfolder != ''">
-                  <img src="{{ getFileExtentionForFolderExplore(vdrprentfolder.fileExt) }}" class="mr-2" *ngIf="vdrprentfolder.fileExt != null" style="width: 30px;"> <span *ngIf="vdrprentfolder.folder"><i class="mdi mdi-folder h4 mr-2"></i></span> {{vdrprentfolder.rollName}}
-              </h4>
-              <h4 *ngIf="vdrprentfolder.length == 0">
-                  <span><i class="mdi mdi-folder h4 mr-2"></i></span> My VDR
-              </h4>
-          </div>
-          <div class="col-lg-2 col-2 text-center my-1">
-              <a href="javascript: void(0);" class="text-secondary" (click)="hideDeatailsGrid()">
-                  <span class="material-icons-outlined">close</span>
-                </a>
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-lg-12 mb-3 p-0">              
-              <mat-tab-group mat-stretch-tabs class="example-stretched-tabs">
+                <div *ngIf="QuickAccess && SearchDocument && SearchDocument.length <= 0"><h2> No Result Found </h2></div>
+
+
+                <section class="row w-100 vdrlist mx-0" *ngIf="!QuickAccess">
+                    <div class="col-lg-12 title my-3" [ngClass]="documentViewList ? 'd-block':'d-none'" *ngIf="childFolders.length > 0">Folders</div>
+                    <div class="col-lg-12 bg-light px-0 mb-2" [ngClass]="documentViewList ? 'd-none':'d-block'">
+                        <div class="row m-0" [ngClass]="documentViewList ? '':''">
+                            <div class="col-lg-4"><h5 class="m-0 py-2">Name</h5></div>
+                            <div class="col-lg-3"><h5 class="m-0 py-2">Last Modified</h5></div>
+                            <div class="col-lg-4"><h5 class="m-0 py-2">File Size</h5></div>
+                            <!-- <div class="col-lg-3"><h5 class="m-0 py-2">Chat</h5></div> -->
+                        </div>
+                    </div>
+                    <div *ngFor="let vdr of childFolders ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-2':'col-lg-12 px-0 gridlist'">
+                        <div [ngClass]="documentViewList ? '':''">
+                            <button mat-button class="w-100" (dblclick)="openFolder(vdr, null)" (click)="setClickedRow(i,false,vdr)" [ngClass]="i == selectedRow ? 'bg-light text-dark':''" appDnd (fileDropped)="onFileDropped($event,true,vdr)" [matTooltip]="vdr.rollName">
+                                <div class="row">
+                                    <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" (change)="fileBrowseHandler($event.target.files)" />
+                                    <div [ngClass]="documentViewList ? 'col-lg-12 py-1':'col-lg-4'"><mat-icon class="mr-2">folder</mat-icon><span class="foldername">{{vdr.rollName}}</span></div>
+                                    <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0">{{vdr.id}}</p></div>
+                                    <div [ngClass]="documentViewList ? 'd-none':'col-lg-4'"><p class="m-0"> <span></span></p></div>
+                                    <!-- <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0">-</p></div> -->
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row w-100 vdrlist mx-0" appDnd (fileDropped)="onFileDropped($event,true,null)" *ngIf="!QuickAccess">
+                    <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" (change)="fileBrowseHandler($event.target.files)" />
+                    <div class="col-lg-12 title my-3" [ngClass]="documentViewList ? 'd-block':'d-none'" *ngIf="childFiles.length > 0">Files</div>
+                    <div *ngFor="let child of childFiles ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[child,i]" [ngClass]="{'col-lg-3':docDetailActivity && documentViewList,'col-lg-2':documentViewList && !docDetailActivity,'col-lg-12 px-0 gridlist':!documentViewList}">
+                        <div [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'" *ngIf="!child.folder">
+                            <div [ngClass]="documentViewList ? '':''">
+                                <!-- <a href="javascript:void(0);" (click)="setClickedRow(i,true,child)" class=" d-block  text-dark" (dblclick)="viewFile(child)"> -->
+                                <button mat-button class="w-100 m-0 px-0" (click)="setClickedRow(i,true,child)">
+                                    <div class="row m-0">
+                                        <div [ngClass]="documentViewList ? 'col-lg-12 p-0':'col-lg-4'">
+                                            <div class="border-bottom file-grid-view" [ngClass]="documentViewList ? '':'d-none'"><div class="file-img-col bg-light" *ngIf="!child.folder"><img src="{{ getFileImageForFolders(child.fileExt) }}" alt="" class="doc-xls"></div></div>
+                                            <div [ngClass]="documentViewList ? 'px-1 py-2 docicon':'docicon gridviewicon'" *ngIf="!child.folder"><p class="m-0"><img src="{{ getFileExtentionForFolderExplore(child.fileExt) }}"> {{ child.rollName }}</p></div>
+                                        </div>
+                                        <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0">{{child.mfDate}} <span>{{child.owner}}</span></p></div>
+                                        <div [ngClass]="documentViewList ? 'd-none':'col-lg-5'"><p class="m-0 text-uppercase">{{child.fileSize}}</p></div>
+                                        <!-- <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><mat-icon (click)="chatList()">textsms</mat-icon></div> -->
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+
+        <section class="vdrinfo" [ngClass]="docDetailActivity ? 'col-lg-3':'d-none hide'">
+            <div class="d-flex align-items-center justify-content-between py-3">
+                <div class="title">
+                    <h4 class="d-flex align-items-center" *ngIf="vdrprentfolder != ''"><img src="{{ getFileExtentionForFolderExplore(vdrprentfolder.fileExt) }}" class="mr-2" *ngIf="vdrprentfolder.fileExt != null" style="width: 30px;"> <span *ngIf="vdrprentfolder.folder"><i class="mdi mdi-folder h4 mr-2"></i></span> {{vdrprentfolder.rollName}}</h4>
+                    <h4 class="d-flex align-items-center" *ngIf="vdrprentfolder.length == 0"><mat-icon class="mr-2">folder</mat-icon> My VDR</h4>
+                </div>
+                <button mat-icon-button color="primary" (click)="hideDeatailsGrid()"><mat-icon>close</mat-icon></button>
+            </div>
+            <mat-tab-group mat-stretch-tabs class="example-stretched-tabs">
                 <mat-tab>
-                  <ng-template mat-tab-label>Details</ng-template>
-                    <div  >
-                        <div *ngIf="vdrprentfolder != ''">
-                            <div class="row pb-1 pt-3 m-0 w-100">
-                                <div class="col-lg-4">
-                                    <strong>Created By</strong>
-                                    <p class="m-0 text-lowercase">{{ vdrprentfolder.createdBy }}</p>
-                                </div>
-                                <div class="col-lg-4">
-                                    <strong>Created Date</strong>
-                                    <p class="m-0">{{ vdrprentfolder.createdDate | date:'dd/MM/yyyy' }}</p>
-                                </div>
-                                <div class="col-lg-4" *ngIf="vdrprentfolder.parentFolder == 'mclear-vdr-uat'">
-                                    <strong>Location</strong>
-                                    <p class="m-0">{{ vdrprentfolder.parentFolder }}</p>
-                                </div>
-                            </div>
-                            <div class="row py-1 m-0 w-100">
-                                <div class="col-lg-4" *ngIf="!vdrprentfolder.folder">
-                                    <strong>File Size</strong>
-                                    <p class="m-0">{{ vdrprentfolder.fileSize }}</p>
-                                </div>
-                                <div class="col-lg-4" *ngIf="vdrprentfolder.updatedBy != null">
-                                    <strong>Modify By</strong>
-                                    <p class="m-0 text-lowercase">{{ vdrprentfolder.updatedBy }}</p>
-                                </div>
-                                <div class="col-lg-4" *ngIf="vdrprentfolder.updateDate != null">
-                                    <strong>Modify Date</strong>
-                                    <p class="m-0">{{ vdrprentfolder.updateDate | date:'dd/MM/yyyy' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="vdrprentfolder.length == 0" class="text-center">
-                            <i class="uil-folder-slash"></i>
-                            <p class="text-secondary my-2">Select a file or folder to view its details</p>
+                    <ng-template mat-tab-label>Details</ng-template>
+                    <div *ngIf="vdrprentfolder != ''">
+                        <div class="mt-3">
+                            <p><span class="font-weight-bold">Created By :</span> {{ vdrprentfolder.createdBy }}</p>
+                            <p><span class="font-weight-bold">Created Date :</span> {{ vdrprentfolder.createdDate | date:'dd/MM/yyyy' }}</p>
+                            <p *ngIf="vdrprentfolder.parentFolder == 'mclear-vdr-uat'"><span class="font-weight-bold">Location :</span> {{ vdrprentfolder.parentFolder }}</p>
+                            <p *ngIf="!vdrprentfolder.folder"><span class="font-weight-bold">File Size :</span> {{ vdrprentfolder.fileSize }}</p>
+                            <p *ngIf="vdrprentfolder.updatedBy != null"><span class="font-weight-bold">Modify By :</span> {{ vdrprentfolder.updatedBy }}</p>
+                            <p *ngIf="vdrprentfolder.updateDate != null"><span class="font-weight-bold">Modify Date :</span> {{ vdrprentfolder.updateDate | date:'dd/MM/yyyy' }}</p>
                         </div>
                     </div>
+                    <div *ngIf="vdrprentfolder.length == 0" class="text-center mt-5"><p class="d-flex align-items-center"><mat-icon class="mr-2">folder</mat-icon> Select a file or folder to view its details</p></div>
                 </mat-tab>
-              
                 <mat-tab>
-                  <ng-template mat-tab-label>Activity</ng-template>
+                    <ng-template mat-tab-label>Activity Audit</ng-template>
                     <div class="tab-pane" id="docActivity">
-                        <div >
-                            <app-audit-list *ngIf="vdrprentfolder != ''"></app-audit-list>
-                        </div>
-                        <div *ngIf="vdrprentfolder.length == 0" class="text-center">
-                            <i class="uil-folder-slash"></i>
-                            <p class="text-secondary my-2">Select a file or folder to view its activity</p>
-                        </div>
+                        <div><app-audit-list *ngIf="vdrprentfolder != ''"></app-audit-list></div>
+                        <div *ngIf="vdrprentfolder.length == 0" class="text-center mt-5"><p class="d-flex align-items-center"><mat-icon class="mr-2">folder</mat-icon> Select a file or folder to view its activity</p></div>
                     </div>
                 </mat-tab>
-              </mat-tab-group>
-          </div>          
-      </div>
-  </div>
-</div>
+            </mat-tab-group>
+        </section>
+    </div>
+</section>
 
 
 
-<div [ngClass]="deleteAlert ? 'show modalShow' : ''" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-          <div class="modal-body p-4">
-              <div class="text-center">
-                  <i class="dripicons-information h1 text-info"></i>
-                  <h4 class="mt-2">Delete ?</h4>
-                  <!-- <p class="mt-3">You really want to delete it.</p> -->
-                  <p>{{this.vdrprentfolder.rollName}}</p>
-                  <button type="button" class="btn btn-info my-2" data-dismiss="modal" (click)="deleteDocument()">Delete</button>
-                  <button type="button" class="btn btn-info my-2 ml-1" (click)="closeDeleteDocAlert()">Cancel</button>
-              </div>
-          </div>
-      </div>
-      <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+<section [ngClass]="deleteAlert ? 'show modalShow' : ''" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <div class="text-center">
+                    <i class="dripicons-information h1 text-info"></i>
+                    <h4 class="mt-2">Delete ?</h4>
+                    <p>{{this.vdrprentfolder.rollName}}</p>
+                    <button type="button" class="btn btn-info my-2" data-dismiss="modal" (click)="deleteDocument()">Delete</button>
+                    <button type="button" class="btn btn-info my-2 ml-1" (click)="closeDeleteDocAlert()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 
-<div class="modal fade" id="shareDoc" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-          <div class="modal-header py-1">
-              <h3 class="modal-title my-auto" id="myCenterModalLabel">Share with others</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true my-auto">×</button>
-          </div>
-          <div class="modal-body pb-0 pt-1">
-              <div class="form-group">
-                  <div class="row">
-                      <div class="col-lg-12 ">
-                          <label for="example-email">People</label>
-                          <!-- <input type="email" id="example-email" name="example-email" class="form-control" placeholder="Email"> -->
-                          <!-- <ng-select2 [data]="permissionListData" (valueChanged)="setSelectPermissionList($event)" [options]="permissionOptions" [placeholder]="permissionPlaceholder">
-                          </ng-select2> -->
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="mt-2 col-lg-12">
-                          <div class="form-check-inline col-lg-3">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" value="view" [disabled]="isDisabledView" (change)="AccessControl($event.target.value, $event.target.checked)">view only
-                              </label>
-                          </div>
-                          <div class="form-check-inline col-lg-5">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" value="download" [disabled]="isDisabledDwnld" (change)="AccessControl($event.target.value, $event.target.checked)">view & download
-                              </label>
-                          </div>
-                          <div class="form-check-inline col-lg-3">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" value="full" [disabled]="isDisabledFull" (change)="AccessControl($event.target.value, $event.target.checked)">full control
-                              </label>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="row pt-1">
-                      <div class="col-lg-12">
-                          <div class="form-group">
-                              <textarea class="form-control" placeholder="Add a note" id="example-textarea" rows="5"></textarea>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-lg-8">
-                          <div>
-                              <span class="border px-1 py-1"> <img src="{{ getFileExtentionForFolderExplore(vdrprentfolder.fileExt) }}" alt="" class="icon-ext-size mr-1">{{vdrprentfolder.rollName}} </span>
-                          </div>
-                      </div>
-                      <!-- <div class="col-lg-4 text-right">
-                          <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck1">
-                              <label class="custom-control-label" for="customCheck1"> Notify people</label>
-                          </div>
-                      </div> -->
-                  </div>
-                  <div class="row">
-                      <div class="col-lg-12 text-right pt-1">
-                          <button type="button" class="btn btn-primary btn-sm" (click)="toShare()">Send</button>
-                          <button type="button" class="btn btn-primary btn-sm ml-2">Cancel</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
+<section class="modal fade" id="shareDoc" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-1">
+                <h3 class="modal-title my-auto" id="myCenterModalLabel">Share with others</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true my-auto">×</button>
+            </div>
+            <div class="modal-body pb-0 pt-1">
+                <div class="form-group">
+                    <div class="row"><div class="col-lg-12 "><label for="example-email">People</label></div></div>
+                    <div class="row">
+                        <div class="mt-2 col-lg-12">
+                            <div class="form-check-inline col-lg-3"><label class="form-check-label"><input type="checkbox" class="form-check-input" value="view" [disabled]="isDisabledView" (change)="AccessControl($event.target.value, $event.target.checked)">view only</label></div>
+                            <div class="form-check-inline col-lg-5"><label class="form-check-label"> <input type="checkbox" class="form-check-input" value="download" [disabled]="isDisabledDwnld" (change)="AccessControl($event.target.value, $event.target.checked)">view & download</label></div>
+                            <div class="form-check-inline col-lg-3"><label class="form-check-label"> <input type="checkbox" class="form-check-input" value="full" [disabled]="isDisabledFull" (change)="AccessControl($event.target.value, $event.target.checked)">full control</label></div>
+                        </div>
+                    </div>
+                    <div class="row pt-1"><div class="col-lg-12"><div class="form-group"><textarea class="form-control" placeholder="Add a note" id="example-textarea" rows="5"></textarea> </div></div></div>
+                    <div class="row"><div class="col-lg-8"> <div> <span class="border px-1 py-1"> <img src="{{ getFileExtentionForFolderExplore(vdrprentfolder.fileExt) }}" alt="" class="icon-ext-size mr-1">{{vdrprentfolder.rollName}} </span></div></div></div>
+                    <div class="row">
+                        <div class="col-lg-12 text-right pt-1">
+                            <button type="button" class="btn btn-primary btn-sm" (click)="toShare()">Send</button>
+                            <button type="button" class="btn btn-primary btn-sm ml-2">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 
-<app-new-folder-creation id="createNewfolder" (createFolderResponce)="createFolderResponce($event)"></app-new-folder-creation>
+<app-new-folder-creation id="createNewfolder" (createFolderResponce)="createFolderResponce($event)">
+</app-new-folder-creation>
 <app-doc-file-upload id="docFileUpload" (uploadDocFileResponce)="uploadDocFileResponce($event)"></app-doc-file-upload>
-<app-move-file-folder id="moveDocModel" (moveFileFolderResponce)="moveFileFolderResponce($event)"></app-move-file-folder>
+<app-move-file-folder id="moveDocModel" (moveFileFolderResponce)="moveFileFolderResponce($event)">
+</app-move-file-folder>
 <app-doc-view-model id="docViewModal" (docViewModalResponce)="docViewModalResponce($event)"></app-doc-view-model>
-<app-doc-folder-upload id="docFolderUpload" (uploadDocFolderResponce)="uploadDocFolderResponce($event)"></app-doc-folder-upload>
+<app-doc-folder-upload id="docFolderUpload" (uploadDocFolderResponce)="uploadDocFolderResponce($event)">
+</app-doc-folder-upload>
 
 
 <context-menu>
-  <!-- (execute)="recentData($event)" -->
-  <ng-template contextMenuItem (execute)="rightViewFile($event);recentData($event)">
-      <div class="text-dark mhover"><i class="dripicons-preview px-2 mhover"></i>Preview</div>
-  </ng-template>
-
-  <ng-template contextMenuItem divider="true"></ng-template>
-
-  <!-- <ng-template contextMenuItem>
-      <div class="text-dark py-1 mhover" (click)="shareDocument()"><i class="mdi mdi-account-plus-outline px-2 mhover"></i>Share</div>
-  </ng-template> -->
-
-  <!-- <ng-template contextMenuItem>
-      <div class="text-dark py-1 mhover pr-2"><i class="mdi mdi-link px-2 mhover"></i>Get shareable link</div>
-  </ng-template> -->
-
-  <ng-template contextMenuItem (execute)="moveFromMenu($event)" *ngIf="hideRightClickMove">
-      <div class="text-dark py-1 mhover"><i class="mdi mdi-folder-move px-2 mhover"></i>Move to</div>
-  </ng-template>
-
-  <ng-template contextMenuItem (execute)="renameFromMenu($event)" *ngIf="hideRightClickMove">
-      <div class="text-dark py-1 mhover"><i class="mdi mdi-rename-box px-2 mhover"></i>Rename</div>
-  </ng-template>
-
-  <ng-template contextMenuItem (execute)="viewDetails($event)">
-      <div class="text-dark py-1 mhover"><i class="mdi mdi-information-outline px-2 mhover"></i>View details</div>
-  </ng-template>
-
-  <ng-template contextMenuItem (execute)="downloadFromMenu($event)" *ngIf="selectedRowFile">
-      <div class="text-dark py-1 mhover"><i class="dripicons-download px-2 mhover"></i>Download</div>
-  </ng-template>
-
-  <!-- <ng-template contextMenuItem (execute)="deleteFromMenu($event)">
-      <div class="text-dark py-1 mhover"><i class="dripicons-trash px-2 mhover"></i>Delete</div>
-  </ng-template> -->
-
-
-  <!-- <ng-template contextMenuItem passive="true">
-  Input something: <input type="text">
-</ng-template> -->
-
+    <!-- <ng-template contextMenuItem (execute)="rightViewFile($event);recentData($event)"><div class="text-dark mhover"><i class="dripicons-preview px-2 mhover"></i>Preview</div></ng-template> 
+    <ng-template contextMenuItem divider="true"></ng-template>
+    <ng-template contextMenuItem (execute)="moveFromMenu($event)" *ngIf="hideRightClickMove"><div class="text-dark py-1 mhover"><i class="mdi mdi-folder-move px-2 mhover"></i>Move to</div></ng-template>-->
+    <ng-template contextMenuItem (execute)="renameFromMenu($event)" *ngIf="hideRightClickMove"><div class="text-dark py-1 mhover"><i class="mdi mdi-rename-box px-2 mhover"></i>Rename</div></ng-template>
+    <ng-template contextMenuItem (execute)="viewDetails($event)"><div class="text-dark py-1 mhover"><i class="mdi mdi-information-outline px-2 mhover"></i>View details</div></ng-template>
+    <ng-template contextMenuItem (execute)="downloadFromMenu($event)" *ngIf="selectedRowFile"><div class="text-dark py-1 mhover"><i class="dripicons-download px-2 mhover"></i>Download</div></ng-template>
 </context-menu>
 
 
+<div id="chatLists" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="header-title"><i class="mdi mdi-folder-settings-outline"></i>&nbsp;Ref:&nbsp;{{ filename}}
+                </h4>
 
 
+                <button type="button" class="close" (click)="closeChatList()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 row">
+                        <div class="col-lg-5">
+                            <div class="card">
+                                <div class="card-body p-0">
+                                    <ul class="nav nav-tabs nav-bordered">
+                                        <li class="nav-item">
+                                            <a href="allUsers" data-toggle="tab" aria-expanded="false"
+                                                class="nav-link active py-2">
+                                                All
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="favUsers" data-toggle="tab" aria-expanded="true"
+                                                class="nav-link py-2">
+                                                Favourties
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="friendUsers" data-toggle="tab" aria-expanded="true"
+                                                class="nav-link py-2">
+                                                Friends
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <!-- end nav-->
+                                    <div class="tab-content">
+                                        <div class="tab-pane show active p-3" id="newpost">
 
-<!-- Chat-List-start -->
+                                            <!-- start search box -->
+                                            <div class="app-search">
+                                                <form>
+                                                    <div class="form-group position-relative">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="People, groups &amp; messages...">
+                                                        <span class="mdi mdi-magnify"></span>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- end search box -->
+
+                                            <!-- users -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div data-simplebar="init" style="max-height: 422px">
+                                                        <div class="simplebar-wrapper" style="margin: 0px;">
+                                                            <div class="simplebar-height-auto-observer-wrapper">
+                                                                <div class="simplebar-height-auto-observer"></div>
+                                                            </div>
+                                                            <div class="simplebar-mask">
+                                                                <div class="simplebar-offset"
+                                                                    style="right: 0px; bottom: 0px;">
+                                                                    <div class="simplebar-content-wrapper"
+                                                                        style="height: auto; overflow: hidden scroll;">
+                                                                        <div class="simplebar-content"
+                                                                            style="padding: 0px;">
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-primary mr-1 btn-rounded">
+                                                                                        B
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">4:30am</span>
+                                                                                            Brandon Smith
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span
+                                                                                                class="w-25 float-right text-right"><span
+                                                                                                    class="badge badge-danger-lighten">3</span></span>
+                                                                                            <span class="w-75">How are
+                                                                                                you today?</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media bg-light p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-success mr-1 btn-rounded">
+                                                                                        S
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">5:30am</span>
+                                                                                            Shreyu N
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span class="w-75">Hey! a
+                                                                                                reminder for tomorrow's
+                                                                                                meeting...</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-warning mr-1 btn-rounded">
+                                                                                        M
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">Thu</span>
+                                                                                            Maria C
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span
+                                                                                                class="w-25 float-right text-right"><span
+                                                                                                    class="badge badge-danger-lighten">2</span></span>
+                                                                                            <span class="w-75">Are we
+                                                                                                going to have this
+                                                                                                week's planning meeting
+                                                                                                today?</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-danger mr-1 btn-rounded">
+                                                                                        R
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">Wed</span>
+                                                                                            Rhonda D
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span class="w-75">Please
+                                                                                                check these design
+                                                                                                assets...</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-info mr-1 btn-rounded">
+                                                                                        M
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">Tue</span>
+                                                                                            Michael H
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span
+                                                                                                class="w-25 float-right text-right"><span
+                                                                                                    class="badge badge-danger-lighten">6</span></span>
+                                                                                            <span class="w-75">Are you
+                                                                                                free for 15 min? I would
+                                                                                                like to discuss
+                                                                                                something...</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-primary mr-1 btn-rounded">
+                                                                                        T
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">Tue</span>
+                                                                                            Thomas R
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span class="w-75">Let's
+                                                                                                have meeting today
+                                                                                                between me, you and
+                                                                                                Tony...</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-success mr-1 btn-rounded">
+                                                                                        T
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">Tue</span>
+                                                                                            Thomas J
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span
+                                                                                                class="w-75">Howdy?</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-body">
+                                                                                <div class="media mt-1 p-2">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-info mr-1 btn-rounded">
+                                                                                        R
+                                                                                    </button>
+                                                                                    <div class="media-body">
+                                                                                        <h5 class="mt-0 mb-0 font-14">
+                                                                                            <span
+                                                                                                class="float-right text-muted font-12">Mon</span>
+                                                                                            Ricky J
+                                                                                        </h5>
+                                                                                        <p
+                                                                                            class="mt-1 mb-0 text-muted font-14">
+                                                                                            <span
+                                                                                                class="w-25 float-right text-right"><span
+                                                                                                    class="badge badge-danger-lighten">28</span></span>
+                                                                                            <span class="w-75">Are you
+                                                                                                interested in
+                                                                                                learning?</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="simplebar-placeholder"
+                                                                style="width: auto; height: 648px;"></div>
+                                                        </div>
+                                                        <div class="simplebar-track simplebar-horizontal"
+                                                            style="visibility: hidden;">
+                                                            <div class="simplebar-scrollbar"
+                                                                style="width: 0px; display: none;"></div>
+                                                        </div>
+                                                        <div class="simplebar-track simplebar-vertical"
+                                                            style="visibility: visible;">
+                                                            <div class="simplebar-scrollbar"
+                                                                style="height: 466px; transform: translate3d(0px, 0px, 0px); display: block;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- end slimscroll-->
+                                                </div>
+                                                <!-- End col -->
+                                            </div>
+                                            <!-- end users -->
+                                        </div>
+                                        <!-- end Tab Pane-->
+                                    </div>
+                                    <!-- end tab content-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="card">
+                                <div class="card-body p-1">
+
+                                    <!-- start page title -->
+
+                                    <!-- end page title -->
+
+                                    <div class="row">
+                                        <!-- start chat users-->
 
 
+                                        <!-- start user detail -->
+                                        <div class="col-xl-12 col-lg-12 order-lg-1 order-xl-2">
+                                            <div class="card">
+                                                <ul class="conversation-list" data-simplebar="init"
+                                                    style="max-height: 400px">
+                                                    <div class="simplebar-wrapper" style="margin: 0px -15px;">
+                                                        <div class="simplebar-height-auto-observer-wrapper">
+                                                            <div class="simplebar-height-auto-observer"></div>
+                                                        </div>
+                                                        <div class="simplebar-mask">
+                                                            <div class="simplebar-offset"
+                                                                style="right: 0px; bottom: 0px;">
+                                                                <div class="simplebar-content-wrapper"
+                                                                    style="height: auto; overflow: hidden scroll;">
+                                                                    <div class="simplebar-content"
+                                                                        style="padding: 0px 15px;">
+                                                                        <li class="clearfix mt-1">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-success btn-rounded">
+                                                                                    S
+                                                                                </button>
+                                                                                <i>10:00</i>
+                                                                            </div>
+                                                                            <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Shreyu N</i>
+                                                                                    <p>
+                                                                                        Hello!
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-<div id="chatLists" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-          <div class="modal-header">
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-right">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix odd">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-primary btn-rounded">
+                                                                                    D
+                                                                                </button>
+                                                                                <i>10:01</i>
+                                                                            </div>
 
-              <h4 class="header-title"><i class="mdi mdi-folder-settings-outline"></i>&nbsp;Ref:&nbsp;{{ filename}}</h4>
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Dominic</i>
+                                                                                    <p>
+                                                                                        Hi, How are you? What about our
+                                                                                        next meeting?
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
+                                                                                <div class="dropdown-menu">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-success btn-rounded">
+                                                                                    S
+                                                                                </button>
+                                                                                <i>10:01</i>
+                                                                            </div>
+                                                                            <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Shreyu N</i>
+                                                                                    <p>
+                                                                                        Yeah everything is fine
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-              <button type="button" class="close" (click)="closeChatList()">×</button>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                  <div class="col-lg-12 row">
-                      <div class="col-lg-5">
-                          <div class="card">
-                              <div class="card-body p-0">
-                                  <ul class="nav nav-tabs nav-bordered">
-                                      <li class="nav-item">
-                                          <a href="allUsers" data-toggle="tab" aria-expanded="false" class="nav-link active py-2">
-                                              All
-                                          </a>
-                                      </li>
-                                      <li class="nav-item">
-                                          <a href="favUsers" data-toggle="tab" aria-expanded="true" class="nav-link py-2">
-                                              Favourties
-                                          </a>
-                                      </li>
-                                      <li class="nav-item">
-                                          <a href="friendUsers" data-toggle="tab" aria-expanded="true" class="nav-link py-2">
-                                              Friends
-                                          </a>
-                                      </li>
-                                  </ul>
-                                  <!-- end nav-->
-                                  <div class="tab-content">
-                                      <div class="tab-pane show active p-3" id="newpost">
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-right">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix odd">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-primary btn-rounded">
+                                                                                    D
+                                                                                </button>
+                                                                                <i>10:02</i>
+                                                                            </div>
 
-                                          <!-- start search box -->
-                                          <div class="app-search">
-                                              <form>
-                                                  <div class="form-group position-relative">
-                                                      <input type="text" class="form-control" placeholder="People, groups &amp; messages...">
-                                                      <span class="mdi mdi-magnify"></span>
-                                                  </div>
-                                              </form>
-                                          </div>
-                                          <!-- end search box -->
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Dominic</i>
+                                                                                    <p>
+                                                                                        Wow that's great
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-                                          <!-- users -->
-                                          <div class="row">
-                                              <div class="col">
-                                                  <div data-simplebar="init" style="max-height: 422px">
-                                                      <div class="simplebar-wrapper" style="margin: 0px;">
-                                                          <div class="simplebar-height-auto-observer-wrapper">
-                                                              <div class="simplebar-height-auto-observer"></div>
-                                                          </div>
-                                                          <div class="simplebar-mask">
-                                                              <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                                                                  <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
-                                                                      <div class="simplebar-content" style="padding: 0px;">
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-primary mr-1 btn-rounded">
-                                                                                      B
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">4:30am</span> Brandon Smith
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-25 float-right text-right"><span
-                                                                                                  class="badge badge-danger-lighten">3</span></span>
-                                                                                          <span class="w-75">How are you today?</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                                <div class="dropdown-menu">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-success btn-rounded">
+                                                                                    S
+                                                                                </button>
+                                                                                <i>10:02</i>
+                                                                            </div>
+                                                                            <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Shreyu N</i>
+                                                                                    <p>
+                                                                                        Let's have it today if you are
+                                                                                        free
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media bg-light p-2">
-                                                                                  <button type="button" class="btn btn-success mr-1 btn-rounded">
-                                                                                      S
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">5:30am</span> Shreyu N
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-75">Hey! a reminder for tomorrow's meeting...</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-right">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix odd">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-primary btn-rounded">
+                                                                                    D
+                                                                                </button>
+                                                                                <i>10:03</i>
+                                                                            </div>
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Dominic</i>
+                                                                                    <p>
+                                                                                        Sure thing! let me know if 2pm
+                                                                                        works for you
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-warning mr-1 btn-rounded">
-                                                                                      M
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">Thu</span> Maria C
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-25 float-right text-right"><span
-                                                                                                  class="badge badge-danger-lighten">2</span></span>
-                                                                                          <span class="w-75">Are we going to have this week's planning meeting today?</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                                <div class="dropdown-menu">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-success btn-rounded">
+                                                                                    S
+                                                                                </button>
+                                                                                <i>10:04</i>
+                                                                            </div>
+                                                                            <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Shreyu N</i>
+                                                                                    <p>
+                                                                                        Sorry, I have another meeting
+                                                                                        scheduled at 2pm. Can we have it
+                                                                                        at 3pm instead?
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-danger mr-1 btn-rounded">
-                                                                                      R
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">Wed</span> Rhonda D
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-75">Please check these design assets...</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-right">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-success btn-rounded">
+                                                                                    S
+                                                                                </button>
+                                                                                <i>10:04</i>
+                                                                            </div>
+                                                                            <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Shreyu N</i>
+                                                                                    <p>
+                                                                                        We can also discuss about the
+                                                                                        presentation talk format if you
+                                                                                        have some extra mins
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-info mr-1 btn-rounded">
-                                                                                      M
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">Tue</span> Michael H
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-25 float-right text-right"><span
-                                                                                                  class="badge badge-danger-lighten">6</span></span>
-                                                                                          <span class="w-75">Are you free for 15 min? I would like to discuss something...</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-right">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="clearfix odd">
+                                                                            <div class="chat-avatar">
+                                                                                <button type="button"
+                                                                                    class="btn btn-primary btn-rounded">
+                                                                                    D
+                                                                                </button>
+                                                                                <i>10:05</i>
+                                                                            </div>
+                                                                            <div class="conversation-text">
+                                                                                <div class="ctext-wrap">
+                                                                                    <i>Dominic</i>
+                                                                                    <p>
+                                                                                        3pm it is. Sure, let's discuss
+                                                                                        about presentation format, it
+                                                                                        would be great to finalize
+                                                                                        today. I am attaching the last
+                                                                                        year format and assets here...
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="card mt-2 mb-1 shadow-none border text-left">
+                                                                                    <div class="p-2">
+                                                                                        <div
+                                                                                            class="row align-items-center">
+                                                                                            <div class="col-auto">
+                                                                                                <div class="avatar-sm">
+                                                                                                    <span
+                                                                                                        class="avatar-title rounded">
+                                                                                                        .ZIP
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col pl-0">
+                                                                                                <a href="javascript:void(0);"
+                                                                                                    class="text-muted font-weight-bold">Hyper-admin-design.zip</a>
+                                                                                                <p class="mb-0">2.3 MB
+                                                                                                </p>
+                                                                                            </div>
+                                                                                            <div class="col-auto">
+                                                                                                <!-- Button -->
+                                                                                                <a href="javascript:void(0);"
+                                                                                                    class="btn btn-link btn-lg text-muted">
+                                                                                                    <i
+                                                                                                        class="dripicons-download"></i>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="conversation-actions dropdown">
+                                                                                <button class="btn btn-sm btn-link"
+                                                                                    data-toggle="dropdown"
+                                                                                    aria-expanded="false"><i
+                                                                                        class="uil uil-ellipsis-v"></i>
+                                                                                </button>
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-primary mr-1 btn-rounded">
-                                                                                      T
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">Tue</span> Thomas R
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-75">Let's have meeting today between me, you and Tony...</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                                <div class="dropdown-menu">
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Copy
+                                                                                        Message</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Edit</a>
+                                                                                    <a class="dropdown-item"
+                                                                                        href="">Delete</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="simplebar-placeholder"
+                                                            style="width: auto; height: 857px;"></div>
+                                                    </div>
+                                                    <div class="simplebar-track simplebar-horizontal"
+                                                        style="visibility: hidden;">
+                                                        <div class="simplebar-scrollbar"
+                                                            style="width: 0px; display: none;"></div>
+                                                    </div>
+                                                    <div class="simplebar-track simplebar-vertical"
+                                                        style="visibility: visible;">
+                                                        <div class="simplebar-scrollbar"
+                                                            style="height: 336px; transform: translate3d(0px, 0px, 0px); display: block;">
+                                                        </div>
+                                                    </div>
+                                                </ul>
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-success mr-1 btn-rounded">
-                                                                                      T
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">Tue</span> Thomas J
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-75">Howdy?</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mt-2 bg-light p-3 mb-3 rounded">
+                                                            <form class="needs-validation" novalidate=""
+                                                                name="chat-form" id="chat-form">
+                                                                <div class="row">
+                                                                    <div class="col mb-2 mb-sm-0">
+                                                                        <input type="text" class="form-control border-0"
+                                                                            placeholder="Enter your text" required="">
+                                                                        <div class="invalid-feedback">
+                                                                            Please enter your messsage
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-auto">
+                                                                        <div class="btn-group">
 
-                                                                          <a href="javascript:void(0);" class="text-body">
-                                                                              <div class="media mt-1 p-2">
-                                                                                  <button type="button" class="btn btn-info mr-1 btn-rounded">
-                                                                                      R
-                                                                                  </button>
-                                                                                  <div class="media-body">
-                                                                                      <h5 class="mt-0 mb-0 font-14">
-                                                                                          <span class="float-right text-muted font-12">Mon</span> Ricky J
-                                                                                      </h5>
-                                                                                      <p class="mt-1 mb-0 text-muted font-14">
-                                                                                          <span class="w-25 float-right text-right"><span
-                                                                                                  class="badge badge-danger-lighten">28</span></span>
-                                                                                          <span class="w-75">Are you interested in learning?</span>
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </a>
+                                                                            <button type="submit"
+                                                                                class="btn btn-success chat-send btn-block">
+                                                                                <i class="uil uil-message"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- end col -->
+                                                                </div>
+                                                                <!-- end row-->
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- end col-->
+                                                </div>
+                                            </div>
+                                            <!-- end card-->
+                                        </div>
+                                        <!-- end col -->
+                                        <!-- end user detail -->
+                                    </div>
+                                    <!-- end row-->
 
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                          <div class="simplebar-placeholder" style="width: auto; height: 648px;"></div>
-                                                      </div>
-                                                      <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
-                                                          <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
-                                                      </div>
-                                                      <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
-                                                          <div class="simplebar-scrollbar" style="height: 466px; transform: translate3d(0px, 0px, 0px); display: block;"></div>
-                                                      </div>
-                                                  </div>
-                                                  <!-- end slimscroll-->
-                                              </div>
-                                              <!-- End col -->
-                                          </div>
-                                          <!-- end users -->
-                                      </div>
-                                      <!-- end Tab Pane-->
-                                  </div>
-                                  <!-- end tab content-->
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-lg-7">
-                          <div class="card">
-                              <div class="card-body p-1">
+                                </div>
+                            </div>
 
-                                  <!-- start page title -->
-
-                                  <!-- end page title -->
-
-                                  <div class="row">
-                                      <!-- start chat users-->
-
-
-                                      <!-- start user detail -->
-                                      <div class="col-xl-12 col-lg-12 order-lg-1 order-xl-2">
-                                          <div class="card">
-                                              <ul class="conversation-list" data-simplebar="init" style="max-height: 400px">
-                                                  <div class="simplebar-wrapper" style="margin: 0px -15px;">
-                                                      <div class="simplebar-height-auto-observer-wrapper">
-                                                          <div class="simplebar-height-auto-observer"></div>
-                                                      </div>
-                                                      <div class="simplebar-mask">
-                                                          <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                                                              <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
-                                                                  <div class="simplebar-content" style="padding: 0px 15px;">
-                                                                      <li class="clearfix mt-1">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-success btn-rounded">
-                                                                                  S
-                                                                              </button>
-                                                                              <i>10:00</i>
-                                                                          </div>
-                                                                          <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Shreyu N</i>
-                                                                                  <p>
-                                                                                      Hello!
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu dropdown-menu-right">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix odd">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-primary btn-rounded">
-                                                                                  D
-                                                                              </button>
-                                                                              <i>10:01</i>
-                                                                          </div>
-
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Dominic</i>
-                                                                                  <p>
-                                                                                      Hi, How are you? What about our next meeting?
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-success btn-rounded">
-                                                                                  S
-                                                                              </button>
-                                                                              <i>10:01</i>
-                                                                          </div>
-                                                                          <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Shreyu N</i>
-                                                                                  <p>
-                                                                                      Yeah everything is fine
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu dropdown-menu-right">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix odd">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-primary btn-rounded">
-                                                                                  D
-                                                                              </button>
-                                                                              <i>10:02</i>
-                                                                          </div>
-
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Dominic</i>
-                                                                                  <p>
-                                                                                      Wow that's great
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-success btn-rounded">
-                                                                                  S
-                                                                              </button>
-                                                                              <i>10:02</i>
-                                                                          </div>
-                                                                          <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Shreyu N</i>
-                                                                                  <p>
-                                                                                      Let's have it today if you are free
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu dropdown-menu-right">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix odd">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-primary btn-rounded">
-                                                                                  D
-                                                                              </button>
-                                                                              <i>10:03</i>
-                                                                          </div>
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Dominic</i>
-                                                                                  <p>
-                                                                                      Sure thing! let me know if 2pm works for you
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-success btn-rounded">
-                                                                                  S
-                                                                              </button>
-                                                                              <i>10:04</i>
-                                                                          </div>
-                                                                          <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Shreyu N</i>
-                                                                                  <p>
-                                                                                      Sorry, I have another meeting scheduled at 2pm. Can we have it at 3pm instead?
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu dropdown-menu-right">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-success btn-rounded">
-                                                                                  S
-                                                                              </button>
-                                                                              <i>10:04</i>
-                                                                          </div>
-                                                                          <!--                                                                            <p>({{currentFileFolder.rollName}})</p>-->
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Shreyu N</i>
-                                                                                  <p>
-                                                                                      We can also discuss about the presentation talk format if you have some extra mins
-                                                                                  </p>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu dropdown-menu-right">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                      <li class="clearfix odd">
-                                                                          <div class="chat-avatar">
-                                                                              <button type="button" class="btn btn-primary btn-rounded">
-                                                                                  D
-                                                                              </button>
-                                                                              <i>10:05</i>
-                                                                          </div>
-                                                                          <div class="conversation-text">
-                                                                              <div class="ctext-wrap">
-                                                                                  <i>Dominic</i>
-                                                                                  <p>
-                                                                                      3pm it is. Sure, let's discuss about presentation format, it would be great to finalize today. I am attaching the last year format and assets here...
-                                                                                  </p>
-                                                                              </div>
-                                                                              <div class="card mt-2 mb-1 shadow-none border text-left">
-                                                                                  <div class="p-2">
-                                                                                      <div class="row align-items-center">
-                                                                                          <div class="col-auto">
-                                                                                              <div class="avatar-sm">
-                                                                                                  <span class="avatar-title rounded">
-                                                                          .ZIP
-                                                                      </span>
-                                                                                              </div>
-                                                                                          </div>
-                                                                                          <div class="col pl-0">
-                                                                                              <a href="javascript:void(0);" class="text-muted font-weight-bold">Hyper-admin-design.zip</a>
-                                                                                              <p class="mb-0">2.3 MB
-                                                                                              </p>
-                                                                                          </div>
-                                                                                          <div class="col-auto">
-                                                                                              <!-- Button -->
-                                                                                              <a href="javascript:void(0);" class="btn btn-link btn-lg text-muted">
-                                                                                                  <i class="dripicons-download"></i>
-                                                                                              </a>
-                                                                                          </div>
-                                                                                      </div>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="conversation-actions dropdown">
-                                                                              <button class="btn btn-sm btn-link" data-toggle="dropdown" aria-expanded="false"><i
-                                                                                      class="uil uil-ellipsis-v"></i>
-                                                                              </button>
-
-                                                                              <div class="dropdown-menu">
-                                                                                  <a class="dropdown-item" href="">Copy
-                                                                                      Message</a>
-                                                                                  <a class="dropdown-item" href="">Edit</a>
-                                                                                  <a class="dropdown-item" href="">Delete</a>
-                                                                              </div>
-                                                                          </div>
-                                                                      </li>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="simplebar-placeholder" style="width: auto; height: 857px;"></div>
-                                                  </div>
-                                                  <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
-                                                      <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
-                                                  </div>
-                                                  <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
-                                                      <div class="simplebar-scrollbar" style="height: 336px; transform: translate3d(0px, 0px, 0px); display: block;"></div>
-                                                  </div>
-                                              </ul>
-
-                                              <div class="row">
-                                                  <div class="col">
-                                                      <div class="mt-2 bg-light p-3 mb-3 rounded">
-                                                          <form class="needs-validation" novalidate="" name="chat-form" id="chat-form">
-                                                              <div class="row">
-                                                                  <div class="col mb-2 mb-sm-0">
-                                                                      <input type="text" class="form-control border-0" placeholder="Enter your text" required="">
-                                                                      <div class="invalid-feedback">
-                                                                          Please enter your messsage
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-sm-auto">
-                                                                      <div class="btn-group">
-
-                                                                          <button type="submit" class="btn btn-success chat-send btn-block">
-                                                                              <i class="uil uil-message"></i></button>
-                                                                      </div>
-                                                                  </div>
-                                                                  <!-- end col -->
-                                                              </div>
-                                                              <!-- end row-->
-                                                          </form>
-                                                      </div>
-                                                  </div>
-                                                  <!-- end col-->
-                                              </div>
-                                          </div>
-                                          <!-- end card-->
-                                      </div>
-                                      <!-- end col -->
-                                      <!-- end user detail -->
-                                  </div>
-                                  <!-- end row-->
-
-                              </div>
-                          </div>
-
-                          <!--Chat end-->
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+                            <!--Chat end-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

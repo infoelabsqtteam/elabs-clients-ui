@@ -476,12 +476,12 @@ export class DriveHomeComponent implements OnInit {
 	downloadFromMenu(details: any) {
 		this.setClickedRow(details.item[1], true, details.item[0])
 		this.selectedRowFile = true;
-		if (this.docFilePerms.download) {
-			this.download();
-		} else {
-			this.notificationService.notify("warning", "You don't have permission");
-		}
-
+		// if (this.docFilePerms.download) {
+		// 	this.download();
+		// } else {
+		// 	this.notificationService.notify("warning", "You don't have permission");
+		// }
+		this.download();
 	}
 	changeGridView() {
 		if (this.documentViewList) {
@@ -491,7 +491,7 @@ export class DriveHomeComponent implements OnInit {
 		}
 	}
 	showDeatailsGrid() {
-		this.docDetailActivity = true;
+		this.docDetailActivity = !this.docDetailActivity;
 		if (this.vdrprentfolder && this.vdrprentfolder.key)
             this.docApiService.GetDocAudit(this.vdrprentfolder);
 	}
