@@ -34,7 +34,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://serverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://devserverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -239,6 +239,23 @@ export const serverHostList = [
   },
   {
     "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "theme_setting": {
+      "header_bg_color": "#665852",
+      "header_txt_color": "#ffffff",
+      "header_txt_hover_color": "",
+      "header_icon_color": "#ffffff",
+      "header_icon_hover_color": "#ffffff",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "#212121",
+      "theme_color": "#665852",
+      "active_bg_color": "#e0dedc",
+      "popup_header_bg": "#CEE7F7",
+      "form_label_bg": "#E4F2FA"
+    }
+  },
+  {
+    "clientEndpoint": "dev-itclabs.e-labs.ai", "serverEndpoint": "https://devserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
       "header_bg_color": "#665852",
       "header_txt_color": "#ffffff",
