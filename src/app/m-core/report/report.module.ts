@@ -5,6 +5,7 @@ import { AngularMaterialModule } from '../angular-material-module/angular-materi
 import { ModalsModule } from '../report/modals/modals.module';
 import { ReportFormComponent } from './report-form/report-form.component';
 import { ModelModule } from '../modals/model.module';
+import { AllPackageModule } from '../all-package/all-package.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ModelModule } from '../modals/model.module';
     AngularMaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    ModelModule
+    ModelModule,
+    AllPackageModule
   ]
 })
 export class ReportModule { }

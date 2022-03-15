@@ -29,6 +29,9 @@ export const MY_DATE_FORMATS = {
   selector: 'app-report-form',
   templateUrl: './report-form.component.html',
   styles: [
+  ],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
 export class ReportFormComponent implements OnInit {
@@ -173,19 +176,23 @@ export class ReportFormComponent implements OnInit {
         const fieldData = reportFormValue[fieldName];
         this.field = fieldData;
         let type = this.field['type'];
+        let criteria = "name;eq;"+type+";STATIC";
+        let payload = this.commonFunctionService.getPaylodWithCriteria('adm:REPORT_FIELD_OPERATOR','operator_list',[criteria],{});
+        this.apiService.getStatiData([payload]);
         if(type == 'dropdown'  && fieldData.ddn_field) {
           const payload = this.commonFunctionService.getPaylodWithCriteria(fieldData.api_params,fieldData.call_back_field,[],{});        
           this.apiService.getStatiData([payload]);
         };
         switch (type) {
-          case 'textarea':
-          case 'dropdown':
-          case 'typehead':
           case 'checkbox':
-            this.operaters = this.operator_list['text'];
-            break;        
-          default:
             this.operaters = this.operator_list[type];
+            this.reportForm.get('value').setValue(false);
+            break;  
+          case 'date':
+            this.operaters = this.operator_list[type];
+            break;       
+          default:
+            this.operaters = this.operator_list['text'];
             break;
         }        
         break;
@@ -479,6 +486,13 @@ export class ReportFormComponent implements OnInit {
       }
     });
     return check;
+  }
+  getTimeFormat(field){
+    if(field && field.time_format && field.time_format != ''){
+      return Number(field.time_format);
+    }else{
+      return Number('12');
+    }    
   }
 
 }
