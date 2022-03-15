@@ -8,7 +8,7 @@ import { PermissionService } from '../../../services/permission/permission.servi
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { KeyCode} from '../../../shared/enums/keycodes.enum';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
 export const MY_DATE_FORMATS = {
@@ -28,7 +28,8 @@ export const MY_DATE_FORMATS = {
   templateUrl: './grid-table-view.component.html',
   styleUrls: ['./grid-table-view.component.css'],
   providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'hi-IN'},
   ]
 })
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
@@ -897,7 +898,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
       }
       delete data.log;
-      delete data.key1;
+      delete data.key;
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
       const value = this.filterForm.getRawValue();

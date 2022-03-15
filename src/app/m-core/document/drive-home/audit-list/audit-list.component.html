@@ -1,24 +1,20 @@
 <div class="table-responsive">
-  <table class="table table-hover table-condensed">
+  <table class="table table-hover table-condensed auditlist">
       <thead>
           <tr>
-              <th scope="col">UserId</th>
-              <th scope="col">Action</th>
-              <th scope="col">IP</th>
-              <th scope="col">Date & Time</th>
+              <th scope="col" style="font-size:11px;">UserId</th>
+              <th scope="col" style="font-size:11px;">Action</th>
+              <th scope="col" style="font-size:11px;">IP</th>
+              <th scope="col" style="font-size:11px;">Date & Time</th>
           </tr>
       </thead>
       <tbody>
           <tr *ngFor="let audit of sortAuditList; let i= index">
-
-              <td class="text-lowercase">
-                  <small>{{audit.userId}}</small>
-              </td>
-              <td>{{audit.accessType}}</td>
-              <td>{{audit.ip}}</td>
-              <td>{{audit.createdDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+              <td class="text-lowercase"><small>{{audit.userId}}</small></td>
+              <td><small>{{audit.accessType}}</small></td>
+              <td><small>{{audit.ip}}</small></td>
+              <td><small>{{audit.createdDate | date: 'dd/MM/yyyy HH:mm:ss'}}</small></td>
           </tr>
-
       </tbody>
   </table>
 </div>

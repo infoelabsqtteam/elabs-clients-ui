@@ -1,29 +1,30 @@
-
-<div mdbModal #createFolderModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
-    <div class="modal-content">
-        <div class="modal-header py-2">
-            <h4 class="modal-title" *ngIf="!renameInput">New Folder</h4>
-            <h4 class="modal-title" *ngIf="renameInput">Rename</h4>
-            <button type="button" class="close" (click)="close()">×</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <input type="text" class="form-control" [(ngModel)]="folderName" [ngClass]="renameInput ? 'd-none':''">
-                <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="renameText" [ngClass]="renameInput ? '':'d-none'">
-                    <div class="input-group-prepend" *ngIf="renameFileExt != ''">
-                        <span class="input-group-text">{{renameFileExt}}</span>
+<div mdbModal #createFolderModal="mdbModal" class="modal fade top"
+    [config]="{ignoreBackdropClick: true,keyboard: true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center align-items-center">
+                <h3 class="modal-title m-0 text-uppercase active d-block" *ngIf="!renameInput">New Folder</h3>
+                <h3 class="modal-title m-0 text-uppercase active d-block" *ngIf="renameInput">Rename</h3>
+                <a class="h5 m-0 closebtb" (click)="close()">×</a>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" [(ngModel)]="folderName"
+                        [ngClass]="renameInput ? 'd-none':''">
+                    <div class="input-group">
+                        <input type="text" class="form-control" [(ngModel)]="renameText"
+                            [ngClass]="renameInput ? '':'d-none'">
+                        <div class="input-group-prepend" *ngIf="renameFileExt != ''">
+                            <span class="input-group-text">{{renameFileExt}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group text-right px-2">
-            <button class="btn btn-light btn-sm mr-1" (click)="cancel()">Cancel</button>
-            <button class="btn btn-primary btn-sm" *ngIf="!renameInput" (click)="createNewFolder()">Create</button>
-            <button class="btn btn-primary btn-sm" *ngIf="renameInput" (click)="renameFileAndFolder()">Ok</button>
+            <div class="modal-footer">
+                <button class="btn btn-light btn-sm mr-1" (click)="cancel()">Cancel</button>
+                <button class="btn btn-primary btn-sm" *ngIf="!renameInput" (click)="createNewFolder()">Create</button>
+                <button class="btn btn-primary btn-sm" *ngIf="renameInput" (click)="renameFileAndFolder()">Ok</button>
+            </div>
         </div>
     </div>
-    <!-- /.modal-content -->
-  </div>
 </div>

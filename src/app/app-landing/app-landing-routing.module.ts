@@ -29,9 +29,12 @@ import { SummaryComponent } from './summary/summary.component';
 import { TestemonialsComponent } from './testemonials/testemonials.component';
 //import { CaseStudyComponent } from './case-study/case-study.component';
 import { DownloadReportComponent } from './download-report/download-report.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 const appLandingRoutes : Routes = [
-        {path: '', component: AppLandingComponent, children:[ 
+
+        {path: '', component: AppLandingComponent, children:[
+            { path: 'privacy-policy', pathMatch: 'full', component: PrivacyPolicyComponent}
         //     {path: 'home_page', component: HomePageComponent},
         //     {path: 'career-with-us', component: CareerWithUsComponent},
         //     {path: 'contact-us', component: ContactUsComponent}, 
@@ -56,10 +59,10 @@ const appLandingRoutes : Routes = [
         //     {path:'case-study',component:CaseStudyComponent},
         //     {path:'summary',component:SummaryComponent},
         //     {path:'testemonials',component:TestemonialsComponent},
-            { path: 'download-manual-report', component: DownloadReportComponent }, 
+            { path: 'download-manual-report', component: DownloadReportComponent },
             
            ]
-        },
+         },
     ];
 
 @NgModule({

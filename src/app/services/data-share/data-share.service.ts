@@ -50,7 +50,9 @@ export class DataShareService {
   dashletMaster:EventEmitter<any> = new EventEmitter<any>();
   gitVirsion:EventEmitter<any> = new EventEmitter<any>();
   forgot:EventEmitter<any> = new EventEmitter<any>();
+  nextFormData:EventEmitter<any> = new EventEmitter<any>();
   
+  getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -204,5 +206,11 @@ export class DataShareService {
   }
   setForgot(responce){
     this.forgot.emit(responce);
+  }
+  setNextFormData(responce){
+    this.nextFormData.emit(responce);
+  }
+  setReportLoadGridData(responce){
+    this.getReportLoadData.emit(responce);
   }
 }
