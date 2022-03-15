@@ -34,7 +34,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 const appLandingRoutes : Routes = [
 
         {path: '', component: AppLandingComponent, children:[
-            { path: 'privacy-policy', pathMatch: 'full', component: PrivacyPolicyComponent}
+            { path: 'privacy-policy', pathMatch: 'full', component: PrivacyPolicyComponent},
         //     {path: 'home_page', component: HomePageComponent},
         //     {path: 'career-with-us', component: CareerWithUsComponent},
         //     {path: 'contact-us', component: ContactUsComponent}, 
