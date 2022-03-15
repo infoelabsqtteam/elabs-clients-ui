@@ -16,10 +16,12 @@ export class PrivacyPolicyComponent implements OnInit {
    gridDataSubscription;
    privacyPolicy: any={};
 
-  constructor(private router: Router
-    ,private commonFunctionService : CommonFunctionService,
-    private apiService : ApiService,private dataShareServices :DataShareService,
-    private envService : EnvService) { 
+  constructor(private router: Router,
+              private commonFunctionService : CommonFunctionService,
+              private apiService : ApiService,
+              private dataShareServices :DataShareService,
+              private envService : EnvService
+    ) { 
       this. getPrivacyPolicy()
       this.gridDataSubscription = this.dataShareServices.tempData.subscribe(data =>{
         if(data && data.length > 0){
@@ -30,10 +32,7 @@ export class PrivacyPolicyComponent implements OnInit {
         } else {
           this.gridData = [];
         }
-      })
-    // let payload = this.commonFunctionService.getDataForGrid(1,[])
-    
-    
+      })   
   }
 
   ngOnInit(): void {
