@@ -61,6 +61,9 @@ export class ReportFormComponent implements OnInit {
       {"gte":"Grater Then Equal",
       "lte":"Less Then Equal"}
   }
+  disableTypeList:any=[
+    "autocomplete-dropdown","button","drag_drop","dropdown_on_tree_view_selection","file","grid_selection","grid_selection_vertical","group_of_fields","html","html_editor","html_view","icon","label","label_with_checkbox","label_with_dropdown","label_with_file","label_with_radio","label_with_text","list_of_checkbox","list_of_fields","mini-html","step_progress_bar","tabular_data_selector","list_of_string","password"
+  ]
   operaters:any =[]; 
   form:any={};
   grid:any={}; 
@@ -87,24 +90,22 @@ export class ReportFormComponent implements OnInit {
   ) { 
     this.exportExcelSubscription = this.dataShareServices.exportExcelLink.subscribe(data =>{
       this.setExportExcelLink(data);
-    }
-    
-    
-    )
+    });
     this.gridDataSubscription = this.dataShareServices.gridData.subscribe(data =>{
       if(data.data && data.data.length > 0){
         this.gridData= data.data;
       } else {
         this.gridData = [];
       }
-    })
+    });
 
     this.staticDataSubscription = this.dataShareServices.staticData.subscribe( data =>{
       this.staticData = data;
       if(this.staticData && this.staticData['form']){
         this.form = this.staticData['form'];
         if(this.form && this.form.fields && this.form.fields.length > 0){
-          this.fields = this.form.fields;
+          const fields = this.filterFields(this.form.fields);
+          this.fields = fields;
         }        
       }else{
         this.fields = [];
@@ -158,10 +159,12 @@ export class ReportFormComponent implements OnInit {
     }
     switch (fieldName) {
       case 'collection_name':
-        this.reportForm.get('name').setValue('');
-        this.reportForm.get('operator').setValue('');
-        this.reportForm.get('value').setValue('');
-        this.getFielsAndColumn(reportFormValue);
+        if(reportFormValue.collection_name != ''){
+          this.reportForm.get('name').setValue('');
+          this.reportForm.get('operator').setValue('');
+          this.reportForm.get('value').setValue('');
+          this.getFielsAndColumn(reportFormValue);
+        }
         break;
       case 'name':
         this.operaters=[];
@@ -287,6 +290,7 @@ export class ReportFormComponent implements OnInit {
   }
   private resetVariables() {
     this.crList = [];
+    this.apiService.resetStaticAllData();
     this.staticData = [];
     this.gridData = [];
     this.operaters = [];
@@ -456,6 +460,25 @@ export class ReportFormComponent implements OnInit {
       this.downloadClick = '';
       this.apiService.resetGetExportExclLink();
     }
+  }
+
+  filterFields(fields:any){
+    let filterFields = [];
+    fields.forEach(field => {
+      if(this.isCheckType(field)){
+        filterFields.push(field);
+      }
+    });
+    return filterFields;
+  }
+  isCheckType(field){
+    let check:boolean = true;
+    this.disableTypeList.forEach(type => {
+      if(field.type == type){
+        check = false;
+      }
+    });
+    return check;
   }
 
 }
