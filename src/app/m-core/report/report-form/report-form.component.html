@@ -31,7 +31,7 @@
                         </mat-select>
                     </mat-form-field>                
                     
-                    <div *ngIf="field.type == 'date'">
+                    <div *ngIf="field.type == 'date' || field.type == 'daterange'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
                             <input matInput [matDatepicker]="picker2" [formControlName]="'value'" autocomplete="off">
@@ -39,7 +39,7 @@
                             <mat-datepicker #picker2 color="primary"></mat-datepicker>
                         </mat-form-field>
                     </div>
-                    <div *ngIf="field.type == 'text'">
+                    <div *ngIf="field.type == 'text' || field.type == 'textarea' || field.type == 'email' || field.type == 'gst_number' || field.type == 'typeahead' || field.type == 'po_number' || field.type == 'radio' || field.type == 'tree_view_selection'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
                             <input matInput type="text" [formControlName]="'value'" autocomplete="off">
@@ -48,13 +48,7 @@
                     <div *ngIf="field.type == 'number'">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Value</mat-label>
-                            <input matInput type="text" [formControlName]="'value'" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="field.type == 'textarea'">
-                        <mat-form-field appearance="outline" class="w-100">
-                            <mat-label>Value</mat-label>
-                            <input matInput type="text" [formControlName]="'value'" autocomplete="off">
+                            <input matInput type="number" [formControlName]="'value'" autocomplete="off">
                         </mat-form-field>
                     </div>
                     <div *ngIf="field.type == 'dropdown'">
@@ -91,9 +85,17 @@
                         </mat-form-field>
 
                     </div>
-                    
-                    
-                    
+                    <div *ngIf="field.type == 'checkbox'">
+                        <mat-checkbox color="primary" class="example-margin" [formControlName]="'value'" >{{ field.label }}</mat-checkbox>
+                    </div>  
+                    <div *ngIf="field.type == 'time'">
+                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                            <mat-label>Value</mat-label>
+                            <input matInput [ngxTimepicker]="picker"  [formControlName]="'value'"
+                                readonly  [format]="getTimeFormat(field)">
+                            <ngx-material-timepicker #picker></ngx-material-timepicker>
+                        </mat-form-field>
+                    </div> 
                     <div class="btn-group d-flex justify-content-end mt-3">
                         <button mat-button class="clearbtn mr-4" (click)="clear()">Clear</button>
                         <button mat-button class="addbtn" [disabled]="checkValidator()"
