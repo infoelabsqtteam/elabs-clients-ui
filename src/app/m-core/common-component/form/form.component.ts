@@ -1197,9 +1197,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
           //this.templateForm.reset();
           //this.formGroupDirective.resetForm()
+          
           this.resetForm();
-          this.custmizedFormValue = {};
-          this.dataListForUpload = {}
+          // this.custmizedFormValue = {};
+           this.dataListForUpload = {}
           //this.addAndUpdateResponce.emit('add');
           this.saveResponceData = saveFromDataRsponce.data;
         } else if (saveFromDataRsponce.success == 'success' && this.updateMode) {
@@ -3300,7 +3301,8 @@ case 'populate_fields_for_report_for_new_order_flow':
     }      
   }
   donotResetField(){
-    let FormValue = this.templateForm.getRawValue();
+    //let FormValue = this.templateForm.getRawValue();
+    let FormValue = this.getFormValue(true);
     this.tableFields.forEach(tablefield => {
       if(tablefield.do_not_refresh_on_add && tablefield.type != "list_of_fields" && tablefield.type != "group_of_fields" && tablefield.type != "stepper"){
         this.donotResetFieldLists[tablefield.field_name] = FormValue[tablefield.field_name];
@@ -3333,8 +3335,11 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.donotResetField();
     this.templateForm.reset()
     if(Object.keys(this.donotResetFieldLists).length > 0){
+      this.custmizedFormValue = {};
       this.updateDataOnFormField(this.donotResetFieldLists);
       this.donotResetFieldLists = {};
+    }else{
+      this.custmizedFormValue = {};
     }    
     this.tableFields.forEach(element => {
       switch (element.type) {
