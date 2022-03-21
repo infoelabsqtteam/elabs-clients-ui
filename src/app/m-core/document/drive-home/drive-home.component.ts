@@ -80,7 +80,7 @@ export class DriveHomeComponent implements OnInit {
     private docFileViewSubscription;
     private docDeleteSubscription;
 	private docFoderSubscription;
-
+	hidehome = false;
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
 
@@ -719,6 +719,7 @@ export class DriveHomeComponent implements OnInit {
 	public vdrprentfolder: any = [];
 	public hideRightClickMove: boolean = true;
 	setClickedRow = function (index, file, Details, temp?) {
+		this.hidehome = true;
 		//this.store.dispatch(new VdrActions.SetCaseParentFolder(false))
 		if (Details.refCodeRoot != null) {
 			this.showNewFolderAndUploadDropdown = true;

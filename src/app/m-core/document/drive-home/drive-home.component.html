@@ -1,7 +1,7 @@
 <section class="d-flex align-items-center justify-content-between border-bottom py-3 breadcrumbhead">
     <div class="breadcrumbmenu">
-        <button mat-button class="documentmenu mr-2" (click)="getHome()">Document Library</button>
-        <button mat-button class="activebreadcruem mr-2" *ngFor="let bredcrumb of pathList| slice:1; let i = index"><span (click)="getBredCrumbData(i)">{{ bredcrumb }}</span></button>
+        <button mat-icon-button *ngIf="hidehome" class="documenthome mr-2"><mat-icon style="opacity:0.5;" (click)="getHome()">home</mat-icon></button>
+        <button mat-button class="activebreadcruem mr-2" *ngFor="let bredcrumb of pathList| slice:2; let i = index"><span (click)="getBredCrumbData(i)">{{ bredcrumb }}</span></button>
         <button mat-button class="activebreadcruem mr-2" [matMenuTriggerFor]="menu" *ngIf="currentSelectedPath != ''">{{ currentSelectedPath }} <mat-icon>arrow_drop_down</mat-icon></button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="createNewFolder()">New Folder</button>
