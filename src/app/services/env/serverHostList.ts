@@ -51,6 +51,23 @@ export const serverHostList = [
     }
   },
   {
+    "clientEndpoint": "lims-itllabs.e-labs.ai", "serverEndpoint": "https://proditlserver.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "theme_setting": {
+      "header_bg_color": "#fcfcfc",
+      "header_txt_color": "",
+      "header_txt_hover_color": "",
+      "header_icon_color": "",
+      "header_icon_hover_color": "",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "#77bce8",
+      "theme_color": "#77bce8",
+      "active_bg_color": "#e4f2fa",
+      "popup_header_bg": "#CEE7F7",
+      "form_label_bg": "#E4F2FA"
+    }
+  },
+  {
     "clientEndpoint": "drugs.medicea.in", "serverEndpoint": "https://sitservermedicea.medicea.in", "title": "Medicea Technology", "google_map": "false", "menu_type": "Horizontal", "folder": "medicea", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "mobile",
     "theme_setting": {
       "header_bg_color": "",
