@@ -80,7 +80,7 @@ export class DriveHomeComponent implements OnInit {
     private docFileViewSubscription;
     private docDeleteSubscription;
 	private docFoderSubscription;
-
+	hidehome = false;
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
 
@@ -376,7 +376,10 @@ export class DriveHomeComponent implements OnInit {
 		if (this.vdrprentfolder.key != null) {
 			this.folderKey = this.vdrprentfolder.key
 			this.pathList = this.folderKey.split("/");
-			const startIndex = this.pathList.length - 2;
+			let startIndex = this.pathList.length - 2;
+			if(this.pathList.length == 3){
+				startIndex = 2;
+			}
 			this.currentSelectedPath = this.pathList[startIndex];
 			if(this.currentSelectedPath == undefined){
 				this.currentSelectedPath = '';
@@ -384,7 +387,10 @@ export class DriveHomeComponent implements OnInit {
 			this.pathList.splice(startIndex, 2);
 		} else {
 			this.pathList = this.pathKey.split("/");
-			const startIndex = this.pathList.length - 2;
+			let startIndex = this.pathList.length - 2;
+			if(this.pathList.length == 3){
+				startIndex = 2;
+			}
 			this.currentSelectedPath = this.pathList[startIndex];
 			if(this.currentSelectedPath == undefined){
 				this.currentSelectedPath = '';
@@ -719,6 +725,7 @@ export class DriveHomeComponent implements OnInit {
 	public vdrprentfolder: any = [];
 	public hideRightClickMove: boolean = true;
 	setClickedRow = function (index, file, Details, temp?) {
+		this.hidehome = true;
 		//this.store.dispatch(new VdrActions.SetCaseParentFolder(false))
 		if (Details.refCodeRoot != null) {
 			this.showNewFolderAndUploadDropdown = true;
