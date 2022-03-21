@@ -104,7 +104,7 @@
                 <section class="row w-100 vdrlist mx-0" appDnd (fileDropped)="onFileDropped($event,true,null)" *ngIf="!QuickAccess">
                     <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" (change)="fileBrowseHandler($event.target.files)" />
                     <div class="col-lg-12 title my-3" [ngClass]="documentViewList ? 'd-block':'d-none'" *ngIf="childFiles.length > 0">Files</div>
-                    <div *ngFor="let child of childFiles ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[child,i]" [ngClass]="{'col-lg-3':docDetailActivity && documentViewList,'col-lg-2':documentViewList && !docDetailActivity,'col-lg-12 px-0 gridlist':!documentViewList}">
+                    <div *ngFor="let child of childFiles ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[child,i]" [ngClass]="{'col-lg-3 mb-3':docDetailActivity && documentViewList,'col-lg-2 mb-3':documentViewList && !docDetailActivity,'col-lg-12 px-0 gridlist':!documentViewList}">
                         <div [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'" *ngIf="!child.folder">
                             <div [ngClass]="documentViewList ? '':''">
                                 <!-- <a href="javascript:void(0);" (click)="setClickedRow(i,true,child)" class=" d-block  text-dark" (dblclick)="viewFile(child)"> -->

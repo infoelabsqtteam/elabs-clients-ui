@@ -376,7 +376,10 @@ export class DriveHomeComponent implements OnInit {
 		if (this.vdrprentfolder.key != null) {
 			this.folderKey = this.vdrprentfolder.key
 			this.pathList = this.folderKey.split("/");
-			const startIndex = this.pathList.length - 2;
+			let startIndex = this.pathList.length - 2;
+			if(this.pathList.length == 3){
+				startIndex = 2;
+			}
 			this.currentSelectedPath = this.pathList[startIndex];
 			if(this.currentSelectedPath == undefined){
 				this.currentSelectedPath = '';
@@ -384,7 +387,10 @@ export class DriveHomeComponent implements OnInit {
 			this.pathList.splice(startIndex, 2);
 		} else {
 			this.pathList = this.pathKey.split("/");
-			const startIndex = this.pathList.length - 2;
+			let startIndex = this.pathList.length - 2;
+			if(this.pathList.length == 3){
+				startIndex = 2;
+			}
 			this.currentSelectedPath = this.pathList[startIndex];
 			if(this.currentSelectedPath == undefined){
 				this.currentSelectedPath = '';
