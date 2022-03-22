@@ -975,6 +975,12 @@
                                 </mat-form-field>
                             </div>
                         </div>
+                        <div *ngIf="tableField.type == 'information'" class="labeltitle">
+                            <mat-form-field  appearance="standard" class="example-full-width w-100">
+	                            <input matInput type="text" readonly [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                            </mat-form-field>
+                        </div>
+                        
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_dropdown'">
                             <div class="col-md-2 labeltitle"><strong>{{ tableField.label | titlecase}} :</strong></div>
                             <div class="col-md-4 labelfiled">
