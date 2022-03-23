@@ -183,3 +183,17 @@
     li {list-style:number;}
   }
 }
+
+// landing page download report form
+.downloadreportform {margin-bottom:-8px;background:#efefef;min-height:88vh;
+  .modal-content, .modal-footer {border:none;padding:0;background:none;}
+  .modal-header {display:none !important;}
+  .angular-editor-textarea {border:none !important;resize:none !important;padding:3px !important;}
+  table {border-color:#ccc;}
+  a {display:inline-block;background:#0d6efd;padding:5px 10px;border-radius:5px;color:#fff;font-size:13px;
+    &:hover {color:#fff}
+  }
+.downloadatat {max-width:700px;background:#fff;padding:20px 0;margin:auto;border-radius:5px;}
+.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {transform:translateY(-1em) scale(0.75);}
+.btn-public {width:100%;margin:0 10px;height:36px;font-size:16px !important;line-height:20px;}
+}

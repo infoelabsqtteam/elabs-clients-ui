@@ -5,7 +5,7 @@ import { StorageService } from '../../services/storage/storage.service';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-createpwd',
   templateUrl: './createpwd.component.html',
@@ -30,6 +30,7 @@ export class CreatepwdComponent implements OnInit
     private authService:AuthService,
     private notificationService:NotificationService,
     private envService:EnvService,
+    private location: Location
   ) {
     this.pageloded();
   }
@@ -88,11 +89,9 @@ export class CreatepwdComponent implements OnInit
     }
   }
 
-      onBack()                                              //Added for backButton on change Password
-         {
-             this.router.navigate(['/home']);             //changed- to user dashboard
-          }
-
+  onBack() {
+    this.location.back()
+  }
 
     pageloded(){
       this.logoPath = this.storageService.getLogoPath() + "logo.png";

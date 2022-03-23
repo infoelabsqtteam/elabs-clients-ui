@@ -2549,11 +2549,12 @@ case 'populate_fields_for_report_for_new_order_flow':
               switch (data.type) {
                 case 'date':
                   if(data && data.date_format && data.date_format != ''){
-                    selectedRow[element.field_name][data.field_name] = this.datePipe.transform(selectedRow[element.field_name][data.field_name],data.date_format);
+                    selectedRow[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],data.date_format);
                   }            
                   break;
               
                 default:
+                  selectedRow[element.field_name] = formValue[element.field_name];
                   break;
               }
             });
@@ -2594,11 +2595,12 @@ case 'populate_fields_for_report_for_new_order_flow':
               switch (data.type) {
                 case 'date':
                   if(data && data.date_format && data.date_format != ''){
-                    modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(modifyFormValue[element.field_name][data.field_name],data.date_format);
+                    modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],data.date_format);
                   }            
                   break;
               
                 default:
+                  modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name];
                   break;
               }
             });
@@ -2610,7 +2612,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
-              modifyFormValue[element.field_name] = this.datePipe.transform(modifyFormValue[element.field_name],element.date_format);
+              modifyFormValue[element.field_name] = this.datePipe.transform(formValue[element.field_name],element.date_format);
             }            
             break;
           default:
