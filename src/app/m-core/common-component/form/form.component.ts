@@ -18,10 +18,7 @@ import { ModelService } from 'src/app/services/model/model.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
-import { table } from 'console';
-import * as e from 'express';
 import { Common } from 'src/app/shared/enums/common.enum';
-import { PageEvent } from '@angular/material/paginator';
 declare var tinymce: any;
 
 
@@ -2549,11 +2546,18 @@ case 'populate_fields_for_report_for_new_order_flow':
               switch (data.type) {
                 case 'date':
                   if(data && data.date_format && data.date_format != ''){
-                    selectedRow[element.field_name][data.field_name] = this.datePipe.transform(selectedRow[element.field_name][data.field_name],data.date_format);
+                    if(typeof formValue[element.field_name][data.field_name] != 'string'){
+                      selectedRow[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],'dd/MM/yyyy');
+                    }else{
+                      selectedRow[element.field_name] = formValue[element.field_name];
+                    }
+                  }else{
+                    selectedRow[element.field_name] = formValue[element.field_name];
                   }            
                   break;
               
                 default:
+                  selectedRow[element.field_name] = formValue[element.field_name];
                   break;
               }
             });
@@ -2594,11 +2598,12 @@ case 'populate_fields_for_report_for_new_order_flow':
               switch (data.type) {
                 case 'date':
                   if(data && data.date_format && data.date_format != ''){
-                    modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(modifyFormValue[element.field_name][data.field_name],data.date_format);
+                    modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],'dd/MM/yyyy');
                   }            
                   break;
               
                 default:
+                  modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name];
                   break;
               }
             });
@@ -2610,7 +2615,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
-              modifyFormValue[element.field_name] = this.datePipe.transform(modifyFormValue[element.field_name],element.date_format);
+              modifyFormValue[element.field_name] = this.datePipe.transform(formValue[element.field_name],element.date_format);
             }            
             break;
           default:
@@ -4228,6 +4233,20 @@ case 'populate_fields_for_report_for_new_order_flow':
                       }
                       //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue([]);
                       break;
+                    case "date":
+                      if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
+                        if(typeof ChildFieldData[data.field_name] === 'string'){
+                          const date = ChildFieldData[data.field_name];
+                          const dateMonthYear = date.split('/');
+                          const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
+                          const value = new Date(formatedDate);
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
+                        }else{                  
+                          const value = formValue[element.field_name][data.field_name] == null ? null : formValue[element.field_name][data.field_name];
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue(value);              
+                        }
+                      }
+                      break;
                     default:
                       if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                         const value = ChildFieldData[data.field_name];
@@ -4342,6 +4361,20 @@ case 'populate_fields_for_report_for_new_order_flow':
                   });
                 }                                   
                 break;
+            case "date":
+              if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
+                if(typeof object === 'string'){
+                  const date = object[element.field_name];
+                  const dateMonthYear = date.split('/');
+                  const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
+                  const value = new Date(formatedDate);
+                  this.templateForm.controls[element.field_name].setValue(value)
+                }else{                  
+                  const value = formValue[element.field_name] == null ? null : formValue[element.field_name];
+                  this.templateForm.controls[element.field_name].setValue(value);                  
+                }
+              }
+              break;
             case "tabular_data_selector":   
               if(object != undefined && object != null){
                 this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));     
@@ -4822,7 +4855,6 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.updateAddNew = false;
     }
   }
-  
   
 
 }
