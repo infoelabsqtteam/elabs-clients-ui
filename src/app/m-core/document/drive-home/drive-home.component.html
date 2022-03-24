@@ -9,6 +9,11 @@
         </mat-menu>
     </div>
     <div class="gridviewmenu d-flex align-items-center">
+        <div class="searchbox mr-3">
+            <input [(ngModel)]="filterdata" class="form-control rounded-pill" placeholder="Search items...">
+            <div class="searchicon"><mat-icon>search</mat-icon></div>
+        </div>
+
         <div [ngClass]="selectionAny ? 'd-inline':'d-none'">
             <!-- <button mat-icon-button [ngClass]="selectedRowFile ? 'd-inline':'d-none'" (click)="viewFile(vdrprentfolder);recentData('')" placement="bottom" ngbTooltip="Preview"><mat-icon>visibility</mat-icon></button> -->
             <button mat-icon-button [matMenuTriggerFor]="beforeMenu"><mat-icon>more_vert</mat-icon></button>
@@ -26,8 +31,6 @@
         <button mat-icon-button color="primary" (click)="showDeatailsGrid()"><mat-icon>info</mat-icon></button>
     </div>
 </section>
-
-
 
 <section class="vdrsection">
     <div class="row">
@@ -54,7 +57,7 @@
                     </div>
 
                 </div>
-                <div *ngFor="let vdr of searchDocumentFolders ; let i = index" [hidden]="!QuickAccess"
+                <div *ngFor="let vdr of searchDocumentFolders ; let i = index"
                     [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]"
                     [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
                     <div [ngClass]="documentViewList ? 'border mb-2 rounded':'border-bottom  mr-2'">
@@ -86,7 +89,7 @@
                             <!-- <div class="col-lg-3"><h5 class="m-0 py-2">Chat</h5></div> -->
                         </div>
                     </div>
-                    <div *ngFor="let vdr of childFolders ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-2':'col-lg-12 px-0 gridlist'">
+                    <div *ngFor="let vdr of childFolders | filter:filterdata;  let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-2':'col-lg-12 px-0 gridlist'">
                         <div [ngClass]="documentViewList ? '':''">
                             <button mat-button class="w-100" (dblclick)="openFolder(vdr, null)" (click)="setClickedRow(i,false,vdr)" [ngClass]="i == selectedRow ? 'bg-light text-dark':''" appDnd (fileDropped)="onFileDropped($event,true,vdr)" [matTooltip]="vdr.rollName">
                                 <div class="row">
@@ -104,7 +107,7 @@
                 <section class="row w-100 vdrlist mx-0" appDnd (fileDropped)="onFileDropped($event,true,null)" *ngIf="!QuickAccess">
                     <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" (change)="fileBrowseHandler($event.target.files)" />
                     <div class="col-lg-12 title my-3" [ngClass]="documentViewList ? 'd-block':'d-none'" *ngIf="childFiles.length > 0">Files</div>
-                    <div *ngFor="let child of childFiles ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[child,i]" [ngClass]="{'col-lg-3 mb-3':docDetailActivity && documentViewList,'col-lg-2 mb-3':documentViewList && !docDetailActivity,'col-lg-12 px-0 gridlist':!documentViewList}">
+                    <div *ngFor="let child of childFiles | filter:filterdata; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[child,i]" [ngClass]="{'col-lg-3 mb-3':docDetailActivity && documentViewList,'col-lg-2 mb-3':documentViewList && !docDetailActivity,'col-lg-12 px-0 gridlist':!documentViewList}">
                         <div [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'" *ngIf="!child.folder">
                             <div [ngClass]="documentViewList ? '':''">
                                 <!-- <a href="javascript:void(0);" (click)="setClickedRow(i,true,child)" class=" d-block  text-dark" (dblclick)="viewFile(child)"> -->
