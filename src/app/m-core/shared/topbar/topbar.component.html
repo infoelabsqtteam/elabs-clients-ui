@@ -43,6 +43,12 @@
             <button mat-menu-item><mat-icon class="mr-2">manage_accounts</mat-icon> My account</button>
             <button mat-menu-item><mat-icon class="mr-2">person_outline</mat-icon> Name: {{userName}}</button>
             <button mat-menu-item><mat-icon class="mr-2">alternate_email</mat-icon> Email: {{userEmail}}</button>
+
+
+            <button mat-menu-item *ngIf="teamname && teamname != null"><mat-icon class="mr-2">alternate_email</mat-icon> Team Name: {{teamname}}</button>
+
+
+
             <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
             <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>
             <button mat-menu-item (click)="logout()"><mat-icon class="mr-2">power_settings_new</mat-icon> Log out</button>
