@@ -72,10 +72,12 @@ export class TopbarComponent implements OnInit, OnChanges {
           this.userInfo = this.storageService.GetUserInfo();
           this.userName = this.userInfo.name;
           this.userEmail = this.userInfo.email;
+          
           let teamvalue = this.userInfo.list1
           for (var _i = 0; _i < teamvalue.length; _i++) {
               this.teamname = teamvalue[_i].name;
           }
+
           if (this.userName && this.userName != null) {
               this.userFirstLetter = this.userName.charAt(0).toUpperCase()
           } else {
