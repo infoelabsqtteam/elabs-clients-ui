@@ -167,6 +167,14 @@
 
 
 
+
+<section>
+    <mat-card-content class="m-0 pt-4 text-center">
+        <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
+    </mat-card-content>
+</section>
+
+
 <section [ngClass]="deleteAlert ? 'show modalShow' : ''" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -241,11 +249,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-
-                <h4 class="header-title"><i class="mdi mdi-folder-settings-outline"></i>&nbsp;Ref:&nbsp;{{ filename}}
-                </h4>
-
-
+                <h4 class="header-title"><i class="mdi mdi-folder-settings-outline"></i>&nbsp;Ref:&nbsp;{{ filename}}</h4>
                 <button type="button" class="close" (click)="closeChatList()">×</button>
             </div>
             <div class="modal-body">
@@ -255,24 +259,9 @@
                             <div class="card">
                                 <div class="card-body p-0">
                                     <ul class="nav nav-tabs nav-bordered">
-                                        <li class="nav-item">
-                                            <a href="allUsers" data-toggle="tab" aria-expanded="false"
-                                                class="nav-link active py-2">
-                                                All
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="favUsers" data-toggle="tab" aria-expanded="true"
-                                                class="nav-link py-2">
-                                                Favourties
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="friendUsers" data-toggle="tab" aria-expanded="true"
-                                                class="nav-link py-2">
-                                                Friends
-                                            </a>
-                                        </li>
+                                        <li class="nav-item"><a href="allUsers" data-toggle="tab" aria-expanded="false" class="nav-link active py-2"> All </a></li>
+                                        <li class="nav-item"> <a href="favUsers" data-toggle="tab" aria-expanded="true" class="nav-link py-2">Favourties</a></li>
+                                        <li class="nav-item"><a href="friendUsers" data-toggle="tab" aria-expanded="true" class="nav-link py-2"> Friends</a></li>
                                     </ul>
                                     <!-- end nav-->
                                     <div class="tab-content">

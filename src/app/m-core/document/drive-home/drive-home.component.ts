@@ -7,6 +7,8 @@ import { DocDataShareService } from '../../../services/data-share/doc-data-share
 import { ModelService } from '../../../services/model/model.service';
 import { EnvService } from '../../../services/env/env.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ApiService } from 'src/app/services/api/api.service';
+import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 
 @Component({
   selector: 'lib-drive-home',
@@ -15,7 +17,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 })
 export class DriveHomeComponent implements OnInit {
 
-  public title: any = 'Right Click Me';
+    public title: any = 'Right Click Me';
 	public DocIndex: any;
 	public thisContext: any = this;
 	public itemVisible: any = false;
@@ -82,6 +84,7 @@ export class DriveHomeComponent implements OnInit {
 	private docFoderSubscription;
 	hidehome = false;
 	filterdata = '';
+	pageNumber: number = 1;
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
 
@@ -92,6 +95,8 @@ export class DriveHomeComponent implements OnInit {
 		private docDataShareService:DocDataShareService,
 		private modelService:ModelService,
 		private envService:EnvService,
+		private commonFunctionService:CommonFunctionService,
+		private apiService:ApiService,
 		private notificationService:NotificationService
     ) {
 		this.documentSubscription = this.docDataShareService.docData.subscribe(doc =>{
@@ -1177,6 +1182,24 @@ export class DriveHomeComponent implements OnInit {
 	uploadDocFolderResponce(responce){
 		console.log(responce);
 	}
+
+	tab: any = [];
+	currentMenu: any;
+	headElements = [];
+
+
+	getPage(page: number) {
+		this.pageNumber = page;
+		const pagePayload = this.commonFunctionService.getPage(page, this.tab, this.currentMenu, this.headElements, '', '');
+		pagePayload["crList"] = [{fName:  "key",operator:"stwic",fValue: this.currentSelectedPath  },  {fName: "rollName",operator:"stwic",fValue:"SEARCH_STRRING" }]
+		this.apiService.getGridData(pagePayload);
+	  }
+
+
+
+
+
+
 
 }
 
