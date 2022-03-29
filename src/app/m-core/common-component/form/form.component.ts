@@ -2596,6 +2596,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             });
             break;
           case 'group_of_fields':
+            modifyFormValue[element.field_name] = formValue[element.field_name];
             element.list_of_fields.forEach(data => {
               switch (data.type) {
                 case 'date':
@@ -2625,7 +2626,8 @@ case 'populate_fields_for_report_for_new_order_flow':
             }           
             break;
           default:
-            modifyFormValue = formValue;
+            modifyFormValue[element.field_name] = formValue[element.field_name];
+            //modifyFormValue = formValue;
             break;
         }
       });
