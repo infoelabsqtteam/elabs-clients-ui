@@ -30,6 +30,7 @@ export class TopbarComponent implements OnInit, OnChanges {
   public userInfo: any;
   public userName: any;
   public userEmail: any;
+  public teamname: any;
   public userFirstLetter: any;
   gitVersionSubscription:any;
   gitVersion: any;
@@ -71,6 +72,7 @@ export class TopbarComponent implements OnInit, OnChanges {
           this.userInfo = this.storageService.GetUserInfo();
           this.userName = this.userInfo.name;
           this.userEmail = this.userInfo.email;
+          this.teamname = this.userInfo.list1
           if (this.userName && this.userName != null) {
               this.userFirstLetter = this.userName.charAt(0).toUpperCase()
           } else {

@@ -81,6 +81,7 @@ export class DriveHomeComponent implements OnInit {
     private docDeleteSubscription;
 	private docFoderSubscription;
 	hidehome = false;
+	filterdata = '';
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
 
