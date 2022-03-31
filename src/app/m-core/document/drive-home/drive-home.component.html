@@ -9,10 +9,15 @@
         </mat-menu>
     </div>
     <div class="gridviewmenu d-flex align-items-center">
-        <div class="searchbox mr-3">
-            <input [(ngModel)]="filterdata" class="form-control rounded-pill" placeholder="Search items...">
+        <!-- <div class="searchbox mr-3">
+            <input [(ngModel)]="filterdata" (change)="filterData()" class="form-control rounded-pill" placeholder="Search items...">
             <div class="searchicon"><mat-icon>search</mat-icon></div>
-        </div>
+        </div> -->
+
+        <form #contactForm="ngForm" class="searchbox mr-3">
+            <input name="firstname" ngModel (keyup)="filterData(contactForm)" class="form-control rounded-pill" placeholder="Search items..." autocomplete="off">
+            <div class="searchicon"><mat-icon>search</mat-icon></div>
+        </form>
 
         <div [ngClass]="selectionAny ? 'd-inline':'d-none'">
             <!-- <button mat-icon-button [ngClass]="selectedRowFile ? 'd-inline':'d-none'" (click)="viewFile(vdrprentfolder);recentData('')" placement="bottom" ngbTooltip="Preview"><mat-icon>visibility</mat-icon></button> -->
@@ -43,9 +48,7 @@
                 <div class="row w-100" id="demo" [hidden]="!QuickAccess">
                     <div class="col-lg-3" *ngFor="let doc of searchDocumentFiles; let i = index"
                         [contextMenu]="basicMenu" [contextMenuSubject]="[doc,i]">
-                        <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark"
-                            (click)="setClickedRow(i,true,doc, 'FromsearchData')" (dblclick)="viewFile(doc)"
-                            [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'">
+                        <a href="javascript:void(0);" class="border rounded d-block mb-2 text-dark" (click)="setClickedRow(i,true,doc, 'FromsearchData')" (dblclick)="viewFile(doc)" [ngClass]="i == fileSelectRow ? 'bg-light':'bg-none'">
                             <div class="border-bottom file-grid-view">
                                 <div class="file-img-col bg-light"><img src="{{ getFileImageForFolders(doc.fileExt) }}" alt="" class="doc-xls"></div>
                             </div>
@@ -57,14 +60,9 @@
                     </div>
 
                 </div>
-                <div *ngFor="let vdr of searchDocumentFolders ; let i = index"
-                    [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]"
-                    [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
+                <div *ngFor="let vdr of searchDocumentFolders ; let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-3':'col-lg-12'">
                     <div [ngClass]="documentViewList ? 'border mb-2 rounded':'border-bottom  mr-2'">
-                        <a href="javascript:void(0);" class="d-block text-dark p-2"
-                            (dblclick)="openFolder(vdr, 'FromsearchData')" (click)="setClickedRow(i,false,vdr)"
-                            [ngClass]="i == selectedRow ? 'bg-light text-primary':''" appDnd
-                            (fileDropped)="onFileDropped($event,true,vdr)">
+                        <a href="javascript:void(0);" class="d-block text-dark p-2" (dblclick)="openFolder(vdr, 'FromsearchData')" (click)="setClickedRow(i,false,vdr)" [ngClass]="i == selectedRow ? 'bg-light text-primary':''" appDnd (fileDropped)="onFileDropped($event,true,vdr)">
                             <div class="row">
                                 <input type="file" #fileDropRef id="fileDropRef" multiple style="display: none" (change)="fileBrowseHandler($event.target.files)" />
                                 <div [ngClass]="documentViewList ? 'col-lg-12':'col-lg-4'"><i class="mdi mdi-folder h4 mr-2"></i>{{vdr.rollName}}</div>
@@ -75,7 +73,6 @@
                         </a>
                     </div>
                 </div>
-
                 <div *ngIf="QuickAccess && SearchDocument && SearchDocument.length <= 0"><h2> No Result Found </h2></div>
 
 
@@ -86,10 +83,9 @@
                             <div class="col-lg-4"><h5 class="m-0 py-2">Name</h5></div>
                             <div class="col-lg-3"><h5 class="m-0 py-2">Last Modified</h5></div>
                             <div class="col-lg-4"><h5 class="m-0 py-2">File Size</h5></div>
-                            <!-- <div class="col-lg-3"><h5 class="m-0 py-2">Chat</h5></div> -->
                         </div>
                     </div>
-                    <div *ngFor="let vdr of childFolders | filter:filterdata;  let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-2':'col-lg-12 px-0 gridlist'">
+                    <div *ngFor="let vdr of childFolders | filter:filterdata | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };  let i = index" [contextMenu]="basicMenu" [contextMenuSubject]="[vdr,i]" [ngClass]="documentViewList ? 'col-lg-2':'col-lg-12 px-0 gridlist'">
                         <div [ngClass]="documentViewList ? '':''">
                             <button mat-button class="w-100" (dblclick)="openFolder(vdr, null)" (click)="setClickedRow(i,false,vdr)" [ngClass]="i == selectedRow ? 'bg-light text-dark':''" appDnd (fileDropped)="onFileDropped($event,true,vdr)" [matTooltip]="vdr.rollName">
                                 <div class="row">
@@ -97,7 +93,6 @@
                                     <div [ngClass]="documentViewList ? 'col-lg-12 py-1':'col-lg-4'"><mat-icon class="mr-2">folder</mat-icon><span class="foldername">{{vdr.rollName}}</span></div>
                                     <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0">{{vdr.id}}</p></div>
                                     <div [ngClass]="documentViewList ? 'd-none':'col-lg-4'"><p class="m-0"> <span></span></p></div>
-                                    <!-- <div [ngClass]="documentViewList ? 'd-none':'col-lg-3'"><p class="m-0">-</p></div> -->
                                 </div>
                             </button>
                         </div>
@@ -165,6 +160,16 @@
     </div>
 </section>
 
+
+
+
+
+
+<section>
+    <mat-card-content class="m-0 pt-4 text-center">
+        <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
+    </mat-card-content>
+</section>
 
 
 <section [ngClass]="deleteAlert ? 'show modalShow' : ''" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -241,11 +246,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-
-                <h4 class="header-title"><i class="mdi mdi-folder-settings-outline"></i>&nbsp;Ref:&nbsp;{{ filename}}
-                </h4>
-
-
+                <h4 class="header-title"><i class="mdi mdi-folder-settings-outline"></i>&nbsp;Ref:&nbsp;{{ filename}}</h4>
                 <button type="button" class="close" (click)="closeChatList()">×</button>
             </div>
             <div class="modal-body">
@@ -255,24 +256,9 @@
                             <div class="card">
                                 <div class="card-body p-0">
                                     <ul class="nav nav-tabs nav-bordered">
-                                        <li class="nav-item">
-                                            <a href="allUsers" data-toggle="tab" aria-expanded="false"
-                                                class="nav-link active py-2">
-                                                All
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="favUsers" data-toggle="tab" aria-expanded="true"
-                                                class="nav-link py-2">
-                                                Favourties
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="friendUsers" data-toggle="tab" aria-expanded="true"
-                                                class="nav-link py-2">
-                                                Friends
-                                            </a>
-                                        </li>
+                                        <li class="nav-item"><a href="allUsers" data-toggle="tab" aria-expanded="false" class="nav-link active py-2"> All </a></li>
+                                        <li class="nav-item"> <a href="favUsers" data-toggle="tab" aria-expanded="true" class="nav-link py-2">Favourties</a></li>
+                                        <li class="nav-item"><a href="friendUsers" data-toggle="tab" aria-expanded="true" class="nav-link py-2"> Friends</a></li>
                                     </ul>
                                     <!-- end nav-->
                                     <div class="tab-content">
@@ -988,3 +974,6 @@
         </div>
     </div>
 </div>
+
+
+

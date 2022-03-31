@@ -108,6 +108,29 @@ export class DocApiService {
       }
     )
   }
+
+  GetFolderChild1(payload){
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+      (respData) => {
+        this.docDataShare.setVdrData(respData);
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+
+    // let api = this.envService.getApi('MOVE_FOLDER_CHILD');
+    // this.http.post(api, payload).subscribe(
+    //   (respData) =>{
+    //     this.docDataShare.setVdrData(respData);
+    //   },
+    //   (error)=>{
+    //     console.log(error);
+    //   }
+    // )
+  }
+
   GetFolderByKey(payload){
     let api = this.envService.getApi('GET_CHILD_FOLDER_BY_KEY');
     this.http.post(api, payload).subscribe(
