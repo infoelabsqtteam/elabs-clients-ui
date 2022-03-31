@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from '../../../services/storage/storage.service';
+import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { ContextMenuComponent } from 'ngx-contextmenu';
 import { DocApiService } from '../../../services/api/doc-api/doc-api.service';
 import { DocDataShareService } from '../../../services/data-share/doc-data-share/doc-data-share.service';
@@ -18,6 +19,7 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 export class DriveHomeComponent implements OnInit {
 
     public title: any = 'Right Click Me';
+	itemNumOfGrid: any = 25;
 	public DocIndex: any;
 	public thisContext: any = this;
 	public itemVisible: any = false;
@@ -85,6 +87,12 @@ export class DriveHomeComponent implements OnInit {
 	hidehome = false;
 	filterdata = '';
 	pageNumber: number = 1;
+	
+
+	tab: any = [];
+	currentMenu: any;
+	headElements = [];
+	total: number;
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
 
@@ -103,7 +111,12 @@ export class DriveHomeComponent implements OnInit {
             this.setDocData(doc);
         })
         this.vdrDataSubscription = this.docDataShareService.vdrData.subscribe(vdr =>{
-            this.setVdrData(vdr);
+			if(vdr["data"] != null && vdr["data"].length >0){
+				this.setVdrData(vdr["data"]);
+				this.total = vdr["data_size"]
+			}else{
+				this.setVdrData(vdr);
+			}
         })
         this.moveFolderDataSubscription = this.docDataShareService.moveFolderData.subscribe(moveData =>{
             this.setMoveFolderData(moveData);
@@ -189,6 +202,7 @@ export class DriveHomeComponent implements OnInit {
     }
     setVdrData(vdrData){
         if (vdrData && vdrData.length > 0) {
+			this.total = vdrData.length;
             this.childFolders = [];
             this.childFiles = [];
             this.vdrParantData = vdrData;
@@ -776,7 +790,10 @@ export class DriveHomeComponent implements OnInit {
 		this.fileSelectRow = -1;
 		this.selectionAny = false;
         this.selectedRowFile = false;
-        this.docApiService.GetFolderChild(selectedFolder);
+
+		let getFilterData = this.payloadForGetChildDocs(selectedFolder);
+		this.docApiService.GetFolderChild1(getFilterData);
+        // this.docApiService.GetFolderChild(selectedFolder);
 		if (param == 'FromsearchData') {
 			//this.store.dispatch(new docActions.ResetSearch());
 			this.SearchDocument = [];
@@ -785,6 +802,18 @@ export class DriveHomeComponent implements OnInit {
 			this.searchText = '';
 			this.showQuickAccess()
 		}
+	}
+
+	payloadForGetChildDocs(selectedFolder){
+		const data = this.commonFunctionService.getPaylodWithCriteria("awsdocs",'',[],'');
+		data["crList"] = [{fName:  "key",operator:"stw",fValue: selectedFolder["key"]  },{fName:  "parentId",operator:"eq",fValue: selectedFolder["_id"]  }]
+		data['pageNo'] = this.pageNumber-1;
+		data['pageSize'] = 25;    
+		const getFilterData = {
+		  data: data,
+		  path: null
+		}
+		return getFilterData;
 	}
 
 	getFileExtentionForFolderExplore(ext): any {
@@ -1183,20 +1212,30 @@ export class DriveHomeComponent implements OnInit {
 		console.log(responce);
 	}
 
-	tab: any = [];
-	currentMenu: any;
-	headElements = [];
-
-
+	
 	getPage(page: number) {
 		this.pageNumber = page;
-		const pagePayload = this.commonFunctionService.getPage(page, this.tab, this.currentMenu, this.headElements, '', '');
-		pagePayload["crList"] = [{fName:  "key",operator:"stwic",fValue: this.currentSelectedPath  },  {fName: "rollName",operator:"stwic",fValue:"SEARCH_STRRING" }]
-		this.apiService.getGridData(pagePayload);
-	  }
+		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder);
+		this.docApiService.GetFolderChild1(getFilterData);
+	}
 
-
-
+	filterData(searchForm){
+		if(searchForm.value["firstname"] && searchForm.value["firstname"].length > 0){
+			let text = searchForm.value["firstname"];
+			const data = this.commonFunctionService.getPaylodWithCriteria("awsdocs",'',[],'');
+			data["crList"] = [{fName:  "key",operator:"stw",fValue: this.vdrprentfolder["key"]  },{fName: "rollName",operator:"stwic",fValue: text}]
+			data['pageNo'] = 0;
+			data['pageSize'] = 25;    
+			const getFilterData = {
+			  data: data,
+			  path: null
+			}
+			this.docApiService.GetFolderChild1(getFilterData);
+		}else{
+			this.getPage(this.pageNumber);
+		}
+		
+	}
 
 
 
