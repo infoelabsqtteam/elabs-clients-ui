@@ -29,7 +29,7 @@ export class GridSelectionModalComponent implements OnInit {
   staticDataSubscriber;
   parentObject={};
   responseData:any;
-  copyStaticData:any;
+  copyStaticData:[] = [];
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -48,11 +48,10 @@ export class GridSelectionModalComponent implements OnInit {
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       if(this.coreFunctionService.isNotBlank(this.field) && this.coreFunctionService.isNotBlank(this.field.ddn_field)  && data[this.field.ddn_field]){
         this.responseData = data[this.field.ddn_field];
-        this.copyStaticData = data;
       }else{
         this.responseData = [];
-        this.copyStaticData  = {}
       }
+      this.copyStaticData = data;
       this.setStaticData(data);
     })
      //this.treeViewData.data = TREE_DATA;
@@ -148,8 +147,8 @@ export class GridSelectionModalComponent implements OnInit {
   }
   setStaticData(staticData){
     if(staticData){
-      this.gridData = [];
       if(this.field.ddn_field && staticData[this.field.ddn_field] && staticData[this.field.ddn_field] != null){
+        this.gridData = [];
         if(staticData[this.field.ddn_field] && staticData[this.field.ddn_field].length>0){
           staticData[this.field.ddn_field].forEach(element => {
             const gridData = JSON.parse(JSON.stringify(element))
