@@ -734,7 +734,7 @@ export class CommonFunctionService {
 
   getValueForGrid(field, object) {
     let value = '';
-    if (field.field_name != undefined && field.field_name != null && field.field_name != '') {
+    if (field && field.field_name != undefined && field.field_name != null && field.field_name != '') {
       value = this.getObjectValue(field.field_name, object)
     }
     if (!field.type) field.type = "Text";
@@ -744,6 +744,7 @@ export class CommonFunctionService {
       case 'time': return this.datePipe.transform(value, 'h:mm a');
       case "boolean": return value ? "Yes" : "No";
       case "currency": return this.CurrencyPipe.transform(value, 'INR');
+	  case "dropdown": return this.getddnDisplayVal(value);
       case "info":
         if (value && value != '') {
           return '<i class="fa fa-eye"></i>';
