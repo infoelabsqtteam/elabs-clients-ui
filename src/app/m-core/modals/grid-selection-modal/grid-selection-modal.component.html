@@ -56,7 +56,7 @@
                                 <div *ngIf="fieldName.type.toLowerCase() == 'number'">
                                   <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
                                 </div>
-                                 <!-- <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
+                                 <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                   <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
                                       <mat-label>{{ fieldName.label | titlecase}}</mat-label>
                                       <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]">
@@ -73,7 +73,7 @@
                                           </mat-option>
                                       </mat-select>
                                   </mat-form-field>
-                                </div>  -->
+                                </div> 
                                 </div>
                               </div>
                               </td>

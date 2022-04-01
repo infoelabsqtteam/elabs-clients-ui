@@ -6,7 +6,9 @@ import { DataShareService } from '../../../services/data-share/data-share.servic
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { ModelService } from 'src/app/services/model/model.service';
+import { ApiService } from '../../../services/api/api.service';
 import { I } from '@angular/cdk/keycodes';
+
 
 @Component({
   selector: 'app-grid-selection-modal',
@@ -27,6 +29,7 @@ export class GridSelectionModalComponent implements OnInit {
   staticDataSubscriber;
   parentObject={};
   responseData:any;
+  copyStaticData:[] = [];
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -39,19 +42,46 @@ export class GridSelectionModalComponent implements OnInit {
     private CommonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
     private notificationService:NotificationService,
-    private coreFunctionService:CoreFunctionService
+    private coreFunctionService:CoreFunctionService,
+    private apiservice:ApiService 
   ) {
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       if(this.coreFunctionService.isNotBlank(this.field) && this.coreFunctionService.isNotBlank(this.field.ddn_field)  && data[this.field.ddn_field]){
         this.responseData = data[this.field.ddn_field];
       }else{
         this.responseData = [];
-
       }
+      this.copyStaticData = data;
       this.setStaticData(data);
     })
      //this.treeViewData.data = TREE_DATA;
    }
+
+   getddnDisplayVal(val) {
+    return this.CommonFunctionService.getddnDisplayVal(val);    
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    if(o1 != null && o2 != null){
+      return o1._id === o2._id;
+    }else{
+      return false;
+    }
+    
+  }
+
+  getStaticDataWithDependentData(){
+    const staticModal = []
+    let staticModalGroup = this.CommonFunctionService.commanApiPayload([],this.listOfGridFieldName,[],{});
+    if(staticModalGroup.length > 0){
+      staticModalGroup.forEach(element => {
+        staticModal.push(element);
+      });
+    } 
+    if(staticModal.length > 0){    
+      this.apiservice.getStatiData(staticModal);
+    }
+  }
 
   ngOnInit(): void {
     let modal = this;
@@ -117,8 +147,8 @@ export class GridSelectionModalComponent implements OnInit {
   }
   setStaticData(staticData){
     if(staticData){
-      this.gridData = [];
       if(this.field.ddn_field && staticData[this.field.ddn_field] && staticData[this.field.ddn_field] != null){
+        this.gridData = [];
         if(staticData[this.field.ddn_field] && staticData[this.field.ddn_field].length>0){
           staticData[this.field.ddn_field].forEach(element => {
             const gridData = JSON.parse(JSON.stringify(element))
@@ -238,6 +268,9 @@ export class GridSelectionModalComponent implements OnInit {
     }else{
       this.grid_row_refresh_icon = false;
     }
+
+    //For dropdown data in grid selection
+    this.getStaticDataWithDependentData()
     
   }
   selectGridData(){
