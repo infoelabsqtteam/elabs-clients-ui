@@ -29,7 +29,7 @@ import { ApedaFormatComponent } from '../report-form/apeda-format/apeda-format.c
 import { EicFormatComponent } from '../report-form/eic-format/eic-format.component';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { GitVersionComponent } from './git-version/git-version.component';
-
+import { ChartFilterComponent } from './chart-filter/chart-filter.component';
 
 const models = [
   ModalsComponent,
@@ -54,6 +54,7 @@ const models = [
   LandingFunctionsModalComponent,
   ShortcutinfoComponent,
   GitVersionComponent,
+  ChartFilterComponent
 ]
 
 @NgModule({

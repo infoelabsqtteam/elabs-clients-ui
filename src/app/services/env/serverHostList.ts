@@ -221,7 +221,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "test.ascgroup.in", "serverEndpoint": "https://sitserverascgroup.e-labs.ai", "title": "ASC group", "google_map": "false", "menu_type": "Vertical", "folder": "asc-group", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "clientEndpoint": "localhost", "serverEndpoint": "https://sitserverascgroup.e-labs.ai", "title": "ASC group", "google_map": "false", "menu_type": "Vertical", "folder": "asc-group", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
