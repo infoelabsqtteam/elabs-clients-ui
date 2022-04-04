@@ -446,40 +446,41 @@ export const serverHostList = [
     }
   },
 
-  {
-    "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "","varify_mode":"",
-    "theme_setting": {
-      "header_bg_color": "#fcfcfc",
-      "header_txt_color": "",
-      "header_txt_hover_color": "",
-      "header_icon_color": "",
-      "header_icon_hover_color": "",
-      "btn_color": "",
-      "btn_hover_color": "",
-      "footer_bg": "#232324",
-      "theme_color": "#1d9527",
-      "active_bg_color": "#e0f0e1",
-      "popup_header_bg": "#CEE7F7",
-      "form_label_bg": "#E4F2FA"
-    }
-  },
-  {
-    "clientEndpoint": "localhost", "serverEndpoint": "https://serverbbsrqualiteklab.qualiteklab.com", "title": "BBSR-Qualitek Lab", "google_map": "false", "menu_type": "Horizontal", "folder": "bbsr-qualitek", "temp_name": "temp1","theme": "theme1", "redirect_url": "","varify_mode":"",
-    "theme_setting": {
-      "header_bg_color": "#fcfcfc",
-      "header_txt_color": "",
-      "header_txt_hover_color": "",
-      "header_icon_color": "",
-      "header_icon_hover_color": "",
-      "btn_color": "",
-      "btn_hover_color": "",
-      "footer_bg": "#77bce8",
-      "theme_color": "#77bce8",
-      "active_bg_color": "#e4f2fa",
-      "popup_header_bg": "#CEE7F7",
-      "form_label_bg": "#E4F2FA"
-    }
-  },
+{
+  "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "","varify_mode":"",
+  "theme_setting": {
+    "header_bg_color": "#fcfcfc",
+    "header_txt_color": "",
+    "header_txt_hover_color": "",
+    "header_icon_color": "",
+    "header_icon_hover_color": "",
+    "btn_color": "",
+    "btn_hover_color": "",
+    "footer_bg": "#232324",
+    "theme_color": "#1d9527",
+    "active_bg_color": "#e0f0e1",
+    "popup_header_bg": "#CEE7F7",
+    "form_label_bg": "#E4F2FA"
+  }
+},
+{
+  "clientEndpoint": "bbsr-lims.qualiteklab.com", "serverEndpoint": "https://serverbbsrqualiteklab.qualiteklab.com", "title": "BBSR-Qualitek Lab", "google_map": "false", "menu_type": "Horizontal", "folder": "bbsr-qualitek", "temp_name": "temp1","theme": "theme1", "redirect_url": "","varify_mode":"",
+  "theme_setting": {
+    "header_bg_color": "#fcfcfc",
+    "header_txt_color": "",
+    "header_txt_hover_color": "",
+    "header_icon_color": "",
+    "header_icon_hover_color": "",
+    "btn_color": "",
+    "btn_hover_color": "",
+    "footer_bg": "#77bce8",
+    "theme_color": "#77bce8",
+    "active_bg_color": "#e4f2fa",
+    "popup_header_bg": "#CEE7F7",
+    "form_label_bg": "#E4F2FA"
+  }
+},
+
   {
     "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
