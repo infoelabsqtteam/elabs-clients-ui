@@ -30,7 +30,7 @@ export const MY_DATE_FORMATS = {
   styleUrls: ['./grid-table-view.component.css'],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-    {provide: DateAdapter, useClass: MomentUtcDateAdapter},
+   // {provide: DateAdapter, useClass: MomentUtcDateAdapter},
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
