@@ -49,7 +49,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             HeaderComponent,
             HomeComponent,
             FooterComponent,
-            HeaderLandingPageComponent          
+            HeaderLandingPageComponent,
             ],
         providers:[
         { provide : HTTP_INTERCEPTORS,useClass : AuthInterceptor, multi: true},

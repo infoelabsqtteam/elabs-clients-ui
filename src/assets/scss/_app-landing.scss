@@ -121,7 +121,7 @@
 
 
 
-button:focus, input:focus, textarea:focus, select:focus {outline:none;}
+button:focus, input:focus, textarea:focus, select:focus {outline:none !important;}
 ul,ol,li {margin:0;padding:0;list-style:none;}
 img {max-width:100%;}
 a, a:hover {text-decoration:none;}
@@ -489,3 +489,7 @@ h2.section-title{margin-bottom:$size10!important;font-size:$size38!important;fon
   .location-all ul li .locationinfo {transform:translateY(-150px)}
 }
 
+.accept-agreement{background: #f2f3f4; position: fixed;bottom: 0px;top: auto;width: 100%;height: 50px;
+  text-align: center;display: flex;align-content: center;justify-content: center;align-items: center;
+  font-weight: 600;color: var(--themebg);font-size: 18px}
+.agreementdiv{padding: 20px 20px 70px;font-size: 14px;}

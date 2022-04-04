@@ -106,10 +106,18 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             this.router.navigate(['permissions']);
         }
         else {
+          const menu = submenu;
+          if(menu.name == "document_library"){
+            this.router.navigate(['vdr']);
+          }else if(menu.name == "report"){
+            this.router.navigate(['report']);
+          }
+          else{
             this.apiService.resetTempData();
             this.apiService.resetGridData();
             this.GoToSelectedModule(module);
-            this.router.navigate(['template']);             
+            this.router.navigate(['template']);  
+          }           
         }
     }else{
         this.notificationService.notify("bg-danger", "Permission denied !!!");

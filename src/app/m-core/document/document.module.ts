@@ -12,6 +12,7 @@ import { DocModelModule } from './doc-model/doc-model.module';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { AngularMaterialModule } from '../angular-material-module/angular-material.module';
 import { DirectiveModuleModule } from '../directive-module/directive-module.module';
+import { AllPackageModule } from '../all-package/all-package.module';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { DirectiveModuleModule } from '../directive-module/directive-module.modu
     MDBBootstrapModule.forRoot(),
     DocModelModule,
     AngularMaterialModule,
-    DirectiveModuleModule    
+    DirectiveModuleModule,
+    AllPackageModule   
   ],
   declarations: [
     DocumentComponent,

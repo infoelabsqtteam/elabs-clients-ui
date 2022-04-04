@@ -293,6 +293,9 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             else if (submenu.name == "document_library") {
                 this.router.navigate(['vdr']);
             }
+            else if (submenu.name == "report") {
+                this.router.navigate(['report']);
+            }
             else {
                 this.apiService.resetTempData();
                 this.apiService.resetGridData();

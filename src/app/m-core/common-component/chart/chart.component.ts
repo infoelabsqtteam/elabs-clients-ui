@@ -6,6 +6,7 @@ import { DataShareService } from 'src/app/services/data-share/data-share.service
 import { EnvService } from 'src/app/services/env/env.service';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { ModelService } from "src/app/services/model/model.service";
 import { ModalDirective } from 'angular-bootstrap-md';
 import * as _moment from 'moment';
 // import {default as _rollupMoment} from 'moment';
@@ -71,16 +72,13 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   dashboardItem:any;
 
-  @HostListener('window:keyup.alt.c') onCtrC(){
-    this.close();
-  }
-
   constructor(
     public formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private envService:EnvService
+    private envService:EnvService,
+    private modelService: ModelService,
   ) { 
 
     // if(this.envService.getRequestType() == 'PUBLIC'){
@@ -102,7 +100,6 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
     this.maxDate = new Date(currentYear + 1, 11, 31); 
-
   }
 
   
@@ -143,6 +140,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
+    
   }
   setDashLetData(dashletData:any){
     if (dashletData) {
@@ -341,18 +339,15 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.apiService.clearTypeaheadData();
   }
 
-  close(){
-    this.basicModal.hide();
-    this.dashboardItem = '';
-    this.dashboardFilter.reset();
-  }
+
   showModal(data:any){
     this.dashboardItem = data;
-    this.basicModal.show();
+    this.modelService.open('chart-filter',{})
+
   }
   
-  reset(){
-    this.dashboardFilter.reset();
+  chartQueryResponce(response){
+
   }
   
 }

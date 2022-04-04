@@ -2,13 +2,13 @@
   <div class="navbar-header navbar">
     <div class="d-flex topmenu">
         <div class="d-flex" *ngIf="!header2">
-          <div class="navbar-brand-box"><a href="/" class="logo logo-light"><span class="logo-lg"><img [src]="logoPath" width="100px" alt=""></span></a></div>
+          <div class="navbar-brand-box"><a (click)="goToMOdule()" class="logo logo-light"><span class="logo-lg"><img [src]="logoPath" width="100px" alt=""></span></a></div>
           <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect m-0" id="vertical-menu-btn" (click)="toggleMobileMenu($event)"><span class="material-icons">sort</span></button>
         </div>
 
         <div class="d-flex" *ngIf="header2">
           <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn" (click)="toggleMobileMenu($event)"><span class="material-icons">sort</span></button>
-          <div class=""><a href="/" class="logo"><span><img [src]="logoPath" width="150px" alt=""></span></a></div>
+          <div class=""><a (click)="goToMOdule()" class="logo"><span><img [src]="logoPath" width="150px" alt=""></span></a></div>
         </div>
 
 
@@ -43,6 +43,9 @@
             <button mat-menu-item><mat-icon class="mr-2">manage_accounts</mat-icon> My account</button>
             <button mat-menu-item><mat-icon class="mr-2">person_outline</mat-icon> Name: {{userName}}</button>
             <button mat-menu-item><mat-icon class="mr-2">alternate_email</mat-icon> Email: {{userEmail}}</button>
+            <div *ngIf="teamname && teamname != null">
+              <button mat-menu-item *ngFor="let team of teamname; let i = index"><mat-icon class="mr-2">group_add</mat-icon> Team Name {{i + 1}}: {{team.name}} </button>
+            </div>
             <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
             <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>
             <button mat-menu-item (click)="logout()"><mat-icon class="mr-2">power_settings_new</mat-icon> Log out</button>

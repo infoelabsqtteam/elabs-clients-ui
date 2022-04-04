@@ -1,4 +1,6 @@
-<div class="my-5 text-center" style="height: 100vh;">
-    <h2>Download report from here!</h2>
-    <app-form [tabIndex]="selectTabIndex" [editedRowIndex]="editedRowIndex" (addAndUpdateResponce)="formResponce($event)" [formName]='formName' [selectContact]='selectContact'></app-form>
-</div>
+<section class="downloadreportform py-5">
+    <h3 class="mb-5 text-center">Download report from here!</h3>
+    <div class="downloadatat">
+        <app-form [tabIndex]="selectTabIndex" [editedRowIndex]="editedRowIndex" (addAndUpdateResponce)="formResponce($event)" [formName]='formName' [selectContact]='selectContact'></app-form>
+    </div>
+</section>

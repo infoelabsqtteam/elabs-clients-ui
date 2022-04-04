@@ -1,7 +1,6 @@
-
 export const serverHostList = [
   {
-    "clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "clientEndpoint": "bbsr-lims.qualiteklab.com", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -35,7 +34,24 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://serverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://devserverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "theme_setting": {
+      "header_bg_color": "#fcfcfc",
+      "header_txt_color": "",
+      "header_txt_hover_color": "",
+      "header_icon_color": "",
+      "header_icon_hover_color": "",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "#77bce8",
+      "theme_color": "#77bce8",
+      "active_bg_color": "#e4f2fa",
+      "popup_header_bg": "#CEE7F7",
+      "form_label_bg": "#E4F2FA"
+    }
+  },
+  {
+    "clientEndpoint": "lims-itllabs.e-labs.ai", "serverEndpoint": "https://proditlserver.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -256,6 +272,23 @@ export const serverHostList = [
     }
   },
   {
+    "clientEndpoint": "dev-itclabs.e-labs.ai", "serverEndpoint": "https://devserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "theme_setting": {
+      "header_bg_color": "#665852",
+      "header_txt_color": "#ffffff",
+      "header_txt_hover_color": "",
+      "header_icon_color": "#ffffff",
+      "header_icon_hover_color": "#ffffff",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "#212121",
+      "theme_color": "#665852",
+      "active_bg_color": "#e0dedc",
+      "popup_header_bg": "#CEE7F7",
+      "form_label_bg": "#E4F2FA"
+    }
+  },
+  {
     "clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
       "header_bg_color": "#665852",
@@ -447,6 +480,7 @@ export const serverHostList = [
     "form_label_bg": "#E4F2FA"
   }
 },
+
   {
     "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {

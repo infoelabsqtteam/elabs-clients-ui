@@ -1,0 +1,52 @@
+button.mat-menu-item {height:auto;line-height:30px;}
+.documentmenu {font-family:"Roboto Condensed", sans-serif;
+    button:focus {outline:none;}
+}
+.breadcrumbhead {
+    mat-icon {font-size:22px;}
+}
+.breadicon {
+    mat-icon {font-size:16px;opacity:0.5;margin:0 !important;} 
+}
+.vdrsection {overflow:hidden;position:relative; min-height:72vh;}
+.mat-button.activebreadcruem {background:rgba(0,0,0,0.1);}
+.mat-button.documentmenu {background:#6d6d6d1a;}
+.vdrlist {font-family:$roboto;
+    .folteritems {margin:0 10px;}
+    .title {opacity:0.7;}
+    .gridlist .mat-button {border:none;border-bottom:1px solid #dadce0;margin:0;}
+    .mat-button {border:1px solid #dadce0;text-align:left;font-size:12px;text-transform:uppercase;margin-bottom:20px;
+        mat-icon{color:#5f6368;font-size:22px;vertical-align:middle;}
+        .foldername {display:inline-block;white-space:normal;vertical-align:middle;line-height:14px;}
+    }
+    .docicon {
+        p {font-size:14px;}
+        img {width:22px;height:22px;object-fit:cover;margin:0 10px;vertical-align:middle;}
+    }
+    .gridviewicon img {margin-left:0px;}
+}
+.ngx-contextmenu {
+    .dropdown.show .dropdown-menu a {padding:0;border:none;}
+}
+
+
+.vdrinfo {background:#f6f6f6;transition:all 0.5s;position:absolute !important;right:0%;height:100%;
+  .title h4 {margin:0;}
+  mat-icon {color:#5f6368;font-size:22px;}
+}
+.vdrinfo.hide {right:-100%;transition:all 1s;}
+.auditlist {display:flex;flex-flow:column;width:100%;
+    thead {flex:0 0 auto;}
+    tbody {flex: 1 1 auto;display: block;overflow-y: auto;overflow-x: hidden;height:50vh;}
+    tr {width:100%;display:table;table-layout:fixed;word-break:break-all;}
+    th, td {padding:5px !important;}
+}
+
+
+
+.searchbox {position:relative;transition:all 1s;width:30px;height:30px;
+    .searchicon {position:absolute;right:10px;top:7px;opacity:0.7;}
+    input {padding:5px 40px 5px 15px;font-size:14px;position:absolute;top:0;left:0;width:100%;display:none;transition:all 1s;}
+    &:hover{width:300px;cursor:pointer;transition:all 1s;}
+    &:hover input{display:block;transition:all 1s;}
+}

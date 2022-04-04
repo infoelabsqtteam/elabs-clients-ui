@@ -15,9 +15,9 @@
 .bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;
   &:hover {background:$buttonHovercolor !important;transition:all 1s;}
 }
-.chartbody {max-height:250px;min-height:250px !important;overflow-y:scroll;}
+.chartbody {max-height:250px;min-height:250px !important;overflow-y:scroll;overflow-x:hidden;}
 .optiondropdown {margin:30px 10px 0;min-width:100% !important;}
-.filteroption {margin:30px 30px 0;}
+.filteroption {margin:30px 10px 0;}
 .dropdownmenu {margin-top:15px;min-height:0px;
   mat-icon {font-size:16px;margin-right:5px !important;line-height:30px;width:auto;height:auto;}
   .mat-menu-content:not(:empty) {padding:0px;}
@@ -126,12 +126,49 @@
 }
 
 .labelwithfiled {font-family:"Roboto Condensed", sans-serif;
-  // .labeltitle {max-width:200px;min-width:200px;}
-  // .labelfiled {margin:5px 0;}
   .mat-form-field-appearance-standard .mat-form-field-flex {padding-top:0;}
   .mat-form-field-infix {padding:0.4em 0;}
   .mat-form-field-label {font-size:13px;}
 }
+
+
+.jobscheduler {
+  .labeltitle {min-width:40px;text-align:right;}
+  .mat-form-field-underline {display:none;}
+  .alldays {margin-left:110px;}
+  .mat-form-field-wrapper, .mat-form-field-appearance-fill .mat-form-field-infix {padding:5px;border-width:5px;}
+  .mat-form-field-appearance-fill .mat-form-field-flex {padding:0px 10px;border-radius:4px;}
+  mat-label {background:none !important;}
+  .mat-form-field-appearance-fill .mat-select-arrow-wrapper {transform:translateY(-20%);}
+  .mat-form-field-appearance-fill.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {transform:translateY(-13px) scale(0.75);}
+  .mat-form-field-label-wrapper {overflow:visible;}
+}
+// .firstweek {
+//   .mat-form-field-wrapper {width:120px;}
+// }
+.dateinfo {width:195px;
+  .mat-form-field-wrapper {padding:0;}
+  .mat-form-field-appearance-fill .mat-form-field-flex {padding:0 0 0 2.9em;}
+  .mat-form-field-appearance-fill .mat-form-field-infix {padding:0em 0 0.75em 0;}
+  .mat-form-field-suffix {position:absolute;left:0;}
+  .mat-select-arrow-wrapper {display:block;margin-right:8px;}
+}
+.timeinfo {width:195px;
+  .mat-form-field-appearance-fill .mat-form-field-flex:after {content:"";background:url(../img/svg-icon/dropdown.svg);width:12px;height:12px;position:absolute;right:15px;top:16px;background-size:100%;}
+}
+.daynumber {
+  .daylist {width:117px;}
+}
+.daybutton {
+  .mat-checkbox-inner-container {position:absolute;top:5px;left:20px;width:20px;height:20px;opacity:0;}
+  .example-margin.mat-checkbox .mat-checkbox-label {width:30px;height:30px;background:#fff;border:1px solid #ccc;border-radius:100%;display:inline-block;text-align:center;line-height:30px !important;}
+  .example-margin.mat-checkbox.mat-checkbox-checked .mat-checkbox-label {background:#e4f2fa;border-color:#e4f2fa;}
+  .col-lg-3 {max-width:50px;margin:10px 0;}
+}
+.schedulemenu {margin-top:20px;}
+
+
+
 .uploadimg {width:120px;height:120px;object-fit:cover;}
 .configdropdown {margin-top:25px !important;}
 .auto-populate-text-primary .mat-input-element,.auto-populate-text-primary .mat-select-value,.auto-populate-text-primary .mat-select-disabled,.auto-populate-text-primary .mat-input-disabled,.auto-populate-text-primary .mat-autocomplete-trigger,.auto-populate-text-primary .mat-form-field-autofill-control,.auto-populate-text-primary .ng-untouched,.auto-populate-text-primary .ng-pristine,.auto-populate-text-primary .cdk-text-field-autofill-monitored,.auto-populate-text-primary s.mat-input-element:disabled{color:blue!important;}
@@ -146,3 +183,21 @@
     li {list-style:number;}
   }
 }
+
+// landing page download report form
+.downloadreportform {margin-bottom:-8px;background:#efefef;min-height:88vh;
+  .modal-content, .modal-footer {border:none;padding:0;background:none;}
+  .modal-header {display:none !important;}
+  .angular-editor-textarea {border:none !important;resize:none !important;padding:3px !important;}
+  table {border-color:#ccc;}
+  a {display:inline-block;background:#0d6efd;padding:5px 10px;border-radius:5px;color:#fff;font-size:13px;
+    &:hover {color:#fff}
+  }
+.downloadatat {max-width:700px;background:#fff;padding:20px 0;margin:auto;border-radius:5px;}
+.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {transform:translateY(-1em) scale(0.75);}
+.btn-public {width:100%;margin:0 10px;height:36px;font-size:16px !important;line-height:20px;}
+}
+
+
+
+.google-visualization-table>div:first-child {height: auto !important;}

@@ -1,0 +1,61 @@
+<div mdbModal #loadModal="mdbModal" class="modal fade">
+    <div class="modal-dialog modal-dialog-full-width" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0 m-0">
+                <h4 class="modal-title font-weight-bold m-0">Load Search Criteria</h4>
+                <button class="closebtn" (click)="close()"><span>&times;</span></button>
+            </div>
+            <div class="modal-body report-form" [formGroup]="loadQueryForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Search By Report Name</mat-label>
+                            <input matInput type="text" [formControlName]="'filter'">
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+
+                <div class="row reportformgrid">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered" style="font-size:12px;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" *ngFor="let data of columns;">{{data.label}}</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of gridData; let j = index">
+                                    <th scope="row">{{j + 1}}</th>
+                                    <td *ngFor="let elId of columns; let j = index">
+                                        <div class="grid-data" *ngIf="elId.type != 'chips'">
+                                            <span [innerHtml]="getValueForGrid(elId,data)" [matTooltip]="getValueForGridTooltip(elId,data)" [matTooltipPosition]="'above'"></span>
+                                        </div>
+                                        <div class="grid-data" *ngIf="elId.type == 'chips'">
+                                            <span class="chips" *ngFor="let chips of getValueForGrid(elId,data); let i = index">
+                                                <span [innerHtml]="getChipsForGrid(chips)"></span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button (click)="gridAction('edit', data)"><mat-icon>edit</mat-icon></button>
+                                        <button mat-icon-button (click)="gridAction('load', data)"><mat-icon>backup</mat-icon></button>
+                                        <button mat-icon-button (click)="gridAction('delete', data)"><mat-icon>delete</mat-icon></button>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="gridData.length == 0">
+                                    <td colspan="4" class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

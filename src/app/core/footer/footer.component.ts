@@ -42,7 +42,7 @@ export class FooterComponent implements OnInit {
     switch(res){
       case "HOME":
           this.currentPage = true;  
-          this.menuBoxHome = true;
+          this.menuBoxHome = false;
           break;
       case "EXAMTEST":
           this.currentPage = true;  
