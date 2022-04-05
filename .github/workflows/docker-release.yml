@@ -4,7 +4,7 @@
 name: Docker Build - Release 
 on:
   push:
-    branches: [ 'releases/**' ]
+    branches: [ 'release/v**' ]
 
 jobs:
   build:
