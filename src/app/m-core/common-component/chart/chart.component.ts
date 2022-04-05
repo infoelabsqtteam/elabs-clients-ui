@@ -54,7 +54,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   dashletData:any={};
   copyDashletData:any={};
   pageNumber:any=1;
-  itemNumOfGrid: any = 100;
+  itemNumOfGrid: any = 12;
   elements:any=[];
   staticData: any = {};
   copyStaticData:any={};
@@ -71,6 +71,8 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   maxDate: Date;
 
   dashboardItem:any;
+  total: number;
+
 
   constructor(
     public formBuilder: FormBuilder,
@@ -162,6 +164,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   setGridData(gridData){
     if (gridData.data && gridData.data.length > 0) {
       this.elements = JSON.parse(JSON.stringify(gridData.data));
+      this.total = gridData.data_size;
       this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
       if(this.checkGetDashletData && this.elements.length > 0){
         this.checkGetDashletData = false;
@@ -248,12 +251,12 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       data: data,
       path: null
     }
-    //this.store.dispatch(new CusTemGenAction.GetGridData(getFilterData))
     this.apiService.getDashletMster(getFilterData)
   }
   getPage(page: number) {
     this.pageNumber = page;
     this.getDataForGrid();
+    this.checkGetDashletData = true;
   }
   dashletFilter(item){
     const element = [];

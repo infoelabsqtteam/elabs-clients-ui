@@ -11,7 +11,7 @@
 </div>
 
 <div class="row" *ngIf="filteredDashboardData.length >0">
-  <div class="col-lg-4" *ngFor="let item of filteredDashboardData; let j = index">
+  <div class="col-lg-4" *ngFor="let item of filteredDashboardData | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let j = index">
     <div class="card">
       <div class="card-header py-0 pr-2">
         <div class="d-flex align-items-center justify-content-between" *ngIf="item.fields && item.fields.length >0">
@@ -40,3 +40,9 @@
 <div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
 
 <app-chart-filter id="chart-filter" (chartQueryResponce)="chartQueryResponce($event)" [dashboardItem]="dashboardItem" [dashletData]="dashletData"></app-chart-filter>
+
+<section>
+  <mat-card-content class="m-0 pt-4 text-center">
+      <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
+  </mat-card-content>
+</section>
