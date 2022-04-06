@@ -9,6 +9,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 import { ModelService } from "src/app/services/model/model.service";
 import { ModalDirective } from 'angular-bootstrap-md';
 import * as _moment from 'moment';
+import { ConsoleLogger } from '@aws-amplify/core';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
 
@@ -48,7 +49,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   public chartLegend:any = {};
   public chartTitle:any = {};
 
-  dashboardFilter:FormGroup;
+  //dashboardFilter:FormGroup;
 
   checkGetDashletData:boolean=true;
   dashletData:any={};
@@ -70,7 +71,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   minDate: Date;
   maxDate: Date;
 
-  dashboardItem:any;
+  
   total: number;
 
 
@@ -89,15 +90,15 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.gridDataSubscription = this.dataShareService.dashletMaster.subscribe(data =>{
       this.setGridData(data);
     })
-    this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
-      this.setStaticData(data);
-    })
+    // this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
+    //   this.setStaticData(data);
+    // })
     this.dashletDataSubscription = this.dataShareService.dashletData.subscribe(data =>{
       this.setDashLetData(data);
     })
-    this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
-      this.setTypeaheadData(data);
-    })
+    // this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
+    //   this.setTypeaheadData(data);
+    // })
     this.getPage(1)   
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
@@ -130,22 +131,23 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     if(this.gridDataSubscription){
       this.gridDataSubscription.unsubscribe();
     }
-    if(this.staticDataSubscription){
-      this.staticDataSubscription.unsubscribe();
-    }
+    // if(this.staticDataSubscription){
+    //   this.staticDataSubscription.unsubscribe();
+    // }
     if(this.dashletDataSubscription){
       this.dashletDataSubscription.unsubscribe();
     }
-    if(this.typeaheadDataSubscription){
-      this.typeaheadDataSubscription.unsubscribe();
-    }
+    // if(this.typeaheadDataSubscription){
+    //   this.typeaheadDataSubscription.unsubscribe();
+    // }
   }
 
   ngOnInit() {
     
   }
   setDashLetData(dashletData:any){
-    if (dashletData) {
+    const dashlet = Object.keys(dashletData)
+    if (dashletData && dashlet.length > 0) {
       this.dashletData = dashletData;
       Object.keys(this.dashletData).forEach(key => {                    
         this.chartDatasets[key] = JSON.parse(JSON.stringify(this.dashletData[key]['dataSets']));  
@@ -171,56 +173,56 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
         let forControl = {};
         let formField = [];
         if(this.elements.length > 0){
-          this.elements.forEach(dashlet => {
-            if(dashlet.fields && dashlet.fields.length > 0){
-              const groupField = {
-                "field_name":dashlet.name
-              }
-              const list_of_fields = {};
-              dashlet.fields.forEach(field => {                    
-                formField.push(field);
-                switch(field.type){ 
-                  case "date":
-                    field['minDate'] = this.minDate
-                    field['maxDate'] = this.maxDate;
-                    this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
-                      break; 
-                  case "daterange":
-                    const date_range = {};
-                    let list_of_dates = [
-                      {field_name : 'start'},
-                      {field_name : 'end'}
-                    ]
-                    if (list_of_dates.length > 0) {
-                      list_of_dates.forEach((data) => {
+          // this.elements.forEach(dashlet => {
+          //   if(dashlet.fields && dashlet.fields.length > 0){
+          //     const groupField = {
+          //       "field_name":dashlet.name
+          //     }
+          //     const list_of_fields = {};
+          //     dashlet.fields.forEach(field => {                    
+          //       formField.push(field);
+          //       switch(field.type){ 
+          //         case "date":
+          //           field['minDate'] = this.minDate
+          //           field['maxDate'] = this.maxDate;
+          //           this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
+          //             break; 
+          //         case "daterange":
+          //           const date_range = {};
+          //           let list_of_dates = [
+          //             {field_name : 'start'},
+          //             {field_name : 'end'}
+          //           ]
+          //           if (list_of_dates.length > 0) {
+          //             list_of_dates.forEach((data) => {
                         
-                        this.commonFunctionService.createFormControl(date_range, data, '', "text")
-                      });
-                    }
-                    this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
-                    break; 
+          //               this.commonFunctionService.createFormControl(date_range, data, '', "text")
+          //             });
+          //           }
+          //           this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
+          //           break; 
                                             
-                  default:
-                    this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
-                    break;
-                }   
-              });
-              this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
-            }                 
+          //         default:
+          //           this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
+          //           break;
+          //       }   
+          //     });
+          //     this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
+          //   }                 
             
-          });
-          if(formField.length > 0){
-            let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
-            if(staticModalGroup.length > 0){      
-              // this.store.dispatch(
-              //   new CusTemGenAction.GetStaticData(staticModalGroup)
-              // )
-              this.apiService.getStatiData(staticModalGroup);
-            }
-          }
-          if (forControl) {
-            this.dashboardFilter = this.formBuilder.group(forControl);              
-          }
+          // });
+          // if(formField.length > 0){
+          //   let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
+          //   if(staticModalGroup.length > 0){      
+          //     // this.store.dispatch(
+          //     //   new CusTemGenAction.GetStaticData(staticModalGroup)
+          //     // )
+          //     //this.apiService.getStatiData(staticModalGroup);
+          //   }
+          // }
+          // if (forControl) {
+          //   this.dashboardFilter = this.formBuilder.group(forControl);              
+          // }
           this.getDashletData(this.elements);
         }            
       }          
@@ -236,13 +238,13 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       }) 
     }
   }
-  setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
-      this.typeAheadData = typeAheadData;
-    } else {
-      this.typeAheadData = [];
-    }
-  }
+  // setTypeaheadData(typeAheadData){
+  //   if (typeAheadData.length > 0) {
+  //     this.typeAheadData = typeAheadData;
+  //   } else {
+  //     this.typeAheadData = [];
+  //   }
+  // }
   getDataForGrid(){    
     const data = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','',[],'');
     data['pageNo'] = this.pageNumber - 1;
@@ -258,26 +260,26 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.getDataForGrid();
     this.checkGetDashletData = true;
   }
-  dashletFilter(item){
-    const element = [];
-    const ele = JSON.parse(JSON.stringify(item));
-    let value = this.dashboardFilter.getRawValue();
-    const filterData = value[ele.name];
-    ele[ele.name] = filterData;
-    element.push(ele);
-    this.getDashletData(element);
-  }
+  // dashletFilter(item){
+  //   const element = [];
+  //   const ele = JSON.parse(JSON.stringify(item));
+  //   let value = this.dashboardFilter.getRawValue();
+  //   const filterData = value[ele.name];
+  //   ele[ele.name] = filterData;
+  //   element.push(ele);
+  //   this.getDashletData(element);
+  // }
 
-   getddnDisplayVal(val) {
-    return this.commonFunctionService.getddnDisplayVal(val);    
-  }
+  //  getddnDisplayVal(val) {
+  //   return this.commonFunctionService.getddnDisplayVal(val);    
+  // }
 
-    getDivClass(field) {
-    // if(!this.commonFunctionService.showIf(field,this.templateForm.getRawValue())){
-    //   return "d-none"
-    // }
-    return this.commonFunctionService.getDivClass(field,[]);
-  }
+  //   getDivClass(field) {
+  //   // if(!this.commonFunctionService.showIf(field,this.templateForm.getRawValue())){
+  //   //   return "d-none"
+  //   // }
+  //   return this.commonFunctionService.getDivClass(field,[]);
+  // }
   chartHover(e){}
   chartClicked(e){}
   compareObjects(o1: any, o2: any): boolean {
@@ -285,18 +287,19 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   }
   getDashletData(elements){
     if(elements && elements.length > 0){
-      let value = this.dashboardFilter.getRawValue();
+      let payloads = [];
+      //let value = this.dashboardFilter.getRawValue();
       elements.forEach(element => {
         const fields = element.fields;        
-        const filterData = this.getSingleCardFilterValue(element,value);
+        //const filterData = this.getSingleCardFilterValue(element,value);
         let crList = [];
-        if(fields && fields.length > 0){
-          crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
-        }        
+        // if(fields && fields.length > 0){
+        //   crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
+        // }        
         let object = {}
-        if(filterData){
-          object = filterData;
-        }
+        // if(filterData){
+        //   object = filterData;
+        // }
         const data = {
           "data": object,
           "crList":crList
@@ -305,8 +308,11 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
           "_id" : element._id,
           "data" : data
         }
-        this.apiService.GetDashletData(payload);
+        payloads.push(payload);
       });
+      if(payloads && payloads.length > 0 && payloads.length == elements.length){
+        this.apiService.GetDashletData(payloads);
+      }      
     }
   }
   getSingleCardFilterValue(field,object){
@@ -316,36 +322,39 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     }
     return value;
   }
-  getOptionText(option) {
-    if (option && option.name) {
-      return option.name;
-    }else{
-      return option;
-    }
-  }
-  updateData(event, parentfield, field) {
-    if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
-      return false;
-    }    
-    let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
-    this.callTypeaheadData(field,objectValue); 
-  }
-  callTypeaheadData(field,objectValue){
-    this.clearTypeaheadData();   
-    const payload = [];
-    const params = field.api_params;
-    const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
-    this.apiService.GetTypeaheadData(payload);    
-  }
-  clearTypeaheadData() {
-    this.apiService.clearTypeaheadData();
-  }
+  // getOptionText(option) {
+  //   if (option && option.name) {
+  //     return option.name;
+  //   }else{
+  //     return option;
+  //   }
+  // }
+  // updateData(event, parentfield, field) {
+  //   if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
+  //     return false;
+  //   }    
+  //   let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
+  //   this.callTypeaheadData(field,objectValue); 
+  // }
+  // callTypeaheadData(field,objectValue){
+  //   this.clearTypeaheadData();   
+  //   const payload = [];
+  //   const params = field.api_params;
+  //   const criteria = field.api_params_criteria;
+  //   payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+  //   this.apiService.GetTypeaheadData(payload);    
+  // }
+  // clearTypeaheadData() {
+  //   this.apiService.clearTypeaheadData();
+  // }
 
 
   showModal(data:any){
-    this.dashboardItem = data;
-    this.modelService.open('chart-filter',{})
+    let object = {
+      'dashboardItem' : data,
+      'dashletData' : this.dashletData
+    }
+    this.modelService.open('chart-filter',object)
 
   }
   

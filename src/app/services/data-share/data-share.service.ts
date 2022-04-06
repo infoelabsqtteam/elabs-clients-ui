@@ -53,6 +53,7 @@ export class DataShareService {
   nextFormData:EventEmitter<any> = new EventEmitter<any>();
   
   getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
+  chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -135,6 +136,10 @@ export class DataShareService {
   resetDashletData(){
     this.DashLetData = {};
   }
+  resetDashletDataByKey(keyName){
+    delete this.DashLetData[keyName];
+    this.dashletData.emit(this.DashLetData);
+  }
   setAppName(response){
     this.appName.emit(response);
   }
@@ -212,5 +217,8 @@ export class DataShareService {
   }
   setReportLoadGridData(responce){
     this.getReportLoadData.emit(responce);
+  }
+  setChartModelShowHide(value){
+    this.chartModelShowHide.emit(value);
   }
 }

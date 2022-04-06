@@ -5,3 +5,16 @@
 google-chart{
     width: 100%;
 }
+.spinner{
+    right: 0;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    background: rgb(0 0 0 / 23%);
+    text-align: center;
+}
+.spinner mat-spinner{
+    top: 40%;
+    left: 40%;
+}

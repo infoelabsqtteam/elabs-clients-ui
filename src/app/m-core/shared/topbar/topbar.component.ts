@@ -25,6 +25,7 @@ export class TopbarComponent implements OnInit, OnChanges {
   valueset: string;
   public menuData: any=[];
   AllModuleList:any=[];
+  isShow:boolean = true;
 
   logoPath = '';
   public userInfo: any;
@@ -65,8 +66,10 @@ export class TopbarComponent implements OnInit, OnChanges {
       if(data && data['git.build.version']){
         this.gitVersion = data['git.build.version'];
       }
-    })
-
+    });
+    this.dataShareService.chartModelShowHide.subscribe(data =>{
+      this.isShow = data;
+    });
 
     if (this.storageService.GetUserInfo()) {
           this.userInfo = this.storageService.GetUserInfo();

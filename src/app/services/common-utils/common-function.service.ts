@@ -379,7 +379,7 @@ export class CommonFunctionService {
           case "text":
           case "tree_view_selection":
           case "dropdown":
-            if(formValue && formValue[element.field_name] != ''){              
+            if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
@@ -416,7 +416,7 @@ export class CommonFunctionService {
             }
             break;
             case "number":
-              if(formValue && formValue[element.field_name] != ''){              
+              if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
                 if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                   element.api_params_criteria.forEach(cri => {
                     criteria.push(cri)
@@ -433,7 +433,7 @@ export class CommonFunctionService {
               }
               break;
           case "typeahead":
-            if(formValue && formValue[element.field_name] != ''){ 
+            if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){ 
               filterList.push(
                 {
                   "fName": element.field_name,
@@ -444,7 +444,7 @@ export class CommonFunctionService {
             }
             break;
           case "info":
-            if(formValue && formValue[element.field_name] != ''){              
+            if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
@@ -461,7 +461,7 @@ export class CommonFunctionService {
             }
             break;
             case "reference_names":
-            if(formValue && formValue[element.field_name] != ''){              
+            if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
@@ -479,7 +479,7 @@ export class CommonFunctionService {
             break;
           case "date":
           case "datetime":
-            if(formValue && formValue[element.field_name] != ''){
+            if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
@@ -496,7 +496,7 @@ export class CommonFunctionService {
             }
             break;
           case "daterange":
-            if(formValue && formValue[element.field_name].start != '' && formValue[element.field_name].end != null){              
+            if(formValue && formValue[element.field_name] && formValue[element.field_name].start != '' && formValue[element.field_name].end != null){              
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
@@ -511,7 +511,7 @@ export class CommonFunctionService {
                 ) 
               }          
             }
-            if(formValue && formValue[element.field_name].end != '' && formValue[element.field_name].end != null){
+            if(formValue && formValue[element.field_name] && formValue[element.field_name].end != '' && formValue[element.field_name].end != null){
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)

@@ -5,6 +5,7 @@ import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
 import { MapsAPILoader } from '@agm/core';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -36,6 +37,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
 
   // Form submit
   chatSubmit: boolean;
+  isShow:boolean = false;
 
   formData: FormGroup;
 
@@ -53,15 +55,18 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     public formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
     private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private dataShareService:DataShareService
   ) {
 
     }
 
   ngOnDestroy(){
+    this.dataShareService.setChartModelShowHide(true);
   }
 
   ngOnInit(): void {
+    this.dataShareService.setChartModelShowHide(false);
     this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
     this.formData = this.formBuilder.group({
       message: ['', [Validators.required]],

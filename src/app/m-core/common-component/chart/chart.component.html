@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="card-body chartbody p-0">
-        <ng-container>
+        <ng-container *ngIf="chartType[item.call_back_field]">
           <canvas mdbChart *ngIf="item.package_name == 'chart_js'" [chartType]="chartType[item.call_back_field]"
             [datasets]="chartDatasets[item.call_back_field]" [labels]="chartLabels[item.call_back_field]"
             [colors]="chartColors[item.call_back_field]" [options]="chartOptions[item.call_back_field]"
@@ -33,13 +33,16 @@
             [options]="chartOptions[item.call_back_field]">
           </google-chart>
         </ng-container>
+        <div *ngIf="!chartType[item.call_back_field]" class="spinner">
+          <mat-spinner diameter="40"  class="custom-spinner"></mat-spinner>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
 
-<app-chart-filter id="chart-filter" (chartQueryResponce)="chartQueryResponce($event)" [dashboardItem]="dashboardItem" [dashletData]="dashletData"></app-chart-filter>
+<app-chart-filter id="chart-filter"></app-chart-filter>
 
 <section>
   <mat-card-content class="m-0 pt-4 text-center">
