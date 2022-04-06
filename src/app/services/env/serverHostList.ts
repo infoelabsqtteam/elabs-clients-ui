@@ -475,9 +475,12 @@ export const serverHostList = [
     "btn_hover_color": "",
     "footer_bg": "#77bce8",
     "theme_color": "#77bce8",
-    "active_bg_color": "#e4f2fa"
+    "active_bg_color": "#e4f2fa",
+    "popup_header_bg": "#CEE7F7",
+    "form_label_bg": "#E4F2FA"
   }
 },
+
   {
     "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {

@@ -2574,7 +2574,9 @@ case 'populate_fields_for_report_for_new_order_flow':
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
-              selectedRow[element.field_name] = this.datePipe.transform(selectedRow[element.field_name],element.date_format);
+              selectedRow[element.field_name] = this.datePipe.transform(selectedRow[element.field_name],'dd/MM/yyyy');
+            } else {
+              selectedRow[element.field_name] = formValue[element.field_name];
             }            
             break;
           default:
@@ -2599,12 +2601,15 @@ case 'populate_fields_for_report_for_new_order_flow':
             });
             break;
           case 'group_of_fields':
+            modifyFormValue[element.field_name] = formValue[element.field_name];
             element.list_of_fields.forEach(data => {
               switch (data.type) {
                 case 'date':
                   if(data && data.date_format && data.date_format != ''){
                     modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],'dd/MM/yyyy');
-                  }            
+                  }  else {
+                    modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name];
+                  }         
                   break;
               
                 default:
@@ -2620,11 +2625,14 @@ case 'populate_fields_for_report_for_new_order_flow':
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
-              modifyFormValue[element.field_name] = this.datePipe.transform(formValue[element.field_name],element.date_format);
-            }            
+              modifyFormValue[element.field_name] = this.datePipe.transform(formValue[element.field_name],'dd/MM/yyyy');
+            } else {
+              modifyFormValue[element.field_name] = formValue[element.field_name];
+            }           
             break;
           default:
-            modifyFormValue = formValue;
+            modifyFormValue[element.field_name] = formValue[element.field_name];
+            //modifyFormValue = formValue;
             break;
         }
       });
@@ -4240,7 +4248,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       break;
                     case "date":
                       if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
-                        if(typeof ChildFieldData[data.field_name] === 'string'){
+                        if(data.date_format && data.date_format !="" && typeof ChildFieldData[data.field_name] === 'string'){
                           const date = ChildFieldData[data.field_name];
                           const dateMonthYear = date.split('/');
                           const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
@@ -4368,8 +4376,8 @@ case 'populate_fields_for_report_for_new_order_flow':
                 break;
             case "date":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                if(typeof object === 'string'){
-                  const date = this.datePipe.transform(formValue[element.field_name], 'dd/MM/yyyy');
+                if(element.date_format && element.date_format != '' && typeof object === 'string'){
+                  const date = object[element.field_name];
                   const dateMonthYear = date.split('/');
                   const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
                   const value = new Date(formatedDate);

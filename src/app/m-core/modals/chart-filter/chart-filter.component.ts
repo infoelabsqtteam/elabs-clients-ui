@@ -1,13 +1,13 @@
-import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone, HostListener } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone, HostListener, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
-import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { ModelService } from "src/app/services/model/model.service";
-import { ModalDirective } from 'angular-bootstrap-md';
+import { ModelService } from 'src/app/services/model/model.service';
+
+
 import * as _moment from 'moment';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
@@ -24,22 +24,23 @@ export const MY_DATE_FORMATS = {
   },
 };
 
-@Component({
-  selector: 'app-chart',
-  templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css'],
-  providers: [
-    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
-    // `MatMomentDateModule` in your applications root module. We provide it at the component level
-    // here, due to limitations of our example generation script.
-    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
-    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
-  ],
-})
-export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
+@Component({
+  selector: 'app-chart-filter',
+  templateUrl: './chart-filter.component.html',
+  styles: [
+  ]
+})
+export class ChartFilterComponent implements OnInit {
   @Input() isShow: string;
+  @Output() chartQueryResponce = new EventEmitter();
+  @Input() id: string;
   @ViewChild('basicModal') public basicModal: ModalDirective;
+  @Input() dashboardItem;
+  @Input() dashletData;
+
+  dashboardFilter:FormGroup;
+
   public chartType:any = {};
   public chartDatasets:any = {};
   public chartLabels:any = {};
@@ -48,10 +49,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   public chartLegend:any = {};
   public chartTitle:any = {};
 
-  dashboardFilter:FormGroup;
+
 
   checkGetDashletData:boolean=true;
-  dashletData:any={};
   copyDashletData:any={};
   pageNumber:any=1;
   itemNumOfGrid: any = 100;
@@ -70,20 +70,17 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   minDate: Date;
   maxDate: Date;
 
-  dashboardItem:any;
+
 
   constructor(
+    private modalService: ModelService,
     public formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private envService:EnvService,
     private modelService: ModelService,
-  ) { 
-
-    // if(this.envService.getRequestType() == 'PUBLIC'){
-    //   this.envService.setRequestType('PRIVATE');
-    // }
+  ) {
     this.gridDataSubscription = this.dataShareService.dashletMaster.subscribe(data =>{
       this.setGridData(data);
     })
@@ -102,7 +99,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.maxDate = new Date(currentYear + 1, 11, 31); 
   }
 
-  
+
   filterchart() {
     this.filteredDashboardData = [];
     if(this.filterValue && this.filterValue.length > 0) {
@@ -115,8 +112,6 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     }
     
   }
-
-
   ngOnChanges(changes: SimpleChanges) {
     if(this.isShow){
       this.getPage(1)
@@ -139,9 +134,17 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  ngOnInit() {
-    
+  ngOnInit(): void {
+    let modal = this;
+    if (!this.id) {
+        console.error('modal must have an id');
+        return;
+    }
+    this.modalService.remove(this.id);
+    this.modalService.add(this);
   }
+
+
   setDashLetData(dashletData:any){
     if (dashletData) {
       this.dashletData = dashletData;
@@ -157,6 +160,92 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
         }        
       })
     }
+  }
+
+  getddnDisplayVal(val) {
+    return this.commonFunctionService.getddnDisplayVal(val);    
+  }
+
+  getDivClass(field) {
+    return this.commonFunctionService.getDivClass(field,[]);
+  }
+  chartHover(e){}
+  chartClicked(e){}
+  compareObjects(o1: any, o2: any): boolean {
+    return o1._id === o2._id;
+  }
+
+
+  getDashletData(elements){
+    if(elements && elements.length > 0){
+      let value = this.dashboardFilter.getRawValue();
+      elements.forEach(element => {
+        const fields = element.fields;        
+        const filterData = this.getSingleCardFilterValue(element,value);
+        let crList = [];
+        if(fields && fields.length > 0){
+          crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
+        }        
+        let object = {}
+        if(filterData){
+          object = filterData;
+        }
+        const data = {
+          "data": object,
+          "crList":crList
+        }
+        const payload={
+          "_id" : element._id,
+          "data" : data
+        }
+        this.apiService.GetDashletData(payload);
+      });
+    }
+  }
+  getSingleCardFilterValue(field,object){
+    let value = {};
+    if (object && object[field.name]) {
+      value = object[field.name]
+    }
+    return value;
+  }
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
+  }
+  updateData(event, parentfield, field) {
+    if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
+      return false;
+    }    
+    let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
+    this.callTypeaheadData(field,objectValue); 
+  }
+  callTypeaheadData(field,objectValue){
+    this.clearTypeaheadData();   
+    const payload = [];
+    const params = field.api_params;
+    const criteria = field.api_params_criteria;
+    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    this.apiService.GetTypeaheadData(payload);    
+  }
+  clearTypeaheadData() {
+    this.apiService.clearTypeaheadData();
+  }
+
+
+
+
+  dashletFilter(item){
+    const element = [];
+    const ele = JSON.parse(JSON.stringify(item));
+    let value = this.dashboardFilter.getRawValue();
+    const filterData = value[ele.name];
+    ele[ele.name] = filterData;
+    element.push(ele);
+    this.getDashletData(element);
   }
 
   setGridData(gridData){
@@ -233,6 +322,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       }) 
     }
   }
+
   setTypeaheadData(typeAheadData){
     if (typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
@@ -255,7 +345,18 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.pageNumber = page;
     this.getDataForGrid();
   }
-  dashletFilter(item){
+
+
+  showModal(object){ 
+    this.basicModal.show();
+  }
+  close(item){
+    this.basicModal.hide();
+    this.reset(item);
+  }
+
+  reset(item){
+    this.dashboardFilter.reset();
     const element = [];
     const ele = JSON.parse(JSON.stringify(item));
     let value = this.dashboardFilter.getRawValue();
@@ -265,89 +366,4 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.getDashletData(element);
   }
 
-   getddnDisplayVal(val) {
-    return this.commonFunctionService.getddnDisplayVal(val);    
-  }
-
-    getDivClass(field) {
-    // if(!this.commonFunctionService.showIf(field,this.templateForm.getRawValue())){
-    //   return "d-none"
-    // }
-    return this.commonFunctionService.getDivClass(field,[]);
-  }
-  chartHover(e){}
-  chartClicked(e){}
-  compareObjects(o1: any, o2: any): boolean {
-    return o1._id === o2._id;
-  }
-  getDashletData(elements){
-    if(elements && elements.length > 0){
-      let value = this.dashboardFilter.getRawValue();
-      elements.forEach(element => {
-        const fields = element.fields;        
-        const filterData = this.getSingleCardFilterValue(element,value);
-        let crList = [];
-        if(fields && fields.length > 0){
-          crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
-        }        
-        let object = {}
-        if(filterData){
-          object = filterData;
-        }
-        const data = {
-          "data": object,
-          "crList":crList
-        }
-        const payload={
-          "_id" : element._id,
-          "data" : data
-        }
-        this.apiService.GetDashletData(payload);
-      });
-    }
-  }
-  getSingleCardFilterValue(field,object){
-    let value = {};
-    if (object && object[field.name]) {
-      value = object[field.name]
-    }
-    return value;
-  }
-  getOptionText(option) {
-    if (option && option.name) {
-      return option.name;
-    }else{
-      return option;
-    }
-  }
-  updateData(event, parentfield, field) {
-    if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
-      return false;
-    }    
-    let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
-    this.callTypeaheadData(field,objectValue); 
-  }
-  callTypeaheadData(field,objectValue){
-    this.clearTypeaheadData();   
-    const payload = [];
-    const params = field.api_params;
-    const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
-    this.apiService.GetTypeaheadData(payload);    
-  }
-  clearTypeaheadData() {
-    this.apiService.clearTypeaheadData();
-  }
-
-
-  showModal(data:any){
-    this.dashboardItem = data;
-    this.modelService.open('chart-filter',{})
-
-  }
-  
-  chartQueryResponce(response){
-
-  }
-  
 }
