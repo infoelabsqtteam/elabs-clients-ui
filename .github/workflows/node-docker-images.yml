@@ -37,7 +37,7 @@ jobs:
       run: echo "VERSION=$(date +%Y%m%d)" >> $GITHUB_ENV
       
     - name: Get Availability
-      run: echo "Availability=UI-GA" >> $GITHUB_ENV
+      run: echo "Availability=UI-RELEASE" >> $GITHUB_ENV
       
     - name: Build, tag, and push image to Amazon ECR
       env:
