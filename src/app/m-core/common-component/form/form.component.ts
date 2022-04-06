@@ -2030,7 +2030,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       //   this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, formValue,field.onchange_data_template);
       // }else if(field.type != 'list_of_fields'){
         let formValue = this.getFormValue(false);
-        this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, formValue,field.onchange_data_template);
+        this.changeDropdown(field, formValue,field.onchange_data_template);
       // }
     }
 
@@ -2130,7 +2130,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(field.type == 'checkbox'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
         let formValue = this.getFormValue(false);
-        this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, formValue,field.data_template);       
+        this.changeDropdown(field,  formValue,field.data_template);       
       }
     }
     if (field.onchange_function && field.onchange_function_param && field.onchange_function_param != "") {
@@ -2306,9 +2306,10 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
 
   }  
-  
-  changeDropdown(params, callback, criteria, object,data_template) {
-    
+  changeDropdown(field, object,data_template) {
+    let params = field.onchange_api_params;
+    let callback = field.onchange_call_back_field;
+    let criteria = field.onchange_api_params_criteria;
     const paramlist = params.split(";");
     if(paramlist.length>1){
       
@@ -2328,7 +2329,11 @@ case 'populate_fields_for_report_for_new_order_flow':
       else{
         staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
         if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-          staticModal[0]["data"]=this.getFormValue(true);
+          if(field && field.formValueAsObjectForQtmp){
+            staticModal[0]["data"]=this.getFormValue(false);
+          }else{
+            staticModal[0]["data"]=this.getFormValue(true);
+          }
         }
         // this.store.dispatch(
         //   new CusTemGenAction.GetStaticData(staticModal)
@@ -2497,7 +2502,7 @@ case 'populate_fields_for_report_for_new_order_flow':
               switch (field.type) {
                 case 'list_of_fields':
                   let formValue = this.getFormValue(true);
-                  this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, formValue,field.onchange_data_template);
+                  this.changeDropdown(field, formValue,field.onchange_data_template);
                   break;              
                 default:
                   break;
@@ -4364,7 +4369,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "date":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
                 if(typeof object === 'string'){
-                  const date = object[element.field_name];
+                  const date = this.datePipe.transform(formValue[element.field_name], 'dd/MM/yyyy');
                   const dateMonthYear = date.split('/');
                   const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
                   const value = new Date(formatedDate);
