@@ -3,13 +3,13 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { EnvService } from 'src/app/services/env/env.service';
+//import { EnvService } from 'src/app/services/env/env.service';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { ModelService } from "src/app/services/model/model.service";
-import { ModalDirective } from 'angular-bootstrap-md';
+//import { ModalDirective } from 'angular-bootstrap-md';
 import * as _moment from 'moment';
-import { ConsoleLogger } from '@aws-amplify/core';
+//import { ConsoleLogger } from '@aws-amplify/core';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
 
@@ -40,7 +40,7 @@ export const MY_DATE_FORMATS = {
 export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() isShow: string;
-  @ViewChild('basicModal') public basicModal: ModalDirective;
+  //@ViewChild('basicModal') public basicModal: ModalDirective;
   public chartType:any = {};
   public chartDatasets:any = {};
   public chartLabels:any = {};
@@ -53,23 +53,23 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   checkGetDashletData:boolean=true;
   dashletData:any={};
-  copyDashletData:any={};
+  //copyDashletData:any={};
   pageNumber:any=1;
   itemNumOfGrid: any = 12;
   elements:any=[];
-  staticData: any = {};
-  copyStaticData:any={};
-  typeAheadData:any=[];
+  // staticData: any = {};
+  // copyStaticData:any={};
+  // typeAheadData:any=[];
 
   gridDataSubscription;
-  staticDataSubscription;
+  //staticDataSubscription;
   dashletDataSubscription;
-  typeaheadDataSubscription;
+  //typeaheadDataSubscription;
 
   filterValue:any = [];
   filteredDashboardData:any = [];
-  minDate: Date;
-  maxDate: Date;
+  // minDate: Date;
+  // maxDate: Date;
 
   
   total: number;
@@ -80,7 +80,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private envService:EnvService,
+    //private envService:EnvService,
     private modelService: ModelService,
   ) { 
 
@@ -99,10 +99,10 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     // this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
     //   this.setTypeaheadData(data);
     // })
-    this.getPage(1)   
-    const currentYear = new Date().getFullYear();
-    this.minDate = new Date(currentYear - 100, 0, 1);
-    this.maxDate = new Date(currentYear + 1, 11, 31); 
+    //this.getPage(1)   
+    // const currentYear = new Date().getFullYear();
+    // this.minDate = new Date(currentYear - 100, 0, 1);
+    // this.maxDate = new Date(currentYear + 1, 11, 31); 
   }
 
   
@@ -230,14 +230,14 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       this.elements = [];
     }
   }
-  setStaticData(staticData){
-    if (staticData) {
-      this.staticData = staticData;
-      Object.keys(this.staticData).forEach(key => {        
-        this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
-      }) 
-    }
-  }
+  // setStaticData(staticData){
+  //   if (staticData) {
+  //     this.staticData = staticData;
+  //     Object.keys(this.staticData).forEach(key => {        
+  //       this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+  //     }) 
+  //   }
+  // }
   // setTypeaheadData(typeAheadData){
   //   if (typeAheadData.length > 0) {
   //     this.typeAheadData = typeAheadData;
