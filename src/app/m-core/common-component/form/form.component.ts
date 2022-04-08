@@ -4234,6 +4234,9 @@ case 'populate_fields_for_report_for_new_order_flow':
                         }
                         this.templateForm.get(element.field_name).get(data.field_name).setValue(gvalue)
                         //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(gvalue);
+                      }else if(ChildFieldData && ChildFieldData.hasOwnProperty(data.field_name)){
+                        let gvalue = 0;
+                        this.templateForm.get(element.field_name).get(data.field_name).setValue(gvalue)
                       }
                       break;
                     case "list_of_checkbox":
