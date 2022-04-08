@@ -220,6 +220,40 @@ export const serverHostList = [
       "form_label_bg": "#E4F2FA"
     }
   },
+    {
+    "clientEndpoint": "lite-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "LiteDemoLab", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "theme_setting": {
+      "header_bg_color": "",
+      "header_txt_color": "",
+      "header_txt_hover_color": "",
+      "header_icon_color": "",
+      "header_icon_hover_color": "",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "",
+      "theme_color": "",
+      "active_bg_color": "",
+      "popup_header_bg": "#CEE7F7",
+      "form_label_bg": "#E4F2FA"
+    }
+  },
+    {
+    "clientEndpoint": "standard-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "StandardDemoLab", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
+    "theme_setting": {
+      "header_bg_color": "",
+      "header_txt_color": "",
+      "header_txt_hover_color": "",
+      "header_icon_color": "",
+      "header_icon_hover_color": "",
+      "btn_color": "",
+      "btn_hover_color": "",
+      "footer_bg": "",
+      "theme_color": "",
+      "active_bg_color": "",
+      "popup_header_bg": "#CEE7F7",
+      "form_label_bg": "#E4F2FA"
+    }
+  },
   {
     "clientEndpoint": "test.ascgroup.in", "serverEndpoint": "https://sitserverascgroup.e-labs.ai", "title": "ASC group", "google_map": "false", "menu_type": "Vertical", "folder": "asc-group", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "",
     "theme_setting": {
