@@ -9,6 +9,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 import { ModelService } from "src/app/services/model/model.service";
 //import { ModalDirective } from 'angular-bootstrap-md';
 import * as _moment from 'moment';
+import { NotificationService } from 'src/app/services/notify/notification.service';
 //import { ConsoleLogger } from '@aws-amplify/core';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
@@ -56,13 +57,17 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   //copyDashletData:any={};
   pageNumber:any=1;
   itemNumOfGrid: any = 12;
+  noOfItems:any = [
+    6,9,12,15,18,21,24
+  ]
   elements:any=[];
-  // staticData: any = {};
-  // copyStaticData:any={};
+  staticData: any = {};
+  copyStaticData:any={};
   // typeAheadData:any=[];
+  tooltipMsg = "Selected chart is less then or equal "+ this.itemNumOfGrid;
 
   gridDataSubscription;
-  //staticDataSubscription;
+  staticDataSubscription;
   dashletDataSubscription;
   //typeaheadDataSubscription;
 
@@ -82,6 +87,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     private dataShareService:DataShareService,
     //private envService:EnvService,
     private modelService: ModelService,
+    private notificationService:NotificationService
   ) { 
 
     // if(this.envService.getRequestType() == 'PUBLIC'){
@@ -90,9 +96,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     this.gridDataSubscription = this.dataShareService.dashletMaster.subscribe(data =>{
       this.setGridData(data);
     })
-    // this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
-    //   this.setStaticData(data);
-    // })
+    this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
+      this.setStaticData(data);
+    })
     this.dashletDataSubscription = this.dataShareService.dashletData.subscribe(data =>{
       this.setDashLetData(data);
     })
@@ -105,24 +111,50 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     // this.maxDate = new Date(currentYear + 1, 11, 31); 
   }
 
-  
-  filterchart() {
-    this.filteredDashboardData = [];
-    if(this.filterValue && this.filterValue.length > 0) {
-      this.filterValue.forEach(element => {
-        const index = this.commonFunctionService.getIndexInArrayById(this.elements, element);
-        this.filteredDashboardData.push(this.elements[index]);
+  clickFilter:boolean = false;
+  filterchart() {    
+    if(this.filterValue && this.filterValue.length > 0 && this.filterValue.length <= this.itemNumOfGrid) {
+      this.clickFilter = true;
+      let value = "";
+      this.filterValue.forEach((element,i) => {
+        if((this.filterValue.length - 1) == i){
+          value = value + element;
+        }else{
+          value = value + element + ":";
+        }
       });
-    } else {
-      this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
+      let cr = "_id;in;"+value+";STATIC";
+      this.getPage(1,[cr]);
+    }    
+  }
+  checkFilter(){
+    if(this.filterValue && this.filterValue.length == 0){
+      this.getPage(1)
     }
-    
+  }
+  resetFilter(){
+    this.filterValue = [];
+    if(this.clickFilter){
+      this.clickFilter = false;
+      this.checkFilter();
+    }
+  }
+  selectNoOfItem(){
+    this.getPage(1);
+  }
+  onKey(value){
+    this.copyStaticData['chart_list'] = this.search(value)
+  }
+  search(value: string) { 
+    let filter = value.toLowerCase();
+    return this.staticData['chart_list'].filter(option => option.name.toLowerCase().startsWith(filter));
   }
 
 
   ngOnChanges(changes: SimpleChanges) {
     if(this.isShow){
       this.getPage(1)
+      this.getChartList();
       this.checkGetDashletData = true;
     }
   }
@@ -131,9 +163,9 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     if(this.gridDataSubscription){
       this.gridDataSubscription.unsubscribe();
     }
-    // if(this.staticDataSubscription){
-    //   this.staticDataSubscription.unsubscribe();
-    // }
+    if(this.staticDataSubscription){
+      this.staticDataSubscription.unsubscribe();
+    }
     if(this.dashletDataSubscription){
       this.dashletDataSubscription.unsubscribe();
     }
@@ -230,14 +262,14 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
       this.elements = [];
     }
   }
-  // setStaticData(staticData){
-  //   if (staticData) {
-  //     this.staticData = staticData;
-  //     Object.keys(this.staticData).forEach(key => {        
-  //       this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
-  //     }) 
-  //   }
-  // }
+  setStaticData(staticData){
+    if (staticData) {
+      this.staticData = staticData;
+      Object.keys(this.staticData).forEach(key => {        
+        this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+      }) 
+    }
+  }
   // setTypeaheadData(typeAheadData){
   //   if (typeAheadData.length > 0) {
   //     this.typeAheadData = typeAheadData;
@@ -245,8 +277,8 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   //     this.typeAheadData = [];
   //   }
   // }
-  getDataForGrid(){    
-    const data = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','',[],'');
+  getDataForGrid(Criteria:any){    
+    const data = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','',Criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid; 
     const getFilterData = {
@@ -255,9 +287,13 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.apiService.getDashletMster(getFilterData)
   }
-  getPage(page: number) {
+  getPage(page: number,criteria?:any) {
+    let Criteria:any = [];
+    if(criteria && criteria.length > 0){
+      Criteria = criteria;
+    }
     this.pageNumber = page;
-    this.getDataForGrid();
+    this.getDataForGrid(Criteria);
     this.checkGetDashletData = true;
   }
   // dashletFilter(item){
@@ -280,6 +316,10 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   //   // }
   //   return this.commonFunctionService.getDivClass(field,[]);
   // }
+  getChartList(){
+    const payload = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','chart_list',[],'');
+    this.apiService.getStatiData([payload]);
+  }
   chartHover(e){}
   chartClicked(e){}
   compareObjects(o1: any, o2: any): boolean {

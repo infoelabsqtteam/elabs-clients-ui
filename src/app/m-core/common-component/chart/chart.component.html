@@ -2,9 +2,25 @@
   <div class="col-sm-4">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label class="filterlabel">Chart List</mat-label>
-      <mat-select [(ngModel)]="filterValue" (selectionChange)="filterchart()" multiple disableOptionCentering
+      <mat-select [(ngModel)]="filterValue" (selectionChange)="checkFilter()" multiple disableOptionCentering
         panelClass="chartfilteroption">
-        <mat-option *ngFor="let staticValue of elements" [value]="staticValue._id">{{staticValue.name}}</mat-option>
+        <input class="form-control-sm w-100 m-1 border" (keyup)="onKey($event.target.value)"> 
+        <mat-option *ngFor="let staticValue of copyStaticData['chart_list']" [value]="staticValue._id">{{staticValue.name}}</mat-option>
+      </mat-select>
+      <mat-hint align="end" [ngClass]="{'text-danger': filterValue.length > itemNumOfGrid}" [matTooltip]="filterValue.length > itemNumOfGrid ? tooltipMsg : ''" [matTooltipClass]="{'bg-danger': filterValue.length > itemNumOfGrid}" [matTooltipPosition]="'above'">{{filterValue?.length || 0}}/{{itemNumOfGrid}}</mat-hint>
+    </mat-form-field>
+  </div>
+  <div class="col-lg-3 mt-2">
+    <button mat-flat-button class="filterbtn" [disabled] = "filterValue.length == 0 || filterValue.length > itemNumOfGrid" (click)="filterchart()">Filter</button>
+    <button mat-flat-button class="filterbtn ml-2" [disabled] = "filterValue.length == 0" (click)="resetFilter()">Reset Filter</button>
+  </div>
+  <div class="col-lg-3 mt-2"></div>
+  <div class="col-lg-2 mt-2">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label class="filterlabel">No. Of Charts</mat-label>
+      <mat-select [(ngModel)]="itemNumOfGrid" (selectionChange)="selectNoOfItem()" disableOptionCentering
+        panelClass="chartfilteroption">
+        <mat-option *ngFor="let numverOfItem of noOfItems" [value]="numverOfItem">{{numverOfItem}}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
