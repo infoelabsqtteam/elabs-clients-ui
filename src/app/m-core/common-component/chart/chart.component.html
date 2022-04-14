@@ -59,10 +59,9 @@
   </div>
 </div>
 <div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
-
-<app-chart-filter id="chart-filter"></app-chart-filter>
-<app-chart-single-modal id="single-chart"></app-chart-single-modal>
-
+  <div [ngClass]="showfilter? '':'nofilter'">
+    <app-chart-filter id="chart-filter" [showfilter]="showfilter"></app-chart-filter>
+  </div>
 <section>
   <mat-card-content class="m-0 pt-4 text-center">
       <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>

@@ -9,7 +9,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: false, ig
         </div>
         <div class="modal-body pt-2" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0">
           <div class="chartfilter mb-3" [formGroup]="dashboardFilter" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0"> 
-            <div class="row align-items-center" [formGroupName]="dashboardItem.name">
+            <div class="row align-items-center" *ngIf="showfilter" [formGroupName]="dashboardItem.name">
               <div class="col-sm-4" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
                 <div *ngIf="field.type == 'date'">
                   <mat-form-field appearance="outline" class="w-100 m-0">

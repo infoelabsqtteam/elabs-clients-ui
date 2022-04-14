@@ -78,7 +78,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   
   total: number;
-
+  showfilter:boolean = false;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -390,6 +390,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
 
   showModal(data:any){
+    this.showfilter = true;
     let object = {
       'dashboardItem' : data,
       'dashletData' : this.dashletData
@@ -399,11 +400,12 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   }
   
   showSingleModal(data:any){
+    this.showfilter = false;
     let object = {
       'dashboardItem' : data,
       'dashletData' : this.dashletData
     }
-    this.modelService.open('single-chart',object)
+    this.modelService.open('chart-filter',object);
 
   }
 

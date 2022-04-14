@@ -35,6 +35,7 @@ export class ChartFilterComponent implements OnInit {
   
   @Input() id: string;
   @ViewChild('basicModal') public basicModal: ModalDirective;
+  @Input() showfilter;
   dashboardItem :any = {};
   dashletData:any = {};
 

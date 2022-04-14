@@ -30,7 +30,6 @@ import { EicFormatComponent } from '../report-form/eic-format/eic-format.compone
 import { AllPackageModule } from '../all-package/all-package.module';
 import { GitVersionComponent } from './git-version/git-version.component';
 import { ChartFilterComponent } from './chart-filter/chart-filter.component';
-import { ChartSingleModalComponent } from './chart-single-modal/chart-single-modal.component';
 
 const models = [
   ModalsComponent,
@@ -56,7 +55,6 @@ const models = [
   ShortcutinfoComponent,
   GitVersionComponent,
   ChartFilterComponent,
-  ChartSingleModalComponent
 ]
 
 @NgModule({
