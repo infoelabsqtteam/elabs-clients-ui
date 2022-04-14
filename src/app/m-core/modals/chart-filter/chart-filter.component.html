@@ -57,7 +57,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: false, ig
                     *ngIf="field.datatype != 'object' && field.datatype != 'key_value'">
                     <mat-label>{{ field.label | titlecase}}</mat-label>
                     <mat-select [formControlName]="field.field_name" disableOptionCentering panelClass="filteroption">
-                      <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue._id">
+                      <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
                         {{getddnDisplayVal(staticValue)}}</mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -66,8 +66,8 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: false, ig
                         class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted">
                         *</span></mat-label>
                     <mat-select [formControlName]="field.field_name" disableOptionCentering panelClass="filteroption">
-                      <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue._id">
-                        {{getddnDisplayVal(staticValue)}}</mat-option>
+                      <mat-option *ngFor="let staticValue of staticData[field.ddn_field] | keyvalue" [value]="staticValue.key">
+                        {{getddnDisplayVal(staticValue.value)}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
