@@ -107,6 +107,7 @@ export class EnvService {
     let themedata = this.getHostKeyValue('theme_setting');
     let pageTitle = this.getHostKeyValue('title');
     let verify_type = this.getHostKeyValue('varify_mode');
+    let team_name = this.getHostKeyValue('teamname');
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
       const path = 'assets/img/logo/' + projectFolderName + '/';
@@ -121,6 +122,7 @@ export class EnvService {
         this.storageService.setVerifyType(verify_type);
       }      
       this.storageService.setPageTheme(tempTheme);
+      this.storageService.setTeamName(team_name);
     }
   }
   

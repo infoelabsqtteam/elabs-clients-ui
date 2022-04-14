@@ -249,29 +249,41 @@ constructor(
           console.log(error);
         }
     )
-  }    
-  GetDashletData(payload:any){
-    let api = this.envService.getApi('GET_DASHLET_DATA');
-    this.http.post(api + '/' + payload._id, payload.data).subscribe(
-      (respData) => {
-          let currentStaticData=[];
-          let getDashletData = this.dataShareService.getDashletData();
-          const dashletData = JSON.parse(JSON.stringify(getDashletData));
-          currentStaticData.push(respData);
-          if(currentStaticData.length > 0){                
-              currentStaticData.forEach(element => {
-                  if(element && element.field != undefined && element.field != null){
-                      dashletData[element.field] = element.data   
-                  }                                   
-              });                 
-
-          } 
-          this.dataShareService.setDashletData(dashletData)
+  }   
+  GetDashletData(payloads:any){
+    //this.dataShareService.setDashletData({});
+    from(payloads)
+    .pipe(
+      mergeMap((payload)=>         
+        this.dashletDataCall(payload))
+      )
+      .subscribe(
+        (res) => {
+          this.SetDashletData(res)
         },
-      (error) => {
+        (error)=>{
           console.log(error);
         }
     )
+  } 
+  dashletDataCall(payload:any){
+    let api = this.envService.getApi('GET_DASHLET_DATA');
+    return this.http.post(api + '/' + payload._id, payload.data);
+  }
+  SetDashletData(respData:any){
+    let currentStaticData=[];
+    let getDashletData = this.dataShareService.getDashletData();
+    const dashletData = JSON.parse(JSON.stringify(getDashletData));
+    currentStaticData.push(respData);
+    if(currentStaticData.length > 0){                
+        currentStaticData.forEach(element => {
+            if(element && element.field != undefined && element.field != null){
+                dashletData[element.field] = element.data   
+            }                                   
+        });                 
+
+    } 
+    this.dataShareService.setDashletData(dashletData);        
   }
   GetExportExclLink(payload){
     let api = this.envService.getApi('EXPORT_GRID_DATA');

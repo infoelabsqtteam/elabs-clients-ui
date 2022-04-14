@@ -35,7 +35,7 @@
 
     <div class="d-flex align-items-center toplogin">
       <ul class="m-0 d-flex">
-        <li class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
+        <li *ngIf="isShow" class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
         <li class="nav-item avatar mx-1" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
         <li class="nav-item avatar mx-1">
           <button mat-icon-button [matMenuTriggerFor]="beforeMenu" ><img src="assets/img/profile.jpg" alt="" width="25px"></button>
@@ -43,8 +43,10 @@
             <button mat-menu-item><mat-icon class="mr-2">manage_accounts</mat-icon> My account</button>
             <button mat-menu-item><mat-icon class="mr-2">person_outline</mat-icon> Name: {{userName}}</button>
             <button mat-menu-item><mat-icon class="mr-2">alternate_email</mat-icon> Email: {{userEmail}}</button>
-            <div *ngIf="teamname && teamname != null">
-              <button mat-menu-item *ngFor="let team of teamname; let i = index"><mat-icon class="mr-2">group_add</mat-icon> Team Name {{i + 1}}: {{team.name}} </button>
+            <div *ngIf="teamName == 'true'">
+              <div *ngIf="teamname && teamname != null">
+                <button mat-menu-item *ngFor="let team of teamname; let i = index"><mat-icon class="mr-2">group_add</mat-icon> Team Name {{i + 1}}: {{team.name}} </button>
+              </div>
             </div>
             <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
             <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>

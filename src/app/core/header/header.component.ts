@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     fullHeader: boolean = false;
     loginUserIcon: boolean = false;
     getmenu: boolean = true;
+    isShow:boolean = true;
 
 
     public userInfo: any;
@@ -116,6 +117,9 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         this.menuDataSubscription = this.dataShareService.menu.subscribe(menu =>{
             this.setMenuData(menu);
         })
+        this.dataShareService.chartModelShowHide.subscribe(data =>{
+            this.isShow = data;
+          });
 
         this.ourSolutionDropDown = [
             { name: 'Food Products', value: 'food-product' },

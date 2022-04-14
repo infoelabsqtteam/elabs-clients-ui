@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
+//import { ApiService } from 'src/app/services/api/api.service';
 import { ModelService } from 'src/app/services/model/model.service';
 
 @Component({
