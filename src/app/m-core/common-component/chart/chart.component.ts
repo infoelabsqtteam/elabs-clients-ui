@@ -398,8 +398,14 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   
-  chartQueryResponce(response){
+  showSingleModal(data:any){
+    let object = {
+      'dashboardItem' : data,
+      'dashletData' : this.dashletData
+    }
+    this.modelService.open('single-chart',object)
 
   }
+
   
 }

@@ -6,7 +6,6 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
-import * as XLSX from 'xlsx';
 import * as _moment from 'moment';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
@@ -23,16 +22,14 @@ export const MY_DATE_FORMATS = {
   },
 };
 
-
 @Component({
-  selector: 'app-chart-filter',
-  templateUrl: './chart-filter.component.html',
+  selector: 'app-chart-single-modal',
+  templateUrl: './chart-single-modal.component.html',
   styles: [
   ]
 })
-export class ChartFilterComponent implements OnInit {
-  
-  
+export class ChartSingleModalComponent implements OnInit {
+
   @Input() id: string;
   @ViewChild('basicModal') public basicModal: ModalDirective;
   dashboardItem :any = {};
@@ -312,43 +309,5 @@ export class ChartFilterComponent implements OnInit {
     this.dashboardFilter.reset();
     this.getDashletData([item]);
   }
-
-  exportexcel():void {
-    let element = document.getElementById('excel-table');
-    const ws:XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
-
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
-
-    XLSX.writeFile(wb,this.filename);
-
-  }
-
-  chartjsimg: any;
-  canvasimg() {
-    var canvas = document.getElementById('chartjs') as HTMLCanvasElement;
-    this.chartjsimg = canvas.toDataURL('image/png');
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

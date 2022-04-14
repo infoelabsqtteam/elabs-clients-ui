@@ -37,7 +37,7 @@ export class StorageService {
   PAGE_TITLE:string = "PAGE_TITLE";
   VERIFY_TYPE:string = "VERIFY_TYPE";
   MODULE:string = "MODULE";
-  
+  TEAM_NAME:string = "TEAM_NAME";
   
   
   constructor(private http: HttpClient) { }
@@ -562,12 +562,24 @@ export class StorageService {
   getPageThmem(){
     return localStorage.getItem(this.TEMP_THEME);
   }
+
+
+
   setTempName(temp){
     localStorage.setItem(this.TEMP_NAME,temp);
   }
   getTemplateName(){
     const template:string=localStorage.getItem(this.TEMP_NAME);
     return template;
+  }
+
+
+  setTeamName(teamname:string){
+    localStorage.setItem(this.TEAM_NAME, teamname);
+  }
+
+  getTeamName(){
+    return localStorage.getItem(this.TEAM_NAME);
   }
 
 

@@ -28,6 +28,7 @@ export class TopbarComponent implements OnInit, OnChanges {
   isShow:boolean = true;
 
   logoPath = '';
+  teamName = '';
   public userInfo: any;
   public userName: any;
   public userEmail: any;
@@ -62,6 +63,7 @@ export class TopbarComponent implements OnInit, OnChanges {
 ) {
     this.AllModuleList = this.storageService.GetModules();
     this.logoPath = this.storageService.getLogoPath() + "logo.png";
+    this.teamName = this.storageService.getTeamName();
     this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe( data =>{
       if(data && data['git.build.version']){
         this.gitVersion = data['git.build.version'];
