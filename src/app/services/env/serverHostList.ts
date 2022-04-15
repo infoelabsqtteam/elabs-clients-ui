@@ -529,7 +529,8 @@ export const serverHostList = [
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
-    },
+    }
+  },
   {
     "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
