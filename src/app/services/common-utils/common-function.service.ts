@@ -122,9 +122,13 @@ export class CommonFunctionService {
             validator.push(Validators.required)
           }
           break;
-          case 'checkbox':
+        case 'checkbox':
           validator.push(Validators.requiredTrue)
-
+          break;
+        case "email":
+          validator.push(Validators.required)
+          validator.push(Validators.email);
+          break;
         default:
           validator.push(Validators.required)
           break;
