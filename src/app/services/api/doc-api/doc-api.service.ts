@@ -39,6 +39,7 @@ export class DocApiService {
       }
     )
   }
+  
   GetHomeVdrBack(payload){
     let api = this.envService.getApi('GET_VDR_DATA');
     this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
@@ -241,5 +242,25 @@ export class DocApiService {
       }
     )
   }
+
+
+
+  SetDocPermission(payload){
+    let api = this.envService.getApi('DOC_PERMISSION');
+    this.http.post(api, payload).subscribe(
+      (respData) => {
+        this.docDataShare.setVdrPermissionData(respData);
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
+
+
+
+
+
+
 
 }

@@ -2,10 +2,11 @@
     <div class="breadcrumbmenu">
         <button mat-icon-button *ngIf="hidehome" class="documenthome mr-2"><mat-icon style="opacity:0.5;" (click)="getHome()">home</mat-icon></button>
         <button mat-button class="activebreadcruem mr-2" *ngFor="let bredcrumb of pathList| slice:2; let i = index"><span (click)="getBredCrumbData(i)">{{ bredcrumb }}</span></button>
-        <button mat-button class="activebreadcruem mr-2" [matMenuTriggerFor]="menu" *ngIf="currentSelectedPath != ''">{{ currentSelectedPath }} <mat-icon>arrow_drop_down</mat-icon></button>
+        <button mat-button class="activebreadcruem mr-2" [matMenuTriggerFor]="menu" *ngIf="currentSelectedPath != ''">{{ currentSelectedPath }} <mat-icon *ngIf="creatorpermission">arrow_drop_down</mat-icon></button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="createNewFolder()">New Folder</button>
-            <button mat-menu-item (click)="fileUploadModal()">Upload Files</button>
+            <button mat-menu-item *ngIf="creatorpermission" (click)="createNewFolder()">New Folder</button>
+            <button mat-menu-item *ngIf="creatorpermission" (click)="fileUploadModal()">Upload Files</button>
+            <button mat-menu-item class="mt-2" *ngIf="!creatorpermission" (click)="fileUploadModal()">Create and Upload Permission no available</button>
         </mat-menu>
     </div>
     <div class="gridviewmenu d-flex align-items-center">
@@ -21,7 +22,8 @@
                 <!-- <button mat-menu-item class="breadicon" *ngIf="hideRightClickMove" (click)="moveModalOpen()"><mat-icon>drive_file_move</mat-icon> Move to</button> -->
                 <button mat-menu-item class="breadicon" *ngIf="hideRightClickMove" (click)="openRenameModal()"><mat-icon>drive_file_rename_outline</mat-icon> Rename</button>
                 <button mat-menu-item  class="breadicon"(click)="showDeatailsGrid()"><mat-icon>info</mat-icon> View details</button>
-                <button mat-menu-item class="breadicon" *ngIf="selectedRowFile" (click)="download()"><mat-icon>file_download</mat-icon> Download</button>
+                <button mat-menu-item class="breadicon" *ngIf="downloadpermission" (click)="download()"><mat-icon>file_download</mat-icon> Download</button>
+                <button mat-menu-item class="breadicon" *ngIf="authrizepermission" (click)="permission()"><mat-icon>assignment_late</mat-icon> Permission</button>
             </mat-menu>
         </div>
         <button mat-icon-button color="primary" (click)="changeGridView()">
@@ -218,15 +220,12 @@
 </section>
 
 
-<app-new-folder-creation id="createNewfolder" (createFolderResponce)="createFolderResponce($event)">
-</app-new-folder-creation>
+<app-new-folder-creation id="createNewfolder" (createFolderResponce)="createFolderResponce($event)"></app-new-folder-creation>
 <app-doc-file-upload id="docFileUpload" (uploadDocFileResponce)="uploadDocFileResponce($event)"></app-doc-file-upload>
-<app-move-file-folder id="moveDocModel" (moveFileFolderResponce)="moveFileFolderResponce($event)">
-</app-move-file-folder>
+<app-move-file-folder id="moveDocModel" (moveFileFolderResponce)="moveFileFolderResponce($event)"></app-move-file-folder>
 <app-doc-view-model id="docViewModal" (docViewModalResponce)="docViewModalResponce($event)"></app-doc-view-model>
-<app-doc-folder-upload id="docFolderUpload" (uploadDocFolderResponce)="uploadDocFolderResponce($event)">
-</app-doc-folder-upload>
-
+<app-doc-folder-upload id="docFolderUpload" (uploadDocFolderResponce)="uploadDocFolderResponce($event)"></app-doc-folder-upload>
+<app-permission id="permissionModal" (permissionResponce)="permissionResponce($event)" [pathList]="pathList" [folder]="vdrprentfolder"></app-permission>
 
 <context-menu>
     <!-- <ng-template contextMenuItem (execute)="rightViewFile($event);recentData($event)"><div class="text-dark mhover"><i class="dripicons-preview px-2 mhover"></i>Preview</div></ng-template> 

@@ -36,9 +36,13 @@ input.mat-input-element {font-size:$size13;}
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75);font-size:$size14;}
     .mat-form-field-label > * {background:$white;padding-right:$size8;}
 
-    .modal-content {/*overflow:visible !important;min-height:450px;*/
-        .grid-button {width:$size25;height:$size25;line-height:$size30;margin:$size3;}
+    .modal-content {
+        .grid-button {width:$size25;height:$size25;line-height:30px;margin:$size3 $zero;color:#555;}
+        .removebtn {
+            span {font-weight:bold;}
+        }
     }
+
     .modal-header {background:$popupheadingbg;margin-bottom:$size20;min-height:$size55;}
     .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;
         &:focus {outline:none;border:none;}
