@@ -11,6 +11,7 @@ import { LoaderService } from './services/loader/loader.service';
 import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
 import { StorageTokenStatus } from './shared/enums/storage-token-status.enum';
+import { AuthService } from './services/api/auth/auth.service';
 
 
 @Component({
@@ -32,14 +33,12 @@ export class AppComponent implements OnInit {
 
   constructor(
     private titleService:Title,
-    private router: Router,
-    private routers:ActivatedRoute, 
+    private router: Router, 
     private storageService: StorageService, 
     private dataShareService:DataShareService,
     private modelService:ModelService,
-    private commonfunctionService:CommonFunctionService,
     public loaderService:LoaderService,
-    private apiService: ApiService,
+    private authApiService: AuthService,
     private envService: EnvService,
     
 
@@ -144,12 +143,12 @@ export class AppComponent implements OnInit {
     if (this.storageService != null && this.storageService.GetIdToken() != null) {
         const idToken = this.storageService.GetIdToken();
         if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
-          this.router.navigate(['home'])   
+          this.authApiService.redirectionWithMenuType();            
         }else{
-          this.router.navigate(['signin']) 
+          this.authApiService.redirectToSignPage(); 
         }
       }else{
-        this.router.navigate(['signin']) 
+        this.authApiService.redirectToSignPage(); 
       }
   }
 

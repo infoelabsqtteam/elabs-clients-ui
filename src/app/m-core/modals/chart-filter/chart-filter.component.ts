@@ -34,8 +34,7 @@ export class ChartFilterComponent implements OnInit {
   
   
   @Input() id: string;
-  @ViewChild('basicModal') public basicModal: ModalDirective;
-  @Input() showfilter;
+  @ViewChild('chartFilterModal') public chartFilterModal: ModalDirective;  
   dashboardItem :any = {};
   dashletData:any = {};
 
@@ -53,10 +52,12 @@ export class ChartFilterComponent implements OnInit {
   staticData: any = {};
   copyStaticData:any={};
   typeAheadData:any=[];
+  showFilter:boolean=false;
 
   staticDataSubscription;
   dashletDataSubscription;
   typeaheadDataSubscription;
+  
 
   minDate: Date;
   maxDate: Date;
@@ -154,7 +155,10 @@ export class ChartFilterComponent implements OnInit {
   getDashletData(elements){
     if(elements && elements.length > 0){
       let payloads = [];
-      let value = this.dashboardFilter.getRawValue();
+      let value = {};
+      if(this.showFilter){
+        value = this.dashboardFilter.getRawValue();
+      }
       elements.forEach(element => {
         const fields = element.fields;        
         const filterData = this.getSingleCardFilterValue(element,value);
@@ -296,22 +300,29 @@ export class ChartFilterComponent implements OnInit {
     if(object.dashboardItem){
       this.dashboardItem = object.dashboardItem;
       this.dashletData = object.dashletData;
-      this.checkGetDashletData = true;
-      this.setFilterForm(this.dashboardItem);
+      this.checkGetDashletData = true;   
+      if(object.filter){
+        this.showFilter = true;
+        this.setFilterForm(this.dashboardItem);
+      }else{
+        this.showFilter = false;
+      }      
       this.setDashLetData(this.dashletData);
-    }
-     
-    this.basicModal.show();
+      this.chartFilterModal.show();
+    }    
+    
   }
   close(item){
     this.checkGetDashletData = false;
     this.reset(item);
-    this.basicModal.hide();
+    this.chartFilterModal.hide();
   }
 
   reset(item){
-    this.dashboardFilter.reset();
-    this.getDashletData([item]);
+    if(this.showFilter){
+      this.dashboardFilter.reset();
+      this.getDashletData([item]);
+    }    
   }
 
   exportexcel():void {
