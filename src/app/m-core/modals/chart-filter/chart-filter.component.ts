@@ -63,7 +63,7 @@ export class ChartFilterComponent implements OnInit {
   maxDate: Date;
 
   filename = "ExcelSheet.xlsx";
-
+  tableData;
 
   constructor(
     private modalService: ModelService,
@@ -83,7 +83,6 @@ export class ChartFilterComponent implements OnInit {
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
       this.setTypeaheadData(data);
     })
-    //this.getPage(1)   
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
     this.maxDate = new Date(currentYear + 1, 11, 31); 
@@ -122,14 +121,15 @@ export class ChartFilterComponent implements OnInit {
     if (dashletData) {
       let dashletValue = {};
       if(this.dashboardItem && this.dashboardItem.call_back_field && dashletData[this.dashboardItem.call_back_field]){
-        dashletValue[this.dashboardItem.call_back_field] = dashletData[this.dashboardItem.call_back_field];      
-        Object.keys(dashletValue).forEach(key => {                    
+        dashletValue[this.dashboardItem.call_back_field] = dashletData[this.dashboardItem.call_back_field];
+        Object.keys(dashletValue).forEach(key => { 
           this.chartDatasets[key] = JSON.parse(JSON.stringify(dashletValue[key]['dataSets']));  
           this.chartLabels[key] = JSON.parse(JSON.stringify(dashletValue[key]['label']));
           this.chartType[key]=JSON.parse(JSON.stringify(dashletValue[key]['type']));
           this.chartColors[key]=JSON.parse(JSON.stringify(dashletValue[key]['colors']));
           this.chartLegend[key]=JSON.parse(JSON.stringify(dashletValue[key]['legend']));
           this.chartOptions[key]=JSON.parse(JSON.stringify(dashletValue[key]['options']));
+          this.tableData = this.chartDatasets[key]; 
           if(dashletValue[key]['title']){
             this.chartTitle[key]=JSON.parse(JSON.stringify(dashletValue[key]['title']));
           }        
@@ -309,6 +309,7 @@ export class ChartFilterComponent implements OnInit {
       }      
       this.setDashLetData(this.dashletData);
       this.chartFilterModal.show();
+      this.dashboardFilter.reset();
     }    
     
   }
@@ -326,8 +327,8 @@ export class ChartFilterComponent implements OnInit {
   }
 
   exportexcel():void {
-    let element = document.getElementById('excel-table');
-    const ws:XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    let element = document.getElementById('excel-data');
+    const ws:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tableData)
 
     const wb:XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
@@ -341,26 +342,6 @@ export class ChartFilterComponent implements OnInit {
     var canvas = document.getElementById('chartjs') as HTMLCanvasElement;
     this.chartjsimg = canvas.toDataURL('image/png');
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
