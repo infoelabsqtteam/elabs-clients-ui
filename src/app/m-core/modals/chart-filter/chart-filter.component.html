@@ -9,8 +9,8 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
         </div>
         <div class="modal-body pt-2" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0">
           <div class="chartfilter mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
-            <div class="row align-items-center" [formGroupName]="dashboardItem.name">
-              <div class="col-sm-4" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
+            <div class="row align-items-center mx-0" [formGroupName]="dashboardItem.name">
+              <div class="col-sm-3 pl-0" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
                 <div *ngIf="field.type == 'date'">
                   <mat-form-field appearance="outline" class="w-100 m-0">
                     <mat-label>{{ field.label | titlecase}}</mat-label>
@@ -72,11 +72,11 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-sm-5">
+              <div class="col-sm-3 px-0">
                   <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>
-                  <button mat-flat-button class="filterbtn ml-2" (click)="reset(dashboardItem)">Reset Filter</button>
-                  <button *ngIf="dashboardItem.package_name == 'google_chart'" mat-flat-button class="filterbtn ml-2" (click)="exportexcel()">Download</button>
-                  <button *ngIf="dashboardItem.package_name == 'chart_js'" mat-flat-button class="filterbtn ml-2" (click)="canvasimg()"><a class="text-dark" href="{{ chartjsimg }}" download>Download Image</a></button>
+                  <button mat-flat-button class="filterbtn mx-1" (click)="reset(dashboardItem)">Reset Filter</button>
+                  <button *ngIf="dashboardItem.package_name == 'google_chart'" mat-flat-button class="filterbtn" (click)="exportexcel()">Download</button>
+                  <button *ngIf="dashboardItem.package_name == 'chart_js'" mat-flat-button class="filterbtn" (click)="canvasimg()"><a class="text-dark" href="{{ chartjsimg }}" download>Download Image</a></button>
                 </div>
             </div>
           </div> 

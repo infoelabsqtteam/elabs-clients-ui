@@ -9,7 +9,7 @@
         .mat-form-field-label {color:#00000099;font-size:13px;}
         .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;}
         .mat-error {margin-top:15px;}
-        .filterbtn {background:var(--formLabelBg);
+        .filterbtn {background:var(--formLabelBg);min-width:auto;
           .mat-button-wrapper {display:flex;align-items:center;}
         }
         .modal-footer {height:$size50;padding:$size10;min-height:$auto;background:var(--popupHeaderBg);border:$no;
