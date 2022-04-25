@@ -71,6 +71,12 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <div *ngIf="field.type == 'text'">
+                  <mat-form-field appearance="outline" class="w-100 m-0">
+                      <mat-label>{{ field.label | titlecase}}</mat-label>
+                      <input matInput type="text" [required]="field.is_mandatory" [formControlName]="field.field_name" [id]="field._id+'_'+field.field_name" autocomplete="off">                              
+                  </mat-form-field>
+              </div>
               </div>
               <div class="col-sm-3 px-0">
                   <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>
