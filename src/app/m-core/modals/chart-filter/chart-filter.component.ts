@@ -64,6 +64,7 @@ export class ChartFilterComponent implements OnInit {
 
   filename = "ExcelSheet.xlsx";
   tableData;
+  tableHead;
 
   constructor(
     private modalService: ModelService,
@@ -130,6 +131,7 @@ export class ChartFilterComponent implements OnInit {
           this.chartLegend[key]=JSON.parse(JSON.stringify(dashletValue[key]['legend']));
           this.chartOptions[key]=JSON.parse(JSON.stringify(dashletValue[key]['options']));
           this.tableData = this.chartDatasets[key]; 
+          this.tableHead = this.chartLabels[key];
           if(dashletValue[key]['title']){
             this.chartTitle[key]=JSON.parse(JSON.stringify(dashletValue[key]['title']));
           }        
@@ -327,14 +329,20 @@ export class ChartFilterComponent implements OnInit {
   }
 
   exportexcel():void {
-    let element = document.getElementById('excel-data');
-    const ws:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tableData)
-
+    let list = [];
+    for (let index = 0; index < this.tableData.length; index++) {
+      let row = this.tableData[index];
+      const element = {};
+      for (let j = 0; j < row.length; j++) {
+        let col = this.tableHead[j];
+        element[col] = row[j];
+      }
+      list.push(element);
+    }
+    const ws:XLSX.WorkSheet = XLSX.utils.json_to_sheet(list);
     const wb:XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
-
     XLSX.writeFile(wb,this.filename);
-
   }
 
   chartjsimg: any;
