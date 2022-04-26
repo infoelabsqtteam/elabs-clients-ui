@@ -33,7 +33,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatMenuModule} from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSliderModule} from '@angular/material/slider';
-
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 const modules =[
   MatCardModule,
@@ -66,7 +66,8 @@ const modules =[
   MatFormFieldModule,      
   MatMenuModule,
   MatSnackBarModule,
-  MatSliderModule
+  MatSliderModule,
+  MatMomentDateModule
 ]
 
 @NgModule({
