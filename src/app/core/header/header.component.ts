@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, HostListener,AfterViewInit } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
 import { StorageService } from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
@@ -18,8 +18,9 @@ import { Common } from "src/app/shared/enums/common.enum";
     styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     @Input() public pageName;
+    @Input() moduleIndex: any;
 
     subscription: any;
     menuDataSubscription;
@@ -34,7 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     fullHeader: boolean = false;
     loginUserIcon: boolean = false;
     getmenu: boolean = true;
-    isShow:boolean = true;
+    isShow: boolean = true;
 
 
     public userInfo: any;
@@ -47,65 +48,65 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     public ourSolutionDropDown: any;
     public aboutUsDropDown: any;
     currentPage: any;
-    logedin:boolean=false;
-    gitVersionSubscription:any;
+    logedin: boolean = false;
+    gitVersionSubscription: any;
     gitVersion: any;
 
     logoPath = ''
     private myData: any;
 
     activeclass = false;
-
+    AllModuleList: any = [];
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
     }
 
 
-    @HostListener('window:keyup.alt.h') onCtrlH(){
+    @HostListener('window:keyup.alt.h') onCtrlH() {
         this.activeclass = true;
     }
 
 
-    @HostListener('window:keyup.alt.o') onCtrlO(){
+    @HostListener('window:keyup.alt.o') onCtrlO() {
         this.shortcutinfo();
     }
 
-    @HostListener('window:keyup.alt.control.c') onCtrlChart(){
+    @HostListener('window:keyup.alt.control.c') onCtrlChart() {
         this.chartModel();
     }
-    
-    @HostListener('window:keyup.enter') onCtrlenter(){
-        if(this.activeclass) {
+
+    @HostListener('window:keyup.enter') onCtrlenter() {
+        if (this.activeclass) {
             this.goToMOdule();
             this.activeclass = false;
         }
     }
 
-   
+
 
 
 
     constructor(
-        private router: Router, 
-        private storageService: StorageService, 
-        private permissionService: PermissionService, 
-        private dataShareService:DataShareService,
-        private apiService:ApiService,
+        private router: Router,
+        private storageService: StorageService,
+        private permissionService: PermissionService,
+        private dataShareService: DataShareService,
+        private apiService: ApiService,
         private modelService: ModelService,
-        private authService:AuthService,
-        private notificationService:NotificationService,
-        public envService:EnvService
+        private authService: AuthService,
+        private notificationService: NotificationService,
+        public envService: EnvService
     ) {
-        
+
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
-        this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe( data =>{
-            if(data && data['git.build.version']){
-              this.gitVersion = data['git.build.version'];
+        this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe(data => {
+            if (data && data['git.build.version']) {
+                this.gitVersion = data['git.build.version'];
             }
         })
-        
-        this.subscription =  this.dataShareService.currentPage.subscribe(
+
+        this.subscription = this.dataShareService.currentPage.subscribe(
             (data: any) => {
                 this.setpage(data);
             },
@@ -114,12 +115,12 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             },
             () => console.log(this.myData)
         );
-        this.menuDataSubscription = this.dataShareService.menu.subscribe(menu =>{
+        this.menuDataSubscription = this.dataShareService.menu.subscribe(menu => {
             this.setMenuData(menu);
         })
-        this.dataShareService.chartModelShowHide.subscribe(data =>{
+        this.dataShareService.chartModelShowHide.subscribe(data => {
             this.isShow = data;
-          });
+        });
 
         this.ourSolutionDropDown = [
             { name: 'Food Products', value: 'food-product' },
@@ -151,28 +152,28 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
 
     }
 
-   
+
 
     shortcutinfo() {
-        this.modelService.open('shortcutinfo_model',{})
+        this.modelService.open('shortcutinfo_model', {})
     }
     chartModel() {
-        this.modelService.open('chart_model',{})
-      }
+        this.modelService.open('chart_model', {})
+    }
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
-        if(this.menuDataSubscription){
+        if (this.menuDataSubscription) {
             this.menuDataSubscription.unsubscribe();
         }
     }
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
         //Add 'implements AfterViewInit' to the class.
-       
+
     }
-    setpage(res){
-        switch(res){
+    setpage(res) {
+        switch (res) {
             case "HOME":
                 this.fullHeader = true;
                 this.menuBoxHome = true;
@@ -212,13 +213,13 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
                 this.loginUserIcon = false;
                 this.showUserAccount = false;
                 break;
-            default :
+            default:
                 this.fullHeader = true;
                 this.menuBoxHome = false;
                 this.menuBoxDashboard = false;
                 this.loginUserIcon = false;
                 break;
-                
+
         }
         if (this.loginUserIcon) {
             if (this.storageService.GetUserInfo()) {
@@ -237,32 +238,56 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         }
         if (this.storageService != null && this.storageService.GetIdToken() != null) {
             const idToken = this.storageService.GetIdToken();
-            if(this.storageService.GetIdTokenStatus() ==  StorageTokenStatus.ID_TOKEN_ACTIVE){                
+            if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
                 this.logedin = true;
-            }else{ 
-                this.logedin = false;       
+            } else {
+                this.logedin = false;
                 const payload = {
-                appName: this.envService.getAppName(),
-                data:{
-                    accessToken:this.storageService.GetAccessToken()
-                }
+                    appName: this.envService.getAppName(),
+                    data: {
+                        accessToken: this.storageService.GetAccessToken()
+                    }
                 }
                 this.authService.SessionExpired(payload);
-                
+
             }
-        
-        }else{
+
+        } else {
             this.logedin = false;
         }
     }
 
-    ngOnInit() {  
+    ngOnInit() {
     }
 
-    setMenuData(menuData){
+    ngOnChanges(changes: SimpleChanges) {
+        this.getMenuByModule()
+    }
+
+    getMenuByModule() {
+        this.AllModuleList = this.storageService.GetModules();
+        if (this.moduleIndex != -1) {
+            const module = this.AllModuleList[this.moduleIndex]
+            if (module.menu_list != undefined && module.menu_list != null) {
+                this.menuData = module.menu_list;
+                const menu = this.menuData[0];
+                if (menu && menu.submenu) {
+                    this.getTemplateData(menu.submenu[0]);
+                } else {
+                    this.getTemplateData(menu)
+                }
+            } else {
+                this.menuData = [];
+            }
+        } else {
+            this.menuData = [];
+        }
+    }
+
+    setMenuData(menuData) {
         if (menuData && menuData.length > 0) {
             this.menuData = menuData;
-        }  
+        }
     }
 
 
@@ -288,7 +313,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             this.storageService.SetActiveMenu(submenu);
             if (submenu.label == "Navigation") {
                 this.router.navigate(['Navigation']);
-            }else if (submenu.label == "Compare") {
+            } else if (submenu.label == "Compare") {
                 this.router.navigate(['diff_html']);
             }
             else if (submenu.label == "Permissions") {
@@ -317,13 +342,13 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
     }
     goToChangePassword()                              //Added by Gaurav Tyagi
     {
-      // this.dataShareService.sendCurrentPage('createpwd');
-      // this.router.navigate([link])
-      this.router.navigate(['createpwd']);
+        // this.dataShareService.sendCurrentPage('createpwd');
+        // this.router.navigate([link])
+        this.router.navigate(['createpwd']);
     }
     navigateSigninPage() {
-       // this.logoPath = '../../assets/images/logo.png';
-        let loginType:any = Common.AUTH_TYPE;
+        // this.logoPath = '../../assets/images/logo.png';
+        let loginType: any = Common.AUTH_TYPE;
         if (loginType == 'ADMIN') {
             this.router.navigate(['admin'])
         } else {
@@ -423,7 +448,7 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         this.authService.Logout(payload);
     }
 
-    changeOurSolution(menu) {        
+    changeOurSolution(menu) {
         this.dataShareService.sendCurrentPage('HOME2')
         this.router.navigate([menu]);
     }
@@ -432,52 +457,52 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
         this.dataShareService.sendCurrentPage('HOME2')
         this.router.navigate([menu]);
     }
-    goToMOdule() {        
+    goToMOdule() {
         this.dataShareService.sendCurrentPage('MODULE')
         this.menuData = [];
         this.apiService.resetMenuData();
         this.router.navigate(['/home']);
     }
-    goToVdr(){
+    goToVdr() {
         this.router.navigate(['/vdr']);
-      }
+    }
 
     @HostListener('window:scroll', ['$event'])
 
-  onWindowScroll(e) {
-    let element = document.querySelector('.navbar');
-    if(element && element.clientHeight){
-        if (window.pageYOffset > element.clientHeight) {
-           // this.logoPath = '../../assets/img/2.png';
-            element.classList.add('navbar-inverse', 'shadow');
-        } else {
-           // this.logoPath = '../../assets/images/logo.png';
-            element.classList.remove('navbar-inverse', 'shadow');
+    onWindowScroll(e) {
+        let element = document.querySelector('.navbar');
+        if (element && element.clientHeight) {
+            if (window.pageYOffset > element.clientHeight) {
+                // this.logoPath = '../../assets/img/2.png';
+                element.classList.add('navbar-inverse', 'shadow');
+            } else {
+                // this.logoPath = '../../assets/images/logo.png';
+                element.classList.remove('navbar-inverse', 'shadow');
+            }
+
         }
 
     }
-    
-  }
 
-  selectClass(){
-      if(this.currentPage == 'HOME'){
-          return 'home fixed-top';
-      }
-      else if(this.currentPage == 'HOME2'){
-        let element = document.querySelector('.navbar');
-        element.classList.add('navbar-inverse', 'shadow');
-      //  this.logoPath = '../../assets/img/2.png';
-        return 'fixed-top'
-      }
-      else{
-          return ''
-      }
-  }
+    selectClass() {
+        if (this.currentPage == 'HOME') {
+            return 'home fixed-top';
+        }
+        else if (this.currentPage == 'HOME2') {
+            let element = document.querySelector('.navbar');
+            element.classList.add('navbar-inverse', 'shadow');
+            //  this.logoPath = '../../assets/img/2.png';
+            return 'fixed-top'
+        }
+        else {
+            return ''
+        }
+    }
 
     gotoStaticMenu(menu) {
         if (menu == 'home_page') {
             this.dataShareService.sendCurrentPage('HOME')
-          //  this.logoPath = '../../assets/images/logo.png';
+            //  this.logoPath = '../../assets/images/logo.png';
             let element = document.querySelector('.navbar');
             element.classList.remove('navbar-inverse', 'shadow');
         }
@@ -500,32 +525,32 @@ export class HeaderComponent implements OnInit, OnDestroy,AfterViewInit {
             return;
         }
     }
-    navigateDashboard(){       
+    navigateDashboard() {
         this.fullHeader = false;
         this.menuBoxHome = false;
         this.menuBoxDashboard = false;
         this.loginUserIcon = false;
-        this.showUserAccount = false;  
+        this.showUserAccount = false;
         const menuType = this.storageService.GetMenuType()
-        if(menuType == 'Horizontal'){
+        if (menuType == 'Horizontal') {
             this.router.navigate(['/home']);
-        }else{
+        } else {
             this.router.navigate(['/dashboard']);
-        }      
-        if(this.storageService.GetIdTokenStatus() ==StorageTokenStatus.ID_TOKEN_ACTIVE){
+        }
+        if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
             const idToken = this.storageService.GetIdToken();
             this.authService.GetUserInfoFromToken(idToken);
-        }else{        
+        } else {
             const payload = {
-            appName: this.envService.getAppName(),
-            data:{
-                accessToken:this.storageService.GetAccessToken()
-            }
+                appName: this.envService.getAppName(),
+                data: {
+                    accessToken: this.storageService.GetAccessToken()
+                }
             }
             this.authService.SessionExpired(payload);
         }
     }
     gitInfo() {
-        this.modelService.open('git_version',{})
-    }  
+        this.modelService.open('git_version', {})
+    }
 }

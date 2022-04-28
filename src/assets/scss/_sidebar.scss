@@ -1,6 +1,7 @@
 .page-content {padding:$calc2;}
 .main-content {margin-left:260px;overflow:$hide;transition:all 0.5s;}
-#page-topbar{position:fixed;top:0;right:0;left:0;z-index:999;background:#fff;box-shadow:0 2px 4px rgb(0 0 0 / 8%);
+#page-topbar{position:fixed;top:0;right:0;left:0;z-index:999;background:var(--headerbg);box-shadow:0 2px 4px rgb(0 0 0 / 8%);
+    header .navbar {box-shadow:none !important;}
     .navbar-header{display:$dflex;justify-content:space-between;align-items:$center;margin:$zero $auto;padding:$zero $calc1 $zero $zero}
     .navbar-brand-box{padding:$zero $rem105;width:260px;transition:$transition2;background:$sidenav}
     .logo{line-height:$size60;max-width:110px;display:block;}
@@ -21,7 +22,7 @@
     }
 }
 
-.sidenav {padding:20px 0;width:260px;z-index:9;background:$sidenav;bottom:0;margin-top:0;position:$fixed;top:$size60;box-shadow:0 2px 4px rgb(0 0 0 / 8%);transition:all .5s;
+.sidenav {padding:20px 0;width:260px;z-index:9;bottom:0;margin-top:0;position:$fixed;top:$size60;box-shadow:0 2px 4px rgb(0 0 0 / 8%);transition:all .5s;
     input {padding:$size8 $size15;font-size:$size15;border-radius:$size25;width:$per100;}
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
     ul {
