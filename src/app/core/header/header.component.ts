@@ -57,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     activeclass = false;
     AllModuleList: any = [];
+    public teamname: any;
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -100,6 +101,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
+        this.teamname = this.storageService.getTeamName();
         this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe(data => {
             if (data && data['git.build.version']) {
                 this.gitVersion = data['git.build.version'];
@@ -226,6 +228,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.userInfo = this.storageService.GetUserInfo();
                 this.userName = this.userInfo.name;
                 this.userEmail = this.userInfo.email;
+                this.teamname = this.userInfo.list1;
                 if (this.userName && this.userName != null) {
                     this.userFirstLetter = this.userName.charAt(0).toUpperCase()
                 } else {
