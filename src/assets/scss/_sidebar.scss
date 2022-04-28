@@ -43,7 +43,7 @@
                 a:hover {color:$navtxtcolor;}
                 .submenu2 {padding-left:15px;}
                 li {padding:6px 0;
-                    .menu1 {color:$navtxtcolor;font-size:14px;padding:0px 10px;white-space:nowrap;}
+                    .menu1 {font-size:14px;padding:0px 10px;white-space:nowrap;}
                     .menu2 {opacity:0.8;font-size:13px;}
                 }
             }
@@ -91,6 +91,7 @@
     }
 }
 
+.togglemenu .mat-icon{color:var(--headericon)}
 
 
 @media only screen and (max-width: 991px) {

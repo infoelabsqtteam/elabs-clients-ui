@@ -1,7 +1,7 @@
 <div id="layout-wrapper">
     <!-- <app-topbar (mobileMenuButtonClicked)="onToggleMobileMenu()" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-topbar> -->
   <div class="d-flex align-items-center verticleheader" id="page-topbar">
-    <button mat-icon-button (click)="onToggleMobileMenu()" class="mx-2"><mat-icon style="font-size:14px;">sort</mat-icon></button>
+    <button mat-icon-button (click)="onToggleMobileMenu()" class="mx-2 togglemenu"><mat-icon style="font-size:14px;">sort</mat-icon></button>
     <app-header class="w-100" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-header>
   </div>
   <app-sidebar (moduleSelect)="changeModul($event)" ></app-sidebar>
