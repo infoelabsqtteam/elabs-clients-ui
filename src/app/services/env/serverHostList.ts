@@ -1,6 +1,6 @@
 export const serverHostList = [
   {
-    "clientEndpoint": "localhost", "serverEndpoint": "https://sitserverascgroup.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "localhost", "serverEndpoint": "https://serverqualiteklab.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -17,7 +17,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "sit.e-labs.ai", "serverEndpoint": "https://sitserverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit.e-labs.ai", "serverEndpoint": "https://sitserverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -34,7 +34,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://devserverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://devserverelabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -119,7 +119,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "testlims.inventlands.com", "serverEndpoint": "https://testinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type": "Horizontal", "folder": "inventlands", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "testlims.inventlands.com", "serverEndpoint": "https://testinventlandserver.e-labs.ai", "title": "Inventlands", "google_map": "false", "menu_type": "Vertical", "folder": "inventlands", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
@@ -136,7 +136,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "sit-sanskar.e-labs.ai", "serverEndpoint": "https://sitsanskarserver.e-labs.ai", "title": "Sanskar", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-sanskar.e-labs.ai", "serverEndpoint": "https://sitsanskarserver.e-labs.ai", "title": "Sanskar", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
@@ -170,7 +170,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "itllabs.e-labs.ai", "serverEndpoint": "https://serveritllabs.e-labs.ai", "title": "Itllabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "itllabs.e-labs.ai", "serverEndpoint": "https://serveritllabs.e-labs.ai", "title": "Itllabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
@@ -204,7 +204,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "Demolab", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "Demolab", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
@@ -221,7 +221,7 @@ export const serverHostList = [
     }
   },
     {
-    "clientEndpoint": "lite-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "LiteDemoLab", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "lite-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "LiteDemoLab", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
@@ -238,7 +238,7 @@ export const serverHostList = [
     }
   },
     {
-    "clientEndpoint": "standard-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "StandardDemoLab", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "standard-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai", "title": "StandardDemoLab", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "",
       "header_txt_color": "",
@@ -289,7 +289,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Vertical", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#665852",
       "header_txt_color": "#ffffff",
@@ -306,7 +306,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "dev-itclabs.e-labs.ai", "serverEndpoint": "https://devserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "dev-itclabs.e-labs.ai", "serverEndpoint": "https://devserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Vertical", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#665852",
       "header_txt_color": "#ffffff",
@@ -323,7 +323,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Horizontal", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Vertical", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#665852",
       "header_txt_color": "#ffffff",
@@ -376,7 +376,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "uat-qualiteklab.e-labs.ai", "serverEndpoint": "https://uatserverqualiteklab.e-labs.ai", "title": "Qualitek Labs", "google_map": "false", "menu_type": "Horizontal", "folder": "qualitek", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "uat-qualiteklab.e-labs.ai", "serverEndpoint": "https://uatserverqualiteklab.e-labs.ai", "title": "Qualitek Labs", "google_map": "false", "menu_type": "Vertical", "folder": "qualitek", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -427,7 +427,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "sit-hitech.e-labs.ai", "serverEndpoint": "https://sithitechserver.e-labs.ai", "title": "Hitech Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "hitech", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-hitech.e-labs.ai", "serverEndpoint": "https://sithitechserver.e-labs.ai", "title": "Hitech Sit", "google_map": "false", "menu_type": "Vertical", "folder": "hitech", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -463,7 +463,7 @@ export const serverHostList = [
   },
 
   {
-    "clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai", "title": "Bioscience Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai", "title": "Bioscience Sit", "google_map": "false", "menu_type": "Vertical", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
