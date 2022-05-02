@@ -12,13 +12,17 @@ import { EnvService } from 'src/app/services/env/env.service';
 export class McoreComponent implements OnInit {
   // layout related config
   layoutType: string;
+  isShow:boolean = true;
 
   constructor(
     private storageService:StorageService,
     private dataShareService:DataShareService,
     private envService:EnvService
     ) {
-    this.dataShareService.sendCurrentPage('DASHBOARD')
+    this.dataShareService.sendCurrentPage('DASHBOARD');
+    this.dataShareService.chartModelShowHide.subscribe(data =>{
+      this.isShow = data;
+    });
    }
 
   ngOnInit() {

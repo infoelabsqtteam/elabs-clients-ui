@@ -54,7 +54,7 @@ const models = [
   LandingFunctionsModalComponent,
   ShortcutinfoComponent,
   GitVersionComponent,
-  ChartFilterComponent
+  ChartFilterComponent,
 ]
 
 @NgModule({

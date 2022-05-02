@@ -6,8 +6,7 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
-
-
+import * as XLSX from 'xlsx';
 import * as _moment from 'moment';
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
@@ -32,12 +31,12 @@ export const MY_DATE_FORMATS = {
   ]
 })
 export class ChartFilterComponent implements OnInit {
-  @Input() isShow: string;
-  @Output() chartQueryResponce = new EventEmitter();
+  
+  
   @Input() id: string;
-  @ViewChild('basicModal') public basicModal: ModalDirective;
-  @Input() dashboardItem;
-  @Input() dashletData;
+  @ViewChild('chartFilterModal') public chartFilterModal: ModalDirective;  
+  dashboardItem :any = {};
+  dashletData:any = {};
 
   dashboardFilter:FormGroup;
 
@@ -49,28 +48,23 @@ export class ChartFilterComponent implements OnInit {
   public chartLegend:any = {};
   public chartTitle:any = {};
 
-
-
   checkGetDashletData:boolean=true;
-  copyDashletData:any={};
-  pageNumber:any=1;
-  itemNumOfGrid: any = 100;
-  elements:any=[];
   staticData: any = {};
   copyStaticData:any={};
   typeAheadData:any=[];
+  showFilter:boolean=false;
 
-  gridDataSubscription;
   staticDataSubscription;
   dashletDataSubscription;
   typeaheadDataSubscription;
+  
 
-  filterValue:any = [];
-  filteredDashboardData:any = [];
   minDate: Date;
   maxDate: Date;
 
-
+  filename = "ExcelSheet.xlsx";
+  tableData;
+  tableHead;
 
   constructor(
     private modalService: ModelService,
@@ -81,9 +75,6 @@ export class ChartFilterComponent implements OnInit {
     private envService:EnvService,
     private modelService: ModelService,
   ) {
-    this.gridDataSubscription = this.dataShareService.dashletMaster.subscribe(data =>{
-      this.setGridData(data);
-    })
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
@@ -93,36 +84,18 @@ export class ChartFilterComponent implements OnInit {
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
       this.setTypeaheadData(data);
     })
-    this.getPage(1)   
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
     this.maxDate = new Date(currentYear + 1, 11, 31); 
   }
 
 
-  filterchart() {
-    this.filteredDashboardData = [];
-    if(this.filterValue && this.filterValue.length > 0) {
-      this.filterValue.forEach(element => {
-        const index = this.commonFunctionService.getIndexInArrayById(this.elements, element);
-        this.filteredDashboardData.push(this.elements[index]);
-      });
-    } else {
-      this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
-    }
-    
-  }
+  
   ngOnChanges(changes: SimpleChanges) {
-    if(this.isShow){
-      this.getPage(1)
-      this.checkGetDashletData = true;
-    }
+    
   }
   ngOnDestroy(){
     this.checkGetDashletData = false;
-    if(this.gridDataSubscription){
-      this.gridDataSubscription.unsubscribe();
-    }
     if(this.staticDataSubscription){
       this.staticDataSubscription.unsubscribe();
     }
@@ -147,18 +120,23 @@ export class ChartFilterComponent implements OnInit {
 
   setDashLetData(dashletData:any){
     if (dashletData) {
-      this.dashletData = dashletData;
-      Object.keys(this.dashletData).forEach(key => {                    
-        this.chartDatasets[key] = JSON.parse(JSON.stringify(this.dashletData[key]['dataSets']));  
-        this.chartLabels[key] = JSON.parse(JSON.stringify(this.dashletData[key]['label']));
-        this.chartType[key]=JSON.parse(JSON.stringify(this.dashletData[key]['type']));
-        this.chartColors[key]=JSON.parse(JSON.stringify(this.dashletData[key]['colors']));
-        this.chartLegend[key]=JSON.parse(JSON.stringify(this.dashletData[key]['legend']));
-        this.chartOptions[key]=JSON.parse(JSON.stringify(this.dashletData[key]['options']));
-        if(this.dashletData[key]['title']){
-          this.chartTitle[key]=JSON.parse(JSON.stringify(this.dashletData[key]['title']));
-        }        
-      })
+      let dashletValue = {};
+      if(this.dashboardItem && this.dashboardItem.call_back_field && dashletData[this.dashboardItem.call_back_field]){
+        dashletValue[this.dashboardItem.call_back_field] = dashletData[this.dashboardItem.call_back_field];
+        Object.keys(dashletValue).forEach(key => { 
+          this.chartDatasets[key] = JSON.parse(JSON.stringify(dashletValue[key]['dataSets']));  
+          this.chartLabels[key] = JSON.parse(JSON.stringify(dashletValue[key]['label']));
+          this.chartType[key]=JSON.parse(JSON.stringify(dashletValue[key]['type']));
+          this.chartColors[key]=JSON.parse(JSON.stringify(dashletValue[key]['colors']));
+          this.chartLegend[key]=JSON.parse(JSON.stringify(dashletValue[key]['legend']));
+          this.chartOptions[key]=JSON.parse(JSON.stringify(dashletValue[key]['options']));
+          this.tableData = this.chartDatasets[key]; 
+          this.tableHead = this.chartLabels[key];
+          if(dashletValue[key]['title']){
+            this.chartTitle[key]=JSON.parse(JSON.stringify(dashletValue[key]['title']));
+          }        
+        })
+      }
     }
   }
 
@@ -178,7 +156,11 @@ export class ChartFilterComponent implements OnInit {
 
   getDashletData(elements){
     if(elements && elements.length > 0){
-      let value = this.dashboardFilter.getRawValue();
+      let payloads = [];
+      let value = {};
+      if(this.showFilter){
+        value = this.dashboardFilter.getRawValue();
+      }
       elements.forEach(element => {
         const fields = element.fields;        
         const filterData = this.getSingleCardFilterValue(element,value);
@@ -187,9 +169,9 @@ export class ChartFilterComponent implements OnInit {
           crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
         }        
         let object = {}
-        if(filterData){
-          object = filterData;
-        }
+        // if(filterData){
+        //   object = filterData;
+        // }
         const data = {
           "data": object,
           "crList":crList
@@ -198,8 +180,13 @@ export class ChartFilterComponent implements OnInit {
           "_id" : element._id,
           "data" : data
         }
-        this.apiService.GetDashletData(payload);
+        payloads.push(payload);
       });
+      if(payloads && payloads.length > 0 && payloads.length == elements.length){
+        const key = elements[0].call_back_field;
+        this.dataShareService.resetDashletDataByKey(key);
+        this.apiService.GetDashletData(payloads);
+      }
     }
   }
   getSingleCardFilterValue(field,object){
@@ -209,13 +196,13 @@ export class ChartFilterComponent implements OnInit {
     }
     return value;
   }
-  getOptionText(option) {
-    if (option && option.name) {
-      return option.name;
-    }else{
-      return option;
-    }
-  }
+  // getOptionText(option) {
+  //   if (option && option.name) {
+  //     return option.name;
+  //   }else{
+  //     return option;
+  //   }
+  // }
   updateData(event, parentfield, field) {
     if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
       return false;
@@ -239,80 +226,59 @@ export class ChartFilterComponent implements OnInit {
 
 
   dashletFilter(item){
-    const element = [];
-    const ele = JSON.parse(JSON.stringify(item));
-    let value = this.dashboardFilter.getRawValue();
-    const filterData = value[ele.name];
-    ele[ele.name] = filterData;
-    element.push(ele);
-    this.getDashletData(element);
+    this.getDashletData([item]);
   }
 
-  setGridData(gridData){
-    if (gridData.data && gridData.data.length > 0) {
-      this.elements = JSON.parse(JSON.stringify(gridData.data));
-      this.filteredDashboardData = JSON.parse(JSON.stringify(this.elements));
-      if(this.checkGetDashletData && this.elements.length > 0){
-        this.checkGetDashletData = false;
-        let forControl = {};
-        let formField = [];
-        if(this.elements.length > 0){
-          this.elements.forEach(dashlet => {
-            if(dashlet.fields && dashlet.fields.length > 0){
-              const groupField = {
-                "field_name":dashlet.name
+  setFilterForm(dashlet){    
+    if(this.checkGetDashletData && dashlet._id && dashlet._id != ''){
+      this.checkGetDashletData = false;
+      let forControl = {};
+      let formField = [];      
+      if(dashlet.fields && dashlet.fields.length > 0){
+        const groupField = {
+          "field_name":dashlet.name
+        }
+        const list_of_fields = {};
+        dashlet.fields.forEach(field => {                    
+          formField.push(field);
+          switch(field.type){ 
+            case "date":
+              field['minDate'] = this.minDate
+              field['maxDate'] = this.maxDate;
+              this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
+                break; 
+            case "daterange":
+              const date_range = {};
+              let list_of_dates = [
+                {field_name : 'start'},
+                {field_name : 'end'}
+              ]
+              if (list_of_dates.length > 0) {
+                list_of_dates.forEach((data) => {
+                  
+                  this.commonFunctionService.createFormControl(date_range, data, '', "text")
+                });
               }
-              const list_of_fields = {};
-              dashlet.fields.forEach(field => {                    
-                formField.push(field);
-                switch(field.type){ 
-                  case "date":
-                    field['minDate'] = this.minDate
-                    field['maxDate'] = this.maxDate;
-                    this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
-                      break; 
-                  case "daterange":
-                    const date_range = {};
-                    let list_of_dates = [
-                      {field_name : 'start'},
-                      {field_name : 'end'}
-                    ]
-                    if (list_of_dates.length > 0) {
-                      list_of_dates.forEach((data) => {
-                        
-                        this.commonFunctionService.createFormControl(date_range, data, '', "text")
-                      });
-                    }
-                    this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
-                    break; 
-                                            
-                  default:
-                    this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
-                    break;
-                }   
-              });
-              this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
-            }                 
-            
-          });
-          if(formField.length > 0){
-            let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
-            if(staticModalGroup.length > 0){      
-              // this.store.dispatch(
-              //   new CusTemGenAction.GetStaticData(staticModalGroup)
-              // )
-              this.apiService.getStatiData(staticModalGroup);
-            }
-          }
-          if (forControl) {
-            this.dashboardFilter = this.formBuilder.group(forControl);              
-          }
-          this.getDashletData(this.elements);
-        }            
-      }          
-    } else {
-      this.elements = [];
-    }
+              this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
+              break; 
+                                      
+            default:
+              this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
+              break;
+          }   
+        });
+        this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
+      } 
+      if(formField.length > 0){
+        let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
+        if(staticModalGroup.length > 0){  
+          this.apiService.getStatiData(staticModalGroup);
+        }
+      }
+      if (forControl) {
+        this.dashboardFilter = this.formBuilder.group(forControl);              
+      }
+    } 
   }
   setStaticData(staticData){
     if (staticData) {
@@ -330,40 +296,60 @@ export class ChartFilterComponent implements OnInit {
       this.typeAheadData = [];
     }
   }
-  getDataForGrid(){    
-    const data = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','',[],'');
-    data['pageNo'] = this.pageNumber - 1;
-    data['pageSize'] = this.itemNumOfGrid; 
-    const getFilterData = {
-      data: data,
-      path: null
-    }
-    //this.store.dispatch(new CusTemGenAction.GetGridData(getFilterData))
-    this.apiService.getDashletMster(getFilterData)
-  }
-  getPage(page: number) {
-    this.pageNumber = page;
-    this.getDataForGrid();
-  }
 
 
-  showModal(object){ 
-    this.basicModal.show();
+  showModal(object){
+    if(object.dashboardItem){
+      this.dashboardItem = object.dashboardItem;
+      this.dashletData = object.dashletData;
+      this.checkGetDashletData = true;   
+      if(object.filter){
+        this.showFilter = true;
+        this.setFilterForm(this.dashboardItem);
+      }else{
+        this.showFilter = false;
+      }      
+      this.setDashLetData(this.dashletData);
+      this.chartFilterModal.show();
+      this.dashboardFilter.reset();
+    }    
+    
   }
   close(item){
-    this.basicModal.hide();
+    this.checkGetDashletData = false;
     this.reset(item);
+    this.chartFilterModal.hide();
   }
 
   reset(item){
-    this.dashboardFilter.reset();
-    const element = [];
-    const ele = JSON.parse(JSON.stringify(item));
-    let value = this.dashboardFilter.getRawValue();
-    const filterData = value[ele.name];
-    ele[ele.name] = filterData;
-    element.push(ele);
-    this.getDashletData(element);
+    if(this.showFilter){
+      this.dashboardFilter.reset();
+      this.getDashletData([item]);
+    }    
   }
+
+  exportexcel():void {
+    let list = [];
+    for (let index = 0; index < this.tableData.length; index++) {
+      let row = this.tableData[index];
+      const element = {};
+      for (let j = 0; j < row.length; j++) {
+        let col = this.tableHead[j];
+        element[col] = row[j];
+      }
+      list.push(element);
+    }
+    const ws:XLSX.WorkSheet = XLSX.utils.json_to_sheet(list);
+    const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
+    XLSX.writeFile(wb,this.filename);
+  }
+
+  chartjsimg: any;
+  canvasimg() {
+    var canvas = document.getElementById('chartjs') as HTMLCanvasElement;
+    this.chartjsimg = canvas.toDataURL('image/png');
+  }
+
 
 }

@@ -54,6 +54,7 @@ export class DataShareService {
   
   getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
   getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
+  chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -136,6 +137,10 @@ export class DataShareService {
   resetDashletData(){
     this.DashLetData = {};
   }
+  resetDashletDataByKey(keyName){
+    delete this.DashLetData[keyName];
+    this.dashletData.emit(this.DashLetData);
+  }
   setAppName(response){
     this.appName.emit(response);
   }
@@ -216,5 +221,8 @@ export class DataShareService {
   }
   setIsGridSelectionOpenOrNot(check:boolean){
     this.getIsGridSelectionOpen.emit(check);
+  }
+  setChartModelShowHide(value){
+    this.chartModelShowHide.emit(value);
   }
 }

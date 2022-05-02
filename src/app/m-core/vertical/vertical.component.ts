@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
 
 @Component({
   selector: 'app-vertical',
@@ -12,7 +13,7 @@ export class VerticalComponent implements OnInit {
   navigationSubscription;
   
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private dataShareService:DataShareService,) {
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
       // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
@@ -59,6 +60,9 @@ export class VerticalComponent implements OnInit {
   }
   changeModul(moduleIndex){
     this.moduleIndex = moduleIndex;
+    if(this.moduleIndex != -1) {
+      this.dataShareService.sendCurrentPage('DASHBOARD')
+    }
   }
   goToHome(){
     this.moduleIndex = -1;

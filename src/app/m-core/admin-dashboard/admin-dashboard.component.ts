@@ -1,10 +1,11 @@
 import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { latLng, tileLayer } from 'leaflet';
+//import { latLng, tileLayer } from 'leaflet';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-import { MapsAPILoader } from '@agm/core';
+//import { MapsAPILoader } from '@agm/core';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -36,32 +37,37 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
 
   // Form submit
   chatSubmit: boolean;
+  isShow:boolean = false;
 
   formData: FormGroup;
 
 
-  options = {
-    layers: [
-      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
-    ],
-    zoom: 6,
-    center: latLng(46.879966, -121.726909),
+  // options = {
+  //   layers: [
+  //     tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
+  //   ],
+  //   zoom: 6,
+  //   center: latLng(46.879966, -121.726909),
     
-  };
+  // };
   
   constructor(
     public formBuilder: FormBuilder,
     private commonFunctionService:CommonFunctionService,
-    private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
+    //private mapsAPILoader: MapsAPILoader,
+    //private ngZone: NgZone,
+    private dataShareService:DataShareService
   ) {
+    this.isShow = true;
 
     }
 
   ngOnDestroy(){
+    this.dataShareService.setChartModelShowHide(true);
   }
 
   ngOnInit(): void {
+    this.dataShareService.setChartModelShowHide(false);
     this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
     this.formData = this.formBuilder.group({
       message: ['', [Validators.required]],

@@ -1627,7 +1627,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(parentfield != ''){
             const custmizedKey = this.custmizedKey(parentfield);   
             const value = formValue[parentfield.field_name][field.field_name]
-            if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
+            if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
               if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
@@ -1647,7 +1647,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             
           }else{
             const value = formValue[field.field_name];
-            if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
+            if(this.custmizedFormValue[field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
@@ -1685,7 +1685,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             if(parentfield != ''){
               const value = formValue[parentfield.field_name][field.field_name]
               const custmizedKey = this.custmizedKey(parentfield);
-              if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
+              if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
                 this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
               }else{
                 if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
@@ -1703,7 +1703,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               
             }else{
               const value = formValue[field.field_name];
-                if(this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
+                if(this.custmizedFormValue[field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
                   this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
                 }else{
                   if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
@@ -1892,9 +1892,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
           if(element.primary_key_for_list){
             let primary_key_field_name = element.field_name;
-            let primary_key_field_value = formValue[field.field_name][element.field_name];
-            let list = this.custmizedFormValue[field.field_name];
-            let alreadyAdded = this.checkDataAlreadyAddedInListOrNot(primary_key_field_name,primary_key_field_value,list);
+            let primary_key_field_value = formValue[field.field_name][element.field_name];            
+            let alreadyAdded = false;
+            if(this.custmizedFormValue[field.field_name]){
+              let list = this.custmizedFormValue[field.field_name];
+              alreadyAdded = this.checkDataAlreadyAddedInListOrNot(primary_key_field_name,primary_key_field_value,list);
+            }
             if(alreadyAdded){
               this.notificationService.notify('bg-danger','Entered value for '+element.label+' is already added. !!!');
               return;
