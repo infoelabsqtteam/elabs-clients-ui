@@ -58,6 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     activeclass = false;
     AllModuleList: any = [];
     public teamname: any;
+    teamNameMenu = '';
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -101,12 +102,26 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
-        this.teamname = this.storageService.getTeamName();
+        this.teamNameMenu = this.storageService.getTeamName();
         this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe(data => {
             if (data && data['git.build.version']) {
                 this.gitVersion = data['git.build.version'];
             }
-        })
+        });
+
+        if (this.storageService.GetUserInfo()) {
+            this.userInfo = this.storageService.GetUserInfo();
+            this.userName = this.userInfo.name;
+            this.userEmail = this.userInfo.email;
+            this.teamname = this.userInfo.list1
+            if (this.userName && this.userName != null) {
+                this.userFirstLetter = this.userName.charAt(0).toUpperCase()
+            } else {
+                if (this.userInfo.email && this.userInfo.email != null) {
+                    this.userFirstLetter = this.userInfo.email.toUpperCase()
+                }
+            }
+        }
 
         this.subscription = this.dataShareService.currentPage.subscribe(
             (data: any) => {
@@ -223,22 +238,22 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 break;
 
         }
-        if (this.loginUserIcon) {
-            if (this.storageService.GetUserInfo()) {
-                this.userInfo = this.storageService.GetUserInfo();
-                this.userName = this.userInfo.name;
-                this.userEmail = this.userInfo.email;
-                this.teamname = this.userInfo.list1;
-                if (this.userName && this.userName != null) {
-                    this.userFirstLetter = this.userName.charAt(0).toUpperCase()
-                } else {
-                    if (this.userInfo.email && this.userInfo.email != null) {
-                        this.userFirstLetter = this.userInfo.email.toUpperCase()
-                    }
-                }
-                this.getUserColorCode(this.userFirstLetter);
-            }
-        }
+        // if (this.loginUserIcon) {
+        //     if (this.storageService.GetUserInfo()) {
+        //         this.userInfo = this.storageService.GetUserInfo();
+        //         this.userName = this.userInfo.name;
+        //         this.userEmail = this.userInfo.email;
+        //         this.teamname = this.userInfo.list1;
+        //         if (this.userName && this.userName != null) {
+        //             this.userFirstLetter = this.userName.charAt(0).toUpperCase()
+        //         } else {
+        //             if (this.userInfo.email && this.userInfo.email != null) {
+        //                 this.userFirstLetter = this.userInfo.email.toUpperCase()
+        //             }
+        //         }
+        //         this.getUserColorCode(this.userFirstLetter);
+        //     }
+        // }
         if (this.storageService != null && this.storageService.GetIdToken() != null) {
             const idToken = this.storageService.GetIdToken();
             if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
@@ -464,7 +479,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.dataShareService.sendCurrentPage('MODULE')
         this.menuData = [];
         this.apiService.resetMenuData();
-        this.router.navigate(['/home']);
+        const menuType = this.storageService.GetMenuType()
+        if (menuType == 'Horizontal') {
+            this.router.navigate(['/home']);
+        } else {
+            this.router.navigate(['/dashboard']);
+        }
     }
     goToVdr() {
         this.router.navigate(['/vdr']);
