@@ -53,6 +53,7 @@ export class DataShareService {
   nextFormData:EventEmitter<any> = new EventEmitter<any>();
   
   getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
+  getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -212,5 +213,8 @@ export class DataShareService {
   }
   setReportLoadGridData(responce){
     this.getReportLoadData.emit(responce);
+  }
+  setIsGridSelectionOpenOrNot(check:boolean){
+    this.getIsGridSelectionOpen.emit(check);
   }
 }

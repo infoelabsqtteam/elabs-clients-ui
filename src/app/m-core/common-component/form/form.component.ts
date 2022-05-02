@@ -267,9 +267,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   navigationSubscription;
   fileDataSubscription;
   fileDownloadUrlSubscription;
+  gridSelectionOpenOrNotSubscription
   dinamicFieldApiSubscription;
   validationConditionSubscription;
   nextFormSubscription;
+  isGridSelectionOpen: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -376,6 +378,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.fileDownloadUrlSubscription = this.dataShareService.fileDownloadUrl.subscribe(data =>{
       this.setFileDownloadUrl(data);
+    })
+    this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
+        this.isGridSelectionOpen= data;
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
@@ -529,6 +534,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     if(this.fileDownloadUrlSubscription){
       this.fileDownloadUrlSubscription.unsubscribe();
+    } 
+    if(this.gridSelectionOpenOrNotSubscription){
+      this.gridSelectionOpenOrNotSubscription.unsubscribe();
     } 
     if(this.dinamicFieldApiSubscription){
       this.dinamicFieldApiSubscription.unsubscribe();
@@ -2010,6 +2018,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       case 'grid_selection':
       case 'grid_selection_vertical':
+        //----------------------this is for confirm modal to add or remove (form component confirm modal) when grid selection field is open.
+        this.dataShareService.setIsGridSelectionOpenOrNot(false);
+        // -------------------------------
         this.curTreeViewField = field;
         this.currentTreeViewFieldParent = parentfield;
         if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
@@ -3339,7 +3350,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       }
 
     }
-    if(this.curTreeViewField && this.curTreeViewField.onchange_function_param != ''){
+    if(this.curTreeViewField && this.curTreeViewField.onchange_function_param != '' && this.curTreeViewField.onchange_function_param != null){
       if(this.curTreeViewField.onchange_function_param.indexOf('QTMP') >= 0){
         const staticModalGroup = []
         staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
@@ -4624,7 +4635,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.previousFormFocusField = formCollecition['current_field']; 
     this.updateMode = formCollecition['updateMode'];
     this.focusFieldParent = formCollecition['parent_field'];
-    if(this.updateMode){
+    if(this.updateMode || this.complete_object_payload_mode){
       this.selectedRow = data;
     }
     if(this.previousFormFocusField && this.previousFormFocusField['add_next_form_button']){
@@ -4673,8 +4684,11 @@ case 'populate_fields_for_report_for_new_order_flow':
     let data = nextFormData['next_form_data']
     if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['current_field']['type'] == 'list_of_fields' && nextFormData['index'] == undefined){
       const fieldName = nextFormData['current_field']['field_name'];
-      this.custmizedFormValue[fieldName] = data;
-      data = {};
+      if(isArray(data)){
+        this.custmizedFormValue[fieldName] = data;
+        data = {};
+      }
+      
     }
     if(this.editedRowIndex >= 0){
       this.getStaticDataWithDependentData();
