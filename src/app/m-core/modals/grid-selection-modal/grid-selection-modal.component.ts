@@ -7,7 +7,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { ApiService } from '../../../services/api/api.service';
-import { I } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 
@@ -34,6 +34,8 @@ export class GridSelectionModalComponent implements OnInit {
   parentObject={};
   responseData:any;
   copyStaticData:[] = [];
+  separatorKeysCodes: number[] = [ENTER, COMMA,SPACE];
+  selectable = true;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
