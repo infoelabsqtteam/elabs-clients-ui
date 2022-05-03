@@ -2947,7 +2947,11 @@ case 'populate_fields_for_report_for_new_order_flow':
 
             const payload = this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params, element.onchange_call_back_field, element.onchange_api_params_criteria, this.selectedRow)
             if(element.onchange_api_params.indexOf('QTMP') >= 0){
-              payload['data'] = this.selectedRow
+              if(element && element.formValueAsObjectForQtmp){
+                payload["data"]=this.getFormValue(false);
+              }else{
+                payload["data"]=this.getFormValue(true);
+              }
             } 
             staticModal.push(payload);
           }
@@ -2964,7 +2968,11 @@ case 'populate_fields_for_report_for_new_order_flow':
             
                         const payload = this.commonFunctionService.getPaylodWithCriteria(data.onchange_api_params, data.onchange_call_back_field, data.onchange_api_params_criteria, this.selectedRow)
                         if(data.onchange_api_params.indexOf('QTMP') >= 0){
-                          payload['data'] = this.selectedRow
+                          if(element && element.formValueAsObjectForQtmp){
+                            payload["data"]=this.getFormValue(false);
+                          }else{
+                            payload["data"]=this.getFormValue(true);
+                          }
                         } 
                         staticModal.push(payload);
                       }
@@ -4496,6 +4504,9 @@ case 'populate_fields_for_report_for_new_order_flow':
   
   storeFormDetails(parent_field:any,field:any,index?){
     let targetFieldName ={}
+    targetFieldName['form'] = {}
+    targetFieldName['custom'] = [];
+
     let updateMode =  this.updateMode;
     let formData = this.getFormValue(true);
     if(field && field.form_field_name){
@@ -4508,14 +4519,17 @@ case 'populate_fields_for_report_for_new_order_flow':
       updateMode = true;
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
-      targetFieldName[field.add_new_target_field] = this.lastTypeaheadTypeValue
+      targetFieldName['form'][field.add_new_target_field] = this.lastTypeaheadTypeValue
     }else if(field && field.type == "list_of_fields"){
       let currentFiedldData = formData[field.field_name];
-      if(index != undefined && index >= 0){        
-        targetFieldName = currentFiedldData[index];
-      }else {
-        targetFieldName = currentFiedldData;
+      if(currentFiedldData && isArray(currentFiedldData)){
+          if(index != undefined && index >= 0){        
+            targetFieldName['custom'] = currentFiedldData[index];
+          }else {
+            targetFieldName['custom'] = currentFiedldData;
+          }
       }
+     
         
       // const listOfFields = field.list_of_fields;
       // let element:any = {}
@@ -4525,7 +4539,17 @@ case 'populate_fields_for_report_for_new_order_flow':
       // if(element && element.field_name){
       //   targetFieldName[element.field_name] = "";
       // }      
-    }    
+    } 
+    if(this.coreFunctionService.isNotBlank(field.moveFieldsToNewForm)){
+      if(field.moveFieldsToNewForm && field.moveFieldsToNewForm.length > 0){
+        field.moveFieldsToNewForm.forEach(keyValue => {
+          const sourceTarget = keyValue.split("#");
+          let key = sourceTarget[0];
+          let value = this.commonFunctionService.getObjectValue(sourceTarget[1],this.getFormValue(false));
+          targetFieldName['form'][key] = value;
+        });
+      }
+    }   
     let form = {
       "collection_name":this.currentMenu.name,
       "data":formData,
@@ -4634,6 +4658,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     const data = formCollecition['data'];
     //console.log(data);
     this.updateDataOnFormField(data);
+    this.getStaticDataWithDependentData();
     this.currentMenu['name'] = formCollecition['collection_name'];
     this.previousFormFocusField = formCollecition['current_field']; 
     this.updateMode = formCollecition['updateMode'];
@@ -4646,7 +4671,10 @@ case 'populate_fields_for_report_for_new_order_flow':
     }else{
       this.enableNextButton = false;
     }
-    const nextFormData = formCollecition['next_form_data']; 
+    let nextFormData ={};
+    if(formCollecition && formCollecition['next_form_data'] && formCollecition['next_form_data']['form']){
+      nextFormData = formCollecition['next_form_data']['form']; 
+    }
     let previousFormFocusFieldValue = '';
     if(this.coreFunctionService.isNotBlank(this.previousFormFocusField.add_new_target_field)){
       previousFormFocusFieldValue = nextFormData[this.previousFormFocusField.add_new_target_field];
@@ -4684,21 +4712,28 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(this.updateAddNew){
       this.getNextFormData(nextFormData);
     }
-    let data = nextFormData['next_form_data']
+    let cdata = {};
+    let fData = {};
+    if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['custom']){
+       cdata = nextFormData['next_form_data']['custom'];
+    }
+    if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['form']){
+       fData = nextFormData['next_form_data']['form'];
+   }   
+    
     if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['current_field']['type'] == 'list_of_fields' && nextFormData['index'] == undefined){
       const fieldName = nextFormData['current_field']['field_name'];
-      if(isArray(data)){
-        this.custmizedFormValue[fieldName] = data;
-        data = {};
+      if(isArray(cdata)){
+        this.custmizedFormValue[fieldName] = cdata;
       }
       
     }
     if(this.editedRowIndex >= 0){
       this.getStaticDataWithDependentData();
     }
-    this.updateDataOnFormField(data);    
+    this.updateDataOnFormField(fData);    
     let nextFormFocusedFieldname = '';
-    for (let key in data) {
+    for (let key in fData) {
       nextFormFocusedFieldname = key;
       break;
     }
@@ -4758,7 +4793,14 @@ case 'populate_fields_for_report_for_new_order_flow':
         this.custmizedFormValue[fieldName] = fieldData;
         previousformData[fieldName] = this.custmizedFormValue[fieldName];
         this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
-        this.templateForm.reset();  
+
+        this.donotResetField();
+        this.templateForm.reset()
+        if(Object.keys(this.donotResetFieldLists).length > 0){
+          this.updateDataOnFormField(this.donotResetFieldLists);
+          this.donotResetFieldLists = {};
+        }
+
       }
       
     }else{
