@@ -1,6 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
+import { DocApiService } from 'src/app/services/api/doc-api/doc-api.service';
+import { DocDataShareService } from 'src/app/services/data-share/doc-data-share/doc-data-share.service';
+import { NotificationService } from 'src/app/services/notify/notification.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 import { ModelService } from '../../../../services/model/model.service';
+import {ThemePalette} from '@angular/material/core';
+import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
+
 
 @Component({
   selector: 'app-doc-file-upload',
@@ -11,19 +18,32 @@ export class DocFileUploadComponent implements OnInit {
 
 
   public fileDrop: boolean;
-  private vdrprentfolder : any = {};
   public uploadFile: boolean = false;
   public files: any[] = [];
+  uploadFileIndex:any=0;
+  docFileUploadResponceSubscription:any;
+  public UploadFile = [];
 
 
 
   @Input() id: string;
+  @Input() folderName: string;
+  @Input() vdrprentfolder:any;
   @Output() uploadDocFileResponce = new EventEmitter();
   @ViewChild('uploadDocFileModal') public uploadDocFileModal: ModalDirective; 
 
   constructor(
-    private modelService:ModelService
-  ) { }
+    private modelService:ModelService,
+	private docApiService:DocApiService,
+	private storageService:StorageService,
+	private docDataShareService:DocDataShareService,
+	private notificationService:NotificationService
+
+  ) { 
+	this.docFileUploadResponceSubscription = this.docDataShareService.uploadResponce.subscribe(responce =>{
+		this.setDocUploadResponce(responce);
+	})
+  }
 
   ngOnInit() {
     let modal = this;
@@ -43,12 +63,25 @@ export class DocFileUploadComponent implements OnInit {
     this.uploadDocFileResponce.emit(false);
     this.files = [];
   }
+  setDocUploadResponce(uploadResponce){
+	if (uploadResponce && this.uploadData.length > 0 && (this.uploadFileIndex - 1) <= this.uploadData.length) {
+		this.files[this.uploadFileIndex-1].upload = true;
+		if((this.uploadFileIndex+1) <= this.uploadData.length){
+			this.setUploadFile(this.uploadFileIndex);
+			this.fileUpload();
+		}else{
+			this.close();
+			this.uploadDocFileResponce.emit('success');
+		}		
+	}
+}
   close(){
 		this.uploadDocFileModal.hide();
 		this.files = [];
 		this.uploadFile = false;
 		this.uploadData = [];
 		this.uploadFilesData = [];
+		this.UploadFile = [];
   }
 
   /**
@@ -75,6 +108,7 @@ export class DocFileUploadComponent implements OnInit {
 	prepareFilesList(files: Array<any>) {
 		for (const item of files) {
 			item.progress = 0;
+			item.upload = false;
 			this.files.push(item);
 		}
 		for (var i = 0; i < files.length; i++) {
@@ -95,6 +129,7 @@ export class DocFileUploadComponent implements OnInit {
 			fileExtn: rxFile.name.split('.')[1],
 			size: rxFile.size,
 			innerBucketPath: this.vdrprentfolder.key + rxFile.name
+			
 		});
   }
   
@@ -127,8 +162,48 @@ export class DocFileUploadComponent implements OnInit {
     const object = {
       uploadData : this.uploadData
     }
-    this.uploadDocFileResponce.emit(object);
+	this.setUploadFile(this.uploadFileIndex);
+	this.fileUpload();
+    //this.uploadDocFileResponce.emit(object);
   }
+  fileUpload(){
+	this.uploadFiles();
+  }
+  setUploadFile(index){
+	const file = this.uploadData[index];
+	this.uploadFileIndex = this.uploadFileIndex + 1;
+	this.UploadFile = [];
+	this.UploadFile.push(file);
+  }
+
+  	public newFolder: any = {};
+  	uploadFiles() {
+		this.useDetails();
+		var newObj = Object.assign({}, this.newFolder);
+		var sessionid = Object.assign({}, this.storageService.getUserLog())
+		newObj.log.sessionId = sessionid.sessionId + ";" + this.storageService.GetIdToken();
+		newObj.rollName = newObj.parentFolder;
+		newObj.isFolder = false;
+		this.docApiService.SaveUploadFile(newObj);
+		this.uploadFilesData = [];
+	}
+	useDetails() {
+		this.newFolder = {
+			parentId: this.vdrprentfolder._id,
+			parentFolder: this.vdrprentfolder.rollName,
+			parenteTag: this.vdrprentfolder.eTag,
+			isFolder: true,
+			key: this.vdrprentfolder.key + this.folderName,
+			rollName: this.folderName,
+			log: this.storageService.getUserLog(),
+			createdBy: this.storageService.getUserLog().userId,
+			uploadData: this.UploadFile,
+			bucket:this.vdrprentfolder.bucket,
+			refCode:this.storageService.getRefCode(),
+			appId:this.storageService.getAppId()
+			//caseId: this.storageService.GetCurrentCaseId(),
+		}
+	}
 
 	
 

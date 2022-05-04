@@ -1034,7 +1034,6 @@ export class DriveHomeComponent implements OnInit {
 	uploadFiles() {
 		this.useDetails();
 		var newObj = Object.assign({}, this.newFolder);
-
 		var sessionid = Object.assign({}, this.storageService.getUserLog())
 		newObj.log.sessionId = sessionid.sessionId + ";" + this.storageService.GetIdToken();
 		newObj.rollName = newObj.parentFolder;
@@ -1046,7 +1045,13 @@ export class DriveHomeComponent implements OnInit {
 			this.qucikAccess = false;
 			this.docApiService.GetFolderChild(this.vdrprentfolder);
 		}, 5000);
+	}
 
+	afterFileUpload(){
+		this.getPathList();
+		this.qucikAccess = false;
+		this.docApiService.GetFolderChild(this.vdrprentfolder);
+		this.docApiService.GetFolderChild(this.openFolderData);
 	}
 
 	public dataDownload: any;
@@ -1186,9 +1191,11 @@ export class DriveHomeComponent implements OnInit {
 		console.log(responce);
 	}
 	uploadDocFileResponce(responce){
-		if(responce.uploadData){
+		if(responce && responce.uploadData){
 			this.uploadData = responce.uploadData;
 			this.uploadFilesSimulator(0);
+		}else if(responce == 'success'){
+			this.afterFileUpload();
 		}
 	}
 	moveFileFolderResponce(responce){
