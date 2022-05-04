@@ -25,9 +25,25 @@ export class DocApiService {
       }
     )
   }
+  // GetHomeVdr(payload){
+  //   let api = this.envService.getApi('GET_VDR_DATA');
+  //   this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
+  //     (respData) =>{
+  //       if(respData['success']){
+  //         this.docDataShare.setVdrData(respData['success']);
+  //         this.docDataShare.setMoveFolderData(respData['success']);
+  //       }
+  //     },
+  //     (error)=>{
+  //       console.log(error);
+  //     }
+  //   )
+  // }
+
+
   GetHomeVdr(payload){
-    let api = this.envService.getApi('GET_VDR_DATA');
-    this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
       (respData) =>{
         if(respData['success']){
           this.docDataShare.setVdrData(respData['success']);
@@ -39,10 +55,12 @@ export class DocApiService {
       }
     )
   }
+
+
   
   GetHomeVdrBack(payload){
     let api = this.envService.getApi('GET_VDR_DATA');
-    this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
+    this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log, payload.crList).subscribe(
       (respData) =>{
         if(respData['success']){
           this.docDataShare.setMoveFolderData(respData['success']);
@@ -143,6 +161,10 @@ export class DocApiService {
       }
     )
   }
+
+
+
+  
   GetDocAudit(payload){
     let api = this.envService.getApi('GET_DOC_AUDIT');
     this.http.post(api, payload).subscribe(
