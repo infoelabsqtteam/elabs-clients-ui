@@ -55,8 +55,6 @@ export class DocApiService {
       }
     )
   }
-
-
   
   GetHomeVdrBack(payload){
     let api = this.envService.getApi('GET_VDR_DATA');
