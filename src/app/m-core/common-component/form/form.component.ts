@@ -1458,6 +1458,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const invalidControl = document.getElementById(id);
     if(invalidControl != null){
       invalidControl.focus();
+      if(this.previousFormFocusField && this.previousFormFocusField.type == 'list_of_fields' && this.previousFormFocusField.datatype == 'list_of_object_with_popup'){
+        this.previousFormFocusField = {};
+        this.checkFormFieldAutfocus = false;
+      }
     }
   }
   handleDisabeIf(){
@@ -1767,7 +1771,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 });
               }
             }else{
-              value = formValue[parentfield.field_name][field.field_name];              
+              if(field.datatype == 'object'){
+                value = formValue[parentfield.field_name][field.field_name]['value'];               
+
+              }else{
+                value = formValue[parentfield.field_name][field.field_name];
+              }
             } 
             if(value == "add_new"){
               this.storeFormDetails(parentfield,field);
@@ -1785,7 +1794,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 });
               }
             }else{
-              value = formValue[field.field_name];               
+              if(field.datatype == 'object'){
+                value = formValue[field.field_name]['value'];               
+
+              }else{
+                value = formValue[field.field_name];
+              }
             } 
             if(value == "add_new"){
               this.storeFormDetails(parentfield,field);
@@ -4524,7 +4538,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       let currentFiedldData = formData[field.field_name];
       if(currentFiedldData && isArray(currentFiedldData)){
           if(index != undefined && index >= 0){        
-            targetFieldName['custom'] = currentFiedldData[index];
+            targetFieldName['form'] = currentFiedldData[index];
           }else {
             targetFieldName['custom'] = currentFiedldData;
           }
@@ -4689,7 +4703,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       } 
     } 
     if(this.previousFormFocusField.type == 'list_of_fields'){
-      this.previousFormFocusField = {};
+      // this.previousFormFocusField = {};
     }  
     switch (formCollecition['current_field'].type) {
       case "typeahead":
