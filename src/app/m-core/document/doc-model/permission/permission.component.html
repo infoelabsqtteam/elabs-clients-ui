@@ -25,8 +25,8 @@
                     <div class="mx-4"><label class="mx-2 my-0">Write</label> <input type="checkbox" [formControlName]="'creator'"></div>
                     <div class="mx-4"><label class="mx-2 my-0">Download</label> <input type="checkbox" [formControlName]="'downloader'"></div>
                     <div class="mx-4"><button mat-flat-button color="primary" [disabled]="checkValidator()" (click)="addPermission()">
-                        <span *ngIf="!updateMode"><mat-icon class="mr-2">add_circle_outline</mat-icon> Add</span>
-                        <span *ngIf="updateMode"><mat-icon class="mr-2">update</mat-icon> Update</span>
+                        <span *ngIf="!updateMode"><mat-icon class="mr-2" style="position:relative;top:6px;">add_circle_outline</mat-icon> Add</span>
+                        <span *ngIf="updateMode"><mat-icon class="mr-2" style="position:relative;top:6px;">update</mat-icon> Update</span>
                     </button></div>
 
                     <div class="mx-4"><button mat-icon-button (click)="viewpermission()"><mat-icon>visibility</mat-icon></button></div>
@@ -57,7 +57,7 @@
 
                 <div class="row mt-4" *ngIf="viewpermissiondata">
                     <div class="w-100">
-                        <h3>Permission User List</h3>
+                        <h3 class="px-3">Permission User List</h3>
                         <table class="table">
                             <thead class="thead-light">
                                 <tr>
