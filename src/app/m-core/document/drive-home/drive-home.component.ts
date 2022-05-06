@@ -97,7 +97,7 @@ export class DriveHomeComponent implements OnInit {
 	downloadpermission = false;
 	viewerpermission = true;
 	authrizepermission = false;
-
+	storeFolderData:any = {};
 	
 
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
@@ -381,22 +381,41 @@ export class DriveHomeComponent implements OnInit {
 		this.currentSelectedPath = '';
 		this.pathKey = '';
 		this.showNewFolderAndUploadDropdown = false;
+		this.storeFolderData = {};
 		this.rootDataCall();
 	}
 	rootDataCall(action?){
-		var clone = Object.assign({}, this.storageService.getUserLog());
-		const payload = {
-			"appId":this.storageService.getUserAppId(),
-			"refCode":this.storageService.getRefCode(),
-			"log":clone,
-		}
+		this.selectionAny = true;
+		//var clone = Object.assign({}, this.storageService.getUserLog());
+		// let userRefcode = this.storageService.getRefCode();
+		// clone["crList"] = [
+		// 	{fName: "refCode" , operator: "eq", fValue: userRefcode}, 
+		// 	{fName: "refCodeRoot" , operator: "eq", fValue: "Y"}
+		// ]
+		// const payload = {
+		// 	"crList":clone["crList"],
+		// 	"appId":this.storageService.getUserAppId(),
+		// 	"refCode":this.storageService.getRefCode(),
+		// 	"log":clone,
+		// }
+		const criteria = [
+			"refCode;eq;"+this.storageService.getRefCode()+";STATIC",
+			"refCodeRoot;eq;Y;STATIC",
+		]
+		let getFilterData = this.payloadForGetChildDocs({},criteria);
+		
 		if(action == "back"){
-			this.docApiService.GetHomeVdrBack(payload);
+			//this.docApiService.GetHomeVdrBack(payload);
+			this.docApiService.GetFolderChild1(getFilterData);
 		}else{
-			this.docApiService.GetHomeVdr(payload);
+			//this.docApiService.GetHomeVdr(payload);
+			this.docApiService.GetFolderChild1(getFilterData);
 			
 		}        
 	}
+
+
+	
 	public currentSelectedPath: any = '';
 	getPathList() {
 		this.currentSelectedPath = '';
@@ -412,6 +431,7 @@ export class DriveHomeComponent implements OnInit {
 				this.currentSelectedPath = '';
 			}
 			this.pathList.splice(startIndex, 2);
+			this.storeFolderDataByKey();
 		} else {
 			this.pathList = this.pathKey.split("/");
 			let startIndex = this.pathList.length - 2;
@@ -425,25 +445,53 @@ export class DriveHomeComponent implements OnInit {
 			this.pathList.splice(startIndex, 2);
 		}
 	}
+
+	storeFolderDataByKey() {
+		const currentFolder = this.vdrprentfolder;
+		let key = '';
+		if(currentFolder && currentFolder.key != null) {
+			key = currentFolder.key;
+		}
+		if(key != '') {
+			this.storeFolderData[key] = currentFolder;
+		}
+	}
+
+	
 	public pathKey: any = '';
 	getBredCrumbData(index) {
 		this.pathKey = '';
-		for (let i = 0; i <= index + 1; i++) {
+		for (let i = 0; i <= index + 2; i++) {
 			const key = this.pathList[i];
 			this.pathKey = this.pathKey.concat(key + '/');
 		}
 		this.showNewFolderAndUploadDropdown = false;
 		this.vdrprentfolder = {};
 		if(this.pathKey != ''){
-			this.docApiService.getFoderByKey(this.pathKey);
+			//this.docApiService.getFoderByKey(this.pathKey);
+			const folder = this.storeFolderData[this.pathKey];
+			this.openFolder(folder, null);
 		}
-		this.getPathList();
-		const serachByKey = {
-			key: this.pathKey,
-			log: this.storageService.getUserLog()
-		}
-        this.docApiService.GetFolderByKey(serachByKey);
+		// this.getPathList();
+		// const serachByKey = {
+		// 	data: this.openFolderData,
+		// 	key: this.pathKey,
+		// 	log: this.storageService.getUserLog()
+		// }
+        // this.docApiService.GetFolderByKey(serachByKey);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
 	showMessage(message: any) {
 		console.log(message);
 		this.DocIndex = message.item[1];
@@ -800,8 +848,11 @@ export class DriveHomeComponent implements OnInit {
 			this.fileSelectRow = -1;
 			this.selectionAny = false;
 			this.selectedRowFile = false;
-
-			let getFilterData = this.payloadForGetChildDocs(selectedFolder);
+			const criteria = [
+				"key;stw;"+selectedFolder["key"]+";STATIC",
+				"parentId;eq;"+selectedFolder["_id"]+";STATIC",
+			]
+			let getFilterData = this.payloadForGetChildDocs(selectedFolder,criteria);
 			this.docApiService.GetFolderChild1(getFilterData);
 			// this.docApiService.GetFolderChild(selectedFolder);
 			if (param == 'FromsearchData') {
@@ -818,9 +869,8 @@ export class DriveHomeComponent implements OnInit {
 		
 	}
 
-	payloadForGetChildDocs(selectedFolder){
-		const data = this.commonFunctionService.getPaylodWithCriteria("aws_docs",'',[],'');
-		data["crList"] = [{fName:  "key",operator:"stw",fValue: selectedFolder["key"]  },{fName:  "parentId",operator:"eq",fValue: selectedFolder["_id"]  }]
+	payloadForGetChildDocs(selectedFolder,criteria){		
+		const data = this.commonFunctionService.getPaylodWithCriteria("aws_docs",'',criteria,'');
 		data['pageNo'] = this.pageNumber-1;
 		data['pageSize'] = 25;
 		data['data'] = selectedFolder;    
@@ -1229,7 +1279,7 @@ export class DriveHomeComponent implements OnInit {
 	
 	getPage(page: number) {
 		this.pageNumber = page;
-		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder);
+		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder, []);
 		this.docApiService.GetFolderChild1(getFilterData);
 	}
 
