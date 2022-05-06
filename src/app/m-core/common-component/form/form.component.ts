@@ -1458,9 +1458,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const invalidControl = document.getElementById(id);
     if(invalidControl != null){
       invalidControl.focus();
+      this.checkFormFieldAutfocus = false;
       if(this.previousFormFocusField && this.previousFormFocusField.type == 'list_of_fields' && this.previousFormFocusField.datatype == 'list_of_object_with_popup'){
         this.previousFormFocusField = {};
-        this.checkFormFieldAutfocus = false;
       }
     }
   }
@@ -4539,6 +4539,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       if(currentFiedldData && isArray(currentFiedldData)){
           if(index != undefined && index >= 0){        
             targetFieldName['form'] = currentFiedldData[index];
+            targetFieldName['updataModeInPopupType'] = true;
           }else {
             targetFieldName['custom'] = currentFiedldData;
           }
@@ -4745,7 +4746,11 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(this.editedRowIndex >= 0){
       this.getStaticDataWithDependentData();
     }
-    this.updateDataOnFormField(fData);    
+    if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['updataModeInPopupType']){
+      this.editedRowData(fData);
+    }else{
+      this.updateDataOnFormField(fData);    
+    }
     let nextFormFocusedFieldname = '';
     for (let key in fData) {
       nextFormFocusedFieldname = key;
@@ -4781,6 +4786,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     const previousFormCollection = this.multipleFormCollection[previousFormIndex];
     const previousFormField = previousFormCollection.current_field;
     const currentFormValue = this.getFormValue(true)
+    this.updateMode = false;
     const fieldName = previousFormField.field_name;
     delete currentFormValue[fieldName];    
     const previousformData = previousFormCollection.data;
