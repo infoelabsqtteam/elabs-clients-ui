@@ -1,13 +1,9 @@
 @import "_variables";
 @import "_themes";
 @import "_app-landing";
-// @import "_elab-iconList";
-// @import "_materialdesignicons";
-// @import "_remixicon-icon";
 @import "_sidebar";
 @import "_login";
 @import "_mcore-material";
-// @import "_flaticon";
 @import "_modules";
 @import "_table-list";
 @import "_custom-material";
@@ -15,5 +11,6 @@
 @import "_theme1";
 @import "_report-form.scss";
 @import "_document_library.scss";
+@import "dashboard.scss";
 @import "_responsive";
 @import "setting-modal"
