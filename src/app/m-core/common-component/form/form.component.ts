@@ -2231,6 +2231,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
             this.updateDataOnFormField(calFormValue); 
           break;
+          case 'populate_fields_for_direct_order':
+            list_of_populated_fields = [
+              {"from":"fax","to":"billing_fax"},
+              {"from":"mobile","to":"billing_mobile"},
+              {"from":"phone","to":"billing_tel"},
+              {"from":"city","to":"billing_city"},
+              {"from":"state","to":"billing_state"},
+              {"from":"country","to":"billing_country"},
+              {"from":"address_line2","to":"billing_address_line2"},
+              {"from":"gst_no","to":"billing_gst"},
+              {"from":"email","to":"billing_contact_person_email"},
+              {"from":"address_line1","to":"billing_address"},
+              {"from":"pincode","to":"billing_pincode"},
+              {"from":"contact.name","to":"billing_contact_person"},
+              {"from":"account.name","to":"billing_company"},
+          
+            ]
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            this.updateDataOnFormField(calFormValue); 
+          break;
 case 'populate_fields_for_new_order_flow':
             list_of_populated_fields = [
               {"from":"fax","to":"billing_fax"},
@@ -2263,6 +2283,24 @@ case 'populate_fields_for_new_order_flow':
             {"from":"address_line1","to":"reporting_address"},
             {"from":"pincode","to":"reporting_pincode"},
             {"from":"first_name+last_name+ ","to":"reporting_contact_person"},
+            {"from":"account.name","to":"reporting_company"},
+          ]
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          this.updateDataOnFormField(calFormValue); 
+          // this.commonFunctionService.populate_fields_for_report(this.templateForm);
+          break;
+          case 'populate_fields_for_report_direct_order':
+           list_of_populated_fields = [
+            {"from":"mobile","to":"reporting_mobile"},
+            {"from":"phone","to":"reporting_tel"},
+            {"from":"city","to":"reporting_city"},
+            {"from":"state","to":"reporting_state"},
+            {"from":"country","to":"reporting_country"},
+            {"from":"gst_no","to":"reporting_gst"},
+            {"from":"email","to":"reporting_contact_person_email"},
+            {"from":"address_line1","to":"reporting_address"},
+            {"from":"pincode","to":"reporting_pincode"},
+            {"from":"contact.name","to":"reporting_contact_person"},
             {"from":"account.name","to":"reporting_company"},
           ]
           calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
