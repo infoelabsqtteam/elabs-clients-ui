@@ -1,10 +1,21 @@
 <section>
     <div class="downloadbtn">
-        <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
-        <button *ngIf="checkFieldsAvailability('NEW')" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
+        <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect
+            class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'"
+            [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons"
+                style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
+        <button *ngIf="checkFieldsAvailability('NEW')" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')"
+            mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'"
+            [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons"
+                style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
         <span *ngFor="let btn of gridButtons">
-            <a *ngIf="btn && btn.grid_header_button && bulkuploadList && bulkuploadList.length > 0" mdbBtn floating="true" size="sm" (click)="gridButtonAction({},0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
-                <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
+            <a *ngIf="btn && btn.grid_header_button && bulkuploadList && bulkuploadList.length > 0" mdbBtn
+                floating="true" size="sm" (click)="gridButtonAction({},0,btn)" mdbWavesEffect
+                class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled"
+                [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
+                <span class="material-icons"
+                    [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{
+                    btn.field_class }}</span>
             </a>
         </span>
     </div>
@@ -14,144 +25,246 @@
     <div class="row w-100 m-0">
         <div class="col-lg-12 mt-0 px-0">
             <mat-card class="m-0 p-0 bg-aluminium">
-               <mat-card-content>
+                <mat-card-content>
                     <div class="row mx-0">
-                        <div [ngClass]="treeView ? 'col-lg-3 pl-0' : 'd-none'"><app-tree-view></app-tree-view></div>
+                        <div [ngClass]="treeView ? 'col-lg-3 pl-0' : 'd-none'">
+                            <app-tree-view></app-tree-view>
+                        </div>
                         <div class="table-responsive table tableFixHead mb-0 pb-0" [ngClass]="treeView || isShowDiv ? 'col-lg-9 pl-0' : 'col-lg-12 px-0'">
                             <table class="table-bordered table-striped table-hover">
-                                <thead >
+                                <thead>
                                     <tr>
-                                        <th *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th *ngFor="let head of headElements; let i = index" (click)="onSort(headElements[i])"><div class="heading" [style.width]="getGridColumnWidth(head)" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
-                                            <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
-                                        </th>                                        
+                                        <th *ngIf="headElements.length > 0">
+                                            <div class="heading text-center">Action</div>
+                                        </th>
+                                        <th *ngFor="let head of headElements; let i = index"
+                                            (click)="onSort(headElements[i])">
+                                            <div class="heading" [style.width]="getGridColumnWidth(head)"
+                                                [style.text-align]="head.text_align"><span class="grid-heading-nowrap"
+                                                    [title]="head.label">{{ head.label | titlecase }}</span>
+                                                <span>
+                                                    <mdb-icon fas icon="sort"></mdb-icon>
+                                                </span>
+                                            </div>
+                                        </th>
                                     </tr>
                                     <tr [formGroup]="filterForm" *ngIf="headElements.length > 0" class="grid-filter">
                                         <td>
                                             <div class="heading text-center">
-                                                <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update"><input type="checkbox" id="selectAllCheckbox" (change)="selectAll()"><span class="ml-1 mr-1">All</span></span>
-                                                <button mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
+                                                <span
+                                                    *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update"><input
+                                                        type="checkbox" id="selectAllCheckbox"
+                                                        (change)="selectAll()"><span class="ml-1 mr-1">All</span></span>
+                                                <button mdbBtn type="button" size="sm" (click)="applyFilter()"
+                                                    mdbWavesEffect class="m-0 grid-button px-1 py-0"
+                                                    [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span
+                                                        class="material-icons">search</span></button>
                                             </div>
                                         </td>
                                         <td *ngFor="let head of headElements; let i = index">
                                             <div *ngIf="head.type == 'tree_view_selection'" class="position-relative">
-                                                <select class="form-control form-control-sm cursor-pointer" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
-                                                    <option *ngFor="let data of treeViewData[head.field_name]" [value]="data">{{getddnDisplayVal(data)}}</option>
+                                                <select class="form-control form-control-sm cursor-pointer"
+                                                    [formControlName]="head.field_name" (click)="openTreeView(head)"
+                                                    style="min-width:100px;" readonly>
+                                                    <option *ngFor="let data of treeViewData[head.field_name]"
+                                                        [value]="data">{{getddnDisplayVal(data)}}</option>
                                                 </select>
-                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                <span *ngIf="checkClearBtn(head.field_name,head.type)"
+                                                    class="filter-clear-button btn-right-dropdown"
+                                                    (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                             </div>
+
+
+
                                             <div *ngIf="head.type == 'dropdown'" class="position-relative">
-                                                <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
-                                                    <option *ngFor="let data of copyStaticData[head.ddn_field]" [ngValue]="data">{{getddnDisplayVal(data)}}</option>
+                                                <!-- <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
+                                                    <option *ngFor="let data of copyStaticData[head.ddn_field] | filter:filterdata; index as i" [ngValue]="data">{{getddnDisplayVal(data)}} 2</option>
                                                 </select>
-                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
-                                            </div>
-                                            <div *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number'" class="position-relative">
-                                                <input class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyFilter()">
-                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-text" (click)="clearFilter(head.field_name,head.type)">&times;</span>
-                                            </div>
-                                            <div *ngIf="head.type.toLowerCase() == 'daterange'" >
-                                                <mat-form-field appearance="outline" class="example-full-width w-100 custom">
-                                                    <!-- <mat-label>Enter a date range</mat-label> -->
-                                                    <mat-date-range-input [rangePicker]="picker" [formGroupName]="head.field_name">
-                                                        <input matStartDate placeholder="Start date" formControlName="start" (dateChange)="applyFilter()">
-                                                        <input matEndDate placeholder="End date" formControlName="end" (dateChange)="applyFilter()">
-                                                    </mat-date-range-input>
-                                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                                    <mat-date-range-picker #picker></mat-date-range-picker>
-                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-date btn-top-date" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>-->
+
+                                                <mat-form-field appearance="outline">
+                                                    <mat-select [formControlName]="head.field_name" (change)="applyFilter()" disableOptionCentering panelClass="matdropdown">
+                                                        <div class="p-1"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="filterdata" [ngModelOptions]="{standalone: true}"></div>
+                                                        <mat-option *ngFor="let data of copyStaticData[head.ddn_field] |filter:filterdata; index as i" [value]="data">{{getddnDisplayVal(data)}}</mat-option>
+                                                    </mat-select>
+                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                                 </mat-form-field>
                                             </div>
-                                            <div *ngIf="head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime'">
+
+
+
+
+                                            <div *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number'"
+                                                class="position-relative">
+                                                <input class="form-control form-control-sm pr-3"
+                                                    [formControlName]="head.field_name" (keyup.enter)="applyFilter()">
+                                                <span *ngIf="checkClearBtn(head.field_name,head.type)"
+                                                    class="filter-clear-button btn-right-text"
+                                                    (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                            </div>
+                                            <div *ngIf="head.type.toLowerCase() == 'daterange'">
+                                                <mat-form-field appearance="outline"
+                                                    class="example-full-width w-100 custom">
+                                                    <!-- <mat-label>Enter a date range</mat-label> -->
+                                                    <mat-date-range-input [rangePicker]="picker"
+                                                        [formGroupName]="head.field_name">
+                                                        <input matStartDate placeholder="Start date"
+                                                            formControlName="start" (dateChange)="applyFilter()">
+                                                        <input matEndDate placeholder="End date" formControlName="end"
+                                                            (dateChange)="applyFilter()">
+                                                    </mat-date-range-input>
+                                                    <mat-datepicker-toggle matSuffix [for]="picker">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)"
+                                                        class="filter-clear-button btn-right-date btn-top-date"
+                                                        (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                </mat-form-field>
+                                            </div>
+                                            <div
+                                                *ngIf="head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <!-- <mat-label>{{ head.label | titlecase}}</mat-label> -->
-                                                    <input matInput [matDatepicker]="picker2"   [formControlName]="head.field_name" (dateChange)="applyFilter()">
-                                                    <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
-                                                    <mat-datepicker #picker2 color="primary" ></mat-datepicker>
-                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-left-date btn-top-datetime" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                    <input matInput [matDatepicker]="picker2"
+                                                        [formControlName]="head.field_name"
+                                                        (dateChange)="applyFilter()">
+                                                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)"
+                                                        class="filter-clear-button btn-left-date btn-top-datetime"
+                                                        (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                                 </mat-form-field>
                                             </div>
-                                        </td>                                        
+                                        </td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}">
+                                    <tr mdbTableCol class="cursor-pointer"
+                                        *ngFor="let el of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index"
+                                        (dblclick)="editedRowData(i,'UPDATE')"
+                                        [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}">
                                         <td [ngClass]="selectedRowIndex == i ? 'd-none':''" *ngIf="elements.length > 0">
                                             <span *ngIf="editedRowIndex != i" class="text-nowrap">
-                                                <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
+                                                <span
+                                                    *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update"
+                                                    class="mr-2"
+                                                    style="display: inline-block;margin: 10px;cursor: pointer;">
                                                     <form #myform="ngForm">
-                                                        <input type="checkbox" [attr.id]="'checkbox' + i" ngModel name="check" (change)="onBulkUploadCheck(el, i, myform)">
+                                                        <input type="checkbox" [attr.id]="'checkbox' + i" ngModel
+                                                            name="check" (change)="onBulkUploadCheck(el, i, myform)">
                                                     </form>
                                                 </span>
                                                 <span *ngFor="let btn of gridButtons">
-                                                    <a *ngIf="!(btn && btn.grid_header_button)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(el,i,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
-                                                        <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
+                                                    <a *ngIf="!(btn && btn.grid_header_button)" mdbBtn floating="true"
+                                                        size="sm" (click)="gridButtonAction(el,i,btn)" mdbWavesEffect
+                                                        class="m-0 mr-1 grid-button" [matTooltip]="btn.label"
+                                                        [matTooltipDisabled]="btn.is_disabled"
+                                                        [matTooltipPosition]="'above'"
+                                                        [matTooltipClass]="btn.field_class">
+                                                        <span class="material-icons"
+                                                            [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{
+                                                            btn.field_class }}</span>
                                                     </a>
                                                 </span>
-                                               
+
                                             </span>
                                             <span *ngIf="editedRowIndex == i">
-                                                <a mdbBtn floating="true" size="sm"  (click)="saveGridData()" mdbWavesEffect class="m-0 mr-1 grid-button ">
+                                                <a mdbBtn floating="true" size="sm" (click)="saveGridData()"
+                                                    mdbWavesEffect class="m-0 mr-1 grid-button ">
                                                     <span class="material-icons">save</span>
                                                 </a>
-                                                <a mdbBtn floating="true" size="sm" (click)="CancilGridEdite()" mdbWavesEffect class="m-0 mr-1 bg-danger ">
+                                                <a mdbBtn floating="true" size="sm" (click)="CancilGridEdite()"
+                                                    mdbWavesEffect class="m-0 mr-1 bg-danger ">
                                                     <span class="material-icons">cancel</span>
                                                 </a>
-                                            </span>                                   
+                                            </span>
 
                                         </td>
-                                        <td *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':selectedRowIndex == i,  '':selectedRowIndex != i, 'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}">
-                                            <div class="grid-data" [style.width]="getGridColumnWidth(elId)" [style.text-align]="elId.text_align">
-                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap text-dark" href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)" [innerHtml]="getValueForGrid(elId,el)"  [matTooltip]="getValueForGridTooltip(elId,el)" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="editedRowIndex != i && elId.type != 'color'" >
-                                                    </a>
+                                        <td *ngFor="let elId of headElements; let j = index"
+                                            [ngClass]="{'d-none':selectedRowIndex == i,  '':selectedRowIndex != i, 'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}">
+                                            <div class="grid-data" [style.width]="getGridColumnWidth(elId)"
+                                                [style.text-align]="elId.text_align">
+                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap text-dark"
+                                                    href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)"
+                                                    [innerHtml]="getValueForGrid(elId,el)"
+                                                    [matTooltip]="getValueForGridTooltip(elId,el)"
+                                                    [matTooltipPosition]="'above'"
+                                                    [ngClass]="elId.field_class != ''?elId.field_class:''"
+                                                    *ngIf="editedRowIndex != i && elId.type != 'color'">
+                                                </a>
 
 
-                                                    <a href="javascript:void(0)" class="grid-coloumn-nowrap text-dark" href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="editedRowIndex != i && elId.type == 'color'">
-                                                        <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{getValueForGrid(elId,el)}}</span>
-                                                    </a>
-                                                    
-                                                </div>
-                                            <div *ngIf="editedRowIndex == i">  
+                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap text-dark"
+                                                    href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)"
+                                                    [ngClass]="elId.field_class != ''?elId.field_class:''"
+                                                    *ngIf="editedRowIndex != i && elId.type == 'color'">
+                                                    <span [style.background]="el[elId.field_name]"
+                                                        class="colorbox"></span> <span
+                                                        class="colorcode">{{getValueForGrid(elId,el)}}</span>
+                                                </a>
+
+                                            </div>
+                                            <div *ngIf="editedRowIndex == i">
                                                 <div *ngIf="elId.type == 'boolean'">
-                                                    <mat-checkbox  color="primary"  [(ngModel)]="editedRowCopyData[elId.field_name]"></mat-checkbox>
+                                                    <mat-checkbox color="primary"
+                                                        [(ngModel)]="editedRowCopyData[elId.field_name]"></mat-checkbox>
                                                 </div>
                                                 <div *ngIf="elId.type == 'checkbox'">
-                                                  <mat-checkbox  color="primary"  [(ngModel)]="editedRowCopyData[elId.field_name]"></mat-checkbox>
+                                                    <mat-checkbox color="primary"
+                                                        [(ngModel)]="editedRowCopyData[elId.field_name]"></mat-checkbox>
                                                 </div>
                                                 <div *ngIf="elId.type.toLowerCase() == 'text'">
-                                                    <input  type="text" class="w-100 form-control form-control-sm d-inline mr-2"  [(ngModel)]="editedRowCopyData[elId.field_name]" >
+                                                    <input type="text"
+                                                        class="w-100 form-control form-control-sm d-inline mr-2"
+                                                        [(ngModel)]="editedRowCopyData[elId.field_name]">
                                                 </div>
                                                 <div *ngIf="elId.type.toLowerCase() == 'dropdown'">
-                                                  <mat-form-field appearance="outline" class="w-100" *ngIf="elId.datatype == 'object'">
-                                                      <mat-label>{{ elId.label | titlecase}}</mat-label>
-                                                      <mat-select [compareWith]="compareObjects" [(ngModel)]="editedRowCopyData[elId.field_name]" (selectionChange)="setValue(elId,i)">
-                                                          <mat-option *ngFor="let staticValue of copyStaticData[elId.ddn_field]" [value]="staticValue">
-                                                              {{getddnDisplayVal(staticValue)}}
-                                                          </mat-option>
-                                                      </mat-select>
-                                                  </mat-form-field>
-                                                  <mat-form-field appearance="outline" class="w-100" *ngIf="elId.datatype != 'object'">
-                                                      <mat-label>{{ elId.label | titlecase}}</mat-label>
-                                                      <mat-select [(ngModel)]="editedRowCopyData[elId.field_name]" (selectionChange)="setValue(elId,i)">
-                                                          <mat-option *ngFor="let staticValue of copyStaticData[elId.ddn_field]" [value]="staticValue">
-                                                              {{getddnDisplayVal(staticValue)}}
-                                                          </mat-option>
-                                                      </mat-select>
-                                                  </mat-form-field>
-                                                </div>
-                                                <div *ngIf="elId.type.toLowerCase() == 'date' || elId.type.toLowerCase() == 'datetime'">
-                                                    <mat-form-field appearance="outline" class="example-full-width w-100">
-                                                        <!-- <mat-label>{{ head.label | titlecase}}</mat-label> -->
-                                                        <input matInput [matDatepicker]="picker2" [(ngModel)]="editedRowCopyData[elId.field_name]">
-                                                        <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
-                                                        <mat-datepicker #picker2 color="primary" ></mat-datepicker>                                    
+                                                    <mat-form-field appearance="outline" class="w-100"
+                                                        *ngIf="elId.datatype == 'object'">
+                                                        <mat-label>{{ elId.label | titlecase}}</mat-label>
+                                                        <mat-select [compareWith]="compareObjects"
+                                                            [(ngModel)]="editedRowCopyData[elId.field_name]"
+                                                            (selectionChange)="setValue(elId,i)">
+                                                            <mat-option
+                                                                *ngFor="let staticValue of copyStaticData[elId.ddn_field]"
+                                                                [value]="staticValue">
+                                                                {{getddnDisplayVal(staticValue)}}
+                                                            </mat-option>
+                                                        </mat-select>
                                                     </mat-form-field>
-                                                </div>                   
+                                                    <mat-form-field appearance="outline" class="w-100"
+                                                        *ngIf="elId.datatype != 'object'">
+                                                        <mat-label>{{ elId.label | titlecase}}</mat-label>
+                                                        <mat-select [(ngModel)]="editedRowCopyData[elId.field_name]"
+                                                            (selectionChange)="setValue(elId,i)">
+                                                            <mat-option
+                                                                *ngFor="let staticValue of copyStaticData[elId.ddn_field]"
+                                                                [value]="staticValue">
+                                                                {{getddnDisplayVal(staticValue)}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div
+                                                    *ngIf="elId.type.toLowerCase() == 'date' || elId.type.toLowerCase() == 'datetime'">
+                                                    <mat-form-field appearance="outline"
+                                                        class="example-full-width w-100">
+                                                        <!-- <mat-label>{{ head.label | titlecase}}</mat-label> -->
+                                                        <input matInput [matDatepicker]="picker2"
+                                                            [(ngModel)]="editedRowCopyData[elId.field_name]">
+                                                        <mat-datepicker-toggle matSuffix [for]="picker2">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                                                    </mat-form-field>
+                                                </div>
                                             </div>
-                                        </td>                                        
+                                        </td>
                                     </tr>
                                     <tr *ngIf="elements.length == 0">
-                                        <td [attr.colspan]="headElements.length + 1" class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+                                        <td [attr.colspan]="headElements.length + 1" class="text-center">
+                                            <div class="py-3 font-weight-bold">No Records Found !!!</div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -162,20 +275,24 @@
                                 <div class="text-right tableclose"></div>
                                 <table class="table-bordered table-striped table-hover">
                                     <thead>
-                                      <tr>
-                                        <th scope="col" width="150px">Field Name</th>
-                                        <th scope="col" class="d-flex justify-content-between align-items-center">Value <a class="h5 m-0 px-2 py-0 grid-button" (click)="tableclose()" [matTooltip]="'Close (CTRL + I)'" [matTooltipPosition]="'above'"><span>×</span></a></th>
-                                      </tr>
+                                        <tr>
+                                            <th scope="col" width="150px">Field Name</th>
+                                            <th scope="col" class="d-flex justify-content-between align-items-center">
+                                                Value <a class="h5 m-0 px-2 py-0 grid-button" (click)="tableclose()"
+                                                    [matTooltip]="'Close (CTRL + I)'"
+                                                    [matTooltipPosition]="'above'"><span>×</span></a></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                      <tr *ngFor="let elId of headElements; let j = index">
-                                        <td scope="row"><span [title]="elId.label">{{ elId.label | titlecase }}</span></td>
-                                        <td><span [innerHtml]="getValueForGrid(elId,selectedRowData)"></span></td>
-                                      </tr>
+                                        <tr *ngFor="let elId of headElements; let j = index">
+                                            <td scope="row"><span [title]="elId.label">{{ elId.label | titlecase
+                                                    }}</span></td>
+                                            <td><span [innerHtml]="getValueForGrid(elId,selectedRowData)"></span></td>
+                                        </tr>
                                     </tbody>
-                                  </table>
+                                </table>
                             </div>
-                          </div>
+                        </div>
 
                     </div>
                 </mat-card-content>
@@ -193,7 +310,11 @@
 <app-modals id="basic-modal" (responceData)="responceData($event)"></app-modals>
 <app-tree-view-modal id="filter-tree-view-modal" (treeViewResponce)="treeViewResponce($event)"></app-tree-view-modal>
 <app-preview-modal id="grid-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>
-<app-form-modal id="form-modal" [tabIndex]="selectTabIndex" [bulkUpdate]="isBulkUpdate" [bulkDataList]="bulkuploadList" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName' [selectContact]='selectContactAdd'></app-form-modal>
+<app-form-modal id="form-modal" [tabIndex]="selectTabIndex" [bulkUpdate]="isBulkUpdate" [bulkDataList]="bulkuploadList"
+    [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName'
+    [selectContact]='selectContactAdd'></app-form-modal>
 <app-template-modal id="template-modal" (temlateModalResponce)="temlateModalResponce($event)"></app-template-modal>
-<app-file-views-modal id="fileview-grid-modal" (fileViewResponceData)="fileViewresponceData($event)"></app-file-views-modal>
-<app-communication-data-modal id="communication-modal" [tabIndex]="selectTabIndex" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)"></app-communication-data-modal>
+<app-file-views-modal id="fileview-grid-modal" (fileViewResponceData)="fileViewresponceData($event)">
+</app-file-views-modal>
+<app-communication-data-modal id="communication-modal" [tabIndex]="selectTabIndex" [editedRowIndex]="selectedRowIndex"
+    (addAndUpdateResponce)="addAndUpdateResponce($event)"></app-communication-data-modal>

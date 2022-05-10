@@ -113,7 +113,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   exportExcelSubscription;
   pdfFileSubscription;
   previewHtmlSubscription;
-
+  filterdata = '';
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
