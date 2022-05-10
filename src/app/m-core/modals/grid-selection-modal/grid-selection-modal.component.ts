@@ -7,7 +7,8 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { ApiService } from '../../../services/api/api.service';
-import { I } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 
 @Component({
@@ -27,14 +28,25 @@ export class GridSelectionModalComponent implements OnInit {
   grid_row_refresh_icon:boolean = false;
   data:any='';
   staticDataSubscriber;
+  typeaheadDataSubscription;
+  gridSelectionOpenOrNotSubscription
+  removable = true;
   parentObject={};
   responseData:any;
   copyStaticData:[] = [];
+  separatorKeysCodes: number[] = [ENTER, COMMA,SPACE];
+  selectable = true;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
-  
+  @ViewChild('chipsInput') chipsInput: ElementRef<HTMLInputElement>;
+  typeAheadData: any;
+  addedDataInList: any;
+  deleteIndex: any;
+  parentObj: any;
+  fieldNameForDeletion: any;
+  isGridSelectionOpen: boolean = true;
 
   constructor(
     private modalService: ModelService, 
@@ -45,6 +57,12 @@ export class GridSelectionModalComponent implements OnInit {
     private coreFunctionService:CoreFunctionService,
     private apiservice:ApiService 
   ) {
+    this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
+        this.isGridSelectionOpen= data;
+    })
+    this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
+      this.setTypeaheadData(data);
+    })
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       if(this.coreFunctionService.isNotBlank(this.field) && this.coreFunctionService.isNotBlank(this.field.ddn_field)  && data[this.field.ddn_field]){
         this.responseData = data[this.field.ddn_field];
@@ -61,6 +79,14 @@ export class GridSelectionModalComponent implements OnInit {
     return this.CommonFunctionService.getddnDisplayVal(val);    
   }
 
+  setTypeaheadData(typeAheadData){
+    if (typeAheadData.length > 0) {
+      this.typeAheadData = typeAheadData;
+    } else {
+      this.typeAheadData = [];
+    }
+  }
+
   compareObjects(o1: any, o2: any): boolean {
     if(o1 != null && o2 != null){
       return o1._id === o2._id;
@@ -70,9 +96,54 @@ export class GridSelectionModalComponent implements OnInit {
     
   }
 
+  custmizedFormValueData(data,fieldName){
+    if(data && data[fieldName.field_name] && data[fieldName.field_name].length > 0){
+      return data[fieldName.field_name];
+    }
+  }
+
+  setValue(event: MatChipInputEvent,field,index){
+    let selectedData = event["option"].value;
+    if(this.gridData[index][field.field_name] == null)this.gridData[index][field.field_name] = [];
+    this.gridData[index][field.field_name].push(selectedData);
+    this.chipsInput.nativeElement.value = "";
+  }
+
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
+  }
+
+  typeaheadObjectWithtext;
+  searchTypeaheadData(field,currentObject){
+    this.typeaheadObjectWithtext = currentObject;
+
+    this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
+
+    this.typeaheadObjectWithtext[field.field_name] = this.chipsInput.nativeElement.value;
+    this.getStaticDataWithDependentData1()
+    this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
+  }
+
+  getStaticDataWithDependentData1(){
+    const staticModal = []
+    let staticModalGroup = this.CommonFunctionService.commanApiPayload([],this.listOfGridFieldName,[],this.typeaheadObjectWithtext);
+    if(staticModalGroup.length > 0){
+      staticModalGroup.forEach(element => {
+        staticModal.push(element);
+      });
+    } 
+    if(staticModal.length > 0){    
+      this.apiservice.GetTypeaheadData(staticModal);
+    }
+  }
+
   getStaticDataWithDependentData(){
     const staticModal = []
-    let staticModalGroup = this.CommonFunctionService.commanApiPayload([],this.listOfGridFieldName,[],{});
+    let staticModalGroup = this.CommonFunctionService.commanApiPayload([],this.listOfGridFieldName,[],this.typeaheadObjectWithtext);
     if(staticModalGroup.length > 0){
       staticModalGroup.forEach(element => {
         staticModal.push(element);
@@ -294,6 +365,7 @@ export class GridSelectionModalComponent implements OnInit {
     this.selectedData = [];
     this.selecteData=[];
     this.data = '';
+    this.dataShareService.setIsGridSelectionOpenOrNot(true);
     this.gridViewModalSelection.hide();
   }
 
@@ -429,6 +501,30 @@ export class GridSelectionModalComponent implements OnInit {
     //   }
     // }
     return false;
+  }
+
+  openModal(id, chipIndex, parentObj,fieldName, alertType) {
+    this.deleteIndex = chipIndex;
+    if(parentObj != ''){
+      this.parentObj = parentObj;
+      this.fieldNameForDeletion = fieldName;
+    }
+    this.CommonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
+  }
+
+  alertResponce1(responce) {
+    if (responce) {
+      this.deleteitem()
+    } else {
+      this.cancel();
+    }
+  }
+  cancel() {
+    this.deleteIndex = -1;
+    this.fieldNameForDeletion = {};
+  }
+  deleteitem() {
+    this.parentObj[this.fieldNameForDeletion.field_name].splice(this.deleteIndex,1)
   }
 
 
