@@ -100,6 +100,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   details:any = {};
   selectAllcheck:boolean = false;
   tabFilterData:any=[];
+  typeAheadData: string[] = [];
 
   
   navigationSubscription;
@@ -113,6 +114,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   exportExcelSubscription;
   pdfFileSubscription;
   previewHtmlSubscription;
+  typeaheadDataSubscription;
 
 
   @Input() selectTabIndex:number;
@@ -305,6 +307,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.previewHtmlSubscription = this.dataShareService.previewHtml.subscribe(data =>{
       this.setPreviewHtml(data);
     })
+    this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
+      this.setTypeaheadData(data);
+    })
     this.userInfo = this.storageService.GetUserInfo();
     this.currentMenu = this.storageService.GetActiveMenu(); 
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -450,6 +455,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
   }
+  setTypeaheadData(typeAheadData){
+    if (typeAheadData.length > 0) {
+      this.typeAheadData = typeAheadData;
+    } else {
+      this.typeAheadData = [];
+    }
+  }
   setDinamicForm(form){
     if(form && form.DINAMIC_FORM && this.flagForTdsForm){
       this.dinamic_form = form.DINAMIC_FORM;
@@ -529,6 +541,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
                 this.commonFunctionService.createFormControl(forControl, element, '', "text")
                 break;
               case "dropdown":
+                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                break;
+              case "typeahead":
                 this.commonFunctionService.createFormControl(forControl, element, '', "text")
                 break;
               case "date":
@@ -1022,6 +1037,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getddnDisplayVal(val) {
     return this.commonFunctionService.getddnDisplayVal(val);    
   }
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
+  }
   
   previewModalResponce(data){
     alert(data);
@@ -1224,6 +1246,26 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
     }
     console.log(this.bulkuploadList)
+  }
+
+  updateData(event, field) {
+    if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
+      return false;
+    }
+    let objectValue = this.filterForm.getRawValue();
+    this.callTypeaheadData(field,objectValue);      
+
+  }
+  callTypeaheadData(field,objectValue){
+    this.clearTypeaheadData();   
+    const payload = [];
+    const params = field.api_params;
+    const criteria = field.api_params_criteria;
+    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    this.apiService.GetTypeaheadData(payload);    
+  }
+  clearTypeaheadData() {
+    this.apiService.clearTypeaheadData();
   }
 
 }

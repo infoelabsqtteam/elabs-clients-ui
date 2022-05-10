@@ -4529,7 +4529,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         'name':this.nextFormData.name
       }
       formData[field.form_field_name] = nextFormReference;
-      targetFieldName = formData[field.field_name]
+      //targetFieldName = formData[field.field_name]
       updateMode = true;
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
@@ -4560,7 +4560,16 @@ case 'populate_fields_for_report_for_new_order_flow':
         field.moveFieldsToNewForm.forEach(keyValue => {
           const sourceTarget = keyValue.split("#");
           let key = sourceTarget[0];
-          let value = this.commonFunctionService.getObjectValue(sourceTarget[1],this.getFormValue(false));
+          let valueField = sourceTarget[1];
+          let formValue = {};
+          if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
+            const storeFormData = this.multipleFormCollection[field.form_value_index];
+            const formData = storeFormData['form_value'];            
+            formValue = formData;            
+          }else{
+            formValue = this.getFormValue(false)
+          }
+          let value = this.commonFunctionService.getObjectValue(valueField,formValue);
           targetFieldName['form'][key] = value;
         });
       }
@@ -4572,7 +4581,8 @@ case 'populate_fields_for_report_for_new_order_flow':
       "parent_field":parent_field,
       "current_field":field,
       "next_form_data":targetFieldName,
-      "updateMode" : updateMode
+      "updateMode" : updateMode,
+      "form_value" : this.getFormValue(false)
     }
     if(field && field.type == "list_of_fields"){
       form['index'] = index;
@@ -4880,7 +4890,9 @@ case 'populate_fields_for_report_for_new_order_flow':
       'add_next_form_button': next,
       'field_name': field_name,
       'type': 'hidden',
-      'form_field_name': form_field_name
+      'form_field_name': form_field_name,
+      'form_value_index' : 0,
+      'moveFieldsToNewForm' : ['employee_name#add_assignments.resource_name']
     };
     this.storeFormDetails('', field);
   }
