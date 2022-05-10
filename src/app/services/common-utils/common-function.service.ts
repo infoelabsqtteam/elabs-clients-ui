@@ -795,24 +795,40 @@ export class CommonFunctionService {
 
       case "color":
         break;
-        case "pattern":
-          if(object != null){
-            return this.getConvertedString(object,field.field_name);
-          }
 
-          case "reference_names":
-            if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
-              let name = '';
-              for(let i=0 ;i<value.length; i++){
-                if(this.coreFunctionService.isNotBlank(value[i]['name'])){
-                  name = name+', '+value[i]['name'];
-                }
-              }
-              if(name.length > 1){
-                name = name.substring(2);
-              }
-              return name;
+      case "pattern":
+        if(object != null){
+          return this.getConvertedString(object,field.field_name);
+        }
+
+      case "chips":
+        if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
+          let name = "";
+          for(let i=0 ;i<value.length; i++){
+            if(this.coreFunctionService.isNotBlank(value[i]['name'])){
+              name = name+', '+value[i]['name'];
+            }else{
+              name = name+', '+value[i];
             }
+          }
+          return name.substring(2);;
+        }
+        return "-";
+      case "reference_names":
+        if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
+          let name = '';
+          for(let i=0 ;i<value.length; i++){
+            if(this.coreFunctionService.isNotBlank(value[i]['name'])){
+              name = name+', '+value[i]['name'];
+            }
+          }
+          if(name.length > 1){
+            name = name.substring(2);
+          }
+          return name;
+        }else{
+          return "-";
+        }
           
 
 
