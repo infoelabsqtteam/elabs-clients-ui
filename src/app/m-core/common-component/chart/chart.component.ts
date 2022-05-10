@@ -61,7 +61,7 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
 
   filterValue:any = [];
   filteredDashboardData:any = [];
-
+  filterdata = '';
   
   total: number;
   showfilter:boolean = false;

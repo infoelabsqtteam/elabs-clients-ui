@@ -81,20 +81,27 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   
   
-  GoToSelectedModule(module){
-    // console.log(index)
-    const moduleList = this.storageService.GetModules();
-    let index = -1;
-    moduleList.forEach((elem, i) => {
-      if(elem._id == module._id){
-        index = i;
-      }
-    });
-    if(index != -1){
-      const moduleObject=this.AllModuleList[index];
-      this.setAppId(moduleObject);
-      this.moduleSelect.emit(index);
-    }    
+  GoToSelectedModule(module){ 
+    let moduleUrl = '';
+    if(module && module.url && module.url != '') {
+      moduleUrl = module.url;
+    }
+    if(moduleUrl != '') {
+      window.open(moduleUrl, '_blank');
+    }else {
+      const moduleList = this.storageService.GetModules();
+      let index = -1;
+      moduleList.forEach((elem, i) => {
+        if(elem._id == module._id){
+          index = i;
+        }
+      });
+      if(index != -1){
+        const moduleObject=this.AllModuleList[index];
+        this.setAppId(moduleObject);
+        this.moduleSelect.emit(index);
+      }  
+    }
   }
   getTemplateData(module,submenu) {
     if(this.permissionService.checkPermission(submenu.name,'view')){

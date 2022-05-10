@@ -4,8 +4,8 @@
       <mat-label class="filterlabel">Chart List</mat-label>
       <mat-select [(ngModel)]="filterValue" (selectionChange)="checkFilter()" multiple disableOptionCentering
         panelClass="chartfilteroption">
-        <div class="p-1"><input class="form-control-sm w-100 border" (keyup)="onKey($event.target.value)"></div>
-        <mat-option *ngFor="let staticValue of copyStaticData['chart_list']" [value]="staticValue._id">{{staticValue.name}}</mat-option>
+        <div class="p-1"><input class="form-control-sm w-100 border" [(ngModel)]="filterdata"></div>
+        <mat-option *ngFor="let staticValue of copyStaticData['chart_list'] | filter:filterdata; index as i" [value]="staticValue._id">{{staticValue.name}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-hint class="mt-2" [ngClass]="{'text-danger': filterValue.length > itemNumOfGrid}" [matTooltip]="filterValue.length > itemNumOfGrid ? tooltipMsg : ''" [matTooltipClass]="{'bg-danger': filterValue.length > itemNumOfGrid}" [matTooltipPosition]="'above'">{{filterValue?.length || 0}}/{{itemNumOfGrid}}</mat-hint>
