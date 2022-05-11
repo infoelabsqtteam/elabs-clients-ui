@@ -34,9 +34,10 @@
 
 
 
-                <div class="row mt-4">
-                    <div class="w-100">
-                        <table class="table" *ngIf="listOfPermission.length > 0">
+                <div class="row mt-4" *ngIf="addeduser">
+                    <div class="w-100" *ngIf="listOfPermission.length > 0">
+                        <h2 class="px-3">Permission Added List</h2>
+                        <table class="table">
                             <thead class="thead-light">
                                 <tr>
                                     <th>#</th>
@@ -57,7 +58,7 @@
 
                 <div class="row mt-4" *ngIf="viewpermissiondata">
                     <div class="w-100">
-                        <h3 class="px-3">Permission User List</h3>
+                        <h2 class="px-3">Permission User List</h2>
                         <table class="table">
                             <thead class="thead-light">
                                 <tr>
@@ -80,22 +81,9 @@
                         </table>
                     </div>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
             <div class="modal-footer">
-                <!-- <button mat-button color="primary" (click)="resetForm()" class="mr-2">Reset</button> -->
+                <button mat-button color="primary" (click)="resetForm()" class="mr-2">Reset</button>
                 <button mat-flat-button color="primary" (click)="savePermission()">Save</button>
             </div>
         </div>
