@@ -14,6 +14,6 @@
     left: 50%;
     top:50%;
 }
-:host ::ng-deep .custom-spinner circle{   
+/* :host ::ng-deep .custom-spinner circle{   
     stroke: #89ca6c;
-}
+} */
