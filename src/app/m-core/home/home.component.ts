@@ -100,21 +100,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }  
   GoToSelectedModule(module){
-    let moduleUrl = '';
-    if(module && module.url && module.url != '') {
-      moduleUrl = module.url;
-    }
-    if(moduleUrl != '') {
-      window.open(moduleUrl, '_blank');
-    }else {
-      this.storageService.setModule(module.name); 
-      this.dataShareService.sendCurrentPage('DASHBOARD')
-      const menuSearchModule = { "value": "menu", key2: module.name }
-      //this.store.dispatch(new MenuActios.GetTempMenu(menuSearchModule))
-      this.apiService.GetTempMenu(menuSearchModule)
-      // this.router.navigate(['/admin']);
-      this.getTemplateByMenu = true;
-    }
+    this.storageService.setModule(module.name); 
+    this.dataShareService.sendCurrentPage('DASHBOARD')
+    const menuSearchModule = { "value": "menu", key2: module.name }
+    //this.store.dispatch(new MenuActios.GetTempMenu(menuSearchModule))
+    this.apiService.GetTempMenu(menuSearchModule)
+    // this.router.navigate(['/admin']);
+    this.getTemplateByMenu = true;
     
   }
   gotoHomePage(){
