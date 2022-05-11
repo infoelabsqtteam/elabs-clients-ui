@@ -32,7 +32,8 @@ export class PermissionComponent implements OnInit {
   pageSize = 25;
 
   listOfPermission: any = [];
-  viewpermissiondata: boolean;
+  viewpermissiondata: boolean = false;
+  addeduser;
   updateMode = false;
 
 
@@ -136,7 +137,10 @@ export class PermissionComponent implements OnInit {
     this.permissionModal.show()
   }
   close() {
+    this.resetForm();
     this.permissionModal.hide();
+    this.viewpermissiondata = false;
+    this.addeduser = false;
   }
 
   savePermission() {
@@ -146,7 +150,8 @@ export class PermissionComponent implements OnInit {
       this.docApiService.SetDocPermission(folder);      
       this.close();
     }
-
+    this.viewpermissiondata = false;
+    this.addeduser = false;
   }
 
 
@@ -209,6 +214,8 @@ export class PermissionComponent implements OnInit {
       }
       this.listOfPermission.push(value);
       this.resetForm();
+      this.viewpermissiondata = false;
+      this.addeduser = true;
     }
     
   }
@@ -274,10 +281,11 @@ export class PermissionComponent implements OnInit {
         this.permissionForm.get(element.field_name).setValue(false);
       }
     })
-
+    this.viewpermissiondata = false;
   }
   viewpermission() {
     this.viewpermissiondata = !this.viewpermissiondata;
+    this.addeduser = false;
     this.permissionData();
   }
   permissionData(){
