@@ -4540,8 +4540,14 @@ case 'populate_fields_for_report_for_new_order_flow':
     });
   }
   
-  checkShowIfListOfFiedlds(field){
-    if(!this.commonFunctionService.showIf(field,this.getFormValue(true))){
+  checkShowIfListOfFiedlds(parent,field,index){
+    let formValue = this.getFormValue(true);
+    let parentFieldName = parent.field_name;
+    let fieldValue = formValue[parentFieldName];
+    if(fieldValue && fieldValue.length > 0){
+      formValue[parentFieldName] = fieldValue[index];
+    }
+    if(!this.commonFunctionService.showIf(field,formValue)){
       return true;
     }else{
       return false;
