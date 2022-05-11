@@ -221,7 +221,7 @@
 
 
 <app-new-folder-creation id="createNewfolder" (createFolderResponce)="createFolderResponce($event)"></app-new-folder-creation>
-<app-doc-file-upload id="docFileUpload" (uploadDocFileResponce)="uploadDocFileResponce($event)"></app-doc-file-upload>
+<app-doc-file-upload id="docFileUpload" [folderName]="folderName" [vdrprentfolder]="vdrprentfolder" (uploadDocFileResponce)="uploadDocFileResponce($event)"></app-doc-file-upload>
 <app-move-file-folder id="moveDocModel" (moveFileFolderResponce)="moveFileFolderResponce($event)"></app-move-file-folder>
 <app-doc-view-model id="docViewModal" (docViewModalResponce)="docViewModalResponce($event)"></app-doc-view-model>
 <app-doc-folder-upload id="docFolderUpload" (uploadDocFolderResponce)="uploadDocFolderResponce($event)"></app-doc-folder-upload>
