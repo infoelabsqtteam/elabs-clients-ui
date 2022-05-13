@@ -1520,7 +1520,44 @@ export class CommonFunctionService {
          return templateValue;
       }
 
+getPercent(templateValue,parent,field){
+  const calculateValue = {};
+  if(field && field.calSourceTarget && field.calSourceTarget.length >= 1){
+    let source = field.calSourceTarget[0].source;
+    let target = field.calSourceTarget[0].target;
+    let sourceValue = this.getObjectValue(source,templateValue);
+    if(sourceValue && sourceValue != ''){
+      if(typeof sourceValue == 'number'){
+        let fileName = field.field_name;
+        let percent:any;
+        if(parent != ''){
+          percent = templateValue[parent.field_name][fileName]
+        }else{
+          percent = templateValue[fileName]
+        }
+        if(typeof sourceValue == 'number' && percent && percent >= 1 ){
+          let percentValue = sourceValue * percent / 100;
+          let targetFields = target.split('.');
+          if(targetFields && targetFields.length == 2){
+            const parent = targetFields[0];
+            const child = targetFields[1];
+            calculateValue[parent] = {};
+            calculateValue[parent][child] = percentValue
+          }else{
+            const child = targetFields[0];
+            calculateValue[child] = percentValue
+          }
+        }
+      }else{
+        this.notificationService.notify('bg-danger', 'Source Value is not a number.')
+      }
+    }else{
+      this.notificationService.notify('bg-danger', 'Source Field is Required.')
+    }
+  }
 
+  return calculateValue;
+}
 update_invoice_total_on_custom_field(templateValue,lims_segment, field: any){
     let total =templateValue['total_amount'];
     let	surcharge	=total['surcharge'];
