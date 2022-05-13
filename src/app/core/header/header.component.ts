@@ -119,10 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
           if(this.AllModuleList.length == 1){
             this.GoToSelectedModule(this.AllModuleList[0]);
           }      
-        }else{
-          this.module = false;
-        }
-
+        };
 
         if (this.storageService.GetUserInfo()) {
             this.userInfo = this.storageService.GetUserInfo();
@@ -283,23 +280,23 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
 
     getMenuByModule() {
-        //  this.AllModuleList = this.storageService.GetModules();
-        // if (this.moduleIndex != -1) {
-        //     const module = this.AllModuleList[this.moduleIndex]
-        //     if (module.menu_list != undefined && module.menu_list != null) {
-        //         this.menuData = module.menu_list;
-        //         const menu = this.menuData[0];
-        //         if (menu && menu.submenu) {
-        //             this.getTemplateData(menu.submenu[0]);
-        //         } else {
-        //             this.getTemplateData(menu)
-        //         }
-        //     } else {
-        //         this.menuData = [];
-        //     }
-        // } else {
-        //     this.menuData = [];
-        // }
+        this.AllModuleList = this.storageService.GetModules();
+        if (this.moduleIndex != -1) {
+            const module = this.AllModuleList[this.moduleIndex]
+            if (module.menu_list != undefined && module.menu_list != null) {
+                this.menuData = module.menu_list;
+                const menu = this.menuData[0];
+                if (menu && menu.submenu) {
+                    this.getTemplateData(menu.submenu[0]);
+                } else {
+                    this.getTemplateData(menu)
+                }
+            } else {
+                this.menuData = [];
+            }
+        } else {
+            this.menuData = [];
+        }
     }
 
     setMenuData(menuData) {
