@@ -2068,7 +2068,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.commonFunctionService.autopopulateFields(this.templateForm);
             break;
         default:
-          this.inputOnChangeFunc(field);
+          this.inputOnChangeFunc('',field);
       }
     }
     let objectValue:string = "";
@@ -2154,7 +2154,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.listOfFieldUpdateMode = false;
   }
   
-  inputOnChangeFunc(field) {
+  inputOnChangeFunc(parent,field) {
     if(field.type == 'checkbox'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
         let formValue = this.getFormValue(false);
@@ -2363,7 +2363,10 @@ case 'populate_fields_for_report_for_new_order_flow':
        case 'calculate_next_calibration_due_date':
             this.commonFunctionService.calculate_next_calibration_due_date(this.templateForm);
             break;
-
+        case 'get_percent':
+          calFormValue = this.commonFunctionService.getPercent(this.templateForm.getRawValue(),parent, field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         default:
           break;
 
@@ -2576,7 +2579,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             }
           }
           if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
-           this.inputOnChangeFunc(field);
+           this.inputOnChangeFunc('',field);
           }
           
         }        
