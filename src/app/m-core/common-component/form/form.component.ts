@@ -3218,7 +3218,15 @@ case 'populate_fields_for_report_for_new_order_flow':
           return '<i class="fa fa-eye text-pointer"></i>';
         } else {
           return '-';
-        }      
+        } 
+      case "checkbox":
+        let value:any = false;
+        if (item.display_name && item.display_name != "") {
+          value = this.commonFunctionService.getObjectValue(item.display_name, listOfField);
+        } else {
+          value = this.getValueForGrid(item,listOfField);
+        }
+        return value ? "Yes" : "No";     
       default:
         if (item.display_name && item.display_name != "") {
           return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
