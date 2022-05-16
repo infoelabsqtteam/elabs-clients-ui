@@ -314,6 +314,7 @@ export class CommonFunctionService {
         setValue = setValue + "";
       }
       switch (condition[1]) {
+        case 'eq':
         case 'equal':
           if (condition.length > 2) {
             //console.log('setValue');
@@ -351,6 +352,7 @@ export class CommonFunctionService {
           } else {
             return false;
           }
+        case "neq":
         case "notequal":
           if (condition.length > 2) {
             //console.log('setValue');
