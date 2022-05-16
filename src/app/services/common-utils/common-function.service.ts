@@ -386,7 +386,7 @@ export class CommonFunctionService {
           case "tree_view_selection":
           case "dropdown":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0 && element.type != 'dropdown'){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
