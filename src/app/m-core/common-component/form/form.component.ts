@@ -4069,8 +4069,9 @@ case 'populate_fields_for_report_for_new_order_flow':
         case "add":
           this.setListoffieldData();          
           break;
-          case "delete":
-            this.deleteGridData();
+        case "delete_row":
+          this.deleteGridData();
+          break; 
         default:
           this.partialDataSave(action_button.onclick,null)
           break;
