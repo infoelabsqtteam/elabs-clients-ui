@@ -50,6 +50,26 @@
 
 
       <ul class="navbar-nav ml-auto nav-flex-icons d-flex align-items-center">
+
+        <div class="searchbox position-relative mr-3">
+          <input [(ngModel)]="filterdata" class="form-control rounded-pill" (keyup)="searchmodel()" placeholder="Search items..." autocomplete="off">
+          <div class="searchicon"><mat-icon>search</mat-icon></div>
+          <div class="moduleitems" *ngIf="showsearchmenu">
+            <div class="modulesdata">
+              <div *ngFor="let item of AllModuleList |filter:filterdata; let i = index">
+                <button mat-button class="text-left w-100" (click)="GoToSelectedModule(item)">{{ item.title }}</button>
+                <!-- <div class="px-2" *ngFor="let subitem of item.menu_list |filter:filterdata">
+                  <button mat-button class="text-left w-100" (click)="getTemplateData(item,subitem)"><small>{{ subitem.label }}</small></button>
+                  <div class="px-2" *ngFor="let subSubitem of subitem.submenu |filter:filterdata">
+                    <button mat-button class="text-left w-100" (click)="getTemplateData(item,subSubitem)"><small>{{ subSubitem.label }}</small></button>
+                  </div>
+                </div> -->
+              </div>
+              <p class="text-center p-3 pt-4" *ngIf="(AllModuleList | filter: filterdata).length === 0"><small>No Data Match</small></p>
+            </div>
+          </div>
+        </div>
+
         <li class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
         <li class="nav-item avatar mx-1" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
         <li class="nav-item avatar mx-1">
@@ -73,4 +93,3 @@
 
   </mdb-navbar>
 </header>
-

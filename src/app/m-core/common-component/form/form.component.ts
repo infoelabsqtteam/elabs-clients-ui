@@ -2079,7 +2079,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.commonFunctionService.autopopulateFields(this.templateForm);
             break;
         default:
-          this.inputOnChangeFunc(field);
+          this.inputOnChangeFunc('',field);
       }
     }
     let objectValue:string = "";
@@ -2165,7 +2165,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.listOfFieldUpdateMode = false;
   }
   
-  inputOnChangeFunc(field) {
+  inputOnChangeFunc(parent,field) {
     if(field.type == 'checkbox'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
         let formValue = this.getFormValue(false);
@@ -2242,6 +2242,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
             this.updateDataOnFormField(calFormValue); 
           break;
+          case 'populate_fields_for_direct_order':
+            list_of_populated_fields = [
+              {"from":"fax","to":"billing_fax"},
+              {"from":"mobile","to":"billing_mobile"},
+              {"from":"phone","to":"billing_tel"},
+              {"from":"city","to":"billing_city"},
+              {"from":"state","to":"billing_state"},
+              {"from":"country","to":"billing_country"},
+              {"from":"address_line2","to":"billing_address_line2"},
+              {"from":"gst_no","to":"billing_gst"},
+              {"from":"email","to":"billing_contact_person_email"},
+              {"from":"address_line1","to":"billing_address"},
+              {"from":"pincode","to":"billing_pincode"},
+              {"from":"contact.name","to":"billing_contact_person"},
+              {"from":"account.name","to":"billing_company"},
+          
+            ]
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            this.updateDataOnFormField(calFormValue); 
+          break;
 case 'populate_fields_for_new_order_flow':
             list_of_populated_fields = [
               {"from":"fax","to":"billing_fax"},
@@ -2274,6 +2294,24 @@ case 'populate_fields_for_new_order_flow':
             {"from":"address_line1","to":"reporting_address"},
             {"from":"pincode","to":"reporting_pincode"},
             {"from":"first_name+last_name+ ","to":"reporting_contact_person"},
+            {"from":"account.name","to":"reporting_company"},
+          ]
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          this.updateDataOnFormField(calFormValue); 
+          // this.commonFunctionService.populate_fields_for_report(this.templateForm);
+          break;
+          case 'populate_fields_for_report_direct_order':
+           list_of_populated_fields = [
+            {"from":"mobile","to":"reporting_mobile"},
+            {"from":"phone","to":"reporting_tel"},
+            {"from":"city","to":"reporting_city"},
+            {"from":"state","to":"reporting_state"},
+            {"from":"country","to":"reporting_country"},
+            {"from":"gst_no","to":"reporting_gst"},
+            {"from":"email","to":"reporting_contact_person_email"},
+            {"from":"address_line1","to":"reporting_address"},
+            {"from":"pincode","to":"reporting_pincode"},
+            {"from":"contact.name","to":"reporting_contact_person"},
             {"from":"account.name","to":"reporting_company"},
           ]
           calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
@@ -2336,7 +2374,10 @@ case 'populate_fields_for_report_for_new_order_flow':
        case 'calculate_next_calibration_due_date':
             this.commonFunctionService.calculate_next_calibration_due_date(this.templateForm);
             break;
-
+        case 'get_percent':
+          calFormValue = this.commonFunctionService.getPercent(this.templateForm.getRawValue(),parent, field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         default:
           break;
 
@@ -2549,7 +2590,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             }
           }
           if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
-           this.inputOnChangeFunc(field);
+           this.inputOnChangeFunc('',field);
           }
           
         }        
@@ -3207,7 +3248,15 @@ case 'populate_fields_for_report_for_new_order_flow':
           return '<i class="fa fa-eye text-pointer"></i>';
         } else {
           return '-';
-        }      
+        } 
+      case "checkbox":
+        let value:any = false;
+        if (item.display_name && item.display_name != "") {
+          value = this.commonFunctionService.getObjectValue(item.display_name, listOfField);
+        } else {
+          value = this.getValueForGrid(item,listOfField);
+        }
+        return value ? "Yes" : "No";     
       default:
         if (item.display_name && item.display_name != "") {
           return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
@@ -4534,8 +4583,14 @@ case 'populate_fields_for_report_for_new_order_flow':
     });
   }
   
-  checkShowIfListOfFiedlds(field){
-    if(!this.commonFunctionService.showIf(field,this.getFormValue(true))){
+  checkShowIfListOfFiedlds(parent,field,index){
+    let formValue = this.getFormValue(true);
+    let parentFieldName = parent.field_name;
+    let fieldValue = formValue[parentFieldName];
+    if(fieldValue && fieldValue.length > 0){
+      formValue[parentFieldName] = fieldValue[index];
+    }
+    if(!this.commonFunctionService.showIf(field,formValue)){
       return true;
     }else{
       return false;
@@ -4561,7 +4616,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         'name':this.nextFormData.name
       }
       formData[field.form_field_name] = nextFormReference;
-      targetFieldName = formData[field.field_name]
+      //targetFieldName = formData[field.field_name]
       updateMode = true;
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
@@ -4592,7 +4647,16 @@ case 'populate_fields_for_report_for_new_order_flow':
         field.moveFieldsToNewForm.forEach(keyValue => {
           const sourceTarget = keyValue.split("#");
           let key = sourceTarget[0];
-          let value = this.commonFunctionService.getObjectValue(sourceTarget[1],this.getFormValue(false));
+          let valueField = sourceTarget[1];
+          let formValue = {};
+          if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
+            const storeFormData = this.multipleFormCollection[field.form_value_index];
+            const formData = storeFormData['form_value'];            
+            formValue = formData;            
+          }else{
+            formValue = this.getFormValue(false)
+          }
+          let value = this.commonFunctionService.getObjectValue(valueField,formValue);
           targetFieldName['form'][key] = value;
         });
       }
@@ -4604,7 +4668,8 @@ case 'populate_fields_for_report_for_new_order_flow':
       "parent_field":parent_field,
       "current_field":field,
       "next_form_data":targetFieldName,
-      "updateMode" : updateMode
+      "updateMode" : updateMode,
+      "form_value" : this.getFormValue(false)
     }
     if(field && field.type == "list_of_fields"){
       form['index'] = index;
@@ -4912,7 +4977,9 @@ case 'populate_fields_for_report_for_new_order_flow':
       'add_next_form_button': next,
       'field_name': field_name,
       'type': 'hidden',
-      'form_field_name': form_field_name
+      'form_field_name': form_field_name,
+      'form_value_index' : 0,
+      'moveFieldsToNewForm' : ['employee_name#add_assignments.resource_name']
     };
     this.storeFormDetails('', field);
   }

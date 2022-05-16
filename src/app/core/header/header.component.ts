@@ -57,8 +57,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     activeclass = false;
     AllModuleList: any = [];
+    filterdata = '';
     public teamname: any;
     teamNameMenu = '';
+    getTemplateByMenu:boolean=false;
+    showsearchmenu = false;
+    module:boolean=true;
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -108,6 +112,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.gitVersion = data['git.build.version'];
             }
         });
+
+
+        this.AllModuleList = this.storageService.GetModules();
+        if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
+          if(this.AllModuleList.length == 1){
+            this.GoToSelectedModule(this.AllModuleList[0]);
+          }      
+        };
 
         if (this.storageService.GetUserInfo()) {
             this.userInfo = this.storageService.GetUserInfo();
@@ -238,22 +250,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 break;
 
         }
-        // if (this.loginUserIcon) {
-        //     if (this.storageService.GetUserInfo()) {
-        //         this.userInfo = this.storageService.GetUserInfo();
-        //         this.userName = this.userInfo.name;
-        //         this.userEmail = this.userInfo.email;
-        //         this.teamname = this.userInfo.list1;
-        //         if (this.userName && this.userName != null) {
-        //             this.userFirstLetter = this.userName.charAt(0).toUpperCase()
-        //         } else {
-        //             if (this.userInfo.email && this.userInfo.email != null) {
-        //                 this.userFirstLetter = this.userInfo.email.toUpperCase()
-        //             }
-        //         }
-        //         this.getUserColorCode(this.userFirstLetter);
-        //     }
-        // }
+       
         if (this.storageService != null && this.storageService.GetIdToken() != null) {
             const idToken = this.storageService.GetIdToken();
             if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
@@ -305,6 +302,48 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     setMenuData(menuData) {
         if (menuData && menuData.length > 0) {
             this.menuData = menuData;
+            if(this.getTemplateByMenu){
+                let defaultmenuIndex = 0;
+                for (let index = 0; index <  this.menuData.length; index++) {
+                  if(this.menuData[index].defaultMenu){
+                    defaultmenuIndex = index;
+                    break;
+                  }            
+                }
+                let defaultSubmenuIndex = -1;
+                const defaultMenu =this.menuData[defaultmenuIndex];
+                if(defaultMenu.submenu && defaultMenu.submenu.length > 0){
+                  for (let index = 0; index < defaultMenu.submenu.length; index++) {
+                    if(defaultMenu.submenu[index].defaultMenu){
+                      defaultSubmenuIndex = index;
+                      break;
+                    }              
+                  }
+                  if(defaultSubmenuIndex == -1){
+                    defaultSubmenuIndex = 0;
+                  }
+                }
+                if(defaultSubmenuIndex > -1){
+                  this.storageService.SetActiveMenu(this.menuData[defaultmenuIndex].submenu[defaultSubmenuIndex]);              
+                  this.apiService.resetTempData();
+                  this.apiService.resetGridData();            
+                  this.router.navigate(['template']);
+                }else{
+                  const menu = this.menuData[defaultmenuIndex];
+                  if(menu.name == "document_library"){
+                    this.router.navigate(['vdr']);
+                  }else if(menu.name == "report"){
+                    this.router.navigate(['report']);
+                  }
+                  else{
+                    this.storageService.SetActiveMenu(this.menuData[defaultmenuIndex]);              
+                    this.apiService.resetTempData();
+                    this.apiService.resetGridData();
+                    this.router.navigate(['template']);
+                  }
+                }          
+              }
+            this.getTemplateByMenu = false;
         }
     }
 
@@ -358,14 +397,10 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.dataShareService.sendCurrentPage('DASHBOARD');
         this.router.navigate([link])
     }
-    goToChangePassword()                              //Added by Gaurav Tyagi
-    {
-        // this.dataShareService.sendCurrentPage('createpwd');
-        // this.router.navigate([link])
+    goToChangePassword(){
         this.router.navigate(['createpwd']);
     }
     navigateSigninPage() {
-        // this.logoPath = '../../assets/images/logo.png';
         let loginType: any = Common.AUTH_TYPE;
         if (loginType == 'ADMIN') {
             this.router.navigate(['admin'])
@@ -496,10 +531,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         let element = document.querySelector('.navbar');
         if (element && element.clientHeight) {
             if (window.pageYOffset > element.clientHeight) {
-                // this.logoPath = '../../assets/img/2.png';
                 element.classList.add('navbar-inverse', 'shadow');
             } else {
-                // this.logoPath = '../../assets/images/logo.png';
                 element.classList.remove('navbar-inverse', 'shadow');
             }
 
@@ -514,7 +547,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         else if (this.currentPage == 'HOME2') {
             let element = document.querySelector('.navbar');
             element.classList.add('navbar-inverse', 'shadow');
-            //  this.logoPath = '../../assets/img/2.png';
             return 'fixed-top'
         }
         else {
@@ -525,7 +557,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     gotoStaticMenu(menu) {
         if (menu == 'home_page') {
             this.dataShareService.sendCurrentPage('HOME')
-            //  this.logoPath = '../../assets/images/logo.png';
             let element = document.querySelector('.navbar');
             element.classList.remove('navbar-inverse', 'shadow');
         }
@@ -576,4 +607,21 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     gitInfo() {
         this.modelService.open('git_version', {})
     }
+    GoToSelectedModule(item){
+        this.storageService.setModule(item.name); 
+        this.dataShareService.sendCurrentPage('DASHBOARD')
+        const menuSearchModule = { "value": "menu", key2: item.name }
+        this.apiService.GetTempMenu(menuSearchModule)
+        this.getTemplateByMenu = true;
+        this.showsearchmenu = false;
+        this.filterdata = '';
+    }
+    searchmodel() {
+        if(this.filterdata != ''){
+            this.showsearchmenu = true;
+        }else {
+            this.showsearchmenu = false;
+        }
+    }
+      
 }

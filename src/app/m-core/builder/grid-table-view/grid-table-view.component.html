@@ -40,11 +40,33 @@
                                                 </select>
                                                 <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                             </div>
+
                                             <div *ngIf="head.type == 'dropdown'" class="position-relative">
-                                                <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
-                                                    <option *ngFor="let data of copyStaticData[head.ddn_field]" [ngValue]="data">{{getddnDisplayVal(data)}}</option>
+                                                <!-- <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
+                                                    <option *ngFor="let data of copyStaticData[head.ddn_field] | filter:filterdata; index as i" [ngValue]="data">{{getddnDisplayVal(data)}} 2</option>
                                                 </select>
-                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>-->
+
+                                                <mat-form-field appearance="outline">
+                                                    <mat-select [formControlName]="head.field_name" (selectionChange)="applyFilter()" disableOptionCentering panelClass="matdropdown">
+                                                        <div class="p-1"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="filterdata" [ngModelOptions]="{standalone: true}"></div>
+                                                        <mat-option *ngFor="let data of copyStaticData[head.ddn_field] |filter:filterdata; index as i" [value]="data">{{getddnDisplayVal(data)}}</mat-option>
+                                                    </mat-select>
+                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="head.type == 'typeahead'">
+                                                <div class="w-100 position-relative">
+                                                    <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="head.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                        <!-- <mat-label>{{head.label}} <span *ngIf="head.is_mandatory && head.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label> -->
+                                                        <input type="text" [placeholder]="head.label" aria-label="Number" matInput [formControlName]="head.field_name"
+                                                            [matAutocomplete]="first" (keyup)="updateData($event,head)" [id]="head._id+'_'+head.field_name" autocomplete="off">
+                                                        <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="applyFilter()" [displayWith]="getOptionText">
+                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                            <!-- <mat-option *ngIf="head.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option> -->
+                                                        </mat-autocomplete> 
+                                                    </mat-form-field>
+                                                </div>
                                             </div>
                                             <div *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number'" class="position-relative">
                                                 <input class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyFilter()">
