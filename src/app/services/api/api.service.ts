@@ -5,6 +5,7 @@ import { from, of, Observable } from 'rxjs';//fromPromise
 import { DataShareService } from '../data-share/data-share.service';
 import { EnvService } from '../env/env.service';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -135,6 +136,15 @@ constructor(
   resetTempData(){
     this.dataShareService.shareTempData([])
   }
+  deleteGridRow(payload){
+    let api = this.envService.getApi('DELETE_GRID_ROW');
+    this.http.post(api+ '/' + payload.curTemp,payload).subscribe(
+      (response) => {
+        this.dataShareService.setDeleteGridRowResponce(response);
+      }
+    )
+  }
+
   SaveFormData(payload){
     let api = this.envService.getApi('SAVE_FORM_DATA');
     this.saveCall(api+ '/' + payload.curTemp,payload)

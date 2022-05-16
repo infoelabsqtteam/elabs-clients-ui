@@ -1125,6 +1125,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.downloadQRCode = this.commonFunctionService.getQRCode(gridData,this.elements[index]);
           this.checkForDownloadReport = true;
           break;
+        case 'DELETE_ROW':
+          if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
+            this.editedRowData(index,button.onclick.action_name)
+          }else{
+            this.notificationService.notify("bg-danger", "Permission denied !!!");
+          }
+          break;
         default:
           this.editedRowData(index,button.onclick.action_name)
           break;
