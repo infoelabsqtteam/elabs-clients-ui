@@ -1274,7 +1274,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.apiService.clearTypeaheadData();
   }
   checkTypgraphCondition(object,name){
-    let background = {};
+    let background = '';
     if(this.typegrapyCriteriaList && this.typegrapyCriteriaList.length >= 1){
       let criteriaMatched = false;
       let matchedelement = {};
@@ -1310,7 +1310,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           default:
             break;
         }
-        background[name] = value;
+        background = value;
       }      
     }
     return background;
