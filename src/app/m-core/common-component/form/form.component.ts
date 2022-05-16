@@ -260,6 +260,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   gridDataSubscription;
   tempDataSubscription;
   saveResponceSubscription;
+  deleteGridRowResponceSubscription;
   gridFilterDataSubscription;
   typeaheadDataSubscription;
   dinamicFormSubscription;
@@ -272,6 +273,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   validationConditionSubscription;
   nextFormSubscription;
   isGridSelectionOpen: boolean = true;
+  deleteGridRowData: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -359,6 +361,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       this.setSaveResponce(responce);
+    })
+    this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
+      this.setGridRowDeleteResponce(responce);
     })
     this.gridFilterDataSubscription = this.dataShareService.gridFilterData.subscribe(data =>{
       this.setGridFilterData(data);
@@ -1252,6 +1257,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         });
       }
     });
+  }
+
+  setGridRowDeleteResponce(responce){
+    console.log(responce);
+    this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
+    this.dataSaveInProgress = true;
   }
 
   setSaveResponce(saveFromDataRsponce){
@@ -2827,7 +2838,13 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(this.envService.getRequestType() == 'PUBLIC'){
       hasPermission = true;
     }
-    let formValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
+    let formValue;
+    if(this.deleteGridRowData){
+      formValue = this.templateForm.getRawValue();
+    }else{
+      formValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
+    }
+    this.deleteGridRowData = false;
        
     if(hasPermission){      
       if(this.templateForm.valid){
@@ -2893,6 +2910,19 @@ case 'populate_fields_for_report_for_new_order_flow':
     }else{
       this.notificationService.notify('bg-danger',checkValidatiaon.msg);
     }     
+  }
+
+  deleteGridData(){
+    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,this.getFormValue(true));
+    if(typeof checkValidatiaon != 'object'){
+      this.deleteGridRowData = true;
+      const saveFromData = this.getSavePayloadData();
+      if(this.getSavePayload){
+          this.apiService.deleteGridRow(saveFromData);
+      }
+    }else{
+      this.notificationService.notify('bg-danger',checkValidatiaon.msg);
+    } 
   }
 
   downloadReport(){
@@ -3990,6 +4020,8 @@ case 'populate_fields_for_report_for_new_order_flow':
         case "add":
           this.setListoffieldData();          
           break;
+          case "delete":
+            this.deleteGridData();
         default:
           this.partialDataSave(action_button.onclick,null)
           break;
