@@ -15,7 +15,9 @@ export class DataShareService {
   tempData:EventEmitter<any> = new EventEmitter<any>(null);
   tempStoreData:any; 
   saveFromDataRsponce:string='';
+  deleteGridRowDataRsponce:string='';
   saveResponceData:EventEmitter<any>= new EventEmitter<any>(null);
+  deleteGridRowResponceData:EventEmitter<any>= new EventEmitter<any>(null);
   gridFilterData:EventEmitter<any>= new EventEmitter<any>(null);
   typeAheadData:EventEmitter<any>= new EventEmitter<any>(null);
   form:EventEmitter<any>= new EventEmitter<any>(null);
@@ -104,6 +106,15 @@ export class DataShareService {
   getSaveResponce(){
     return this.saveFromDataRsponce;
   }
+
+  setDeleteGridRowResponce(responce){
+    this.deleteGridRowResponceData.emit(responce);
+    this.deleteGridRowDataRsponce = responce;
+  }
+  getDeleteRowDataResponce(){
+    return this.deleteGridRowDataRsponce;
+  }
+
   setGridFilterData(responce){
     this.gridFilterData.emit(responce);
   }

@@ -3,6 +3,7 @@ export enum EndPoint {
     GET_USER_PERMISSION = "user/utvn",
     SAVE_CUSTOM_TEMPLATE = "ins/save/templates",
     SAVE_FORM_DATA = "ins/save",
+    DELETE_GRID_ROW = "del/delete",
     SEND_EMAIL = "ins/send_mail",
     GET_CUSTOM_TEMPLATE = "rpts/sobj",
     GET_GRID_DATA = "rpts/gd",
