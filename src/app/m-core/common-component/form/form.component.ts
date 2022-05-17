@@ -2231,6 +2231,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
             this.updateDataOnFormField(calFormValue); 
           break;
+          case 'job_card_series':
+            list_of_populated_fields=[
+              {"from":"tl_name.name+service_line.name+parent_company.name+/","to":"job_card_name"},
+            ]
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            this.updateDataOnFormField(calFormValue); 
+          break;
           case 'populate_fields_for_direct_order':
             list_of_populated_fields = [
               {"from":"fax","to":"billing_fax"},
