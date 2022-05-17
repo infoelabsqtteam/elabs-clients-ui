@@ -18,7 +18,8 @@
               <ng-template mat-tab-label>
                 <div class="mat-tab-label-content cursor-pointer" (click)="getTab(i,tab.tab_name)">
                     {{ gateTabName(tab) }}
-                    <span *ngIf="selectTabIndex == i">({{total}})</span>
+                    <!-- <span *ngIf="selectTabIndex == i">({{gridCountByTab[tab.tab_name]}})</span> -->
+                    <span>({{gridCountByTab[tab.tab_name]}})</span>
                 </div>
               </ng-template>
             </mat-tab>

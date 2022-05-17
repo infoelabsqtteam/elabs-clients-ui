@@ -97,7 +97,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}">
+                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}" [style.background-color]="checkTypgraphCondition(el,'background-color')">
                                         <td [ngClass]="selectedRowIndex == i ? 'd-none':''" *ngIf="elements.length > 0">
                                             <span *ngIf="editedRowIndex != i" class="text-nowrap">
                                                 <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">

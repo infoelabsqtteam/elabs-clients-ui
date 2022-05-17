@@ -10,6 +10,8 @@ export class DataShareService {
   currentpage:string = '';
   staticData: EventEmitter<any> = new EventEmitter<any>(null);
   setStaticData={};
+  gridCountData: EventEmitter<any> = new EventEmitter<any>(null);
+  setGridCountData={};
   gridData: EventEmitter<any> = new EventEmitter<any>(null);
   menu:EventEmitter<any> = new EventEmitter<any>(null);
   tempData:EventEmitter<any> = new EventEmitter<any>(null);
@@ -82,6 +84,13 @@ export class DataShareService {
   }
   getStatiData(){
     return this.setStaticData;
+  }
+  shareGridCountData(gridCountData:any){
+    this.gridCountData.emit(gridCountData);
+    this.setGridCountData = gridCountData;
+  }
+  getGridCountData(){
+    return this.setGridCountData;
   }
   shareGridData(gridData:any){
     this.gridData.emit(gridData);
