@@ -82,6 +82,38 @@ constructor(
   resetStaticAllData(){
     this.dataShareService.shareStaticData({})
   }
+  getGridCountData(payloads){ 
+    from(payloads)
+    .pipe(
+      mergeMap((payload)=>         
+        this.gridCountDataCall([payload]))
+      )
+      .subscribe(
+        (res) => {
+          this.setGridCountData(res['success'])
+        },
+        (error)=>{
+          console.log(error);
+        }
+    )
+  }
+  gridCountDataCall(payload){
+    let api = this.envService.getApi('GET_COUNT_DATA');
+    return this.http.post(api, payload)
+  }
+  setGridCountData(data){
+    const gridCountData = this.dataShareService.getGridCountData();    
+    if(data.length > 0){                
+      data.forEach(element => {
+        gridCountData[element.field] = element.data_size            
+      }); 
+    } 
+    this.dataShareService.shareGridCountData(gridCountData);
+
+  }
+  resetGridCountAllData(){
+    this.dataShareService.shareGridCountData({})
+  }
   getGridData(payload){
     let api = this.envService.getApi('GET_GRID_DATA');
     this.http.post(api + '/' + payload.path, payload.data).subscribe(

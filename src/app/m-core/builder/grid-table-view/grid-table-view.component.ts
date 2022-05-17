@@ -588,13 +588,28 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
           this.currentMenu.name = this.tab.tab_name;
+          this.apiService.resetGridCountAllData();
           this.getPage(1);
+          this.getTabsCount(this.tabs);
         }
 
       }
     }
 
 
+  }
+  getTabsCount(tabs){
+    if(tabs && tabs.length >= 1 ){
+      let payloads = [];
+      tabs.forEach(element => {
+        const payload = this.commonFunctionService.getPaylodWithCriteria(element.tab_name,element.tab_name,[],{});
+        payload['countOnly'] = true;
+        payloads.push(payload);
+      });
+      if(payloads && payloads.length > 0){
+        this.apiService.getGridCountData(payloads);
+      }  
+    }
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce.success != '' && this.updateGridData) {
