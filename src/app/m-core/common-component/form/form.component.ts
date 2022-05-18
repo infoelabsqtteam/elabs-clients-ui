@@ -1327,7 +1327,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }
             getFormData.data=data;
             this.apiService.GetForm(getFormData);
-            let navigation_url = "template/"+public_key+"/"+_id+"/ie09/cnf00v";
+            let navigation_url = "pbl/"+public_key+"/"+_id+"/ie09/cnf00v";
             this.router.navigate([navigation_url]);
           }else{
             this.router.navigate(["home_page"]);
