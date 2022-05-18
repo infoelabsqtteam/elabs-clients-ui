@@ -1338,7 +1338,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }
             getFormData.data=data;
             this.apiService.GetForm(getFormData);
-            let navigation_url = "template/"+public_key+"/"+_id+"/ie09/cnf00v";
+            let navigation_url = "pbl/"+public_key+"/"+_id+"/ie09/cnf00v";
             this.router.navigate([navigation_url]);
           }else{
             this.router.navigate(["home_page"]);
@@ -2238,6 +2238,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               {"from":"first_name+last_name+ ","to":"billing_contact_person"},
               {"from":"account.name","to":"billing_company"},
           
+            ]
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            this.updateDataOnFormField(calFormValue); 
+          break;
+          case 'job_card_series':
+            list_of_populated_fields=[
+              {"from":"tl_name.name+service_line.name+parent_company.name+/","to":"job_card_name"},
             ]
             calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
             this.updateDataOnFormField(calFormValue); 
