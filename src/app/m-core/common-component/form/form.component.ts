@@ -260,6 +260,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   gridDataSubscription;
   tempDataSubscription;
   saveResponceSubscription;
+  deleteGridRowResponceSubscription;
   gridFilterDataSubscription;
   typeaheadDataSubscription;
   dinamicFormSubscription;
@@ -272,6 +273,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   validationConditionSubscription;
   nextFormSubscription;
   isGridSelectionOpen: boolean = true;
+  deleteGridRowData: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -359,6 +361,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       this.setSaveResponce(responce);
+    })
+    this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
+      this.setGridRowDeleteResponce(responce);
     })
     this.gridFilterDataSubscription = this.dataShareService.gridFilterData.subscribe(data =>{
       this.setGridFilterData(data);
@@ -1254,6 +1259,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     });
   }
 
+  setGridRowDeleteResponce(responce){
+    console.log(responce);
+    this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
+    this.dataSaveInProgress = true;
+  }
+
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
       if (saveFromDataRsponce.success && saveFromDataRsponce.success != '' && this.showNotify) {
@@ -2068,7 +2079,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.commonFunctionService.autopopulateFields(this.templateForm);
             break;
         default:
-          this.inputOnChangeFunc(field);
+          this.inputOnChangeFunc('',field);
       }
     }
     let objectValue:string = "";
@@ -2154,7 +2165,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.listOfFieldUpdateMode = false;
   }
   
-  inputOnChangeFunc(field) {
+  inputOnChangeFunc(parent,field) {
     if(field.type == 'checkbox'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
         let formValue = this.getFormValue(false);
@@ -2227,6 +2238,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               {"from":"first_name+last_name+ ","to":"billing_contact_person"},
               {"from":"account.name","to":"billing_company"},
           
+            ]
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            this.updateDataOnFormField(calFormValue); 
+          break;
+          case 'job_card_series':
+            list_of_populated_fields=[
+              {"from":"tl_name.name+service_line.name+parent_company.name+/","to":"job_card_name"},
             ]
             calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
             this.updateDataOnFormField(calFormValue); 
@@ -2363,7 +2381,10 @@ case 'populate_fields_for_report_for_new_order_flow':
        case 'calculate_next_calibration_due_date':
             this.commonFunctionService.calculate_next_calibration_due_date(this.templateForm);
             break;
-
+        case 'get_percent':
+          calFormValue = this.commonFunctionService.getPercent(this.templateForm.getRawValue(),parent, field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         default:
           break;
 
@@ -2576,7 +2597,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             }
           }
           if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
-           this.inputOnChangeFunc(field);
+           this.inputOnChangeFunc('',field);
           }
           
         }        
@@ -2865,7 +2886,13 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(this.envService.getRequestType() == 'PUBLIC'){
       hasPermission = true;
     }
-    let formValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
+    let formValue;
+    if(this.deleteGridRowData){
+      formValue = this.templateForm.getRawValue();
+    }else{
+      formValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
+    }
+    this.deleteGridRowData = false;
        
     if(hasPermission){      
       if(this.templateForm.valid){
@@ -2931,6 +2958,19 @@ case 'populate_fields_for_report_for_new_order_flow':
     }else{
       this.notificationService.notify('bg-danger',checkValidatiaon.msg);
     }     
+  }
+
+  deleteGridData(){
+    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,this.getFormValue(true));
+    if(typeof checkValidatiaon != 'object'){
+      this.deleteGridRowData = true;
+      const saveFromData = this.getSavePayloadData();
+      if(this.getSavePayload){
+          this.apiService.deleteGridRow(saveFromData);
+      }
+    }else{
+      this.notificationService.notify('bg-danger',checkValidatiaon.msg);
+    } 
   }
 
   downloadReport(){
@@ -3215,7 +3255,15 @@ case 'populate_fields_for_report_for_new_order_flow':
           return '<i class="fa fa-eye text-pointer"></i>';
         } else {
           return '-';
-        }      
+        } 
+      case "checkbox":
+        let value:any = false;
+        if (item.display_name && item.display_name != "") {
+          value = this.commonFunctionService.getObjectValue(item.display_name, listOfField);
+        } else {
+          value = this.getValueForGrid(item,listOfField);
+        }
+        return value ? "Yes" : "No";     
       default:
         if (item.display_name && item.display_name != "") {
           return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
@@ -4028,6 +4076,9 @@ case 'populate_fields_for_report_for_new_order_flow':
         case "add":
           this.setListoffieldData();          
           break;
+        case "delete_row":
+          this.deleteGridData();
+          break; 
         default:
           this.partialDataSave(action_button.onclick,null)
           break;
