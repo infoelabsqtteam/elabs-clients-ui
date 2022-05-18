@@ -602,7 +602,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(tabs && tabs.length >= 1 ){
       let payloads = [];
       tabs.forEach(element => {
-        const payload = this.commonFunctionService.getPaylodWithCriteria(element.tab_name,element.tab_name,[],{});
+        let grid_api_params_criteria = [];
+        if(this.commonFunctionService.isGridFieldExist(element,"api_params_criteria")){
+          grid_api_params_criteria = element.grid.api_params_criteria;
+        }
+        const payload = this.commonFunctionService.getPaylodWithCriteria(element.tab_name,element.tab_name,grid_api_params_criteria,{});
         payload['countOnly'] = true;
         payloads.push(payload);
       });
