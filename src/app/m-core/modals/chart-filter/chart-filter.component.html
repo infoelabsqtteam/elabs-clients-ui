@@ -77,6 +77,18 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                       <input matInput type="text" [required]="field.is_mandatory" [formControlName]="field.field_name" [id]="field._id+'_'+field.field_name" autocomplete="off">                              
                   </mat-form-field>
               </div>
+              <div *ngIf="field.type == 'typeahead'">
+                <div class="w-100 position-relative m-0" *ngIf="field.datatype != 'chips'">
+                    <mat-form-field appearance="outline" class="w-100 m-0" [ngClass]="field.datatype != 'list_of_object' ? 'w-100' : ''">
+                        <mat-label>{{field.label}} <span *ngIf="field.is_mandatory && field.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                        <input type="text" [placeholder]="field.label" [required]="field.is_mandatory && field.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="field.field_name"
+                            [matAutocomplete]="first" (keyup)="updateData($event,item,field)" [id]="field._id+'_'+field.field_name">
+                        <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete"  [displayWith]="getOptionText">
+                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+              </div>
               </div>
               <div class="col-sm-3 px-0">
                   <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>
