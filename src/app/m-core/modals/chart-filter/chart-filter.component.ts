@@ -196,18 +196,18 @@ export class ChartFilterComponent implements OnInit {
     }
     return value;
   }
-  // getOptionText(option) {
-  //   if (option && option.name) {
-  //     return option.name;
-  //   }else{
-  //     return option;
-  //   }
-  // }
-  updateData(event, parentfield, field) {
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
+  }
+  updateData(event, field) {
     if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
       return false;
     }    
-    let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
+    let objectValue = this.getSingleCardFilterValue(field,this.dashboardFilter.getRawValue()); 
     this.callTypeaheadData(field,objectValue); 
   }
   callTypeaheadData(field,objectValue){
