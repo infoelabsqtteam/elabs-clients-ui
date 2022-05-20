@@ -599,21 +599,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   }
   getTabsCount(tabs){
-    if(tabs && tabs.length >= 1 ){
-      let payloads = [];
-      tabs.forEach(element => {
-        let grid_api_params_criteria = [];
-        if(this.commonFunctionService.isGridFieldExist(element,"api_params_criteria")){
-          grid_api_params_criteria = element.grid.api_params_criteria;
-        }
-        const payload = this.commonFunctionService.getPaylodWithCriteria(element.tab_name,element.tab_name,grid_api_params_criteria,{});
-        payload['countOnly'] = true;
-        payloads.push(payload);
-      });
-      if(payloads && payloads.length > 0){
-        this.apiService.getGridCountData(payloads);
-      }  
-    }
+    this.commonFunctionService.getTabsCountPyload(tabs);    
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce.success != '' && this.updateGridData) {
@@ -725,8 +711,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = false;
     this.bulkuploadList = [];
     this.formName = '';
-    this.getPage(this.pageNumber);      
-    
+    this.getPage(this.pageNumber);
+    this.getTabsCount(this.tabs);   
   }
   
   addNewForm(formName){

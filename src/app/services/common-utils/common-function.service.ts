@@ -185,6 +185,23 @@ export class CommonFunctionService {
     }    
     return staticModal;
   }
+  getTabsCountPyload(tabs){
+    let payloads = [];
+    if(tabs && tabs.length >= 1 ){      
+      tabs.forEach(element => {
+        let grid_api_params_criteria = [];
+        if(this.isGridFieldExist(element,"api_params_criteria")){
+          grid_api_params_criteria = element.grid.api_params_criteria;
+        }
+        const payload = this.getPaylodWithCriteria(element.tab_name,element.tab_name,grid_api_params_criteria,{});
+        payload['countOnly'] = true;
+        payloads.push(payload);
+      }); 
+    }
+    if(payloads && payloads.length > 0){
+      this.apiService.getGridCountData(payloads);
+    } 
+  }
   getCriteriaList(criteria,object){
     const crList = [];    
     criteria.forEach(element => {
