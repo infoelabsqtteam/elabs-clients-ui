@@ -465,6 +465,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.isStepper = false;
         this.saveResponceData = {};
         this.listOfFieldUpdateMode=false;
+        this.listOfFieldsUpdateIndex = -1;
         this.ngOnInit();  
         const tempData = this.dataShareService.getTempData();
         this.setTempData(tempData); 
@@ -588,7 +589,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.dataSaveInProgress = true; 
     this.isLinear=true;
     this.isStepper = false;
-    this.listOfFieldUpdateMode=false;  
+    this.listOfFieldUpdateMode=false; 
+    this.listOfFieldsUpdateIndex = -1; 
     this.checkFormFieldAutfocus = true;     
   }
 

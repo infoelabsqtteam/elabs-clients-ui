@@ -182,6 +182,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
         this.total = gridData.data_size;
+        const currentTabName = this.storageService.GetActiveMenu()['name'];
+        this.gridCountByTab[currentTabName] = gridData.data_size;
       } else {
         this.total = 0;
       }
