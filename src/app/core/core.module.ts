@@ -43,7 +43,8 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             AngularMaterialModule,
             AngularCommonModule,
             FormModelModule,
-            ModelModule
+            ModelModule,
+            AllPackageModule
             ],
         exports :[
             AppRoutingModule,

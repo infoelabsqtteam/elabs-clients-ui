@@ -10,28 +10,34 @@
                     <div class="col-md-2"><label class="mb-0 mt-2">Folder / File Path:</label></div>
                     <div class="col-md-10"><button mat-button disabled>{{folder.key | slice:17}}</button></div>
                 </div>
-                <div class="row py-2 align-items-center" [formGroup]="permissionForm">
-                    <div class="col-md-2">
-                        <div class="w-100 position-relative d-flex">
-                            <mat-form-field appearance="outline" class="example-full-width w-100">
-                                <mat-label>User<span class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                <input type="text" placeholder="user" matInput [formControlName]="'user'" [matAutocomplete]="first" (keyup)="updateData($event)">
-                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" [displayWith]="getOptionText">
-                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
-                        </div>
+                <div class="py-2 d-flex align-items-center" [formGroup]="permissionForm">
+                    <div class="">
+                        <mat-form-field appearance="outline" class="w-100 m-0">
+                            <mat-label>User<span class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                            <input type="text" placeholder="user" matInput [formControlName]="'user'" [matAutocomplete]="first" (keyup)="updateData($event)">
+                            <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" [displayWith]="getOptionText">
+                                <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
                     </div>
+                    <div class="mx-4"><label class="mx-2 my-0">Authorize</label> <input type="checkbox" [formControlName]="'authoriser'"></div>
+                    <div class="mx-4"><label class="mx-2 my-0">Read</label> <input type="checkbox" [formControlName]="'viewer'"></div>
+                    <div class="mx-4"><label class="mx-2 my-0">Write</label> <input type="checkbox" [formControlName]="'creator'"></div>
+                    <div class="mx-4"><label class="mx-2 my-0">Download</label> <input type="checkbox" [formControlName]="'downloader'"></div>
+                    <div class="mx-4"><button mat-flat-button color="primary" [disabled]="checkValidator()" (click)="addPermission()">
+                        <span *ngIf="!updateMode"><mat-icon class="mr-2" style="position:relative;top:6px;">add_circle_outline</mat-icon> Add</span>
+                        <span *ngIf="updateMode"><mat-icon class="mr-2" style="position:relative;top:6px;">update</mat-icon> Update</span>
+                    </button></div>
 
-                    <div class="col-md-2"><label class="mx-2 my-0">Authorize</label> <input type="checkbox" [formControlName]="'authoriser'"></div>
-                    <div class="col-md-2"><label class="mx-2 my-0">Read</label> <input type="checkbox" [formControlName]="'viewer'"></div>
-                    <div class="col-md-2"><label class="mx-2 my-0">Write</label> <input type="checkbox" [formControlName]="'creator'"></div>
-                    <div class="col-md-2"><label class="mx-2 my-0">Download</label> <input type="checkbox" [formControlName]="'downloader'"></div>
-                    <div class="col-md-2"><button mat-flat-button color="primary" [disabled]="checkValidator()" (click)="addPermission()"><mat-icon class="mr-2">add_circle_outline</mat-icon> Add</button></div>
+                    <div class="mx-4"><button mat-icon-button (click)="viewpermission()"><mat-icon>visibility</mat-icon></button></div>
                 </div>
-                <div class="row mt-4">
-                    <div class="w-100">
-                        <table class="table" *ngIf="listOfPermission.length > 0">
+
+
+
+                <div class="row mt-4" *ngIf="addeduser">
+                    <div class="w-100" *ngIf="listOfPermission.length > 0">
+                        <h2 class="px-3">Permission Added List</h2>
+                        <table class="table">
                             <thead class="thead-light">
                                 <tr>
                                     <th>#</th>
@@ -48,9 +54,36 @@
                     </div>
                 </div>
 
+
+
+                <div class="row mt-4" *ngIf="viewpermissiondata">
+                    <div class="w-100">
+                        <h2 class="px-3">Permission User List</h2>
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th *ngFor="let col of colums">{{col.label}}</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let permission of elements; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{permission.user.name}}</td>
+                                    <td>{{permission.authoriser}}</td>
+                                    <td>{{permission.viewer}}</td>
+                                    <td>{{permission.creator}}</td>
+                                    <td>{{permission.downloader}}</td>
+                                    <td><button mat-icon-button (click)="editpermission(i)"><mat-icon style="font-size:14px;">edit</mat-icon></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button mat-button color="primary" class="mr-2">Reset</button>
+                <button mat-button color="primary" (click)="resetForm()" class="mr-2">Reset</button>
                 <button mat-flat-button color="primary" (click)="savePermission()">Save</button>
             </div>
         </div>

@@ -7,9 +7,9 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
           <h3 class="modal-title m-0 text-uppercase active d-block">{{dashboardItem.name}}</h3>
           <a class="h5 m-0 closebtb" (click)="close(dashboardItem)">×</a>
         </div>
-        <div class="modal-body pt-2" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0">
-          <div class="chartfilter mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
-            <div class="row align-items-center mx-0" [formGroupName]="dashboardItem.name">
+        <div class="modal-body p-0" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0">
+          <div class="chartfilter px-3 pt-2 mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
+            <div class="row align-items-center mx-0">
               <div class="col-sm-3 pl-0" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
                 <div *ngIf="field.type == 'date'">
                   <mat-form-field appearance="outline" class="w-100 m-0">
@@ -77,6 +77,18 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                       <input matInput type="text" [required]="field.is_mandatory" [formControlName]="field.field_name" [id]="field._id+'_'+field.field_name" autocomplete="off">                              
                   </mat-form-field>
               </div>
+              <div *ngIf="field.type == 'typeahead'">
+                <div class="w-100 position-relative m-0" *ngIf="field.datatype != 'chips'">
+                    <mat-form-field appearance="outline" class="w-100 m-0" [ngClass]="field.datatype != 'list_of_object' ? 'w-100' : ''">
+                        <mat-label>{{field.label}} <span *ngIf="field.is_mandatory && field.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                        <input type="text" [placeholder]="field.label" [required]="field.is_mandatory && field.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="field.field_name"
+                            [matAutocomplete]="first" (keyup)="updateData($event,field)" [id]="field._id+'_'+field.field_name">
+                        <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete"  [displayWith]="getOptionText">
+                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+              </div>
               </div>
               <div class="col-sm-3 px-0">
                   <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>
@@ -89,7 +101,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
   
           <div >
             <ng-container class="px-5">
-              <canvas id="chartjs" class="w-100 vh-100" mdbChart *ngIf="dashboardItem.package_name == 'chart_js'"
+              <canvas id="chartjs" class="w-100" mdbChart *ngIf="dashboardItem.package_name == 'chart_js'"
                 [chartType]="chartType[dashboardItem.call_back_field]"
                 [datasets]="chartDatasets[dashboardItem.call_back_field]"
                 [labels]="chartLabels[dashboardItem.call_back_field]"
@@ -98,7 +110,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                 [legend]="chartLegend[dashboardItem.call_back_field]" (chartHover)="chartHover($event)"
                 (chartClick)="chartClicked($event)">
               </canvas>
-              <google-chart id="excel-table" class="w-100 vh-100" *ngIf="dashboardItem.package_name == 'google_chart' && chartTitle[dashboardItem.call_back_field]"
+              <google-chart id="excel-table" class="w-100" *ngIf="dashboardItem.package_name == 'google_chart' && chartTitle[dashboardItem.call_back_field]"
                 [title]="chartTitle[dashboardItem.call_back_field]" [type]="chartType[dashboardItem.call_back_field]"
                 [data]="chartDatasets[dashboardItem.call_back_field]"
                 [columns]="chartLabels[dashboardItem.call_back_field]"
