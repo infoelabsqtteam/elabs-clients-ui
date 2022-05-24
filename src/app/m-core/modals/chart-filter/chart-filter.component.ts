@@ -163,7 +163,8 @@ export class ChartFilterComponent implements OnInit {
       }
       elements.forEach(element => {
         const fields = element.fields;        
-        const filterData = this.getSingleCardFilterValue(element,value);
+        //const filterData = this.getSingleCardFilterValue(element,value);
+        const filterData = value;
         let crList = [];
         if(fields && fields.length > 0){
           crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
@@ -207,8 +208,8 @@ export class ChartFilterComponent implements OnInit {
     if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
       return false;
     }    
-    let objectValue = this.getSingleCardFilterValue(field,this.dashboardFilter.getRawValue()); 
-    this.callTypeaheadData(field,objectValue); 
+    //let objectValue = this.getSingleCardFilterValue(field,this.dashboardFilter.getRawValue()); 
+    this.callTypeaheadData(field,this.dashboardFilter.getRawValue()); 
   }
   callTypeaheadData(field,objectValue){
     this.clearTypeaheadData();   
@@ -235,17 +236,17 @@ export class ChartFilterComponent implements OnInit {
       let forControl = {};
       let formField = [];      
       if(dashlet.fields && dashlet.fields.length > 0){
-        const groupField = {
-          "field_name":dashlet.name
-        }
-        const list_of_fields = {};
+        // const groupField = {
+        //   "field_name":dashlet.name
+        // }
+        //const list_of_fields = {};
         dashlet.fields.forEach(field => {                    
           formField.push(field);
           switch(field.type){ 
             case "date":
               field['minDate'] = this.minDate
               field['maxDate'] = this.maxDate;
-              this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
+              this.commonFunctionService.createFormControl(forControl, field, '', "text")
                 break; 
             case "daterange":
               const date_range = {};
@@ -254,20 +255,19 @@ export class ChartFilterComponent implements OnInit {
                 {field_name : 'end'}
               ]
               if (list_of_dates.length > 0) {
-                list_of_dates.forEach((data) => {
-                  
+                list_of_dates.forEach((data) => {                  
                   this.commonFunctionService.createFormControl(date_range, data, '', "text")
                 });
               }
-              this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
+              this.commonFunctionService.createFormControl(forControl, field, date_range, "group")                                    
               break; 
                                       
             default:
-              this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
+              this.commonFunctionService.createFormControl(forControl, field, '', "text");
               break;
           }   
         });
-        this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
+        //this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
       } 
       if(formField.length > 0){
         let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
