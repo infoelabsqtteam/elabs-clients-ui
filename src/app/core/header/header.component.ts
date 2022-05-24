@@ -238,22 +238,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 break;
 
         }
-        // if (this.loginUserIcon) {
-        //     if (this.storageService.GetUserInfo()) {
-        //         this.userInfo = this.storageService.GetUserInfo();
-        //         this.userName = this.userInfo.name;
-        //         this.userEmail = this.userInfo.email;
-        //         this.teamname = this.userInfo.list1;
-        //         if (this.userName && this.userName != null) {
-        //             this.userFirstLetter = this.userName.charAt(0).toUpperCase()
-        //         } else {
-        //             if (this.userInfo.email && this.userInfo.email != null) {
-        //                 this.userFirstLetter = this.userInfo.email.toUpperCase()
-        //             }
-        //         }
-        //         this.getUserColorCode(this.userFirstLetter);
-        //     }
-        // }
         if (this.storageService != null && this.storageService.GetIdToken() != null) {
             const idToken = this.storageService.GetIdToken();
             if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
@@ -576,4 +560,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     gitInfo() {
         this.modelService.open('git_version', {})
     }
+    feedback() {
+        this.modelService.open('feedback_model', {})
+     }
 }

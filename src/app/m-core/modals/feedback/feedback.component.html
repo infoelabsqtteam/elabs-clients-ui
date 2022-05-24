@@ -1,0 +1,52 @@
+<div mdbModal #feedback="mdbModal" class="modal fade top" [config]="{ignoreBackdropClick: true,keyboard: true}">
+  <div class="modal-dialog">
+    <div class="modal-content" [formGroup]="feedbackForm">
+      <div class="modal-header justify-content-center mb-0">
+        <h3 class="modal-title m-0 text-uppercase">Feedback</h3>
+        <a class="h5 m-0 closebtb" (click)="close()">×</a>
+      </div>
+      <div class="modal-body pt-2">
+        <!-- <mat-form-field appearance="outline" class="w-100" style="visibility:hidden;position:absolute;">
+              <mat-label>Customer Name</mat-label>
+              <mat-select [formControlName]="customerName">
+                <mat-option *ngFor="let data of customerdata" value="data">{{data.name}}</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Subject</mat-label><input matInput formControlName="summary" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Feedback Message</mat-label><textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <!-- <button mat-flat-button color="primary" (click)="fileUploadModal()"><mat-icon>file_upload</mat-icon> Upload File</button> -->
+
+        <!-- <table class="mt-3" mdbTable small="true" bordered="true" *ngIf="uploadedData && uploadedData.length > 0">
+          <thead class="black white-text">
+              <tr>
+                  <th class="black">Name</th>
+                  <th class="black">Type</th>
+                  <th class="black">Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr mdbTableCol *ngFor="let data of uploadedData; let i = index">
+                  <td scope="row">{{data.fileName}}</td>
+                  <td>{{data.fileExtn}}</td>
+                  <td>
+                      <mdb-icon far icon="times-circle" (click)="removeAttachedDataFromList(i,data)"></mdb-icon>
+                      <mdb-icon fas icon="download" class="pl-3" (click)="downloadFile(data)"></mdb-icon>
+                  </td>
+              </tr>
+          </tbody>
+      </table> -->
+      </div>
+      <div class="modal-footer justify-content-end" style="height:auto;">
+        <button mat-button color="primary" class="mr-2" (click)="close()">Cancel</button>
+        <button mat-flat-button color="primary" (click)="save()" [disabled]="checkValidator()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-file-upload-modal id="file-upload-modal" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
