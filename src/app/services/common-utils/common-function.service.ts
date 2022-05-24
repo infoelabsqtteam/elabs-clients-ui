@@ -457,13 +457,19 @@ export class CommonFunctionService {
               break;
           case "typeahead":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){ 
-              filterList.push(
-                {
-                  "fName": element.field_name,
-                  "fValue": this.getddnDisplayVal(formValue[element.field_name]),
-                  "operator": "stwic"
-                }
-              )
+              if(isArray(element.dataFilterCriteria) && element.dataFilterCriteria.length > 0){
+                element.dataFilterCriteria.forEach(cri => {
+                  criteria.push(cri)
+                });
+              }else{
+                filterList.push(
+                  {
+                    "fName": element.field_name,
+                    "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                    "operator": "stwic"
+                  }
+                )
+              }
             }
             break;
           case "info":
