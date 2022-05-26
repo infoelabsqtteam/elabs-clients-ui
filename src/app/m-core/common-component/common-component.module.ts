@@ -10,11 +10,11 @@ import { AgmCoreModule } from '@agm/core';
 import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
-
+import { PipesModule } from '../../pipes/pipes.module';
 
 const components = [
   FormComponent,
-  ChartComponent
+  ChartComponent,
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
@@ -35,7 +35,8 @@ const maskConfig: Partial<IConfig> = {
       libraries: ['places']
   }),
   ModelModule,
-  AllPackageModule
+  AllPackageModule,
+  PipesModule
   ],
   exports:components,
   declarations: components

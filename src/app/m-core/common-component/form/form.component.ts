@@ -274,6 +274,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   nextFormSubscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
+  filterdata = '';
+  term: string;
 
   constructor(
     private formBuilder: FormBuilder, 
