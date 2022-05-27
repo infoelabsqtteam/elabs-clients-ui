@@ -319,6 +319,17 @@ export class CommonFunctionService {
       }
     }
   }
+  isMendetory(tableField, formValue) {
+    if (tableField.is_mandatory) {
+      return true;
+    } else {
+      if (tableField.mandatory_if && tableField.mandatory_if != '') {
+        return this.checkIfCondition(tableField.mandatory_if, formValue)
+      }else {
+        return false;
+      }
+    }
+  }
 
   checkIfCondition(data, formValue) {
     let condition = []
@@ -2544,6 +2555,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   openFileUpload(fieldName, modalName, formValue, fileData) {
     const alertData = {
+      "field" :fieldName,
       "event": true,
       "fieldName": fieldName.field_name,
       "ddnFieldName": fieldName.ddn_field,
