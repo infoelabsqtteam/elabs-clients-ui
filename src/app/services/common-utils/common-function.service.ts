@@ -319,6 +319,17 @@ export class CommonFunctionService {
       }
     }
   }
+  isMendetory(tableField, formValue) {
+    if (tableField.is_mandatory) {
+      return true;
+    } else {
+      if (tableField.mandatory_if && tableField.mandatory_if != '') {
+        return this.checkIfCondition(tableField.mandatory_if, formValue)
+      }else {
+        return false;
+      }
+    }
+  }
 
   checkIfCondition(data, formValue) {
     let condition = []

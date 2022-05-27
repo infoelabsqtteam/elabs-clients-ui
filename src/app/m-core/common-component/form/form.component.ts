@@ -196,6 +196,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   filePreviewFields:any=[];
   showIfFieldList:any=[];
   disableIfFieldList:any=[];
+  mendetoryIfFieldList:any=[];
   canUpdateIfFieldList:any=[];
   pageLoading: boolean = true;
   formFieldButtons: any = [];
@@ -454,6 +455,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.tableFields = [];
         this.showIfFieldList=[];
         this.disableIfFieldList=[];
+        this.mendetoryIfFieldList = [];
         this.canUpdateIfFieldList=[];
         this.formFieldButtons=[];
         this.list_of_fields = [];
@@ -575,6 +577,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     //this.tableFields = [];
     this.showIfFieldList=[];
     this.disableIfFieldList=[];
+    this.mendetoryIfFieldList = [];
     this.canUpdateIfFieldList=[];
     this.custmizedFormValue = {};
     this.dataListForUpload = {};
@@ -722,6 +725,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
     this.showIfFieldList=[];
     this.disableIfFieldList=[];
+    this.mendetoryIfFieldList = [];
     if (this.tableFields.length > 0 && this.createFormgroup) {
       this.createFormgroup = false;
       const forControl = {};
@@ -796,6 +800,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   //show if handling
                   if(data.show_if && data.show_if != ''){
                     this.showIfFieldList.push(modifyData);
+                  }
+                  //Mendetory If handling
+                  if(data.mandatory_if && data.mandatory_if != ''){
+                    this.mendetoryIfFieldList.push(modifyData);
                   }
                   //disable if handling
                   if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null)){                          
@@ -872,6 +880,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       if(data.show_if && data.show_if != ''){
                         this.showIfFieldList.push(modifyData);
                       }
+                      //mendetory if handling
+                      if(data.mandatory_if && data.mandatory_if != ''){
+                        this.mendetoryIfFieldList.push(modifyData);
+                      }
                       //disable if handling
                       if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null)){                          
                         this.disableIfFieldList.push(modifyData);
@@ -914,6 +926,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(element.show_if && element.show_if != ''){
           this.showIfFieldList.push(element);
         }
+        //mendatory if handling
+        if(element.mandatory_if && element.mandatory_if != ''){
+          this.mendetoryIfFieldList.push(element);
+        }
         //disable if handling
         if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null)){                  
           this.disableIfFieldList.push(element);
@@ -938,6 +954,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
           if(element.show_if && element.show_if != ''){
             this.showIfFieldList.push(element);
+          }
+          if(element.mandatory_if && element.mandatory_if != ''){
+            this.mendetoryIfFieldList.push(element);
           }
           if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null)){                  
             this.disableIfFieldList.push(element);
@@ -1514,6 +1533,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       });
     }
+    if(this.mendetoryIfFieldList.length > 0){
+      this.mendetoryIfFieldList.forEach(element => {
+        if(element.parent && element.parent != undefined && element.parent != '' && element.parent != null ){
+          this.isMendetory(element.parent,element);
+        }else{
+          this.isMendetory('',element)
+        }
+      });
+    }
     if(this.showIfFieldList.length > 0){
       this.showIfFieldList.forEach(element => {
         let id = '';
@@ -1574,7 +1602,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       });
       return true;
-    }
+    }    
     if(this.disableIfFieldList.length == 0 && this.showIfFieldList.length == 0){
       return true;
     }    
@@ -3520,6 +3548,38 @@ case 'populate_fields_for_report_for_new_order_flow':
         
     return tobedesabled;
   }  
+  isMendetory(parent,chield){
+    const  formValue = this.getFormValue(true);   
+    let tobedesabled;
+    if(parent == ''){
+      tobedesabled = this.commonFunctionService.isMendetory(chield,formValue)
+      if(tobedesabled){
+        if(this.templateFormControl[chield.field_name].status == 'VALID'){
+          this.templateForm.get(chield.field_name).setValidators([Validators.required]);
+          this.templateForm.get(chield.field_name).updateValueAndValidity();
+        }       
+      }else{
+        if(this.templateFormControl[chield.field_name].status == 'INVALID'){
+          this.templateForm.get(chield.field_name).clearValidators();
+          this.templateForm.get(chield.field_name).updateValueAndValidity();
+        }        
+      }
+    }else{
+      tobedesabled = this.commonFunctionService.isMendetory(chield,formValue)
+      if(tobedesabled){
+        if(this.templateFormControl[parent][chield.field_name].status == 'VALID'){
+          this.templateForm.get(parent).get(chield.field_name).setValidators([Validators.required]);
+          this.templateForm.get(parent).get(chield.field_name).updateValueAndValidity();
+        } 
+      }else{
+        if(this.templateFormControl[parent][chield.field_name].status == 'INVALID'){
+          this.templateForm.get(parent).get(chield.field_name).clearValidators();
+          this.templateForm.get(parent).get(chield.field_name).updateValueAndValidity();
+        } 
+      }
+    }       
+    return tobedesabled;
+  }
   showModal(object){
     this.custmizedFormValue = {}    
     this.formModal.show();
