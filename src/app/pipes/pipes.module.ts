@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SortingPipePipe } from './sorting-pipe.pipe';
 import { SortPipe }  from './sort.pipe';
-
+import { Ng2SearchPipe } from './ng2-filter.pipe';
 const pipes = [
   SortingPipePipe,
-  SortPipe
+  SortPipe,
+  Ng2SearchPipe
 ]
 
 @NgModule({
