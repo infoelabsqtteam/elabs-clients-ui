@@ -515,7 +515,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -532,7 +532,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "app.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "app.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -549,7 +549,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "food.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "food.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "food-multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -566,7 +566,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "lims-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "lims-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",

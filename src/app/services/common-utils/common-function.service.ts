@@ -319,6 +319,17 @@ export class CommonFunctionService {
       }
     }
   }
+  isMendetory(tableField, formValue) {
+    if (tableField.is_mandatory) {
+      return true;
+    } else {
+      if (tableField.mandatory_if && tableField.mandatory_if != '') {
+        return this.checkIfCondition(tableField.mandatory_if, formValue)
+      }else {
+        return false;
+      }
+    }
+  }
 
   checkIfCondition(data, formValue) {
     let condition = []
@@ -457,13 +468,19 @@ export class CommonFunctionService {
               break;
           case "typeahead":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){ 
-              filterList.push(
-                {
-                  "fName": element.field_name,
-                  "fValue": this.getddnDisplayVal(formValue[element.field_name]),
-                  "operator": "stwic"
-                }
-              )
+              if(isArray(element.dataFilterCriteria) && element.dataFilterCriteria.length > 0){
+                element.dataFilterCriteria.forEach(cri => {
+                  criteria.push(cri)
+                });
+              }else{
+                filterList.push(
+                  {
+                    "fName": element.field_name,
+                    "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                    "operator": "stwic"
+                  }
+                )
+              }
             }
             break;
           case "info":
@@ -2538,6 +2555,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   openFileUpload(fieldName, modalName, formValue, fileData) {
     const alertData = {
+      "field" :fieldName,
       "event": true,
       "fieldName": fieldName.field_name,
       "ddnFieldName": fieldName.ddn_field,

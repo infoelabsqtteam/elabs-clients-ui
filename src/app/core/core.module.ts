@@ -39,6 +39,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
         imports :[
             AppRoutingModule,
             MDBBootstrapModule.forRoot(),
+            AllPackageModule,
             AngularMaterialModule,
             AngularCommonModule,
             FormModelModule,
