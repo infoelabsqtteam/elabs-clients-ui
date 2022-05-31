@@ -788,7 +788,7 @@
                         <div *ngIf="tableField.type == 'grid_selection'">
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
-                                <div class="grid-selection-buttons">
+                                <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
 
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
@@ -800,19 +800,21 @@
                                     <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="custmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 
-                                                <th *ngIf="!updateMode"></th>                               
+                                                <th *ngIf="!updateMode || tableField.add_new_enabled"></th>                               
                                                 <th *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                             <tr *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag cdkDragLockAxis="y">
-                                                <td *ngIf="!updateMode">
-                                                    <div class="example-handle" cdkDragHandle>
+                                                <td *ngIf="!updateMode || tableField.add_new_enabled">
+                                                    <div class="example-handle" cdkDragHandle *ngIf="!tableField.add_new_enabled">
                                                         <svg width="16px" fill="currentColor" viewBox="0 0 24 24">
                                                           <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                           <path d="M0 0h24v24H0z" fill="none"></path>
                                                         </svg>
                                                     </div>
+                                                    <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
+                                                    <a *ngIf="tableField.add_new_enabled" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
                                                 <td *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
                                                     <span disabled *ngIf="fieldName.type=='checkbox'" >

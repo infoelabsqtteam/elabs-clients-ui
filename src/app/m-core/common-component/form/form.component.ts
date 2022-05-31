@@ -205,6 +205,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   selectedRowIndex: any = -1;
   userInfo: any;
   custmizedFormValue: any = {};
+  customEntryData:any={};
   typeAheadData: string[] = [];
   public tempVal = {};
   listOfFieldUpdateMode:boolean=false;
@@ -2084,9 +2085,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.curTreeViewField = field;
         this.currentTreeViewFieldParent = parentfield;
         if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
+        let selectedData = this.getGridSelectedData(this.custmizedFormValue[field.field_name],field);
         const gridModalData = {
           "field": this.curTreeViewField,
-          "selectedData":this.custmizedFormValue[field.field_name],
+          "selectedData":selectedData,
           "object": this.getFormValue(true)
         }
         this.modalService.open('grid-selection-modal', gridModalData);
@@ -2166,6 +2168,21 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
 
   } 
+  getGridSelectedData(data,field){
+    let gridSelectedData = [];
+    if (!this.customEntryData[field.field_name]) this.customEntryData[field.field_name] = [];
+    this.customEntryData[field.field_name] = []
+    if(data && data.length > 0){
+      data.forEach(grid => {
+        if(grid && grid.customEntry){
+          this.customEntryData[field.field_name].push(grid);
+        }else{
+          gridSelectedData.push(grid);
+        }
+      });
+    }
+    return gridSelectedData;
+  }
   checkFieldShowOrHide(field){    
     for (let index = 0; index < this.showIfFieldList.length; index++) {
       const element = this.showIfFieldList[index];
@@ -3432,6 +3449,12 @@ case 'populate_fields_for_report_for_new_order_flow':
 
     if (!this.custmizedFormValue[this.curTreeViewField.field_name]) this.custmizedFormValue[this.curTreeViewField.field_name] = [];
     this.custmizedFormValue[this.curTreeViewField.field_name] = JSON.parse(JSON.stringify(responce));
+    if(this.customEntryData[this.curTreeViewField.field_name] && this.customEntryData[this.curTreeViewField.field_name].length > 0){
+      this.customEntryData[this.curTreeViewField.field_name].forEach(data => {
+        this.custmizedFormValue[this.curTreeViewField.field_name].push(data);
+      });
+      this.customEntryData[this.curTreeViewField.field_name] = [];
+    }
 
     if(this.curTreeViewField && this.curTreeViewField.onchange_function && this.curTreeViewField.onchange_function_param){
       // if(this.currentTreeViewFieldParent != ''){
@@ -4693,16 +4716,24 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
       targetFieldName['form'][field.add_new_target_field] = this.lastTypeaheadTypeValue
-    }else if(field && field.type == "list_of_fields"){
-      let currentFiedldData = formData[field.field_name];
-      if(currentFiedldData && isArray(currentFiedldData)){
-          if(index != undefined && index >= 0){        
-            targetFieldName['form'] = currentFiedldData[index];
-            targetFieldName['updataModeInPopupType'] = true;
-          }else {
-            targetFieldName['custom'] = currentFiedldData;
+    }else if(field){
+      switch (field.type) {
+        case "list_of_fields":
+        case "grid_selection":
+          let currentFieldData = formData[field.field_name];
+          if(currentFieldData && isArray(currentFieldData)){
+              if(index != undefined && index >= 0){        
+                targetFieldName['form'] = currentFieldData[index];
+                targetFieldName['updataModeInPopupType'] = true;
+              }else {
+                targetFieldName['custom'] = currentFieldData;
+              }
           }
+          break;      
+        default:
+          break;
       }
+      
      
         
       // const listOfFields = field.list_of_fields;
@@ -4743,8 +4774,16 @@ case 'populate_fields_for_report_for_new_order_flow':
       "updateMode" : updateMode,
       "form_value" : this.getFormValue(false)
     }
-    if(field && field.type == "list_of_fields"){
-      form['index'] = index;
+    if(field){
+      switch (field.type) {
+        case "list_of_fields":
+        case "grid_selection":
+          form['index'] = index;
+          break;      
+        default:
+          break;
+      }
+      
     }
     this.multipleFormCollection.push(form);
     let id = '';
@@ -4903,13 +4942,21 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['form']){
        fData = nextFormData['next_form_data']['form'];
-   }   
+    }   
     
-    if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['current_field']['type'] == 'list_of_fields' && nextFormData['index'] == undefined){
-      const fieldName = nextFormData['current_field']['field_name'];
-      if(isArray(cdata)){
-        this.custmizedFormValue[fieldName] = cdata;
+    if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['index'] == undefined){
+      switch (nextFormData['current_field']['type']) {
+        case 'list_of_fields':
+        case 'grid_selection':
+          const fieldName = nextFormData['current_field']['field_name'];
+          if(isArray(cdata)){
+            this.custmizedFormValue[fieldName] = cdata;
+          }
+          break;      
+        default:
+          break;
       }
+      
       
     }
     if(this.editedRowIndex >= 0){
@@ -4959,39 +5006,47 @@ case 'populate_fields_for_report_for_new_order_flow':
     const fieldName = previousFormField.field_name;
     delete currentFormValue[fieldName];    
     const previousformData = previousFormCollection.data;
-    if(previousFormField && previousFormField.type && previousFormField.type == 'list_of_fields'){
-      let fieldData = previousformData[fieldName]
-      let index = previousFormCollection['index'];
-      if(isArray(fieldData)){
-        if(index != undefined && index >= 0){
-          fieldData[index] = currentFormValue;
-        }else{
-          fieldData.push(currentFormValue);
-        }
-      }else{
-        fieldData = [];
-        fieldData.push(currentFormValue);
-      }     
-      
-      if(index != undefined && index >= 0){
-        this.custmizedFormValue[fieldName] = fieldData;
-        previousformData[fieldName] = this.custmizedFormValue[fieldName];
-        this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
-        this.close();
-      }else{
-        this.custmizedFormValue[fieldName] = fieldData;
-        previousformData[fieldName] = this.custmizedFormValue[fieldName];
-        this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
+    if(previousFormField && previousFormField.type){
+      switch (previousFormField.type) {
+        case 'list_of_fields':
+        case 'grid_selection':
+          let fieldData = previousformData[fieldName]
+          let index = previousFormCollection['index'];
+          if(isArray(fieldData)){
+            if(index != undefined && index >= 0){
+              fieldData[index] = currentFormValue;
+            }else{
+              currentFormValue['customEntry']=true; 
+              fieldData.push(currentFormValue);
+            }
+          }else{
+            fieldData = [];
+            currentFormValue['customEntry']=true;
+            fieldData.push(currentFormValue);
+          }     
+          
+          if(index != undefined && index >= 0){
+            this.custmizedFormValue[fieldName] = fieldData;
+            previousformData[fieldName] = this.custmizedFormValue[fieldName];
+            this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
+            this.close();
+          }else{
+            this.custmizedFormValue[fieldName] = fieldData;
+            previousformData[fieldName] = this.custmizedFormValue[fieldName];
+            this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
 
-        this.donotResetField();
-        this.templateForm.reset()
-        if(Object.keys(this.donotResetFieldLists).length > 0){
-          this.updateDataOnFormField(this.donotResetFieldLists);
-          this.donotResetFieldLists = {};
-        }
+            this.donotResetField();
+            this.templateForm.reset()
+            if(Object.keys(this.donotResetFieldLists).length > 0){
+              this.updateDataOnFormField(this.donotResetFieldLists);
+              this.donotResetFieldLists = {};
+            }
 
-      }
-      
+          }
+          break;      
+        default:
+          break;
+      }      
     }else{
       previousformData[fieldName] = currentFormValue;
       if(!this.enableNextButton){
