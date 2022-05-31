@@ -1283,7 +1283,6 @@ export class DriveHomeComponent implements OnInit {
 		console.log(responce);
 	}
 
-	
 	getPage(page: number) {
 		this.pageNumber = page;
 		const criteria = [
