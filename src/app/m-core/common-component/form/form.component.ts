@@ -182,6 +182,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   list_of_fields: any = [];
   getSavePayload:boolean=false;
   updateMode: boolean = false;
+  nextFormUpdateMode:boolean = false;
   complete_object_payload_mode:boolean = false;
   close_form_on_success:boolean=false;
   nextIndex:boolean = false;
@@ -4942,7 +4943,10 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['form']){
        fData = nextFormData['next_form_data']['form'];
-    }   
+    }  
+    if(nextFormData['index'] != undefined && nextFormData['index'] >= 0){
+      this.nextFormUpdateMode = true;
+    } 
     
     if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['index'] == undefined){
       switch (nextFormData['current_field']['type']) {
@@ -5029,6 +5033,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             this.custmizedFormValue[fieldName] = fieldData;
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
+            this.nextFormUpdateMode = false;
             this.close();
           }else{
             this.custmizedFormValue[fieldName] = fieldData;

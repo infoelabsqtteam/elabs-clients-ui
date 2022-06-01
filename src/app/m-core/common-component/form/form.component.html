@@ -1607,7 +1607,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="noshadow rounded bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
+            <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="noshadow rounded bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{nextFormUpdateMode && action_button.onclick.api == 'add' ? 'Update':action_button.label}}</button>
         </span>               
         <mat-spinner diameter="40" *ngIf="!dataSaveInProgress" class="custom-spinner"></mat-spinner>
         <!-- <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button> -->
