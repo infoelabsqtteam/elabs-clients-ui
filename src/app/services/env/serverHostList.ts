@@ -55,6 +55,7 @@ export const serverHostList = [
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
+      
       "header_txt_hover_color": "",
       "header_icon_color": "",
       "header_icon_hover_color": "",
