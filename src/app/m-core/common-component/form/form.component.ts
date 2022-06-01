@@ -280,6 +280,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   filterdata = '';
   term: string;
 
+  @HostListener('document:click') clickout() {
+    this.term = '';
+  }
+
   constructor(
     private formBuilder: FormBuilder, 
     private storageService: StorageService,
