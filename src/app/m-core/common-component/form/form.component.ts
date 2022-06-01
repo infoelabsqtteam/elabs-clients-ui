@@ -2175,7 +2175,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.customEntryData[field.field_name] = []
     if(data && data.length > 0){
       data.forEach(grid => {
-        if(grid && grid.customEntry){
+        if(grid && grid.customEntry && field.add_new_enabled){
           this.customEntryData[field.field_name].push(grid);
         }else{
           gridSelectedData.push(grid);
