@@ -922,6 +922,7 @@
                                             <td>
                                                 <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,tableField.field_name)"></mdb-icon>
                                                 <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
+                                                <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
                                             </td>
                                         </tr>
                                     </tbody>

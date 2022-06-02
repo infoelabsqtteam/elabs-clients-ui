@@ -19,6 +19,8 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
+import { saveAs } from 'file-saver';
+import * as FileSaver from 'file-saver';
 declare var tinymce: any;
 
 
@@ -292,7 +294,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private modelService: ModelService,
     private notificationService:NotificationService,
     private envService:EnvService,
-    private coreFunctionService:CoreFunctionService
+    private coreFunctionService:CoreFunctionService,
 ) {
 
     this.tinymceConfig = {
@@ -4086,6 +4088,49 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.downloadClick = file.rollName;
     this.commonFunctionService.downloadFile(file);
   }
+
+  downloadFileWithBytes(filedata){
+
+    let link = document.createElement('a');
+      link.setAttribute('type', 'hidden');
+      const a = Int32Array.from([filedata.fileData])
+      const buffer = new Uint8Array([filedata.fileData]).buffer;
+      const buffer1 = new Int8Array([filedata.fileData]).buffer;
+      const buffer2 = new Uint16Array([filedata.fileData]).buffer;
+      const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(file);
+      link.href = url;
+      link.download = this.downloadClick;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    // const blob = new Blob([filedata.fileData], { type: 'text/csv' });
+    // const s = new Uint16Array([filedata.fileData]).buffer;
+    // const url= window.URL.createObjectURL(s);
+    // window.open(url);
+
+    // const data: Blob = new Blob([filedata.fileData], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});  
+    // FileSaver.saveAs(data, "test" + '.xlsx');  
+ 
+
+    // const blob = new Blob([filedata.fileData], { type : 'application/vnd.ms.excel' });
+    // const fil = new File([blob], "test" + '.xlsx', { type: 'application/vnd.ms.excel' });
+    // saveAs(fil);
+
+    // let link = document.createElement('a');
+    // link.setAttribute('type', 'hidden');
+
+    // const file = new Blob([filedata.fileData], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    // const url = window.URL.createObjectURL(file);
+    // link.href = url;
+    // link.download = filedata.fileName;
+    // document.body.appendChild(link);
+    // link.click();
+    // link.remove();
+   
+  }
+
   numberOnly(event){
     return this.commonFunctionService.numberOnly(event);
   }
