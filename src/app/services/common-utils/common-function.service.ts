@@ -185,6 +185,23 @@ export class CommonFunctionService {
     }    
     return staticModal;
   }
+  getTabsCountPyload(tabs){
+    let payloads = [];
+    if(tabs && tabs.length >= 1 ){      
+      tabs.forEach(element => {
+        let grid_api_params_criteria = [];
+        if(this.isGridFieldExist(element,"api_params_criteria")){
+          grid_api_params_criteria = element.grid.api_params_criteria;
+        }
+        const payload = this.getPaylodWithCriteria(element.tab_name,element.tab_name,grid_api_params_criteria,{});
+        payload['countOnly'] = true;
+        payloads.push(payload);
+      }); 
+    }
+    if(payloads && payloads.length > 0){
+      this.apiService.getGridCountData(payloads);
+    } 
+  }
   getCriteriaList(criteria,object){
     const crList = [];    
     criteria.forEach(element => {
@@ -302,6 +319,17 @@ export class CommonFunctionService {
       }
     }
   }
+  isMendetory(tableField, formValue) {
+    if (tableField.is_mandatory) {
+      return true;
+    } else {
+      if (tableField.mandatory_if && tableField.mandatory_if != '') {
+        return this.checkIfCondition(tableField.mandatory_if, formValue)
+      }else {
+        return false;
+      }
+    }
+  }
 
   checkIfCondition(data, formValue) {
     let condition = []
@@ -314,6 +342,7 @@ export class CommonFunctionService {
         setValue = setValue + "";
       }
       switch (condition[1]) {
+        case 'eq':
         case 'equal':
           if (condition.length > 2) {
             //console.log('setValue');
@@ -351,6 +380,7 @@ export class CommonFunctionService {
           } else {
             return false;
           }
+        case "neq":
         case "notequal":
           if (condition.length > 2) {
             //console.log('setValue');
@@ -384,7 +414,7 @@ export class CommonFunctionService {
           case "tree_view_selection":
           case "dropdown":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0 && element.type != 'dropdown'){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -438,13 +468,19 @@ export class CommonFunctionService {
               break;
           case "typeahead":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){ 
-              filterList.push(
-                {
-                  "fName": element.field_name,
-                  "fValue": this.getddnDisplayVal(formValue[element.field_name]),
-                  "operator": "stwic"
-                }
-              )
+              if(isArray(element.dataFilterCriteria) && element.dataFilterCriteria.length > 0){
+                element.dataFilterCriteria.forEach(cri => {
+                  criteria.push(cri)
+                });
+              }else{
+                filterList.push(
+                  {
+                    "fName": element.field_name,
+                    "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                    "operator": "stwic"
+                  }
+                )
+              }
             }
             break;
           case "info":
@@ -2519,6 +2555,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   openFileUpload(fieldName, modalName, formValue, fileData) {
     const alertData = {
+      "field" :fieldName,
       "event": true,
       "fieldName": fieldName.field_name,
       "ddnFieldName": fieldName.ddn_field,

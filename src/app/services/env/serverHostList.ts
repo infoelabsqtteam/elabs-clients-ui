@@ -51,10 +51,11 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "lims-itllabs.e-labs.ai", "serverEndpoint": "https://proditlserver.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "lims-itllabs.e-labs.ai", "serverEndpoint": "https://proditlserver.e-labs.ai", "title": "ITL LABS", "google_map": "false", "menu_type": "Vertical", "folder": "itl", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
+      
       "header_txt_hover_color": "",
       "header_icon_color": "",
       "header_icon_hover_color": "",
@@ -463,7 +464,7 @@ export const serverHostList = [
   },
 
   {
-    "clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai", "title": "Bioscience Sit", "google_map": "false", "menu_type": "Vertical", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai", "title": "AAL Biosciences Research Lab", "google_map": "false", "menu_type": "Vertical", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -481,7 +482,7 @@ export const serverHostList = [
   },
 
   {
-    "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "","varify_mode":"","teamname": "false",
+    "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "AAL Biosciences Research Lab", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "","varify_mode":"","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -515,7 +516,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai", "title": "Bioscience Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "bioscience", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -532,7 +533,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "app.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -549,7 +550,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "app.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "food.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "food-multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -566,7 +567,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "lims-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "lims-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",

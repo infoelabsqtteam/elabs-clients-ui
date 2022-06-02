@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
+import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { ModelService } from 'src/app/services/model/model.service';
+import { NotificationService } from 'src/app/services/notify/notification.service';
 import { StorageService } from '../../../services/storage/storage.service';
 
 @Component({
@@ -16,8 +18,17 @@ export class FileUploadModalComponent implements OnInit {
   fileDrop: boolean = false;
   uploadFile: boolean = false;
   files: any[] = [];
+  field:any={};
+  fileSize:any=0;
+  fileSizeHints:any = '';
 
-  constructor(private modalService: ModelService, private el: ElementRef,private storageService: StorageService) { }
+  constructor(
+    private modalService: ModelService, 
+    private el: ElementRef,
+    private storageService: StorageService,
+    private notificationService:NotificationService,
+    private commonfunctionService:CommonFunctionService
+    ) { }
 
   ngOnInit(): void {
     let modal = this;
@@ -51,7 +62,15 @@ export class FileUploadModalComponent implements OnInit {
 	 * @param index (File index)
 	 */
   deleteFile(index: number) {
+    const file = this.uploadData[index];
+    const index1 = this.commonfunctionService.getIndexInArrayById(this.files,file.fileName,'name');
+    if(index1 != -1){
+      this.delete(this.files,index1);
+    }    
     this.uploadData.splice(index, 1);
+  }
+  delete(list,index){
+    list.splice(index,1);
   }
 
 	/**
@@ -135,12 +154,29 @@ export class FileUploadModalComponent implements OnInit {
   }
   uploadFilesSimulator(index) {
     this.uploadFile = true;
-    if (this.uploadData && this.uploadData.length > 0) {
-      this.fileUploadResponce.emit(this.uploadData);
-    } else {
-      this.fileUploadResponce.emit([]);
+    if(this.checkFileSize(this.files)){
+      if (this.uploadData && this.uploadData.length > 0) {
+        this.fileUploadResponce.emit(this.uploadData);
+      } else {
+        this.fileUploadResponce.emit([]);
+      }
+      this.docUploadModal.hide();
+    }    
+  }
+  checkFileSize(files){
+    let check = true;
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
+      if(this.fileSize != 0){
+        const sizeInKb = (file?.size / 1024).toFixed(2);
+        if(sizeInKb > this.fileSize){          
+          this.notificationService.notify('bg-danger', file.name + " size is greter then " + this.fileSize + " KB")
+          check = false;
+          break;
+        }
+      }
     }
-    this.docUploadModal.hide();
+    return check;
   }
   showModal(object) {
     if(object && object.files){
@@ -148,11 +184,23 @@ export class FileUploadModalComponent implements OnInit {
     }else{
       this.uploadData = [];
     }    
+    if(object && object.field){
+      this.field = object.field;
+    }
+    if(this.field && this.field.maxFileSize && this.field.maxFileSize != '' && this.field.maxFileSize > 0){
+      this.fileSize = this.field.maxFileSize;
+      this.fileSizeHints = "Max file Size " + this.fileSize + " KB"
+    }else{
+      this.fileSize = 0;
+      this.fileSizeHints = '';
+    }
     this.docUploadModal.show();
   }
   cancel() {
     this.docUploadModal.hide();
-    this.fileUploadResponce.emit(this.uploadData);
+    this.fileSize = 0;
+    this.fileSizeHints = '';
+    //this.fileUploadResponce.emit(this.uploadData);
   }
 
 }

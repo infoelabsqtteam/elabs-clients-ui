@@ -1283,10 +1283,13 @@ export class DriveHomeComponent implements OnInit {
 		console.log(responce);
 	}
 
-	
 	getPage(page: number) {
 		this.pageNumber = page;
-		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder, []);
+		const criteria = [
+			"key;stw;"+this.vdrprentfolder["key"]+";STATIC",
+			"parentId;eq;"+this.vdrprentfolder["_id"]+";STATIC",
+		]
+		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder, criteria);
 		this.docApiService.GetFolderChild1(getFilterData);
 	}
 

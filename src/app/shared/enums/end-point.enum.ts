@@ -7,6 +7,7 @@ export enum EndPoint {
     SEND_EMAIL = "ins/send_mail",
     GET_CUSTOM_TEMPLATE = "rpts/sobj",
     GET_GRID_DATA = "rpts/gd",
+    GET_COUNT_DATA = "rpts/gd_list",
     GET_TEMPLATE_NAMES = "template/names",
     EXPORT_GRID_DATA = "downloads/excelExport",
     SAVE_NAVIGATION = "ins/save/navigation",

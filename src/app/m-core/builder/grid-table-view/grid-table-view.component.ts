@@ -101,6 +101,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   selectAllcheck:boolean = false;
   tabFilterData:any=[];
   typeAheadData: string[] = [];
+  typegrapyCriteriaList:any=[];
 
   
   navigationSubscription;
@@ -491,6 +492,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
         if(this.tab.grid.details && this.tab.grid.details != null){
           this.details = this.tab.grid.details;
+        }
+        if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
+          this.typegrapyCriteriaList = this.tab.grid.colorCriteria;
+        }else{
+          this.typegrapyCriteriaList = [];
         }     
       }else{
         this.headElements = [];
@@ -582,13 +588,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
           this.currentMenu.name = this.tab.tab_name;
+          this.apiService.resetGridCountAllData();
           this.getPage(1);
+          this.getTabsCount(this.tabs);
         }
 
       }
     }
 
 
+  }
+  getTabsCount(tabs){
+    this.commonFunctionService.getTabsCountPyload(tabs);    
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce.success != '' && this.updateGridData) {
@@ -700,8 +711,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = false;
     this.bulkuploadList = [];
     this.formName = '';
-    this.getPage(this.pageNumber);      
-    
+    this.getPage(this.pageNumber);
+    this.getTabsCount(this.tabs);   
   }
   
   addNewForm(formName){
@@ -1026,15 +1037,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   compareObjects(o1: any, o2: any): boolean {
     return o1._id === o2._id;
   }
-  clearFilter(fieldName,type){
-    if(type.toLowerCase() == 'daterange'){
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
-    }else{
-      this.filterForm.get([fieldName]).setValue('');
-    }    
-    this.applyFilter();
-  }
+  
   getddnDisplayVal(val) {
     return this.commonFunctionService.getddnDisplayVal(val);    
   }
@@ -1274,6 +1277,57 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
+  }
+  checkTypgraphCondition(object,name){
+    let background = '';
+    if(this.typegrapyCriteriaList && this.typegrapyCriteriaList.length >= 1){
+      let criteriaMatched = false;
+      let matchedelement = {};
+      for (let index = 0; index < this.typegrapyCriteriaList.length; index++) {
+        const element = this.typegrapyCriteriaList[index];
+        let crList = element['crList'];
+        let childConditionsMatched = false;
+        for (let j = 0; j < crList.length; j++) {
+          const child = crList[j];
+          let modify = child.replaceAll(';', "#");
+          if(!this.commonFunctionService.checkIfCondition(modify,object)){
+            childConditionsMatched = false;
+            break;
+          }else{
+            childConditionsMatched = true;
+          }          
+        }
+        if(childConditionsMatched){
+          matchedelement = this.typegrapyCriteriaList[index]
+          criteriaMatched = true;
+          break;
+        }else{
+          criteriaMatched = false;
+        }
+      }
+      if(criteriaMatched){ 
+        let typograpy = matchedelement['typoGraphy']; 
+        let value = '';
+        switch (name) {
+          case 'background-color':
+            value = typograpy['background_color'];
+            break;        
+          default:
+            break;
+        }
+        background = value;
+      }      
+    }
+    return background;
+  }
+  clearFilter(fieldName,type){
+    if(type.toLowerCase() == 'daterange'){
+      (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
+      (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
+    }else{
+      this.filterForm.get([fieldName]).setValue('');
+    }    
+    this.applyFilter();
   }
 
 }

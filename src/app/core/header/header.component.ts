@@ -250,7 +250,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 break;
 
         }
-       
         if (this.storageService != null && this.storageService.GetIdToken() != null) {
             const idToken = this.storageService.GetIdToken();
             if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
@@ -607,6 +606,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     gitInfo() {
         this.modelService.open('git_version', {})
     }
+    feedback() {
+        this.modelService.open('feedback_model', {})
+     }
     GoToSelectedModule(item){
         this.storageService.setModule(item.name); 
         this.dataShareService.sendCurrentPage('DASHBOARD')
