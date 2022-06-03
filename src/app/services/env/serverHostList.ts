@@ -532,8 +532,9 @@ export const serverHostList = [
       "form_label_bg": "#E4F2FA"
     }
   },
+  
   {
-    "clientEndpoint": "app.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "app.multani.com", "serverEndpoint": "http://server.multani.com:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -550,7 +551,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "food.multani.com", "serverEndpoint": "http://103.122.85.26:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "food-multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "food.multani.com", "serverEndpoint": "http://server.multani.com:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Horizontal", "folder": "food-multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
