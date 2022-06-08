@@ -93,7 +93,7 @@ export class DocApiService {
     )
   }
   SaveUploadFile(payload){
-    let api = this.envService.getApi('UPLOAD_DOC_FILE');
+    let api = this.envService.getApi('INSERT_FILE_AFTER_UPLOAD');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setDocUploadResponce(respData);

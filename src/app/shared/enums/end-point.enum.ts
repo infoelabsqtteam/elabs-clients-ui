@@ -47,6 +47,7 @@ export enum EndPoint {
     GET_VDR_DATA = "vdrn/getRefCodeRootFolderForAppId/e",    
     MOVE_FOLDER_CHILD = "vdrn/getch",
     UPLOAD_DOC_FILE = "vdrn/crtfl/e",
+    INSERT_FILE_AFTER_UPLOAD = "vdrn/crtflaftupl/e",
     CREATE_FOLDER = "vdrn/crtfd/e",
     GET_CHILD_FOLDER_BY_KEY = "vdrn/getchbk",
     GET_DOC_AUDIT = "vdrn/getAudit/",

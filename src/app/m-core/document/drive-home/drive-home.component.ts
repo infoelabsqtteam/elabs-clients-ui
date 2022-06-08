@@ -286,6 +286,7 @@ export class DriveHomeComponent implements OnInit {
             link.setAttribute('type', 'hidden');
             link.href = this.downloadLink;
             link.download = this.downloadClick;
+			link.target = '_blank';
             document.body.appendChild(link);
             link.click();
             link.remove();

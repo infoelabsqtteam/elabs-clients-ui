@@ -7,6 +7,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { ModelService } from '../../../../services/model/model.service';
 import {ThemePalette} from '@angular/material/core';
 import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
+import * as S3 from 'aws-sdk/clients/s3';
 
 
 @Component({
@@ -21,9 +22,18 @@ export class DocFileUploadComponent implements OnInit {
   public uploadFile: boolean = false;
   public files: any[] = [];
   uploadFileIndex:any=0;
+  currentFileIndex:any=-1;
   docFileUploadResponceSubscription:any;
+  uploadProgressValue = 0;
+  progressBarColor = 'primary';
+  progressMode='determinate';
+  bufferValue = 100;
   public UploadFile = [];
-
+  config = {
+    accessKeyId: 'AKIA2FN5UBQH66NW7I5L',
+    secretAccessKey: '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',
+    region: 'ap-south-1'
+}
 
 
   @Input() id: string;
@@ -70,6 +80,7 @@ export class DocFileUploadComponent implements OnInit {
 			this.setUploadFile(this.uploadFileIndex);
 			this.fileUpload();
 		}else{
+			this.currentFileIndex = -1;
 			this.close();
 			this.uploadDocFileResponce.emit('success');
 		}		
@@ -128,8 +139,8 @@ export class DocFileUploadComponent implements OnInit {
 			fileName: rxFile.name,
 			fileExtn: rxFile.name.split('.')[1],
 			size: rxFile.size,
-			innerBucketPath: this.vdrprentfolder.key + rxFile.name
-			
+			innerBucketPath: this.vdrprentfolder.key + rxFile.name,
+			type : rxFile.type
 		});
   }
   
@@ -158,7 +169,7 @@ export class DocFileUploadComponent implements OnInit {
 	}
   
   uploadFilesSimulator(){
-		this.uploadFile = true;
+	this.uploadFile = true;
     const object = {
       uploadData : this.uploadData
     }
@@ -171,37 +182,68 @@ export class DocFileUploadComponent implements OnInit {
   }
   setUploadFile(index){
 	const file = this.uploadData[index];
+	this.currentFileIndex = index;
 	this.uploadFileIndex = this.uploadFileIndex + 1;
 	this.UploadFile = [];
 	this.UploadFile.push(file);
   }
 
-  	public newFolder: any = {};
-  	uploadFiles() {
+	public newFolder: any = {};
+	uploadFiles() {
 		this.useDetails();
-		var newObj = Object.assign({}, this.newFolder);
+		var newObj:any = Object.assign({}, this.newFolder);
 		var sessionid = Object.assign({}, this.storageService.getUserLog())
 		newObj.log.sessionId = sessionid.sessionId + ";" + this.storageService.GetIdToken();
-		newObj.rollName = newObj.parentFolder;
-		newObj.isFolder = false;
-		this.docApiService.SaveUploadFile(newObj);
-		this.uploadFilesData = [];
+		// newObj.rollName = newObj.parentFolder;
+		// newObj.isFolder = false;
+		const file = this.files[this.currentFileIndex]
+		newObj.rollName = file.name;
+		newObj.fileExt = file.name.split('.')[1];
+		newObj.fileSize = file.size;
+		this.uploadByS3(newObj,file);	
+	}
+	uploadByS3(newObj,file){
+		const bucket = new S3(this.config);	        
+		const params = {
+			Bucket: 'documents-e-labs-ai',
+			Key: newObj.key + file.name,
+			Body: file,
+			ACL: 'private',
+			ContentType: file.type
+		};
+		
+		bucket.upload(params).on('httpUploadProgress', (evt) => {        
+			this.uploadProgressValue = Math.round(100.0 * (evt.loaded / evt.total));
+			//console.log(this.uploadProgressValue + ' %' + evt.loaded + ' of ' + evt.total + ' Bytes');
+		}).send( (err, data) => {
+			if (err) {
+				this.notificationService.notify("success","There was an error uploading your file: "+ err);
+				//console.log('There was an error uploading your file: ', err);
+				return false;
+			}			
+			const key = data.Key;
+			newObj.key = key;
+			newObj.capKey = key.toUpperCase();
+			newObj.bucket = data.Bucket;
+			this.files[this.currentFileIndex].upload = true;
+			this.uploadProgressValue = 0;
+			this.docApiService.SaveUploadFile(newObj);
+			this.uploadFilesData = [];					
+			return true;
+		});
 	}
 	useDetails() {
 		this.newFolder = {
 			parentId: this.vdrprentfolder._id,
 			parentFolder: this.vdrprentfolder.rollName,
-			parenteTag: this.vdrprentfolder.eTag,
-			isFolder: true,
+			parentTag: this.vdrprentfolder.eTag,
+			folder: false,
 			key: this.vdrprentfolder.key + this.folderName,
-			rollName: this.folderName,
 			log: this.storageService.getUserLog(),
-			createdBy: this.storageService.getUserLog().userId,
-			uploadData: this.UploadFile,
-			bucket:this.vdrprentfolder.bucket,
+			createdBy: this.storageService.getUserLog().userId,		
+			bucket:this.vdrprentfolder.bucket,			
 			refCode:this.storageService.getRefCode(),
 			appId:this.storageService.getAppId()
-			//caseId: this.storageService.GetCurrentCaseId(),
 		}
 	}
 

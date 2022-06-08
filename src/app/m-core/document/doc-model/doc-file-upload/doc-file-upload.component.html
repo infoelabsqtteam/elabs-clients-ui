@@ -24,6 +24,15 @@
                                 <a href="javascript:void(0);" class="text-muted font-weight-bold">{{ file?.name }}</a>
                                 <p class="mb-0">{{ formatBytes(file?.size,2) }}</p>
                                 <!-- <app-progress [progress]="file?.progress" *ngIf="uploadFile"></app-progress> -->
+                                <section class="example-section" *ngIf="uploadFile">
+                                    <mat-progress-bar *ngIf="!file.upload && currentFileIndex == i"
+                                        class="example-margin"
+                                        [color]="progressBarColor"
+                                        [mode]="progressMode"
+                                        [value]="uploadProgressValue"
+                                        [bufferValue]="bufferValue">
+                                    </mat-progress-bar>
+                                </section>
                             </div>
                             <div class="col-auto" *ngIf="!uploadFile">
                                 <!-- Button -->
@@ -33,7 +42,7 @@
                                 </a>
                             </div>
                             <div class="col-auto" *ngIf="uploadFile">                                
-                                <span *ngIf="!file.upload"><mat-spinner diameter="20" class="custom-spinner"></mat-spinner></span>
+                                <!-- <span *ngIf="!file.upload"><mat-spinner diameter="20" class="custom-spinner"></mat-spinner></span> -->
                                 <span *ngIf="file.upload" class="material-icons text-success">check</span>                            
                             </div>
                         </div>
