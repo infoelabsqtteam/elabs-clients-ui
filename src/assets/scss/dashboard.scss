@@ -32,8 +32,10 @@ a.google-visualization-table-page-number.gradient {padding:0 3px;border-radius:1
 .google-visualization-table-div-page {padding:3px !important;}
 .google-visualization-table-page-number.current {background:var(--popupHeaderBg) !important;}
 
-.chartdropdown .mat-option-text, .mat-input-element, .chartautocomplete .mat-option {font-size:11px !important;}
+.chartdropdown .mat-option-text, .chartautocomplete .mat-option {font-size:11px !important;}
 
-
+.chartfilter {
+  .mat-input-element {font-size:11px !important;}
+}
 
 
