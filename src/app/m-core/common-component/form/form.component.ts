@@ -3637,6 +3637,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.dataListForUpload = []
     this.checkFormAfterCloseModel();
     this.apiService.resetStaticAllData();
+    this.filePreviewFields = [];
     this.copyStaticData = {};
     //this.commonFunctionService.resetStaticAllData();
   }  
