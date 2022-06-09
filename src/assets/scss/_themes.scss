@@ -199,6 +199,12 @@
 
 
 
-.google-visualization-table>div:first-child {height: auto !important;}
+.google-visualization-table>div:first-child {height:auto !important;border-width:1px !important;}
 .bg-light-50 {background:#efefef;}
 .searchdropdown {position:sticky;top:0;z-index:99;}
+.modal-dialog .angular-editor-textarea {padding:0 !important; border:none !important;resize:none !important;}
+
+.travel-management {
+  span {opacity:0.7}
+  mat-icon {font-size:12px;vertical-align:middle;opacity:0.7;width:auto;height:auto;}
+}

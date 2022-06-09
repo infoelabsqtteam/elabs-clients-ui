@@ -193,7 +193,7 @@ export class CommonFunctionService {
         if(this.isGridFieldExist(element,"api_params_criteria")){
           grid_api_params_criteria = element.grid.api_params_criteria;
         }
-        const payload = this.getPaylodWithCriteria(element.tab_name,element.tab_name,grid_api_params_criteria,{});
+        const payload = this.getPaylodWithCriteria(element.tab_name,element.tab_name+"_"+element.name,grid_api_params_criteria,{});
         payload['countOnly'] = true;
         payloads.push(payload);
       }); 
