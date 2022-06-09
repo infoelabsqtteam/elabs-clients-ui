@@ -19,8 +19,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
-import { saveAs } from 'file-saver';
-import * as FileSaver from 'file-saver';
+
 declare var tinymce: any;
 
 
