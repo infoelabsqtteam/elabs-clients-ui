@@ -93,7 +93,7 @@ export class DocApiService {
     )
   }
   SaveUploadFile(payload){
-    let api = this.envService.getApi('UPLOAD_DOC_FILE');
+    let api = this.envService.getApi('INSERT_FILE_AFTER_UPLOAD');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setDocUploadResponce(respData);
@@ -179,6 +179,17 @@ export class DocApiService {
   }
   DocFileDownload(payload){
     let api = this.envService.getApi('DOC_FILE_DOWNLOAD');
+    this.http.post(api, payload).subscribe(
+      (respData) =>{
+        this.docDataShare.setDocFileDownloadLink(respData['success']);
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+  SetDocFileAutditAfterDownload(payload){    
+    let api = this.envService.getApi('SET_DOC_FILE_AUDIT_AFTER_DOWNLOAD');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setDocFileDownloadLink(respData['success']);

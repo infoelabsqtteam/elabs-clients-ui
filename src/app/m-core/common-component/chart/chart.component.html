@@ -54,9 +54,23 @@
         <div *ngIf="!chartType[item.call_back_field]" class="spinner">
           <mat-spinner diameter="40"  class="custom-spinner"></mat-spinner>
         </div>
+        
       </div>
     </div>
   </div>
+  <!-- <div class="col-lg-4" >
+    <div class="card">
+      <div class="card-header py-0 pr-2"></div>
+        <div class="card-body chartbody p-1">
+          <canvas mdbChart [chartType]="'bar'"
+                [datasets]="testDataset" [labels]="testLabel"
+                [colors]="testColor" [options]="testOption"
+                [legend]="'true'" (chartHover)="chartHover($event)"
+                (chartClick)="chartClicked($event)">
+            </canvas>
+        </div>
+    </div>
+  </div> -->
 </div>
 <div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
 <section>

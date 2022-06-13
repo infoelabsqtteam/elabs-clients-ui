@@ -1,0 +1,20 @@
+.progress.modal.fade{
+    background:inherit;
+}
+.percent{
+    right: 5px;
+    position: absolute;
+    top: 2px;
+    font-size: 8px;
+}
+.spin-progress{
+    position: absolute;
+    right: 0;
+    top: 0;margin: 0;
+}
+.file{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 3px;
+    font-size: 13px;
+}

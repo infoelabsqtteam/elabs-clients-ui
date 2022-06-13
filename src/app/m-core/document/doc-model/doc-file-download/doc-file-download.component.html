@@ -1,0 +1,27 @@
+
+<div mdbModal #downloadDocFileModal="mdbModal" class="progress modal fade right"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true,backdrop:false}">
+  <div class="modal-dialog modal-sm modal-dialog-scrollable modal-side modal-bottom-right">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="position-relative " >                
+                <div class="dz-message ">
+                    <!-- <i class="h1 text-muted dripicons-cloud-upload"></i> -->
+                    <h4 class="file">{{vdrprentfolder.rollName}}   
+                      <p class="spin-progress">                   
+                        <mat-progress-spinner
+                            [diameter]="diameter"
+                            [strokeWidth]="strokeWidth"
+                            class="example-margin"
+                            [color]="color"
+                            [mode]="mode"
+                            [value]="downloadProgressValue">
+                        </mat-progress-spinner>
+                        <span class="percent">{{downloadProgressValue}}%</span>
+                      </p> 
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

@@ -43,6 +43,38 @@ export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   public chartLegend:any = {};
   public chartTitle:any = {};
 
+  testDataset = [
+    {
+      "backgroundColor":"rgba(182,127,0,1)",
+    "borderColor":"rgba(117,61,41,1)",
+    "stack":"department",
+    "data":[
+      [3,5],
+      [6,8],
+      [7,9],
+      [5,9]
+    ],
+    "borderWidth":1.0,
+    "label":"Finished Product"
+  }
+]
+testLabel = ["Pharma","Food","Ayurvedic","Environment"]
+
+testOption = {
+  "scales":{
+    "yAxes":[{"ticks":{"beginAtZero":true,"min":0.0}}]
+    },
+    tooltips: {
+      callbacks: {
+        label: (tooltipItem, data) => {
+          const v = data.datasets[0].data[tooltipItem.index];
+          return Array.isArray(v) ? v[1] - v[0] : v;
+        }
+      }
+    },
+  }
+
+
   checkGetDashletData:boolean=true;
   dashletData:any={};
   pageNumber:any=1;
