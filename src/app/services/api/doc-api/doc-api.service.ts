@@ -188,6 +188,17 @@ export class DocApiService {
       }
     )
   }
+  SetDocFileAutditAfterDownload(payload){    
+    let api = this.envService.getApi('SET_DOC_FILE_AUDIT_AFTER_DOWNLOAD');
+    this.http.post(api, payload).subscribe(
+      (respData) =>{
+        this.docDataShare.setDocFileDownloadLink(respData['success']);
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
   ResetDownloadLink(){
     this.docDataShare.setDocFileDownloadLink('');
   }

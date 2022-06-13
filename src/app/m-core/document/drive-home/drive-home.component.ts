@@ -10,6 +10,8 @@ import { EnvService } from '../../../services/env/env.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
+import * as S3 from 'aws-sdk/clients/s3';
+import { config } from '../config.modal';
 
 @Component({
   selector: 'lib-drive-home',
@@ -19,7 +21,7 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 export class DriveHomeComponent implements OnInit {
 
     public title: any = 'Right Click Me';
-	itemNumOfGrid: any = 25;
+	itemNumOfGrid: any = 30;
 	public DocIndex: any;
 	public thisContext: any = this;
 	public itemVisible: any = false;
@@ -873,7 +875,7 @@ export class DriveHomeComponent implements OnInit {
 	payloadForGetChildDocs(selectedFolder,criteria){		
 		const data = this.commonFunctionService.getPaylodWithCriteria("aws_docs",'',criteria,'');
 		data['pageNo'] = this.pageNumber-1;
-		data['pageSize'] = 25;
+		data['pageSize'] = 30;
 		data['data'] = selectedFolder;    
 		const getFilterData = {
 		  data: data,
@@ -1108,10 +1110,15 @@ export class DriveHomeComponent implements OnInit {
 	public dataDownload: any;
 	public downloadClick: any = '';
 	download() {
-		this.dataDownload = this.vdrprentfolder;
-		this.downloadClick = this.vdrprentfolder.rollName;
-		this.dataDownload.log = this.storageService.getUserLog();
-		this.docApiService.DocFileDownload(this.dataDownload);
+		const object = {
+			'folder' : this.vdrprentfolder
+		}
+		this.modelService.open('downloadFile',object);
+
+		// this.dataDownload = this.vdrprentfolder;
+		// this.downloadClick = this.vdrprentfolder.rollName;
+		// this.dataDownload.log = this.storageService.getUserLog();
+		// this.docApiService.DocFileDownload(this.dataDownload);
 	}
 	rightViewFile(files) {
 		this.viewFile(files.item[0]);
@@ -1332,6 +1339,9 @@ export class DriveHomeComponent implements OnInit {
 			return true;
 		}
 	}	
+	downloadFileResponce(event){
+		console.log(event);
+	}
 
 }
 

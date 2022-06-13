@@ -8,6 +8,7 @@ import { ModelService } from '../../../../services/model/model.service';
 import {ThemePalette} from '@angular/material/core';
 import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 import * as S3 from 'aws-sdk/clients/s3';
+import { config } from '../../config.modal';
 
 
 @Component({
@@ -29,11 +30,6 @@ export class DocFileUploadComponent implements OnInit {
   progressMode='determinate';
   bufferValue = 100;
   public UploadFile = [];
-  config = {
-    accessKeyId: 'AKIA2FN5UBQH66NW7I5L',
-    secretAccessKey: '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',
-    region: 'ap-south-1'
-}
 
 
   @Input() id: string;
@@ -203,7 +199,7 @@ export class DocFileUploadComponent implements OnInit {
 		this.uploadByS3(newObj,file);	
 	}
 	uploadByS3(newObj,file){
-		const bucket = new S3(this.config);	        
+		const bucket = new S3(config);	        
 		const params = {
 			Bucket: 'documents-e-labs-ai',
 			Key: newObj.key + file.name,

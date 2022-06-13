@@ -52,6 +52,7 @@ export enum EndPoint {
     GET_CHILD_FOLDER_BY_KEY = "vdrn/getchbk",
     GET_DOC_AUDIT = "vdrn/getAudit/",
     DOC_FILE_DOWNLOAD = "vdrn/getfl/download",
+    SET_DOC_FILE_AUDIT_AFTER_DOWNLOAD="vdrn/setflaud/download",
     DOC_FILE_VIEW = "vdrn/getfl/view",
     DOC_DELETE = "vdrn/fo/",
     DOC_SHARE = "vdrn/shr",
