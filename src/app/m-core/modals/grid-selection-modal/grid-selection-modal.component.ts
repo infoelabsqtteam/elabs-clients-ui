@@ -163,6 +163,7 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
 
+
   ngOnInit(): void {
     let modal = this;
     if (!this.id) {
@@ -568,6 +569,13 @@ export class GridSelectionModalComponent implements OnInit {
       return true;
     }else{
       return false;
+    }
+  }
+  fieldButtonLabel(field){
+    if(field && field.grid_selection_button_label != null && field.grid_selection_button_label != ''){
+      return field.grid_selection_button_label;
+    }else{
+      return field.label;
     }
   }
 
