@@ -66,8 +66,8 @@
                                           </mat-chip>
                                           <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
                                               [matAutocomplete]="first" [matChipInputFor]="chipList"
-                                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="searchTypeaheadData(fieldName,data)" [id]="fieldName._id+'_'+fieldName.field_name">
-                                          <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i)" [displayWith]="getOptionText">
+                                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                          <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
                                               <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                           </mat-autocomplete>
                                       </mat-chip-list>
@@ -143,7 +143,7 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
-        <button type="button" [disabled]="checkValidator()" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect  (click)="selectGridData()">{{ field.label}}</button>
+        <button type="button" [disabled]="checkValidator()" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect  (click)="selectGridData()">{{ fieldButtonLabel(field)}}</button>
         <button type="button" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
       </div>
     </div>
