@@ -147,8 +147,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
   }
   setGridCountData(counts){
-    Object.keys(counts).forEach(key => {        
-      this.gridCountByTab[key] = JSON.parse(JSON.stringify(counts[key]));
+    Object.keys(counts).forEach(key => { 
+      if(counts[key]){
+        this.gridCountByTab[key] = JSON.parse(JSON.stringify(counts[key]));
+      }     
     })
   }
   setTempData(tempData:any){
