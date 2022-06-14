@@ -37,6 +37,7 @@ export class DocFileUploadComponent implements OnInit {
   @Input() vdrprentfolder:any;
   @Output() uploadDocFileResponce = new EventEmitter();
   @ViewChild('uploadDocFileModal') public uploadDocFileModal: ModalDirective; 
+  @ViewChild('fileDropRef', {static: false}) fileDropRef:ElementRef;
 
   constructor(
     private modelService:ModelService,
@@ -83,12 +84,15 @@ export class DocFileUploadComponent implements OnInit {
 	}
 }
   close(){
+	    this.uploadFileIndex=0;
+        this.currentFileIndex=-1;
 		this.uploadDocFileModal.hide();
 		this.files = [];
 		this.uploadFile = false;
 		this.uploadData = [];
 		this.uploadFilesData = [];
 		this.UploadFile = [];
+		this.fileDropRef.nativeElement.value = "";
   }
 
   /**
