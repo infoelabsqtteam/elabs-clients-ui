@@ -1181,6 +1181,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   customValidationFiels=[];
   setStaticData(staticData){
+    if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
+      this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
+      const fieldName = {
+        "field" : "staticDataMessgae"
+      }
+      this.apiService.ResetStaticData(fieldName);
+    }
     this.staticData = staticData; 
     Object.keys(this.staticData).forEach(key => {        
       this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
@@ -2245,7 +2252,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   
   inputOnChangeFunc(parent,field) {
-    if(field.type == 'checkbox'){
+    if(field.type == 'checkbox' || field.type == 'date'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
         let formValue = this.getFormValue(false);
         this.changeDropdown(field,  formValue,field.data_template);       
