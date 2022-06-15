@@ -226,6 +226,7 @@
 <app-doc-view-model id="docViewModal" (docViewModalResponce)="docViewModalResponce($event)"></app-doc-view-model>
 <app-doc-folder-upload id="docFolderUpload" (uploadDocFolderResponce)="uploadDocFolderResponce($event)"></app-doc-folder-upload>
 <app-permission id="permissionModal" (permissionResponce)="permissionResponce($event)" [pathList]="pathList" [folder]="vdrprentfolder"></app-permission>
+<lib-doc-file-download id="downloadFile" (downloadFileResponce)="downloadFileResponce($event)"></lib-doc-file-download>
 
 <context-menu>
     <!-- <ng-template contextMenuItem (execute)="rightViewFile($event);recentData($event)"><div class="text-dark mhover"><i class="dripicons-preview px-2 mhover"></i>Preview</div></ng-template> 

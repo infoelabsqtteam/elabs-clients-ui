@@ -10,6 +10,7 @@ import { DocViewModelComponent } from './doc-view-model/doc-view-model.component
 import { DocFolderUploadComponent } from './doc-folder-upload/doc-folder-upload.component';
 import { AngularMaterialModule } from '../../angular-material-module/angular-material.module';
 import { PermissionComponent } from './permission/permission.component';
+import { DocFileDownloadComponent } from './doc-file-download/doc-file-download.component';
 
 
 const models = [
@@ -18,7 +19,8 @@ const models = [
   DocFileUploadComponent,
   DocViewModelComponent,
   DocFolderUploadComponent,
-  PermissionComponent
+  PermissionComponent,
+  DocFileDownloadComponent
 ]
 
 @NgModule({
