@@ -25,9 +25,25 @@ export class DocApiService {
       }
     )
   }
+  // GetHomeVdr(payload){
+  //   let api = this.envService.getApi('GET_VDR_DATA');
+  //   this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
+  //     (respData) =>{
+  //       if(respData['success']){
+  //         this.docDataShare.setVdrData(respData['success']);
+  //         this.docDataShare.setMoveFolderData(respData['success']);
+  //       }
+  //     },
+  //     (error)=>{
+  //       console.log(error);
+  //     }
+  //   )
+  // }
+
+
   GetHomeVdr(payload){
-    let api = this.envService.getApi('GET_VDR_DATA');
-    this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
       (respData) =>{
         if(respData['success']){
           this.docDataShare.setVdrData(respData['success']);
@@ -39,9 +55,10 @@ export class DocApiService {
       }
     )
   }
+  
   GetHomeVdrBack(payload){
     let api = this.envService.getApi('GET_VDR_DATA');
-    this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log).subscribe(
+    this.http.post(api + '/' + payload.appId+ '/' + payload.refCode, payload.log, payload.crList).subscribe(
       (respData) =>{
         if(respData['success']){
           this.docDataShare.setMoveFolderData(respData['success']);
@@ -76,7 +93,7 @@ export class DocApiService {
     )
   }
   SaveUploadFile(payload){
-    let api = this.envService.getApi('UPLOAD_DOC_FILE');
+    let api = this.envService.getApi('INSERT_FILE_AFTER_UPLOAD');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setDocUploadResponce(respData);
@@ -142,6 +159,10 @@ export class DocApiService {
       }
     )
   }
+
+
+
+  
   GetDocAudit(payload){
     let api = this.envService.getApi('GET_DOC_AUDIT');
     this.http.post(api, payload).subscribe(
@@ -158,6 +179,17 @@ export class DocApiService {
   }
   DocFileDownload(payload){
     let api = this.envService.getApi('DOC_FILE_DOWNLOAD');
+    this.http.post(api, payload).subscribe(
+      (respData) =>{
+        this.docDataShare.setDocFileDownloadLink(respData['success']);
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+  SetDocFileAutditAfterDownload(payload){    
+    let api = this.envService.getApi('SET_DOC_FILE_AUDIT_AFTER_DOWNLOAD');
     this.http.post(api, payload).subscribe(
       (respData) =>{
         this.docDataShare.setDocFileDownloadLink(respData['success']);
@@ -241,5 +273,25 @@ export class DocApiService {
       }
     )
   }
+
+
+
+  SetDocPermission(payload){
+    let api = this.envService.getApi('DOC_PERMISSION');
+    this.http.post(api, payload).subscribe(
+      (respData) => {
+        this.docDataShare.setVdrPermissionData(respData);
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
+
+
+
+
+
+
 
 }

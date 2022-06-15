@@ -15,7 +15,6 @@
 .bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;
   &:hover {background:$buttonHovercolor !important;transition:all 1s;}
 }
-.chartbody {max-height:250px;min-height:250px !important;overflow-y:scroll;overflow-x:hidden;}
 .optiondropdown {margin:30px 10px 0;min-width:100% !important;}
 .filteroption {margin:30px 30px 0;}
 .dropdownmenu {margin-top:15px;min-height:0px;
@@ -200,4 +199,12 @@
 
 
 
-.google-visualization-table>div:first-child {height: auto !important;}
+.google-visualization-table>div:first-child {height:auto !important;border-width:1px !important;}
+.bg-light-50 {background:#efefef;}
+.searchdropdown {position:sticky;top:0;z-index:99;}
+.modal-dialog .angular-editor-textarea {padding:0 !important; border:none !important;resize:none !important;}
+
+.travel-management {
+  span {opacity:0.7}
+  mat-icon {font-size:12px;vertical-align:middle;opacity:0.7;width:auto;height:auto;}
+}

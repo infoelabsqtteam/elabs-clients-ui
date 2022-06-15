@@ -100,6 +100,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   details:any = {};
   selectAllcheck:boolean = false;
   tabFilterData:any=[];
+  typeAheadData: string[] = [];
+  typegrapyCriteriaList:any=[];
 
   
   navigationSubscription;
@@ -113,7 +115,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   exportExcelSubscription;
   pdfFileSubscription;
   previewHtmlSubscription;
+  typeaheadDataSubscription;
 
+  filterdata = '';
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -305,6 +309,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.previewHtmlSubscription = this.dataShareService.previewHtml.subscribe(data =>{
       this.setPreviewHtml(data);
     })
+    this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
+      this.setTypeaheadData(data);
+    })
     this.userInfo = this.storageService.GetUserInfo();
     this.currentMenu = this.storageService.GetActiveMenu(); 
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -450,6 +457,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
   }
+  setTypeaheadData(typeAheadData){
+    if (typeAheadData.length > 0) {
+      this.typeAheadData = typeAheadData;
+    } else {
+      this.typeAheadData = [];
+    }
+  }
   setDinamicForm(form){
     if(form && form.DINAMIC_FORM && this.flagForTdsForm){
       this.dinamic_form = form.DINAMIC_FORM;
@@ -478,6 +492,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
         if(this.tab.grid.details && this.tab.grid.details != null){
           this.details = this.tab.grid.details;
+        }
+        if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
+          this.typegrapyCriteriaList = this.tab.grid.colorCriteria;
+        }else{
+          this.typegrapyCriteriaList = [];
         }     
       }else{
         this.headElements = [];
@@ -531,6 +550,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               case "dropdown":
                 this.commonFunctionService.createFormControl(forControl, element, '', "text")
                 break;
+              case "typeahead":
+                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                break;
               case "date":
               case "datetime":
                 this.commonFunctionService.createFormControl(forControl, element, '', "text")
@@ -566,13 +588,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
           this.currentMenu.name = this.tab.tab_name;
+          this.apiService.resetGridCountAllData();
           this.getPage(1);
+          this.getTabsCount(this.tabs);
         }
 
       }
     }
 
 
+  }
+  getTabsCount(tabs){
+    this.commonFunctionService.getTabsCountPyload(tabs);    
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce.success != '' && this.updateGridData) {
@@ -684,8 +711,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = false;
     this.bulkuploadList = [];
     this.formName = '';
-    this.getPage(this.pageNumber);      
-    
+    this.getPage(this.pageNumber);
+    this.getTabsCount(this.tabs);   
   }
   
   addNewForm(formName){
@@ -1010,17 +1037,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   compareObjects(o1: any, o2: any): boolean {
     return o1._id === o2._id;
   }
-  clearFilter(fieldName,type){
-    if(type.toLowerCase() == 'daterange'){
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
-    }else{
-      this.filterForm.get([fieldName]).setValue('');
-    }    
-    this.applyFilter();
-  }
+  
   getddnDisplayVal(val) {
     return this.commonFunctionService.getddnDisplayVal(val);    
+  }
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
   }
   
   previewModalResponce(data){
@@ -1101,6 +1127,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         case 'DOWNLOAD_QR':
           this.downloadQRCode = this.commonFunctionService.getQRCode(gridData,this.elements[index]);
           this.checkForDownloadReport = true;
+          break;
+        case 'DELETE_ROW':
+          if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
+            this.editedRowData(index,button.onclick.action_name)
+          }else{
+            this.notificationService.notify("bg-danger", "Permission denied !!!");
+          }
           break;
         default:
           this.editedRowData(index,button.onclick.action_name)
@@ -1224,6 +1257,77 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
     }
     console.log(this.bulkuploadList)
+  }
+
+  updateData(event, field) {
+    if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
+      return false;
+    }
+    let objectValue = this.filterForm.getRawValue();
+    this.callTypeaheadData(field,objectValue);      
+
+  }
+  callTypeaheadData(field,objectValue){
+    this.clearTypeaheadData();   
+    const payload = [];
+    const params = field.api_params;
+    const criteria = field.api_params_criteria;
+    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    this.apiService.GetTypeaheadData(payload);    
+  }
+  clearTypeaheadData() {
+    this.apiService.clearTypeaheadData();
+  }
+  checkTypgraphCondition(object,name){
+    let background = '';
+    if(this.typegrapyCriteriaList && this.typegrapyCriteriaList.length >= 1){
+      let criteriaMatched = false;
+      let matchedelement = {};
+      for (let index = 0; index < this.typegrapyCriteriaList.length; index++) {
+        const element = this.typegrapyCriteriaList[index];
+        let crList = element['crList'];
+        let childConditionsMatched = false;
+        for (let j = 0; j < crList.length; j++) {
+          const child = crList[j];
+          let modify = child.replaceAll(';', "#");
+          if(!this.commonFunctionService.checkIfCondition(modify,object)){
+            childConditionsMatched = false;
+            break;
+          }else{
+            childConditionsMatched = true;
+          }          
+        }
+        if(childConditionsMatched){
+          matchedelement = this.typegrapyCriteriaList[index]
+          criteriaMatched = true;
+          break;
+        }else{
+          criteriaMatched = false;
+        }
+      }
+      if(criteriaMatched){ 
+        let typograpy = matchedelement['typoGraphy']; 
+        let value = '';
+        switch (name) {
+          case 'background-color':
+            value = typograpy['background_color'];
+            break;        
+          default:
+            break;
+        }
+        background = value;
+      }      
+    }
+    return background;
+  }
+  clearFilter(fieldName,type){
+    if(type.toLowerCase() == 'daterange'){
+      (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
+      (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
+    }else{
+      this.filterForm.get([fieldName]).setValue('');
+    }    
+    this.applyFilter();
   }
 
 }

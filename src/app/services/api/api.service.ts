@@ -5,6 +5,7 @@ import { from, of, Observable } from 'rxjs';//fromPromise
 import { DataShareService } from '../data-share/data-share.service';
 import { EnvService } from '../env/env.service';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,9 @@ constructor(
             staticData[element.field] = element.data
         }                    
       }); 
+    }
+    if(data['staticDataMessgae'] != null && data['staticDataMessgae'] != ''){
+      staticData['staticDataMessgae'] = data['staticDataMessgae'];
     } 
     this.dataShareService.shareStaticData(staticData);
 
@@ -80,6 +84,38 @@ constructor(
   }
   resetStaticAllData(){
     this.dataShareService.shareStaticData({})
+  }
+  getGridCountData(payloads){ 
+    from(payloads)
+    .pipe(
+      mergeMap((payload)=>         
+        this.gridCountDataCall([payload]))
+      )
+      .subscribe(
+        (res) => {
+          this.setGridCountData(res['success'])
+        },
+        (error)=>{
+          console.log(error);
+        }
+    )
+  }
+  gridCountDataCall(payload){
+    let api = this.envService.getApi('GET_COUNT_DATA');
+    return this.http.post(api, payload)
+  }
+  setGridCountData(data){
+    const gridCountData = this.dataShareService.getGridCountData();    
+    if(data.length > 0){                
+      data.forEach(element => {
+        gridCountData[element.field] = element.data_size            
+      }); 
+    } 
+    this.dataShareService.shareGridCountData(gridCountData);
+
+  }
+  resetGridCountAllData(){
+    this.dataShareService.shareGridCountData({})
   }
   getGridData(payload){
     let api = this.envService.getApi('GET_GRID_DATA');
@@ -135,6 +171,15 @@ constructor(
   resetTempData(){
     this.dataShareService.shareTempData([])
   }
+  deleteGridRow(payload){
+    let api = this.envService.getApi('DELETE_GRID_ROW');
+    this.http.post(api+ '/' + payload.curTemp,payload).subscribe(
+      (response) => {
+        this.dataShareService.setDeleteGridRowResponce(response);
+      }
+    )
+  }
+
   SaveFormData(payload){
     let api = this.envService.getApi('SAVE_FORM_DATA');
     this.saveCall(api+ '/' + payload.curTemp,payload)

@@ -122,9 +122,13 @@ export class CommonFunctionService {
             validator.push(Validators.required)
           }
           break;
-          case 'checkbox':
+        case 'checkbox':
           validator.push(Validators.requiredTrue)
-
+          break;
+        case "email":
+          validator.push(Validators.required)
+          validator.push(Validators.email);
+          break;
         default:
           validator.push(Validators.required)
           break;
@@ -180,6 +184,23 @@ export class CommonFunctionService {
       }      
     }    
     return staticModal;
+  }
+  getTabsCountPyload(tabs){
+    let payloads = [];
+    if(tabs && tabs.length >= 1 ){      
+      tabs.forEach(element => {
+        let grid_api_params_criteria = [];
+        if(this.isGridFieldExist(element,"api_params_criteria")){
+          grid_api_params_criteria = element.grid.api_params_criteria;
+        }
+        const payload = this.getPaylodWithCriteria(element.tab_name,element.tab_name+"_"+element.name,grid_api_params_criteria,{});
+        payload['countOnly'] = true;
+        payloads.push(payload);
+      }); 
+    }
+    if(payloads && payloads.length > 0){
+      this.apiService.getGridCountData(payloads);
+    } 
   }
   getCriteriaList(criteria,object){
     const crList = [];    
@@ -298,6 +319,17 @@ export class CommonFunctionService {
       }
     }
   }
+  isMendetory(tableField, formValue) {
+    if (tableField.is_mandatory) {
+      return true;
+    } else {
+      if (tableField.mandatory_if && tableField.mandatory_if != '') {
+        return this.checkIfCondition(tableField.mandatory_if, formValue)
+      }else {
+        return false;
+      }
+    }
+  }
 
   checkIfCondition(data, formValue) {
     let condition = []
@@ -310,6 +342,7 @@ export class CommonFunctionService {
         setValue = setValue + "";
       }
       switch (condition[1]) {
+        case 'eq':
         case 'equal':
           if (condition.length > 2) {
             //console.log('setValue');
@@ -347,6 +380,7 @@ export class CommonFunctionService {
           } else {
             return false;
           }
+        case "neq":
         case "notequal":
           if (condition.length > 2) {
             //console.log('setValue');
@@ -380,7 +414,7 @@ export class CommonFunctionService {
           case "tree_view_selection":
           case "dropdown":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0 && element.type != 'dropdown'){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -434,13 +468,19 @@ export class CommonFunctionService {
               break;
           case "typeahead":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){ 
-              filterList.push(
-                {
-                  "fName": element.field_name,
-                  "fValue": this.getddnDisplayVal(formValue[element.field_name]),
-                  "operator": "stwic"
-                }
-              )
+              if(isArray(element.dataFilterCriteria) && element.dataFilterCriteria.length > 0){
+                element.dataFilterCriteria.forEach(cri => {
+                  criteria.push(cri)
+                });
+              }else{
+                filterList.push(
+                  {
+                    "fName": element.field_name,
+                    "fValue": this.getddnDisplayVal(formValue[element.field_name]),
+                    "operator": "stwic"
+                  }
+                )
+              }
             }
             break;
           case "info":
@@ -791,24 +831,40 @@ export class CommonFunctionService {
 
       case "color":
         break;
-        case "pattern":
-          if(object != null){
-            return this.getConvertedString(object,field.field_name);
-          }
 
-          case "reference_names":
-            if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
-              let name = '';
-              for(let i=0 ;i<value.length; i++){
-                if(this.coreFunctionService.isNotBlank(value[i]['name'])){
-                  name = name+', '+value[i]['name'];
-                }
-              }
-              if(name.length > 1){
-                name = name.substring(2);
-              }
-              return name;
+      case "pattern":
+        if(object != null){
+          return this.getConvertedString(object,field.field_name);
+        }
+
+      case "chips":
+        if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
+          let name = "";
+          for(let i=0 ;i<value.length; i++){
+            if(this.coreFunctionService.isNotBlank(value[i]['name'])){
+              name = name+', '+value[i]['name'];
+            }else{
+              name = name+', '+value[i];
             }
+          }
+          return name.substring(2);;
+        }
+        return "-";
+      case "reference_names":
+        if(this.coreFunctionService.isNotBlank(value) && Array.isArray(value)){
+          let name = '';
+          for(let i=0 ;i<value.length; i++){
+            if(this.coreFunctionService.isNotBlank(value[i]['name'])){
+              name = name+', '+value[i]['name'];
+            }
+          }
+          if(name.length > 1){
+            name = name.substring(2);
+          }
+          return name;
+        }else{
+          return "-";
+        }
           
 
 
@@ -1500,7 +1556,44 @@ export class CommonFunctionService {
          return templateValue;
       }
 
+getPercent(templateValue,parent,field){
+  const calculateValue = {};
+  if(field && field.calSourceTarget && field.calSourceTarget.length >= 1){
+    let source = field.calSourceTarget[0].source;
+    let target = field.calSourceTarget[0].target;
+    let sourceValue = this.getObjectValue(source,templateValue);
+    if(sourceValue && sourceValue != ''){
+      if(typeof sourceValue == 'number'){
+        let fileName = field.field_name;
+        let percent:any;
+        if(parent != ''){
+          percent = templateValue[parent.field_name][fileName]
+        }else{
+          percent = templateValue[fileName]
+        }
+        if(typeof sourceValue == 'number' && percent && percent >= 1 ){
+          let percentValue = sourceValue * percent / 100;
+          let targetFields = target.split('.');
+          if(targetFields && targetFields.length == 2){
+            const parent = targetFields[0];
+            const child = targetFields[1];
+            calculateValue[parent] = {};
+            calculateValue[parent][child] = percentValue
+          }else{
+            const child = targetFields[0];
+            calculateValue[child] = percentValue
+          }
+        }
+      }else{
+        this.notificationService.notify('bg-danger', 'Source Value is not a number.')
+      }
+    }else{
+      this.notificationService.notify('bg-danger', 'Source Field is Required.')
+    }
+  }
 
+  return calculateValue;
+}
 update_invoice_total_on_custom_field(templateValue,lims_segment, field: any){
     let total =templateValue['total_amount'];
     let	surcharge	=total['surcharge'];
@@ -2462,6 +2555,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   openFileUpload(fieldName, modalName, formValue, fileData) {
     const alertData = {
+      "field" :fieldName,
       "event": true,
       "fieldName": fieldName.field_name,
       "ddnFieldName": fieldName.ddn_field,

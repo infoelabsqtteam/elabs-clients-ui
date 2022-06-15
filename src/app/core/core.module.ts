@@ -10,7 +10,7 @@ import { AuthInterceptor } from '../shared/auth.interceptor';
 import { LoggingInterceptor } from '../shared/logging.interceptor';
 
 import { MDBBootstrapModule  } from 'angular-bootstrap-md';
-
+import { AllPackageModule } from '../m-core/all-package/all-package.module';
 import { HeaderLandingPageComponent } from './header-landing-page/header-landing-page.component';
 import { SigninModalComponent } from '../auth/modal/signin-modal/signin-modal.component';
 import { SignupModalComponent } from '../auth/modal/signup-modal/signup-modal.component';
@@ -39,10 +39,12 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
         imports :[
             AppRoutingModule,
             MDBBootstrapModule.forRoot(),
+            AllPackageModule,
             AngularMaterialModule,
             AngularCommonModule,
             FormModelModule,
-            ModelModule
+            ModelModule,
+            AllPackageModule
             ],
         exports :[
             AppRoutingModule,
