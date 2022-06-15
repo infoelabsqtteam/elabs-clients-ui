@@ -19,7 +19,8 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
-
+import { saveAs } from 'file-saver';
+import * as FileSaver from 'file-saver';
 declare var tinymce: any;
 
 
@@ -603,7 +604,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.isStepper = false;
     this.listOfFieldUpdateMode=false; 
     this.listOfFieldsUpdateIndex = -1; 
-    this.checkFormFieldAutfocus = true;     
+    this.checkFormFieldAutfocus = true;    
+    this.filePreviewFields = []; 
   }
 
 
@@ -3641,10 +3643,10 @@ case 'populate_fields_for_report_for_new_order_flow':
     //this.formGroupDirective.resetForm()
     this.updateMode=false;
     this.dataListForUpload = []
-    this.checkFormAfterCloseModel();
-    this.apiService.resetStaticAllData();
     this.filePreviewFields = [];
     this.copyStaticData = {};
+    this.apiService.resetStaticAllData();
+    this.checkFormAfterCloseModel();
     //this.commonFunctionService.resetStaticAllData();
   }  
   close(){    
@@ -5086,12 +5088,14 @@ case 'populate_fields_for_report_for_new_order_flow':
           }     
           
           if(index != undefined && index >= 0){
+            this.custmizedFormValue = {};
             this.custmizedFormValue[fieldName] = fieldData;
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
             this.nextFormUpdateMode = false;
             this.close();
           }else{
+            this.custmizedFormValue = {};
             this.custmizedFormValue[fieldName] = fieldData;
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
