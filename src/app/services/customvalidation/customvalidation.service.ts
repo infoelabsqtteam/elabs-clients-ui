@@ -22,11 +22,13 @@ export class CustomvalidationService {
       return valid ? null : { invalidPassword: true };
     };
   }
-  checkDates(startDate: string, endDate: string) {
+  checkDates(endDate: string, startDate: string) {
     return (formGroup: FormGroup) => {
       const startDateControl = formGroup.controls[startDate];
       const endDateControl = formGroup.controls[endDate];
-      if(startDateControl.value < endDateControl.value) {
+      const date1 =new Date(startDateControl.value);
+      const date2 =new Date(endDateControl.value);
+      if(date1 > date2) {
         endDateControl.setErrors({ notValid: true });
       }else{
         endDateControl.setErrors(null);
