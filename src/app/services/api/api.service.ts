@@ -70,6 +70,9 @@ constructor(
             staticData[element.field] = element.data
         }                    
       }); 
+    }
+    if(data['staticDataMessgae'] != null && data['staticDataMessgae'] != ''){
+      staticData['staticDataMessgae'] = data['staticDataMessgae'];
     } 
     this.dataShareService.shareStaticData(staticData);
 
