@@ -607,7 +607,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.isStepper = false;
     this.listOfFieldUpdateMode=false; 
     this.listOfFieldsUpdateIndex = -1; 
-    this.checkFormFieldAutfocus = true;     
+    this.checkFormFieldAutfocus = true;
+    this.filePreviewFields = [];
   }
 
 
@@ -989,11 +990,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             switch (field.type) {
               case 'date':
                 validators['validator'].push(this.customValidationService.checkDates(field.field_name,field.compareFieldName));
-                break;            
+                break;
               default:
                 break;
             }
-            
+
           });
         }
         this.templateForm = this.formBuilder.group(forControl,validators);
@@ -2992,7 +2993,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             } 
             if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
               //formValue['appId'] = this.commonFunctionService.getAppId();
-              formValue['appId'] = this.commonFunctionService.getRefcode();              
+              formValue['appId'] = this.commonFunctionService.getRefcode();
             }            
             // this.custmizedFormValue.forEach(element => {
             //   this.templateForm.value[element.name] = element.value;
@@ -3664,10 +3665,10 @@ case 'populate_fields_for_report_for_new_order_flow':
     //this.formGroupDirective.resetForm()
     this.updateMode=false;
     this.dataListForUpload = []
-    this.checkFormAfterCloseModel();
-    this.apiService.resetStaticAllData();
     this.filePreviewFields = [];
     this.copyStaticData = {};
+    this.apiService.resetStaticAllData();
+    this.checkFormAfterCloseModel();
     //this.commonFunctionService.resetStaticAllData();
   }  
   close(){    
@@ -5109,12 +5110,14 @@ case 'populate_fields_for_report_for_new_order_flow':
           }     
           
           if(index != undefined && index >= 0){
+            this.custmizedFormValue = {};
             this.custmizedFormValue[fieldName] = fieldData;
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
             this.nextFormUpdateMode = false;
             this.close();
           }else{
+            this.custmizedFormValue = {};
             this.custmizedFormValue[fieldName] = fieldData;
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
