@@ -19,8 +19,8 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
-import { saveAs } from 'file-saver';
-import * as FileSaver from 'file-saver';
+import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
+
 declare var tinymce: any;
 
 
@@ -304,6 +304,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private notificationService:NotificationService,
     private envService:EnvService,
     private coreFunctionService:CoreFunctionService,
+    private customValidationService:CustomvalidationService
 ) {
 
     this.tinymceConfig = {
@@ -466,6 +467,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.showIfFieldList=[];
         this.disableIfFieldList=[];
         this.mendetoryIfFieldList = [];
+        this.customValidationFiels = [];
         this.canUpdateIfFieldList=[];
         this.formFieldButtons=[];
         this.list_of_fields = [];
@@ -588,6 +590,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.showIfFieldList=[];
     this.disableIfFieldList=[];
     this.mendetoryIfFieldList = [];
+    this.customValidationFiels = [];
     this.canUpdateIfFieldList=[];
     this.custmizedFormValue = {};
     this.dataListForUpload = {};
@@ -604,8 +607,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.isStepper = false;
     this.listOfFieldUpdateMode=false; 
     this.listOfFieldsUpdateIndex = -1; 
-    this.checkFormFieldAutfocus = true;    
-    this.filePreviewFields = []; 
+    this.checkFormFieldAutfocus = true;
+    this.filePreviewFields = [];
   }
 
 
@@ -737,6 +740,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.showIfFieldList=[];
     this.disableIfFieldList=[];
     this.mendetoryIfFieldList = [];
+    this.customValidationFiels = [];
     if (this.tableFields.length > 0 && this.createFormgroup) {
       this.createFormgroup = false;
       const forControl = {};
@@ -941,6 +945,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(element.mandatory_if && element.mandatory_if != ''){
           this.mendetoryIfFieldList.push(element);
         }
+        //Customvalidation handling
+        if(element.compareFieldName && element.compareFieldName != ''){
+          this.customValidationFiels.push(element);
+        }
         //disable if handling
         if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null)){                  
           this.disableIfFieldList.push(element);
@@ -975,7 +983,21 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         });
       }
       if (forControl) {
-        this.templateForm = this.formBuilder.group(forControl);
+        let validators = {};
+        validators['validator'] = [];
+        if(this.customValidationFiels && this.customValidationFiels.length > 0){
+          this.customValidationFiels.forEach(field => {
+            switch (field.type) {
+              case 'date':
+                validators['validator'].push(this.customValidationService.checkDates(field.field_name,field.compareFieldName));
+                break;
+              default:
+                break;
+            }
+
+          });
+        }
+        this.templateForm = this.formBuilder.group(forControl,validators);
         if(this.nextIndex){
           this.nextIndex = false;
           this.next();
@@ -1158,6 +1180,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
     
   }
+  customValidationFiels=[];
   setStaticData(staticData){
     if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
       this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
@@ -2971,7 +2994,6 @@ case 'populate_fields_for_report_for_new_order_flow':
             if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
               //formValue['appId'] = this.commonFunctionService.getAppId();
               formValue['appId'] = this.commonFunctionService.getRefcode();
-              
             }            
             // this.custmizedFormValue.forEach(element => {
             //   this.templateForm.value[element.name] = element.value;
