@@ -366,8 +366,32 @@ export class GridSelectionModalComponent implements OnInit {
         }
       });
     }
-    this.gridSelectionResponce.emit(this.selectedData);
-    this.closeModal();
+    let check = 0;
+    let validation = {
+      'msg' : ''
+    }
+    if(this.field && this.field.mendetory_fields && this.field.mendetory_fields.length > 0){            
+      if(this.selectedData && this.selectedData.length > 0){
+        this.field.mendetory_fields.forEach(mField => {
+          const fieldName = mField.field_name;
+          this.selectedData.forEach((row,i) => {
+            if(row && row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null){
+              if(validation.msg == ''){
+                const rowNo = i + 1;
+                validation.msg = mField.label+'( '+rowNo+' ) is required.';
+              }
+              check = 1;
+            }
+          });
+        });        
+      }
+    }
+    if(check != 0){
+      this.notificationService.notify('bg-info',validation.msg);
+    }else{
+      this.gridSelectionResponce.emit(this.selectedData);
+      this.closeModal();
+    }    
   }
 
   closeModal() {

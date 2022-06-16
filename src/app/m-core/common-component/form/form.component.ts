@@ -20,6 +20,7 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
+import { json } from 'express';
 
 declare var tinymce: any;
 
@@ -200,6 +201,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showIfFieldList:any=[];
   disableIfFieldList:any=[];
   mendetoryIfFieldList:any=[];
+  gridSelectionMendetoryList:any=[];
   canUpdateIfFieldList:any=[];
   pageLoading: boolean = true;
   formFieldButtons: any = [];
@@ -467,6 +469,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.showIfFieldList=[];
         this.disableIfFieldList=[];
         this.mendetoryIfFieldList = [];
+        this.gridSelectionMendetoryList=[];
         this.customValidationFiels = [];
         this.canUpdateIfFieldList=[];
         this.formFieldButtons=[];
@@ -590,6 +593,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.showIfFieldList=[];
     this.disableIfFieldList=[];
     this.mendetoryIfFieldList = [];
+    this.gridSelectionMendetoryList=[];
     this.customValidationFiels = [];
     this.canUpdateIfFieldList=[];
     this.custmizedFormValue = {};
@@ -740,6 +744,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.showIfFieldList=[];
     this.disableIfFieldList=[];
     this.mendetoryIfFieldList = [];
+    this.gridSelectionMendetoryList=[];
     this.customValidationFiels = [];
     if (this.tableFields.length > 0 && this.createFormgroup) {
       this.createFormgroup = false;
@@ -924,6 +929,22 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             case "input_with_uploadfile":
               element.is_disabled = true;
               this.commonFunctionService.createFormControl(forControl, element, '', "text")
+              break;
+            case "grid_selection":
+                if(element && element.gridColumns && element.gridColumns.length > 0){
+                  let colParField = JSON.parse(JSON.stringify(element));
+                  colParField['mendetory_fields'] = [];
+                  element.gridColumns.forEach(colField => {
+                    if(colField && colField.is_mandatory){
+                      colParField['mendetory_fields'].push(colField);
+                    }
+                  });
+                  if(colParField && colParField['mendetory_fields'] && colParField['mendetory_fields'].length > 0){
+                    this.gridSelectionMendetoryList.push(colParField);
+                    element['mendetory_fields'] = colParField['mendetory_fields'];
+                  }
+                }
+                this.commonFunctionService.createFormControl(forControl, element, '', "text")
               break;
             default:
               this.commonFunctionService.createFormControl(forControl, element, '', "text")
@@ -2981,8 +3002,9 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     this.deleteGridRowData = false;
        
-    if(hasPermission){      
-      if(this.templateForm.valid){
+    if(hasPermission){ 
+      let gridSelectionValidation:any = this.checkGridSelectionMendetory();     
+      if(this.templateForm.valid && gridSelectionValidation.status){
         if(this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue)){
           if (this.dataSaveInProgress) {
             this.showNotify = true;
@@ -3019,7 +3041,11 @@ case 'populate_fields_for_report_for_new_order_flow':
         }
       }else{
         this.getSavePayload = false;
-        this.notificationService.notify("bg-danger", "Some fields are mendatory");
+        if(gridSelectionValidation.msg && gridSelectionValidation.msg != ''){
+          this.notificationService.notify("bg-info", gridSelectionValidation.msg);
+        }else{
+          this.notificationService.notify("bg-danger", "Some fields are mendatory");
+        }        
       }
     }else{
       this.getSavePayload = false;
@@ -3044,8 +3070,45 @@ case 'populate_fields_for_report_for_new_order_flow':
     }else{
       this.notificationService.notify('bg-danger',checkValidatiaon.msg);
     }     
+  }  
+  checkGridSelectionMendetory(){
+    let validation = {
+      'status' : true,
+      'msg' : ''
+    }
+    if(this.gridSelectionMendetoryList && this.gridSelectionMendetoryList.length > 0){
+      let check = 0;
+      this.gridSelectionMendetoryList.forEach(field => {        
+        let data:any = [];
+        if(this.custmizedFormValue[field.field_name]){
+          data = this.custmizedFormValue[field.field_name];
+        }
+        if(field.mendetory_fields && field.mendetory_fields.length > 0){
+          if(data && data.length > 0){
+            field.mendetory_fields.forEach(mField => {
+              const fieldName = mField.field_name;
+              data.forEach(row => {
+                if(row && row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null){
+                  if(validation.msg == ''){
+                    validation.msg = mField.label + ' of ' + field.label+' is required.';
+                  }
+                  check = 1;
+                }
+              });
+            });
+          }
+        }     
+      });
+      if(check != 0){
+        validation.status = false;
+        return validation;
+      }else{
+        return validation
+      }
+    }else{
+      return validation;
+    }
   }
-
   deleteGridData(){
     let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,this.getFormValue(true));
     if(typeof checkValidatiaon != 'object'){
