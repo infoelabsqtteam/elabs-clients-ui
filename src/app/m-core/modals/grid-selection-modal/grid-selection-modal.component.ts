@@ -375,7 +375,8 @@ export class GridSelectionModalComponent implements OnInit {
         this.field.mendetory_fields.forEach(mField => {
           const fieldName = mField.field_name;
           this.selectedData.forEach((row,i) => {
-            if(row && row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null){
+            let checkDisable = this.isDisable(mField,row);
+            if(row && !checkDisable && (row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null)){
               if(validation.msg == ''){
                 const rowNo = i + 1;
                 validation.msg = mField.label+'( '+rowNo+' ) is required.';
