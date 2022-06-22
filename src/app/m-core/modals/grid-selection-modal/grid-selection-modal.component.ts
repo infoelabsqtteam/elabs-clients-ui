@@ -434,7 +434,8 @@ export class GridSelectionModalComponent implements OnInit {
       });
     } else {
       index = indx;
-    }
+    }    
+    
     if (event.checked) {
       this.gridData[index].selected = true;
     } else {
@@ -445,6 +446,19 @@ export class GridSelectionModalComponent implements OnInit {
   // exists(item) {
   //   return this.selectedData.indexOf(item) > -1;
   // };
+  checkDisableRowIf(index){
+    let check = false;
+    if(this.gridData[index].selected){
+      const condition = this.field.disableRowIf;
+      const data = this.gridData[index];
+      if(this.CommonFunctionService.checkDisableRowIf(condition,data)){
+        check = true;
+      }else{
+        check = false;
+      }
+    }
+    return check;
+  }
   isIndeterminate() {
     let check = 0;
     if (this.gridData.length > 0) {

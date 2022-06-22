@@ -3014,8 +3014,8 @@ case 'populate_fields_for_report_for_new_order_flow':
               formValue['refCode'] = this.commonFunctionService.getRefcode();
             } 
             if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
-              //formValue['appId'] = this.commonFunctionService.getAppId();
-              formValue['appId'] = this.commonFunctionService.getRefcode();
+              formValue['appId'] = this.commonFunctionService.getAppId();
+              //formValue['appId'] = this.commonFunctionService.getRefcode();
             }            
             // this.custmizedFormValue.forEach(element => {
             //   this.templateForm.value[element.name] = element.value;
@@ -5237,7 +5237,13 @@ case 'populate_fields_for_report_for_new_order_flow':
     this.storeFormDetails("",field);
   }
   updateListofFields(field,index){
-    this.storeFormDetails("",field,index);
+    const data = this.custmizedFormValue[field.field_name][index];
+    const condition = field.disableRowIf;
+    if(!this.commonFunctionService.checkDisableRowIf(condition,data)){
+      this.storeFormDetails("",field,index);
+    }else{
+      this.notificationService.notify("bg-info","Permission denied !!!");
+    }    
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){

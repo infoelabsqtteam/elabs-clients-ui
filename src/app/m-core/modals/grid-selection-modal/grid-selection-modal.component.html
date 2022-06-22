@@ -30,7 +30,7 @@
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
                             <td class="text-center" *ngIf="grid_row_selection">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
-                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected"> </mat-checkbox>
+                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox>
                                   <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
                                 </div>
                               </td>
