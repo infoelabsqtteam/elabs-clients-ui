@@ -64,12 +64,11 @@
                                 <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                   <mat-form-field appearance="outline" class="example-full-width w-100">
                                       <mat-chip-list #chipList aria-label="Item selection">
-                                          <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
+                                          <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data)">{{getddnDisplayVal(item)}}
                                               <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                           </mat-chip>
                                           <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                              [matAutocomplete]="first" [matChipInputFor]="chipList"
-                                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                              [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                           <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
                                               <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                           </mat-autocomplete>
@@ -84,7 +83,7 @@
                                  <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                   <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
                                       <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                      <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]">
+                                      <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
                                           <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field]" [value]="staticValue">
                                               {{getddnDisplayVal(staticValue)}}
                                           </mat-option>
@@ -92,7 +91,7 @@
                                   </mat-form-field>
                                   <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">
                                       <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                      <mat-select [(ngModel)]="data[fieldName.field_name]" >
+                                      <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
                                           <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field]" [value]="staticValue">
                                               {{getddnDisplayVal(staticValue)}}
                                           </mat-option>

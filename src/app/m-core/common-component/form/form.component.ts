@@ -5236,14 +5236,13 @@ case 'populate_fields_for_report_for_new_order_flow':
   addListOfFields(field){
     this.storeFormDetails("",field);
   }
-  updateListofFields(field,index){
+  updateListofFields(field,index){    
+    this.storeFormDetails("",field,index); 
+  }
+  checkRowDisabledIf(field,index){
     const data = this.custmizedFormValue[field.field_name][index];
     const condition = field.disableRowIf;
-    if(!this.commonFunctionService.checkDisableRowIf(condition,data)){
-      this.storeFormDetails("",field,index);
-    }else{
-      this.notificationService.notify("bg-info","Permission denied !!!");
-    }    
+    return !this.commonFunctionService.checkDisableRowIf(condition,data);
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){

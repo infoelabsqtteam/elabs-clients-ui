@@ -447,10 +447,14 @@ export class GridSelectionModalComponent implements OnInit {
   //   return this.selectedData.indexOf(item) > -1;
   // };
   checkDisableRowIf(index){
+    const data = this.gridData[index];
+    return this.checkRowIf(data);
+    
+  }
+  checkRowIf(data){
     let check = false;
-    if(this.gridData[index].selected){
+    if(data.selected){
       const condition = this.field.disableRowIf;
-      const data = this.gridData[index];
       if(this.CommonFunctionService.checkDisableRowIf(condition,data)){
         check = true;
       }else{
@@ -528,11 +532,19 @@ export class GridSelectionModalComponent implements OnInit {
 
   isDisable(field, object) {
     const updateMode = false;
+    let disabledrow = false;
     if (field.is_disabled) {
       return true;
-    } else if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
-      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, object);
+    } 
+    if(this.field.disableRowIf && this.field.disableRowIf != ''){
+      disabledrow = this.checkRowIf(object);
     }
+    if(disabledrow){
+      return true;
+    }
+    if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
+      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, object);
+    }   
     return false;
   }
   checkValidator() {
