@@ -816,8 +816,8 @@
                                                           <path d="M0 0h24v24H0z" fill="none"></path>
                                                         </svg>
                                                     </div>
-                                                    <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
-                                                    <a *ngIf="tableField.add_new_enabled" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
+                                                    <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled &&  checkRowDisabledIf(tableField,i)" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
+                                                    <a *ngIf="tableField.add_new_enabled && checkRowDisabledIf(tableField,i)" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
                                                 <td *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
                                                     <span disabled *ngIf="fieldName.type=='checkbox'" >

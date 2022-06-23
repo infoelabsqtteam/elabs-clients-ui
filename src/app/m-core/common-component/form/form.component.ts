@@ -249,7 +249,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   address: string;
   private geoCoder;
   checkFormFieldAutfocus:boolean=false;
-  separatorKeysCodes: number[] = [ENTER, COMMA,SPACE];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   visible = true;
   selectable = true;
   removable = true;
@@ -3014,8 +3014,8 @@ case 'populate_fields_for_report_for_new_order_flow':
               formValue['refCode'] = this.commonFunctionService.getRefcode();
             } 
             if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
-              //formValue['appId'] = this.commonFunctionService.getAppId();
-              formValue['appId'] = this.commonFunctionService.getRefcode();
+              formValue['appId'] = this.commonFunctionService.getAppId();
+              //formValue['appId'] = this.commonFunctionService.getRefcode();
             }            
             // this.custmizedFormValue.forEach(element => {
             //   this.templateForm.value[element.name] = element.value;
@@ -5236,8 +5236,13 @@ case 'populate_fields_for_report_for_new_order_flow':
   addListOfFields(field){
     this.storeFormDetails("",field);
   }
-  updateListofFields(field,index){
-    this.storeFormDetails("",field,index);
+  updateListofFields(field,index){    
+    this.storeFormDetails("",field,index); 
+  }
+  checkRowDisabledIf(field,index){
+    const data = this.custmizedFormValue[field.field_name][index];
+    const condition = field.disableRowIf;
+    return !this.commonFunctionService.checkDisableRowIf(condition,data);
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
