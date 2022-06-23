@@ -249,7 +249,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   address: string;
   private geoCoder;
   checkFormFieldAutfocus:boolean=false;
-  separatorKeysCodes: number[] = [ENTER, COMMA,SPACE];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   visible = true;
   selectable = true;
   removable = true;

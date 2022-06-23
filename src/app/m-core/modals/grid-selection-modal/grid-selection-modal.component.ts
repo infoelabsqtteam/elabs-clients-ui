@@ -34,7 +34,7 @@ export class GridSelectionModalComponent implements OnInit {
   parentObject = {};
   responseData: any;
   copyStaticData: [] = [];
-  separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   selectable = true;
 
   @Input() id: string;
@@ -454,11 +454,16 @@ export class GridSelectionModalComponent implements OnInit {
   checkRowIf(data){
     let check = false;
     if(data.selected){
-      const condition = this.field.disableRowIf;
-      if(this.CommonFunctionService.checkDisableRowIf(condition,data)){
-        check = true;
-      }else{
-        check = false;
+      let condition = '';
+      if(this.field.disableRowIf && this.field.disableRowIf != ''){
+        condition = this.field.disableRowIf;
+      }
+      if(condition != ''){
+        if(this.CommonFunctionService.checkDisableRowIf(condition,data)){
+          check = true;
+        }else{
+          check = false;
+        }
       }
     }
     return check;
@@ -488,14 +493,18 @@ export class GridSelectionModalComponent implements OnInit {
   toggleAll(event: MatCheckboxChange) {
     if (event.checked) {
       if (this.gridData.length > 0) {
-        this.gridData.forEach(row => {
-          row.selected = true;
+        this.gridData.forEach((row,i) => {
+          if(!this.checkDisableRowIf(i)){
+            row.selected = true;
+          }
         });
       }
     } else {
       if (this.gridData.length > 0) {
-        this.gridData.forEach(row => {
-          row.selected = false;
+        this.gridData.forEach((row,i) => {
+          if(!this.checkDisableRowIf(i)){
+            row.selected = false;
+          }
         });
       }
     }
