@@ -286,9 +286,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.menuData = module.menu_list;
                 const menu = this.menuData[0];
                 if (menu && menu.submenu) {
-                    this.getTemplateData(menu.submenu[0]);
+                    this.getTemplateData(module, menu.submenu[0]);
                 } else {
-                    this.getTemplateData(menu)
+                    this.getTemplateData(module,menu)
                 }
             } else {
                 this.menuData = [];
@@ -364,32 +364,68 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }
 
     }
-    getTemplateData(submenu) {
-        if (this.permissionService.checkPermission(submenu.name, 'view')) {
+    getTemplateData(module,submenu) {
+        if(this.permissionService.checkPermission(submenu.name,'view')){
             this.storageService.SetActiveMenu(submenu);
             if (submenu.label == "Navigation") {
                 this.router.navigate(['Navigation']);
-            } else if (submenu.label == "Compare") {
-                this.router.navigate(['diff_html']);
             }
             else if (submenu.label == "Permissions") {
                 this.router.navigate(['permissions']);
             }
-            else if (submenu.name == "document_library") {
-                this.router.navigate(['vdr']);
-            }
-            else if (submenu.name == "report") {
-                this.router.navigate(['report']);
-            }
             else {
+              const menu = submenu;
+              if(menu.name == "document_library"){
+                this.router.navigate(['vdr']);
+              }else if(menu.name == "report"){
+                this.router.navigate(['report']);
+              }
+              else{
                 this.apiService.resetTempData();
                 this.apiService.resetGridData();
-                this.router.navigate(['template']);
+                this.GoToSelectedModule(module);
+                this.router.navigate(['template']);  
+              }           
             }
-        } else {
+        }else{
             this.notificationService.notify("bg-danger", "Permission denied !!!");
         }
     }
+
+
+
+
+    getTemplateMenuData(submenu) {
+        if(this.permissionService.checkPermission(submenu.name,'view')){
+            this.storageService.SetActiveMenu(submenu);
+            if (submenu.label == "Navigation") {
+                this.router.navigate(['Navigation']);
+            }
+            else if (submenu.label == "Permissions") {
+                this.router.navigate(['permissions']);
+            }
+            else {
+              const menu = submenu;
+              if(menu.name == "document_library"){
+                this.router.navigate(['vdr']);
+              }else if(menu.name == "report"){
+                this.router.navigate(['report']);
+              }
+              else{
+                this.apiService.resetTempData();
+                this.apiService.resetGridData();
+                this.router.navigate(['template']);  
+              }           
+            }
+        }else{
+            this.notificationService.notify("bg-danger", "Permission denied !!!");
+        }
+    }
+
+
+
+
+
 
 
     goToEditeProfile(link) {
