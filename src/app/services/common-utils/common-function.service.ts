@@ -2913,4 +2913,13 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
   }
 
+  checkDisableRowIf(field,formValue){
+    let check = false;
+    if(this.checkIfCondition(field,formValue)){
+      check = true;
+    }else{
+      check = false;
+    }
+    return check;
+  }
 }

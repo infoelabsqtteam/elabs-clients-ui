@@ -34,7 +34,7 @@ export class GridSelectionModalComponent implements OnInit {
   parentObject = {};
   responseData: any;
   copyStaticData: [] = [];
-  separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   selectable = true;
 
   @Input() id: string;
@@ -434,7 +434,8 @@ export class GridSelectionModalComponent implements OnInit {
       });
     } else {
       index = indx;
-    }
+    }    
+    
     if (event.checked) {
       this.gridData[index].selected = true;
     } else {
@@ -445,6 +446,28 @@ export class GridSelectionModalComponent implements OnInit {
   // exists(item) {
   //   return this.selectedData.indexOf(item) > -1;
   // };
+  checkDisableRowIf(index){
+    const data = this.gridData[index];
+    return this.checkRowIf(data);
+    
+  }
+  checkRowIf(data){
+    let check = false;
+    if(data.selected){
+      let condition = '';
+      if(this.field.disableRowIf && this.field.disableRowIf != ''){
+        condition = this.field.disableRowIf;
+      }
+      if(condition != ''){
+        if(this.CommonFunctionService.checkDisableRowIf(condition,data)){
+          check = true;
+        }else{
+          check = false;
+        }
+      }
+    }
+    return check;
+  }
   isIndeterminate() {
     let check = 0;
     if (this.gridData.length > 0) {
@@ -470,14 +493,18 @@ export class GridSelectionModalComponent implements OnInit {
   toggleAll(event: MatCheckboxChange) {
     if (event.checked) {
       if (this.gridData.length > 0) {
-        this.gridData.forEach(row => {
-          row.selected = true;
+        this.gridData.forEach((row,i) => {
+          if(!this.checkDisableRowIf(i)){
+            row.selected = true;
+          }
         });
       }
     } else {
       if (this.gridData.length > 0) {
-        this.gridData.forEach(row => {
-          row.selected = false;
+        this.gridData.forEach((row,i) => {
+          if(!this.checkDisableRowIf(i)){
+            row.selected = false;
+          }
         });
       }
     }
@@ -514,11 +541,19 @@ export class GridSelectionModalComponent implements OnInit {
 
   isDisable(field, object) {
     const updateMode = false;
+    let disabledrow = false;
     if (field.is_disabled) {
       return true;
-    } else if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
-      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, object);
+    } 
+    if(this.field.disableRowIf && this.field.disableRowIf != ''){
+      disabledrow = this.checkRowIf(object);
     }
+    if(disabledrow){
+      return true;
+    }
+    if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
+      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, object);
+    }   
     return false;
   }
   checkValidator() {
