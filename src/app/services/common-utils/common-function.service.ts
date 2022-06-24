@@ -2542,13 +2542,14 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   is_check_role(id) {
     const userInfo = this.storageService.GetUserInfo();
     if (userInfo.roles && userInfo.roles != null && userInfo.roles != "" && Array.isArray(userInfo.roles) && userInfo.roles.length > 0) {
-      userInfo.roles.forEach(element => {
+      for (let index = 0; index < userInfo.roles.length; index++) {
+        const element = userInfo.roles[index];
         if (element._id == id) {
           return true;
         } else {
           return false;
         }
-      });
+      }
     } else {
       return false;
     }
