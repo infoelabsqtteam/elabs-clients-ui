@@ -6,6 +6,7 @@ import { DataShareService } from '../data-share/data-share.service';
 import { EnvService } from '../env/env.service';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
 import { response } from 'express';
+import { ModelService } from '../model/model.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ constructor(
   private dataShareService:DataShareService,
   private http:HttpClient,
   private envService:EnvService,
-  private router:Router
+  private router:Router,
+  private modalService: ModelService, 
 ) { }
   getStatiData(payloads){    
     // let api = this.envService.getApi('GET_STATIC_DATA');
@@ -337,6 +339,7 @@ constructor(
           this.dataShareService.setExportExcelLink(respData)
         },
       (error) => {
+        this.modalService.close('download-progress-modal'); 
           console.log(error);
         }
     )

@@ -31,6 +31,7 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { GitVersionComponent } from './git-version/git-version.component';
 import { ChartFilterComponent } from './chart-filter/chart-filter.component';
 import { FeedbackComponent } from './feedback/feedback.component';
+import { DownloadProgressComponent } from './download-progress/download-progress.component';
 
 
 
@@ -59,7 +60,8 @@ const models = [
   ShortcutinfoComponent,
   GitVersionComponent,
   ChartFilterComponent,
-  FeedbackComponent
+  FeedbackComponent,
+  DownloadProgressComponent
 ]
 
 @NgModule({
