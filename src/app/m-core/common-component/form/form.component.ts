@@ -5331,6 +5331,26 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.updateAddNew = false;
     }
   }
+  checkIfCondition(field,key,key2){
+    let check = false;
+    if(field[key] && field[key] != '' && field[key] != null){
+      let keyValue = field[key];
+      if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
+        check = true;
+      }
+    }
+    return check;
+  }
+  getValue(field,key,key2){
+    let value = '';
+    if(field[key] && field[key] != '' && field[key] != null){
+      let keyValue = field[key];
+      if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
+        value = keyValue[key2];
+      }
+    }
+    return value;
+  }
   
 
 }
