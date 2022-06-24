@@ -3400,6 +3400,7 @@ case 'populate_fields_for_report_for_new_order_flow':
           }
       case "list_of_string":
       case "list_of_checkbox":
+        case "grid_selection":
         if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
           return '<i class="fa fa-eye text-pointer"></i>';
         } else {
@@ -3440,6 +3441,10 @@ case 'populate_fields_for_report_for_new_order_flow':
           break;
       case "list_of_string":
       case "list_of_checkbox":
+      case "grid_selection":
+        if(item["gridColumns"] && item["gridColumns"].length > 0){
+          value['gridColumns']=item.gridColumns;
+        }
         this.viewModal('form_basic-modal', value, item,false);
         break;      
       default:

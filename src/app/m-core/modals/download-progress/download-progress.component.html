@@ -1,0 +1,25 @@
+
+<div mdbModal #downloadProgressModal="mdbModal" class="progress modal fade right"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true,backdrop:false}">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable modal-side modal-bottom-right">
+      <div class="modal-content">
+        <div class="modal-header">
+            <p class="heading blinkings text-dark"><b>Processing, please wait...</b></p>
+            <a class="h5 m-0" (click)="close()"><span aria-hidden="true">×</span></a>
+        </div>
+          <div class="modal-body py-0">
+              <div class="position-relative " >                
+                  <div class="dz-message ">
+                      <!-- <i class="h1 text-muted dripicons-cloud-upload"></i> -->
+                      <h4 class="file">  
+                        <p class="spin-progress mt-2">                   
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        </p> 
+                      </h4>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  
