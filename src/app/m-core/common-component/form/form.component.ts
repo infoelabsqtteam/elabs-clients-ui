@@ -5247,7 +5247,10 @@ case 'populate_fields_for_report_for_new_order_flow':
   checkRowDisabledIf(field,index){
     const data = this.custmizedFormValue[field.field_name][index];
     const condition = field.disableRowIf;
-    return !this.commonFunctionService.checkDisableRowIf(condition,data);
+    if(condition){
+      return !this.commonFunctionService.checkDisableRowIf(condition,data);
+    }
+    return false;    
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
