@@ -34,8 +34,7 @@ export class ChartFilterComponent implements OnInit {
   
   
   @Input() id: string;
-  @ViewChild('basicModal') public basicModal: ModalDirective;
-  @Input() showfilter;
+  @ViewChild('chartFilterModal') public chartFilterModal: ModalDirective;  
   dashboardItem :any = {};
   dashletData:any = {};
 
@@ -53,16 +52,19 @@ export class ChartFilterComponent implements OnInit {
   staticData: any = {};
   copyStaticData:any={};
   typeAheadData:any=[];
+  showFilter:boolean=false;
 
   staticDataSubscription;
   dashletDataSubscription;
   typeaheadDataSubscription;
+  
 
   minDate: Date;
   maxDate: Date;
 
   filename = "ExcelSheet.xlsx";
-
+  tableData;
+  tableHead;
 
   constructor(
     private modalService: ModelService,
@@ -82,7 +84,6 @@ export class ChartFilterComponent implements OnInit {
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
       this.setTypeaheadData(data);
     })
-    //this.getPage(1)   
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
     this.maxDate = new Date(currentYear + 1, 11, 31); 
@@ -121,14 +122,16 @@ export class ChartFilterComponent implements OnInit {
     if (dashletData) {
       let dashletValue = {};
       if(this.dashboardItem && this.dashboardItem.call_back_field && dashletData[this.dashboardItem.call_back_field]){
-        dashletValue[this.dashboardItem.call_back_field] = dashletData[this.dashboardItem.call_back_field];      
-        Object.keys(dashletValue).forEach(key => {                    
+        dashletValue[this.dashboardItem.call_back_field] = dashletData[this.dashboardItem.call_back_field];
+        Object.keys(dashletValue).forEach(key => { 
           this.chartDatasets[key] = JSON.parse(JSON.stringify(dashletValue[key]['dataSets']));  
           this.chartLabels[key] = JSON.parse(JSON.stringify(dashletValue[key]['label']));
           this.chartType[key]=JSON.parse(JSON.stringify(dashletValue[key]['type']));
           this.chartColors[key]=JSON.parse(JSON.stringify(dashletValue[key]['colors']));
           this.chartLegend[key]=JSON.parse(JSON.stringify(dashletValue[key]['legend']));
           this.chartOptions[key]=JSON.parse(JSON.stringify(dashletValue[key]['options']));
+          this.tableData = this.chartDatasets[key]; 
+          this.tableHead = this.chartLabels[key];
           if(dashletValue[key]['title']){
             this.chartTitle[key]=JSON.parse(JSON.stringify(dashletValue[key]['title']));
           }        
@@ -154,10 +157,14 @@ export class ChartFilterComponent implements OnInit {
   getDashletData(elements){
     if(elements && elements.length > 0){
       let payloads = [];
-      let value = this.dashboardFilter.getRawValue();
+      let value = {};
+      if(this.showFilter){
+        value = this.dashboardFilter.getRawValue();
+      }
       elements.forEach(element => {
         const fields = element.fields;        
-        const filterData = this.getSingleCardFilterValue(element,value);
+        //const filterData = this.getSingleCardFilterValue(element,value);
+        const filterData = value;
         let crList = [];
         if(fields && fields.length > 0){
           crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
@@ -190,19 +197,19 @@ export class ChartFilterComponent implements OnInit {
     }
     return value;
   }
-  // getOptionText(option) {
-  //   if (option && option.name) {
-  //     return option.name;
-  //   }else{
-  //     return option;
-  //   }
-  // }
-  updateData(event, parentfield, field) {
+  getOptionText(option) {
+    if (option && option.name) {
+      return option.name;
+    }else{
+      return option;
+    }
+  }
+  updateData(event, field) {
     if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
       return false;
     }    
-    let objectValue = this.getSingleCardFilterValue(parentfield,this.dashboardFilter.getRawValue()); 
-    this.callTypeaheadData(field,objectValue); 
+    //let objectValue = this.getSingleCardFilterValue(field,this.dashboardFilter.getRawValue()); 
+    this.callTypeaheadData(field,this.dashboardFilter.getRawValue()); 
   }
   callTypeaheadData(field,objectValue){
     this.clearTypeaheadData();   
@@ -229,17 +236,17 @@ export class ChartFilterComponent implements OnInit {
       let forControl = {};
       let formField = [];      
       if(dashlet.fields && dashlet.fields.length > 0){
-        const groupField = {
-          "field_name":dashlet.name
-        }
-        const list_of_fields = {};
+        // const groupField = {
+        //   "field_name":dashlet.name
+        // }
+        //const list_of_fields = {};
         dashlet.fields.forEach(field => {                    
           formField.push(field);
           switch(field.type){ 
             case "date":
               field['minDate'] = this.minDate
               field['maxDate'] = this.maxDate;
-              this.commonFunctionService.createFormControl(list_of_fields, field, '', "text")
+              this.commonFunctionService.createFormControl(forControl, field, '', "text")
                 break; 
             case "daterange":
               const date_range = {};
@@ -248,20 +255,19 @@ export class ChartFilterComponent implements OnInit {
                 {field_name : 'end'}
               ]
               if (list_of_dates.length > 0) {
-                list_of_dates.forEach((data) => {
-                  
+                list_of_dates.forEach((data) => {                  
                   this.commonFunctionService.createFormControl(date_range, data, '', "text")
                 });
               }
-              this.commonFunctionService.createFormControl(list_of_fields, field, date_range, "group")                                    
+              this.commonFunctionService.createFormControl(forControl, field, date_range, "group")                                    
               break; 
                                       
             default:
-              this.commonFunctionService.createFormControl(list_of_fields, field, '', "text");
+              this.commonFunctionService.createFormControl(forControl, field, '', "text");
               break;
           }   
         });
-        this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
+        //this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
       } 
       if(formField.length > 0){
         let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
@@ -296,33 +302,47 @@ export class ChartFilterComponent implements OnInit {
     if(object.dashboardItem){
       this.dashboardItem = object.dashboardItem;
       this.dashletData = object.dashletData;
-      this.checkGetDashletData = true;
-      this.setFilterForm(this.dashboardItem);
+      this.checkGetDashletData = true;   
+      if(object.filter){
+        this.showFilter = true;
+        this.setFilterForm(this.dashboardItem);
+      }else{
+        this.showFilter = false;
+      }      
       this.setDashLetData(this.dashletData);
-    }
-     
-    this.basicModal.show();
+      this.chartFilterModal.show();
+      this.dashboardFilter.reset();
+    }    
+    
   }
   close(item){
     this.checkGetDashletData = false;
     this.reset(item);
-    this.basicModal.hide();
+    this.chartFilterModal.hide();
   }
 
   reset(item){
-    this.dashboardFilter.reset();
-    this.getDashletData([item]);
+    if(this.showFilter){
+      this.dashboardFilter.reset();
+      this.getDashletData([item]);
+    }    
   }
 
   exportexcel():void {
-    let element = document.getElementById('excel-table');
-    const ws:XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
-
+    let list = [];
+    for (let index = 0; index < this.tableData.length; index++) {
+      let row = this.tableData[index];
+      const element = {};
+      for (let j = 0; j < row.length; j++) {
+        let col = this.tableHead[j];
+        element[col] = row[j];
+      }
+      list.push(element);
+    }
+    const ws:XLSX.WorkSheet = XLSX.utils.json_to_sheet(list);
     const wb:XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
-
     XLSX.writeFile(wb,this.filename);
-
   }
 
   chartjsimg: any;
@@ -330,26 +350,6 @@ export class ChartFilterComponent implements OnInit {
     var canvas = document.getElementById('chartjs') as HTMLCanvasElement;
     this.chartjsimg = canvas.toDataURL('image/png');
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

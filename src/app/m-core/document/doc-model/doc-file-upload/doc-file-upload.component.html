@@ -10,9 +10,9 @@
                     <h3>Drop files here or click to upload.</h3>
                 </div>
             </div>
-            <div class="progress mt-1" *ngIf="uploadFile">
+            <!-- <div class="progress mt-1" *ngIf="uploadFile">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-            </div>
+            </div> -->
             <div class="files-list">
                 <div class="card mt-1 mb-0 shadow-none border" *ngFor="let file of files; let i = index">
                     <div class="p-2">
@@ -24,12 +24,26 @@
                                 <a href="javascript:void(0);" class="text-muted font-weight-bold">{{ file?.name }}</a>
                                 <p class="mb-0">{{ formatBytes(file?.size,2) }}</p>
                                 <!-- <app-progress [progress]="file?.progress" *ngIf="uploadFile"></app-progress> -->
+                                <section class="example-section" *ngIf="uploadFile">
+                                    <mat-progress-bar *ngIf="!file.upload && currentFileIndex == i"
+                                        class="example-margin"
+                                        [color]="progressBarColor"
+                                        [mode]="progressMode"
+                                        [value]="uploadProgressValue"
+                                        [bufferValue]="bufferValue">
+                                    </mat-progress-bar>
+                                </section>
                             </div>
-                            <div class="col-auto">
+                            <div class="col-auto" *ngIf="!uploadFile">
                                 <!-- Button -->
                                 <a href="javascript:void(0);" (click)="deleteFile(i)" class="btn btn-link btn-lg text-muted">
                                     <i class="dripicons-cross"></i>
+                                    <span class="material-icons text-danger">close</span>
                                 </a>
+                            </div>
+                            <div class="col-auto" *ngIf="uploadFile">                                
+                                <!-- <span *ngIf="!file.upload"><mat-spinner diameter="20" class="custom-spinner"></mat-spinner></span> -->
+                                <span *ngIf="file.upload" class="material-icons text-success">check</span>                            
                             </div>
                         </div>
                     </div>
@@ -39,7 +53,6 @@
         <div class="form-group text-right px-2">
             <button class="btn btn-light btn-sm mr-1" (click)="cancel()" *ngIf="!uploadFile">Cancel</button>
             <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator()" *ngIf="!uploadFile">Upload</button>
-
         </div>
     </div>
     <!-- /.modal-content -->

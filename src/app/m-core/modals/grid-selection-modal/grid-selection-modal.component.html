@@ -30,7 +30,7 @@
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
                             <td class="text-center" *ngIf="grid_row_selection">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
-                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected"> </mat-checkbox>
+                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox>
                                   <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
                                 </div>
                               </td>
@@ -53,13 +53,37 @@
                                 <div *ngIf="fieldName.type.toLowerCase() == 'text'">
                                     <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)" >
                                 </div>
+                                <div *ngIf="fieldName.type.toLowerCase() == 'textarea'">
+                                    <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)"></textarea>
+                                </div>
                                 <div *ngIf="fieldName.type.toLowerCase() == 'number'">
                                   <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
                                 </div>
+
+
+                                <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
+                                  <mat-form-field appearance="outline" class="example-full-width w-100">
+                                      <mat-chip-list #chipList aria-label="Item selection">
+                                          <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data)">{{getddnDisplayVal(item)}}
+                                              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                          </mat-chip>
+                                          <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
+                                              [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                          <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
+                                              <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                          </mat-autocomplete>
+                                      </mat-chip-list>
+                                      <!-- <mat-error class="text-danger" *ngIf="templateFormControl[fieldName.field_name].touched && templateFormControl[fieldName.field_name].errors?.required">
+                                          {{ fieldName.label | titlecase}} is <strong>required</strong>
+                                      </mat-error> -->
+                                  </mat-form-field>                                
+                              </div>
+
+
                                  <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                   <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
                                       <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                      <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]">
+                                      <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
                                           <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field]" [value]="staticValue">
                                               {{getddnDisplayVal(staticValue)}}
                                           </mat-option>
@@ -67,7 +91,7 @@
                                   </mat-form-field>
                                   <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">
                                       <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                      <mat-select [(ngModel)]="data[fieldName.field_name]" >
+                                      <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
                                           <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field]" [value]="staticValue">
                                               {{getddnDisplayVal(staticValue)}}
                                           </mat-option>
@@ -121,9 +145,11 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
-        <button type="button" [disabled]="checkValidator()" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect  (click)="selectGridData()">{{ field.label}}</button>
+        <button type="button" [disabled]="checkValidator()" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect  (click)="selectGridData()">{{ fieldButtonLabel(field)}}</button>
         <button type="button" mdbBtn color="primary" outline="true" size="sm" class="waves-light" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
       </div>
     </div>
   </div>
 </div>
+
+<app-confirm-modal *ngIf="!isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce1($event)"></app-confirm-modal>

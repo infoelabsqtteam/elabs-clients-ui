@@ -81,7 +81,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   
   
-  GoToSelectedModule(module){
+  GoToSelectedModule(module){ 
     // console.log(index)
     const moduleList = this.storageService.GetModules();
     let index = -1;

@@ -26,6 +26,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   currentMenu:any;
   userInfo: any;
   tabs:any=[];
+  gridCountByTab:any=[];
   total: number;
   isTabFilter:boolean=false;
   filterTab:any='';
@@ -33,6 +34,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   gridDataSubscription;
   tempDataSubscription;
   dinamicFormSubscription;
+  gridDataCountSubscription:any;
  
   
 
@@ -106,6 +108,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
       this.setDinamicForm(form);
     })
+    this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
+      this.setGridCountData(counts);
+    })
   }
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
@@ -141,6 +146,13 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
 
   }
+  setGridCountData(counts){
+    Object.keys(counts).forEach(key => { 
+      if(counts[key]){
+        this.gridCountByTab[key] = JSON.parse(JSON.stringify(counts[key]));
+      }     
+    })
+  }
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs; 
@@ -172,6 +184,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
         this.total = gridData.data_size;
+        const currentTabName = this.storageService.GetActiveMenu()['name'];
+        this.gridCountByTab[currentTabName] = gridData.data_size;
       } else {
         this.total = 0;
       }

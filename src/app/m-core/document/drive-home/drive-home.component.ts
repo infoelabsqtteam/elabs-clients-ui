@@ -10,6 +10,8 @@ import { EnvService } from '../../../services/env/env.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
+import * as S3 from 'aws-sdk/clients/s3';
+import { config } from '../config.modal';
 
 @Component({
   selector: 'lib-drive-home',
@@ -19,7 +21,7 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 export class DriveHomeComponent implements OnInit {
 
     public title: any = 'Right Click Me';
-	itemNumOfGrid: any = 25;
+	itemNumOfGrid: any = 30;
 	public DocIndex: any;
 	public thisContext: any = this;
 	public itemVisible: any = false;
@@ -87,12 +89,19 @@ export class DriveHomeComponent implements OnInit {
 	hidehome = false;
 	filterdata = '';
 	pageNumber: number = 1;
-	
+	selectFileOrFolder = false;
 
 	tab: any = [];
 	currentMenu: any;
 	headElements = [];
 	total: number;
+	creatorpermission = false;
+	downloadpermission = false;
+	viewerpermission = true;
+	authrizepermission = false;
+	storeFolderData:any = {};
+	
+
 	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 	
 
@@ -113,7 +122,7 @@ export class DriveHomeComponent implements OnInit {
         this.vdrDataSubscription = this.docDataShareService.vdrData.subscribe(vdr =>{
 			if(vdr["data"] != null && vdr["data"].length >0){
 				this.setVdrData(vdr["data"]);
-				this.total = vdr["data_size"]
+				this.total = vdr["data_size"];
 			}else{
 				this.setVdrData(vdr);
 			}
@@ -176,7 +185,6 @@ export class DriveHomeComponent implements OnInit {
 		this.permissionListData = [];
 		this.permissionPlaceholder = "Add people & groups";
 		this.permissionOptions = { multiple: true };
-
 	}
 
     setDocData(searchDocData){
@@ -280,6 +288,7 @@ export class DriveHomeComponent implements OnInit {
             link.setAttribute('type', 'hidden');
             link.href = this.downloadLink;
             link.download = this.downloadClick;
+			link.target = '_blank';
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -375,21 +384,41 @@ export class DriveHomeComponent implements OnInit {
 		this.currentSelectedPath = '';
 		this.pathKey = '';
 		this.showNewFolderAndUploadDropdown = false;
+		this.storeFolderData = {};
 		this.rootDataCall();
 	}
 	rootDataCall(action?){
-		var clone = Object.assign({}, this.storageService.getUserLog())
-		const payload = {
-			"appId":this.storageService.getUserAppId(),
-			"refCode":this.storageService.getRefCode(),
-			"log":clone
-		}	
+		this.selectionAny = true;
+		//var clone = Object.assign({}, this.storageService.getUserLog());
+		// let userRefcode = this.storageService.getRefCode();
+		// clone["crList"] = [
+		// 	{fName: "refCode" , operator: "eq", fValue: userRefcode}, 
+		// 	{fName: "refCodeRoot" , operator: "eq", fValue: "Y"}
+		// ]
+		// const payload = {
+		// 	"crList":clone["crList"],
+		// 	"appId":this.storageService.getUserAppId(),
+		// 	"refCode":this.storageService.getRefCode(),
+		// 	"log":clone,
+		// }
+		const criteria = [
+			"refCode;eq;"+this.storageService.getRefCode()+";STATIC",
+			"refCodeRoot;eq;Y;STATIC",
+		]
+		let getFilterData = this.payloadForGetChildDocs({},criteria);
+		
 		if(action == "back"){
-			this.docApiService.GetHomeVdrBack(payload);
+			//this.docApiService.GetHomeVdrBack(payload);
+			this.docApiService.GetFolderChild1(getFilterData);
 		}else{
-			this.docApiService.GetHomeVdr(payload);
+			//this.docApiService.GetHomeVdr(payload);
+			this.docApiService.GetFolderChild1(getFilterData);
+			
 		}        
 	}
+
+
+	
 	public currentSelectedPath: any = '';
 	getPathList() {
 		this.currentSelectedPath = '';
@@ -405,6 +434,7 @@ export class DriveHomeComponent implements OnInit {
 				this.currentSelectedPath = '';
 			}
 			this.pathList.splice(startIndex, 2);
+			this.storeFolderDataByKey();
 		} else {
 			this.pathList = this.pathKey.split("/");
 			let startIndex = this.pathList.length - 2;
@@ -418,25 +448,53 @@ export class DriveHomeComponent implements OnInit {
 			this.pathList.splice(startIndex, 2);
 		}
 	}
+
+	storeFolderDataByKey() {
+		const currentFolder = this.vdrprentfolder;
+		let key = '';
+		if(currentFolder && currentFolder.key != null) {
+			key = currentFolder.key;
+		}
+		if(key != '') {
+			this.storeFolderData[key] = currentFolder;
+		}
+	}
+
+	
 	public pathKey: any = '';
 	getBredCrumbData(index) {
 		this.pathKey = '';
-		for (let i = 0; i <= index + 1; i++) {
+		for (let i = 0; i <= index + 2; i++) {
 			const key = this.pathList[i];
 			this.pathKey = this.pathKey.concat(key + '/');
 		}
 		this.showNewFolderAndUploadDropdown = false;
 		this.vdrprentfolder = {};
 		if(this.pathKey != ''){
-			this.docApiService.getFoderByKey(this.pathKey);
+			//this.docApiService.getFoderByKey(this.pathKey);
+			const folder = this.storeFolderData[this.pathKey];
+			this.openFolder(folder, null);
 		}
-		this.getPathList();
-		const serachByKey = {
-			key: this.pathKey,
-			log: this.storageService.getUserLog()
-		}
-        this.docApiService.GetFolderByKey(serachByKey);
+		// this.getPathList();
+		// const serachByKey = {
+		// 	data: this.openFolderData,
+		// 	key: this.pathKey,
+		// 	log: this.storageService.getUserLog()
+		// }
+        // this.docApiService.GetFolderByKey(serachByKey);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
 	showMessage(message: any) {
 		console.log(message);
 		this.DocIndex = message.item[1];
@@ -746,7 +804,8 @@ export class DriveHomeComponent implements OnInit {
 	public hideRightClickMove: boolean = true;
 	setClickedRow = function (index, file, Details, temp?) {
 		this.hidehome = true;
-		//this.store.dispatch(new VdrActions.SetCaseParentFolder(false))
+		this.selectFileOrFolder = true;
+		this.getPermission(Details);
 		if (Details.refCodeRoot != null) {
 			this.showNewFolderAndUploadDropdown = true;
 			this.selectedRow = index;
@@ -780,35 +839,44 @@ export class DriveHomeComponent implements OnInit {
 	}
 
 	openFolder(selectedFolder: any, param: any) {
-		this.qucikAccess = false;
+		
 		this.vdrprentfolder = selectedFolder;
-		this.openFolderData = selectedFolder;
-		this.getPathList();
-		this.childFolders = [];
-		this.childFiles = [];
-		this.selectedRow = -1;
-		this.fileSelectRow = -1;
-		this.selectionAny = false;
-        this.selectedRowFile = false;
-
-		let getFilterData = this.payloadForGetChildDocs(selectedFolder);
-		this.docApiService.GetFolderChild1(getFilterData);
-        // this.docApiService.GetFolderChild(selectedFolder);
-		if (param == 'FromsearchData') {
-			//this.store.dispatch(new docActions.ResetSearch());
-			this.SearchDocument = [];
-			this.searchDocumentFolders = [];
-			this.searchDocumentFiles = [];
-			this.searchText = '';
-			this.showQuickAccess()
+		if(this.checkDocAccessPermission('viewer')){
+			this.qucikAccess = false;
+			this.openFolderData = selectedFolder;
+			this.getPathList();
+			this.childFolders = [];
+			this.childFiles = [];
+			this.selectedRow = -1;
+			this.fileSelectRow = -1;
+			this.selectionAny = false;
+			this.selectedRowFile = false;
+			const criteria = [
+				"key;stw;"+selectedFolder["key"]+";STATIC",
+				"parentId;eq;"+selectedFolder["_id"]+";STATIC",
+			]
+			let getFilterData = this.payloadForGetChildDocs(selectedFolder,criteria);
+			this.docApiService.GetFolderChild1(getFilterData);
+			// this.docApiService.GetFolderChild(selectedFolder);
+			if (param == 'FromsearchData') {
+				//this.store.dispatch(new docActions.ResetSearch());
+				this.SearchDocument = [];
+				this.searchDocumentFolders = [];
+				this.searchDocumentFiles = [];
+				this.searchText = '';
+				this.showQuickAccess()
+			}
+		}else{
+			this.notificationService.notify("bg-danger", "No Permission for folder view");
 		}
+		
 	}
 
-	payloadForGetChildDocs(selectedFolder){
-		const data = this.commonFunctionService.getPaylodWithCriteria("awsdocs",'',[],'');
-		data["crList"] = [{fName:  "key",operator:"stw",fValue: selectedFolder["key"]  },{fName:  "parentId",operator:"eq",fValue: selectedFolder["_id"]  }]
+	payloadForGetChildDocs(selectedFolder,criteria){		
+		const data = this.commonFunctionService.getPaylodWithCriteria("aws_docs",'',criteria,'');
 		data['pageNo'] = this.pageNumber-1;
-		data['pageSize'] = 25;    
+		data['pageSize'] = 30;
+		data['data'] = selectedFolder;    
 		const getFilterData = {
 		  data: data,
 		  path: null
@@ -824,6 +892,30 @@ export class DriveHomeComponent implements OnInit {
 		} else {
 			return 'assets/img/fileImages/default.png'
 		}
+	}
+
+	getPermission(data){
+		if (data.accessPermission != null) {
+			if (data.accessPermission.authoriser == true) {
+				this.authrizepermission = true;
+			}
+			if(data.accessPermission.creator == true) {
+				this.creatorpermission = true;
+			}
+			if(data.accessPermission.downloader == true) {
+				this.downloadpermission = true;
+			}
+			if (data.accessPermission.viewer == true) {
+				this.viewerpermission = true;
+			}else {
+				this.viewerpermission = false;	
+			}
+		}else {
+			this.authrizepermission = false;
+			this.downloadpermission = false;
+			this.creatorpermission = false;
+		}
+
 	}
 
 	getFileImageForFolders(ext): any {
@@ -934,7 +1026,7 @@ export class DriveHomeComponent implements OnInit {
 			action: 'move',
 			projectMod: 'e',
 			data: {
-				source: this.vdrprentfolder.key,                // select folder key
+				source: this.vdrprentfolder.key,
 				log: this.storageService.getUserLog(),
 				target: this.selectedMoveFolder.key
 			}
@@ -946,22 +1038,8 @@ export class DriveHomeComponent implements OnInit {
 	// End move functionality------------------------------------------------
 
 
-
-
-
-
-	//    deleteDoc(){
-	// 	   if(this.DocIndex || this.DocIndex==0){
-	// 			  this.store.dispatch(new trashActions.trashDocument(this.DocIndex));
-	// 			  this.DocIndex=false;
-	// 	   }
-	// 	   else{
-	// 			this.store.dispatch(new trashActions.trashDocument(this.fileSelectRow));
-	// 	   }
-	//    }
 	public deleteAlert: boolean = false;
 	deleteDocAlert() {
-		// $('#conformation-modal').modal("show");
 		this.deleteAlert = true;
 	}
 
@@ -977,7 +1055,6 @@ export class DriveHomeComponent implements OnInit {
 		}
 		this.docApiService.DocDelete(delSEarchModule)
 		this.closeDeleteDocAlert();
-		// this.store.dispatch(new VdrActions.GetFolderChld(this.selectFolder));
 	}
 
 	closeDeleteDocAlert() {
@@ -986,18 +1063,8 @@ export class DriveHomeComponent implements OnInit {
 
 
 	recentData(mes: any) {
-		// if (mes) {
-		// 	this.store.dispatch(new recentActions.RecentData(mes.item[1]));
-		// 	mes = false;
-		// }
-		// else {
-		// 	this.store.dispatch(new recentActions.RecentData(this.fileSelectRow));
-		// }
 	}
 
-	//    deleteDoc(){
-	// 	this.store.dispatch(new trashActions.trashDocument(this.fileSelectRow));
-	//    }
 	useDetails() {
 		this.newFolder = {
 			parentId: this.vdrprentfolder._id,
@@ -1020,7 +1087,6 @@ export class DriveHomeComponent implements OnInit {
 	uploadFiles() {
 		this.useDetails();
 		var newObj = Object.assign({}, this.newFolder);
-
 		var sessionid = Object.assign({}, this.storageService.getUserLog())
 		newObj.log.sessionId = sessionid.sessionId + ";" + this.storageService.GetIdToken();
 		newObj.rollName = newObj.parentFolder;
@@ -1032,16 +1098,27 @@ export class DriveHomeComponent implements OnInit {
 			this.qucikAccess = false;
 			this.docApiService.GetFolderChild(this.vdrprentfolder);
 		}, 5000);
+	}
 
+	afterFileUpload(){
+		this.getPathList();
+		this.qucikAccess = false;
+		this.docApiService.GetFolderChild(this.vdrprentfolder);
+		this.docApiService.GetFolderChild(this.openFolderData);
 	}
 
 	public dataDownload: any;
 	public downloadClick: any = '';
 	download() {
-		this.dataDownload = this.vdrprentfolder;
-		this.downloadClick = this.vdrprentfolder.rollName;
-		this.dataDownload.log = this.storageService.getUserLog();
-		this.docApiService.DocFileDownload(this.dataDownload);
+		const object = {
+			'folder' : this.vdrprentfolder
+		}
+		this.modelService.open('downloadFile',object);
+
+		// this.dataDownload = this.vdrprentfolder;
+		// this.downloadClick = this.vdrprentfolder.rollName;
+		// this.dataDownload.log = this.storageService.getUserLog();
+		// this.docApiService.DocFileDownload(this.dataDownload);
 	}
 	rightViewFile(files) {
 		this.viewFile(files.item[0]);
@@ -1172,9 +1249,11 @@ export class DriveHomeComponent implements OnInit {
 		console.log(responce);
 	}
 	uploadDocFileResponce(responce){
-		if(responce.uploadData){
+		if(responce && responce.uploadData){
 			this.uploadData = responce.uploadData;
 			this.uploadFilesSimulator(0);
+		}else if(responce == 'success'){
+			this.afterFileUpload();
 		}
 	}
 	moveFileFolderResponce(responce){
@@ -1212,10 +1291,13 @@ export class DriveHomeComponent implements OnInit {
 		console.log(responce);
 	}
 
-	
 	getPage(page: number) {
 		this.pageNumber = page;
-		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder);
+		const criteria = [
+			"key;stw;"+this.vdrprentfolder["key"]+";STATIC",
+			"parentId;eq;"+this.vdrprentfolder["_id"]+";STATIC",
+		]
+		let getFilterData = this.payloadForGetChildDocs(this.vdrprentfolder, criteria);
 		this.docApiService.GetFolderChild1(getFilterData);
 	}
 
@@ -1237,8 +1319,29 @@ export class DriveHomeComponent implements OnInit {
 		
 	}
 
-
-
+	permission() {
+		const object = {}
+		this.modelService.open('permissionModal',object);
+	}
+	permissionResponce(responce){
+		console.log(responce);
+	}
+	checkDocAccessPermission(name){
+		let selectedFolder = this.vdrprentfolder;
+		if(selectedFolder && selectedFolder.accessPermission){
+			let accessPermission = selectedFolder.accessPermission;
+			if(accessPermission && accessPermission[name]){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return true;
+		}
+	}	
+	downloadFileResponce(event){
+		console.log(event);
+	}
 
 }
 

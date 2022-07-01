@@ -73,12 +73,12 @@ export class AuthService {
     if (this.envService.checkRedirectionUrl()) {
       window.location.href = this.envService.checkRedirectionUrl();
     }else{      
-      this.router.navigate(['/signin']);
+      this.redirectToSignPage();
     }
   }
   gotToSigninPage(){
     this.resetData()
-    this.router.navigate(['/signin']);
+    this.redirectToSignPage();
   }
   GetUserInfoFromToken(payload:any){
     let api = this.envService.getAuthApi('GET_USER_PERMISSION');
@@ -88,32 +88,35 @@ export class AuthService {
         if (respData && respData.user) {
           this.storageService.SetUserInfo(respData);
           this.storageService.GetUserInfo();
-          this.envService.setRequestType('PRIVATE');
-          const menuType = this.storageService.GetMenuType()
+          this.envService.setRequestType('PRIVATE');          
           this.dataShareService.restSettingModule('logged_in');
           this.apiService.gitVersion('');
-          if(menuType == 'Horizontal'){
-               this.router.navigate(['/home']);
-              // this.router.navigate(['/dashboard']);
-              //this.router.navigate(['/scheduling-dashboard']);
-          }else{
-              this.router.navigate(['/dashboard']);
-          } 
-                                  
+          this.redirectionWithMenuType();                                  
         } else {
             this.envService.setRequestType('PUBLIC');
-            this.router.navigate(['/signin']);
+            this.redirectToSignPage();
         }
       },
       (error)=>{
         if(error.status == 403){
           this.envService.setRequestType('PUBLIC');
-          this.router.navigate(['/signin']); 
+          this.redirectToSignPage(); 
         }else{
             this.notificationService.notify("bg-danger", error.message);
         } 
       }
     )
+  }
+  redirectionWithMenuType(){
+    const menuType = this.storageService.GetMenuType()
+    if(menuType == 'Horizontal'){
+      this.router.navigate(['/home']);
+    }else{
+      this.router.navigate(['/dashboard']);
+    } 
+  }
+  redirectToSignPage(){
+    this.router.navigate(['/signin']);
   }
   TrySignin(payload:any){
     let api = this.envService.getAuthApi('AUTH_SIGNIN');
@@ -203,7 +206,7 @@ export class AuthService {
                 this.router.navigate(['/otp_varify/'+username]);                           
             }else{
                 this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
-                this.router.navigate(['/signin']);
+                this.redirectToSignPage();
             }
         }
       },
@@ -222,7 +225,7 @@ export class AuthService {
             this.router.navigate(['otp_varify'+'/'+payload.userId]);
           }else{
             this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
-            this.router.navigate(['/signin']);
+            this.redirectToSignPage();
           }
 
         } else if(respData && respData['message']){
@@ -237,7 +240,7 @@ export class AuthService {
         //         this.router.navigate(['/otp_varify/'+username]);                           
         //     }else{
         //         this.notificationService.notify("bg-success", "A verification link has been sent to your email account. please click on the link to verify your email and continue the registration process. ");
-        //         this.router.navigate(['/signin']);
+        //         this.redirectToSignPage();
         //     }
         // }
       },
@@ -251,7 +254,7 @@ export class AuthService {
     this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
       (respData) =>{
         if(respData['success']){
-          this.router.navigate(['/signin']);
+          this.redirectToSignPage();
         }else if(respData['error']){
             this.notificationService.notify("bg-danger", respData['message']);
         }
@@ -294,7 +297,7 @@ export class AuthService {
         if(respData && respData['message']){
           this.notificationService.notify("bg-success", respData['message']);          
         }
-        this.router.navigate(['/signin']);
+        this.redirectToSignPage();
         // if (respData && respData.hasOwnProperty('success')) {
         //     this.notificationService.notify("bg-info", "New Password changed successfully.");
         //     this.dataShareService.setAuthentication(true);

@@ -8,6 +8,7 @@
                     <div class="dz-message ">
                         <mdb-icon fas icon="cloud-upload-alt" size="3x" class="animated text-muted"></mdb-icon>
                         <h3>Drop files here or click to upload.</h3>
+                        <small>{{fileSizeHints}}</small>
                     </div>
                 </div>
 
@@ -37,9 +38,7 @@
             <div class="form-group text-right px-2">
                 <button class="btn btn-light btn-sm mr-1" (click)="cancel()">Cancel</button>
                 <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator(0)">Add</button>
-
             </div>
-
         </div>
     </div>
 </div>

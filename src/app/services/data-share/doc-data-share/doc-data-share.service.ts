@@ -17,6 +17,7 @@ export class DocDataShareService {
   docDeleteResponce:EventEmitter<any>= new EventEmitter<any>(null);
   docShareResponce:EventEmitter<any>= new EventEmitter<any>(null);
   folder:EventEmitter<any>= new EventEmitter<any>(null);
+  vdrPermission:EventEmitter<any>= new EventEmitter<any>(null);
 
   constructor() { }
 
@@ -55,5 +56,8 @@ export class DocDataShareService {
   }
   setFolderData(responce){
     this.folder.emit(responce);
+  }
+  setVdrPermissionData(vdrData){
+    this.vdrPermission.emit(vdrData);
   }
 }

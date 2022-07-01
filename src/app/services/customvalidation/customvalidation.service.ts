@@ -22,6 +22,19 @@ export class CustomvalidationService {
       return valid ? null : { invalidPassword: true };
     };
   }
+  checkDates(endDate: string, startDate: string) {
+    return (formGroup: FormGroup) => {
+      const startDateControl = formGroup.controls[startDate];
+      const endDateControl = formGroup.controls[endDate];
+      const date1 =new Date(startDateControl.value);
+      const date2 =new Date(endDateControl.value);
+      if(date1 > date2) {
+        endDateControl.setErrors({ notValid: true });
+      }else{
+        endDateControl.setErrors(null);
+      }
+    }    
+ }
 
   MatchPassword(password: string, confirmPassword: string) {
     return (formGroup: FormGroup) => {

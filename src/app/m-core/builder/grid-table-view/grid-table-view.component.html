@@ -3,7 +3,7 @@
         <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
         <button *ngIf="checkFieldsAvailability('NEW')" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
         <span *ngFor="let btn of gridButtons">
-            <a *ngIf="btn && btn.grid_header_button && bulkuploadList && bulkuploadList.length > 0" mdbBtn floating="true" size="sm" (click)="gridButtonAction({},0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
+            <a *ngIf="(btn && btn.grid_header_button) || (bulkuploadList && bulkuploadList.length > 0)" mdbBtn floating="true" size="sm" (click)="gridButtonAction({},0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
         </span>
@@ -40,11 +40,33 @@
                                                 </select>
                                                 <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                             </div>
+
                                             <div *ngIf="head.type == 'dropdown'" class="position-relative">
-                                                <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
-                                                    <option *ngFor="let data of staticData[head.ddn_field]" [value]="data">{{getddnDisplayVal(data)}}</option>
+                                                <!-- <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
+                                                    <option *ngFor="let data of copyStaticData[head.ddn_field] | filter:filterdata; index as i" [ngValue]="data">{{getddnDisplayVal(data)}} 2</option>
                                                 </select>
-                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>-->
+
+                                                <mat-form-field appearance="outline">
+                                                    <mat-select [formControlName]="head.field_name" (selectionChange)="applyFilter()" disableOptionCentering panelClass="matdropdown">
+                                                        <div class="p-1"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="filterdata" [ngModelOptions]="{standalone: true}"></div>
+                                                        <mat-option *ngFor="let data of copyStaticData[head.ddn_field] |filter:filterdata; index as i" [value]="data">{{getddnDisplayVal(data)}}</mat-option>
+                                                    </mat-select>
+                                                    <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="head.type == 'typeahead'">
+                                                <div class="w-100 position-relative">
+                                                    <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="head.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                        <!-- <mat-label>{{head.label}} <span *ngIf="head.is_mandatory && head.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label> -->
+                                                        <input type="text" [placeholder]="head.label" aria-label="Number" matInput [formControlName]="head.field_name"
+                                                            [matAutocomplete]="first" (keyup)="updateData($event,head)" [id]="head._id+'_'+head.field_name" autocomplete="off">
+                                                        <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="applyFilter()" [displayWith]="getOptionText">
+                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                            <!-- <mat-option *ngIf="head.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option> -->
+                                                        </mat-autocomplete> 
+                                                    </mat-form-field>
+                                                </div>
                                             </div>
                                             <div *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number'" class="position-relative">
                                                 <input class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyFilter()">
@@ -75,7 +97,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}">
+                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of elements | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}" [style.background-color]="checkTypgraphCondition(el,'background-color')">
                                         <td [ngClass]="selectedRowIndex == i ? 'd-none':''" *ngIf="elements.length > 0">
                                             <span *ngIf="editedRowIndex != i" class="text-nowrap">
                                                 <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
@@ -197,3 +219,4 @@
 <app-template-modal id="template-modal" (temlateModalResponce)="temlateModalResponce($event)"></app-template-modal>
 <app-file-views-modal id="fileview-grid-modal" (fileViewResponceData)="fileViewresponceData($event)"></app-file-views-modal>
 <app-communication-data-modal id="communication-modal" [tabIndex]="selectTabIndex" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)"></app-communication-data-modal>
+<app-download-progress  id="download-progress-modal"></app-download-progress>
