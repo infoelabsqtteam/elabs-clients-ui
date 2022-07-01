@@ -118,7 +118,7 @@ export class CommonFunctionService {
         case "list_of_string":
           break;
         case "typeahead":
-          if (field.datatype != 'list_of_object') {
+          if (field.datatype != 'list_of_object' && field.datatype != 'chips') {
             validator.push(Validators.required)
           }
           break;
@@ -868,7 +868,7 @@ export class CommonFunctionService {
             if(validatField){            
               if(formValue[element.field_name] != "" && formValue[element.field_name] != null &&  !Array.isArray(formValue[element.field_name])){
                 return {'msg':'Entered value for '+element.label+' is not valid. !!!'}
-              }else if(this.applicableForValidation(element) && !Array.isArray(formValueWithCust[element.field_name]) && formValueWithCust[element.field_name].length > 0){
+              }else if(this.applicableForValidation(element) && !Array.isArray(formValueWithCust[element.field_name]) && formValueWithCust[element.field_name].length <= 0){
                 return {'msg':'Please Enter '+ element.label + '. !!!'}
               }
             }else if (formValue[element.field_name] == "" && !Array.isArray(formValue[element.field_name])) {     

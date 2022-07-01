@@ -1,6 +1,6 @@
 export const serverHostList = [
   {
-    "clientEndpoint": "localhost", "serverEndpoint": "https://serverqualiteklab.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Horizontal", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "localhost", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",

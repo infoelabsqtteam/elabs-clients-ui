@@ -270,12 +270,12 @@
                             </div>
                             <div class="w-100 position-relative" *ngIf="tableField.datatype == 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
-                                    <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                    <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'chips'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                     <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <mat-chip *ngFor="let item of custmizedFormValueData('',tableField); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                         </mat-chip>
-                                        <input type="text" #chipsInput [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
+                                        <input type="text" #chipsInput [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'chips'" aria-label="Number" matInput [formControlName]="tableField.field_name"
                                             [matAutocomplete]="first" [matChipInputFor]="chipList"
                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name">
                                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,true,chipsInput)" [displayWith]="getOptionText">
