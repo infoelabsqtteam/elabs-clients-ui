@@ -102,9 +102,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   GoToSelectedModule(module){
     this.storageService.setModule(module.name); 
     this.dataShareService.sendCurrentPage('DASHBOARD')
+    const criteria = "module_name;eq;"+module.name+";STATIC";
     const menuSearchModule = { "value": "menu", key2: module.name }
+    const payload = this.commonFunctionService.getPaylodWithCriteria("menu",'',[criteria],{});
     //this.store.dispatch(new MenuActios.GetTempMenu(menuSearchModule))
-    this.apiService.GetTempMenu(menuSearchModule)
+    //.apiService.GetTempMenu(menuSearchModule);
+    this.apiService.GetTempMenu(payload);
     // this.router.navigate(['/admin']);
     this.getTemplateByMenu = true;
     
