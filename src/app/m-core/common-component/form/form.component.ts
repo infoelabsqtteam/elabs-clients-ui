@@ -249,7 +249,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   address: string;
   private geoCoder;
   checkFormFieldAutfocus:boolean=false;
-  separatorKeysCodes: number[] = [ENTER, COMMA,SPACE];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   visible = true;
   selectable = true;
   removable = true;
@@ -3017,8 +3017,8 @@ case 'populate_fields_for_report_for_new_order_flow':
               formValue['refCode'] = this.commonFunctionService.getRefcode();
             } 
             if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
-              //formValue['appId'] = this.commonFunctionService.getAppId();
-              formValue['appId'] = this.commonFunctionService.getRefcode();
+              formValue['appId'] = this.commonFunctionService.getAppId();
+              //formValue['appId'] = this.commonFunctionService.getRefcode();
             }            
             // this.custmizedFormValue.forEach(element => {
             //   this.templateForm.value[element.name] = element.value;
@@ -3403,6 +3403,7 @@ case 'populate_fields_for_report_for_new_order_flow':
           }
       case "list_of_string":
       case "list_of_checkbox":
+        case "grid_selection":
         if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
           return '<i class="fa fa-eye text-pointer"></i>';
         } else {
@@ -3443,6 +3444,10 @@ case 'populate_fields_for_report_for_new_order_flow':
           break;
       case "list_of_string":
       case "list_of_checkbox":
+      case "grid_selection":
+        if(item["gridColumns"] && item["gridColumns"].length > 0){
+          value['gridColumns']=item.gridColumns;
+        }
         this.viewModal('form_basic-modal', value, item,false);
         break;      
       default:
@@ -5239,8 +5244,16 @@ case 'populate_fields_for_report_for_new_order_flow':
   addListOfFields(field){
     this.storeFormDetails("",field);
   }
-  updateListofFields(field,index){
-    this.storeFormDetails("",field,index);
+  updateListofFields(field,index){    
+    this.storeFormDetails("",field,index); 
+  }
+  checkRowDisabledIf(field,index){
+    const data = this.custmizedFormValue[field.field_name][index];
+    const condition = field.disableRowIf;
+    if(condition){
+      return !this.commonFunctionService.checkDisableRowIf(condition,data);
+    }
+    return false;    
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
@@ -5328,6 +5341,26 @@ case 'populate_fields_for_report_for_new_order_flow':
     }else{
       this.updateAddNew = false;
     }
+  }
+  checkIfCondition(field,key,key2){
+    let check = false;
+    if(field[key] && field[key] != '' && field[key] != null){
+      let keyValue = field[key];
+      if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
+        check = true;
+      }
+    }
+    return check;
+  }
+  getValue(field,key,key2){
+    let value = '';
+    if(field[key] && field[key] != '' && field[key] != null){
+      let keyValue = field[key];
+      if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
+        value = keyValue[key2];
+      }
+    }
+    return value;
   }
   
 

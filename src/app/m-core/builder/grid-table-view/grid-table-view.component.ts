@@ -646,6 +646,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       link.remove();
       this.downloadClick = '';
       this.apiService.resetGetExportExclLink();
+      this.modalService.close('download-progress-modal'); 
+
     }
   }
   setDownloadPdfData(downloadPdfData){
@@ -910,7 +912,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   public downloadClick = '';
 
-  exportExcel() {  
+  exportExcel() { 
+    this.modalService.open('download-progress-modal', {}); 
     let tempNme = this.currentMenu.name;
     if(this.permissionService.checkPermission(tempNme,'export')){  
       let gridName = '';

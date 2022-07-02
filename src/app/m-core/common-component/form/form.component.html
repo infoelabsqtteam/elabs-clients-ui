@@ -276,12 +276,12 @@
                             </div>
                             <div class="w-100 position-relative" *ngIf="tableField.datatype == 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
-                                    <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                    <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'chips'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                     <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <mat-chip *ngFor="let item of custmizedFormValueData('',tableField); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                         </mat-chip>
-                                        <input type="text" #chipsInput [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
+                                        <input type="text" #chipsInput [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'chips'" aria-label="Number" matInput [formControlName]="tableField.field_name"
                                             [matAutocomplete]="first" [matChipInputFor]="chipList"
                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name">
                                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,true,chipsInput)" [displayWith]="getOptionText">
@@ -361,7 +361,7 @@
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object_with_popup'">                            
                                     <div class="grid-selection-buttons" *ngIf="tableField.type == 'list_of_fields' && !tableField.add_list_field && tableField.add_list_field != 'add'">
-                                        <button [id]="tableField._id+'_'+tableField.field_name" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>
+                                        <button [id]="tableField._id+'_'+tableField.field_name" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>
                                     </div>
                                 </div>
                             </div>
@@ -793,9 +793,9 @@
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
 
-                                    <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
-                                    <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
-                                    <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
+                                    <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
+                                    <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="checkIfCondition(tableField,'selectButtonProperty','toolTip') ? getValue(tableField,'selectButtonProperty','toolTip') : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
+                                    <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="checkIfCondition(tableField,'reviewButtonProperty','toolTip') ? getValue(tableField,'reviewButtonProperty','toolTip') : 'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
                                 </div>
                             </div>                            
                             <div class="" *ngIf="custmizedFormValue[tableField.field_name]">
@@ -816,8 +816,8 @@
                                                           <path d="M0 0h24v24H0z" fill="none"></path>
                                                         </svg>
                                                     </div>
-                                                    <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
-                                                    <a *ngIf="tableField.add_new_enabled" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
+                                                    <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled &&  checkRowDisabledIf(tableField,i)" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
+                                                    <a *ngIf="tableField.add_new_enabled && checkRowDisabledIf(tableField,i)" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
                                                 <td *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
                                                     <span disabled *ngIf="fieldName.type=='checkbox'" >

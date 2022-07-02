@@ -118,7 +118,7 @@ export class CommonFunctionService {
         case "list_of_string":
           break;
         case "typeahead":
-          if (field.datatype != 'list_of_object') {
+          if (field.datatype != 'list_of_object' && field.datatype != 'chips') {
             validator.push(Validators.required)
           }
           break;
@@ -301,13 +301,21 @@ export class CommonFunctionService {
       if (updateMode) {
         if (tableField.disable_on_update != undefined && tableField.disable_on_update) {
           if (tableField.can_update_if != undefined && tableField.can_update_if.has_role != null && tableField.can_update_if.has_role != undefined && Array.isArray(tableField.can_update_if.has_role) && tableField.can_update_if.has_role.length > 0) {
-            tableField.can_update_if.has_role.forEach(element => {
+            let check = 0;
+            for (let index = 0; index < tableField.can_update_if.has_role.length; index++) {
+              const element = tableField.can_update_if.has_role[index];
               if (this.is_check_role(element._id)) {
-                return false;
+                check = 1;
+                break;
               } else {
-                return true;
+                check = 0;
               }
-            });
+            }
+            if(check == 1){
+              return false;
+            }else{
+              return true;
+            }
           } else {
             return true;
           }
@@ -317,6 +325,28 @@ export class CommonFunctionService {
       } else {
         return false;
       }
+    }
+  }
+  is_check_role(id) {
+    const userInfo = this.storageService.GetUserInfo();
+    let check = 0;
+    if (userInfo.roles && userInfo.roles != null && userInfo.roles != "" && Array.isArray(userInfo.roles) && userInfo.roles.length > 0) {
+      for (let index = 0; index < userInfo.roles.length; index++) {
+        const element = userInfo.roles[index];
+        if (element._id == id) {
+          check = 1;
+          break;
+        } else {
+          check = 0;
+        }
+      }
+    } else {
+      check = 0;
+    }
+    if(check == 1){
+      return true;
+    }else{
+      return false;
     }
   }
   isMendetory(tableField, formValue) {
@@ -924,7 +954,7 @@ export class CommonFunctionService {
             if(validatField){            
               if(formValue[element.field_name] != "" && formValue[element.field_name] != null &&  !Array.isArray(formValue[element.field_name])){
                 return {'msg':'Entered value for '+element.label+' is not valid. !!!'}
-              }else if(this.applicableForValidation(element) && !Array.isArray(formValueWithCust[element.field_name]) && formValueWithCust[element.field_name].length > 0){
+              }else if(this.applicableForValidation(element) && !Array.isArray(formValueWithCust[element.field_name]) && formValueWithCust[element.field_name].length <= 0){
                 return {'msg':'Please Enter '+ element.label + '. !!!'}
               }
             }else if (formValue[element.field_name] == "" && !Array.isArray(formValue[element.field_name])) {     
@@ -2538,20 +2568,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     return arr; // for testing
   };
 
-  is_check_role(id) {
-    const userInfo = this.storageService.GetUserInfo();
-    if (userInfo.roles && userInfo.roles != null && userInfo.roles != "" && Array.isArray(userInfo.roles) && userInfo.roles.length > 0) {
-      userInfo.roles.forEach(element => {
-        if (element._id == id) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    } else {
-      return false;
-    }
-  }
+  
 
   openFileUpload(fieldName, modalName, formValue, fileData) {
     const alertData = {
@@ -2913,4 +2930,13 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
   }
 
+  checkDisableRowIf(field,formValue){
+    let check = false;
+    if(this.checkIfCondition(field,formValue)){
+      check = true;
+    }else{
+      check = false;
+    }
+    return check;
+  }
 }
