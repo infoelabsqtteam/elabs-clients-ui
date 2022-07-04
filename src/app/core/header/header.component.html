@@ -49,9 +49,8 @@
       </div>
 
 
-      <ul class="navbar-nav ml-auto nav-flex-icons d-flex align-items-center">
-
-        <div class="searchbox position-relative mr-3">
+      <ul class="navbar-nav ml-auto nav-flex-icons d-flex align-items-center position-relative">
+        <div class="searchbox mr-3">
           <input [(ngModel)]="filterdata" class="form-control rounded-pill" (keyup)="searchmodel()" placeholder="Search items..." autocomplete="off">
           <div class="searchicon"><mat-icon>search</mat-icon></div>
           <div class="moduleitems" *ngIf="showsearchmenu">

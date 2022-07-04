@@ -21,8 +21,7 @@ body {font-family:$roboto;font-size:13px;}
         .navbar-brand {width:$size150;height:$size70;
             img {max-width:100%;height:100%;object-fit:contain;}
         }
-        .nav-link{
-            color:$navtxtcolor;font-size:13px;font-weight:500;
+        .nav-link{color:$navtxtcolor;font-size:13px;font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
             &:focus, &:hover {outline:$no;color:$navtxthovercolor;}
             .mat-button-focus-overlay {display:$no;}
         }
