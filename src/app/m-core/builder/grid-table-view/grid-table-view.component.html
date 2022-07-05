@@ -73,7 +73,7 @@
                                                 <span *ngIf="checkClearBtn(head.field_name,head.type)" class="filter-clear-button btn-right-text" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                             </div>
                                             <div *ngIf="head.type.toLowerCase() == 'daterange'" >
-                                                <mat-form-field appearance="outline" class="example-full-width w-100 custom">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100 m-0 custom">
                                                     <!-- <mat-label>Enter a date range</mat-label> -->
                                                     <mat-date-range-input [rangePicker]="picker" [formGroupName]="head.field_name">
                                                         <input matStartDate placeholder="Start date" formControlName="start" (dateChange)="applyFilter()">
@@ -85,7 +85,7 @@
                                                 </mat-form-field>
                                             </div>
                                             <div *ngIf="head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime'">
-                                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
                                                     <!-- <mat-label>{{ head.label | titlecase}}</mat-label> -->
                                                     <input matInput [matDatepicker]="picker2"   [formControlName]="head.field_name" (dateChange)="applyFilter()">
                                                     <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
