@@ -5,7 +5,6 @@
       <mat-select [(ngModel)]="filterValue" (selectionChange)="checkFilter()" multiple disableOptionCentering
         panelClass="chartfilteroption">
         <div class="p-1"><input class="form-control-sm w-100 border" [(ngModel)]="filterdata"></div>
-        <!-- <mat-option *ngFor="let staticValue of copyStaticData['chart_list'] | filter:filterdata; index as i" [value]="staticValue._id">{{staticValue.name}}</mat-option> -->
         <mat-option *ngFor="let item of filteredDashboardData | filter:filterdata; index as i" [value]="item._id">{{item.name}}</mat-option>
       </mat-select>
     </mat-form-field>
