@@ -102,8 +102,26 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
 
+  add(event: MatChipInputEvent, field, index,chipsInput){
+    let selectedData = "";
+    if(event && event.value){
+      selectedData = event.value
+    } 
+    if(selectedData != ""){  
+      this.setData(selectedData,field, index,chipsInput) 
+    }
+  }
   setValue(event: MatChipInputEvent, field, index,chipsInput) {
-    let selectedData = event["option"].value;
+    let selectedData = "";
+    if(event && event["option"] && event["option"].value){
+      selectedData = event["option"].value
+    }  
+    if(selectedData != ""){ 
+      this.setData(selectedData,field, index,chipsInput)  
+    }  
+  }
+
+  setData(selectedData, field, index,chipsInput){
     if (this.gridData[index][field.field_name] == null) this.gridData[index][field.field_name] = [];
     if(this.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.gridData[index][field.field_name])){
       this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
