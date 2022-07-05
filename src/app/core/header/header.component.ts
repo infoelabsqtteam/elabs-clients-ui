@@ -10,6 +10,7 @@ import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.en
 import { NotificationService } from "src/app/services/notify/notification.service";
 import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
+import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 
 
 @Component({
@@ -102,7 +103,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         private modelService: ModelService,
         private authService: AuthService,
         private notificationService: NotificationService,
-        public envService: EnvService
+        public envService: EnvService,
+        private commonFunctionService:CommonFunctionService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -648,8 +650,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     GoToSelectedModule(item){
         this.storageService.setModule(item.name); 
         this.dataShareService.sendCurrentPage('DASHBOARD')
-        const menuSearchModule = { "value": "menu", key2: item.name }
-        this.apiService.GetTempMenu(menuSearchModule)
+        // const menuSearchModule = { "value": "menu", key2: item.name }
+        // this.apiService.GetTempMenu(menuSearchModule)
+        const criteria = "module_name;eq;"+item.name+";STATIC";        
+        const payload = this.commonFunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
+        this.apiService.GetTempMenu(payload);
         this.getTemplateByMenu = true;
         this.showsearchmenu = false;
         this.filterdata = '';
