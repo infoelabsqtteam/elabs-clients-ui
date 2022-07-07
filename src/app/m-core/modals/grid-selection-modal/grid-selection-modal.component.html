@@ -25,8 +25,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
-
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
                             <td class="text-center" *ngIf="grid_row_selection">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
@@ -68,16 +66,28 @@
                                               <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                           </mat-chip>
                                           <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                              [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                              [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                           <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
                                               <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                           </mat-autocomplete>
                                       </mat-chip-list>
-                                      <!-- <mat-error class="text-danger" *ngIf="templateFormControl[fieldName.field_name].touched && templateFormControl[fieldName.field_name].errors?.required">
-                                          {{ fieldName.label | titlecase}} is <strong>required</strong>
-                                      </mat-error> -->
                                   </mat-form-field>                                
                               </div>
+
+                              <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'userinput_chips'">
+                                <mat-form-field appearance="outline" class="example-full-width w-100">
+                                    <mat-chip-list #chipList aria-label="Item selection">
+                                        <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data)">{{getddnDisplayVal(item)}}
+                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                        </mat-chip>
+                                        <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
+                                            [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                        <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
+                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                        </mat-autocomplete>
+                                    </mat-chip-list>
+                                </mat-form-field>                                
+                            </div>
 
 
                                  <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
