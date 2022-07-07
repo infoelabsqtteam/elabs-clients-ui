@@ -10,20 +10,29 @@
       <div class="metismenu list-unstyled header2" id="side-menu" #sideMenu *ngIf="sidebar2">
         <mat-accordion>
           <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index">
-            <mat-expansion-panel-header  *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
+            <mat-expansion-panel-header *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
               <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="25"> <span class="ml-2"> {{ item.title }}</span></mat-panel-title>
             </mat-expansion-panel-header>
-            <ul *ngIf="hasMenu(item)" class="sub-menu" aria-expanded="false">
-              <li *ngFor="let subitem of item.menu_list">
-                <a *ngIf="!hasSubMenu(subitem)" class="side-nav-link-ref menu1" [attr.data-parent]="subitem.parentId"  (click)="getTemplateData(item,subitem)"> {{ subitem.label }} </a>
-                <a *ngIf="hasSubMenu(subitem)" class="side-nav-link-a-ref menu1" [attr.data-parent]="subitem.parentId"> {{ subitem.label }} </a>
+
+            <div *ngIf="hasMenu(item)" class="menulist" aria-expanded="false">
+              <div class="menuitems" *ngFor="let subitem of item.menu_list">
+                <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
+                <!--<a *ngIf="hasSubMenu(subitem)" class="side-nav-link-a-ref menu1" [attr.data-parent]="subitem.parentId"> {{ subitem.label }}</a>
                 <ul *ngIf="hasSubMenu(subitem)" class="sub-menu mm-collapse submenu2" aria-expanded="false">
                   <li *ngFor="let subSubitem of subitem.submenu">
                     <a [attr.data-parent]="subSubitem.parentId" class="side-nav-link-ref menu2" (click)="getTemplateData(item,subSubitem)"> {{ subSubitem.label }}</a>
                   </li>
-                </ul>
-              </li>
-            </ul>
+                </ul> -->
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId">{{ subitem.label }}</mat-expansion-panel-header>
+                    <div matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
+                      <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }}</small>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
           </mat-expansion-panel>
         </mat-accordion>
       </div>
