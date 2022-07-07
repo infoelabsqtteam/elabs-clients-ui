@@ -67,7 +67,7 @@
                                           </mat-chip>
                                           <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
                                               [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
-                                          <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
+                                          <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
                                               <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                           </mat-autocomplete>
                                       </mat-chip-list>
@@ -81,8 +81,8 @@
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                         </mat-chip>
                                         <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                            [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
-                                        <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput)" [displayWith]="getOptionText">
+                                            [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                        <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
                                             <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                         </mat-autocomplete>
                                     </mat-chip-list>
