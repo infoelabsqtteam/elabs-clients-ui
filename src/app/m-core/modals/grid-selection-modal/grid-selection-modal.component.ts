@@ -102,22 +102,24 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
 
-  add(event: MatChipInputEvent, field, index,chipsInput){
+  add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
     if(event && event.value){
       selectedData = event.value
     } 
+    let indx = this.getCorrectIndex(data,index);
     if(selectedData != ""){  
-      this.setData(selectedData,field, index,chipsInput) 
+      this.setData(selectedData,field, indx,chipsInput) 
     }
   }
-  setValue(event: MatChipInputEvent, field, index,chipsInput) {
+  setValue(event: MatChipInputEvent, field, index,chipsInput,data) {
     let selectedData = "";
     if(event && event["option"] && event["option"].value){
       selectedData = event["option"].value
     }  
+    let indx = this.getCorrectIndex(data,index);
     if(selectedData != ""){ 
-      this.setData(selectedData,field, index,chipsInput)  
+      this.setData(selectedData,field, indx,chipsInput);  
     }  
   }
 
@@ -430,8 +432,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
   //SELECT ALL FUNCTIONLITY
 
-
-  toggle(data, event: MatCheckboxChange, indx) {
+  getCorrectIndex(data, indx){
     let index;
     if (data._id != undefined) {
       index = this.CommonFunctionService.getIndexInArrayById(this.gridData, data._id);
@@ -452,8 +453,12 @@ export class GridSelectionModalComponent implements OnInit {
       });
     } else {
       index = indx;
-    }    
-    
+    } 
+    return index;
+  }
+
+  toggle(data, event: MatCheckboxChange, indx) {
+    let index = this.getCorrectIndex(data,indx);
     if (event.checked) {
       this.gridData[index].selected = true;
     } else {
