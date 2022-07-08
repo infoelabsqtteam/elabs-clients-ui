@@ -2443,10 +2443,11 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     });
   }
 
-  populatefields(value, populate_fields) {
+  populatefields(value, populate_fields,multipleFormCollection?) {
     let obj = {}
     if(populate_fields && populate_fields.length > 0){
       populate_fields.forEach(el =>{
+            value = this.getFormDataInMultiformCollection(multipleFormCollection, value);
         let toList = el.to.split(".");
         if(toList && toList.length > 1){
           const parent = toList[0];
@@ -2938,5 +2939,52 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       check = false;
     }
     return check;
+  }
+
+
+  getFormDataInMultiformCollection(multiformCollection:any,formValue,  index?){
+    let data = {};
+      if(index>=0 && multiformCollection && multiformCollection.length >= 1 && multiformCollection[index] && multiformCollection[index]['data']){
+         data = multiformCollection[index]['data'];
+      }else{
+        let dummyData = {};
+        if(multiformCollection && multiformCollection.length > 0){
+            multiformCollection.forEach((element,index) => {
+              let currentData ={};
+              if(element.data){
+                currentData = element.data;
+              }
+              if(index == 0){
+                dummyData = currentData;
+              }else{
+                Object.keys(currentData).forEach(key => {
+                  dummyData[key] = currentData[key];
+                });
+              }
+             
+            });
+        }
+        if(Object.keys(formValue).length > 0){
+          Object.keys(formValue).forEach(key => {
+            dummyData[key] = formValue[key];
+          });
+        }
+        data = dummyData;
+      }
+      return data;
+  }
+
+  convertListOfStringToListObject(list_of_populated_fields,keysList,seprator){
+    let listOfObjects = [];
+    list_of_populated_fields.forEach(element => {
+    let object = {}
+    let source_targetList = element.split(seprator);
+    keysList.forEach((key,i) => {
+      object[key] = source_targetList[i];
+    });
+    
+    listOfObjects.push(object);
+  });
+   return listOfObjects;
   }
 }
