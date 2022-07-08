@@ -2944,11 +2944,11 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
   getFormDataInMultiformCollection(multiformCollection:any,formValue,  index?){
     let data = {};
-      if(index>=0 && multiformCollection.length >= 1 && multiformCollection[index] && multiformCollection[index]['data']){
+      if(index>=0 && multiformCollection && multiformCollection.length >= 1 && multiformCollection[index] && multiformCollection[index]['data']){
          data = multiformCollection[index]['data'];
       }else{
         let dummyData = {};
-        if(multiformCollection.length > 0){
+        if(multiformCollection && multiformCollection.length > 0){
             multiformCollection.forEach((element,index) => {
               let currentData ={};
               if(element.data){

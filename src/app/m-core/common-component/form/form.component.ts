@@ -4916,13 +4916,14 @@ case 'populate_fields_for_report_for_new_order_flow':
           let key = sourceTarget[0];
           let valueField = sourceTarget[1];
           let formValue = {};
-          if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
-            const storeFormData = this.multipleFormCollection[field.form_value_index];
-            const formData = storeFormData['form_value'];            
-            formValue = formData;            
-          }else{
-            formValue = this.getFormValue(false)
-          }
+          // if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
+          //   const storeFormData = this.multipleFormCollection[field.form_value_index];
+          //   const formData = storeFormData['form_value'];            
+          //   formValue = formData;            
+          // }else{
+          //   formValue = this.getFormValue(false)
+          // }
+          formValue = this.commonFunctionService.getFormDataInMultiformCollection(this.multipleFormCollection,this.getFormValue(false));
           let value = this.commonFunctionService.getObjectValue(valueField,formValue);
           targetFieldName['form'][key] = value;
         });
