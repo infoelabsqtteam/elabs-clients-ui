@@ -2455,10 +2455,16 @@ case 'populate_fields_for_report_for_new_order_flow':
           // this.commonFunctionService.populate_fields_for_report(this.templateForm);
           break;
         case 'manufactured_as_customer':
-          list_of_populated_fields = [
-            {"from":"account.name", "to":"sample_details.mfg_by"}
-          ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          if(field.listOfPopulatedFields && field.listOfPopulatedFields.length > 0){
+            let keysList = ["from","to"]
+            let seprator = ":";
+            list_of_populated_fields = this.commonFunctionService.convertListOfStringToListObject(field.listOfPopulatedFields,keysList,seprator);
+          }else{
+            list_of_populated_fields = [
+              {"from":"account.name", "to":"sample_details.mfg_by"}
+            ]
+          }
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,this.multipleFormCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
@@ -2471,10 +2477,16 @@ case 'populate_fields_for_report_for_new_order_flow':
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
         case 'supplied_as_customer':
-          list_of_populated_fields = [
-            {"from":"account.name", "to":"sample_details.supplied_by"}
-]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          if(field.listOfPopulatedFields && field.listOfPopulatedFields.length > 0){
+            let keysList = ["from","to"];
+            let seprator = ":";
+            list_of_populated_fields = this.commonFunctionService.convertListOfStringToListObject(field.listOfPopulatedFields,keysList,seprator);
+          }else{
+            list_of_populated_fields = [
+              {"from":"account.name", "to":"sample_details.supplied_by"}
+            ]
+          }
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,this.multipleFormCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
@@ -5029,18 +5041,21 @@ case 'populate_fields_for_report_for_new_order_flow':
     const formCollecition = this.multipleFormCollection[lastIndex];
     this.form = formCollecition['form'];
     this.resetFlagsForNewForm();
-    this.setForm();
     const data = formCollecition['data'];
     //console.log(data);
+
+    this.updateMode = formCollecition['updateMode'];
+    if(this.updateMode || this.complete_object_payload_mode){
+      this.selectedRow = data;
+    }
+    this.setForm();
     this.updateDataOnFormField(data);
     this.getStaticDataWithDependentData();
     this.currentMenu['name'] = formCollecition['collection_name'];
     this.previousFormFocusField = formCollecition['current_field']; 
-    this.updateMode = formCollecition['updateMode'];
+
     this.focusFieldParent = formCollecition['parent_field'];
-    if(this.updateMode || this.complete_object_payload_mode){
-      this.selectedRow = data;
-    }
+  
     if(this.previousFormFocusField && this.previousFormFocusField['add_next_form_button']){
       this.enableNextButton = true;
     }else{
@@ -5253,7 +5268,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(condition){
       return !this.commonFunctionService.checkDisableRowIf(condition,data);
     }
-    return false;    
+    return true;    
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
