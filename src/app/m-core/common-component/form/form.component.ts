@@ -2487,8 +2487,8 @@ case 'populate_fields_for_report_for_new_order_flow':
               {"from":"account.name", "to":"sample_details.supplied_by"}
             ]
           }
-           multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,multiCollection);
+           let multiCollection1 = JSON.parse(JSON.stringify(this.multipleFormCollection));
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,multiCollection1);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
