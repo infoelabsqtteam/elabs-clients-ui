@@ -2407,6 +2407,7 @@ case 'populate_fields_for_new_order_flow':
             {"from":"gst_no","to":"reporting_gst"},
             {"from":"email","to":"reporting_contact_person_email"},
             {"from":"address_line1","to":"reporting_address"},
+            {"from":"address_line2","to":"reporting_address_line2"},
             {"from":"pincode","to":"reporting_pincode"},
             {"from":"first_name+last_name+ ","to":"reporting_contact_person"},
             {"from":"account.name","to":"reporting_company"},
@@ -2425,6 +2426,7 @@ case 'populate_fields_for_new_order_flow':
             {"from":"gst_no","to":"reporting_gst"},
             {"from":"email","to":"reporting_contact_person_email"},
             {"from":"address_line1","to":"reporting_address"},
+            {"from":"address_line2","to":"reporting_address_line2"},
             {"from":"pincode","to":"reporting_pincode"},
             {"from":"contact.name","to":"reporting_contact_person"},
             {"from":"account.name","to":"reporting_company"},
@@ -2443,6 +2445,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             {"from":"gst_no","to":"reporting_gst"},
             {"from":"email","to":"reporting_contact_person_email"},
             {"from":"address_line1","to":"reporting_address"},
+            {"from":"address_line2","to":"reporting_address_line2"},
             {"from":"pincode","to":"reporting_pincode"},
             {"from":"first_name+last_name+ ","to":"reporting_contact_person"},
             {"from":"sample_booking.name","to":"reporting_company"},
@@ -2452,10 +2455,16 @@ case 'populate_fields_for_report_for_new_order_flow':
           // this.commonFunctionService.populate_fields_for_report(this.templateForm);
           break;
         case 'manufactured_as_customer':
-          list_of_populated_fields = [
-            {"from":"account.name", "to":"sample_details.mfg_by"}
-          ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          if(field.listOfPopulatedFields && field.listOfPopulatedFields.length > 0){
+            let keysList = ["from","to"]
+            let seprator = ":";
+            list_of_populated_fields = this.commonFunctionService.convertListOfStringToListObject(field.listOfPopulatedFields,keysList,seprator);
+          }else{
+            list_of_populated_fields = [
+              {"from":"account.name", "to":"sample_details.mfg_by"}
+            ]
+          }
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,this.multipleFormCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
@@ -2468,10 +2477,16 @@ case 'populate_fields_for_report_for_new_order_flow':
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
         case 'supplied_as_customer':
-          list_of_populated_fields = [
-            {"from":"account.name", "to":"sample_details.supplied_by"}
-]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          if(field.listOfPopulatedFields && field.listOfPopulatedFields.length > 0){
+            let keysList = ["from","to"];
+            let seprator = ":";
+            list_of_populated_fields = this.commonFunctionService.convertListOfStringToListObject(field.listOfPopulatedFields,keysList,seprator);
+          }else{
+            list_of_populated_fields = [
+              {"from":"account.name", "to":"sample_details.supplied_by"}
+            ]
+          }
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,this.multipleFormCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
@@ -4901,13 +4916,14 @@ case 'populate_fields_for_report_for_new_order_flow':
           let key = sourceTarget[0];
           let valueField = sourceTarget[1];
           let formValue = {};
-          if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
-            const storeFormData = this.multipleFormCollection[field.form_value_index];
-            const formData = storeFormData['form_value'];            
-            formValue = formData;            
-          }else{
-            formValue = this.getFormValue(false)
-          }
+          // if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
+          //   const storeFormData = this.multipleFormCollection[field.form_value_index];
+          //   const formData = storeFormData['form_value'];            
+          //   formValue = formData;            
+          // }else{
+          //   formValue = this.getFormValue(false)
+          // }
+          formValue = this.commonFunctionService.getFormDataInMultiformCollection(this.multipleFormCollection,this.getFormValue(false));
           let value = this.commonFunctionService.getObjectValue(valueField,formValue);
           targetFieldName['form'][key] = value;
         });
@@ -5026,18 +5042,21 @@ case 'populate_fields_for_report_for_new_order_flow':
     const formCollecition = this.multipleFormCollection[lastIndex];
     this.form = formCollecition['form'];
     this.resetFlagsForNewForm();
-    this.setForm();
     const data = formCollecition['data'];
     //console.log(data);
+
+    this.updateMode = formCollecition['updateMode'];
+    if(this.updateMode || this.complete_object_payload_mode){
+      this.selectedRow = data;
+    }
+    this.setForm();
     this.updateDataOnFormField(data);
     this.getStaticDataWithDependentData();
     this.currentMenu['name'] = formCollecition['collection_name'];
     this.previousFormFocusField = formCollecition['current_field']; 
-    this.updateMode = formCollecition['updateMode'];
+
     this.focusFieldParent = formCollecition['parent_field'];
-    if(this.updateMode || this.complete_object_payload_mode){
-      this.selectedRow = data;
-    }
+  
     if(this.previousFormFocusField && this.previousFormFocusField['add_next_form_button']){
       this.enableNextButton = true;
     }else{
@@ -5250,7 +5269,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     if(condition){
       return !this.commonFunctionService.checkDisableRowIf(condition,data);
     }
-    return false;    
+    return true;    
   }
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){

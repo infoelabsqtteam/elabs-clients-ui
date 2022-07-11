@@ -8,13 +8,12 @@
 .table table {
     width:100%;font-size:13px;border:1px solid #ccc !important;
     
-    thead {background: rgba(0, 0, 0, 0.03);font-family:$roboto;
+    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {
-            th {
-                cursor: pointer;vertical-align:middle;padding:5px;
-                .heading {font-weight:500;position:relative;}
+            th { cursor: pointer;vertical-align:middle;padding:5px;position:relative;background:#fafafa;
+                .heading {font-weight:500;}
                 .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;}
-                .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
+                .fas { display:none;transition:all 1s;position:absolute;right:5px;top:5px;}
                 &:hover {
                     .fas { display:inline-block;}   
                 }
@@ -90,7 +89,7 @@
 
 .modal-content:not(.card-image) .close {position:inherit !important;}
 .btn {box-shadow:none !important;
-    &:hover, &:focus {box-shadow:none !important;}
+    &:hover, &:focus {box-shadow:0 0 5px #075c93 !important;}
 }
 
 
