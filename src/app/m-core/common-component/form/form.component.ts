@@ -2464,7 +2464,8 @@ case 'populate_fields_for_report_for_new_order_flow':
               {"from":"account.name", "to":"sample_details.mfg_by"}
             ]
           }
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,this.multipleFormCollection);
+          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,multiCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
@@ -2486,7 +2487,8 @@ case 'populate_fields_for_report_for_new_order_flow':
               {"from":"account.name", "to":"sample_details.supplied_by"}
             ]
           }
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,this.multipleFormCollection);
+           multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,multiCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
@@ -4923,7 +4925,8 @@ case 'populate_fields_for_report_for_new_order_flow':
           // }else{
           //   formValue = this.getFormValue(false)
           // }
-          formValue = this.commonFunctionService.getFormDataInMultiformCollection(this.multipleFormCollection,this.getFormValue(false));
+          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
           let value = this.commonFunctionService.getObjectValue(valueField,formValue);
           targetFieldName['form'][key] = value;
         });
