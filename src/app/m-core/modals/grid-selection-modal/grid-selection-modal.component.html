@@ -108,6 +108,16 @@
                                       </mat-select>
                                   </mat-form-field>
                                 </div> 
+
+                                <div *ngIf="fieldName.type.toLowerCase() == 'mini-html'">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <angular-editor [(ngModel)]="data[fieldName.field_name]" [config]="minieditorConfig"></angular-editor>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 </div>
                               </div>
                               </td>
