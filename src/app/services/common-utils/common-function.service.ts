@@ -479,7 +479,7 @@ export class CommonFunctionService {
               }
             }
             break;
-            case "number":
+          case "number":
               if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
                 if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                   element.api_params_criteria.forEach(cri => {
@@ -531,6 +531,7 @@ export class CommonFunctionService {
             }
             break;
             case "reference_names":
+            case "chips":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {

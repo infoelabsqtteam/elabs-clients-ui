@@ -542,6 +542,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               case "info":
                 case "number":
                 case "reference_names":
+                case "chips" :
                 this.commonFunctionService.createFormControl(forControl, element, '', "text")
                 break;
               case "tree_view_selection":
