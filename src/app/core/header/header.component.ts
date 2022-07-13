@@ -547,7 +547,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
     goToMOdule() {
         this.dataShareService.sendCurrentPage('MODULE')
-        this.menuData = [];
+        //this.menuData = [];
         this.apiService.resetMenuData();
         const menuType = this.storageService.GetMenuType()
         if (menuType == 'Horizontal') {
