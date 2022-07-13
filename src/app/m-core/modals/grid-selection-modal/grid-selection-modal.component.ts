@@ -10,6 +10,7 @@ import { ApiService } from '../../../services/api/api.service';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import {Sort} from '@angular/material/sort';
 
 
 @Component({
@@ -145,6 +146,30 @@ export class GridSelectionModalComponent implements OnInit {
       this.setStaticData(data);
     })
     //this.treeViewData.data = TREE_DATA;
+  }
+
+
+  sortData(sort: Sort) {
+    const data = this.gridData.slice();
+    if (!sort.active || sort.direction === '') {
+      this.gridData = data;
+      return;
+    }
+    let fieldname = sort.active;
+    const columnIndex = this.CommonFunctionService.getIndexInArrayById(this.listOfGridFieldName,fieldname,'field_name');
+    let gridColumns = this.listOfGridFieldName[columnIndex];
+    console.log(gridColumns);
+
+    if(gridColumns && gridColumns.field_name && gridColumns.field_name != ''){
+      this.gridData = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        const dataA = this.CommonFunctionService.getObjectValue(fieldname, a);
+        const dataB = this.CommonFunctionService.getObjectValue(fieldname, b);
+        return compare(dataA, dataB, isAsc);
+      });
+    }else {
+      return 0;
+    }
   }
 
   getddnDisplayVal(val) {
@@ -735,4 +760,9 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
 
+}
+
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
