@@ -6,7 +6,7 @@
             .bg-cerulean{background:var(--buttonColor) !important;width:120px;height:35px;border-radius:4px !important;margin:0 0 0 20px;font-size:14px;}
         }
         .form-label {background:var(--formLabelBg);font-family:$roboto;}
-        .mat-form-field-label {color:#00000099;font-size:13px;}
+        .mat-form-field-label {color:#00000099;font-size:13px;text-transform:capitalize;}
         .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;}
         .mat-error {margin-top:15px;}
         .filterbtn {background:var(--formLabelBg);min-width:auto;

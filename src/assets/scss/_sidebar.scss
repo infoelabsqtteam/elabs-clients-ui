@@ -22,10 +22,10 @@
     }
 }
 
-.sidenav {padding:20px 0;width:260px;z-index:9;bottom:0;margin-top:0;position:$fixed;top:$size60;box-shadow:0 2px 4px rgb(0 0 0 / 8%);transition:all .5s;
+.sidenav {padding:20px 0;width:260px;z-index:9;bottom:0;left:0;margin-top:0;position:$fixed;top:$size60;box-shadow:0 2px 4px rgb(0 0 0 / 8%);transition:all .5s;
     input {padding:$size8 $size15;font-size:$size15;border-radius:$size25;width:$per100;}
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
-    #sidebar-menu {padding-bottom:40px;
+    #sidebar-menu {padding-bottom:60px;
         .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;margin:0px;}
         .mat-expansion-panel-header.mat-expanded {height:48px;}
         .mat-expansion-panel-header-title {align-items:center;font-size:13px;}
@@ -43,41 +43,10 @@
     }
 }
 
-// .vertical-collpsed {
-//     .main-content {margin-left:0;}
-//     perfect-scrollbar, .vertical-menu perfect-scrollbar .ps {overflow:$overflowshow !important;}
-//     .sidefilter{display:$no;}
-//     .navbar-brand-box {width:$size70 !important;}
-//     .sidenav {position:$absolute;width:$size70;}
-//     #sidebar-menu span {display:$no;padding-left:$size25;}
-//     .right-arrow:after {content:"\F0142";font-family:$iconfamily;display:$block;float:$right;font-size:$size15;}
-//     #layout-wrapper{position:$relative;}
-//     #sidebar-menu {
-//         li{ 
-//             a {
-//                 display:$block;color: #8590a5;
-//                 &:hover {color:#d7e4ec !important}
-//             }
-//             .sub-menu li:hover a {color:#252b3b;}
-//             ul {
-//                 li:hover > ul {top:$zero;}
-//             } 
-//             &:hover {
-//                 a.is-parent {width:calc(240px + 70px);color:#d7e4ec !important;background:#293041;}
-//                 span {display:$blockinline;}
-//             }
-//         }
-//     }
-//     #sidebar-menu li:hover > ul {display:$block;left:$per100;position:$absolute;width:$size240;background:$white;box-shadow:$navhovershdow;
-//     }
-//     .ps__rail-x, .ps__rail-y { display:$no !important;}
-// }
-
-
 
 .vertical-collpsed {
-    .main-content {transition:all .5s;}
-    .sidenav {left:-100%;
+    .main-content {transition:all .5s;margin-left:0;}
+    .sidenav {left:-100%;transition:all .5s;
         span {display:block !important;}
     }
 }

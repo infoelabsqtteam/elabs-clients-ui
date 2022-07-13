@@ -15,13 +15,13 @@
       <div class="modal-body pt-0 popuptable">
         <div class="">
             <div class="table without-filter mb-2">            
-                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover">
+                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover" matSort (matSortChange)="sortData($event)">
                     <thead>
                         <tr>
                             <th *ngIf="grid_row_selection" class="text-center">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
-                            <th *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="heading" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
+                            <th *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
                         </tr>
                     </thead>
                     <tbody>
