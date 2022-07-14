@@ -158,8 +158,6 @@ export class GridSelectionModalComponent implements OnInit {
     let fieldname = sort.active;
     const columnIndex = this.CommonFunctionService.getIndexInArrayById(this.listOfGridFieldName,fieldname,'field_name');
     let gridColumns = this.listOfGridFieldName[columnIndex];
-    console.log(gridColumns);
-
     if(gridColumns && gridColumns.field_name && gridColumns.field_name != ''){
       this.gridData = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';

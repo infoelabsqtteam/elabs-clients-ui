@@ -763,6 +763,17 @@ export class CommonFunctionService {
         }
     }
   }
+
+  getFixedDivClass(field,fieldsLangth){
+    const fields = {...field}
+    if (!fields.type) {
+      fields.type = "text";
+    }
+    if(fields.field_class && field.field_class != ''){
+      return fields.field_class;
+    }
+  }
+
   getButtonDivClass(field){
     const fields = {...field}    
     if(fields.field_class && field.field_class != ''){

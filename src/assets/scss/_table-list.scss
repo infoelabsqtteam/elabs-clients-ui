@@ -5,9 +5,7 @@
 }
 
 .tableFixHead {overflow:$auto;height:$calc3;}
-.table table {
-    width:100%;font-size:13px;border:1px solid #ccc !important;
-    
+.table table {width:100%;font-size:13px;border:1px solid #ccc !important;
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border:none;
@@ -26,8 +24,8 @@
 
     tbody {
         tr {
-            &:nth-of-type(odd) {background-color: #fff;}
-            &:nth-of-type(even) {background-color: rgba(0, 0, 0, 0.02);}
+            &:nth-of-type(odd) td {background-color: #fff;}
+            &:nth-of-type(even) td {background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
         .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;}
@@ -108,5 +106,21 @@
 
 
 .one-line-text {text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
-.grid-filter .form-control-sm {min-width:170px;}
+
+
+.fixedcol {position:sticky;z-index:1;max-width:160px;min-width:160px;padding:5px 10px !important;left:0;}
+.fixedcol:nth-child(2) {left:0px !important;}
+.fixedcol:nth-child(3) {left:150px !important;}
+.fixedcol:nth-child(4) {left:300px !important;}
+.fixedcol:nth-child(5) {left:450px !important;}
+.fixedcol:nth-child(6) {left:600px !important;}
+.fixedcol:nth-child(7) {left:750px !important;}
+.fixedcol:nth-child(8) {left:900px !important;}
+.fixedcol:nth-child(9) {left:1050px !important;}
+.fixedcol:nth-child(10) {left:1200px !important;}
+.fixedcol:nth-child(11) {left:1350px !important;}
+.fixedcol:nth-child(12) {left:1500px !important;}
+.fixedcol:nth-child(13) {left:1650px !important;}
+.fixedcol:nth-child(14) {left:1800px !important;}
+
 
