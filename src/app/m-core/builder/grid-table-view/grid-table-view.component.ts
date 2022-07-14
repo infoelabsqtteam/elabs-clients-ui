@@ -118,6 +118,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   typeaheadDataSubscription;
 
   filterdata = '';
+  fixedcolwidth = 150
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -1217,6 +1218,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         return '';
       }      
     }    
+  }
+
+  getDivClass(field) {
+    const fieldsLangth = this.headElements.length;
+    return this.commonFunctionService.getFixedDivClass(field,fieldsLangth);
   }
 
   onBulkUpdate(){
