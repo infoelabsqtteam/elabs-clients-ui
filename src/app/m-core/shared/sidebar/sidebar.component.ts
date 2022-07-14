@@ -126,5 +126,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 setAppId(module){
   this.storageService.setModule(module.name);
 }
+favrotedata;
+favroteitem(event) {
+  event.target.classList.toggle("active");
+}
 
 }
