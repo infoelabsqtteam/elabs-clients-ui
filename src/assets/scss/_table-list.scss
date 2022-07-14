@@ -10,15 +10,15 @@
     
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {
-            th { cursor: pointer;vertical-align:middle;padding:5px;position:relative;background:#fafafa;
-                .heading {font-weight:500;}
+            th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border:none;
+                .heading {font-weight:500;position:relative;}
                 .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;}
-                .fas { display:none;transition:all 1s;position:absolute;right:5px;top:5px;}
+                .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
                     .fas { display:inline-block;}   
                 }
             }
-            td {padding:5px;}
+            td {padding:5px 10px;border-top:none;border:none;}
         }
         .grid-button {background:rgba(0,0,0,0.1);}
     }
