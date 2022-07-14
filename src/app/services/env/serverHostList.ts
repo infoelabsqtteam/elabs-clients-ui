@@ -515,7 +515,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Vertical", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", "title": "Multani Sit", "google_map": "false", "menu_type": "Vertical", "folder": "multani-sit", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -531,7 +531,6 @@ export const serverHostList = [
       "form_label_bg": "#E4F2FA"
     }
   },
-  
   {
     "clientEndpoint": "app.multani.com", "serverEndpoint": "http://server.multani.com:30051", "title": "Multani Prod", "google_map": "false", "menu_type": "Vertical", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
