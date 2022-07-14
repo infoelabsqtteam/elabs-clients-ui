@@ -1222,10 +1222,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   getDivClass(field) {
     const fieldsLangth = this.headElements.length;
-    // const fieldName = field.field_class;
-    // if(fieldName != null && fieldName.length > 1) {
-    //   this.fixedcolwidth
-    // }
     return this.commonFunctionService.getFixedDivClass(field,fieldsLangth);
   }
 

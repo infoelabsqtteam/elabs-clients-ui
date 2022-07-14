@@ -120,6 +120,7 @@ export class GridSelectionModalComponent implements OnInit {
       'strikeThrough']
     ]
   };
+  fixedcolwidth = 150;
 
   constructor(
     private modalService: ModelService,
@@ -644,6 +645,12 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }
   }
+
+  getDivClass(field) {
+    const fieldsLangth = this.listOfGridFieldName.length;
+    return this.CommonFunctionService.getFixedDivClass(field,fieldsLangth);
+  }
+
   applyOnGridFilter(field) {
     if (field && field.etc_fields && field.etc_fields.on_grid_filter === 'false') {
       return false;
