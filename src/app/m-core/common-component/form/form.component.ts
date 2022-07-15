@@ -826,7 +826,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                     this.mendetoryIfFieldList.push(modifyData);
                   }
                   //disable if handling
-                  if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null)){                          
+                  if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null) || (data.disable_on_add && data.disable_on_add != '' && data.disable_on_add != undefined && data.disable_on_add != null)){                          
                     this.disableIfFieldList.push(modifyData);
                   }                      
                   if(element.type == 'list_of_fields'){
@@ -905,7 +905,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         this.mendetoryIfFieldList.push(modifyData);
                       }
                       //disable if handling
-                      if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null)){                          
+                      if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null) || (data.disable_on_add && data.disable_on_add != '' && data.disable_on_add != undefined && data.disable_on_add != null)){                          
                         this.disableIfFieldList.push(modifyData);
                       }                     
                       
@@ -971,7 +971,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.customValidationFiels.push(element);
         }
         //disable if handling
-        if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null)){                  
+        if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null) || (element.disable_on_add && element.disable_on_add != '' && element.disable_on_add != undefined && element.disable_on_add != null)){                  
           this.disableIfFieldList.push(element);
         }
         // if(element.type && element.type == 'pdf_view'){
@@ -998,7 +998,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(element.mandatory_if && element.mandatory_if != ''){
             this.mendetoryIfFieldList.push(element);
           }
-          if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null)){                  
+          if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null) || (element.disable_on_add && element.disable_on_add != '' && element.disable_on_add != undefined && element.disable_on_add != null)){                  
             this.disableIfFieldList.push(element);
           }
         });

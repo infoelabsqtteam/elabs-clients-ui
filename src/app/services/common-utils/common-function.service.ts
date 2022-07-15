@@ -298,32 +298,19 @@ export class CommonFunctionService {
       if (tableField.disable_if && tableField.disable_if != '') {
         return this.checkIfCondition(tableField.disable_if, formValue)
       }
+     
       if (updateMode) {
         if (tableField.disable_on_update != undefined && tableField.disable_on_update) {
-          if (tableField.can_update_if != undefined && tableField.can_update_if.has_role != null && tableField.can_update_if.has_role != undefined && Array.isArray(tableField.can_update_if.has_role) && tableField.can_update_if.has_role.length > 0) {
-            let check = 0;
-            for (let index = 0; index < tableField.can_update_if.has_role.length; index++) {
-              const element = tableField.can_update_if.has_role[index];
-              if (this.is_check_role(element._id)) {
-                check = 1;
-                break;
-              } else {
-                check = 0;
-              }
-            }
-            if(check == 1){
-              return false;
-            }else{
-              return true;
-            }
-          } else {
-            return true;
-          }
+          return this.checkCanUpdateIf(tableField);
         } else {
           return false;
         }
       } else {
-        return false;
+        if (tableField.disable_on_add != undefined && tableField.disable_on_add) {
+          return this.checkCanUpdateIf(tableField);
+        }else{
+          return false;
+        }
       }
     }
   }
@@ -425,6 +412,29 @@ export class CommonFunctionService {
       return true;
     }
   }
+
+  checkCanUpdateIf(tableField){
+    if (tableField.can_update_if != undefined && tableField.can_update_if.has_role != null && tableField.can_update_if.has_role != undefined && Array.isArray(tableField.can_update_if.has_role) && tableField.can_update_if.has_role.length > 0) {
+      let check = 0;
+      for (let index = 0; index < tableField.can_update_if.has_role.length; index++) {
+        const element = tableField.can_update_if.has_role[index];
+        if (this.is_check_role(element._id)) {
+          check = 1;
+          break;
+        } else {
+          check = 0;
+        }
+      }
+      if(check == 1){
+        return false;
+      }else{
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
   openTreeModal(fieldLabel, ddnField, modalName) {
     const alertData = {
       "event": true,
