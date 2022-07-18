@@ -3,15 +3,6 @@
         <app-sidebar-search (sidebarSearch)="sidebarSearchResponce($event)"></app-sidebar-search>
     </div>
     <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
-        <!-- <div class="mat-tab-label-container pt-2">
-            <div class="mat-tab-list">
-                <div class="mat-tab-labels">
-                    <div class="mat-tab-label" *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
-                        <div class="mat-tab-label-content cursor-pointer" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }}<span *ngIf="selectTabIndex == i">({{total}})</span></div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="tablist">
           <mat-tab-group animationDuration="0ms">
             <mat-tab *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
@@ -20,6 +11,7 @@
                     {{ gateTabName(tab) }}
                     <!-- <span *ngIf="selectTabIndex == i">({{gridCountByTab[tab.tab_name]}})</span> -->
                     <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span>
+                    <span class="favibtn" (click)="favroteitem($event)"><mat-icon>grade</mat-icon></span>
                 </div>
               </ng-template>
             </mat-tab>

@@ -62,6 +62,10 @@
 
 .mat-tab-header {
     .mat-tab-label {height:35px;padding:0 10px;min-width:auto;
+        .favibtn {
+            mat-icon {font-size:13px;color:#ddd;height:auto;}
+            .active {color:var(--footerbg) !important}
+        }
         .mat-tab-label-content {font-size:13px;font-family:$roboto;}
     }
     .mat-tab-label-active {border-bottom:2px solid #4285f4;opacity:1 !important;}

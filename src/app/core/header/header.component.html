@@ -68,7 +68,13 @@
             </div>
           </div>
         </div>
-
+        <li class="nav-item avatar mx-1 position-relative">
+          <button mat-icon-button [matMenuTriggerFor]="notify"><mat-icon>notifications</mat-icon> <span class="notifybadge">25</span></button>
+          <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu notificationdrowdown">
+            <button mat-menu-item *ngFor="let data of notificationlist; let i = index">{{data.title}}</button>
+            <button mat-button color="primary" class="w-100">All Notificatoin <mat-icon>chevron_right</mat-icon></button>
+          </mat-menu>
+        </li>
         <li class="nav-item avatar mx-1" (click)="chartModel()"><button mat-icon-button><mat-icon>bar_chart</mat-icon></button></li>
         <li class="nav-item avatar mx-1" (click)="shortcutinfo()"><button mat-icon-button><mat-icon>info</mat-icon></button></li>
         <li class="nav-item avatar mx-1">
@@ -84,6 +90,7 @@
             </div>
             <button mat-menu-item (click)="gitInfo()"><mat-icon class="mr-2">info</mat-icon> Version: {{gitVersion}}</button>
             <button mat-menu-item routerLink="/createpwd"><mat-icon class="mr-2">lock_clock</mat-icon> Change Password</button>
+            <button mat-menu-item routerLink="/notification-setting"><mat-icon class="mr-2">settings</mat-icon> Notificatoin Setting</button>
             <button mat-menu-item (click)="feedback()"><mat-icon class="mr-2">forum</mat-icon> Feedback</button>
             <button mat-menu-item (click)="logOut()"><mat-icon class="mr-2">power_settings_new</mat-icon> Log out</button>
           </mat-menu>

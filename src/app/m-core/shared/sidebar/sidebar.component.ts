@@ -21,7 +21,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   AllModuleList:any=[];
   modal:any='';
   sidebar2 = true;
-   
+  favrotedata;
+
+  
   @Output() moduleSelect = new EventEmitter();
 
   constructor( 
@@ -126,9 +128,19 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 setAppId(module){
   this.storageService.setModule(module.name);
 }
-favrotedata;
-favroteitem(event) {
-  event.target.classList.toggle("active");
+
+
+favroteitem() {
+  const useremail = this.storageService.GetUserInfo().email;
+  console.log(useremail);
+
 }
+
+
+
+
+
+
+
 
 }

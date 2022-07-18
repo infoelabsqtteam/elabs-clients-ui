@@ -64,6 +64,19 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     showsearchmenu = false;
     module:boolean=true;
 
+    notificationlist = [
+        {'title': 'Notificatoin list 1'},
+        {'title': 'Notificatoin list 2'},
+        {'title': 'Notificatoin list 3'},
+        {'title': 'Notificatoin list 4'},
+        {'title': 'Notificatoin list 5'},
+        {'title': 'Notificatoin list 6'},
+        {'title': 'Notificatoin list 7'},
+        {'title': 'Notificatoin list 8'},
+        {'title': 'Notificatoin list 9'},
+        {'title': 'Notificatoin list 10'}
+    ]
+
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
     }

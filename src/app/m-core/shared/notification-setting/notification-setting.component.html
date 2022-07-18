@@ -1,0 +1,32 @@
+<section class="notificationSetting card my-3">
+    <div class="card-header d-flex align-items-center">
+        <mat-icon class="mr-2">settings</mat-icon>
+        <strong class="h6 m-0 text-muted">Notificatoin Setting</strong>
+    </div>
+
+    <div class="card-body">
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let item of AllModuleList; let i = index">
+                <mat-expansion-panel-header>
+                    <mat-panel-title><strong class="h6 m-0 text-muted">{{ item.title }}</strong></mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngFor="let subitem of item.menu_list">
+                    <div *ngIf="!hasSubMenu(subitem)" class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                        <h4 class="m-0">{{ subitem.label }}</h4>
+                        <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="1"><label class="custom-control-label" for="1"></label></div>
+                    </div>
+
+                    <mat-accordion class="notificationmenu">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header class=" border-bottom pb-2 mb-2" *ngIf="hasSubMenu(subitem)"><h4 class="m-0">{{ subitem.label }}</h4></mat-expansion-panel-header>
+                            <div class="d-flex justify-content-between mb-2" *ngFor="let subSubitem of subitem.submenu">
+                                <small class="text-muted">{{ subSubitem.label }}</small>
+                                <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="customSwitch2"><label class="custom-control-label" for="customSwitch2"></label></div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</section>

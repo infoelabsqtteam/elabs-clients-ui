@@ -2,3 +2,30 @@
 .setting-icon .material-icons-outlined{font-size:35px!important;}
 .modal .modal-full-height{width:250px!important;}
 .modal .modal-full-height .modal-body:hover{overflow-y:inherit;}
+
+.notifybadge {position:absolute;top:0;right:0;background:red;color:#fff;width:18px;height:18px;border-radius:100%;line-height:18px;font-size:10px;}
+.mat-menu-panel.notificationdrowdown {min-width:230px;}
+
+
+
+.notificationSetting {
+    .mat-expansion-panel-spacing {margin:0;}
+    .notificationmenu {
+        .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;}
+        .mat-expansion-panel-header {padding:0 20px 0 0;height:40px;border-radius:0;}
+        .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
+        .mat-expansion-panel-body {padding:0 0px 16px;}
+        small {font-size:90%;}
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+

@@ -236,7 +236,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
   }   
 
-  
+  favrotedata;
+  favroteitem(event) {
+    event.target.classList.toggle("active");
+  }
 
 }
 

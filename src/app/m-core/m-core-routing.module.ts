@@ -15,6 +15,7 @@ import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { DriveHomeComponent } from './document/drive-home/drive-home.component';
 import { PageNotFoundComponent } from '../core/error/page-not-found.component';
 import { ReportFormComponent } from './report/report-form/report-form.component';
+import { NotificationSettingComponent } from './shared/notification-setting/notification-setting.component';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
@@ -31,6 +32,7 @@ const elabsRoutes : Routes = [
                 { path : 'diff_html', component:DiffHtmlComponent},
                 { path : 'vdr', component: DriveHomeComponent },
                 { path : 'report', component: ReportFormComponent },
+                { path : 'notification-setting', component: NotificationSettingComponent },
                 { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
             ],
             runGuardsAndResolvers: 'always'
