@@ -10,6 +10,7 @@ import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.en
 import { NotificationService } from "src/app/services/notify/notification.service";
 import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
+import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 
 
 @Component({
@@ -50,6 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     currentPage: any;
     logedin: boolean = false;
     gitVersionSubscription: any;
+    userNotificationSubscription:any;
     gitVersion: any;
 
     logoPath = ''
@@ -64,18 +66,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     showsearchmenu = false;
     module:boolean=true;
 
-    notificationlist = [
-        {'title': 'Notificatoin list 1'},
-        {'title': 'Notificatoin list 2'},
-        {'title': 'Notificatoin list 3'},
-        {'title': 'Notificatoin list 4'},
-        {'title': 'Notificatoin list 5'},
-        {'title': 'Notificatoin list 6'},
-        {'title': 'Notificatoin list 7'},
-        {'title': 'Notificatoin list 8'},
-        {'title': 'Notificatoin list 9'},
-        {'title': 'Notificatoin list 10'}
-    ]
+    notificationlist = []
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -115,7 +106,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         private modelService: ModelService,
         private authService: AuthService,
         private notificationService: NotificationService,
-        public envService: EnvService
+        public envService: EnvService,
+        private commonfunctionService:CommonFunctionService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -123,6 +115,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.gitVersionSubscription = this.dataShareService.gitVirsion.subscribe(data => {
             if (data && data['git.build.version']) {
                 this.gitVersion = data['git.build.version'];
+            }
+        });
+        this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
+            if (data && data.data && data.data.length > 0) {
+                this.setUserNotification(data.data);
             }
         });
 
@@ -288,7 +285,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.getMenuByModule()
+        this.getMenuByModule();
+        this.commonfunctionService.getUserNotification(this.userInfo);
     }
 
     getMenuByModule() {
@@ -358,7 +356,20 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.getTemplateByMenu = false;
         }
     }
-
+    setUserNotification(data){
+        this.notificationlist = data;
+    }
+    getUnreadNotificationLength(){
+        let length = 0;
+        if(this.notificationlist && this.notificationlist.length > 0){
+            this.notificationlist.forEach(element => {
+                if(element.seenStatus == 'unread'){
+                    length = length + 1;
+                }
+            });
+        }
+        return length;
+    }
 
     onLogout() {
         this.logOut();

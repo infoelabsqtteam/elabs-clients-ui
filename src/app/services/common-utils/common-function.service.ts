@@ -3009,4 +3009,19 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
   });
    return listOfObjects;
   }
+
+  getUserNotification(user){
+    const userId = user._id;
+    if(userId && userId != null && userId != ''){
+      const criteria = "userId._id;eq;"+userId+";STATIC";
+      const payload = this.getPaylodWithCriteria('user_notification','',[criteria],{});
+      payload['pageNo'] = 0;
+      payload['pageSize'] = 50;
+      const callPayload = {
+        "path" : null,
+        "data": payload
+      }
+      this.apiService.getUserNotification(callPayload);
+    }
+  }
 }

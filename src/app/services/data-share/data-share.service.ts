@@ -61,6 +61,7 @@ export class DataShareService {
   chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
 
   favouriteData:EventEmitter<any> = new EventEmitter<any>();
+  userNotification:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -249,5 +250,8 @@ export class DataShareService {
   }
   setFavouritData(responce){
     this.favouriteData.emit(responce);
+  }
+  shareUserNotification(responce){
+    this.userNotification.emit(responce);
   }
 }
