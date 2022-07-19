@@ -122,6 +122,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.setUserNotification(data.data);
             }
         });
+        this.dataShareService.saveResponceData.subscribe(responce =>{
+            this.setSaveResponce(responce);
+        })
 
 
         this.AllModuleList = this.storageService.GetModules();
@@ -204,6 +207,15 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.subscription.unsubscribe();
         if (this.menuDataSubscription) {
             this.menuDataSubscription.unsubscribe();
+        }
+    }
+    setSaveResponce(saveFromDataRsponce){
+        if (saveFromDataRsponce) {
+            if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+                if (saveFromDataRsponce.success == 'success') {
+                    this.commonfunctionService.getUserNotification(this.userInfo);
+                }
+            }
         }
     }
     ngAfterViewInit(): void {
@@ -369,6 +381,18 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             });
         }
         return length;
+    }
+
+    readNotification(index){
+        let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
+        if(notification.seenStatus == 'unread'){
+            notification['seenStatus'] = 'read';
+        }
+        const payload = {
+            'curTemp' : 'user_notification',
+            'data' : notification
+        }
+        this.apiService.SaveFormData(payload);
     }
 
     onLogout() {
