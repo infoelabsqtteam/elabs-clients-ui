@@ -59,8 +59,7 @@ export class DataShareService {
   getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
   getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
   chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
-
-  favouriteData:EventEmitter<any> = new EventEmitter<any>();
+  userNotification:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -247,7 +246,7 @@ export class DataShareService {
   setChartModelShowHide(value){
     this.chartModelShowHide.emit(value);
   }
-  setFavouritData(responce){
-    this.favouriteData.emit(responce);
+  shareUserNotification(responce){
+    this.userNotification.emit(responce);
   }
 }

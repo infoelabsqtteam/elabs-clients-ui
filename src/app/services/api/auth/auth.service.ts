@@ -94,6 +94,7 @@ export class AuthService {
           this.dataShareService.restSettingModule('logged_in');
           this.apiService.gitVersion('');
           this.commonFunctionService.getUserPrefrerence(respData.user);
+          this.commonFunctionService.getUserNotification(respData.user);
           this.redirectionWithMenuType();                                  
         } else {
             this.envService.setRequestType('PUBLIC');
@@ -110,6 +111,7 @@ export class AuthService {
       }
     )
   }
+  
   redirectionWithMenuType(){
     const menuType = this.storageService.GetMenuType()
     if(menuType == 'Horizontal'){

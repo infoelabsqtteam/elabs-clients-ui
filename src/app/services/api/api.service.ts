@@ -567,4 +567,19 @@ constructor(
     ) 
   }
 
+  getUserNotification(payload){
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+      (respData) => {
+          this.dataShareService.shareUserNotification(respData)
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
+  resetUserNotification(){
+    this.dataShareService.shareUserNotification([])
+  }
+
 }
