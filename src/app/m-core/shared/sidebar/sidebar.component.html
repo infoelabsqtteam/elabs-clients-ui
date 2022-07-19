@@ -16,12 +16,12 @@
 
             <div *ngIf="hasMenu(item)" class="menulist" aria-expanded="false">
               <div class="menuitems" *ngFor="let subitem of item.menu_list">
-                <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }} <span class="favibtn" (click)="favroteitem()"><mat-icon>grade</mat-icon></span></a>
+                <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }} <span class="favibtn" (click)="addFebMenu(subitem)"><mat-icon>grade</mat-icon></span></a>
                 <mat-accordion>
                   <mat-expansion-panel>
                     <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId">{{ subitem.label }}</mat-expansion-panel-header>
                     <div matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
-                      <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }} <span class="favibtn" (click)="favroteitem()"><mat-icon>grade</mat-icon></span></small>
+                      <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }} <span class="favibtn" (click)="addFebMenu(subSubitem)"><mat-icon>grade</mat-icon></span></small>
                     </div>
                   </mat-expansion-panel>
                 </mat-accordion>

@@ -8,9 +8,6 @@ import { StorageService } from 'src/app/services/storage/storage.service';
   ]
 })
 export class NotificationSettingComponent implements OnInit {
-  panelOpenState = false;
-  menulist = ['Menu 1', 'Menu 2', 'Menu 3', 'Menu 4', 'Menu 5']
-
 
   AllModuleList:any=[];
 

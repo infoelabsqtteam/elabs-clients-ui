@@ -2839,9 +2839,7 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
   if(this.isGridFieldExist(tab,"api_params_criteria")){
     grid_api_params_criteria = tab.grid.api_params_criteria;
   }
-  const data = this.getPaylodWithCriteria(currentMenu.name,'',grid_api_params_criteria,'');
-  data['pageNo'] = page - 1;
-  data['pageSize'] = this.itemNumOfGrid;    
+  const data = this.setPageNoAndSize(this.getPaylodWithCriteria(currentMenu.name,'',grid_api_params_criteria,''),page);     
   this.getfilterCrlist(headElements,filterForm).forEach(element => {
     data.crList.push(element);
   });
@@ -2858,6 +2856,11 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
     path: null
   }
   return getFilterData;
+}
+setPageNoAndSize(payload,page){
+  payload['pageNo'] = page - 1;
+  payload['pageSize'] = this.itemNumOfGrid; 
+  return payload;
 }
 setPageNumverAndSize(payload,page,){
   payload['pageNo'] = page - 1;
@@ -3008,5 +3011,52 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     listOfObjects.push(object);
   });
    return listOfObjects;
+  }
+
+  getUserPrefrerence(user) {
+    let criteria = "userId._id;eq;"+user._id+";STATIC";
+    let myData = this.setPageNoAndSize(this.getPaylodWithCriteria("user_preference", "", [criteria], {}),1);
+    const payloadData = {
+      path: null,
+      data : myData
+    }
+    this.apiService.getFavouriteData(payloadData);
+  }
+  updateUserPreference(data,fieldName){
+    let refObj:any = this.getReferenceObject(data);
+    let userPreference = this.storageService.getUserPreference();
+    if(userPreference && userPreference._id && userPreference._id != null && userPreference._id != ''){
+      let fieldData = userPreference[fieldName];
+      if(fieldData && fieldData.length > 0){
+        let matchIndex = -1;
+        for (let index = 0; index < fieldData.length; index++) {
+          const element = fieldData[index];
+          if(element._id == refObj._id){
+            
+          }else{
+
+          }          
+        }
+        if(matchIndex  > -1){
+          fieldData.splice(matchIndex);
+        }else{
+
+        }
+        userPreference[fieldName] = fieldData;
+      }
+    }else{
+
+    }    
+  }
+  getReferenceObject(obj){
+    let ref = {}
+    ref["_id"]=obj._id;
+    ref["code"] = obj.code;
+    ref["name"] = obj.name;
+    if(obj.version != null){
+      ref["version"] = obj.version
+    }
+    return ref;
+    
   }
 }

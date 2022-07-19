@@ -1,0 +1,22 @@
+<section class="notificationSetting card my-3">
+    <div class="card-header d-flex align-items-center">
+        <mat-icon class="mr-2">sort</mat-icon>
+        <strong class="h6 m-0 text-muted">All Notificatoin List</strong>
+    </div>
+
+    <div class="card-body p-0 notificationdetails">
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let item of AllModuleList; let i = index">
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="align-items-center">
+                        <mat-icon class="mr-2">notifications</mat-icon>
+                        <strong class="h6 m-0 text-muted"> {{ item.title }}</strong>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div>
+                    <p class="muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</section>

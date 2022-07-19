@@ -7,6 +7,7 @@ import { EnvService } from '../env/env.service';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
 import { response } from 'express';
 import { ModelService } from '../model/model.service';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ constructor(
   private envService:EnvService,
   private router:Router,
   private modalService: ModelService, 
+  private stroageService:StorageService
 ) { }
   getStatiData(payloads){    
     // let api = this.envService.getApi('GET_STATIC_DATA');
@@ -554,7 +556,10 @@ constructor(
     let api = this.envService.getApi('GET_GRID_DATA');
     this.http.post(api + '/' + payload.path, payload.data).subscribe(
       (respData) => {
-          this.dataShareService.setFavouritData(respData)
+        if(respData && respData['data'] && respData['data'].length > 0){
+          const userPreference = respData['data'][0];
+          this.stroageService.setUserPreference(userPreference);
+        }          
         },
       (error) => {
           console.log(error);

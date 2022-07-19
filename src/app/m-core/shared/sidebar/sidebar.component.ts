@@ -7,6 +7,9 @@ import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { ApiService } from '../../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,8 +24,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   AllModuleList:any=[];
   modal:any='';
   sidebar2 = true;
+  pageNumber: number = 0;
+  itemNumOfGrid: any = 25;
   favrotedata;
-
+  favDataSubscription
   
   @Output() moduleSelect = new EventEmitter();
 
@@ -31,9 +36,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private storageService:StorageService,
     private permissionService:PermissionService, 
     private notificationService: NotificationService,
+    private commonFunctionService:CommonFunctionService,
+    private dataShareService:DataShareService,
     private apiService:ApiService
   ) {
-   
+    
   }
 
   ngOnInit(): void {
@@ -128,19 +135,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 setAppId(module){
   this.storageService.setModule(module.name);
 }
-
-
-favroteitem() {
-  const useremail = this.storageService.GetUserInfo().email;
-  console.log(useremail);
-
+addFebMenu(menu){
+  this.commonFunctionService.updateUserPreference(menu,'favoriteMenus');
 }
-
-
-
-
-
-
-
 
 }

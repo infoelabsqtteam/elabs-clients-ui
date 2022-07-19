@@ -38,6 +38,7 @@ export class StorageService {
   VERIFY_TYPE:string = "VERIFY_TYPE";
   MODULE:string = "MODULE";
   TEAM_NAME:string = "TEAM_NAME";
+  USER_PREFERENCE:any;
   
   
   constructor(private http: HttpClient) { }
@@ -47,6 +48,12 @@ export class StorageService {
   }
   getModule(){
     return localStorage.getItem('MODULE');
+  }
+  setUserPreference(user_preference:any){
+    localStorage.setItem("USER_PREFERENCE",JSON.stringify(user_preference));
+  }
+  getUserPreference(){
+    return JSON.parse(JSON.stringify(localStorage.getItem('USER_PREFERENCE')));
   }
 
   setAppId(appId:string){
