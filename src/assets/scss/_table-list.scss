@@ -7,7 +7,7 @@
 .tableFixHead {overflow:$auto;height:$calc3;}
 .table table {width:100%;font-size:13px;border:1px solid #ccc !important;
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
-        tr {
+        tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border:none;
                 .heading {font-weight:500;position:relative;}
                 .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;}
@@ -16,7 +16,7 @@
                     .fas { display:inline-block;}   
                 }
             }
-            td {padding:5px 10px;border-top:none;border:none;}
+            td {padding:5px 10px;border-top:none;border-bottom:none;}
         }
         .grid-button {background:rgba(0,0,0,0.1);}
     }
