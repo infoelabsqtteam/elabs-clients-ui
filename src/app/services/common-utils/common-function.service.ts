@@ -3023,7 +3023,21 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     this.apiService.getFavouriteData(payloadData);
   }
   updateUserPreference(data,fieldName){
+    let payloadData = this.getUserPreferenceObj(data,fieldName);
+    let payload = {
+      "curTemp" : "user_preference",
+      "data" : payloadData
+    }
+    this.apiService.SaveFormData(payload);
+  }
+  getUserPreferenceByFieldName(fieldName){
+    let userPreference = this.storageService.getUserPreference();
+    return userPreference[fieldName];
+  }
+
+  getUserPreferenceObj(data,fieldName){
     let refObj:any = this.getReferenceObject(data);
+    let uRef = {};
     let userPreference = this.storageService.getUserPreference();
     if(userPreference && userPreference._id && userPreference._id != null && userPreference._id != ''){
       let fieldData = userPreference[fieldName];
@@ -3032,21 +3046,30 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
         for (let index = 0; index < fieldData.length; index++) {
           const element = fieldData[index];
           if(element._id == refObj._id){
-            
-          }else{
-
-          }          
+            matchIndex = index;
+            break;
+          }         
         }
         if(matchIndex  > -1){
           fieldData.splice(matchIndex);
         }else{
-
-        }
-        userPreference[fieldName] = fieldData;
+          fieldData.push(refObj);
+        }        
+      }else{
+        fieldData = [];
+        fieldData.push(refObj);
       }
+      userPreference[fieldName] = fieldData;
+      uRef = userPreference;
     }else{
-
+      let user = this.storageService.GetUserInfo();
+      let userRef = this.getReferenceObject(user);
+      let dataList = [];
+      dataList.push(refObj);
+      uRef['userId'] = userRef;
+      uRef[fieldName] = dataList;
     }    
+    return uRef
   }
   getReferenceObject(obj){
     let ref = {}
@@ -3062,9 +3085,7 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     const userId = user._id;
     if(userId && userId != null && userId != ''){
       const criteria = "userId._id;eq;"+userId+";STATIC";
-      const payload = this.getPaylodWithCriteria('user_notification','',[criteria],{});
-      payload['pageNo'] = 0;
-      payload['pageSize'] = 50;
+      const payload = this.setPageNoAndSize(this.getPaylodWithCriteria('user_notification','',[criteria],{}),1);
       const callPayload = {
         "path" : null,
         "data": payload

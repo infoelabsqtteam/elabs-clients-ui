@@ -38,9 +38,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private commonfunctionService:CommonFunctionService
   ) {
     
+    this.dataShareService.saveResponceData.subscribe(responce => {
+      this.setSaveResponce(responce);
+    })
   }
 
   ngOnInit(): void {
@@ -52,7 +56,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     
   }
 
-  
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+        if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+            if (saveFromDataRsponce.success == 'success') {
+                this.commonfunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+            }
+        }
+    }
+}
 
   /**
    * Initialize
@@ -137,6 +149,22 @@ setAppId(module){
 }
 addFebMenu(menu){
   this.commonFunctionService.updateUserPreference(menu,'favoriteMenus');
+}
+checkFebMenuAddOrNot(menu){
+  let menuId = menu._id;
+  let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
+  if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
+    for (let index = 0; index < userFebMenu.length; index++) {
+      const element = userFebMenu[index];
+      if(element._id == menuId ){
+        return true;
+      }else{
+        return false;
+      }      
+    }
+  }else{
+    return false;
+  }
 }
 
 }
