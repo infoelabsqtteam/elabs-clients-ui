@@ -2964,8 +2964,8 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
     this.apiService.getFavouriteData(payloadData);
   }
-  updateUserPreference(data,fieldName){
-    let payloadData = this.getUserPreferenceObj(data,fieldName);
+  updateUserPreference(data,fieldName,parent?){
+    let payloadData = this.getUserPreferenceObj(data,fieldName,parent);
     let payload = {
       "curTemp" : "user_preference",
       "data" : payloadData
@@ -2981,8 +2981,11 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return data;
   }
 
-  getUserPreferenceObj(data,fieldName){
-    let refObj:any = this.getReferenceObject(data);
+  getUserPreferenceObj(data,fieldName,parent?){
+    let refObj:any = data;
+    if(parent != ''){
+      refObj = parent;
+    }
     let uRef = {};
     let userPreference = this.storageService.getUserPreference();
     if(userPreference && userPreference._id && userPreference._id != null && userPreference._id != ''){
@@ -2997,9 +3000,44 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
           }         
         }
         if(matchIndex  > -1){
-          fieldData.splice(matchIndex);
+          if(parent != ''){
+            let submenu = fieldData[matchIndex].submenu;
+            let submenuMatchIndex = -1;
+            if(submenu && submenu.length > 0){
+              for (let j = 0; j < submenu.length; j++) {
+                const subMenu = submenu[j];
+                if(subMenu._id == data._id){
+                  submenuMatchIndex = j;
+                  break;
+                }         
+              }
+            }
+            if(submenuMatchIndex > -1){
+              submenu.splice(submenuMatchIndex);
+              if(fieldData[matchIndex].submenu.length == 0){
+                fieldData.splice(matchIndex);
+              }else{
+                fieldData[matchIndex].submenu = submenu;
+              }
+            }else{
+              if(submenu.length > 0){
+                fieldData[matchIndex].submenu.push(data);
+              }else{
+                fieldData[matchIndex].submenu = []
+                fieldData[matchIndex].submenu.push(data);
+              }
+            }
+          }else{
+            fieldData.splice(matchIndex);
+          }
         }else{
-          fieldData.push(refObj);
+          if(parent != ''){
+            refObj['submenu'] = [];
+            refObj['submenu'].push(data);
+            fieldData.push(refObj);
+          }else{
+            fieldData.push(refObj);
+          }
         }        
       }else{
         fieldData = [];

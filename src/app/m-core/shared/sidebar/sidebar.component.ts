@@ -147,22 +147,46 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 setAppId(module){
   this.storageService.setModule(module.name);
 }
-addFebMenu(menu){
-  this.commonFunctionService.updateUserPreference(menu,'favoriteMenus');
+addFebMenu(menu,parent){
+  this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
 }
-checkFebMenuAddOrNot(menu){
+checkFebMenuAddOrNot(menu,parent){
   let menuId = menu._id;
+  if(parent != ''){
+    menuId = parent._id;
+  }
   let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
   if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
     let match = -1;
     for (let index = 0; index < userFebMenu.length; index++) {
       const element = userFebMenu[index];
       if(element._id == menuId ){
-        match = 0;
+        match = index;
+        break;
       }     
     }
     if(match > -1){
-      return true;
+      if(parent != ''){
+        const submenu = userFebMenu[match]['submenu'];
+        let subMatchIndex = -1;
+        if(submenu && submenu.length > 0){
+          for (let j = 0; j < submenu.length; j++) {
+            const subMenu = submenu[j];
+            if(subMenu._id == menu._id){
+              subMatchIndex = j;
+              break;
+            }
+            
+          }
+        }
+        if(subMatchIndex > -1){
+          return true
+        }else{
+          return false;
+        }
+      }else{
+        return true;
+      }      
     }else{
       return false;
     }
