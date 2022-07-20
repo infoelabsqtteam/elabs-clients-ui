@@ -53,7 +53,7 @@ export class StorageService {
     localStorage.setItem("USER_PREFERENCE",JSON.stringify(user_preference));
   }
   getUserPreference(){
-    return JSON.parse(JSON.stringify(localStorage.getItem('USER_PREFERENCE')));
+    return JSON.parse(localStorage.getItem('USER_PREFERENCE'));
   }
 
   setAppId(appId:string){

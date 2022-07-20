@@ -36,8 +36,8 @@
                   .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
                   .favibtn { position:absolute;right:5px;top:5px;size:13px;color:#ddd;cursor:pointer;
                     mat-icon {width:auto;height:auto;font-size:18px;}
-                    .active {color:var(--footerbg) !important}
                   }
+                  .favibtn.active mat-icon {color:var(--footerbg) !important;}
                   .submenutitle {padding:0;padding-right:2px;height:auto;}
                   .dropdownmenulist {opacity:0.8;font-size:13px;padding:3px 0;display:block;cursor:pointer;padding-left:10px;position:relative;}
                 }

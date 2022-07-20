@@ -1918,55 +1918,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   
   
 
-  buggetForcastCalc(templateForm: FormGroup){
-    let templateValue = templateForm.getRawValue();
-    let actualCurYr = templateValue.actual_current;
-    let actualLastYr = templateValue.actuals;
-    let budget = templateValue.this_year;
-    let growthpers = {};
-    let budgetpers = {};
-    let value = [];
-    let value1 = [];
-    Object.keys(actualCurYr).forEach(key => {
-      let growthper=0;
-      let budgetper=0;
-      let actualCurYrMonth = actualCurYr[key];
-      let actualLastYrMonth = actualLastYr[key];
-      if(actualLastYrMonth != 0){
-        growthper = actualCurYrMonth/actualLastYrMonth;
-      }
-
-      let budgetcurYrMonth = budget[key];
-      if(budgetcurYrMonth != 0){
-        budgetper = actualCurYrMonth/budgetcurYrMonth;
-      }
-
-        growthpers[key] = growthper;
-        let obj = {
-          field: key, value: growthpers[key] 
-        }
-        value.push(obj)
-
-        budgetpers[key] = budgetper;
-        let obj1 = {
-          field: key, value: budgetpers[key] 
-        }
-        value1.push(obj1)
-    })
-    const fieldWithValueforgrowth = {
-      field: 'growth_per', value: value
-    }
-    fieldWithValueforgrowth.value.forEach(element => {
-        (<FormGroup>templateForm.controls[fieldWithValueforgrowth.field]).controls[element.field].patchValue(element.value);
-    })
-
-    const fieldWithValueforBudget = {
-      field: 'budget_per', value: value1
-    }
-    fieldWithValueforBudget.value.forEach(element => {
-        (<FormGroup>templateForm.controls[fieldWithValueforBudget.field]).controls[element.field].patchValue(element.value);
-    })
-  }
+  
 
   calculateParameterAmtOnInjection(data,rate,quantity){
             let totalInjection = data.no_of_injection;
@@ -2521,13 +2473,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   }
 
-  manufactured_as_customer(templateForm: FormGroup) {
-    (<FormGroup>templateForm.controls["sample_details"]).controls["mfg_by"].patchValue(templateForm.value.account.name);
-  }
-
-  supplied_as_customer(templateForm: FormGroup) {
-    (<FormGroup>templateForm.controls["sample_details"]).controls["supplied_by"].patchValue(templateForm.value.account.name);
-  }
+  
 
 
   getDecimalAmount(value) {
@@ -2559,13 +2505,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     return templateForm;
   }
 
-  setValueInVieldsForChild(templateForm: FormGroup, field: any) {
-    (<FormGroup>templateForm.controls['total_amount']).addControl('discount_amount', new FormControl(''))
-    field.value.forEach(element => {
-      (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
-    });
-    return templateForm;
-  }
+  
 
   claimAmountCalculation(field1, field2, field3) {
     let total = 0;
@@ -3093,5 +3033,69 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       }
       this.apiService.getUserNotification(callPayload);
     }
+  }
+
+  buggetForcastCalc(templateForm: FormGroup){
+    let templateValue = templateForm.getRawValue();
+    let actualCurYr = templateValue.actual_current;
+    let actualLastYr = templateValue.actuals;
+    let budget = templateValue.this_year;
+    let growthpers = {};
+    let budgetpers = {};
+    let value = [];
+    let value1 = [];
+    Object.keys(actualCurYr).forEach(key => {
+      let growthper=0;
+      let budgetper=0;
+      let actualCurYrMonth = actualCurYr[key];
+      let actualLastYrMonth = actualLastYr[key];
+      if(actualLastYrMonth != 0){
+        growthper = actualCurYrMonth/actualLastYrMonth;
+      }
+
+      let budgetcurYrMonth = budget[key];
+      if(budgetcurYrMonth != 0){
+        budgetper = actualCurYrMonth/budgetcurYrMonth;
+      }
+
+        growthpers[key] = growthper;
+        let obj = {
+          field: key, value: growthpers[key] 
+        }
+        value.push(obj)
+
+        budgetpers[key] = budgetper;
+        let obj1 = {
+          field: key, value: budgetpers[key] 
+        }
+        value1.push(obj1)
+    })
+    const fieldWithValueforgrowth = {
+      field: 'growth_per', value: value
+    }
+    fieldWithValueforgrowth.value.forEach(element => {
+        (<FormGroup>templateForm.controls[fieldWithValueforgrowth.field]).controls[element.field].patchValue(element.value);
+    })
+
+    const fieldWithValueforBudget = {
+      field: 'budget_per', value: value1
+    }
+    fieldWithValueforBudget.value.forEach(element => {
+        (<FormGroup>templateForm.controls[fieldWithValueforBudget.field]).controls[element.field].patchValue(element.value);
+    })
+  }
+  manufactured_as_customer(templateForm: FormGroup) {
+    (<FormGroup>templateForm.controls["sample_details"]).controls["mfg_by"].patchValue(templateForm.value.account.name);
+  }
+
+  supplied_as_customer(templateForm: FormGroup) {
+    (<FormGroup>templateForm.controls["sample_details"]).controls["supplied_by"].patchValue(templateForm.value.account.name);
+  }
+  setValueInVieldsForChild(templateForm: FormGroup, field: any) {
+    (<FormGroup>templateForm.controls['total_amount']).addControl('discount_amount', new FormControl(''))
+    field.value.forEach(element => {
+      (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
+    });
+    return templateForm;
   }
 }

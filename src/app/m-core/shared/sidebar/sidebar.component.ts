@@ -154,13 +154,17 @@ checkFebMenuAddOrNot(menu){
   let menuId = menu._id;
   let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
   if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
+    let match = -1;
     for (let index = 0; index < userFebMenu.length; index++) {
       const element = userFebMenu[index];
       if(element._id == menuId ){
-        return true;
-      }else{
-        return false;
-      }      
+        match = 0;
+      }     
+    }
+    if(match > -1){
+      return true;
+    }else{
+      return false;
     }
   }else{
     return false;
