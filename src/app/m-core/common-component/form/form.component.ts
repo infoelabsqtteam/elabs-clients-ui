@@ -21,6 +21,7 @@ import { CoreFunctionService } from 'src/app/services/common-utils/core-function
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
 import { json } from 'express';
+import { Subscription } from 'rxjs';
 
 declare var tinymce: any;
 
@@ -263,22 +264,22 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
   public style:string  = 'width: 100px, height: 100px, backgroundColor: cornflowerblue';
 
-  staticDataSubscriber;
-  gridDataSubscription;
-  tempDataSubscription;
-  saveResponceSubscription;
-  deleteGridRowResponceSubscription;
-  gridFilterDataSubscription;
-  typeaheadDataSubscription;
-  dinamicFormSubscription;
-  nestedFormSubscription;
-  navigationSubscription;
-  fileDataSubscription;
-  fileDownloadUrlSubscription;
-  gridSelectionOpenOrNotSubscription
-  dinamicFieldApiSubscription;
-  validationConditionSubscription;
-  nextFormSubscription;
+  staticDataSubscriber:Subscription;
+  gridDataSubscription:Subscription;
+  tempDataSubscription:Subscription;
+  saveResponceSubscription:Subscription;
+  deleteGridRowResponceSubscription:Subscription;
+  gridFilterDataSubscription:Subscription;
+  typeaheadDataSubscription:Subscription;
+  dinamicFormSubscription:Subscription;
+  nestedFormSubscription:Subscription;
+  navigationSubscription:Subscription;
+  fileDataSubscription:Subscription;
+  fileDownloadUrlSubscription:Subscription;
+  gridSelectionOpenOrNotSubscription:Subscription;
+  dinamicFieldApiSubscription:Subscription;
+  validationConditionSubscription:Subscription;
+  nextFormSubscription:Subscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';

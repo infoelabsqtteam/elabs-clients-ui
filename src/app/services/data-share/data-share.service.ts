@@ -60,6 +60,7 @@ export class DataShareService {
   getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
   chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
   userNotification:EventEmitter<any> = new EventEmitter<any>();
+  otherSaveCall:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -248,5 +249,8 @@ export class DataShareService {
   }
   shareUserNotification(responce){
     this.userNotification.emit(responce);
+  }
+  setOtherComponent(responce){
+    this.otherSaveCall.emit(responce);
   }
 }

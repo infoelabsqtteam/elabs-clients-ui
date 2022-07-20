@@ -215,6 +215,17 @@ constructor(
         }
     )
   }
+  saveOtherComponent(payload){
+    let api = this.envService.getApi('SAVE_FORM_DATA');
+    this.http.post(api+ '/' + payload.curTemp, payload.data).subscribe(
+      (respData) => {
+          this.dataShareService.setOtherComponent(respData)
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
+  }
   ResetSaveResponce(){
     this.dataShareService.setSaveResponce('')
   }

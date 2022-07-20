@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private commonfunctionService:CommonFunctionService
   ) {
     
-    this.dataShareService.saveResponceData.subscribe(responce => {
+    this.dataShareService.otherSaveCall.subscribe(responce => {
       this.setSaveResponce(responce);
     })
   }

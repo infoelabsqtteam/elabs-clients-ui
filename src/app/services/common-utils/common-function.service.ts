@@ -17,6 +17,7 @@ import { NotificationService } from '../notify/notification.service';
 import { ApiService } from '../api/api.service';
 import { ModelService } from '../model/model.service';
 import { EnvService } from '../env/env.service';
+import { I } from '@angular/cdk/keycodes';
 
 
 @Injectable({
@@ -2969,11 +2970,15 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       "curTemp" : "user_preference",
       "data" : payloadData
     }
-    this.apiService.SaveFormData(payload);
+    this.apiService.saveOtherComponent(payload);
   }
   getUserPreferenceByFieldName(fieldName){
+    let data = [];
     let userPreference = this.storageService.getUserPreference();
-    return userPreference[fieldName];
+    if(userPreference && userPreference[fieldName]){
+      data = userPreference[fieldName];
+    }
+    return data;
   }
 
   getUserPreferenceObj(data,fieldName){
