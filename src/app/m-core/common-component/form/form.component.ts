@@ -5208,12 +5208,13 @@ case 'populate_fields_for_report_for_new_order_flow':
             this.nextFormUpdateMode = false;
             this.close();
           }else{
+            this.donotResetField();
             this.custmizedFormValue = {};
             this.custmizedFormValue[fieldName] = fieldData;
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
 
-            this.donotResetField();
+            
             this.templateForm.reset()
             if(Object.keys(this.donotResetFieldLists).length > 0){
               this.updateDataOnFormField(this.donotResetFieldLists);
