@@ -5175,7 +5175,8 @@ case 'populate_fields_for_report_for_new_order_flow':
     const previousFormIndex = this.multipleFormCollection.length - 1;
     const previousFormCollection = this.multipleFormCollection[previousFormIndex];
     const previousFormField = previousFormCollection.current_field;
-    const currentFormValue = this.getFormValue(true)
+    // const currentFormValue = this.getFormValue(true)
+    const currentFormValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
     this.updateMode = false;
     const fieldName = previousFormField.field_name;
     delete currentFormValue[fieldName];    
