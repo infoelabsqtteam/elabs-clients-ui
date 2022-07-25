@@ -11,7 +11,6 @@
                     {{ gateTabName(tab) }}
                     <!-- <span *ngIf="selectTabIndex == i">({{gridCountByTab[tab.tab_name]}})</span> -->
                     <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span>
-                    <span class="favibtn" (click)="favroteitem($event)"><mat-icon>grade</mat-icon></span>
                 </div>
               </ng-template>
             </mat-tab>

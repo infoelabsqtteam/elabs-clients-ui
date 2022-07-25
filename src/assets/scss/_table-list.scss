@@ -64,8 +64,8 @@
     .mat-tab-label {height:35px;padding:0 10px;min-width:auto;
         .favibtn {
             mat-icon {font-size:13px;color:#ddd;height:auto;}
-            .active {color:var(--footerbg) !important}
         }
+        .favibtn.active mat-icon {color:var(--footerbg) !important}
         .mat-tab-label-content {font-size:13px;font-family:$roboto;}
     }
     .mat-tab-label-active {border-bottom:2px solid #4285f4;opacity:1 !important;}
@@ -110,7 +110,7 @@
 
 
 .one-line-text {text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
-
+.form-control.form-control-sm, .mat-form-field .mat-form-field-infix {min-width:150px;width:100% !important;}
 
 .fixedcol {position:sticky;z-index:1;max-width:160px;min-width:160px;padding:5px 10px !important;left:0;}
 .fixedcol:nth-child(2) {left:0px !important;}
