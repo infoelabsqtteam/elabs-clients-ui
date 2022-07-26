@@ -375,7 +375,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         let length = 0;
         if(this.notificationlist && this.notificationlist.length > 0){
             this.notificationlist.forEach(element => {
-                if(element.seenStatus == 'unread'){
+                if(element.notificationStatus == 'UNREAD'){
                     length = length + 1;
                 }
             });
@@ -385,8 +385,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     readNotification(index){
         let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
-        if(notification.seenStatus == 'unread'){
-            notification['seenStatus'] = 'read';
+        if(notification.notificationStatus == 'UNREAD'){
+            notification['notificationStatus'] = 'READ';
         }
         const payload = {
             'curTemp' : 'user_notification',
