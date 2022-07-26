@@ -71,7 +71,7 @@
         <li class="nav-item avatar mx-1 position-relative">
           <button mat-icon-button [matMenuTriggerFor]="notify"><mat-icon>notifications</mat-icon> <span class="notifybadge" *ngIf="getUnreadNotificationLength() > 0" [innerHtml]="getUnreadNotificationLength()"></span></button>
           <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu notificationdrowdown">
-            <button mat-menu-item [ngClass]="{'font-weight-bold': data.seenStatus == 'unread'}" *ngFor="let data of notificationlist; let i = index" (click)="readNotification(i)">{{data.message}}</button>
+            <button mat-menu-item [ngClass]="{'font-weight-bold': data.notificationStatus == 'UNREAD'}" *ngFor="let data of notificationlist; let i = index" (click)="readNotification(i)">{{data.message}}</button>
             <button mat-button color="primary" class="w-100" routerLink="/notification-list">All Notificatoin <mat-icon>chevron_right</mat-icon></button>
           </mat-menu>
         </li>

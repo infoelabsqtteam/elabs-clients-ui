@@ -2982,9 +2982,12 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
   }
 
   getUserPreferenceObj(data,fieldName,parent?){
-    let refObj:any = data;
+    let refObj:any = this.getReferenceObject(data);
     if(parent != ''){
       refObj = parent;
+    }
+    if(fieldName == "favoriteMenus"){
+      refObj = data;
     }
     let uRef = {};
     let userPreference = this.storageService.getUserPreference();
