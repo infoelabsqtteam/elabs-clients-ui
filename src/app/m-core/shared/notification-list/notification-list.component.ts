@@ -8,7 +8,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
   ]
 })
 export class NotificationListComponent implements OnInit {
-
+  p: number = 1;
   AllModuleList:any=[];
 
   constructor(
