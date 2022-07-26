@@ -21,7 +21,10 @@
 }
 
 .notificationdetails {
-    mat-icon {color:#999;font-size:14px;height:auto;}
+    .card.active {opacity:0.5;}
+    .icon {width:35px;}
+    p {font-size:14px;}
+    mat-icon {color:#999;font-size:13px;height:auto;}
 }
 
 

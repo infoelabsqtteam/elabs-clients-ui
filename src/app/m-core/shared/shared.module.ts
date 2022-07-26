@@ -9,7 +9,7 @@ import { CoreModule } from '../../core/core.module';
 import { MDBBootstrapModule  } from 'angular-bootstrap-md'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
+import { AllPackageModule } from '../all-package/all-package.module';
 
 
 import { TopbarComponent } from './topbar/topbar.component';
@@ -36,7 +36,8 @@ import { NotificationListComponent } from './notification-list/notification-list
     MDBBootstrapModule.forRoot(),
     LeafletModule,
     Ng2SearchPipeModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    AllPackageModule
   ],
   exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,LeafletModule,Ng2SearchPipeModule,NgbDropdownModule],
   providers: []
