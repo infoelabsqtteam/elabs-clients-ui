@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -27,7 +28,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   pageNumber: number = 0;
   itemNumOfGrid: any = 25;
   favrotedata;
-  favDataSubscription
+  favDataSubscription;
+  saveResponceSubscription:Subscription;
   
   @Output() moduleSelect = new EventEmitter();
 
@@ -42,9 +44,19 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private commonfunctionService:CommonFunctionService
   ) {
     
-    this.dataShareService.otherSaveCall.subscribe(responce => {
+    // this.dataShareService.otherSaveCall.subscribe(responce => {
+    //   this.setSaveResponce(responce);
+    // })
+  }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       this.setSaveResponce(responce);
     })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -64,6 +76,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    this.unsubscribe(this.saveResponceSubscription);
 }
 
   /**
@@ -149,6 +162,7 @@ setAppId(module){
 }
 addFebMenu(menu,parent){
   this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  this.saveCallSubscribe();
 }
 checkFebMenuAddOrNot(menu,parent){
   let menuId = menu._id;

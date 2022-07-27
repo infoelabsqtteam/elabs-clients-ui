@@ -8,6 +8,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import { ApiService } from '../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { Subscription } from 'rxjs';
 
 
 
@@ -35,6 +36,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   tempDataSubscription;
   dinamicFormSubscription;
   gridDataCountSubscription:any;
+  saveResponceSubscription:Subscription;
  
   
 
@@ -112,6 +114,27 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.setGridCountData(counts);
     })
   }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+        if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+            if (saveFromDataRsponce.success == 'success') {
+                this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+            }
+        }
+    }
+    this.unsubscribe(this.saveResponceSubscription);
+}
+
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
     this.selectContact = '';
@@ -242,6 +265,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
   addFebMenu(tab,parent){
     this.commonFunctionService.updateUserPreference(tab,'favoriteTabs',parent);
+    this.saveCallSubscribe();
   }
   checkFebMenuAddOrNot(tab,parent){
     let tabId = tab._id;

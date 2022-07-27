@@ -11,6 +11,7 @@ import { NotificationService } from "src/app/services/notify/notification.servic
 import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
 import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
+import { Subscription } from "rxjs";
 
 
 @Component({
@@ -51,7 +52,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     currentPage: any;
     logedin: boolean = false;
     gitVersionSubscription: any;
-    userNotificationSubscription:any;
+    userNotificationSubscription:Subscription;
+    saveResponceSubscription:Subscription;
     gitVersion: any;
 
     logoPath = ''
@@ -122,9 +124,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.setUserNotification(data.data);
             }
         });
-        this.dataShareService.saveResponceData.subscribe(responce =>{
-            this.setSaveResponce(responce);
-        })
+        
 
 
         this.AllModuleList = this.storageService.GetModules();
@@ -202,21 +202,37 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     chartModel() {
         this.modelService.open('chart_model', {})
     }
+    saveCallSubscribe(){
+        this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
+          this.setSaveResponce(responce);
+        })
+      }
+      unsubscribe(variable){
+        if(variable){
+          variable.unsubscribe();
+        }
+      }
+    
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
         if (this.menuDataSubscription) {
             this.menuDataSubscription.unsubscribe();
         }
+        if(this.userNotificationSubscription){
+            this.userNotificationSubscription.unsubscribe();
+        }
     }
     setSaveResponce(saveFromDataRsponce){
         if (saveFromDataRsponce) {
             if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
                 if (saveFromDataRsponce.success == 'success') {
-                    this.commonfunctionService.getUserNotification(this.userInfo);
+                    this.commonfunctionService.getUserNotification(1);
                 }
             }
         }
+        this.unsubscribe(this.saveResponceSubscription);
+
     }
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -298,7 +314,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     ngOnChanges(changes: SimpleChanges) {
         this.getMenuByModule();
-        this.commonfunctionService.getUserNotification(this.userInfo);
+        this.commonfunctionService.getUserNotification(1);
     }
 
     getMenuByModule() {
@@ -387,12 +403,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
         if(notification.notificationStatus == 'UNREAD'){
             notification['notificationStatus'] = 'READ';
+            const payload = {
+                'curTemp' : 'user_notification',
+                'data' : notification
+            }
+            this.apiService.SaveFormData(payload);
+            this.saveCallSubscribe();
         }
-        const payload = {
-            'curTemp' : 'user_notification',
-            'data' : notification
-        }
-        this.apiService.SaveFormData(payload);
+        
     }
 
     onLogout() {

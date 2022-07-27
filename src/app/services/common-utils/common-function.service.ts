@@ -18,6 +18,7 @@ import { ApiService } from '../api/api.service';
 import { ModelService } from '../model/model.service';
 import { EnvService } from '../env/env.service';
 import { I } from '@angular/cdk/keycodes';
+import { Common } from 'src/app/shared/enums/common.enum';
 
 
 @Injectable({
@@ -27,8 +28,8 @@ export class CommonFunctionService {
   userInfo: any;
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
-  pageNumber: number = 1;
-  itemNumOfGrid: any = 25;
+  pageNumber: number = Common.PAGE_NO;
+  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -2970,7 +2971,7 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       "curTemp" : "user_preference",
       "data" : payloadData
     }
-    this.apiService.saveOtherComponent(payload);
+    this.apiService.SaveFormData(payload);
   }
   getUserPreferenceByFieldName(fieldName){
     let data = [];
@@ -3068,11 +3069,12 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
     return ref;
   }
-  getUserNotification(user){
+  getUserNotification(pageNo){
+    let user = this.storageService.GetUserInfo();
     const userId = user._id;
     if(userId && userId != null && userId != ''){
       const criteria = "userId._id;eq;"+userId+";STATIC";
-      const payload = this.setPageNoAndSize(this.getPaylodWithCriteria('user_notification','',[criteria],{}),1);
+      const payload = this.setPageNoAndSize(this.getPaylodWithCriteria('user_notification','',[criteria],{}),pageNo);
       const callPayload = {
         "path" : null,
         "data": payload

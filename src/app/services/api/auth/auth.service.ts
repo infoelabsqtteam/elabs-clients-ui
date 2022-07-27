@@ -94,7 +94,7 @@ export class AuthService {
           this.dataShareService.restSettingModule('logged_in');
           this.apiService.gitVersion('');
           this.commonFunctionService.getUserPrefrerence(respData.user);
-          this.commonFunctionService.getUserNotification(respData.user);
+          this.commonFunctionService.getUserNotification(1);
           this.redirectionWithMenuType();                                  
         } else {
             this.envService.setRequestType('PUBLIC');

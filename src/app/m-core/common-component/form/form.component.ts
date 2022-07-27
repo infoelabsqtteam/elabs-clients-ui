@@ -22,6 +22,7 @@ import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
 import { json } from 'express';
 import { Subscription } from 'rxjs';
+import { visitAll } from '@angular/compiler';
 
 declare var tinymce: any;
 
@@ -373,10 +374,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
-    })
-    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
-      this.setSaveResponce(responce);
-    })
+    })    
     this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
       this.setGridRowDeleteResponce(responce);
     })
@@ -514,7 +512,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.closeModal();
   }
 
-
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
   moreformResponce(responce) {
 
   }
@@ -1447,6 +1454,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.dataSaveInProgress = true;
       }
     }
+    this.unsubscribe(this.saveResponceSubscription);
   }
   setGridFilterData(gridFilterData){
     if (gridFilterData) {
@@ -3081,8 +3089,10 @@ case 'populate_fields_for_report_for_new_order_flow':
       if(this.getSavePayload){
         if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.api && this.currentActionButton.onclick.api != null && this.currentActionButton.onclick.api.toLowerCase() == 'send_email'){
           this.apiService.SendEmail(saveFromData)
+          this.saveCallSubscribe();
         }else{
           this.apiService.SaveFormData(saveFromData);
+          this.saveCallSubscribe();
         }        
       }
     }else{
@@ -3300,6 +3310,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       data: this.elements[this.selectedRowIndex]
     }
     this.apiService.SaveFormData(updateFromData);
+    this.saveCallSubscribe();
   }
 
   candelForm() {    
@@ -3861,6 +3872,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
        payload['data'] = list;
       this.apiService.DynamicApiCall(payload);
+      this.saveCallSubscribe();
       //console.log();
       
     }
@@ -3881,6 +3893,7 @@ case 'populate_fields_for_report_for_new_order_flow':
               payload.data = saveFromData.data;
               if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
                 this.apiService.DynamicApiCall(payload);
+                this.saveCallSubscribe();
               } 
             }
           }else{
@@ -3894,6 +3907,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             });
             if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
               this.apiService.DynamicApiCall(payload);
+              this.saveCallSubscribe();
             }
           }
       } 

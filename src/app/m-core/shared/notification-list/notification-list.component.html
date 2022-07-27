@@ -1,58 +1,24 @@
 <section class="notificationdetails pt-4 px-3">
     <div class="card">
-        <div class="card-header">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="select">
+        <div class="card-header pl-3">
+            <div class="form-check" class="align-middle">
+                <mat-checkbox color="primary" class="mb-0 pr-2" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                 <label class="form-check-label" for="select">Select All</label>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-hover m-0">
                 <tbody>
-                  <tr>
-                    <td width="20"><input type="checkbox" class="mt-2"></td>
-                    <td width="70%">
-                        <h4 class="m-0">Notification One</h4>
+                  <tr *ngFor="let data of notificationlist | paginate: { id: 'Notification', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" [ngClass]="{'table-secondary': data.notificationStatus == 'UNREAD'}">
+                    <td width="20" class="align-middle">
+                        <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox>
+                    </td>
+                    <td width="70%" (click)="readNotification(i)" style="cursor: pointer;">
+                        <h4 class="m-0">{{data.message}}</h4>
                         <span class="mutted">Notification Discriptions</span>
                     </td>
                     <td><span class="mt-2">Author</span></td>
                     <td><span class="mt-2"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></span></td>
-                    <td><span class="mt-2">43 Minutes ago</span></td>
-                  </tr>
-
-                  <tr>
-                    <td width="20"><input type="checkbox" class="mt-2"></td>
-                    <td width="70%">
-                        <h4 class="m-0">Notification Two</h4>
-                        <span class="mutted">Notification Discriptions</span>
-                    </td>
-                    <td><span class="mt-2">Author</span></td>
-                    <td><span class="mt-2"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></span></td>
-                    <td><span class="mt-2">43 Minutes ago</span></td>
-                  </tr>
-
-                  <tr class="table-secondary">
-                    <td width="20"><input type="checkbox" class="mt-2"></td>
-                    <td width="70%">
-                        <h4 class="m-0">Notification Three</h4>
-                        <span class="mutted">Notification Discriptions</span>
-                    </td>
-                    <td><span class="mt-2">Author</span></td>
-                    <td><span class="mt-2"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></span></td>
-                    <td><span class="mt-2">43 Minutes ago</span></td>
-                  </tr>
-
-                  <tr>
-                    <td width="20"><input type="checkbox" class="mt-2"></td>
-                    <td width="70%">
-                        <h4 class="m-0">Notification Four</h4>
-                        <span class="mutted">Notification Discriptions</span>
-                    </td>
-                    <td><span class="mt-2">Author</span></td>
-                    <td><span class="mt-2">
-                        <img src="assets/img/profile.jpg" class="rounded" width="20" height="20">
-                        <img src="assets/img/profile.jpg" class="rounded" width="20" height="20">
-                    </span></td>
                     <td><span class="mt-2">43 Minutes ago</span></td>
                   </tr>
                 </tbody>
@@ -63,6 +29,6 @@
 
 <section class="mt-5">
     <mat-card-content class="m-0 pt-4 text-center">
-        <pagination-controls id="server"></pagination-controls>
+        <pagination-controls (pageChange)="getUserNotification($event)" id="Notification"></pagination-controls>
     </mat-card-content>
 </section>

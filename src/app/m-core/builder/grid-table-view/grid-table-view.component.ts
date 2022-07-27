@@ -12,6 +12,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
+import { Common } from 'src/app/shared/enums/common.enum';
+import { Subscription } from 'rxjs';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -65,10 +67,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   temView: boolean = false;
   treeView: boolean = false;
   public orderBy = '-';
-  pageNumber: number = 1;
+  pageNumber: number = Common.PAGE_NO;
   total: number;
   loading: boolean;
-  itemNumOfGrid: any = 25;
+  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
   userInfo: any;
   staticData: any = {};
   copyStaticData:any={};
@@ -108,7 +110,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   gridDataSubscription;
   staticDataSubscription;
   tempDataSubscription;
-  saveResponceSubscription;
+  saveResponceSubscription:Subscription;
   gridFilterDataSubscription;
   dinamicFormSubscription;
   fileDataSubscription;
@@ -289,9 +291,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
-    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
-      this.setSaveResponce(responce);
-    })
+    
     this.gridFilterDataSubscription = this.dataShareService.gridFilterData.subscribe(data =>{
       this.setGridFilterData(data);
     })
@@ -339,6 +339,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     
+  }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
+      this.setSaveResponce(responce);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
   ngOnDestroy() {
@@ -617,6 +627,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.updateGridData = false;
       this.apiService.ResetSaveResponce();
     }
+    this.unsubscribe(this.saveResponceSubscription);
   }
   setFileData(getfileData){
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
@@ -820,7 +831,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       curTemp: this.currentMenu.name,
       data: updateData
     }
-    this.apiService.SaveFormData(saveFromData)
+    this.apiService.SaveFormData(saveFromData);
+    this.saveCallSubscribe();
   }
   getTreeViewNode(node) {
     //console.log(node);
