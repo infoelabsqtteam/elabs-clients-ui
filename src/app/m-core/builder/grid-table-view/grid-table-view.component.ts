@@ -1,4 +1,4 @@
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
@@ -14,6 +14,7 @@ import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
+
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -37,6 +38,8 @@ export const MY_DATE_FORMATS = {
   ]
 })
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
+
+  
 
   filterForm: FormGroup;
   tabs: any = [];
@@ -121,6 +124,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   filterdata = '';
   fixedcolwidth = 150
+  recordId:any="";
+  updateNotification:boolean=true;
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -277,11 +282,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private modalService: ModelService, 
     private formBuilder: FormBuilder, 
     private router: Router, 
+    private routers: ActivatedRoute,
     private datePipe: DatePipe,
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private notificationService:NotificationService
   ) {
+    if(routers.snapshot.params["formName"]){
+      this.formName = routers.snapshot.params["formName"];
+    }  
+    if(routers.snapshot.params["recordId"]){      
+      this.recordId = routers.snapshot.params["recordId"];
+    } 
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
     })
@@ -444,6 +456,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         let checkboxes = document.getElementById("selectAllCheckbox");
         if(checkboxes != null){
           checkboxes['checked'] = false;
+        }
+        if(this.recordId != '' && this.updateNotification){
+          this.updateNotification = false; 
+          let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);
+          if(index != -1){
+            this.editedRowData(index,"UPDATE");
+          }          
         }
       } else {
         this.elements = [];
@@ -922,6 +941,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
     const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
+    if(this.recordId){
+      let crList = pagePayload.data.crList;
+      let criteria = "_id;eq;"+this.recordId+";STATIC"
+      this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
+        crList.push(element);
+      });
+      pagePayload.data.crList = crList;
+    }
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';

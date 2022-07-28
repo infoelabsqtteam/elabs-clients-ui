@@ -2822,13 +2822,15 @@ isGridFieldExist(tab,fieldName){
 
 getIndexInArrayById(array,id,key?){
   let index = -1;
-  array.forEach((element,i) => {
-    if(element._id && element._id == id){
-      index = i;
-    }else if(element[key] && element[key] == id){
-      index = i;
-    }
-  });
+  if(array && array.length > 0){
+    array.forEach((element,i) => {
+      if(element._id && element._id == id){
+        index = i;
+      }else if(element[key] && element[key] == id){
+        index = i;
+      }
+    });
+  }
   return index;
 }
 
@@ -3069,6 +3071,46 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
     return ref;
   }
+  moduleIndex(moduleId){
+    let moduleList = this.storageService.GetModules();
+    return this.getIndexInArrayById(moduleList,moduleId);    
+  }
+  getMenuName(module,menuId,submenuId){
+    let menuList = module.menu_list;
+    let menuIndex = this.getIndexInArrayById(menuList,menuId);
+    let menu = menuList[menuIndex];
+    let menuName = "";
+    if(submenuId != ""){
+      if(menu.submenu){
+        let subMenuList = menu.submenu;
+        if(subMenuList && subMenuList.length > 0){
+            let subMenuIndex = this.getIndexInArrayById(subMenuList,submenuId);
+            let submenu = subMenuList[subMenuIndex];
+            menuName = submenu.name;
+        }
+      }
+    }else{
+      menuName = menu.name;
+    }
+    return menuName;
+  }
+  dateDiff(dateSent){
+    let obj={};
+    let currentDate = new Date();
+    dateSent = new Date(dateSent);
+    // let diff = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate());
+    let diff = currentDate.getTime() - dateSent.getTime();
+    let days = Math.floor(diff / (60 * 60 * 24 * 1000));
+    let hours = Math.floor(diff / (60 * 60 * 1000)) - (days * 24);
+    let minutes = Math.floor(diff / (60 * 1000)) - ((days * 24 * 60) + (hours * 60));
+    let seconds = Math.floor(diff / 1000) - ((days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60));
+    obj['days'] = days;
+    obj['hours'] = hours;
+    obj['minutes'] = minutes;
+    obj['seconds'] = seconds;
+ 
+     return obj;
+   }
   getUserNotification(pageNo){
     let user = this.storageService.GetUserInfo();
     const userId = user._id;
@@ -3146,4 +3188,6 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     });
     return templateForm;
   }
+
+  
 }

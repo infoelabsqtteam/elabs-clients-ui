@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     getTemplateByMenu:boolean=false;
     showsearchmenu = false;
     module:boolean=true;
+    headerNotificationList:any=[];
 
     notificationlist = []
 
@@ -386,6 +387,17 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
     setUserNotification(data){
         this.notificationlist = data;
+        this.headerNotificationList = [];
+        if(this.notificationlist && this.notificationlist.length > 0){
+            for (let index = 0; index < this.notificationlist.length; index++) {
+                const element = this.notificationlist[index];
+                if(index == 10){
+                    break;
+                }
+                this.headerNotificationList.push(element);                
+            }
+        }
+
     }
     getUnreadNotificationLength(){
         let length = 0;
@@ -401,6 +413,24 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     readNotification(index){
         let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
+        let url = notification.url;
+        let rout = "notification/"+url;
+        let list = rout.split("/");
+        let moduleId = list[1];
+        let menuId = list[2];
+        let submenuId = list[3];
+        let moduleIndex = this.commonfunctionService.moduleIndex(moduleId);
+        //this.dataShareService.setModuleIndex(moduleIndex);
+        if(moduleIndex != undefined){
+        let moduleList = this.storageService.GetModules();
+        let module = moduleList[moduleIndex];
+        let menuName = this.commonfunctionService.getMenuName(module,menuId,submenuId);
+        let menu = {
+            "name" : menuName
+        }
+        this.storageService.SetActiveMenu(menu);
+        this.router.navigate([rout]); 
+        }
         if(notification.notificationStatus == 'UNREAD'){
             notification['notificationStatus'] = 'READ';
             const payload = {

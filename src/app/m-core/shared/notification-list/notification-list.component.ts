@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ApiService } from 'src/app/services/api/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notification-list',
@@ -14,6 +15,7 @@ import { ApiService } from 'src/app/services/api/api.service';
   ]
 })
 export class NotificationListComponent implements OnInit {
+  
   
   notificationlist:any=[];
   userNotificationSubscription:Subscription;
@@ -27,7 +29,8 @@ export class NotificationListComponent implements OnInit {
     private storageService:StorageService,
     private dataShareService:DataShareService,
     private CommonFunctionService:CommonFunctionService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private router: Router
   )
   { 
     this.CommonFunctionService.getUserNotification(this.pageNumber);
@@ -189,6 +192,26 @@ export class NotificationListComponent implements OnInit {
   
   readNotification(index){
     let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
+    //let rout = "notification/5f8a7df93fead0865fab7356/5f8e8c63efa14277b0ec62e8/605e10135234aa12be92ec4b/5fa51e62eb4a3c2940eb9d1b/default/62e22131b74b6a45e713d14a";
+    let url = notification.url;
+    let rout = "notification/"+url;
+    let list = rout.split("/");
+    let moduleId = list[1];
+    let menuId = list[2];
+    let submenuId = list[3];
+    let moduleIndex = this.CommonFunctionService.moduleIndex(moduleId);
+    //this.dataShareService.setModuleIndex(moduleIndex);
+    if(moduleIndex != undefined){
+      let moduleList = this.storageService.GetModules();
+      let module = moduleList[moduleIndex];
+      let menuName = this.CommonFunctionService.getMenuName(module,menuId,submenuId);
+      let menu = {
+        "name" : menuName
+      }
+      this.storageService.SetActiveMenu(menu);
+      this.router.navigate([rout]); 
+    }
+    
     if(notification.notificationStatus == 'UNREAD'){
         notification['notificationStatus'] = 'READ';
         const payload = {
@@ -198,6 +221,21 @@ export class NotificationListComponent implements OnInit {
       this.apiService.SaveFormData(payload);
       this.saveCallSubscribe();
     }    
-}
+  }
+  getDay(index){
+    let notification = this.notificationlist[index];
+    let createdDate = notification.createdDate;
+    let obj = this.CommonFunctionService.dateDiff(createdDate);
+    if(obj && obj['days'] == 0){
+      if(obj['hours'] == 0){
+        return obj['minutes']+" Minutes ago";
+      }else{        
+        return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
+      }      
+    }else{
+      return obj['days'] +" days ago";
+    }
+  }
+  
 
 }

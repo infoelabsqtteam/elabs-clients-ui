@@ -23,6 +23,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   grid_view_mode:any = '';  
   navigationSubscription;  
   selectTabIndex: number = 0;
+  tabId:any = "";
   selectedRowIndex: any = -1;
   currentMenu:any;
   userInfo: any;
@@ -91,7 +92,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.apiService.GetForm(getFormData);
         // alert('Index is:-' + index);
       }
-    }    
+    }else if(routers.snapshot.params["tabId"]){
+      this.tabId = routers.snapshot.params["tabId"]; 
+      // let moduleId =  routers.snapshot.params["moduleId"];     
+      // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
+    }   
     this.userInfo = this.storageService.GetUserInfo();
     
     
@@ -179,6 +184,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs; 
+      if(this.tabId != ""){
+        this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
+      }
       this.filterTab = tempData[0].filterTab;
       if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
         this.isTabFilter = true;

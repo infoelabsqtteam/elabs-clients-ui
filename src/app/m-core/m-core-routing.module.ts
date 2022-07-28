@@ -35,6 +35,7 @@ const elabsRoutes : Routes = [
                 { path : 'report', component: ReportFormComponent },
                 { path : 'notification-setting', component: NotificationSettingComponent },
                 { path : 'notification-list', component: NotificationListComponent },
+                { path : 'notification/:moduleId/:menuId/:subMenuId/:tabId/:formName/:recordId', component: BuilderComponent },
                 { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
             ],
             runGuardsAndResolvers: 'always'
