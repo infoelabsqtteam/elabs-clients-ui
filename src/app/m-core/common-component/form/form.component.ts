@@ -4496,7 +4496,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "list_of_string":
             case "drag_drop":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                this.custmizedFormValue[element.field_name] = formValue[element.field_name]
+                this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                 this.templateForm.controls[element.field_name].setValue('')
               }
               break;
@@ -4511,7 +4511,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "list_of_fields":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
                 if(isArray(formValue[element.field_name])){
-                  this.custmizedFormValue[element.field_name] = formValue[element.field_name]
+                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                 }else if(typeof formValue[element.field_name] == "object" && element.datatype == 'key_value'){
                   this.custmizedFormValue[element.field_name] = formValue[element.field_name]
                 }else{
@@ -4522,7 +4522,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case 'grid_selection_vertical':
                       case "drag_drop":                    
                         if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
-                          this.custmizedFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name]
+                          this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                           this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                         }
@@ -4530,7 +4530,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case "typeahead":
                         if(data.datatype == "list_of_object" || element.datatype == 'chips'){
                           if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
-                            this.custmizedFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name]
+                            this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                           }
@@ -4557,7 +4557,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "typeahead":
               if(element.datatype == "list_of_object" || element.datatype == 'chips'){
                 if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                  this.custmizedFormValue[element.field_name] = formValue[element.field_name]
+                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                   this.templateForm.controls[element.field_name].setValue('')
                 }
               }else{
@@ -4578,7 +4578,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                     case "drag_drop": 
                       if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                         if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
-                        const value = ChildFieldData[data.field_name];
+                        const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
                         this.custmizedFormValue[element.field_name][data.field_name] = value;
                         this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                         //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
@@ -4588,7 +4588,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       if(data.datatype == "list_of_object" || data.datatype == 'chips'){
                         if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                           if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
-                          const value = ChildFieldData[data.field_name];
+                          const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
                           this.custmizedFormValue[element.field_name][data.field_name] = value;
                           this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
@@ -5175,7 +5175,8 @@ case 'populate_fields_for_report_for_new_order_flow':
     const previousFormIndex = this.multipleFormCollection.length - 1;
     const previousFormCollection = this.multipleFormCollection[previousFormIndex];
     const previousFormField = previousFormCollection.current_field;
-    const currentFormValue = this.getFormValue(true)
+    // const currentFormValue = this.getFormValue(true)
+    const currentFormValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
     this.updateMode = false;
     const fieldName = previousFormField.field_name;
     delete currentFormValue[fieldName];    
@@ -5201,18 +5202,19 @@ case 'populate_fields_for_report_for_new_order_flow':
           
           if(index != undefined && index >= 0){
             this.custmizedFormValue = {};
-            this.custmizedFormValue[fieldName] = fieldData;
+            this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
             this.nextFormUpdateMode = false;
             this.close();
           }else{
+            this.donotResetField();
             this.custmizedFormValue = {};
-            this.custmizedFormValue[fieldName] = fieldData;
+            this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
 
-            this.donotResetField();
+            
             this.templateForm.reset()
             if(Object.keys(this.donotResetFieldLists).length > 0){
               this.updateDataOnFormField(this.donotResetFieldLists);
