@@ -14,16 +14,16 @@ export class AuditHistoryComponent implements OnInit {
 
   @Input() id: string;
   @ViewChild('auditHistory') public auditHistory: ModalDirective;
-  @Input() auditData;
-  @Input() aduitIndex;
-
-
+  aduitTabIndex
   tempDataSubscription
-  formData:any = [];
-  selectedObject:any = [];
-  previewObject;
-  formshow = false;
+  allTabs: any;
+  selectedTab: any;
 
+  auditHistoryList: any;
+  singleAuditHistoryList: any;
+  selectedObject: any;
+  previousAuditData: any;
+  showdata = false;
 
   constructor(
     private modalService: ModelService,
@@ -32,6 +32,13 @@ export class AuditHistoryComponent implements OnInit {
     this.tempDataSubscription = this.dataShareService.tempData.subscribe(temp => {
       this.setTempData(temp);
     })
+    this.dataShareService.auditHistoryList.subscribe(auditHistory => {
+      this.setAuditHistory(auditHistory);
+    })
+  }
+  setAuditHistory(auditHistory: any) {
+    this.auditHistoryList = auditHistory;
+    this.singleAuditHistoryList = auditHistory[0]
   }
 
   ngOnInit(): void {
@@ -41,32 +48,30 @@ export class AuditHistoryComponent implements OnInit {
   }
 
   showModal(object) {
+    this.aduitTabIndex = object["aduitTabIndex"];
+    this.selectedTab = this.allTabs[this.aduitTabIndex];
     this.auditHistory.show();
   }
   close() {
+    this.showdata = false;
     this.auditHistory.hide();
-   // this.resetData();
   }
 
   setTempData(tempData) {
-    if(tempData && tempData.length > 0){
-      for (let index = 0; index < tempData.length; index++) {
-        this.formData = tempData[index].templateTabs;
-      }
-      this.formData[this.aduitIndex];
+    if (tempData && tempData.length > 0) {
+      this.allTabs = tempData[0]["templateTabs"];
     }
   }
 
-
-  // onChange(index) {
-  //   this.formshow = true;
-  //   this.selectedObject = this.formData[index-1];
-  //   this.previewObject = this.formData[index-2];
-  // }
-
-  // resetData() {
-  //   this.formshow = false;
-  // }
-
+  handleChange(index) {
+    this.showdata = true;
+    this.selectedObject = this.auditHistoryList[index];
+    if (index == 0) {
+      this.showdata = false;
+      this.previousAuditData = {};
+    } else {
+      this.previousAuditData = this.auditHistoryList[index - 1];
+    }
+  }
 
 }

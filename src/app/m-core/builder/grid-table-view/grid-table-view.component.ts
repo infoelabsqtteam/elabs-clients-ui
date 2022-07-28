@@ -119,8 +119,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   filterdata = '';
   fixedcolwidth = 150;
-  auditData;
-  aduitIndex;
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -1077,11 +1075,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
 
-  gridAuditHistory(gridData,index) {
-    this.auditData = gridData;
-    this.aduitIndex = index;
-    this.modalService.open('audit-history',{});
-  }
+  // gridAuditHistory(gridData,index) {
+  //   let obj = {
+  //     "auditData":gridData,
+  //     "aduitTabIndex": this.selectTabIndex
+  //   }
+  //   this.modalService.open('audit-history',obj);
+  // }
 
   gridButtonAction(gridData,index,button){
     if(button && button.onclick && button.onclick.action_name){
@@ -1147,6 +1147,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           }else{
             this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
+          break;
+          case 'AUDIT_HISTORY':
+            let obj = {
+              "aduitTabIndex": this.selectTabIndex
+            }
+            this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
+            this.modalService.open('audit-history',obj);
           break;
         default:
           this.editedRowData(index,button.onclick.action_name)

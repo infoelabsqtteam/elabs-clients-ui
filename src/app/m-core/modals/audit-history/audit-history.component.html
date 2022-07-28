@@ -7,117 +7,60 @@
       </div>
 
       <div class="modal-body auditdetails">
+
         <div class="row no-gutters">
           <div class="col-md-4">
-            <div class="d-flex align-items-center justify-content-between audittitle">
-              <h4 class="m-0">{{auditData.tab_name}}</h4>
+            <div class="d-flex align-items-center justify-content-between audittitle" *ngIf="auditHistoryList">
+              <h4 class="m-0">{{selectedTab.label}}</h4>
               <div class="d-flex align-items-center">
-                <select>
-                  <option value="" selected disabled>Select Version</option>
-                  <option>Version: 0</option>
+                <select (change)="handleChange($event.target.selectedIndex)">
+                  <option *ngFor="let data of auditHistoryList; let i = index" [value]="data.version">version: {{i}}
+                  </option>
                 </select>
               </div>
             </div>
             <div class="auditdata">
               <p><strong>Version:</strong></p>
-              <p><strong>Label:</strong></p>
-              <p><strong>Form Name:</strong></p>
+              <p><strong>Id:</strong></p>
+              <p><strong>Name:</strong></p>
+              <p><strong>Alt Name:</strong></p>
             </div>
           </div>
 
-          <div class="col-md-4">
+
+          <div class="col-md-4" *ngIf="auditHistoryList">
             <div class="audittitle"><h4 class="m-0">Old</h4></div>
-            <div class="auditdata">
-              <p><strong>Version:</strong></p>
-              <p><strong>Label:</strong></p>
-              <p><strong>Form Name:</strong></p>
+            <div class="auditdata" *ngIf="!showdata">
+              <p>No Data</p>
+              <p>No Data</p>
+              <p>No Data</p>
+              <p>No Data</p>
+            </div>
+            <div class="auditdata" *ngIf="showdata">
+              <p>{{previousAuditData.version}}</p>
+              <p>{{previousAuditData._id}}</p>
+              <p>{{previousAuditData.currentObject.name}}</p>
+              <p>{{previousAuditData.currentObject.altname}}</p>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-4" *ngIf="auditHistoryList">
             <div class="audittitle"><h4 class="m-0">New</h4></div>
-            <div class="auditdata">
-              <p><strong>{{auditData.version}}</strong></p>
-              <p><strong>{{auditData.name}}</strong></p>
-              <p><strong>Form Name:</strong></p>
+            <div class="auditdata" *ngIf="!showdata">
+              <p>{{singleAuditHistoryList.version}}</p>
+              <p>{{singleAuditHistoryList._id}}</p>
+              <p>{{singleAuditHistoryList.currentObject.name}}</p>
+              <p>{{singleAuditHistoryList.currentObject.altname}}</p>
+            </div>
+            <div class="auditdata" *ngIf="showdata">
+              <p>{{selectedObject.version}}</p>
+              <p>{{selectedObject._id}}</p>
+              <p>{{selectedObject.currentObject.name}}</p>
+              <p>{{selectedObject.currentObject.altname}}</p>
             </div>
           </div>
-
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <div mdbModal #auditHistory="mdbModal" class="modal fade">
-  <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
-    <div class="modal-content">
-      <div class="modal-header justify-content-center m-0">
-        <h4 class="modal-title font-weight-bold m-0">Audit History</h4>
-        <button class="closebtb" (click)="close()"><span>&times;</span></button>
-      </div>
-
-      <div class="modal-body auditdetails">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <div class="d-flex align-items-center justify-content-between audittitle">
-              <h4 class="m-0">Form Label</h4>
-              <div class="d-flex align-items-center">
-                <span>version
-                  <select (change)="onChange($event.target.selectedIndex)">
-                    <option value="" selected disabled>Select Version</option>
-                    <option *ngFor="let data of formData" [value]="data.name">Version: {{data.version}}
-                    </option>
-                  </select>
-                </span>
-                <span class="ml-2 refresh" (click)="resetData()"><mat-icon>refresh</mat-icon></span>
-              </div>
-            </div>
-            <div class="auditdata" *ngIf="!formshow"><p *ngFor="let data of formData; let i = index">{{data.label}}</p></div>
-            <div class="auditdata" *ngIf="formshow"><p style="border:none"><strong>{{selectedObject.label}}</strong></p></div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="audittitle"><h4 class="m-0">New</h4></div>
-            <div class="auditdata" *ngIf="!formshow"><p *ngFor="let data of formData; let i = index"><strong>Version:</strong> {{data.version}}</p></div>
-            <div class="auditdata" *ngIf="formshow">
-              <p style="border:none"><strong>Version:</strong> {{selectedObject.version}}</p>
-              <p style="border:none"><strong>Label:</strong> {{selectedObject.label}}</p>
-              <p style="border:none"><strong>Form Name:</strong> {{selectedObject.form.name}}</p>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="audittitle"><h4 class="m-0">Old</h4></div>
-            <div class="auditdata" *ngIf="!formshow"><p>---</p><p *ngFor="let data of formData.slice(0, -1)"><strong>Version:</strong>{{data.version}}</p></div>
-            <div class="auditdata" *ngIf="formshow">
-              <p style="border:none"><strong>Version:</strong> {{previewObject.version}}</p>
-              <p style="border:none"><strong>Label:</strong> {{previewObject.label}}</p>
-              <p style="border:none"><strong>Form Name:</strong> {{previewObject.form.name}}</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
