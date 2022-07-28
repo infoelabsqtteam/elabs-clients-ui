@@ -118,7 +118,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   typeaheadDataSubscription;
 
   filterdata = '';
-  fixedcolwidth = 150
+  fixedcolwidth = 150;
+  auditData;
+  aduitIndex;
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -1073,6 +1075,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
     }  
     
+  }
+
+  gridAuditHistory(gridData,index) {
+    this.auditData = gridData;
+    this.aduitIndex = index;
+    this.modalService.open('audit-history',{});
   }
 
   gridButtonAction(gridData,index,button){
