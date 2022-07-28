@@ -59,7 +59,6 @@ export class DataShareService {
   getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
   chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
   userNotification:EventEmitter<any> = new EventEmitter<any>();
-  otherSaveCall:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 

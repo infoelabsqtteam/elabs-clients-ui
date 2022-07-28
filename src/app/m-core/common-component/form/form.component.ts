@@ -20,9 +20,7 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
-import { json } from 'express';
 import { Subscription } from 'rxjs';
-import { visitAll } from '@angular/compiler';
 
 declare var tinymce: any;
 
