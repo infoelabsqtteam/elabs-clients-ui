@@ -8,6 +8,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import { ApiService } from '../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { Subscription } from 'rxjs';
 
 
 
@@ -22,6 +23,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   grid_view_mode:any = '';  
   navigationSubscription;  
   selectTabIndex: number = 0;
+  tabId:any = "";
   selectedRowIndex: any = -1;
   currentMenu:any;
   userInfo: any;
@@ -35,6 +37,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   tempDataSubscription;
   dinamicFormSubscription;
   gridDataCountSubscription:any;
+  saveResponceSubscription:Subscription;
  
   
 
@@ -89,7 +92,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.apiService.GetForm(getFormData);
         // alert('Index is:-' + index);
       }
-    }    
+    }else if(routers.snapshot.params["tabId"]){
+      this.tabId = routers.snapshot.params["tabId"]; 
+      // let moduleId =  routers.snapshot.params["moduleId"];     
+      // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
+    }   
     this.userInfo = this.storageService.GetUserInfo();
     
     
@@ -112,6 +119,27 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.setGridCountData(counts);
     })
   }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+        if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+            if (saveFromDataRsponce.success == 'success') {
+                this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+            }
+        }
+    }
+    this.unsubscribe(this.saveResponceSubscription);
+}
+
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
     this.selectContact = '';
@@ -156,6 +184,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs; 
+      if(this.tabId != ""){
+        this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
+      }
       this.filterTab = tempData[0].filterTab;
       if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
         this.isTabFilter = true;
@@ -236,8 +267,59 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
   }   
 
-  
 
-}
+
+
+
+  addFebMenu(tab,parent){
+    this.commonFunctionService.updateUserPreference(tab,'favoriteTabs',parent);
+    this.saveCallSubscribe();
+  }
+  checkFebMenuAddOrNot(tab,parent){
+    let tabId = tab._id;
+    if(parent != ''){
+      tabId = parent._id;
+    }
+    let userFebTab = this.commonFunctionService.getUserPreferenceByFieldName('favoriteTabs');
+    if(userFebTab && userFebTab != null && userFebTab.length > 0){
+      let match = -1;
+      for (let index = 0; index < userFebTab.length; index++) {
+        const element = userFebTab[index];
+        if(element._id == tabId ){
+          match = index;
+          break;
+        }     
+      }
+      if(match > -1){
+        if(parent != ''){
+          const submenu = userFebTab[match]['tab'];
+          let subMatchIndex = -1;
+          if(submenu && submenu.length > 0){
+            for (let j = 0; j < submenu.length; j++) {
+              const subMenu = submenu[j];
+              if(subMenu._id == tab._id){
+                subMatchIndex = j;
+                break;
+              }
+              
+            }
+          }
+          if(subMatchIndex > -1){
+            return true
+          }else{
+            return false;
+          }
+        }else{
+          return true;
+        }      
+      }else{
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
+  
+ }
 
 
