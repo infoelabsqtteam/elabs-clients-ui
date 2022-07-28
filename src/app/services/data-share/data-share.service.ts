@@ -54,13 +54,13 @@ export class DataShareService {
   dashletMaster:EventEmitter<any> = new EventEmitter<any>();
   gitVirsion:EventEmitter<any> = new EventEmitter<any>();
   forgot:EventEmitter<any> = new EventEmitter<any>();
-  nextFormData:EventEmitter<any> = new EventEmitter<any>();
-  
+  nextFormData:EventEmitter<any> = new EventEmitter<any>();  
   getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
   getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
   chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
   auditHistoryList:EventEmitter<any> = new EventEmitter<any>();
 
+  userNotification:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -76,7 +76,6 @@ export class DataShareService {
   getCurrentPage(){
     return this.currentpage;
   }
-
   shareData(responce:any){
     this.sharedData.emit(responce);
   }
@@ -249,5 +248,8 @@ export class DataShareService {
   }
   setAuditHistoryData(data){
     this.auditHistoryList.emit(data);
+  }
+  shareUserNotification(responce){
+    this.userNotification.emit(responce);
   }
 }

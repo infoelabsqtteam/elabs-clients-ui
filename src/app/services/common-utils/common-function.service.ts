@@ -17,6 +17,8 @@ import { NotificationService } from '../notify/notification.service';
 import { ApiService } from '../api/api.service';
 import { ModelService } from '../model/model.service';
 import { EnvService } from '../env/env.service';
+import { I } from '@angular/cdk/keycodes';
+import { Common } from 'src/app/shared/enums/common.enum';
 
 
 @Injectable({
@@ -26,8 +28,8 @@ export class CommonFunctionService {
   userInfo: any;
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
-  pageNumber: number = 1;
-  itemNumOfGrid: any = 25;
+  pageNumber: number = Common.PAGE_NO;
+  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -1918,55 +1920,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   
   
 
-  buggetForcastCalc(templateForm: FormGroup){
-    let templateValue = templateForm.getRawValue();
-    let actualCurYr = templateValue.actual_current;
-    let actualLastYr = templateValue.actuals;
-    let budget = templateValue.this_year;
-    let growthpers = {};
-    let budgetpers = {};
-    let value = [];
-    let value1 = [];
-    Object.keys(actualCurYr).forEach(key => {
-      let growthper=0;
-      let budgetper=0;
-      let actualCurYrMonth = actualCurYr[key];
-      let actualLastYrMonth = actualLastYr[key];
-      if(actualLastYrMonth != 0){
-        growthper = actualCurYrMonth/actualLastYrMonth;
-      }
-
-      let budgetcurYrMonth = budget[key];
-      if(budgetcurYrMonth != 0){
-        budgetper = actualCurYrMonth/budgetcurYrMonth;
-      }
-
-        growthpers[key] = growthper;
-        let obj = {
-          field: key, value: growthpers[key] 
-        }
-        value.push(obj)
-
-        budgetpers[key] = budgetper;
-        let obj1 = {
-          field: key, value: budgetpers[key] 
-        }
-        value1.push(obj1)
-    })
-    const fieldWithValueforgrowth = {
-      field: 'growth_per', value: value
-    }
-    fieldWithValueforgrowth.value.forEach(element => {
-        (<FormGroup>templateForm.controls[fieldWithValueforgrowth.field]).controls[element.field].patchValue(element.value);
-    })
-
-    const fieldWithValueforBudget = {
-      field: 'budget_per', value: value1
-    }
-    fieldWithValueforBudget.value.forEach(element => {
-        (<FormGroup>templateForm.controls[fieldWithValueforBudget.field]).controls[element.field].patchValue(element.value);
-    })
-  }
+  
 
   calculateParameterAmtOnInjection(data,rate,quantity){
             let totalInjection = data.no_of_injection;
@@ -2521,13 +2475,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   }
 
-  manufactured_as_customer(templateForm: FormGroup) {
-    (<FormGroup>templateForm.controls["sample_details"]).controls["mfg_by"].patchValue(templateForm.value.account.name);
-  }
-
-  supplied_as_customer(templateForm: FormGroup) {
-    (<FormGroup>templateForm.controls["sample_details"]).controls["supplied_by"].patchValue(templateForm.value.account.name);
-  }
+  
 
 
   getDecimalAmount(value) {
@@ -2559,13 +2507,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     return templateForm;
   }
 
-  setValueInVieldsForChild(templateForm: FormGroup, field: any) {
-    (<FormGroup>templateForm.controls['total_amount']).addControl('discount_amount', new FormControl(''))
-    field.value.forEach(element => {
-      (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
-    });
-    return templateForm;
-  }
+  
 
   claimAmountCalculation(field1, field2, field3) {
     let total = 0;
@@ -2844,9 +2786,7 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
   if(this.isGridFieldExist(tab,"api_params_criteria")){
     grid_api_params_criteria = tab.grid.api_params_criteria;
   }
-  const data = this.getPaylodWithCriteria(currentMenu.name,'',grid_api_params_criteria,'');
-  data['pageNo'] = page - 1;
-  data['pageSize'] = this.itemNumOfGrid;    
+  const data = this.setPageNoAndSize(this.getPaylodWithCriteria(currentMenu.name,'',grid_api_params_criteria,''),page);     
   this.getfilterCrlist(headElements,filterForm).forEach(element => {
     data.crList.push(element);
   });
@@ -2863,6 +2803,11 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
     path: null
   }
   return getFilterData;
+}
+setPageNoAndSize(payload,page){
+  payload['pageNo'] = page - 1;
+  payload['pageSize'] = this.itemNumOfGrid; 
+  return payload;
 }
 setPageNumverAndSize(payload,page,){
   payload['pageNo'] = page - 1;
@@ -2881,13 +2826,15 @@ isGridFieldExist(tab,fieldName){
 
 getIndexInArrayById(array,id,key?){
   let index = -1;
-  array.forEach((element,i) => {
-    if(element._id && element._id == id){
-      index = i;
-    }else if(element[key] && element[key] == id){
-      index = i;
-    }
-  });
+  if(array && array.length > 0){
+    array.forEach((element,i) => {
+      if(element._id && element._id == id){
+        index = i;
+      }else if(element[key] && element[key] == id){
+        index = i;
+      }
+    });
+  }
   return index;
 }
 
@@ -3014,4 +2961,237 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
   });
    return listOfObjects;
   }
+
+  getUserPrefrerence(user) {
+    let criteria = "userId._id;eq;"+user._id+";STATIC";
+    let myData = this.setPageNoAndSize(this.getPaylodWithCriteria("user_preference", "", [criteria], {}),1);
+    const payloadData = {
+      path: null,
+      data : myData
+    }
+    this.apiService.getFavouriteData(payloadData);
+  }
+  updateUserPreference(data,fieldName,parent?){
+    let payloadData = this.getUserPreferenceObj(data,fieldName,parent);
+    let payload = {
+      "curTemp" : "user_preference",
+      "data" : payloadData
+    }
+    this.apiService.SaveFormData(payload);
+  }
+  getUserPreferenceByFieldName(fieldName){
+    let data = [];
+    let userPreference = this.storageService.getUserPreference();
+    if(userPreference && userPreference[fieldName]){
+      data = userPreference[fieldName];
+    }
+    return data;
+  }
+
+  getUserPreferenceObj(data,fieldName,parent?){
+    let refObj:any = this.getReferenceObject(data);
+    if(parent != ''){
+      refObj = parent;
+    }
+    if(fieldName == "favoriteMenus"){
+      refObj = data;
+    }
+    let uRef = {};
+    let userPreference = this.storageService.getUserPreference();
+    if(userPreference && userPreference._id && userPreference._id != null && userPreference._id != ''){
+      let fieldData = userPreference[fieldName];
+      if(fieldData && fieldData.length > 0){
+        let matchIndex = -1;
+        for (let index = 0; index < fieldData.length; index++) {
+          const element = fieldData[index];
+          if(element._id == refObj._id){
+            matchIndex = index;
+            break;
+          }         
+        }
+        if(matchIndex  > -1){
+          if(parent != ''){
+            let submenu = fieldData[matchIndex].submenu;
+            let submenuMatchIndex = -1;
+            if(submenu && submenu.length > 0){
+              for (let j = 0; j < submenu.length; j++) {
+                const subMenu = submenu[j];
+                if(subMenu._id == data._id){
+                  submenuMatchIndex = j;
+                  break;
+                }         
+              }
+            }
+            if(submenuMatchIndex > -1){
+              submenu.splice(submenuMatchIndex);
+              if(fieldData[matchIndex].submenu.length == 0){
+                fieldData.splice(matchIndex);
+              }else{
+                fieldData[matchIndex].submenu = submenu;
+              }
+            }else{
+              if(submenu.length > 0){
+                fieldData[matchIndex].submenu.push(data);
+              }else{
+                fieldData[matchIndex].submenu = []
+                fieldData[matchIndex].submenu.push(data);
+              }
+            }
+          }else{
+            fieldData.splice(matchIndex);
+          }
+        }else{
+          if(parent != ''){
+            refObj['submenu'] = [];
+            refObj['submenu'].push(data);
+            fieldData.push(refObj);
+          }else{
+            fieldData.push(refObj);
+          }
+        }        
+      }else{
+        fieldData = [];
+        fieldData.push(refObj);
+      }
+      userPreference[fieldName] = fieldData;
+      uRef = userPreference;
+    }else{
+      let user = this.storageService.GetUserInfo();
+      let userRef = this.getReferenceObject(user);
+      let dataList = [];
+      dataList.push(refObj);
+      uRef['userId'] = userRef;
+      uRef[fieldName] = dataList;
+    }    
+    return uRef
+  }
+  getReferenceObject(obj){
+    let ref = {}
+    ref["_id"]=obj._id;
+    ref["code"] = obj.code;
+    ref["name"] = obj.name;
+    if(obj.version != null){
+      ref["version"] = obj.version
+    }
+    return ref;
+  }
+  moduleIndex(moduleId){
+    let moduleList = this.storageService.GetModules();
+    return this.getIndexInArrayById(moduleList,moduleId);    
+  }
+  getMenuName(module,menuId,submenuId){
+    let menuList = module.menu_list;
+    let menuIndex = this.getIndexInArrayById(menuList,menuId);
+    let menu = menuList[menuIndex];
+    let menuName = "";
+    if(submenuId != ""){
+      if(menu.submenu){
+        let subMenuList = menu.submenu;
+        if(subMenuList && subMenuList.length > 0){
+            let subMenuIndex = this.getIndexInArrayById(subMenuList,submenuId);
+            let submenu = subMenuList[subMenuIndex];
+            menuName = submenu.name;
+        }
+      }
+    }else{
+      menuName = menu.name;
+    }
+    return menuName;
+  }
+  dateDiff(dateSent){
+    let obj={};
+    let currentDate = new Date();
+    dateSent = new Date(dateSent);
+    // let diff = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate());
+    let diff = currentDate.getTime() - dateSent.getTime();
+    let days = Math.floor(diff / (60 * 60 * 24 * 1000));
+    let hours = Math.floor(diff / (60 * 60 * 1000)) - (days * 24);
+    let minutes = Math.floor(diff / (60 * 1000)) - ((days * 24 * 60) + (hours * 60));
+    let seconds = Math.floor(diff / 1000) - ((days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60));
+    obj['days'] = days;
+    obj['hours'] = hours;
+    obj['minutes'] = minutes;
+    obj['seconds'] = seconds;
+ 
+     return obj;
+   }
+  getUserNotification(pageNo){
+    let user = this.storageService.GetUserInfo();
+    const userId = user._id;
+    if(userId && userId != null && userId != ''){
+      const criteria = "userId._id;eq;"+userId+";STATIC";
+      const payload = this.setPageNoAndSize(this.getPaylodWithCriteria('user_notification','',[criteria],{}),pageNo);
+      const callPayload = {
+        "path" : null,
+        "data": payload
+      }
+      this.apiService.getUserNotification(callPayload);
+    }
+  }
+
+  buggetForcastCalc(templateForm: FormGroup){
+    let templateValue = templateForm.getRawValue();
+    let actualCurYr = templateValue.actual_current;
+    let actualLastYr = templateValue.actuals;
+    let budget = templateValue.this_year;
+    let growthpers = {};
+    let budgetpers = {};
+    let value = [];
+    let value1 = [];
+    Object.keys(actualCurYr).forEach(key => {
+      let growthper=0;
+      let budgetper=0;
+      let actualCurYrMonth = actualCurYr[key];
+      let actualLastYrMonth = actualLastYr[key];
+      if(actualLastYrMonth != 0){
+        growthper = actualCurYrMonth/actualLastYrMonth;
+      }
+
+      let budgetcurYrMonth = budget[key];
+      if(budgetcurYrMonth != 0){
+        budgetper = actualCurYrMonth/budgetcurYrMonth;
+      }
+
+        growthpers[key] = growthper;
+        let obj = {
+          field: key, value: growthpers[key] 
+        }
+        value.push(obj)
+
+        budgetpers[key] = budgetper;
+        let obj1 = {
+          field: key, value: budgetpers[key] 
+        }
+        value1.push(obj1)
+    })
+    const fieldWithValueforgrowth = {
+      field: 'growth_per', value: value
+    }
+    fieldWithValueforgrowth.value.forEach(element => {
+        (<FormGroup>templateForm.controls[fieldWithValueforgrowth.field]).controls[element.field].patchValue(element.value);
+    })
+
+    const fieldWithValueforBudget = {
+      field: 'budget_per', value: value1
+    }
+    fieldWithValueforBudget.value.forEach(element => {
+        (<FormGroup>templateForm.controls[fieldWithValueforBudget.field]).controls[element.field].patchValue(element.value);
+    })
+  }
+  manufactured_as_customer(templateForm: FormGroup) {
+    (<FormGroup>templateForm.controls["sample_details"]).controls["mfg_by"].patchValue(templateForm.value.account.name);
+  }
+
+  supplied_as_customer(templateForm: FormGroup) {
+    (<FormGroup>templateForm.controls["sample_details"]).controls["supplied_by"].patchValue(templateForm.value.account.name);
+  }
+  setValueInVieldsForChild(templateForm: FormGroup, field: any) {
+    (<FormGroup>templateForm.controls['total_amount']).addControl('discount_amount', new FormControl(''))
+    field.value.forEach(element => {
+      (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
+    });
+    return templateForm;
+  }
+
+  
 }
