@@ -29,9 +29,6 @@ export class AuditHistoryComponent implements OnInit {
     private modalService: ModelService,
     private dataShareService: DataShareService,
   ) {
-    this.tempDataSubscription = this.dataShareService.tempData.subscribe(temp => {
-      this.setTempData(temp);
-    })
     this.dataShareService.auditHistoryList.subscribe(auditHistory => {
       this.setAuditHistory(auditHistory);
     })
@@ -49,18 +46,12 @@ export class AuditHistoryComponent implements OnInit {
 
   showModal(object) {
     this.aduitTabIndex = object["aduitTabIndex"];
-    this.selectedTab = this.allTabs[this.aduitTabIndex];
+    this.selectedTab = object["tabname"][this.aduitTabIndex];
     this.auditHistory.show();
   }
   close() {
     this.showdata = false;
     this.auditHistory.hide();
-  }
-
-  setTempData(tempData) {
-    if (tempData && tempData.length > 0) {
-      this.allTabs = tempData[0]["templateTabs"];
-    }
   }
 
   handleChange(index) {

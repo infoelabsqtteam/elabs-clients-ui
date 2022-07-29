@@ -1114,14 +1114,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
 
-  // gridAuditHistory(gridData,index) {
-  //   let obj = {
-  //     "auditData":gridData,
-  //     "aduitTabIndex": this.selectTabIndex
-  //   }
-  //   this.modalService.open('audit-history',obj);
-  // }
-
   gridButtonAction(gridData,index,button){
     if(button && button.onclick && button.onclick.action_name){
       switch (button.onclick.action_name.toUpperCase()) {
@@ -1189,7 +1181,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           break;
           case 'AUDIT_HISTORY':
             let obj = {
-              "aduitTabIndex": this.selectTabIndex
+              "aduitTabIndex": this.selectTabIndex,
+              "tabname": this.tabs
             }
             this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
             this.modalService.open('audit-history',obj);
