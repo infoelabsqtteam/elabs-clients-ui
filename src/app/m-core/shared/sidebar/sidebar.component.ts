@@ -4,12 +4,10 @@ import { Router, NavigationEnd } from '@angular/router';
 import { StorageService } from '../../../services/storage/storage.service';
 import { PermissionService } from '../../../services/permission/permission.service';
 import { MENU } from './menu';
-import { MenuItem } from './menu.model';
 import { ApiService } from '../../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -30,6 +28,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   favrotedata;
   favDataSubscription;
   saveResponceSubscription:Subscription;
+  userPreferenceSubscription:Subscription;
   
   @Output() moduleSelect = new EventEmitter();
 
@@ -51,6 +50,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       this.setSaveResponce(responce);
+    })
+  }
+  userPreferenceSubscribe(menu,field,parent){
+    this.userPreferenceSubscription = this.dataShareService.userPreference.subscribe(responce =>{      
+        this.updateUserPreference(menu,field,parent);
     })
   }
   unsubscribe(variable){
@@ -161,7 +165,14 @@ setAppId(module){
   this.storageService.setModule(module.name);
 }
 addFebMenu(menu,parent){
-  this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+  this.userPreferenceSubscribe(menu,'favoriteMenus',parent);
+  // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  // this.saveCallSubscribe();
+}
+updateUserPreference(menu,field,parent){
+  this.unsubscribe(this.userPreferenceSubscription);
+  this.commonFunctionService.updateUserPreference(menu,field,parent);
   this.saveCallSubscribe();
 }
 checkFebMenuAddOrNot(menu,parent){

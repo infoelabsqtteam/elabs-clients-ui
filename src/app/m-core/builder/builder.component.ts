@@ -38,6 +38,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   dinamicFormSubscription;
   gridDataCountSubscription:any;
   saveResponceSubscription:Subscription;
+  userPreferenceSubscription:Subscription;
  
   
 
@@ -122,6 +123,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       this.setSaveResponce(responce);
+    })
+  }
+  userPreferenceSubscribe(menu,field,parent){
+    this.userPreferenceSubscription = this.dataShareService.userPreference.subscribe(responce =>{      
+        this.updateUserPreference(menu,field,parent);
     })
   }
   unsubscribe(variable){
@@ -271,8 +277,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
 
 
-  addFebMenu(tab,parent){
-    this.commonFunctionService.updateUserPreference(tab,'favoriteTabs',parent);
+  
+  addFebMenu(menu,parent){
+    this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+    this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
+    // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+    // this.saveCallSubscribe();
+  }
+  updateUserPreference(menu,field,parent){
+    this.unsubscribe(this.userPreferenceSubscription);
+    this.commonFunctionService.updateUserPreference(menu,field,parent);
     this.saveCallSubscribe();
   }
   checkFebMenuAddOrNot(tab,parent){
