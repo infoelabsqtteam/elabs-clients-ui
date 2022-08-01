@@ -33,7 +33,6 @@ import { ChartFilterComponent } from './chart-filter/chart-filter.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { DownloadProgressComponent } from './download-progress/download-progress.component';
 import { AuditHistoryComponent } from './audit-history/audit-history.component';
-import { NgxDiff2htmlModule } from 'ngx-diff2html';
 
 
 const models = [
@@ -73,7 +72,6 @@ const models = [
     DirectiveModuleModule,
     ReactiveFormsModule,
     FormsModule,
-    NgxDiff2htmlModule,
     AllPackageModule
   ],
   declarations: models,
