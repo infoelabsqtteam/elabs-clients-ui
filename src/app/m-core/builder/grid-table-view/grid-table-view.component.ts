@@ -123,7 +123,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   typeaheadDataSubscription;
 
   filterdata = '';
-  fixedcolwidth = 150
+  fixedcolwidth = 150;
   recordId:any="";
   updateNotification:boolean=true;
 
@@ -1178,6 +1178,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           }else{
             this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
+          break;
+          case 'AUDIT_HISTORY':
+            if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
+              let obj = {
+                "aduitTabIndex": this.selectTabIndex,
+                "tabname": this.tabs
+              }
+              this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
+              this.modalService.open('audit-history',obj);
+            }else {
+              this.notificationService.notify("bg-danger", "Permission denied !!!");
+            }
           break;
         default:
           this.editedRowData(index,button.onclick.action_name)

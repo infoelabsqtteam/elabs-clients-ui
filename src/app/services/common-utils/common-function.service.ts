@@ -2649,6 +2649,10 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
       this.apiService.GetQr(data);
     }
 
+    getAuditHistory(data,object){
+      this.apiService.getAuditHistory(data);
+    }
+
     getFormForTds(data,currentMenu, object){
       let payloadData = {};
       if(currentMenu != ''){

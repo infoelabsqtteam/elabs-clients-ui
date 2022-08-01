@@ -487,6 +487,18 @@ constructor(
     )
   }
 
+  getAuditHistory(payload){
+    let api = this.envService.getApi('AUDIT_HISTORY');
+    this.http.post(api +"/"+ payload['_id'], payload).subscribe(
+      (respData) => {          
+        this.dataShareService.setAuditHistoryData(respData);
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
+  }
+
   getAplicationsThemeSetting(payload) {
     let api = this.envService.getApi('GET_GRID_DATA');
     this.http.post(api + '/' + payload.path, payload.data).subscribe(
