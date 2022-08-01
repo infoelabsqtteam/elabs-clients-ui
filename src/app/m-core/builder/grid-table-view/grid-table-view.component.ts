@@ -1180,12 +1180,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           }
           break;
           case 'AUDIT_HISTORY':
-            let obj = {
-              "aduitTabIndex": this.selectTabIndex,
-              "tabname": this.tabs
+            if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
+              let obj = {
+                "aduitTabIndex": this.selectTabIndex,
+                "tabname": this.tabs
+              }
+              this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
+              this.modalService.open('audit-history',obj);
+            }else {
+              this.notificationService.notify("bg-danger", "Permission denied !!!");
             }
-            this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
-            this.modalService.open('audit-history',obj);
           break;
         default:
           this.editedRowData(index,button.onclick.action_name)

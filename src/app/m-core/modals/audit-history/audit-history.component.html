@@ -20,6 +20,8 @@
               </div>
             </div>
             <div class="auditdata">
+              <p><strong>Updated By :</strong></p>
+              <p><strong>Updated Date :</strong></p>
               <p><strong>Version:</strong></p>
               <p><strong>Id:</strong></p>
               <p><strong>Name:</strong></p>
@@ -30,13 +32,17 @@
 
           <div class="col-md-4" *ngIf="auditHistoryList">
             <div class="audittitle"><h4 class="m-0">Old</h4></div>
-            <div class="auditdata" *ngIf="!showdata">
+            <div class="auditdata text-danger" *ngIf="!showdata">
+              <p>No Data</p>
+              <p>No Data</p>
               <p>No Data</p>
               <p>No Data</p>
               <p>No Data</p>
               <p>No Data</p>
             </div>
-            <div class="auditdata" *ngIf="showdata">
+            <div class="auditdata text-danger" *ngIf="showdata">
+              <p>{{previousAuditData.createdByName}}</p>
+              <p>{{previousAuditData.createdDate | date:'fullDate'}}</p>
               <p>{{previousAuditData.version}}</p>
               <p>{{previousAuditData._id}}</p>
               <p>{{previousAuditData.currentObject.name}}</p>
@@ -46,13 +52,17 @@
 
           <div class="col-md-4" *ngIf="auditHistoryList">
             <div class="audittitle"><h4 class="m-0">New</h4></div>
-            <div class="auditdata" *ngIf="!showdata">
+            <div class="auditdata text-success" *ngIf="!showdata">
+              <p>{{singleAuditHistoryList.createdByName}}</p>
+              <p>{{singleAuditHistoryList.createdDate | date:'fullDate'}}</p>
               <p>{{singleAuditHistoryList.version}}</p>
               <p>{{singleAuditHistoryList._id}}</p>
               <p>{{singleAuditHistoryList.currentObject.name}}</p>
               <p>{{singleAuditHistoryList.currentObject.altname}}</p>
             </div>
-            <div class="auditdata" *ngIf="showdata">
+            <div class="auditdata text-danger" *ngIf="showdata">
+              <p>{{selectedObject.createdByName}}</p>
+              <p>{{selectedObject.createdDate | date:'fullDate'}}</p>
               <p>{{selectedObject.version}}</p>
               <p>{{selectedObject._id}}</p>
               <p>{{selectedObject.currentObject.name}}</p>
@@ -60,6 +70,8 @@
             </div>
           </div>
         </div>
+        <ngx-diff2html *ngIf="!showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{singleAuditHistoryList | json}}"></ngx-diff2html>
+        <ngx-diff2html *ngIf="showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{selectedObject | json}}"></ngx-diff2html>
       </div>
     </div>
   </div>

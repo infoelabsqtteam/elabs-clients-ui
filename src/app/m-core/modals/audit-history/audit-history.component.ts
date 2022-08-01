@@ -24,6 +24,7 @@ export class AuditHistoryComponent implements OnInit {
   selectedObject: any;
   previousAuditData: any;
   showdata = false;
+  showcompareData = false;
 
   constructor(
     private modalService: ModelService,
@@ -33,9 +34,11 @@ export class AuditHistoryComponent implements OnInit {
       this.setAuditHistory(auditHistory);
     })
   }
+
   setAuditHistory(auditHistory: any) {
     this.auditHistoryList = auditHistory;
-    this.singleAuditHistoryList = auditHistory[0]
+    this.singleAuditHistoryList = auditHistory[0];
+    console.log(this.singleAuditHistoryList)
   }
 
   ngOnInit(): void {
@@ -51,11 +54,13 @@ export class AuditHistoryComponent implements OnInit {
   }
   close() {
     this.showdata = false;
+    this.previousAuditData = [];
     this.auditHistory.hide();
   }
 
   handleChange(index) {
     this.showdata = true;
+    this.showcompareData = true;
     this.selectedObject = this.auditHistoryList[index];
     if (index == 0) {
       this.showdata = false;
@@ -64,5 +69,7 @@ export class AuditHistoryComponent implements OnInit {
       this.previousAuditData = this.auditHistoryList[index - 1];
     }
   }
+
+
 
 }
