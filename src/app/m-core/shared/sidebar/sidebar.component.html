@@ -14,12 +14,14 @@
 
             <div *ngIf="hasMenu(item)" class="menulist" aria-expanded="false">
               <div class="menuitems" *ngFor="let subitem of item.menu_list">
-                <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }} <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span></a>
+                <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
+                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
                 <mat-accordion>
                   <mat-expansion-panel>
                     <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId">{{ subitem.label }}</mat-expansion-panel-header>
-                    <div matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
-                      <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }} <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span></small>
+                    <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
+                      <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }}</small>
+                      <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span>
                     </div>
                   </mat-expansion-panel>
                 </mat-accordion>

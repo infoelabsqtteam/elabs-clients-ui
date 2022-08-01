@@ -7,11 +7,8 @@
           <mat-tab-group animationDuration="0ms">
             <mat-tab *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
               <ng-template mat-tab-label>
-                <div class="mat-tab-label-content cursor-pointer" (click)="getTab(i,tab.tab_name)">
-                    {{ gateTabName(tab) }}
-                    <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span>
-                    <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
-                </div>
+                <div class="mat-tab-label-content cursor-pointer" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
+                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
               </ng-template>
             </mat-tab>
           </mat-tab-group>
