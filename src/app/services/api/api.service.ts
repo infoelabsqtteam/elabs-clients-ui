@@ -569,10 +569,13 @@ constructor(
     let api = this.envService.getApi('GET_GRID_DATA');
     this.http.post(api + '/' + payload.path, payload.data).subscribe(
       (respData) => {
-        if(respData && respData['data'] && respData['data'].length > 0){
-          const userPreference = respData['data'][0];
-          this.stroageService.setUserPreference(userPreference);
-        }          
+          if(respData && respData['data'] && respData['data'].length > 0){
+            const userPreference = respData['data'][0];
+            this.stroageService.setUserPreference(userPreference);
+            this.dataShareService.setUserPreference(userPreference);
+          }else{            
+            this.dataShareService.setUserPreference(respData['data']);
+          }          
         },
       (error) => {
           console.log(error);
