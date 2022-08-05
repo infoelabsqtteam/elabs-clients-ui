@@ -213,8 +213,8 @@ export const serverHostList = [
       "header_icon_hover_color": "",
       "btn_color": "",
       "btn_hover_color": "",
-      "footer_bg": "",
-      "theme_color": "",
+      "footer_bg": "#77bce8",
+      "theme_color": "#77bce8",
       "active_bg_color": "",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
