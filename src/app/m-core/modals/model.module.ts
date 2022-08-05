@@ -32,8 +32,7 @@ import { GitVersionComponent } from './git-version/git-version.component';
 import { ChartFilterComponent } from './chart-filter/chart-filter.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { DownloadProgressComponent } from './download-progress/download-progress.component';
-
-
+import { AuditHistoryComponent } from './audit-history/audit-history.component';
 
 
 const models = [
@@ -61,7 +60,8 @@ const models = [
   GitVersionComponent,
   ChartFilterComponent,
   FeedbackComponent,
-  DownloadProgressComponent
+  DownloadProgressComponent,
+  AuditHistoryComponent,
 ]
 
 @NgModule({

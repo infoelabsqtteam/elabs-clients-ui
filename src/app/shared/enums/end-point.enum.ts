@@ -58,5 +58,6 @@ export enum EndPoint {
     DOC_SHARE = "vdrn/shr",
     GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey",
     GIT_VERSION = "git/version",
-    DOC_PERMISSION = 'vdrn/svper'
+    DOC_PERMISSION = 'vdrn/svper',
+    AUDIT_HISTORY = "getAuditHistory/ID"
 }

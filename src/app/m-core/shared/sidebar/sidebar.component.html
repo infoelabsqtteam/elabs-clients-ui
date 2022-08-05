@@ -5,8 +5,6 @@
 
   <perfect-scrollbar>
     <div id="sidebar-menu">
-
-
       <div class="metismenu list-unstyled header2" id="side-menu" #sideMenu *ngIf="sidebar2">
         <mat-accordion>
           <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index">
@@ -17,17 +15,13 @@
             <div *ngIf="hasMenu(item)" class="menulist" aria-expanded="false">
               <div class="menuitems" *ngFor="let subitem of item.menu_list">
                 <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
-                <!--<a *ngIf="hasSubMenu(subitem)" class="side-nav-link-a-ref menu1" [attr.data-parent]="subitem.parentId"> {{ subitem.label }}</a>
-                <ul *ngIf="hasSubMenu(subitem)" class="sub-menu mm-collapse submenu2" aria-expanded="false">
-                  <li *ngFor="let subSubitem of subitem.submenu">
-                    <a [attr.data-parent]="subSubitem.parentId" class="side-nav-link-ref menu2" (click)="getTemplateData(item,subSubitem)"> {{ subSubitem.label }}</a>
-                  </li>
-                </ul> -->
+                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
                 <mat-accordion>
                   <mat-expansion-panel>
                     <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId">{{ subitem.label }}</mat-expansion-panel-header>
-                    <div matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
+                    <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
                       <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }}</small>
+                      <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span>
                     </div>
                   </mat-expansion-panel>
                 </mat-accordion>

@@ -20,7 +20,7 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
-import { json } from 'express';
+import { Subscription } from 'rxjs';
 
 declare var tinymce: any;
 
@@ -263,22 +263,22 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
   public style:string  = 'width: 100px, height: 100px, backgroundColor: cornflowerblue';
 
-  staticDataSubscriber;
-  gridDataSubscription;
-  tempDataSubscription;
-  saveResponceSubscription;
-  deleteGridRowResponceSubscription;
-  gridFilterDataSubscription;
-  typeaheadDataSubscription;
-  dinamicFormSubscription;
-  nestedFormSubscription;
-  navigationSubscription;
-  fileDataSubscription;
-  fileDownloadUrlSubscription;
-  gridSelectionOpenOrNotSubscription
-  dinamicFieldApiSubscription;
-  validationConditionSubscription;
-  nextFormSubscription;
+  staticDataSubscriber:Subscription;
+  gridDataSubscription:Subscription;
+  tempDataSubscription:Subscription;
+  saveResponceSubscription:Subscription;
+  deleteGridRowResponceSubscription:Subscription;
+  gridFilterDataSubscription:Subscription;
+  typeaheadDataSubscription:Subscription;
+  dinamicFormSubscription:Subscription;
+  nestedFormSubscription:Subscription;
+  navigationSubscription:Subscription;
+  fileDataSubscription:Subscription;
+  fileDownloadUrlSubscription:Subscription;
+  gridSelectionOpenOrNotSubscription:Subscription;
+  dinamicFieldApiSubscription:Subscription;
+  validationConditionSubscription:Subscription;
+  nextFormSubscription:Subscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
@@ -372,10 +372,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
-    })
-    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
-      this.setSaveResponce(responce);
-    })
+    })    
     this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
       this.setGridRowDeleteResponce(responce);
     })
@@ -513,7 +510,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.closeModal();
   }
 
-
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
   moreformResponce(responce) {
 
   }
@@ -1446,6 +1452,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.dataSaveInProgress = true;
       }
     }
+    this.unsubscribe(this.saveResponceSubscription);
   }
   setGridFilterData(gridFilterData){
     if (gridFilterData) {
@@ -1690,39 +1697,45 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     return gridColumns;
   }
 
-  checkDataAlreadyAddedInListOrNot(primary_key,incomingData,alreadyDataAddedlist){
-    if(alreadyDataAddedlist == undefined){
-      alreadyDataAddedlist = [];
-    }
-    let alreadyExist = "false";
-    if(typeof incomingData == 'object'){
-      alreadyDataAddedlist.forEach(element => {
-        if(element._id == incomingData._id){
-          alreadyExist =  "true";
-        }
-      });
-    }
-    else if(typeof incomingData == 'string'){
-      alreadyDataAddedlist.forEach(element => {
-        if(typeof element == 'string'){
-          if(element == incomingData){
-            alreadyExist =  "true";
-          }
-        }else{
-          if(element[primary_key] == incomingData){
-            alreadyExist =  "true";
-          }
-        }
-      
-      });
-    }else{
-      alreadyExist =  "false";
-    }
-    if(alreadyExist == "true"){
-      return true;
-    }else{
+  checkDataAlreadyAddedInListOrNot(field,incomingData,alreadyDataAddedlist){
+    if(field && field.allowDuplicacy){
       return false;
+    }else{
+      let primary_key = field.field_name
+      if(alreadyDataAddedlist == undefined){
+        alreadyDataAddedlist = [];
+      }
+      let alreadyExist = "false";
+      if(typeof incomingData == 'object'){
+        alreadyDataAddedlist.forEach(element => {
+          if(element._id == incomingData._id){
+            alreadyExist =  "true";
+          }
+        });
+      }
+      else if(typeof incomingData == 'string'){
+        alreadyDataAddedlist.forEach(element => {
+          if(typeof element == 'string'){
+            if(element == incomingData){
+              alreadyExist =  "true";
+            }
+          }else{
+            if(element[primary_key] == incomingData){
+              alreadyExist =  "true";
+            }
+          }
+        
+        });
+      }else{
+        alreadyExist =  "false";
+      }
+      if(alreadyExist == "true"){
+        return true;
+      }else{
+        return false;
+      }
     }
+    
   }
   
   setValue(parentfield,field, add,event?) {
@@ -1734,7 +1747,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(parentfield != ''){
             const custmizedKey = this.custmizedKey(parentfield);   
             const value = formValue[parentfield.field_name][field.field_name]
-            if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
+            if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey][field.field_name])){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
               if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
@@ -1754,7 +1767,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             
           }else{
             const value = formValue[field.field_name];
-            if(this.custmizedFormValue[field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
+            if(this.custmizedFormValue[field.field_name] && this.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name])){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
@@ -1792,7 +1805,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             if(parentfield != ''){
               const value = formValue[parentfield.field_name][field.field_name]
               const custmizedKey = this.custmizedKey(parentfield);
-              if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value, this.custmizedFormValue[custmizedKey][field.field_name])){
+              if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey][field.field_name])){
                 this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
               }else{
                 if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
@@ -1810,7 +1823,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               
             }else{
               const value = formValue[field.field_name];
-                if(this.custmizedFormValue[field.field_name] && this.checkDataAlreadyAddedInListOrNot(field.field_name,value,this.custmizedFormValue[field.field_name])){
+                if(this.custmizedFormValue[field.field_name] && this.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name])){
                   this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
                 }else{
                   if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
@@ -2008,12 +2021,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
 
           if(element.primary_key_for_list){
-            let primary_key_field_name = element.field_name;
             let primary_key_field_value = formValue[field.field_name][element.field_name];            
             let alreadyAdded = false;
             if(this.custmizedFormValue[field.field_name]){
               let list = this.custmizedFormValue[field.field_name];
-              alreadyAdded = this.checkDataAlreadyAddedInListOrNot(primary_key_field_name,primary_key_field_value,list);
+              alreadyAdded = this.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list);
             }
             if(alreadyAdded){
               this.notificationService.notify('bg-danger','Entered value for '+element.label+' is already added. !!!');
@@ -3080,8 +3092,10 @@ case 'populate_fields_for_report_for_new_order_flow':
       if(this.getSavePayload){
         if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.api && this.currentActionButton.onclick.api != null && this.currentActionButton.onclick.api.toLowerCase() == 'send_email'){
           this.apiService.SendEmail(saveFromData)
+          this.saveCallSubscribe();
         }else{
           this.apiService.SaveFormData(saveFromData);
+          this.saveCallSubscribe();
         }        
       }
     }else{
@@ -3299,6 +3313,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       data: this.elements[this.selectedRowIndex]
     }
     this.apiService.SaveFormData(updateFromData);
+    this.saveCallSubscribe();
   }
 
   candelForm() {    
@@ -3860,6 +3875,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
        payload['data'] = list;
       this.apiService.DynamicApiCall(payload);
+      this.saveCallSubscribe();
       //console.log();
       
     }
@@ -3880,6 +3896,7 @@ case 'populate_fields_for_report_for_new_order_flow':
               payload.data = saveFromData.data;
               if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
                 this.apiService.DynamicApiCall(payload);
+                this.saveCallSubscribe();
               } 
             }
           }else{
@@ -3893,6 +3910,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             });
             if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
               this.apiService.DynamicApiCall(payload);
+              this.saveCallSubscribe();
             }
           }
       } 
@@ -4496,7 +4514,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "list_of_string":
             case "drag_drop":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                this.custmizedFormValue[element.field_name] = formValue[element.field_name]
+                this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                 this.templateForm.controls[element.field_name].setValue('')
               }
               break;
@@ -4511,7 +4529,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "list_of_fields":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
                 if(isArray(formValue[element.field_name])){
-                  this.custmizedFormValue[element.field_name] = formValue[element.field_name]
+                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                 }else if(typeof formValue[element.field_name] == "object" && element.datatype == 'key_value'){
                   this.custmizedFormValue[element.field_name] = formValue[element.field_name]
                 }else{
@@ -4522,7 +4540,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case 'grid_selection_vertical':
                       case "drag_drop":                    
                         if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
-                          this.custmizedFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name]
+                          this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                           this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                         }
@@ -4530,7 +4548,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case "typeahead":
                         if(data.datatype == "list_of_object" || element.datatype == 'chips'){
                           if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
-                            this.custmizedFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name]
+                            this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                           }
@@ -4557,7 +4575,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "typeahead":
               if(element.datatype == "list_of_object" || element.datatype == 'chips'){
                 if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                  this.custmizedFormValue[element.field_name] = formValue[element.field_name]
+                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                   this.templateForm.controls[element.field_name].setValue('')
                 }
               }else{
@@ -4578,7 +4596,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                     case "drag_drop": 
                       if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                         if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
-                        const value = ChildFieldData[data.field_name];
+                        const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
                         this.custmizedFormValue[element.field_name][data.field_name] = value;
                         this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                         //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
@@ -4588,7 +4606,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                       if(data.datatype == "list_of_object" || data.datatype == 'chips'){
                         if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                           if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
-                          const value = ChildFieldData[data.field_name];
+                          const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
                           this.custmizedFormValue[element.field_name][data.field_name] = value;
                           this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
@@ -5175,7 +5193,8 @@ case 'populate_fields_for_report_for_new_order_flow':
     const previousFormIndex = this.multipleFormCollection.length - 1;
     const previousFormCollection = this.multipleFormCollection[previousFormIndex];
     const previousFormField = previousFormCollection.current_field;
-    const currentFormValue = this.getFormValue(true)
+    // const currentFormValue = this.getFormValue(true)
+    const currentFormValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
     this.updateMode = false;
     const fieldName = previousFormField.field_name;
     delete currentFormValue[fieldName];    
@@ -5201,18 +5220,19 @@ case 'populate_fields_for_report_for_new_order_flow':
           
           if(index != undefined && index >= 0){
             this.custmizedFormValue = {};
-            this.custmizedFormValue[fieldName] = fieldData;
+            this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
             this.nextFormUpdateMode = false;
             this.close();
           }else{
+            this.donotResetField();
             this.custmizedFormValue = {};
-            this.custmizedFormValue[fieldName] = fieldData;
+            this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
             previousformData[fieldName] = this.custmizedFormValue[fieldName];
             this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
 
-            this.donotResetField();
+            
             this.templateForm.reset()
             if(Object.keys(this.donotResetFieldLists).length > 0){
               this.updateDataOnFormField(this.donotResetFieldLists);

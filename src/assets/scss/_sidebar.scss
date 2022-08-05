@@ -31,12 +31,17 @@
         .mat-expansion-panel-header-title {align-items:center;font-size:13px;}
         .mat-expansion-panel-body {padding: 0 24px;
             .menulist {padding-left:30px;
-                .menuitems {padding:6px 0;font-size:13px;
+                .menuitems {padding:6px 0;font-size:13px;position:relative;
                   .mat-expansion-panel-body {padding:0;}
                   .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
+                  .favibtn { position:absolute;right:5px;top:5px;size:13px;color:#ddd;cursor:pointer;
+                    mat-icon {width:auto;height:auto;font-size:18px;}
+                  }
+                  .favibtn.active mat-icon {color:var(--footerbg) !important;}
                   .submenutitle {padding:0;padding-right:2px;height:auto;}
-                  .dropdownmenulist {opacity:0.8;font-size:13px;padding:3px 0;display:block;cursor:pointer;padding-left:10px;}
+                  .dropdownmenulist {opacity:0.8;font-size:13px;padding:3px 0;display:block;cursor:pointer;padding-left:10px;position:relative;}
                 }
+                .menuitems:first-child a .favibtn {display:none !important;}
             }
         }
     
@@ -52,7 +57,6 @@
 }
 
 .togglemenu .mat-icon{color:var(--headericon)}
-
 
 @media only screen and (max-width: 991px) {
     #page-topbar .navbar-header .navbar { display:none;}

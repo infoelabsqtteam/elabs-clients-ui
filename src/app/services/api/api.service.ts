@@ -7,6 +7,7 @@ import { EnvService } from '../env/env.service';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
 import { response } from 'express';
 import { ModelService } from '../model/model.service';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ constructor(
   private envService:EnvService,
   private router:Router,
   private modalService: ModelService, 
+  private stroageService:StorageService
 ) { }
   getStatiData(payloads){    
     // let api = this.envService.getApi('GET_STATIC_DATA');
@@ -213,6 +215,7 @@ constructor(
         }
     )
   }
+  
   ResetSaveResponce(){
     this.dataShareService.setSaveResponce('')
   }
@@ -484,6 +487,18 @@ constructor(
     )
   }
 
+  getAuditHistory(payload){
+    let api = this.envService.getApi('AUDIT_HISTORY');
+    this.http.post(api +"/"+ payload['_id'], payload).subscribe(
+      (respData) => {          
+        this.dataShareService.setAuditHistoryData(respData);
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
+  }
+
   getAplicationsThemeSetting(payload) {
     let api = this.envService.getApi('GET_GRID_DATA');
     this.http.post(api + '/' + payload.path, payload.data).subscribe(
@@ -550,6 +565,37 @@ constructor(
   }
 
 
+  getFavouriteData(payload){
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+      (respData) => {
+          if(respData && respData['data'] && respData['data'].length > 0){
+            const userPreference = respData['data'][0];
+            this.stroageService.setUserPreference(userPreference);
+            this.dataShareService.setUserPreference(userPreference);
+          }else{            
+            this.dataShareService.setUserPreference(respData['data']);
+          }          
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
 
+  getUserNotification(payload){
+    let api = this.envService.getApi('GET_GRID_DATA');
+    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+      (respData) => {
+          this.dataShareService.shareUserNotification(respData)
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
+  resetUserNotification(){
+    this.dataShareService.shareUserNotification([])
+  }
 
 }

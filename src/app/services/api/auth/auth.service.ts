@@ -9,6 +9,7 @@ import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { serverHostList } from '../../env/serverHostList';
+import { CommonFunctionService } from '../../common-utils/common-function.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class AuthService {
     private apiService:ApiService,
     private storageService:StorageService,
     private router:Router,
-    private encryptionService:EncryptionService
+    private encryptionService:EncryptionService,
+    private commonFunctionService:CommonFunctionService
   ) { }
 
 
@@ -91,6 +93,8 @@ export class AuthService {
           this.envService.setRequestType('PRIVATE');          
           this.dataShareService.restSettingModule('logged_in');
           this.apiService.gitVersion('');
+          this.commonFunctionService.getUserPrefrerence(respData.user);
+          this.commonFunctionService.getUserNotification(1);
           this.redirectionWithMenuType();                                  
         } else {
             this.envService.setRequestType('PUBLIC');
@@ -107,6 +111,7 @@ export class AuthService {
       }
     )
   }
+  
   redirectionWithMenuType(){
     const menuType = this.storageService.GetMenuType()
     if(menuType == 'Horizontal'){
