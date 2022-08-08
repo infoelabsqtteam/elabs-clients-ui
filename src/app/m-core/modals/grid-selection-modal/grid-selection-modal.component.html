@@ -15,7 +15,7 @@
       <div class="modal-body pt-0 popuptable">
         <div class="">
             <div class="table without-filter mb-2">            
-                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover" matSort (matSortChange)="sortData($event)">
+                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover  gridselectionform" matSort (matSortChange)="sortData($event)">
                     <thead>
                         <tr>
                             <th *ngIf="grid_row_selection" class="text-center">
