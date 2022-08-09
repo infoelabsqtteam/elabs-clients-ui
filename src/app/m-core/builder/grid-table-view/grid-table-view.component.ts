@@ -632,7 +632,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
-  
+  updateColumnList(field,index){
+    
+  }
   getTabsCount(tabs){
     this.commonFunctionService.getTabsCountPyload(tabs);    
   }
