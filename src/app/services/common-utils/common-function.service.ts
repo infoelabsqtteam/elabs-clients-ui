@@ -3128,6 +3128,17 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       this.apiService.getUserNotification(callPayload);
     }
   }
+  updateFieldInList(fieldName,list){
+    let modifyList = [];
+    if(list && list.length > 0){
+      list.forEach(element => {
+        let value = JSON.parse(JSON.stringify(element));
+        value[fieldName] = true;
+        modifyList.push(value);        
+      });
+    }
+    return modifyList;
+  }
 
   buggetForcastCalc(templateForm: FormGroup){
     let templateValue = templateForm.getRawValue();
