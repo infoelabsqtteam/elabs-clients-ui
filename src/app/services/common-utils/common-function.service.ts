@@ -3139,6 +3139,12 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
     return modifyList;
   }
+  getApplicationAllSettings() {
+    const payload1 = this.setPageNoAndSize(this.getPaylodWithCriteria("application_setting", "", [], {}), 1);
+    this.apiService.getAplicationsSetting(payload1);
+    const payload = this.setPageNoAndSize(this.getPaylodWithCriteria("application_theme_setting", "", [], {}), 1);
+    this.apiService.getAplicationsThemeSetting(payload);
+  }
 
   buggetForcastCalc(templateForm: FormGroup){
     let templateValue = templateForm.getRawValue();

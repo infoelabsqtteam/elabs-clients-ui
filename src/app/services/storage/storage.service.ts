@@ -56,6 +56,20 @@ export class StorageService {
     return JSON.parse(localStorage.getItem('USER_PREFERENCE'));
   }
 
+  setThemeSetting(settingObj:any){
+    localStorage.setItem("THEME_SETTING",JSON.stringify(settingObj));
+  }
+  getThemeSetting(){
+    return JSON.parse(localStorage.getItem('THEME_SETTING'));
+  }
+
+  setApplicationSetting(applicationSetting:any){
+    localStorage.setItem("APPLICATION_SETTING",JSON.stringify(applicationSetting));
+  }
+  getApplicationSetting(){
+    return JSON.parse(localStorage.getItem('APPLICATION_SETTING'));
+  }
+
   setAppId(appId:string){
     localStorage.setItem('appId', appId);
   }

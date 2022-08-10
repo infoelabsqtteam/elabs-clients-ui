@@ -99,30 +99,12 @@ export class EnvService {
   setDinamicallyHost(){
     let setHostName = this.storageService.getHostNameDinamically();
     let serverHostName = this.getHostKeyValue('serverEndpoint');
-    let projectFolderName = this.getHostKeyValue('folder');
-    let menuType = this.getHostKeyValue('menu_type');
-    let tempTheme = this.getHostKeyValue('theme');
-    let giolocation = this.getHostKeyValue('google_map');
-    let tempName = this.getHostKeyValue('temp_name');
-    let themedata = this.getHostKeyValue('theme_setting');
-    let pageTitle = this.getHostKeyValue('title');
-    let verify_type = this.getHostKeyValue('varify_mode');
-    let team_name = this.getHostKeyValue('teamname');
+    //let themedata = this.getHostKeyValue('theme_setting');    
+    //this.setApplicationSetting();
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
-      const path = 'assets/img/logo/' + projectFolderName + '/';
       this.storageService.setHostNameDinamically(hostName);
-      this.storageService.setLogoPath(path); 
-      this.storageService.SetMenuType(menuType);
-      this.setGoogleLocation(giolocation); 
-      this.storageService.setTempName(tempName);
-      this.setApplicationSetting(themedata);
-      this.storageService.setPageTitle(pageTitle);
-      if(verify_type){
-        this.storageService.setVerifyType(verify_type);
-      }      
-      this.storageService.setPageTheme(tempTheme);
-      this.storageService.setTeamName(team_name);
+      //this.setThemeSetting(themedata);
     }
   }
   
@@ -149,7 +131,28 @@ export class EnvService {
     (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
   }
 
-  setApplicationSetting(settingObj) {
+  setApplicationSetting(){
+    let projectFolderName = this.storageService.getApplicationSetting()['folder'];
+    let menuType = this.storageService.getApplicationSetting()['menu_type'];
+    let tempTheme = this.storageService.getApplicationSetting()['theme'];
+    let giolocation = this.storageService.getApplicationSetting()['google_map'];
+    let tempName = this.storageService.getApplicationSetting()['temp_name'];
+    let pageTitle = this.storageService.getApplicationSetting()['title'];
+    let verify_type = this.storageService.getApplicationSetting()['varify_mode'];
+    let team_name = this.storageService.getApplicationSetting()['teamname'];
+    const path = 'assets/img/logo/' + projectFolderName + '/';      
+    this.storageService.setLogoPath(path); 
+    this.storageService.SetMenuType(menuType);
+    this.storageService.setPageTheme(tempTheme);
+    this.setGoogleLocation(giolocation); 
+    this.storageService.setTempName(tempName);      
+    this.storageService.setPageTitle(pageTitle);
+    if(verify_type){
+      this.storageService.setVerifyType(verify_type);
+    }            
+    this.storageService.setTeamName(team_name);
+  }
+  setThemeSetting(settingObj) {
       if(settingObj.header_bg_color != "" ) {
         document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
       }
@@ -189,7 +192,7 @@ export class EnvService {
   }
   checkRedirectionUrl(){
     let redirectURL = '';
-    const url = this.getHostKeyValue('redirect_url')
+    const url = this.storageService.getApplicationSetting()['redirect_url'];
     if(url){
       redirectURL = url;
     }

@@ -12,6 +12,7 @@ import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
 import { StorageTokenStatus } from './shared/enums/storage-token-status.enum';
 import { AuthService } from './services/api/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -24,9 +25,10 @@ export class AppComponent implements OnInit {
   loadedFeature = 'signin';
   pageName: any;
   redirectToHitUrl:boolean=false;
-  settingModelRestSubscription;
+  settingModelRestSubscription:Subscription;
   showHideSetting:boolean = false;
-  applicationSettingSubscription
+  themeSettingSubscription:Subscription;
+  applicationSettingSubscription:Subscription;
 
   favIcon: HTMLLinkElement = document.querySelector('#favIcon');
   themeName:any = '';
@@ -39,27 +41,37 @@ export class AppComponent implements OnInit {
     private modelService:ModelService,
     public loaderService:LoaderService,
     private authApiService: AuthService,
+    private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
     
 
   ) {
-    // const object = this.commonfunctionService.getPaylodWithCriteria("ui_theme_setting", "", [], {});
-    // object["pageNo"] = 0;
-    // object["pageSize"] = 25;
-    // const payload = {
-    //   "path": null,
-    //   "data": object
-    // }
-    // this.apiService.getAplicationsThemeSetting(payload);
-    if(this.dataShareService.applicationSetting != undefined){
-      this.applicationSettingSubscription = this.dataShareService.applicationSetting.subscribe(
+    
+    this.commonfunctionService.getApplicationAllSettings();
+    if(this.dataShareService.themeSetting != undefined){
+      this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
-        //  console.log(data)
-        const themeSettingDate = data.data;
-        if(themeSettingDate && themeSettingDate.length > 0) {
-          const settingObj = themeSettingDate[0];
-          this.envService.setApplicationSetting(settingObj);
-        }
+          const themeSetting = data;
+          if(themeSetting && themeSetting.length > 0) {
+            const settingObj = themeSetting[0];
+            this.storageService.setThemeSetting(settingObj);
+            this.envService.setThemeSetting(settingObj);
+            this.dataShareService.resetThemeSetting([]);
+            this.dataShareService.subscribeTemeSetting("setting");
+          }
+        })
+    }
+    if(this.dataShareService.applicationSetting != undefined){
+      this.themeSettingSubscription = this.dataShareService.applicationSetting.subscribe(
+        data =>{
+          const applicationSetting = data;
+          if(applicationSetting && applicationSetting.length > 0) {
+            const settingObj = applicationSetting[0];
+            this.storageService.setApplicationSetting(settingObj);
+            this.envService.setApplicationSetting();
+            this.loadPage();
+            this.dataShareService.resetApplicationSetting([]);
+          }
         })
     }
    
@@ -75,7 +87,6 @@ export class AppComponent implements OnInit {
     })
    }
 
-  
   ngOnInit() {     
     this.router.events.subscribe(event =>{
       // if (event instanceof NavigationStart){
@@ -139,7 +150,6 @@ export class AppComponent implements OnInit {
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
-    this.loadPage();
     if (this.storageService != null && this.storageService.GetIdToken() != null) {
         const idToken = this.storageService.GetIdToken();
         if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
@@ -170,7 +180,6 @@ export class AppComponent implements OnInit {
   loadPage(){
     this.favIcon.href = this.storageService.getLogoPath() + "favicon.ico";
     this.titleService.setTitle(this.storageService.getPageTitle());
-    this.envService.setDinamicallyHost();
     this.themeName = this.storageService.getPageThmem();
   }
 }
