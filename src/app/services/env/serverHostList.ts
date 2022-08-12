@@ -1,6 +1,6 @@
 export const serverHostList = [
   {
-    "clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "localhost", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
@@ -213,8 +213,8 @@ export const serverHostList = [
       "header_icon_hover_color": "",
       "btn_color": "",
       "btn_hover_color": "",
-      "footer_bg": "",
-      "theme_color": "",
+      "footer_bg": "#77bce8",
+      "theme_color": "#77bce8",
       "active_bg_color": "",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
