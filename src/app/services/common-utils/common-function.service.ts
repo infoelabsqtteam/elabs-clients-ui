@@ -3193,7 +3193,7 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return templateForm;
   }
 
-  calculateTotalFair(value, populate_fields,multipleFormCollection?){
+  calculateTotalFair(value){
     let totalFair = 0;
     let claimSheet = value.claimSheet;
     let travelFair = claimSheet.travelFare;

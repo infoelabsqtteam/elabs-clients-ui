@@ -2373,7 +2373,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             list_of_populated_fields=[
               {"from":"travelFare+localTa+dailyAllowance+foodHotel+miscellaneous+/","to":"totalForTheDay"},
             ]
-            calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue(), list_of_populated_fields);
+            calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue());
             this.updateDataOnFormField(calFormValue); 
           break;
           case 'populate_fields_for_direct_order':
