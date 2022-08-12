@@ -32,7 +32,7 @@ const packages = [
   MomentDateModule,
   EditorModule,
   CarouselModule,
-  NgxDiff2htmlModule 
+  NgxDiff2htmlModule
 ]
 
 @NgModule({

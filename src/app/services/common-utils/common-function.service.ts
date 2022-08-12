@@ -3193,5 +3193,28 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return templateForm;
   }
 
+  calculateTotalFair(value, populate_fields,multipleFormCollection?){
+    let totalFair = 0;
+    let claimSheet = value.claimSheet;
+    let travelFair = claimSheet.travelFare;
+    let localTa = claimSheet.localTa;
+    let dailyAllowance = claimSheet.dailyAllowance;
+    let foodHotel = claimSheet.foodHotel;
+    let miscellaneous = claimSheet.miscellaneous;
+
+    totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
+
+    let obj1 = {
+      totalForTheDay:totalFair
+    }
+
+    let obj = {
+      claimSheet:obj1
+    }
+
+    return obj;
+
+  }
+
   
 }
