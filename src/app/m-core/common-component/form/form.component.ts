@@ -2370,9 +2370,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.updateDataOnFormField(calFormValue); 
           break;
           case 'calculation_travel_claim_sheet':
-            list_of_populated_fields=[
-              {"from":"travelFare+localTa+dailyAllowance+foodHotel+miscellaneous+/","to":"totalForTheDay"},
-            ]
             calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue());
             this.updateDataOnFormField(calFormValue); 
           break;
