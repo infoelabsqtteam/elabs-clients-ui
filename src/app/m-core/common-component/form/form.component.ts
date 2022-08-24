@@ -2526,6 +2526,10 @@ case 'populate_fields_for_report_for_new_order_flow':
           calFormValue = this.commonFunctionService.getPercent(this.templateForm.getRawValue(),parent, field);
           this.updateDataOnFormField(calFormValue);
           break;
+
+          case 'CALCULATE_TOTAL_AMOUNT':
+            calFormValue = this.commonFunctionService.calculateTotalAmount(tamplateFormValue)
+            this.updateDataOnFormField(calFormValue);
         default:
           break;
 

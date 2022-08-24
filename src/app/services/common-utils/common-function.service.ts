@@ -354,6 +354,11 @@ export class CommonFunctionService {
     let condition = []
     condition = data.split('#')
     if (condition.length >= 2) {
+
+      if(condition[3] != null && condition[3] != "" && condition[3] == 'dynamic'){
+        condition[2] = this.getObjectValue(condition[2], formValue)+"";
+      }
+
       let setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
       if (setValue === undefined || setValue === "") {
         setValue = "";
@@ -3214,6 +3219,19 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
     return obj;
 
+  }
+
+  calculateTotalAmount(formValue){
+    let list = formValue['claimSheet'];
+    let total = 0;
+    for(let i=0; i<list.length;i++){
+      total +=  list[i]['totalForTheDay']
+    }
+
+    let obj = {
+      totalAmountOfTravelCliam:total
+    }
+    return obj;
   }
 
   
