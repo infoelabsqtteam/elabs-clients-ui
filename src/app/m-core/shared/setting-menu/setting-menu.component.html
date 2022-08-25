@@ -1,0 +1,35 @@
+<section class="rightsettingmenu">
+    <mat-list>
+        <div mat-subheader>Setting</div>
+
+        <mat-list-item matRipple (click)="chartModel()">
+            <mat-icon>bar_chart</mat-icon>
+            <div mat-subheader>Chart Bar</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+
+        <mat-list-item matRipple (click)="shortcutinfo()">
+            <mat-icon>info</mat-icon>
+            <div mat-subheader>Shortcut Key</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+
+        <mat-list-item matRipple (click)="toggle = !toggle">
+            <mat-icon>notifications</mat-icon>
+            <div mat-subheader>Notifications<span class="budget" *ngIf="getUnreadNotificationLength() > 0" [innerHtml]="getUnreadNotificationLength()"></span>
+                <mat-icon class="ml-5">chevron_right</mat-icon>
+            </div>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="toggle">
+            <div mat-line matRipple class="px-3 py-1" [ngClass]="{'font-weight-bold': data.notificationStatus == 'UNREAD'}" *ngFor="let data of headerNotificationList; let i = index" (click)="readNotification(i)"><small>{{i + 1}} &nbsp; {{data.message}}</small></div>
+        </mat-list-item>
+
+        <button mat-button *ngIf="toggle" color="primary" class="w-100" routerLink="/notification-list">All Notifications <mat-icon>chevron_right</mat-icon></button>
+        <mat-divider></mat-divider>
+
+
+
+
+    </mat-list>
+</section>

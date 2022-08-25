@@ -5,6 +5,11 @@
 ::-webkit-scrollbar-thumb:hover{background:$color555}
 
 body {font-family:$roboto;font-size:13px;}
+.mat-tab-nav-bar, .mat-tab-header {border:none !important;}
+.mat-menu-content:not(:empty) {padding:0 !important;}
+.mat-drawer-container {height:calc(100vh - 60px);background-color:$bodybg !important;}
+.card {border:none !important;box-shadow:0 0 5px #e7e7e7;}
+
 
 @font-face {
     font-family: 'Montserrat';
@@ -14,22 +19,34 @@ body {font-family:$roboto;font-size:13px;}
     unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
   }
 
-  header {position:sticky;top:0;z-index:10;
-    .navbar-toggler-icon {position:relative;background-image:none !important;}
-    .navbar-toggler-icon:after {content:"\f0c9";position:absolute;font-family:"Font Awesome 5 Free";font-weight:900;top:5px;right:5px;color:#fff;}
-    .navbar {box-shadow:$no;background:$headerbg;
-        .navbar-brand {width:$size150;height:$size70;
+  /// Header
+  .header {box-shadow: 0 2px 4px rgb(0 0 0 / 8%);height:auto !important;position:relative;
+    .logoitem {width:260px;background:$themebg;
+        .mat-icon{color:var(--headericon);font-size:14px;}
+        .logo {height:$size60;width:205px;
             img {max-width:100%;height:100%;object-fit:contain;}
         }
-        .nav-link{color:$navtxtcolor;font-size:13px;font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-            &:focus, &:hover {outline:$no;color:$navtxthovercolor;}
-            .mat-button-focus-overlay {display:$no;}
-        }
-        button {
-            mat-icon {font-size:18px;opacity:0.7;color:var(--headericon)}
-        }
+      }
+    mat-icon {font-size:18px;opacity:0.7;color:var(--headericon)}
+    .searchbox {top:5px;right:60px;z-index:99;}
+    .headermenu {width:100%;
+        .mat-icon {width:auto;height:auto;line-height:0;vertical-align:middle;font-size:16px;margin-left:-5px;}
+        .mat-tab-label {height:58px;}
+    }
+    nav { height:60px;
+        .rightheader {position:absolute;right:0;top:10px;}
     }
 }
+
+.menudropdon, .logindropdown {margin-top:20px;border-radius:0 0 4px 4px !important;
+    button.mat-menu-item {font-size:13px;}
+    mat-icon {font-size:16px;width:auto;height:auto;}
+}
+.logindropdown {margin-top:10px !important;}
+
+
+
+
 
 /// Material Dropdown menu
 .moremenulist.mat-menu-panel {margin-top:7px;border-radius:0px 0px 4px 4px;
@@ -37,7 +54,6 @@ body {font-family:$roboto;font-size:13px;}
         font-size:13px;width:100%;text-align:left;
         &:focus {outline:$no;}
     }
-    .mat-menu-content:not(:empty) {padding-top:0;padding-bottom:0;}
 }
 .moremenulist.userlogin {max-width:120px;}
 
@@ -74,7 +90,7 @@ body {font-family:$roboto;font-size:13px;}
 .hz-scroll{display:$block;overflow-x:$auto;white-space:$nowrap}
 .errorlogo {width:120px;margin:0 auto;}
 
-
+.filtermenu {margin:30px 10px 0;min-width:100% !important;}
 .chartfilteroption{margin:30px 30px 0;min-width:100% !important;}
 .notfound {max-width:520px;width:100%;line-height:1.4;text-align:center;margin:auto;padding-top:100px;
     h3 {font-family:cabin,sans-serif;position:relative;font-size:16px;font-weight:700;color:#262626;margin:0;}

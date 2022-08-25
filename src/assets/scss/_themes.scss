@@ -12,14 +12,13 @@
 
 
 // Button Color
-.bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;
+.bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;margin:0 10px;
   &:hover {background:$buttonHovercolor !important;transition:all 1s;}
 }
 .optiondropdown {margin:30px 10px 0;min-width:100% !important;}
 .filteroption {margin:30px 30px 0;}
 .dropdownmenu {margin-top:15px;min-height:0px;
   mat-icon {font-size:16px;margin-right:5px !important;line-height:30px;width:auto;height:auto;}
-  .mat-menu-content:not(:empty) {padding:0px;}
   button {height:auto;line-height:30px;font-size:13px;
       &:focus {outline:none;}
   }
@@ -38,7 +37,6 @@
 }
 .dropdownmenu {margin-top:15px;min-height:0px;max-width:100% !important;
   mat-icon {font-size:16px;margin-right:5px !important;line-height:30px;width:auto;height:auto;}
-  .mat-menu-content:not(:empty) {padding:0px;}
   button {height:auto;line-height:30px;font-size:13px;
       &:focus {outline:none;}
   }

@@ -1,4 +1,4 @@
-<footer class="pt-2" *ngIf="menuBoxHome || currentPage">
+<footer *ngIf="menuBoxHome || currentPage">
   <div class="container" *ngIf="menuBoxHome">
     <div class="row">
       <div class="col-md-3">
@@ -112,8 +112,8 @@
       </ul>
     </div>
   </div>
-  <div class="copyright py-3" *ngIf="currentPage">
-    <div class="container">
+  <div class="copyright py-2" *ngIf="currentPage">
+    <div class="container-fluid">
       <div class="row" *ngIf="template == 'temp1'">
         <div class="col-md-6"><p class="m-0 text-white">© Copyright 2021 | {{title}}</p></div>
         <div class="col-md-6 text-md-right"> <a href="javascript:void(0)">Terms</a> | <a href="javascript:void(0)">Privacy &amp; Policy</a> | <a href="javascript:void(0)">Sitemap</a> </div>

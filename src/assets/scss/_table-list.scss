@@ -1,14 +1,15 @@
-.downloadbtn {position:absolute;right:15px;top:5px;z-index:9;
+.downloadbtn {position:absolute;right:15px;top:5px;z-index:1;
   .btn {box-shadow:none;border:1px solid #ccc;background:#f8f8f8;
     &:hover, &:focus, &:active {box-shadow:none !important;}
   }
 }
 
+.mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
-.table table {width:100%;font-size:13px;border:1px solid #ccc !important;
+.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {box-shadow:0 0 1px #ccc;
-            th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border:none;
+            th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {font-weight:500;position:relative;}
                 .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
@@ -51,7 +52,9 @@
 }
 
 
-.tablist {padding-right:150px;}
+.tablist {padding-right:150px;
+    .mat-tab-label-active {border-radius:5px 5px 0 0;background:#77bce8;color:#000;}
+}
 
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
@@ -69,13 +72,11 @@
 .mat-tab-header {
     .mat-tab-label {height:35px;padding:0 10px;min-width:auto;
         .favibtn {
-            mat-icon {font-size:13px;color:#ddd;height:auto;}
+            mat-icon {font-size:13px;color:#333;height:auto;}
         }
-        .favibtn.active mat-icon {color:var(--footerbg) !important}
+        .favibtn.active mat-icon {color:#0082d5;}
         .mat-tab-label-content {font-size:13px;font-family:$roboto;}
     }
-    .mat-tab-label-active {border-bottom:2px solid #4285f4;opacity:1 !important;}
-    
 }
 
 
@@ -96,9 +97,7 @@
 
 
 .modal-content:not(.card-image) .close {position:inherit !important;}
-.btn {box-shadow:none !important;
-    &:hover, &:focus {border:2px solid #285393;}
-}
+.btn {box-shadow:none !important;}
 
 
 .cdk-overlay-container .mat-snack-bar-container {

@@ -604,8 +604,7 @@
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'file'">
-                                        <button class="btn bg-cerulean btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled">{{fields.label}}</button> 
-                                        <!-- list of attachment files -->
+                                        <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',fields)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
                                         <div *ngIf="dataListForUpload[fields.field_name] && dataListForUpload[fields.field_name].length > 0">
                                             <table mdbTable small="true" bordered="true">
                                                 <thead class="black white-text">
@@ -620,12 +619,13 @@
                                                         <td>
                                                             <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
                                                             <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
+                                                            <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>                           
-                                    </div> 
+                                    </div>
                                     <div *ngIf="fields.type == 'input_with_uploadfile'">
                                         <div class="w-100 position-relative">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -664,6 +664,9 @@
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
                                 </div>
                             </div>
+
+
+                            
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter mt-2" *ngIf="custmizedFormValue[tableField.field_name]">
                                     <table class="table-bordered table-striped table-hover one-line-text" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
@@ -915,6 +918,7 @@
                         <div *ngIf="tableField.type == 'button'">
                             <button mdbBtn type="button" size="sm" class="btn-public rounded bg-cerulean text-white" (click)="partialDataSave(tableField.onclick, tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button>
                         </div>
+
                         <div *ngIf="tableField.type == 'file'">
                             <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                             <!-- list of attachment files -->
@@ -939,6 +943,7 @@
                                 </table>
                             </div>                           
                         </div> 
+
                         <div *ngIf="tableField.type == 'input_with_uploadfile'">
                             <div class="w-100 position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
