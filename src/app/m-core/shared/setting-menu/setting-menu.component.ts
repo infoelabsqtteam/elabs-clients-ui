@@ -762,8 +762,10 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         }
     }
 
-
-
+    toggle = false;
+    notifymenu() {
+        this.toggle = !this.toggle;
+    }
 
 
 

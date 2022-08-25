@@ -14,7 +14,7 @@
         </mat-list-item>
         <mat-divider></mat-divider>
 
-        <mat-list-item matRipple (click)="toggle = !toggle">
+        <mat-list-item matRipple (click)="notifymenu()">
             <mat-icon>notifications</mat-icon>
             <div mat-subheader>Notifications<span class="budget" *ngIf="getUnreadNotificationLength() > 0" [innerHtml]="getUnreadNotificationLength()"></span>
                 <mat-icon class="ml-5">chevron_right</mat-icon>
