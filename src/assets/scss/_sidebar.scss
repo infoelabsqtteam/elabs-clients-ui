@@ -2,7 +2,7 @@
  .mat-drawer-inner-container {overflow-y:hidden !important;} 
 
  //----- Left Side Bar Menu -----//
-.sidenav {padding:20px 0;height:100%;width:260px;background:$themebg;
+.sidenav {padding:20px 0;height:100%;width:260px;background:var(--themecolor);
     input {padding:$size8 $size15;font-size:$size15;border-radius:$size25;width:$per100;}
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
     .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;margin:0px;background:none;}
@@ -16,7 +16,7 @@
                   .favibtn { position:absolute;right:20px;top:5px;size:13px;color:#ddd;cursor:pointer;
                     mat-icon {width:auto;height:auto;font-size:18px;}
                   }
-                  .favibtn.active mat-icon {color:var(--footerbg) !important;}
+                  .favibtn.active mat-icon {color:#0082d5;}
                   .submenutitle {padding:0;padding-right:2px;height:auto;font-size:inherit;}
                   .dropdownmenulist {opacity:0.8;font-size:13px;padding:3px 0;display:block;cursor:pointer;padding-left:10px;position:relative;}
                 }
@@ -27,7 +27,7 @@
 
 
  //----- Right Side Bar Menu -----//
-.rightsettingmenu {width:260px;height:100%;background:$themebg;
+.rightsettingmenu {width:260px;height:100%;background:var(--themecolor);
     mat-icon {color:#999;font-size:16px;width:auto;height:auto;}
     .mat-icon-button {line-height:15px;}
     mat-list-item {cursor:pointer;}

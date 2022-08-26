@@ -20,8 +20,8 @@ body {font-family:$roboto;font-size:13px;}
   }
 
   /// Header
-  .header {box-shadow: 0 2px 4px rgb(0 0 0 / 8%);height:auto !important;position:relative;
-    .logoitem {width:260px;background:$themebg;
+  .header {box-shadow: 0 2px 4px rgb(0 0 0 / 8%);height:auto !important;position:relative;background:var(--headerbg) !important;
+    .logoitem {width:260px;background:var(--themecolor);
         .mat-icon{color:var(--headericon);font-size:14px;}
         .logo {height:$size60;width:205px;
             img {max-width:100%;height:100%;object-fit:contain;}
