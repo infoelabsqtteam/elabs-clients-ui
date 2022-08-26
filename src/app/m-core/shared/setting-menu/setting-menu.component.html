@@ -1,7 +1,11 @@
 <section class="rightsettingmenu">
-    <mat-list>
-        <div mat-subheader>Setting</div>
+    <div class="profilepci bg-white text-center pb-2">
+        <div class="prifileimg mx-auto"><img src="assets/img/profile.jpg" alt="" width="60"></div>
+        <h3 class="m-0">{{userName}}</h3>
+        <h5 class="m-0">{{userEmail}}</h5>
+    </div>
 
+    <mat-list class="pt-0">
         <mat-list-item matRipple (click)="chartModel()">
             <mat-icon>bar_chart</mat-icon>
             <div mat-subheader>Chart Bar</div>
@@ -24,12 +28,48 @@
         <mat-list-item *ngIf="toggle">
             <div mat-line matRipple class="px-3 py-1" [ngClass]="{'font-weight-bold': data.notificationStatus == 'UNREAD'}" *ngFor="let data of headerNotificationList; let i = index" (click)="readNotification(i)"><small>{{i + 1}} &nbsp; {{data.message}}</small></div>
         </mat-list-item>
-
         <button mat-button *ngIf="toggle" color="primary" class="w-100" routerLink="/notification-list">All Notifications <mat-icon>chevron_right</mat-icon></button>
         <mat-divider></mat-divider>
 
+        <mat-list-item matRipple routerLink="/notification-setting">
+            <mat-icon>settings</mat-icon>
+            <div mat-subheader>Notificatoin Setting</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
+        <mat-list-item matRipple (click)="gitInfo()">
+            <mat-icon>info</mat-icon>
+            <div mat-subheader>Version: {{gitVersion}}</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
+        <mat-list-item matRipple (click)="feedback()">
+            <mat-icon>forum</mat-icon>
+            <div mat-subheader>Feedback</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+
+        <mat-list-item matRipple routerLink="/createpwd">
+            <mat-icon>lock_clock</mat-icon>
+            <div mat-subheader>Change Password</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+
+        <mat-list-item matRipple (click)="logOut()">
+            <mat-icon>power_settings_new</mat-icon>
+            <div mat-subheader>Log out</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
     </mat-list>
+
+
+    <!-- <div *ngIf="teamNameMenu == 'true'">
+        <div *ngIf="teamname && teamname != null">
+          <button mat-menu-item *ngFor="let team of teamname; let i = index">
+            <mat-icon class="mr-2">group_add</mat-icon> Team Name {{i + 1}}: {{team.name}}
+          </button>
+        </div>
+      </div> -->
+
 </section>

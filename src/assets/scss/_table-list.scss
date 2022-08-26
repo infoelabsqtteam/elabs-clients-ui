@@ -7,6 +7,9 @@
 .mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
 .table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
+    .grid-data {width:auto !important;max-width:140px;}
+    .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
+
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
@@ -29,7 +32,7 @@
             &:nth-of-type(even) {background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;}
+        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
     }
 
     .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;
@@ -115,8 +118,6 @@
 
 
 .one-line-text {text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
-.form-control.form-control-sm, .mat-form-field .mat-form-field-infix {min-width:150px;width:100% !important;}
-
 .fixedcol {position:sticky;z-index:1;max-width:160px;min-width:160px;padding:5px 10px !important;left:0;}
 .fixedcol:nth-child(2) {left:0px !important;}
 .fixedcol:nth-child(3) {left:150px !important;}
