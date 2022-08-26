@@ -1,5 +1,9 @@
-@media only screen and (max-width:1400px) {
-  .mat-tab-header .mat-tab-label {padding:0 5px;}
+@media only screen and (max-width:1450px) {
+  .topheader {width:76%;}
+}
+
+@media only screen and (max-width:1150px) {
+  .topheader {width:70%;}
 }
 
 @media only screen and (max-width: 991px) {
@@ -19,8 +23,8 @@
 
 
 @media only screen and (max-width: 600px){
-
-  }
+  body {overflow:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
+}
 
 
 
