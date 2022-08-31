@@ -398,9 +398,12 @@ export class CommonFunctionService {
   }
 
   checkIfCondition(data, formValue) {
-    let condition = [];
+    let condition = []
     condition = data.split('#')
     if (condition.length >= 2) {
+      if(condition[3] != null && condition[3] != "" && condition[3] == 'dynamic'){
+        condition[2] = this.getObjectValue(condition[2], formValue)+"";
+      }
       let setValue = "";
       if(condition.length > 3 && condition[3] == 'STATIC'){
         setValue = condition[0];
@@ -3260,6 +3263,42 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
     });
     return templateForm;
+  }
+
+  calculateTotalFair(value){
+    let totalFair = 0;
+    let claimSheet = value.claimSheet;
+    let travelFair = claimSheet.travelFare;
+    let localTa = claimSheet.localTa;
+    let dailyAllowance = claimSheet.dailyAllowance;
+    let foodHotel = claimSheet.foodHotel;
+    let miscellaneous = claimSheet.miscellaneous;
+
+    totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
+
+    let obj1 = {
+      totalForTheDay:totalFair
+    }
+
+    let obj = {
+      claimSheet:obj1
+    }
+
+    return obj;
+
+  }
+
+  calculateTotalAmount(formValue){
+    let list = formValue['claimSheet'];
+    let total = 0;
+    for(let i=0; i<list.length;i++){
+      total +=  list[i]['totalForTheDay']
+    }
+
+    let obj = {
+      totalAmountOfTravelCliam:total
+    }
+    return obj;
   }
 
   
