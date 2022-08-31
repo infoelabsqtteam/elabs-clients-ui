@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/api/auth/auth.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { Subscription } from 'rxjs';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
 
 
 
@@ -22,13 +24,20 @@ export class SigninComponent implements OnInit {
   template:string = "temp1";
   logoPath = '';
   title = "";
+  applicationSettingSubscription:Subscription;
   constructor(
     private router: Router,
     private authService:AuthService,
     private envService:EnvService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private dataShareService:DataShareService
     ) {
       this.pageloded();
+      this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
+        if(setting == 'setting'){
+          this.pageloded();
+        }
+      })
   }
 
 
@@ -66,7 +75,7 @@ export class SigninComponent implements OnInit {
   pageloded(){
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
-    this.title = this.envService.getHostKeyValue('title');
+    this.title = this.storageService.getPageTitle();
   }
 
   showpassword() {

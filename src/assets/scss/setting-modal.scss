@@ -25,6 +25,20 @@
     span {font-size:12px;display:block;}
 }
 
+.gridFilterDropdown {
+    .mat-checkbox-inner-container{    
+        height: 12px;
+        margin-right: 6px;
+        width: 12px;
+    }
+    label {
+        margin-bottom: 0px;
+    }
+    li {
+        font-size: 12px;
+    }
+}
+
 
 
 

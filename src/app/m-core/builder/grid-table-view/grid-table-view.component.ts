@@ -14,6 +14,7 @@ import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
+import { V } from '@angular/cdk/keycodes';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -129,6 +130,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
+
+  showColumnList:any={};
 
 
 
@@ -511,7 +514,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       if(this.tab.grid && this.tab.grid != undefined){
         if(this.tab.grid.gridColumns && this.createFilterHeadElement){
-          this.headElements = this.tab.grid.gridColumns;          
+          this.headElements = this.commonFunctionService.updateFieldInList('show',this.tab.grid.gridColumns);          
           this.createFilterHeadElement = false;
         }
         if(this.tab.grid.gridColumns == undefined && this.tab.grid.gridColumns == null){
@@ -628,6 +631,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
 
 
+  }
+  updateColumnList(field,index){
+    
   }
   getTabsCount(tabs){
     this.commonFunctionService.getTabsCountPyload(tabs);    
@@ -1351,7 +1357,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         for (let j = 0; j < crList.length; j++) {
           const child = crList[j];
           let modify = child.replaceAll(';', "#");
-          if(!this.commonFunctionService.checkIfCondition(modify,object)){
+          if(!this.commonFunctionService.checkIfConditionForArrayListValue(modify,object)){
             childConditionsMatched = false;
             break;
           }else{
