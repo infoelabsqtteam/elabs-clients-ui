@@ -82,6 +82,7 @@ export class AppComponent implements OnInit {
         this.showHideSetting = false;
       }else if (data == "logged_out"){
         this.showHideSetting = true;
+        this.localSetting();
       }else if(data == "hide"){
         this.showHideSetting = true;
       }
