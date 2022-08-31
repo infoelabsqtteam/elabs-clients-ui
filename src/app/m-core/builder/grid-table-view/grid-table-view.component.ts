@@ -1357,7 +1357,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         for (let j = 0; j < crList.length; j++) {
           const child = crList[j];
           let modify = child.replaceAll(';', "#");
-          if(!this.commonFunctionService.checkIfCondition(modify,object)){
+          if(!this.commonFunctionService.checkIfConditionForArrayListValue(modify,object)){
             childConditionsMatched = false;
             break;
           }else{

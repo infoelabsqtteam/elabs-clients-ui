@@ -110,13 +110,19 @@ export class EnvService {
   
   getHostKeyValue(keyName){
     let hostname = this.getHostName('hostname');
-    let value = '';    
+    let value:any = '';    
     if(serverHostList && serverHostList.length > 0){
       for (let index = 0; index < serverHostList.length; index++) {
         const element = serverHostList[index];
         if(hostname == element.clientEndpoint){
-          value = element[keyName];
-          break;
+          if(keyName == "object"){
+            value = element;
+            break;
+          }else{
+            value = element[keyName];
+            break;
+          }
+          
         }        
       }
     }
@@ -192,9 +198,9 @@ export class EnvService {
   }
   checkRedirectionUrl(){
     let redirectURL = '';
-    const url = this.storageService.getApplicationSetting()['redirect_url'];
-    if(url){
-      redirectURL = url;
+    const url = this.storageService.getApplicationSetting();
+    if(url && url['redirect_url']){
+      redirectURL = url['redirect_url'];
     }
     return redirectURL;
   }

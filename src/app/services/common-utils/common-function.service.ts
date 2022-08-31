@@ -258,7 +258,7 @@ export class CommonFunctionService {
       const showIf = field.show_if.split(';')
       let checkIf = true;
       for (let index = 0; index < showIf.length; index++) {
-        checkIf = this.checkIfCondition(showIf[index], formValue);
+        checkIf = this.checkIfConditionForArrayListValue(showIf[index], formValue);
         if (!checkIf) {
           return;
         }
@@ -271,6 +271,53 @@ export class CommonFunctionService {
     } else {
       return true;
     }
+  }
+  checkIfConditionForArrayListValue(data, formValue){
+    let condition = []
+    condition = data.split('#');
+    if (condition.length == 4) {
+      let check = "";
+      let checkList = [];      
+      let setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
+      if(setValue && setValue.length > 0){
+        for (let index = 0; index < setValue.length; index++) {
+          const element = setValue[index];
+          let value = this.getObjectValue(condition[3],element);
+          if(value && value != ''){
+            check = check + value + "#";
+            for (let index = 0; index < condition.length; index++) {
+              const conditons = condition[index];
+              if(index == 1){
+                check = check + conditons + '#';
+              }else if(index == 2){
+                check = check + conditons + '#STATIC';
+              }        
+            }
+            checkList.push(check);
+            check = "";
+          }else{
+            return false;
+          }
+        }        
+      }else{
+        return false;
+      }
+      if(checkList && checkList.length > 0){
+        for (let index = 0; index < checkList.length; index++) {
+          const condition = checkList[index];
+          let result = this.checkIfCondition(condition,formValue);
+          if(result){
+            return true;
+          }
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }else{
+      return this.checkIfCondition(data,formValue);
+    }
+
   }
     calculateAdditionalCost(obj){
     
@@ -351,10 +398,15 @@ export class CommonFunctionService {
   }
 
   checkIfCondition(data, formValue) {
-    let condition = []
+    let condition = [];
     condition = data.split('#')
     if (condition.length >= 2) {
-      let setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
+      let setValue = "";
+      if(condition.length > 3 && condition[3] == 'STATIC'){
+        setValue = condition[0];
+      }else{
+        setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
+      }      
       if (setValue === undefined || setValue === "") {
         setValue = "";
       } else {
