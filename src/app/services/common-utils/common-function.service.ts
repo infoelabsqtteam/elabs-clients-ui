@@ -275,7 +275,7 @@ export class CommonFunctionService {
   checkIfConditionForArrayListValue(data, formValue){
     let condition = []
     condition = data.split('#');
-    if (condition.length == 4 && condition[3] != 'dynamic') {
+    if (condition.length == 4 && condition[3] != 'dynamic' && condition[3] != 'STATIC') {
       let check = "";
       let checkList = [];      
       let setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
