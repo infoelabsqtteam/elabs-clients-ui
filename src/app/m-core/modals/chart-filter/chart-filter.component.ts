@@ -212,12 +212,16 @@ export class ChartFilterComponent implements OnInit {
     this.callTypeaheadData(field,this.dashboardFilter.getRawValue()); 
   }
   callTypeaheadData(field,objectValue){
-    this.clearTypeaheadData();   
-    const payload = [];
-    const params = field.api_params;
-    const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
-    this.apiService.GetTypeaheadData(payload);    
+    this.clearTypeaheadData();  
+    const field_name = field.field_name;
+    const value = this.commonFunctionService.getObjectValue(field_name,objectValue);
+    if(value && value != ''){
+      const payload = [];
+      const params = field.api_params;
+      const criteria = field.api_params_criteria;
+      payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+      this.apiService.GetTypeaheadData(payload);  
+    }  
   }
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
@@ -349,6 +353,14 @@ export class ChartFilterComponent implements OnInit {
   canvasimg() {
     var canvas = document.getElementById('chartjs') as HTMLCanvasElement;
     this.chartjsimg = canvas.toDataURL('image/png');
+  }
+
+  setValue(parentfield,field, add,event?) {    
+ 
+    if (field.type == 'typeahead') {
+      this.clearTypeaheadData();
+    }
+
   }
 
 
