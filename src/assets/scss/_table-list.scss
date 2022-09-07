@@ -50,8 +50,13 @@
 
 }
 
-
-.tablist {padding-right:150px;}
+.mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
+    mat-icon {font-size:16px;}
+}
+.filterdrowdownmenu {margin-top:5px;min-width:160px !important;
+    li {font-size:12px;}
+}
+.tablist {padding-right:190px;}
 
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
@@ -96,7 +101,7 @@
 
 
 .modal-content:not(.card-image) .close {position:inherit !important;}
-.btn {box-shadow:none !important;
+.bg-cerulean.btn {box-shadow:none !important;border:2px solid transparent;
     &:hover, &:focus {border:2px solid #285393;}
 }
 
