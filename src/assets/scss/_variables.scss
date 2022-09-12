@@ -1,7 +1,8 @@
 :root {
     --primary-color: #0d6efd;
     --secondary-color: #6c757d;
-    --themecolor: "#ffffff";
+    --themecolor:#000;
+    --themes:#e8f5fd;
     --white: #fff;
     --module-hover-bg: #eef5fd;
     //Header
@@ -14,14 +15,15 @@
     --activebg: #77bce8;
     --activecolor: #fff;
     //Button
-    --buttonColor: #0d6efd;
-    --buttonHoverColor: #0d6efd;
+    --buttonColor: #2597de;
+    --buttonHoverColor: #0b71b0;
     --footerbg: #77bce8;
     --popupHeaderBg: #CEE7F7;
     --formLabelBg: #E4F2FA;
     --chartheaderBg: #8dcbf2;
 }
 
+$bodybg: #f1f4f7;
 // Header Color Setting
 $headerbg: var(--headerbg);
 $headericon: var(--headericon);
@@ -36,6 +38,7 @@ $buttoncolor: var(--buttonColor);
 $buttonHovercolor: var(--buttonHoverColor);
 
 $themecolor: var(--themecolor);
+$themebg: var(--themes);
 
 // Theme Setting
 //$themecolor: var(--themecolor);
@@ -44,7 +47,7 @@ $popupheadingbg: #ecf0f1;
 $inputbordercolor: #ced4da;
 $white : var(--white);
 $black: #000;
-$themebg: #665852;
+// $themebg: #665852;
 $footerbg: var(--footerbg);
 //Display
 $no: none;
