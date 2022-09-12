@@ -1994,7 +1994,15 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
                   totalInjection = this.getDecimalAmount(totalInjection + (quantity-1)*no_of_injection2);
                   totalAmount = this.getDecimalAmount(totalInjection * rate_per_injection);
                 }
-              }else{
+              }
+              else if(data.no_of_injection > 0 && data.no_of_injection2<=0){
+                let no_of_injection = data.no_of_injection;
+                if(quantity > 1 && no_of_injection>0){
+                  totalInjection = this.getDecimalAmount(totalInjection + (quantity-1)*no_of_injection);
+                  totalAmount = this.getDecimalAmount(totalInjection * rate_per_injection);
+                }
+              }
+              else{
                 totalAmount = this.getDecimalAmount(quantity*totalInjection * rate_per_injection);
               }
               // data["quotation_effective_rate"]= totalAmount;
