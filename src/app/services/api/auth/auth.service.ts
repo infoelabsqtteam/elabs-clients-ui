@@ -69,6 +69,7 @@ export class AuthService {
     this.apiService.resetTempData();
     this.apiService.resetGridData();
     this.envService.setRequestType('PUBLIC');
+    this.commonFunctionService.getApplicationAllSettings();
     
   }
   logOutRedirection(){

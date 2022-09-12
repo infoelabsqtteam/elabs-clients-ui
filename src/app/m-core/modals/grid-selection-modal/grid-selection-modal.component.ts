@@ -439,7 +439,8 @@ export class GridSelectionModalComponent implements OnInit {
       this.gridData = [];
     }
     if (this.field.gridColumns && this.field.gridColumns.length > 0) {
-      this.field.gridColumns.forEach(field => {
+      let gridColumns = this.CommonFunctionService.updateFieldInList('display',this.field.gridColumns);
+      gridColumns.forEach(field => {
         if (this.coreFunctionService.isNotBlank(field.show_if)) {
           if (!this.CommonFunctionService.showIf(field, this.parentObject)) {
             field['display'] = false;
@@ -450,7 +451,7 @@ export class GridSelectionModalComponent implements OnInit {
           field['display'] = true;
         }
       });
-      this.listOfGridFieldName = this.field.gridColumns;
+      this.listOfGridFieldName = gridColumns;
       this.gridViewModalSelection.show();
     } else {
       this.notificationService.notify("bg-danger", "Grid Columns are not available In This Field.")
@@ -469,6 +470,9 @@ export class GridSelectionModalComponent implements OnInit {
     //For dropdown data in grid selection
     this.getStaticDataWithDependentData()
 
+  }
+  updateColumnList(data,index){
+    //this.listOfGridFieldName[index].display = data.display;
   }
   selectGridData() {
     this.selectedData = [];
@@ -665,6 +669,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   isDisable(field, object) {
+    console.log(field.field_name +":- " + field.display);
     const updateMode = false;
     let disabledrow = false;
     if (field.is_disabled) {

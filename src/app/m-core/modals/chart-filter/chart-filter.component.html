@@ -83,7 +83,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                         <mat-label>{{field.label}} <span *ngIf="field.is_mandatory && field.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                         <input type="text" [placeholder]="field.label" [required]="field.is_mandatory && field.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="field.field_name"
                             [matAutocomplete]="first" (keyup)="updateData($event,field)" [id]="field._id+'_'+field.field_name">
-                        <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" class="chartautocomplete" [displayWith]="getOptionText">
+                        <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" class="chartautocomplete" (optionSelected)="setValue('',field,false)" [displayWith]="getOptionText">
                             <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                         </mat-autocomplete>
                     </mat-form-field>

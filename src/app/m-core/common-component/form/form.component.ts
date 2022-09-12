@@ -3648,7 +3648,11 @@ case 'populate_fields_for_report_for_new_order_flow':
             break;
 
             case 'calculate_lims_invoice':
-              let val1 = this.commonFunctionService.calculate_lims_invoice(this.getFormValue(true),'','');
+              let calculate_on_field = "";
+              if(this.curTreeViewField.calculate_on_field != null && this.curTreeViewField.calculate_on_field != ''){
+                calculate_on_field = this.curTreeViewField.calculate_on_field
+              }
+              let val1 = this.commonFunctionService.calculate_lims_invoice(this.getFormValue(true),'',calculate_on_field);
               this.updateDataOnFormField(val1);
               break;
 
@@ -4873,12 +4877,22 @@ case 'populate_fields_for_report_for_new_order_flow':
   checkShowIfListOfFiedlds(parent,field,index){
     let formValue = this.getFormValue(true);
     let parentFieldName = parent.field_name;
-    let fieldValue = formValue[parentFieldName];
-    if(fieldValue && fieldValue.length > 0){
-      formValue[parentFieldName] = fieldValue[index];
-    }
-    if(!this.commonFunctionService.showIf(field,formValue)){
-      return true;
+    let fieldValue = formValue[parentFieldName];    
+    if(fieldValue && fieldValue.length > 0 && field && field.show_if && field.show_if != null && field.show_if != ''){
+      let check = 0;      
+      for (let index = 0; index < fieldValue.length; index++) {
+        const value = fieldValue[index];
+        formValue[parentFieldName] = value;
+        if(this.commonFunctionService.showIf(field,formValue)){
+          check = 1;
+          break;
+        }        
+      }
+      if(check == 1){
+        return false;
+      }else{
+        return true;
+      }
     }else{
       return false;
     }

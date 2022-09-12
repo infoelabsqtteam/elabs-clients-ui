@@ -55,9 +55,7 @@
 }
 
 
-.tablist {padding-right:150px;
-    .mat-tab-label-active {border-radius:5px 5px 0 0;background:#77bce8;color:#000;}
-}
+.tablist {padding-right:190px;}
 
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
@@ -100,7 +98,9 @@
 
 
 .modal-content:not(.card-image) .close {position:inherit !important;}
-.btn {box-shadow:none !important;}
+.btn {box-shadow:none !important;
+    &:hover, &:focus {border:2px solid #285393;}
+}
 
 
 .cdk-overlay-container .mat-snack-bar-container {

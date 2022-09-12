@@ -500,11 +500,24 @@ constructor(
   }
 
   getAplicationsThemeSetting(payload) {
-    let api = this.envService.getApi('GET_GRID_DATA');
-    this.http.post(api + '/' + payload.path, payload.data).subscribe(
+    let api = this.envService.getApi('GET_CUSTOM_TEMPLATE');
+    this.http.post(api, payload).subscribe(
       (respData) => {
         if(JSON.stringify(respData) != "{}"){ 
           this.dataShareService.setThemeSetting(respData)
+        }
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
+  }
+  getAplicationsSetting(payload) {
+    let api = this.envService.getApi('GET_CUSTOM_TEMPLATE');
+    this.http.post(api, payload).subscribe(
+      (respData) => {
+        if(JSON.stringify(respData) != "{}"){ 
+          this.dataShareService.setApplicationSetting(respData)
         }
         },
       (error) => {
