@@ -55,6 +55,12 @@
 }
 
 
+.mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
+    mat-icon {font-size:16px;}
+}
+.filterdrowdownmenu {margin-top:5px;min-width:160px !important;
+    li {font-size:12px;}
+}
 .tablist {padding-right:190px;}
 
 .ngx-pagination {margin-bottom:0px !important;
@@ -98,9 +104,9 @@
 
 
 .modal-content:not(.card-image) .close {position:inherit !important;}
-.btn {box-shadow:none !important;
-    &:hover, &:focus {border:2px solid #285393;}
-}
+// .btn {box-shadow:none !important;
+//     &:hover, &:focus {border:2px solid #285393;}
+// }
 
 
 .cdk-overlay-container .mat-snack-bar-container {

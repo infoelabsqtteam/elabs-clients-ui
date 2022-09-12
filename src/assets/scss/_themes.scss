@@ -1,9 +1,9 @@
 .service-block-two .inner-box .lower-content .link a i, .form-tab h4.active, .mat-form-field.mat-focused.mat-primary .mat-select-arrow{color:$themetext!important}
-.sec-title:before, .sec-title .dotted-box .dotted, .service-block-two .inner-box .lower-content .link:before, .page-title .content-box .title-box:before, .theme-btn-two, .ngx-pagination .current, .float, .page-title .content-box .title-box .dotted-box .dotted{background:$themecolor!important}
+.sec-title:before, .sec-title .dotted-box .dotted, .service-block-two .inner-box .lower-content .link:before, .page-title .content-box .title-box:before, .theme-btn-two, .float, .page-title .content-box .title-box .dotted-box .dotted{background:$themecolor!important}
 
 
 .theme-color3, .copyright{background:$footerbg!important;color:$white!important}
-
+.ngx-pagination .current {background:$footerbg!important;}
 
 .modal-footer .btn-outline-primary,  .modal-footer .btn-outline-primary.active, .modal-footer
 .btn-outline-primary:active, .modal-footer .btn-outline-primary:active:focus, .btn-outline-primary:focus, .modal-footer .btn-outline-primary:hover {border:2px solid $themecolor!important; color:$themecolor!important;}
