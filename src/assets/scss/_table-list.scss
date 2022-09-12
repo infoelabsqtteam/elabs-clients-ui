@@ -61,7 +61,9 @@
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
     li {font-size:12px;}
 }
-.tablist {padding-right:190px;}
+.tablist {padding-right:190px;
+    .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
+}
 
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
