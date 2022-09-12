@@ -1,43 +1,38 @@
-<div class="row mb-3">
-  <div class="col-sm-4 d-flex">
-    <mat-form-field appearance="outline" class="w-100 mr-2">
-      <mat-label class="filterlabel">Chart List</mat-label>
-      <mat-select [(ngModel)]="filterValue" (selectionChange)="checkFilter()" multiple disableOptionCentering
-        panelClass="chartfilteroption">
-        <div class="p-1"><input class="form-control-sm w-100 border" [(ngModel)]="filterdata"></div>
-        <mat-option *ngFor="let item of filteredDashboardData | filter:filterdata; index as i" [value]="item._id">{{item.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-hint class="mt-2" [ngClass]="{'text-danger': filterValue.length > itemNumOfGrid}" [matTooltip]="filterValue.length > itemNumOfGrid ? tooltipMsg : ''" [matTooltipClass]="{'bg-danger': filterValue.length > itemNumOfGrid}" [matTooltipPosition]="'above'">{{filterValue?.length || 0}}/{{itemNumOfGrid}}</mat-hint>
-  </div>
-  <div class="col-lg-6">
-    <button mat-flat-button color="primary" class="filterbtn" [disabled] = "filterValue.length == 0 || filterValue.length > itemNumOfGrid" (click)="filterchart()">Filter</button>
-    <button mat-button color="primary" class="filterbtn ml-2" [disabled] = "filterValue.length == 0" (click)="resetFilter()">Reset Filter</button>
-  </div>
-  <div class="col-lg-2 mt-2">
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label class="filterlabel">No. Of Charts</mat-label>
-      <mat-select [(ngModel)]="itemNumOfGrid" (selectionChange)="selectNoOfItem()" disableOptionCentering
-        panelClass="chartfilteroption">
-        <mat-option *ngFor="let numverOfItem of noOfItems" [value]="numverOfItem">{{numverOfItem}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+<div class="px-3 chartfilter">
+  <div class="row">
+    <div class="col-sm-4 d-flex">
+      <mat-form-field appearance="legacy" class="w-100 mr-2 mb-0">
+        <mat-label class="filterlabel d-flex align-items-center justify-content-between"><span>Chart List</span> <span class="mr-2">{{filterValue?.length || 0}}/{{itemNumOfGrid}}</span></mat-label>
+        <mat-select [(ngModel)]="filterValue" (selectionChange)="checkFilter()" multiple disableOptionCentering panelClass="chartfilteroption">
+          <div class="p-1"><input class="form-control-sm w-100 border" [(ngModel)]="filterdata"></div>
+          <mat-option *ngFor="let item of filteredDashboardData | filter:filterdata; index as i" [value]="item._id"><small>{{item.name}}</small></mat-option></mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-6">
+      <button mat-flat-button color="primary" class="filterbtn" [disabled]="filterValue.length == 0 || filterValue.length > itemNumOfGrid" (click)="filterchart()">Filter</button>
+      <button mat-icon-button color="primary" class="filterbtn ml-2" [disabled]="filterValue.length == 0" (click)="resetFilter()"><mat-icon>refresh</mat-icon></button>
+    </div>
+    <div class="col-lg-2">
+      <mat-form-field appearance="legacy" class="w-100 mb-0">
+        <mat-label class="filterlabel d-flex align-items-center justify-content-between"><span>No. Of Charts </span></mat-label>
+        <mat-select [(ngModel)]="itemNumOfGrid" (selectionChange)="selectNoOfItem()" disableOptionCentering panelClass="filtermenu">
+          <mat-option *ngFor="let numverOfItem of noOfItems" [value]="numverOfItem"><small>{{numverOfItem}}</small></mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
 </div>
 
-<div class="row" *ngIf="filteredDashboardData.length >0">
-  <div class="col-lg-4" *ngFor="let item of filteredDashboardData | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let j = index">
+<div class="row no-gutters" *ngIf="filteredDashboardData.length >0">
+  <div class="col-lg-4 p-2" *ngFor="let item of filteredDashboardData | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let j = index">
     <div class="card">
-      <div class="card-header py-0 pr-2">
+      <div class="card-header py-1 pr-2">
         <div class="d-flex align-items-center justify-content-between" *ngIf="item.fields && item.fields.length >0">
           <h4 class="m-0 charttitle">{{item.name}}</h4>
-          <div>
-            <button mat-icon-button class="chartboardbtn" (click)="filterModel(item,true)"><mat-icon style="font-size:15px;opacity:0.7;">filter_alt</mat-icon></button>
-            <button mat-icon-button class="chartboardbtn" (click)="filterModel(item,false)"><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
-          </div>
+          <button mat-icon-button class="chartboardbtn" (click)="filterModel(item,true)"><mat-icon style="font-size:15px;opacity:0.7;">filter_alt</mat-icon></button>
         </div>
       </div>
-      <div class="card-body chartbody p-1">
+      <div class="chartbody p-1">
         <ng-container *ngIf="chartType[item.call_back_field]">
           <canvas mdbChart *ngIf="item.package_name == 'chart_js'" [chartType]="chartType[item.call_back_field]"
             [datasets]="chartDatasets[item.call_back_field]" [labels]="chartLabels[item.call_back_field]"
@@ -51,30 +46,16 @@
             [options]="chartOptions[item.call_back_field]">
           </google-chart>
         </ng-container>
-        <div *ngIf="!chartType[item.call_back_field]" class="spinner">
-          <mat-spinner diameter="40"  class="custom-spinner"></mat-spinner>
-        </div>
-        
+        <div *ngIf="!chartType[item.call_back_field]" class="spinner"><mat-spinner diameter="40" class="custom-spinner"></mat-spinner></div>
       </div>
     </div>
   </div>
-  <!-- <div class="col-lg-4" >
-    <div class="card">
-      <div class="card-header py-0 pr-2"></div>
-        <div class="card-body chartbody p-1">
-          <canvas mdbChart [chartType]="'bar'"
-                [datasets]="testDataset" [labels]="testLabel"
-                [colors]="testColor" [options]="testOption"
-                [legend]="'true'" (chartHover)="chartHover($event)"
-                (chartClick)="chartClicked($event)">
-            </canvas>
-        </div>
-    </div>
-  </div> -->
 </div>
 <div *ngIf="elements.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
+
+
 <section>
   <mat-card-content class="m-0 pt-4 text-center">
-      <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
+    <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
   </mat-card-content>
 </section>
