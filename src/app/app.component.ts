@@ -150,6 +150,7 @@ export class AppComponent implements OnInit {
 
   redirectToHomePage(){
     this.storageService.removeDataFormStorage();
+    this.localSetting();
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
@@ -168,6 +169,7 @@ export class AppComponent implements OnInit {
   @HostListener("window:onbeforeunload",["$event"])
     clearLocalStorage(event){
       this.storageService.removeDataFormStorage();
+      this.localSetting();
     }
 
   openSettingModel(){
