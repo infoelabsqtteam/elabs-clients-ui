@@ -13,8 +13,8 @@
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
-                .heading {font-weight:500;position:relative;}
-                .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;}
+                .heading {font-weight:500;position:relative;font-size:13px;}
+                .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
                     .fas { display:inline-block;}   
