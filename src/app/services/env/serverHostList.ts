@@ -1,7 +1,7 @@
 export const serverHostList = [
   {
     "clientEndpoint": "localhost",
-    "serverEndpoint": "https://uatserveritclabs.e-labs.ai",    
+    "serverEndpoint": "http://localhost:8104",    
     "title": "Elabs",
     "folder": "elabs-client",
     "temp_name": "temp1",   
