@@ -222,7 +222,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
       if (gridData.data && gridData.data.length > 0) {
         this.total = gridData.data_size;
         const currentTabName = this.storageService.GetActiveMenu()['name'];
-        this.gridCountByTab[currentTabName] = gridData.data_size;
+        const tabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,currentTabName,'tab_name');
+        const tab = this.tabs[tabIndex];
+        const key = currentTabName+"_"+tab.name;
+        this.gridCountByTab[key] = gridData.data_size;
       } else {
         this.total = 0;
       }
