@@ -135,11 +135,11 @@
                                         </td>
                                         <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':selectedRowIndex == i || !elId.show,  '':selectedRowIndex != i, 'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}">
                                             <div class="grid-data" [style.width]="getGridColumnWidth(elId)" [style.text-align]="elId.text_align">
-                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap text-dark" href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)" [innerHtml]="getValueForGrid(elId,el)"  [matTooltip]="getValueForGridTooltip(elId,el)" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="editedRowIndex != i && elId.type != 'color'" >
+                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap" href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)" [innerHtml]="getValueForGrid(elId,el)"  [matTooltip]="getValueForGridTooltip(elId,el)" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="editedRowIndex != i && elId.type != 'color'" >
                                                     </a>
 
 
-                                                    <a href="javascript:void(0)" class="grid-coloumn-nowrap text-dark" href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="editedRowIndex != i && elId.type == 'color'">
+                                                    <a href="javascript:void(0)" class="grid-coloumn-nowrap" href="javascript:void(0)" (click)="clickOnGridElement(elId,el,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="editedRowIndex != i && elId.type == 'color'">
                                                         <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{getValueForGrid(elId,el)}}</span>
                                                     </a>
                                                     

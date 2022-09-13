@@ -12,7 +12,7 @@ export const serverHostList = [
     "varify_mode": "",
     "teamname": "false",
     "theme_setting": {
-      "header_bg_color": "#fcfcfc",
+      "header_bg_color": "#fff",
       "header_txt_color": "",
       "header_txt_hover_color": "",
       "header_icon_color": "",
@@ -20,7 +20,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#77bce8",
-      "theme_color": "#77bce8",
+      "theme_color": "#e8f5fd",
       "active_bg_color": "#e4f2fa",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -37,7 +37,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#77bce8",
-      "theme_color": "#77bce8",
+      "theme_color": "#e4f2fa",
       "active_bg_color": "#e4f2fa",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -301,15 +301,15 @@ export const serverHostList = [
   {
     "clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Vertical", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
-      "header_bg_color": "#665852",
+      "header_bg_color": "#fff",
       "header_txt_color": "#ffffff",
       "header_txt_hover_color": "",
-      "header_icon_color": "#ffffff",
+      "header_icon_color": "#555",
       "header_icon_hover_color": "#ffffff",
-      "btn_color": "",
+      "btn_color": "#2597de",
       "btn_hover_color": "",
       "footer_bg": "#212121",
-      "theme_color": "#665852",
+      "theme_color": "#f7e9e9",
       "active_bg_color": "#e0dedc",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -335,15 +335,15 @@ export const serverHostList = [
   {
     "clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai", "title": "Itclabs", "google_map": "false", "menu_type": "Vertical", "folder": "itclabs", "temp_name": "temp2", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
-      "header_bg_color": "#665852",
+      "header_bg_color": "#fff",
       "header_txt_color": "#ffffff",
       "header_txt_hover_color": "",
-      "header_icon_color": "#ffffff",
+      "header_icon_color": "#555",
       "header_icon_hover_color": "#ffffff",
-      "btn_color": "",
+      "btn_color": "#fdc8c8",
       "btn_hover_color": "",
       "footer_bg": "#212121",
-      "theme_color": "#665852",
+      "theme_color": "#f7e9e9",
       "active_bg_color": "#e0dedc",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -379,7 +379,7 @@ export const serverHostList = [
       "btn_color": "#64B3E5",
       "btn_hover_color": "#64B3E5",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#e0f0e1",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -515,10 +515,10 @@ export const serverHostList = [
       "header_txt_hover_color": "",
       "header_icon_color": "",
       "header_icon_hover_color": "",
-      "btn_color": "",
+      "btn_color": "#33a646",
       "btn_hover_color": "",
-      "footer_bg": "#77bce8",
-      "theme_color": "#77bce8",
+      "footer_bg": "#72aa7e",
+      "theme_color": "#fff",
       "active_bg_color": "#e4f2fa",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -535,7 +535,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -552,7 +552,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -569,7 +569,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -586,7 +586,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
