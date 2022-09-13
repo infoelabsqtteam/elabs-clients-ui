@@ -1,12 +1,9 @@
 // Date Picker
-.mat-form-field {background:$white;margin-bottom:5px;}
 .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;padding:$zero !important;}
 .mat-form-field-appearance-outline .mat-form-field-infix {border:$no;padding:.68em $zero !important;}
 .mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {top:$size5 !important;font-size:$size11;}
 .mat-form-field-appearance-outline .mat-form-field-flex {padding-right:$size2 !important;}
 .mat-form-field-appearance-outline .mat-form-field-outline, .mat-form-field-appearance-outline .mat-form-field-outline-thick{color:$inputbordercolor !important;}
-// .mat-form-field-appearance-outline:not(.mat-form-field-disabled) .mat-form-field-flex:hover .mat-form-field-outline {opacity:$one !important;}
-// .mat-form-field-appearance-outline:not(.mat-form-field-disabled) .mat-form-field-flex:hover .mat-form-field-outline-thick {opacity:$zero !important;display:$no;}
 .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {border-width:$size1 !important;}
 .mat-form-field.mat-focused .mat-form-field-label {color:inherit !important;}
 .mat-form-field-appearance-outline .mat-select-arrow-wrapper {transform:translateY(0%) !important;}
@@ -18,15 +15,19 @@ input.mat-input-element {font-size:$size13;}
 
 .login2 .mat-form-field-appearance-outline .mat-form-field-label {margin-top:6px;font-size:11px;}
 
-
+.modal.fade.in .modal-dialog {transform: inherit!important;}
 
 // Module Popup
-.cdk-global-overlay-wrapper{z-index:$zindex1000!important}
+// .cdk-global-overlay-wrapper{z-index:$zindex1000!important}
+// .modal.fade{background:rgba($black,0.5)}
+// .cdk-overlay-container{z-index:$zindex2000!important}
+// .modal-backdrop{z-index:$zindex998!important}
+// .modal{z-index:$zindex999!important}
+// .modal.fade.in .modal-dialog {transform:inherit !important;}
+body.modal-open .modal-backdrop {display:none !important;}
+.mat-drawer-content {z-index:auto !important;}
 .modal.fade{background:rgba($black,0.5)}
-.cdk-overlay-container{z-index:$zindex2000!important}
-.modal-backdrop{z-index:$zindex998!important}
-.modal{z-index:$zindex999!important}
-.modal.fade.in .modal-dialog {transform:inherit !important;}
+
 .modal-dialog-full-width {max-width: 98%!important;}
 .modal-dialog {border-radius:10px;
     .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
@@ -73,7 +74,6 @@ input.mat-input-element {font-size:$size13;}
 .example-tree {
     .mat-tree-node {position:relative;}
     .mat-icon-button {width:30px;height:30px;line-height:30px;margin:0 10px;}
-    // .plusicon {position:absolute;right:0px;top:5px;}
     li {
         background:#efefef;border-radius:5px;margin-bottom:10px !important;
     }
@@ -91,10 +91,6 @@ input.mat-input-element {font-size:$size13;}
     stroke: $buttoncolor!important;
 }
 
-// .modal-content {
-//     .angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button {padding:0 !important;float:none !important;}
-//     .angular-editor-textarea {height:20px !important;}
-// }
 
 
 

@@ -1,16 +1,20 @@
-.downloadbtn {position:absolute;right:15px;top:5px;z-index:9;
+.downloadbtn {position:absolute;right:15px;top:5px;z-index:1;
   .btn {box-shadow:none;border:1px solid #ccc;background:#f8f8f8;
     &:hover, &:focus, &:active {box-shadow:none !important;}
   }
 }
 
+.mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
-.table table {width:100%;font-size:13px;border:1px solid #ccc !important;
+.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
+    .grid-data {width:auto !important;max-width:140px;}
+    .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
+
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {box-shadow:0 0 1px #ccc;
-            th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border:none;
-                .heading {font-weight:500;position:relative;}
-                .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;}
+            th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
+                .heading {font-weight:500;position:relative;font-size:13px;}
+                .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
                     .fas { display:inline-block;}   
@@ -28,7 +32,7 @@
             &:nth-of-type(even) {background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;}
+        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
     }
 
     .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;
@@ -50,13 +54,16 @@
 
 }
 
+
 .mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
     mat-icon {font-size:16px;}
 }
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
     li {font-size:12px;}
 }
-.tablist {padding-right:190px;}
+.tablist {padding-right:190px;
+    .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
+}
 
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
@@ -74,13 +81,11 @@
 .mat-tab-header {
     .mat-tab-label {height:35px;padding:0 10px;min-width:auto;
         .favibtn {
-            mat-icon {font-size:13px;color:#ddd;height:auto;}
+            mat-icon {font-size:13px;color:#333;height:auto;}
         }
-        .favibtn.active mat-icon {color:var(--footerbg) !important}
+        .favibtn.active mat-icon {color:#0082d5;}
         .mat-tab-label-content {font-size:13px;font-family:$roboto;}
     }
-    .mat-tab-label-active {border-bottom:2px solid #4285f4;opacity:1 !important;}
-    
 }
 
 
@@ -101,9 +106,9 @@
 
 
 .modal-content:not(.card-image) .close {position:inherit !important;}
-.bg-cerulean.btn {box-shadow:none !important;border:2px solid transparent;
-    &:hover, &:focus {border:2px solid #285393;}
-}
+// .btn {box-shadow:none !important;
+//     &:hover, &:focus {border:2px solid #285393;}
+// }
 
 
 .cdk-overlay-container .mat-snack-bar-container {
@@ -121,8 +126,6 @@
 
 
 .one-line-text {text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
-.form-control.form-control-sm, .mat-form-field .mat-form-field-infix {min-width:150px;width:100% !important;}
-
 .fixedcol {position:sticky;z-index:1;max-width:160px;min-width:160px;padding:5px 10px !important;left:0;}
 .fixedcol:nth-child(2) {left:0px !important;}
 .fixedcol:nth-child(3) {left:150px !important;}
