@@ -403,7 +403,7 @@ export const serverHostList = [
     }
   },
   {
-    "clientEndpoint": "lims.qualiteklab.com", "serverEndpoint": "https://serverqualiteklab.qualiteklab.com", "title": "Qualitek Labs", "google_map": "false", "menu_type": "Horizontal", "folder": "qualitek", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    "clientEndpoint": "lims.qualiteklab.com", "serverEndpoint": "https://serverqualiteklab.qualiteklab.com", "title": "Qualitek Labs", "google_map": "false", "menu_type": "Vertical", "folder": "qualitek", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
     "theme_setting": {
       "header_bg_color": "#fcfcfc",
       "header_txt_color": "",
