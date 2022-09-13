@@ -221,9 +221,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
         this.total = gridData.data_size;
-        const currentTabName = this.storageService.GetActiveMenu()['name'];
-        const tabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,currentTabName,'tab_name');
-        const tab = this.tabs[tabIndex];
+        const currentTabName = this.storageService.GetActiveMenu()['name'];        
+        const tab = this.tabs[this.selectTabIndex];
         const key = currentTabName+"_"+tab.name;
         this.gridCountByTab[key] = gridData.data_size;
       } else {
@@ -243,7 +242,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
   getTab(i, tabName) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
-      this.apiService.resetGridData();        
+      this.apiService.resetGridData(); 
+      this.selectTabIndex = i;       
       if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
         this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
       }
@@ -252,8 +252,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }
       else{
         this.grid_view_mode="tableView";
-      } 
-      this.selectTabIndex = i;   
+      }          
     } else {
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
