@@ -515,10 +515,10 @@ export const serverHostList = [
       "header_txt_hover_color": "",
       "header_icon_color": "",
       "header_icon_hover_color": "",
-      "btn_color": "",
+      "btn_color": "#33a646",
       "btn_hover_color": "",
-      "footer_bg": "#77bce8",
-      "theme_color": "#cbebff",
+      "footer_bg": "#72aa7e",
+      "theme_color": "#fff",
       "active_bg_color": "#e4f2fa",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -535,7 +535,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -552,7 +552,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -569,7 +569,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
@@ -586,7 +586,7 @@ export const serverHostList = [
       "btn_color": "",
       "btn_hover_color": "",
       "footer_bg": "#232324",
-      "theme_color": "#1d9527",
+      "theme_color": "#fff",
       "active_bg_color": "#e0f0e1",
       "popup_header_bg": "#CEE7F7",
       "form_label_bg": "#E4F2FA"
