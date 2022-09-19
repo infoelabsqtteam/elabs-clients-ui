@@ -17,7 +17,7 @@ import { NotificationService } from '../notify/notification.service';
 import { ApiService } from '../api/api.service';
 import { ModelService } from '../model/model.service';
 import { EnvService } from '../env/env.service';
-import { I } from '@angular/cdk/keycodes';
+import { I, L } from '@angular/cdk/keycodes';
 import { Common } from 'src/app/shared/enums/common.enum';
 
 
@@ -1366,6 +1366,26 @@ export class CommonFunctionService {
     templateValue["quotation_param_methods"] = updatedParamsList;
     return this.calculateQquoteAmount(templateValue, {field_name:"quotation_param_methods"});
   }
+
+  calculateInvoiceTotalAmount(formValue, invoiceInfos){
+    let list = invoiceInfos;
+    let total = 0;
+    for(let i=0; i<list.length;i++){
+      total +=  list[i]['netpayableAmount']
+    }
+
+    let lumpSumAmount = formValue['lumpSumAmount']
+    let advanceAmount = formValue['advanceAmount'];
+    let toatallumsumOrAdvance= lumpSumAmount+advanceAmount;
+    let totalFair = total-toatallumsumOrAdvance;
+
+    let obj = {
+      totalAmount:total,
+      payAmount:totalFair
+    }
+    return obj;
+  }
+
   quote_amount_via_discount_percent(listOfParm,templateValue){    
     let discount = templateValue.discount_percent;
     let quantity = templateValue.qty;
@@ -1396,7 +1416,6 @@ export class CommonFunctionService {
     return templateValue;
 
   }
-  
   samplingAmountAddition(templateValue){    
     let net_amount = templateValue['net_amount'];
     let sampling_charge = templateValue['sampling_charge'];
@@ -1405,6 +1424,8 @@ export class CommonFunctionService {
     templateValue['final_amount'] = totl
     return templateValue;
   }
+  
+
   calculateParameterLimsSegmentWise(lims_segment, data, fieldName){
     switch(lims_segment){
       case 'standard':
@@ -3273,6 +3294,8 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return templateForm;
   }
 
+
+
   calculateTotalFair(value){
     let totalFair = 0;
     let claimSheet = value.claimSheet;
@@ -3281,6 +3304,12 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     let dailyAllowance = claimSheet.dailyAllowance;
     let foodHotel = claimSheet.foodHotel;
     let miscellaneous = claimSheet.miscellaneous;
+    if(claimSheet !=0) {
+      let travelFair = claimSheet.travelFare;
+      console.log(travelFair)
+    } else {
+      let travelFair = 0;
+    }
 
     totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
 
@@ -3295,6 +3324,7 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return obj;
 
   }
+
 
   calculateTotalAmount(formValue){
     let list = formValue['claimSheet'];
