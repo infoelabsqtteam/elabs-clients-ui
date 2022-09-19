@@ -48,41 +48,41 @@ export class AppComponent implements OnInit {
   ) {
     
 
-    this.localSetting();
-    // this.commonfunctionService.getApplicationAllSettings();
-    // if(this.dataShareService.themeSetting != undefined){
-    //   this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
-    //     data =>{
-    //       const themeSetting = data;
-    //       if(themeSetting && themeSetting.length > 0) {
-    //         const settingObj = themeSetting[0];
-    //         this.storageService.setThemeSetting(settingObj);
-    //         this.envService.setThemeSetting(settingObj);
-    //         this.dataShareService.resetThemeSetting([]);
-    //         this.dataShareService.subscribeTemeSetting("setting");
-    //       }
-    //     })
-    // }
-    // if(this.dataShareService.applicationSetting != undefined){
-    //   this.themeSettingSubscription = this.dataShareService.applicationSetting.subscribe(
-    //     data =>{
-    //       const applicationSetting = data;
-    //       if(applicationSetting && applicationSetting.length > 0) {
-    //         const settingObj = applicationSetting[0];
-    //         this.storageService.setApplicationSetting(settingObj);
-    //         this.envService.setApplicationSetting();
-    //         this.loadPage();
-    //         this.dataShareService.resetApplicationSetting([]);
-    //       }
-    //     })
-    // }
+    //this.localSetting();
+    this.commonfunctionService.getApplicationAllSettings();
+    if(this.dataShareService.themeSetting != undefined){
+      this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
+        data =>{
+          const themeSetting = data;
+          if(themeSetting && themeSetting.length > 0) {
+            const settingObj = themeSetting[0];
+            this.storageService.setThemeSetting(settingObj);
+            this.envService.setThemeSetting(settingObj);
+            this.dataShareService.resetThemeSetting([]);
+            this.dataShareService.subscribeTemeSetting("setting");
+          }
+        })
+    }
+    if(this.dataShareService.applicationSetting != undefined){
+      this.themeSettingSubscription = this.dataShareService.applicationSetting.subscribe(
+        data =>{
+          const applicationSetting = data;
+          if(applicationSetting && applicationSetting.length > 0) {
+            const settingObj = applicationSetting[0];
+            this.storageService.setApplicationSetting(settingObj);
+            this.envService.setApplicationSetting();
+            this.loadPage();
+            this.dataShareService.resetApplicationSetting([]);
+          }
+        })
+    }
    
     this.settingModelRestSubscription = this.dataShareService.settingData.subscribe(data =>{
       if(data == "logged_in"){
         this.showHideSetting = false;
       }else if (data == "logged_out"){
         this.showHideSetting = true;
-        this.localSetting();
+        //this.localSetting();
       }else if(data == "hide"){
         this.showHideSetting = true;
       }
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit {
 
   redirectToHomePage(){
     this.storageService.removeDataFormStorage();
-    this.localSetting();
+    //this.localSetting();
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
@@ -169,7 +169,7 @@ export class AppComponent implements OnInit {
   @HostListener("window:onbeforeunload",["$event"])
     clearLocalStorage(event){
       this.storageService.removeDataFormStorage();
-      this.localSetting();
+      //this.localSetting();
     }
 
   openSettingModel(){

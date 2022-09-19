@@ -191,10 +191,13 @@ export class AuthService {
       (error)=>{
         if(error && error.status == 403){
           this.notificationService.notify("bg-danger", "Username password does not match.");
+          console.log("Sign In first error handling." + JSON.stringify(error));
         }else if(error && error.error && error.error.message){
           this.notificationService.notify("bg-danger", error.error.message);
+          console.log("Sign In Secong error handling." + JSON.stringify(error));
         }else{
           this.notificationService.notify("bg-danger", error.message);
+          console.log("Sign In Third error handling." + JSON.stringify(error));
         }
       }
     )

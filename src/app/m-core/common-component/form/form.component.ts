@@ -197,6 +197,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   elements: any = [];
   tabFilterData:any=[];
   tableFields: any = [];
+  fields: any = [];
   filePreviewFields:any=[];
   showIfFieldList:any=[];
   disableIfFieldList:any=[];
@@ -739,6 +740,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }   
     if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
+      this.fields = JSON.parse(JSON.stringify(this.tableFields));
       this.getTableField = false;
     }else{
       this.tableFields = [];
@@ -756,8 +758,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.createFormgroup = false;
       const forControl = {};
       this.checkBoxFieldListValue = []
+      let staticModalGroup = [];
       // this.filePreviewFields=[];
-      this.tableFields.forEach(element => {
+      for (let index = 0; index < this.tableFields.length; index++) {
+        const element = this.tableFields[index];
+        if(element == null){
+          this.notifyFieldValueIsNull(this.form.name,index+1);
+          break;
+        }
         if(element.type == 'pdf_view'){
           const object = this.elements[this.selectedRowIndex];
           staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
@@ -820,7 +828,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             case "group_of_fields":
               const list_of_fields = {};
               if (element.list_of_fields.length > 0) {
-                element.list_of_fields.forEach((data) => {
+                for (let j = 0; j < element.list_of_fields.length; j++) {
+                  const data = element.list_of_fields[j];
+                  if(data == null){
+                    this.notifyFieldValueIsNull(element.name,j+1);
+                    break;
+                  }
                   let modifyData = JSON.parse(JSON.stringify(data));
                   modifyData.parent = element.field_name;
                   //show if handling
@@ -881,7 +894,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         break;
                     } 
                   }                 
-                });
+                }
               }
               this.commonFunctionService.createFormControl(forControl, element, list_of_fields, "group")
               if(element.type == 'list_of_fields'){
@@ -986,7 +999,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(element.type && element.type == 'info_html'){
           this.filePreviewFields.push(element)
         }
-      });
+      }
       if(this.formFieldButtons.length > 0){
         this.formFieldButtons.forEach(element => {
           if(element.field_name && element.field_name != ''){              
@@ -1009,7 +1022,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
         });
       }
-      if (forControl) {
+      if (forControl && this.tableFields.length > 0) {
         let validators = {};
         validators['validator'] = [];
         if(this.customValidationFiels && this.customValidationFiels.length > 0){
@@ -1107,7 +1120,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       
       let object =this.getFormValue(true);
-      let staticModalGroup = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
+      let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
+      if(staticModalG && staticModalG.length > 0){
+        staticModalG.forEach(element => {
+          staticModalGroup.push(element);
+        });
+      }
       if(staticModalGroup != undefined && staticModalGroup != null){
         if(staticModalGroup.length > 0){
           staticModalGroup.forEach(data =>{
@@ -1148,8 +1166,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
 
     
-    if (this.tableFields.length > 0 && this.pageLoading) {
-      this.tableFields.forEach(element => {
+    if (this.fields.length > 0 && this.pageLoading) {
+      this.fields.forEach(element => {
         switch (element.type) {
           case "typeahead":
             if (element.datatype == 'list_of_object') {
@@ -1206,6 +1224,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     
     
+  }
+  notifyFieldValueIsNull(formName,fieldNo){
+    let msg = "Field No. "+ fieldNo + "value is null";
+    this.notificationService.notify("bg-danger",msg);
+    this.fields = [];
+    this.closeModal();
   }
   customValidationFiels=[];
   setStaticData(staticData){
