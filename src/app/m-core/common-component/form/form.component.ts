@@ -2369,10 +2369,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
             this.updateDataOnFormField(calFormValue); 
           break;
+
           case 'calculation_travel_claim_sheet':
             calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue());
             this.updateDataOnFormField(calFormValue); 
           break;
+      
+       
           case 'populate_fields_for_direct_order':
             list_of_populated_fields = [
               {"from":"fax","to":"billing_fax"},
@@ -3646,6 +3649,10 @@ case 'populate_fields_for_report_for_new_order_flow':
             let val = this.commonFunctionService.quote_amount_via_sample_no(this.getFormValue(true),this.custmizedFormValue['quotation_param_methods']);
             this.updateDataOnFormField(val);
             break;
+            case 'calculation_invoice_totalAmount':
+              let value = this.commonFunctionService.calculateInvoiceTotalAmount(this.getFormValue(true),this.custmizedFormValue['invoiceInfos']);
+              this.updateDataOnFormField(value);
+              break;
 
             case 'calculate_lims_invoice':
               let calculate_on_field = "";
