@@ -58,8 +58,7 @@ export class AppComponent implements OnInit {
             const settingObj = themeSetting[0];
             this.storageService.setThemeSetting(settingObj);
             this.envService.setThemeSetting(settingObj);
-            this.dataShareService.resetThemeSetting([]);
-            this.dataShareService.subscribeTemeSetting("setting");
+            this.dataShareService.resetThemeSetting([]);            
           }
         })
     }
@@ -72,6 +71,7 @@ export class AppComponent implements OnInit {
             this.storageService.setApplicationSetting(settingObj);
             this.envService.setApplicationSetting();
             this.loadPage();
+            this.dataShareService.subscribeTemeSetting("setting");
             this.dataShareService.resetApplicationSetting([]);
           }
         })
