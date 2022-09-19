@@ -1118,56 +1118,56 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         });
             
       }
-      
-      let object =this.getFormValue(true);
-      let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
-      if(staticModalG && staticModalG.length > 0){
-        staticModalG.forEach(element => {
-          staticModalGroup.push(element);
-        });
-      }
-      if(staticModalGroup != undefined && staticModalGroup != null){
-        if(staticModalGroup.length > 0){
-          staticModalGroup.forEach(data =>{
-            staticModal.push(data);
-          })
+      if(this.tableFields.length > 0){
+        let object =this.getFormValue(true);
+        let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
+        if(staticModalG && staticModalG.length > 0){
+          staticModalG.forEach(element => {
+            staticModalGroup.push(element);
+          });
         }
-      }
-      if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){      
-        let criteria = [];
-        if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
-          criteria=this.tab.api_params_criteria
+        if(staticModalGroup != undefined && staticModalGroup != null){
+          if(staticModalGroup.length > 0){
+            staticModalGroup.forEach(data =>{
+              staticModal.push(data);
+            })
+          }
         }
-        staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
-        
-      }
-      if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined && this.selectedRowIndex == -1){  
-            
-        if(this.form.api_params == 'QTMP:EMAIL_WITH_TEMP:QUOTATION_LETTER'){
-          object = this.saveResponceData;
-        }          
-        let criteria = [];
-        if(this.form.api_params_criteria && this.form.api_params_criteria != null){
-          criteria=this.form.api_params_criteria
+        if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){      
+          let criteria = [];
+          if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
+            criteria=this.tab.api_params_criteria
+          }
+          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
+          
         }
-        staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(false)))
-        
-      }
-      if(staticModal.length > 0 && this.editedRowIndex == -1){
-        //console.log("staticModalGroup "+ Date.now());
-        // this.store.dispatch(
-        //   new CusTemGenAction.GetStaticData(staticModal)
-        // )
-        this.apiService.getStatiData(staticModal);
-        
-      }
-      
+        if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined && this.selectedRowIndex == -1){  
+              
+          if(this.form.api_params == 'QTMP:EMAIL_WITH_TEMP:QUOTATION_LETTER'){
+            object = this.saveResponceData;
+          }          
+          let criteria = [];
+          if(this.form.api_params_criteria && this.form.api_params_criteria != null){
+            criteria=this.form.api_params_criteria
+          }
+          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(false)))
+          
+        }
+        if(staticModal.length > 0 && this.editedRowIndex == -1){
+          //console.log("staticModalGroup "+ Date.now());
+          // this.store.dispatch(
+          //   new CusTemGenAction.GetStaticData(staticModal)
+          // )
+          this.apiService.getStatiData(staticModal);
+          
+        }
+      }    
 
     }
 
     
-    if (this.fields.length > 0 && this.pageLoading) {
-      this.fields.forEach(element => {
+    if (this.tableFields.length > 0 && this.pageLoading) {
+      this.tableFields.forEach(element => {
         switch (element.type) {
           case "typeahead":
             if (element.datatype == 'list_of_object') {
@@ -1226,9 +1226,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
   }
   notifyFieldValueIsNull(formName,fieldNo){
-    let msg = "Field No. "+ fieldNo + "value is null";
+    let msg = "Field No. "+ fieldNo + " value is null";
     this.notificationService.notify("bg-danger",msg);
-    this.fields = [];
+    this.tableFields = [];
     this.closeModal();
   }
   customValidationFiels=[];
@@ -3542,9 +3542,11 @@ case 'populate_fields_for_report_for_new_order_flow':
   showIf(field){
     const  objectc = this.selectedRow?this.selectedRow:{}
     const object = JSON.parse(JSON.stringify(objectc));
-    Object.keys(this.templateForm.getRawValue()).forEach(key => {
-      object[key] = this.templateForm.getRawValue()[key];
-    })
+    if(this.templateForm){
+      Object.keys(this.templateForm.getRawValue()).forEach(key => {
+        object[key] = this.templateForm.getRawValue()[key];
+      })
+    }
     const display = this.commonFunctionService.showIf(field,object);
     const modifiedField = JSON.parse(JSON.stringify(field));
     modifiedField['display'] = display; 
@@ -3820,7 +3822,9 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.loadPreviousForm();
     }else{
       this.addAndUpdateResponce.emit('close');
-      this.templateForm.reset();
+      if(this.templateForm && this.templateForm.controls){
+        this.templateForm.reset();
+      }      
     }
   }
   checkValidator(action_button){
@@ -3837,64 +3841,71 @@ case 'populate_fields_for_report_for_new_order_flow':
   }
   donotResetField(){
     //let FormValue = this.templateForm.getRawValue();
-    let FormValue = this.getFormValue(true);
-    this.tableFields.forEach(tablefield => {
-      if(tablefield.do_not_refresh_on_add && tablefield.type != "list_of_fields" && tablefield.type != "group_of_fields" && tablefield.type != "stepper"){
-        this.donotResetFieldLists[tablefield.field_name] = FormValue[tablefield.field_name];
-      }else if(tablefield.type == "group_of_fields"){
-        if(tablefield.list_of_fields && tablefield.list_of_fields.length > 0){
-          tablefield.list_of_fields.forEach(field => {
-            if(field.do_not_refresh_on_add){
-              this.donotResetFieldLists[tablefield.field_name][field.field_name] = FormValue[tablefield.field_name][field.field_name];
-            }
-          });
+    if(this.tableFields.length > 0){
+      let FormValue = this.getFormValue(true);
+      this.tableFields.forEach(tablefield => {
+        if(tablefield.do_not_refresh_on_add && tablefield.type != "list_of_fields" && tablefield.type != "group_of_fields" && tablefield.type != "stepper"){
+          this.donotResetFieldLists[tablefield.field_name] = FormValue[tablefield.field_name];
+        }else if(tablefield.type == "group_of_fields"){
+          if(tablefield.list_of_fields && tablefield.list_of_fields.length > 0){
+            tablefield.list_of_fields.forEach(field => {
+              if(field.do_not_refresh_on_add){
+                this.donotResetFieldLists[tablefield.field_name][field.field_name] = FormValue[tablefield.field_name][field.field_name];
+              }
+            });
+          }
+        }else if(tablefield.type == "stepper"){
+          if(tablefield.list_of_fields && tablefield.list_of_fields.length > 0){
+            tablefield.list_of_fields.forEach(step => {
+              if(step.list_of_fields && step.list_of_fields.length > 0){
+                step.list_of_fields.forEach(field => {
+                  if(field.do_not_refresh_on_add){
+                    this.donotResetFieldLists[step.field_name][field.field_name] = FormValue[step.field_name][field.field_name];
+                  }
+                });
+              }
+            });
+          }
         }
-      }else if(tablefield.type == "stepper"){
-        if(tablefield.list_of_fields && tablefield.list_of_fields.length > 0){
-          tablefield.list_of_fields.forEach(step => {
-            if(step.list_of_fields && step.list_of_fields.length > 0){
-              step.list_of_fields.forEach(field => {
-                if(field.do_not_refresh_on_add){
-                  this.donotResetFieldLists[step.field_name][field.field_name] = FormValue[step.field_name][field.field_name];
-                }
-              });
-            }
-          });
-        }
-      }
-    });
+      });
+    }
+
   }
   resetForm(){
     //this.formGroupDirective.resetForm();
     this.setPreviousFormTargetFieldData();
     this.donotResetField();
-    this.templateForm.reset()
+    if(this.templateForm && this.templateForm.controls){
+      this.templateForm.reset()
+    }
     if(Object.keys(this.donotResetFieldLists).length > 0){
       this.custmizedFormValue = {};
       this.updateDataOnFormField(this.donotResetFieldLists);
       this.donotResetFieldLists = {};
     }else{
       this.custmizedFormValue = {};
-    }    
-    this.tableFields.forEach(element => {
-      switch (element.type) {
-        case 'checkbox':
-          this.templateForm.controls[element.field_name].setValue(false)
-          break; 
-        case 'list_of_checkbox':
-          const controls:any = this.templateForm.get(element.field_name)['controls'];
-          if(controls && controls.length > 0){
-            controls.forEach((child,i) => {
-              controls.at(i).patchValue(false);
-              //this.templateForm.get(element.field_name).at(i).patchValue(false);
-              //(<FormArray>this.templateForm.controls[element.field_name]).controls[i].patchValue(false);
-            });
-          }
-          break;     
-        default:
-          break;
-      }
-    });
+    }  
+    if(this.tableFields.length > 0){ 
+      this.tableFields.forEach(element => {
+        switch (element.type) {
+          case 'checkbox':
+            this.templateForm.controls[element.field_name].setValue(false)
+            break; 
+          case 'list_of_checkbox':
+            const controls:any = this.templateForm.get(element.field_name)['controls'];
+            if(controls && controls.length > 0){
+              controls.forEach((child,i) => {
+                controls.at(i).patchValue(false);
+                //this.templateForm.get(element.field_name).at(i).patchValue(false);
+                //(<FormArray>this.templateForm.controls[element.field_name]).controls[i].patchValue(false);
+              });
+            }
+            break;     
+          default:
+            break;
+        }
+      });
+    }
   }
   partialDataSave(feilds,tableField){       
     const payload = {
@@ -4456,7 +4467,7 @@ case 'populate_fields_for_report_for_new_order_flow':
 
   funCallOnFormLoad(fields){
     fields.forEach(ele => {
-      if(ele.type == "group_of_fields"){
+      if(ele && ele.type == "group_of_fields"){
         ele.list_of_fields.forEach(element => {
           if(element.onchange_function && element.onchange_function_param != ''){
             switch (element.onchange_function_param) {

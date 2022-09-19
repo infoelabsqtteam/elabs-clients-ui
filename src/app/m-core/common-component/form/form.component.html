@@ -17,7 +17,7 @@
         </p>
         <a class="h5 m-0 closebtb" (click)="closeModal()" [matTooltip]="'Close (ALT + C)'" [matTooltipPosition]="'above'"><span>×</span></a>
     </div>
-    <div class="modal-body pb-2 pt-1 mt-0 px-4" *ngIf="fields.length > 0">
+    <div class="modal-body pb-2 pt-1 mt-0 px-4">
         <div class="row">
             <div [ngClass]="checkFormType()?'col-lg-8':'col-lg-12'"> 
                 <div class="row" *ngIf="handleDisabeIf()">
