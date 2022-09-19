@@ -391,7 +391,7 @@
                                     <div *ngIf="fields.type == 'gst_number'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
                                             <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
                                                 {{ fields.label | titlecase}} is <strong>required</strong>
                                             </mat-error>
@@ -404,7 +404,7 @@
                                         <div class="w-100 position-relative">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
                                                 <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
                                                     {{ fields.label | titlecase}} is <strong>required</strong>
                                                 </mat-error>
@@ -538,7 +538,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="fields.type == 'checkbox'">
-                                        <mat-checkbox color="primary" class="example-margin" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)">{{ fields.label | titlecase}}</mat-checkbox>
+                                        <mat-checkbox color="primary" class="example-margin" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)" [id]="fields._id+'_'+fields.field_name">{{ fields.label | titlecase}}</mat-checkbox>
                                     </div>
                                     <div *ngIf="fields.type == 'list_of_string'">
                                         <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips' || fields.datatype == 'chips_with_mask'">
@@ -606,7 +606,7 @@
                                     <div *ngIf="fields.type == 'textarea'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <textarea matInput [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name"></textarea>                
+                                            <textarea matInput [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"></textarea>                
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'file'">
