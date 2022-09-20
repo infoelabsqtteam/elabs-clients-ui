@@ -9,7 +9,7 @@ body {font-family:$roboto;font-size:13px;}
 .mat-menu-content:not(:empty) {padding:0 !important;}
 .mat-drawer-container {height:calc(100vh - 60px);background-color:$bodybg !important;}
 .card {border:none !important;box-shadow:0 0 5px #e7e7e7;}
-
+.chartitems {min-height:calc(100vh - 210px);}
 
 @font-face {
     font-family: 'Montserrat';
@@ -54,7 +54,9 @@ body {font-family:$roboto;font-size:13px;}
 }
 .logindropdown {margin-top:10px !important;}
 
-
+.modal-open {
+    .header {z-index:1;}
+}
 
 
 
