@@ -138,14 +138,15 @@ export class EnvService {
   }
 
   setApplicationSetting(){
-    let projectFolderName = this.storageService.getApplicationSetting()['folder'];
-    let menuType = this.storageService.getApplicationSetting()['menu_type'];
-    let tempTheme = this.storageService.getApplicationSetting()['theme'];
-    let giolocation = this.storageService.getApplicationSetting()['google_map'];
-    let tempName = this.storageService.getApplicationSetting()['temp_name'];
-    let pageTitle = this.storageService.getApplicationSetting()['title'];
-    let verify_type = this.storageService.getApplicationSetting()['varify_mode'];
-    let team_name = this.storageService.getApplicationSetting()['teamname'];
+    let applicationSettingObj = this.storageService.getApplicationSetting();
+    let projectFolderName = applicationSettingObj['folder'];
+    let menuType = applicationSettingObj['menu_type'];
+    let tempTheme = applicationSettingObj['theme'];
+    let giolocation = applicationSettingObj['google_map'];
+    let tempName = applicationSettingObj['temp_name'];
+    let pageTitle = applicationSettingObj['title'];
+    let verify_type = applicationSettingObj['varify_mode'];
+    let team_name = applicationSettingObj['teamname'];
     const path = 'assets/img/logo/' + projectFolderName + '/';      
     this.storageService.setLogoPath(path); 
     this.storageService.SetMenuType(menuType);
