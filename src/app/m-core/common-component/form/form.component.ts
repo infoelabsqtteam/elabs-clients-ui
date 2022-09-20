@@ -197,7 +197,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   elements: any = [];
   tabFilterData:any=[];
   tableFields: any = [];
-  fields: any = [];
   filePreviewFields:any=[];
   showIfFieldList:any=[];
   disableIfFieldList:any=[];
@@ -740,7 +739,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }   
     if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
-      this.fields = JSON.parse(JSON.stringify(this.tableFields));
       this.getTableField = false;
     }else{
       this.tableFields = [];
