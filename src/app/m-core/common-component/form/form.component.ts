@@ -855,6 +855,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, [], "list")
                         this.checkBoxFieldListValue.push(modifyData);
                         break;
+                      case "checkbox":
+                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, false, "checkbox")
+                        break;
                       case "date":
                         let currentYear = new Date().getFullYear();
                         if(data.datatype == 'object'){
@@ -886,7 +889,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         data['maxDate'] = this.maxDate;
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
                         break; 
-                    
+                      case "daterange":
+                        const list_of_fields_date_range = {};
+                        let list_of_fields_dates = [
+                          {field_name : 'start'},
+                          {field_name : 'end'}
+                        ]
+                        if (element.list_of_fields_dates.length > 0) {
+                          list_of_fields_dates.forEach((data) => {                            
+                            this.commonFunctionService.createFormControl(list_of_fields_date_range, data, '', "text")
+                          });
+                        }
+                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, list_of_fields_date_range, "group")                                    
+                        break; 
                       default:
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
                         break;
