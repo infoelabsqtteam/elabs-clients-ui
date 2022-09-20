@@ -3,7 +3,7 @@
       <a class="logo px-2" [routerLink]="['/home']"><img [src]="logoPath" alt=""></a>
       <button mat-icon-button (click)="drawer.toggle()"><mat-icon>sort</mat-icon></button>
     </div>
-    <div class="topheader"><app-header class="w-100" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-header></div>
+    <div class="topheader"><app-header class="w-100"></app-header></div>
     <div class="settingmenu"><button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>settings</mat-icon></button></div>
   </mat-toolbar>
   
