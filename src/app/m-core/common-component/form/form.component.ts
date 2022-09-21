@@ -814,7 +814,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 {field_name : 'start'},
                 {field_name : 'end'}
               ]
-              if (element.list_of_dates.length > 0) {
+              if (list_of_dates.length > 0) {
                 list_of_dates.forEach((data) => {
                   
                   this.commonFunctionService.createFormControl(date_range, data, '', "text")
@@ -888,19 +888,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         data['minDate'] = this.minDate
                         data['maxDate'] = this.maxDate;
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
-                        break; 
-                      case "daterange":
-                        const list_of_fields_date_range = {};
-                        let list_of_fields_dates = [
-                          {field_name : 'start'},
-                          {field_name : 'end'}
-                        ]
-                        if (element.list_of_fields_dates.length > 0) {
-                          list_of_fields_dates.forEach((data) => {                            
-                            this.commonFunctionService.createFormControl(list_of_fields_date_range, data, '', "text")
-                          });
-                        }
-                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, list_of_fields_date_range, "group")                                    
                         break; 
                       default:
                         this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
