@@ -2774,6 +2774,47 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     }
     this.modalService.open(id, alertData);
   }
+  custmizedKey(parentfield){
+    let custmizedKey = parentfield.field_name;
+    switch (parentfield.type) {
+      case "list_of_fields":
+      case "group_of_fields":
+        custmizedKey = parentfield.field_name+'_'+parentfield.type                
+        break;          
+      default:
+        custmizedKey = parentfield.field_name;
+        break;
+    }
+    return custmizedKey;
+  }
+  checkStorageValue(object,parent,chield){
+    let check = false;
+    if(parent != '' && parent != undefined && parent != null){
+      const parentKey = this.custmizedKey(parent);
+      if(object[parentKey] && object[parentKey][chield.field_name] && object[parentKey][chield.field_name].length > 0){
+        check = true;
+      }
+    }else{
+      if(object[chield.field_name]){
+        check = true;
+      }
+    }
+    return check;
+  }
+  getVariableStorageValue(object,parent,chield): Array<any>{
+    let data = [];    
+    if(parent != '' && parent != undefined && parent != null){
+      const parentKey = this.custmizedKey(parent); 
+      if(this.checkStorageValue(object,parent,chield)){
+        data = object[parentKey][chield.field_name] 
+      }       
+    }else {
+      if(this.checkStorageValue(object,'',chield)){
+        data = object[chield.field_name]
+      }      
+    }
+     return data;
+  }
 
   calculation_of_script_for_tds(object, field: any) {
     const staticModal = []

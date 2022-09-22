@@ -610,8 +610,8 @@
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'file'">
-                                        <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',fields)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
-                                        <div *ngIf="dataListForUpload[fields.field_name] && dataListForUpload[fields.field_name].length > 0">
+                                        <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
+                                        <div *ngIf="checkDataListForUpload(tableField,fields)">
                                             <table mdbTable small="true" bordered="true">
                                                 <thead class="black white-text">
                                                     <tr>
@@ -619,13 +619,17 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr mdbTableCol *ngFor="let file of dataListForUpload[fields.field_name]; let i = index">
-                                                        <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
-                                                        <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
+                                                    <tr mdbTableCol *ngFor="let file of getDataListForUpload(tableField,fields); let i = index">
+                                                        <td scope="row">
+                                                            <span *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</span>
+                                                        </td>
                                                         <td>
-                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
+                                                            <span *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</span>
+                                                        </td>
+                                                        <td>
+                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')" ></mdb-icon>
                                                             <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
-                                                            <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
+                                                            <!-- <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon> -->
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -670,9 +674,6 @@
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
                                 </div>
                             </div>
-
-
-                            
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter mt-2" *ngIf="custmizedFormValue[tableField.field_name]">
                                     <table class="table-bordered table-striped table-hover one-line-text" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
@@ -940,7 +941,7 @@
                                             <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                             <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                             <td>
-                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,tableField.field_name)"></mdb-icon>
+                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"></mdb-icon>
                                                 <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                 <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
                                             </td>
@@ -1050,7 +1051,7 @@
                                                 <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                                 <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                                 <td>
-                                                    <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,tableField.field_name)"></mdb-icon>
+                                                    <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList('',tableField,i)"></mdb-icon>
                                                     <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                 </td>
                                             </tr>
@@ -1501,7 +1502,7 @@
                                                             <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                                             <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                                             <td>
-                                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
+                                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(tableField,fields,i)"></mdb-icon>
                                                                 <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                             </td>
                                                         </tr>
