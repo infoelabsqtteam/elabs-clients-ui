@@ -1,9 +1,5 @@
-<div class="vertical-menu sidenav">
-  <div class="row w-100 m-0 sidefilter">
-    <div class="col-lg-12">
-      <input type="text" class="form-control form-control-sm mb-3" [(ngModel)]="modal" [placeholder]="'Type Modal...'" />
-    </div>
-  </div>
+<section class="vertical-menu sidenav">
+  <div class="sidefilter px-3 mb-4"><input type="text" [(ngModel)]="modal" [placeholder]="'Type Modal...'"/></div>
 
   <perfect-scrollbar>
     <div class="metismenu list-unstyled mb-5" #sideMenu>
@@ -13,11 +9,14 @@
             <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="20"><span class="ml-2">{{ item.title }}</span></mat-panel-title>
           </mat-expansion-panel-header>
 
-          <div *ngIf="hasMenu(item)" class="menulist" aria-expanded="false">
+          <div *ngIf="hasMenu(item)" class="menulist">
             <div class="menuitems" *ngFor="let subitem of item.menu_list">
-              <a *ngIf="!hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
-              <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
-              <mat-accordion>
+              <div class="position-relative" *ngIf="!hasSubMenu(subitem)">
+                <a [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
+                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
+              </div>
+              
+              <mat-accordion *ngIf="hasSubMenu(subitem)">
                 <mat-expansion-panel>
                   <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId">{{ subitem.label }}</mat-expansion-panel-header>
                   <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
@@ -32,4 +31,4 @@
       </mat-accordion>
     </div>
   </perfect-scrollbar>
-</div>
+</section>

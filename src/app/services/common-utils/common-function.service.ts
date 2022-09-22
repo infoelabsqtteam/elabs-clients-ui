@@ -1875,6 +1875,20 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   }
 
 
+   getDateInStringFunction(templateValue){
+  //var froD = templateValue.getFromDate;
+  const fromDate = templateValue['fromDate'];
+  const  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var monthNumber = templateValue.fromDate.toDate().getMonth()
+  var monthName = months[monthNumber]; 
+  let year = templateValue.fromDate.toDate().getFullYear();
+  let result = {
+    "labelName": monthName+'-'+year
+  }
+
+  return result;
+
+}
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
     if(quantity >0 && gross_amount > 0){
       current_disount = discount_amount*100/gross_amount;

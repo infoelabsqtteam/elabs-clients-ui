@@ -3,17 +3,18 @@
 
  //----- Left Side Bar Menu -----//
 .sidenav {padding:20px 0;height:100%;width:260px;background:var(--themecolor);
-    input {padding:$size8 $size15;font-size:$size15;border-radius:$size25;width:$per100;}
+    input {padding:$size8 $size15;font-size:$size15;border-radius:$size25;width:$per100;border:1px solid #ccc;}
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
     .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;margin:0px;background:none;}
+        .mat-expansion-panel-header {padding:0 20px 0 10px}
         .mat-expansion-panel-header.mat-expanded {height:48px;}
         .mat-expansion-panel-header-title {align-items:center;font-size:13px;}
-        .mat-expansion-panel-body {padding: 0 24px;
-            .menulist {padding-left:30px;
+        .mat-expansion-panel-body {padding:0 25px 0 0;
+            .menulist {padding-left:20px;
                 .menuitems {padding:6px 0;font-size:13px;position:relative;
                   .mat-expansion-panel-body {padding:0;}
                   .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
-                  .favibtn { position:absolute;right:20px;top:5px;size:13px;color:#ddd;cursor:pointer;
+                  .favibtn { position:absolute;right:0px;top:5px;size:13px;color:#ddd;cursor:pointer;
                     mat-icon {width:auto;height:auto;font-size:18px;}
                   }
                   .favibtn.active mat-icon {color:#0082d5;}
