@@ -1380,8 +1380,8 @@ export class CommonFunctionService {
     let totalFair = total-toatallumsumOrAdvance;
 
     let obj = {
-      totalAmount:total,
-      payAmount:totalFair
+      totalAmount:(total).toFixed(2),
+      payAmount:(totalFair).toFixed(2)
     }
     return obj;
   }
@@ -3318,12 +3318,6 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     let dailyAllowance = claimSheet.dailyAllowance;
     let foodHotel = claimSheet.foodHotel;
     let miscellaneous = claimSheet.miscellaneous;
-    if(claimSheet !=0) {
-      let travelFair = claimSheet.travelFare;
-      console.log(travelFair)
-    } else {
-      let travelFair = 0;
-    }
 
     totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
 
