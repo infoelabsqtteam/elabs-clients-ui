@@ -1380,8 +1380,8 @@ export class CommonFunctionService {
     let totalFair = total-toatallumsumOrAdvance;
 
     let obj = {
-      totalAmount:total,
-      payAmount:totalFair
+      totalAmount:(total).toFixed(2),
+      payAmount:(totalFair).toFixed(2)
     }
     return obj;
   }
@@ -1875,6 +1875,20 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   }
 
 
+   getDateInStringFunction(templateValue){
+  //var froD = templateValue.getFromDate;
+  const fromDate = templateValue['fromDate'];
+  const  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var monthNumber = templateValue.fromDate.toDate().getMonth()
+  var monthName = months[monthNumber]; 
+  let year = templateValue.fromDate.toDate().getFullYear();
+  let result = {
+    "labelName": monthName+'-'+year
+  }
+
+  return result;
+
+}
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
     if(quantity >0 && gross_amount > 0){
       current_disount = discount_amount*100/gross_amount;
@@ -3345,12 +3359,6 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     let dailyAllowance = claimSheet.dailyAllowance;
     let foodHotel = claimSheet.foodHotel;
     let miscellaneous = claimSheet.miscellaneous;
-    if(claimSheet !=0) {
-      let travelFair = claimSheet.travelFare;
-      console.log(travelFair)
-    } else {
-      let travelFair = 0;
-    }
 
     totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
 
