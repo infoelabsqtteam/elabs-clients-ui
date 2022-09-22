@@ -2349,9 +2349,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
       
           case 'calculate_lims_invoice_with_po_items':
-           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
-            this.updateDataOnFormField(val);
-            break;
+          let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
+          this.updateDataOnFormField(val);
+          break;
+
+          
+          case 'getDateInStringFunction':
+          calFormValue = this.commonFunctionService.getDateInStringFunction(tamplateFormValue);
+          this.updateDataOnFormField(calFormValue); 
+          break;
 
       //   case 'quote_amount_via_sample_no':
       //       calFormValue = this.commonFunctionService.quote_amount_via_sample_no(tamplateFormValue,this.custmizedFormValue['quotation_param_methods']);
