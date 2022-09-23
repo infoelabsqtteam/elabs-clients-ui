@@ -627,7 +627,7 @@
                                                             <span *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</span>
                                                         </td>
                                                         <td>
-                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')" ></mdb-icon>
+                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,tableField,fields,file,'delete')" ></mdb-icon>
                                                             <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                             <!-- <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon> -->
                                                         </td>
@@ -941,7 +941,7 @@
                                             <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                             <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                             <td>
-                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"></mdb-icon>
+                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,'',tableField,file,'delete')"></mdb-icon>
                                                 <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                 <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
                                             </td>

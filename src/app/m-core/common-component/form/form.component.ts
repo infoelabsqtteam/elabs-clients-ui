@@ -3502,7 +3502,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     }   
 
   }
-  showListOfFieldData(listOfField,item,i){
+  showListOfFieldData(listOfField,item){
     let value={};
     value['data'] = listOfField[item.field_name];
     let editemode = false; 
