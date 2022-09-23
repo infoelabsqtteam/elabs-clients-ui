@@ -61,8 +61,15 @@
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
     li {font-size:12px;}
 }
-.tablist {padding-right:190px;
-    .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
+.tablist {padding-right:190px;height:35px;
+    .gridtabs {overflow-x:scroll;white-space:nowrap;display:flex;
+        .tablist {float:left;padding:7px 10px;position:relative;display:flex;cursor:pointer;height:60px;
+            .tabtitle {font-size:13px;font-family:$roboto;color:rgba(0,0,0,.7);}
+            .favibtn mat-icon {font-size:13px;color:#333;height:auto;width:auto;margin:0 5px;}
+            .favibtn.active mat-icon {color:#0082d5;}
+        }
+        .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
+    }
 }
 
 .ngx-pagination {margin-bottom:0px !important;
