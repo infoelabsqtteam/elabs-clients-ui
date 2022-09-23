@@ -55,8 +55,6 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTab(this.selectTabIndex,tab["tab_name"])
     }
 }
-
-
   constructor(
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
@@ -67,7 +65,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private apiService:ApiService,
     private notificationService:NotificationService,
     private envService:EnvService
-  ) {    
+  ) {  
     if(routers.snapshot.params["key1"]){
       const index = JSON.stringify(routers.snapshot.params["key1"]);
       if(index != ''){
@@ -144,6 +142,15 @@ export class BuilderComponent implements OnInit,OnDestroy {
         }
     }
     this.unsubscribe(this.saveResponceSubscription);
+}
+
+
+next() {
+  ++this.selectTabIndex;
+}
+
+previous() {
+   --this.selectTabIndex;
 }
 
   initialiseInvites() {    
