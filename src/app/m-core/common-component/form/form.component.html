@@ -21,7 +21,7 @@
         <div class="row">
             <div [ngClass]="checkFormType()?'col-lg-8':'col-lg-12'"> 
                 <div class="row" *ngIf="handleDisabeIf()">
-                    <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="getDivClass(tableField)" [id]="tableField._id"  >
+                    <div *ngFor="let tableField of tableFields | filter:modal; let i = index" [ngClass]="getDivClass(tableField)" [id]="tableField._id"  >
                         <div *ngIf="tableField.type == 'text'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
@@ -309,12 +309,17 @@
                                     <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
                                 </div>
                             </div>
+                            <div class="row" *ngIf="copyStaticData[tableField.ddn_field].length > 16">
+                                <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                            </div>
                             <div class="row" [formArrayName]="tableField.field_name">
-                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field]; let i = index">
+                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field] | filter:term; let i = index">
                                     <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{getddnDisplayVal(order)}}</mat-checkbox>
                                 </div>
                             </div>
                         </div>
+
+
                         <div *ngIf="tableField.type == 'checkbox'">
                             <mat-checkbox color="primary" class="example-margin" [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)">{{ tableField.label | titlecase}}</mat-checkbox>
                         </div>
