@@ -38,6 +38,7 @@ export class GridSelectionModalComponent implements OnInit {
   copyStaticData: [] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   selectable = true;
+  term: any={};
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -242,7 +243,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   typeaheadObjectWithtext;
   searchTypeaheadData(field, currentObject,chipsInputValue) {
-    console.log(chipsInputValue)
+    //console.log(chipsInputValue)
     this.typeaheadObjectWithtext = currentObject;
 
     this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
@@ -669,7 +670,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   isDisable(field, object) {
-    console.log(field.field_name +":- " + field.display);
+    //console.log(field.field_name +":- " + field.display);
     const updateMode = false;
     let disabledrow = false;
     if (field.is_disabled) {

@@ -1659,7 +1659,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 this.templateForm.get(element.field_name).reset();
                 element.list_of_fields.forEach(field => {
                   if(field.type == 'list_of_string' || field.datatype == "list_of_object" || element.datatype == "chips" || element.datatype == "chips_with_mask"){
-                    const custmizedKey = this.custmizedKey(element);            
+                    const custmizedKey = this.commonFunctionService.custmizedKey(element);            
                     if (this.custmizedFormValue[custmizedKey]){ 
                       if (this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
                     }
@@ -1769,7 +1769,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "list_of_string":
         if (add) {
           if(parentfield != ''){
-            const custmizedKey = this.custmizedKey(parentfield);   
+            const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
             const value = formValue[parentfield.field_name][field.field_name]
             if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey][field.field_name])){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
@@ -1828,7 +1828,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if (add) {
             if(parentfield != ''){
               const value = formValue[parentfield.field_name][field.field_name]
-              const custmizedKey = this.custmizedKey(parentfield);
+              const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);
               if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && this.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey][field.field_name])){
                 this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
               }else{
@@ -1954,7 +1954,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         let field_control = this.templateForm.get(field.field_name);        
         for (let index = 0; index < field.list_of_fields.length; index++) {
           const element = field.list_of_fields[index];
-          const custmizedKey = this.custmizedKey(field);
+          const custmizedKey = this.commonFunctionService.custmizedKey(field);
           let custmizedData = '';
           let mendatory = false;
           if(element.is_mandatory){
@@ -2066,7 +2066,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 updateCustmizedValue[this.listOfFieldsUpdateIndex][key] = formValue[field.field_name][key];
               })
 // pending for review by vikash (from)
-              const keyName=field.field_name+'_'+field.type;
+              //const keyName=field.field_name+'_'+field.type;
+              let keyName = this.commonFunctionService.custmizedKey(field);
               if(this.custmizedFormValue[keyName]){
                 Object.keys(this.custmizedFormValue[keyName]).forEach(childkey => {
                   updateCustmizedValue[this.listOfFieldsUpdateIndex][childkey] = this.custmizedFormValue[keyName][childkey];
@@ -2074,7 +2075,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
               if(this.dataListForUpload[keyName]){
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                  
-                  updateCustmizedValue[childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);;
+                  updateCustmizedValue[this.listOfFieldsUpdateIndex][childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);;
                 })
               }
               if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
@@ -2097,7 +2098,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
               // pending for review by vikash (to)
               this.custmizedFormValue[field.field_name] =   updateCustmizedValue; 
-              this.custmizedFormValue[keyName] = {}
+              this.custmizedFormValue[keyName] = {};
+              this.dataListForUpload[keyName] = {};
             // }else{
             //   const updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
             //   updateCustmizedValue[this.listOfFieldsUpdateIndex] = JSON.parse(JSON.stringify(formValue[field.field_name]))
@@ -2728,7 +2730,11 @@ case 'populate_fields_for_report_for_new_order_flow':
 
   alertResponce(responce) {
     if (responce) {
-      this.deleteitem()
+      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
+        this.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex)
+      }else{
+        this.deleteitem()
+      }      
     } else {
       this.cancel();
     }
@@ -2737,7 +2743,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     // if(this.updateMode){
     //   const custmizedKeyChild = this.deletefieldName['child'].field_name;
     //   if(this.deletefieldName['parent'] != undefined && this.deletefieldName['parent'] != null && this.deletefieldName['parent'] != ''){
-    //     const custmizedKeyParent = this.custmizedKey(this.deletefieldName['parent'])        
+    //     const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent'])        
     //     this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild][this.deleteIndex]['status'] = 'I';
     //   }else{
     //     this.custmizedFormValue[custmizedKeyChild][this.deleteIndex]['status'] = 'I';
@@ -2745,7 +2751,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     // }else{
       const custmizedKeyChild = this.deletefieldName['child'].field_name;
       if(this.deletefieldName['parent'] != undefined && this.deletefieldName['parent'] != null && this.deletefieldName['parent'] != ''){
-        const custmizedKeyParent = this.custmizedKey(this.deletefieldName['parent']) 
+        const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent']) 
         let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild]))
         deleteCustmizedValue.splice(this.deleteIndex, 1);
         this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild] = deleteCustmizedValue;
@@ -3430,7 +3436,7 @@ case 'populate_fields_for_report_for_new_order_flow':
         }
       }
     });    
-    if(this.currentTreeViewFieldParent != ''){
+    if(this.currentTreeViewFieldParent && this.currentTreeViewFieldParent != '' && this.currentTreeViewFieldParent.field_name && this.currentTreeViewFieldParent.field_name != ''){
       if (!this.treeViewData[this.currentTreeViewFieldParent.field_name]) this.treeViewData[this.currentTreeViewFieldParent.field_name] = {}
       if (!this.treeViewData[this.currentTreeViewFieldParent.field_name][this.curTreeViewField.field_name]) this.treeViewData[this.currentTreeViewFieldParent.field_name][this.curTreeViewField.field_name] = [];
       
@@ -3447,6 +3453,22 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.treeViewData[this.curTreeViewField.field_name].push(obj);
       this.curTreeViewField = {};
     }
+  }
+  treeViewOptionData(parent,child):Array<any>{
+    let treeViewData = [];
+    if(parent != ""){
+      if(this.treeViewData && this.treeViewData[parent.field_name]){
+        let parentData = this.treeViewData[parent.field_name];
+        if(parentData && parentData[child.field_name]){
+          treeViewData = parentData[child.field_name];
+        }
+      }
+    }else{
+      if(this.treeViewData && this.treeViewData[child.field_name]){
+        treeViewData = this.treeViewData[child.field_name];
+      }
+    }
+    return treeViewData;
   }
   showListFieldValue(listOfField, item) {
     switch (item.type) {
@@ -3473,7 +3495,7 @@ case 'populate_fields_for_report_for_new_order_flow':
           }
       case "list_of_string":
       case "list_of_checkbox":
-        case "grid_selection":
+      case "grid_selection":
         if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
           return '<i class="fa fa-eye text-pointer"></i>';
         } else {
@@ -3498,7 +3520,8 @@ case 'populate_fields_for_report_for_new_order_flow':
   }
   showListOfFieldData(listOfField,item){
     let value={};
-    value['data'] = listOfField[item.field_name]    
+    value['data'] = listOfField[item.field_name];
+    let editemode = false; 
     switch (item.type) {
       case "typeahead":
           if(item.datatype == "list_of_object"){  
@@ -3519,19 +3542,25 @@ case 'populate_fields_for_report_for_new_order_flow':
           value['gridColumns']=item.gridColumns;
         }
         this.viewModal('form_basic-modal', value, item,false);
+        break;
+      case "file":
+        if (value['data'] && value['data'] != '') {
+          this.viewModal('fileview-grid-modal', value, item, editemode);
+        };
         break;      
       default:
         break;
     } 
   }
   viewModal(id, object, field,editemode) {
-    this.alertData = {
-      "field": field,
-      "data": object,
-      "menu_name": this.currentMenu.name,
-      'editemode': editemode
-    }
-    this.modalService.open(id, this.alertData);
+    // this.alertData = {
+    //   "field": field,
+    //   "data": object,
+    //   "menu_name": this.currentMenu.name,
+    //   'editemode': editemode
+    // }
+    // this.modalService.open(id, this.alertData);
+    this.commonFunctionService.viewModal(id, object, field, this.currentMenu,editemode)
   }
   responceData(data) {
     if(this.clickFieldName.type){
@@ -3574,13 +3603,13 @@ case 'populate_fields_for_report_for_new_order_flow':
             element.list_of_fields.forEach((data) => {
               switch (data.type) {                
                 case "list_of_string":
-                  const custmisedKey = this.custmizedKey(element);
+                  const custmisedKey = this.commonFunctionService.custmizedKey(element);
                   if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
                   this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];
                   break;
                 case "typeahead":
                   if (data.datatype == 'list_of_object') {
-                    const custmisedKey = this.custmizedKey(element);
+                    const custmisedKey = this.commonFunctionService.custmizedKey(element);
                     if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
                     this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];    
                   } else {
@@ -3611,7 +3640,18 @@ case 'populate_fields_for_report_for_new_order_flow':
                   }
                   this.templateForm.get(element.field_name).get(data.field_name).setValue(checkboxListValue);
                   //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(checkboxListValue);
-                  break;                
+                  break; 
+                case "file":
+                case "input_with_uploadfile":
+                  if(object[data.field_name] != null && object[data.field_name] != undefined){
+                    let custmizedKey = this.commonFunctionService.custmizedKey(element);
+                    if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
+                    if (!this.dataListForUpload[custmizedKey][data.field_name]) this.dataListForUpload[custmizedKey][data.field_name] = [];
+                    this.dataListForUpload[custmizedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
+                    const value = this.modifyFileSetValue(object[data.field_name]);
+                    this.templateForm.get(element.field_name).get(data.field_name).setValue(value);
+                  }
+                  break;               
                 default:
                   this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
                   //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
@@ -3987,50 +4027,19 @@ case 'populate_fields_for_report_for_new_order_flow':
       array = this.commonFunctionService.array_move(array,index,index-1);
     }
   }
-
+  checkDataListForUpload(parent,chield){
+    return this.commonFunctionService.checkStorageValue(this.dataListForUpload,parent,chield);
+  }
   checkCustmizedFormValueData(parent,chield){
-    let check = false;
-    if(parent != '' && parent != undefined && parent != null){
-      const parentKey = this.custmizedKey(parent);
-      if(this.custmizedFormValue[parentKey] && this.custmizedFormValue[parentKey][chield.field_name]){
-        check = true;
-      }
-    }else{
-      if(this.custmizedFormValue[chield.field_name]){
-        check = true;
-      }
-    }
-    return check;
-  }
+    return this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield);
+  } 
   
+  getDataListForUpload(parent,chield): Array<any>{
+    return this.commonFunctionService.getVariableStorageValue(this.dataListForUpload,parent,chield);
+  }
   custmizedFormValueData(parent,chield): Array<any>{
-    let data = [];    
-    if(parent != '' && parent != undefined && parent != null){
-      const parentKey = this.custmizedKey(parent); 
-      if(this.checkCustmizedFormValueData(parent,chield)){
-        data = this.custmizedFormValue[parentKey][chield.field_name] 
-      }       
-    }else {
-      if(this.checkCustmizedFormValueData('',chield)){
-        data = this.custmizedFormValue[chield.field_name]
-      }      
-    }
-     return data;
-  }
-
-  custmizedKey(parentfield){
-    let custmizedKey = parentfield.field_name;
-    switch (parentfield.type) {
-      case "list_of_fields":
-      case "group_of_fields":
-        custmizedKey = parentfield.field_name+'_'+parentfield.type                
-        break;          
-      default:
-        custmizedKey = parentfield.field_name;
-        break;
-    }
-    return custmizedKey;
-  }
+    return this.commonFunctionService.getVariableStorageValue(this.custmizedFormValue,parent,chield);
+  }   
   modifyUploadFiles(files){
     const fileList = [];
     if(files && files.length > 0){
@@ -4048,7 +4057,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     let fileName = '';
     let fileLength = files.length;
     let file = files[0];
-    if(fileLength == 1){
+    if(fileLength == 1 && (file.fileName || file.rollName)){
       fileName = file.fileName || file.rollName;
     }else if(fileLength > 1){
       fileName = fileLength + " Files";
@@ -4059,7 +4068,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     let fileList = [];
     let msg = "";
     if(parent != ''){
-      const parentKey = this.custmizedKey(parent);
+      const parentKey = this.commonFunctionService.custmizedKey(parent);
       if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
         fileList = this.dataListForUpload[parentKey][field.field_name];
       }
@@ -4085,7 +4094,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.curFileUploadFieldparentfield = parent;
       let selectedFileList = [];
       if(parent != ''){
-        const parentKey = this.custmizedKey(parent);
+        const parentKey = this.commonFunctionService.custmizedKey(parent);
         if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
           selectedFileList = this.dataListForUpload[parentKey][field.field_name];
         }
@@ -4100,7 +4109,7 @@ case 'populate_fields_for_report_for_new_order_flow':
   fileUploadResponce(response) {
 
     if(this.curFileUploadFieldparentfield != ''){
-      const custmizedKey = this.custmizedKey(this.curFileUploadFieldparentfield);            
+      const custmizedKey = this.commonFunctionService.custmizedKey(this.curFileUploadFieldparentfield);            
       if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
       if (!this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name]) this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name] = [];
       this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name] = response;
@@ -4110,7 +4119,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     
     if(this.curFileUploadFieldparentfield != ''){
-      const custmizedKey = this.custmizedKey(this.curFileUploadFieldparentfield); 
+      const custmizedKey = this.commonFunctionService.custmizedKey(this.curFileUploadFieldparentfield); 
       if(this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name] && this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name].length > 0){
         let fileName = this.modifyFileSetValue(this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name]);        
         this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(this.curFileUploadField.field_name).setValue(fileName);
@@ -4179,8 +4188,15 @@ case 'populate_fields_for_report_for_new_order_flow':
     // this.curFileUploadField = {};
   }
 
-  removeAttachedDataFromList(index,fieldName){
-    this.dataListForUpload[fieldName].splice(index,1)
+  removeAttachedDataFromList(parent,child,index){
+    let fieldName = child.field_name;
+    if(parent != ''){
+      let custmisedKey = this.commonFunctionService.custmizedKey(parent);
+      this.dataListForUpload[custmisedKey][fieldName].splice(index,1);
+
+    }else{
+      this.dataListForUpload[fieldName].splice(index,1)
+    }    
   }
 
   toggle(index,event: MatCheckboxChange,field) {
@@ -4262,7 +4278,7 @@ case 'populate_fields_for_report_for_new_order_flow':
 
   typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
     if(parent != '' && parent != undefined && parent != null){
-      const parentKey = this.custmizedKey(parent); 
+      const parentKey = this.commonFunctionService.custmizedKey(parent); 
       if(this.checkCustmizedFormValueData(parent,chield)){
         moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
       }       
