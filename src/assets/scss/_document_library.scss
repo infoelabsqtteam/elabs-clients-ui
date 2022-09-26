@@ -51,7 +51,7 @@ button.mat-menu-item {height:auto;line-height:30px;}
     &:hover{width:300px;cursor:pointer;transition:all 1s;}
     &:hover input{display:block;transition:all 1s;}
     &:hover mat-icon {color:#555;}
-    .moduleitems {position:absolute;top:100%;width:100%;padding-top:15px;display:none;
+    .moduleitems {position:absolute;top:100%;width:100%;padding-top:15px;display:none;z-index:2;
        .modulesdata {height:250px;z-index:999;background:#fff;border:1px solid #ccc;overflow:hidden;overflow-y:scroll;}
     }
     &:hover .moduleitems {display:block;}
