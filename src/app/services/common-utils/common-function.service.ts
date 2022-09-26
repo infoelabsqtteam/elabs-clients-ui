@@ -1764,13 +1764,13 @@ break;
 
   net_amount =gross_amount-discount_amount;
   taxable_amount = gross_amount-discount_amount+surcharge;
-  this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+  this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount,field);
        
   return templateValue;
  }
 
 
-update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount){
+update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount,field?){
   let	gst_amount	=0;
   let	cgst_amount	=0;
   let	sgst_amount	=0;
@@ -1845,6 +1845,10 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     total['sez_amount'] = this.getDecimalAmount(sez_amount);
     total['net_amount'] = this.getDecimalAmount(net_amount);
     total['net_payble'] = this.getDecimalAmount(net_payble);
+
+    if(field != null && field.field_name != null && field != ""){
+      delete total[field.field_name]
+    }
 
     templateValue['total_amount'] = total;
     return templateValue;

@@ -220,6 +220,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   public alertData = {};
 
   public curTreeViewField: any = {};
+  curFormField:any={};
+  curParentFormField:any={};
   treeViewData: any = {};
   dataSaveInProgress: boolean = true;
   copyStaticData:any={};
@@ -1297,6 +1299,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
 
     if(this.staticData["COMPLETE_OBJECT"] && this.staticData["COMPLETE_OBJECT"] != null){
+      if(this.curFormField && this.curFormField.resetFormAfterQtmp){
+        this.resetForm();
+        this.curFormField = {};
+        this.curParentFormField = {};
+      }
       this.updateDataOnFormField(this.staticData["COMPLETE_OBJECT"]);          
       this.selectedRow = this.staticData["COMPLETE_OBJECT"];
       this.complete_object_payload_mode = true;
@@ -1764,7 +1771,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   
   setValue(parentfield,field, add,event?) {
 
-    let formValue = this.templateForm.getRawValue()    
+    let formValue = this.templateForm.getRawValue()   
+    this.curFormField = field;
+    this.curParentFormField = parentfield; 
     switch (field.type) {
       case "list_of_string":
         if (add) {
@@ -3917,9 +3926,11 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     if(Object.keys(this.donotResetFieldLists).length > 0){
       this.custmizedFormValue = {};
+      this.dataListForUpload = {};
       this.updateDataOnFormField(this.donotResetFieldLists);
       this.donotResetFieldLists = {};
     }else{
+      this.dataListForUpload={};
       this.custmizedFormValue = {};
     }  
     if(this.tableFields.length > 0){ 
