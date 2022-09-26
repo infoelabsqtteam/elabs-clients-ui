@@ -12,6 +12,7 @@ import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
 import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 import { Subscription } from "rxjs";
+import { FormControl } from "@angular/forms";
 
 
 @Component({
@@ -23,7 +24,7 @@ import { Subscription } from "rxjs";
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     @Input() public pageName;
     @Input() moduleIndex: any;
-
+    selected = new FormControl(0);
     subscription: any;
     menuDataSubscription;
 
@@ -742,6 +743,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.modelService.open('feedback_model', {})
      }
     GoToSelectedModule(item){
+        this.selected = new FormControl(1);
         this.storageService.setModule(item.name); 
         this.dataShareService.sendCurrentPage('DASHBOARD')
         const menuSearchModule = { "value": "menu", key2: item.name }
