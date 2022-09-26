@@ -318,8 +318,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div *ngIf="tableField.type == 'checkbox'">
                             <mat-checkbox color="primary" class="example-margin" [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)">{{ tableField.label | titlecase}}</mat-checkbox>
                         </div>
@@ -955,7 +953,6 @@
                                 </table>
                             </div>                           
                         </div> 
-
                         <div *ngIf="tableField.type == 'input_with_uploadfile'">
                             <div class="w-100 position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
