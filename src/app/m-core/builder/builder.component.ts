@@ -9,6 +9,7 @@ import { ApiService } from '../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { Subscription } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 
 
@@ -39,7 +40,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   gridDataCountSubscription:any;
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
- 
+  selected = new FormControl(0);
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -145,18 +146,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
 }
 
 
-next() {
-  ++this.selectTabIndex;
-}
-
-previous() {
-   --this.selectTabIndex;
-}
-
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
     this.selectContact = '';
     this.selectTabIndex = 0;
+    this.selected = new FormControl(0);   
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
       const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
