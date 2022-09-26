@@ -21,7 +21,7 @@
         <div class="row">
             <div [ngClass]="checkFormType()?'col-lg-8':'col-lg-12'"> 
                 <div class="row" *ngIf="handleDisabeIf()">
-                    <div *ngFor="let tableField of tableFields | filter:modal; let i = index" [ngClass]="getDivClass(tableField)" [id]="tableField._id"  >
+                    <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="getDivClass(tableField)" [id]="tableField._id"  >
                         <div *ngIf="tableField.type == 'text'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
