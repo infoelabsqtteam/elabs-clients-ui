@@ -599,11 +599,11 @@
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
                                             <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" disableOptionCentering panelClass="optiondropdown">
-                                                <mat-option *ngFor="let data of treeViewData[fields.field_name]" [value]="data">
+                                                <mat-option *ngFor="let data of treeViewOptionData(tableField,fields)" [value]="data">
                                                     {{getddnDisplayVal(data)}}
                                                 </mat-option>
                                             </mat-select>
-                                            <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView('',fields)">Tree View</span>
+                                            <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView(tableField,fields)">Tree View</span>
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'textarea'">
@@ -756,7 +756,7 @@
                                 <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" disableOptionCentering panelClass="optiondropdown">
-                                        <mat-option *ngFor="let data of treeViewData[tableField.field_name]" [value]="data">
+                                        <mat-option *ngFor="let data of treeViewOptionData('',tableField)" [value]="data">
                                             {{getddnDisplayVal(data)}}
                                         </mat-option>
                                     </mat-select>

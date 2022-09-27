@@ -30,25 +30,25 @@
       <div class="modal-body pt-0 popuptable">
         <div class="">
             <div class="table without-filter mb-2">            
-                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover  gridselectionform" matSort (matSortChange)="sortData($event)">
+                <table *ngIf="field.type == 'grid_selection'" class="table-bordered table-striped table-hover  gridselectionform" matSort (matSortChange)="sortData($event)" stickyTable>
                     <thead>
                         <tr>
-                            <th *ngIf="grid_row_selection" class="text-center">
+                            <th *ngIf="grid_row_selection" class="text-center" sticky="true">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
-                            <th [style.left.px]="fixedcolwidth" *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
+                            <th  *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'" [sticky]="fieldName.sticky"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
-                            <td class="text-center" *ngIf="grid_row_selection">
+                            <td class="text-center" *ngIf="grid_row_selection" sticky="true">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
                                   <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox>
                                   <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
                                 </div>
                               </td>
 
-                            <td [style.left.px]="fixedcolwidth" *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                            <td  *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'" [sticky]="fieldName.sticky">
                               <!-- <div *ngIf="!editedColumne">
                                 <span  [innerHtml]="getValueForGrid(fieldName,data)" ></span>
                               </div> -->

@@ -10,7 +10,7 @@
     .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
-    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
+    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:4;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {font-weight:500;position:relative;font-size:13px;}
@@ -28,8 +28,8 @@
 
     tbody {
         tr {
-            &:nth-of-type(odd) {background-color: #fff;}
-            &:nth-of-type(even) {background-color:#fafafa;}
+            &:nth-of-type(odd) td{background-color: #fff;}
+            &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
         .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}

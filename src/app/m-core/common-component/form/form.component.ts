@@ -3463,6 +3463,22 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.curTreeViewField = {};
     }
   }
+  treeViewOptionData(parent,child):Array<any>{
+    let treeViewData = [];
+    if(parent != ""){
+      if(this.treeViewData && this.treeViewData[parent.field_name]){
+        let parentData = this.treeViewData[parent.field_name];
+        if(parentData && parentData[child.field_name]){
+          treeViewData = parentData[child.field_name];
+        }
+      }
+    }else{
+      if(this.treeViewData && this.treeViewData[child.field_name]){
+        treeViewData = this.treeViewData[child.field_name];
+      }
+    }
+    return treeViewData;
+  }
   showListFieldValue(listOfField, item) {
     switch (item.type) {
       case "typeahead":
