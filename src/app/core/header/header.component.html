@@ -3,15 +3,15 @@
       <ng-container *ngIf="menuBoxDashboard || showUserAccount">
         <mat-tab-group animationDuration="0ms" *ngIf="menuBoxDashboard" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
           <mat-tab>
-            <ng-template mat-tab-label><a [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'"
+            <ng-template mat-tab-label><a class="px-2" [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'"
                 [ngClass]="activeclass ? 'selectedclass' : ''" (click)="goToMOdule()" *ngIf="menuBoxDashboard"
                 #tooltip="matTooltip" matTooltip="Press B">Home</a></ng-template>
           </mat-tab>
           <mat-tab *ngFor="let menu of menuData" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
             <ng-template mat-tab-label>
-              <a *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu)"
+              <a class="px-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu)"
                 #tooltip="matTooltip" matTooltip="Press Ctrl + c">{{ menu.label }}</a>
-              <a [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
+              <a class="px-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
                 (click)="activeLinkD(menu.label,false)">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
                 <button mat-menu-item *ngFor="let submenu of menu.submenu" (click)="getTemplateMenuData(submenu)">{{
