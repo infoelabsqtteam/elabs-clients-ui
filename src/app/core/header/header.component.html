@@ -1,7 +1,7 @@
 <nav class="mx-3 position-relative">
     <div class="headermenu">
       <ng-container *ngIf="menuBoxDashboard || showUserAccount">
-        <mat-tab-group animationDuration="0ms" *ngIf="menuBoxDashboard">
+        <mat-tab-group animationDuration="0ms" *ngIf="menuBoxDashboard" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
           <mat-tab>
             <ng-template mat-tab-label><a [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'"
                 [ngClass]="activeclass ? 'selectedclass' : ''" (click)="goToMOdule()" *ngIf="menuBoxDashboard"
