@@ -91,7 +91,8 @@ export class AuthService {
         if (respData && respData.user) {
           this.storageService.SetUserInfo(respData);
           this.storageService.GetUserInfo();
-          this.envService.setRequestType('PRIVATE');          
+          this.envService.setRequestType('PRIVATE');  
+          this.commonFunctionService.getApplicationAllSettings();        
           this.dataShareService.restSettingModule('logged_in');
           this.apiService.gitVersion('');
           this.commonFunctionService.getUserPrefrerence(respData.user);
