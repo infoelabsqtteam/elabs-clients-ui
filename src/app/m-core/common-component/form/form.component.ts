@@ -2321,6 +2321,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   
   inputOnChangeFunc(parent,field) {
+    if(parent && parent != ''){
+      field['parent'] = parent;
+    }
     if(field.type == 'checkbox' || field.type == 'date'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
         let formValue = this.getFormValue(false);
@@ -2400,14 +2403,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               {"from":"account.name","to":"billing_company"},
           
             ]
-            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
             this.updateDataOnFormField(calFormValue); 
           break;
           case 'job_card_series':
             list_of_populated_fields=[
               {"from":"tl_name.name+service_line.name+parent_company.name+/","to":"job_card_name"},
             ]
-            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
             this.updateDataOnFormField(calFormValue); 
           break;
 
@@ -2434,7 +2437,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               {"from":"account.name","to":"billing_company"},
           
             ]
-            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
             this.updateDataOnFormField(calFormValue); 
           break;
 case 'populate_fields_for_new_order_flow':
@@ -2454,7 +2457,7 @@ case 'populate_fields_for_new_order_flow':
               {"from":"sample_booking.name","to":"billing_company"},
 
             ]
-            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+            calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
             this.updateDataOnFormField(calFormValue); 
           break;
         case 'populate_fields_for_report':
@@ -2472,7 +2475,7 @@ case 'populate_fields_for_new_order_flow':
             {"from":"first_name+last_name+ ","to":"reporting_contact_person"},
             {"from":"account.name","to":"reporting_company"},
           ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
           this.updateDataOnFormField(calFormValue); 
           // this.commonFunctionService.populate_fields_for_report(this.templateForm);
           break;
@@ -2491,7 +2494,7 @@ case 'populate_fields_for_new_order_flow':
             {"from":"contact.name","to":"reporting_contact_person"},
             {"from":"account.name","to":"reporting_company"},
           ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
           this.updateDataOnFormField(calFormValue); 
           // this.commonFunctionService.populate_fields_for_report(this.templateForm);
           break;
@@ -2510,7 +2513,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             {"from":"first_name+last_name+ ","to":"reporting_contact_person"},
             {"from":"sample_booking.name","to":"reporting_company"},
           ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.populate_fields_for_report(this.templateForm);
           break;
@@ -2533,7 +2536,7 @@ case 'populate_fields_for_report_for_new_order_flow':
           list_of_populated_fields = [
             {"from":"sample_booking.name", "to":"sample_details.mfg_by"}
           ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
@@ -2556,7 +2559,7 @@ case 'populate_fields_for_report_for_new_order_flow':
           list_of_populated_fields = [
             {"from":"sample_booking.name", "to":"sample_details.supplied_by"}
           ]
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
