@@ -2522,8 +2522,20 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     });
   }
 
-  populatefields(value, populate_fields,multipleFormCollection?) {
+  populatefields(value, populate_fields,field,multipleFormCollection?) {
     let obj = {}
+    let check = false;
+    if(field && field.field_name){
+      let fieldName = "";
+      if(field.parent && field.parent.field_name && field.parent.field_name != ''){
+        fieldName = field.parent.field_name+'.'+field.field_name;
+      }else{
+        fieldName = field.field_name;
+      }
+      if(field.type == "checkbox" && this.getObjectValue(fieldName,value)){
+        check = true;
+      }
+    }
     if(populate_fields && populate_fields.length > 0){
       populate_fields.forEach(el =>{
             value = this.getFormDataInMultiformCollection(multipleFormCollection, value);
@@ -2532,10 +2544,18 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
           const parent = toList[0];
           if (!obj[parent]) obj[parent] = {};
           const child = toList[1];
-          obj[parent][child] =this.mergeMultiFieldsValues(el.from, value);  
+          if(check){
+            obj[parent][child] =this.mergeMultiFieldsValues(el.from, value);
+          }else{
+            obj[parent][child] = "";
+          }            
         }else{
           const field = toList[0];
-          obj[field] =this.mergeMultiFieldsValues(el.from, value);
+          if(check){
+            obj[field] =this.mergeMultiFieldsValues(el.from, value);
+          }else{
+            obj[field] = "";
+          }
         }
       });
     }
