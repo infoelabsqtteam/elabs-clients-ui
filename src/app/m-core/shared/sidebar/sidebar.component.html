@@ -6,7 +6,7 @@
       <mat-accordion>
         <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index">
           <mat-expansion-panel-header *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
-            <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="20"><span class="ml-2">{{ item.title }}</span></mat-panel-title>
+            <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="20"><span class="ml-2 menutitle">{{ item.title }}</span></mat-panel-title>
           </mat-expansion-panel-header>
 
           <div *ngIf="hasMenu(item)" class="menulist">
