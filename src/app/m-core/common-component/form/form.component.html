@@ -683,7 +683,7 @@
                                         <thead>
                                             <tr>
                                                 <th width="10%" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">Action</th>
-                                                <th *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(tableField,item,0) ? 'd-none' : ''">{{item.label}}</th>                                                
+                                                <th *ngFor="let item of getListOfFieldsGridColumn(tableField)" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(tableField,item,0) ? 'd-none' : ''">{{item.label}}</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -693,7 +693,7 @@
                                                     <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup'" (click)="editListOfFiedls(listOfField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,listOfField,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                                                 </td>
-                                                <td *ngFor="let item of tableField.list_of_fields" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(tableField,item,i) ? 'd-none' : ''" (click)="showListOfFieldData(listOfField, item)" [innerHtml]="showListFieldValue(listOfField, item)"></td>                                                
+                                                <td *ngFor="let item of getListOfFieldsGridColumn(tableField)" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(tableField,item,i) ? 'd-none' : ''" (click)="showListOfFieldData(listOfField, item)" [innerHtml]="showListFieldValue(listOfField, item)"></td>                                                
                                             </tr>
                                         </tbody>
                                     </table>
@@ -928,7 +928,6 @@
                         <div *ngIf="tableField.type == 'button'">
                             <button mdbBtn type="button" size="sm" class="btn-public rounded bg-cerulean text-white" (click)="partialDataSave(tableField.onclick, tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button>
                         </div>
-
                         <div *ngIf="tableField.type == 'file'">
                             <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                             <!-- list of attachment files -->
