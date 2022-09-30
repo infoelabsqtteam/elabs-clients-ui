@@ -42,6 +42,13 @@
     .form-control:focus {border-color:#80bdff;box-shadow:0 0 0 0.1rem rgb(0 123 255 / 25%);}
 }
 
+
+.activetxt {
+    td {background:var(--activebg) !important}
+}
+
+
+
 .datalist.table {
     tbody {
         tr {

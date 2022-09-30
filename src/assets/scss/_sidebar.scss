@@ -5,6 +5,7 @@
 .sidenav {padding:20px 0;height:100%;width:260px;background:var(--themecolor);
     input {padding:$size8 $size15;font-size:$size15;border-radius:$size25;width:$per100;border:1px solid #ccc;}
     i {font-size:$size18;color:$iconcolor;transition:$transition;}
+    .menutitle {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;}
     .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;margin:0px;background:none;}
         .mat-expansion-panel-header {padding:0 20px 0 10px}
         .mat-expansion-panel-header.mat-expanded {height:48px;}
