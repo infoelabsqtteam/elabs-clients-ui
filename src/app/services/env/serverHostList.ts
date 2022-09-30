@@ -662,7 +662,24 @@ export const serverHostList = [
     //   "form_label_bg": "#E4F2FA"
     // }
   },
-  
+    {
+    "clientEndpoint": "prodclientslims.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai", 
+    // "title": "Multani Sit", "google_map": "false", "menu_type": "Vertical", "folder": "multani", "temp_name": "temp3", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
+    // "theme_setting": {
+    //   "header_bg_color": "#fcfcfc",
+    //   "header_txt_color": "",
+    //   "header_txt_hover_color": "",
+    //   "header_icon_color": "",
+    //   "header_icon_hover_color": "",
+    //   "btn_color": "",
+    //   "btn_hover_color": "",
+    //   "footer_bg": "#232324",
+    //   "theme_color": "#1d9527",
+    //   "active_bg_color": "#e0f0e1",
+    //   "popup_header_bg": "#CEE7F7",
+    //   "form_label_bg": "#E4F2FA"
+    // }
+  },
    {
     "clientEndpoint": "web.sralabs.com", "serverEndpoint": "https://prodsatiateserver.e-labs.ai",
     //  "title": "Elabs", "google_map": "false", "menu_type": "Vertical", "folder": "elabs-client", "temp_name": "temp1", "theme": "theme1", "redirect_url": "", "varify_mode": "","teamname": "false",
