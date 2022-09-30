@@ -49,4 +49,4 @@ jobs:
       run: aws s3 sync dist s3://prodclientslims.e-labs.ai
       
     - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2DMYDKCSUDLCI --paths '/*'    
+      run: aws cloudfront create-invalidation --distribution-id E24DKHL9E5HEDF --paths '/*'    
