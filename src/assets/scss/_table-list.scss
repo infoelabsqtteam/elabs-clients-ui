@@ -28,6 +28,8 @@
 
     tbody {
         tr {
+            &:nth-of-type(odd) td{background-color: #fff;}
+            &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
         .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
@@ -41,16 +43,10 @@
 }
 
 
-.selectedparametermodule {
-    table {
-        tbody {
-            tr {
-                &:nth-of-type(odd) td{background-color: #fff;}
-                &:nth-of-type(even) td{background-color:#fafafa;}
-            }
-        }
-    }
+.activetxt {
+    td {background:var(--activebg) !important}
 }
+
 
 
 .datalist.table {
