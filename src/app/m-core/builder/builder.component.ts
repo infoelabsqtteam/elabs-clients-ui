@@ -8,6 +8,8 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import { ApiService } from '../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { EnvService } from 'src/app/services/env/env.service';
+import { Subscription } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 
 
@@ -22,6 +24,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   grid_view_mode:any = '';  
   navigationSubscription;  
   selectTabIndex: number = 0;
+  tabId:any = "";
   selectedRowIndex: any = -1;
   currentMenu:any;
   userInfo: any;
@@ -35,7 +38,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   tempDataSubscription;
   dinamicFormSubscription;
   gridDataCountSubscription:any;
- 
+  saveResponceSubscription:Subscription;
+  userPreferenceSubscription:Subscription;
+  selected = new FormControl(0);
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -51,8 +56,6 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTab(this.selectTabIndex,tab["tab_name"])
     }
 }
-
-
   constructor(
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
@@ -63,7 +66,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private apiService:ApiService,
     private notificationService:NotificationService,
     private envService:EnvService
-  ) {    
+  ) {  
     if(routers.snapshot.params["key1"]){
       const index = JSON.stringify(routers.snapshot.params["key1"]);
       if(index != ''){
@@ -89,7 +92,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.apiService.GetForm(getFormData);
         // alert('Index is:-' + index);
       }
-    }    
+    }else if(routers.snapshot.params["tabId"]){
+      this.tabId = routers.snapshot.params["tabId"]; 
+      // let moduleId =  routers.snapshot.params["moduleId"];     
+      // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
+    }   
     this.userInfo = this.storageService.GetUserInfo();
     
     
@@ -112,10 +119,38 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.setGridCountData(counts);
     })
   }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  userPreferenceSubscribe(menu,field,parent){
+    this.userPreferenceSubscription = this.dataShareService.userPreference.subscribe(responce =>{      
+        this.updateUserPreference(menu,field,parent);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+        if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+            if (saveFromDataRsponce.success == 'success') {
+                this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+            }
+        }
+    }
+    this.unsubscribe(this.saveResponceSubscription);
+}
+
+
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
     this.selectContact = '';
     this.selectTabIndex = 0;
+    this.selected = new FormControl(0);   
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
       const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
@@ -156,6 +191,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs; 
+      if(this.tabId != ""){
+        this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
+      }
       this.filterTab = tempData[0].filterTab;
       if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
         this.isTabFilter = true;
@@ -184,8 +222,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
         this.total = gridData.data_size;
-        const currentTabName = this.storageService.GetActiveMenu()['name'];
-        this.gridCountByTab[currentTabName] = gridData.data_size;
+        const currentTabName = this.storageService.GetActiveMenu()['name'];        
+        const tab = this.tabs[this.selectTabIndex];
+        const key = currentTabName+"_"+tab.name;
+        this.gridCountByTab[key] = gridData.data_size;
       } else {
         this.total = 0;
       }
@@ -203,7 +243,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
   getTab(i, tabName) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
-      this.apiService.resetGridData();        
+      this.apiService.resetGridData(); 
+      this.selectTabIndex = i;       
       if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
         this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
       }
@@ -212,8 +253,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }
       else{
         this.grid_view_mode="tableView";
-      } 
-      this.selectTabIndex = i;   
+      }          
     } else {
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
@@ -236,8 +276,67 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
   }   
 
-  
 
-}
+
+
+
+  
+  addFebMenu(menu,parent){
+    this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+    this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
+    // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+    // this.saveCallSubscribe();
+  }
+  updateUserPreference(menu,field,parent){
+    this.unsubscribe(this.userPreferenceSubscription);
+    this.commonFunctionService.updateUserPreference(menu,field,parent);
+    this.saveCallSubscribe();
+  }
+  checkFebMenuAddOrNot(tab,parent){
+    let tabId = tab._id;
+    if(parent != ''){
+      tabId = parent._id;
+    }
+    let userFebTab = this.commonFunctionService.getUserPreferenceByFieldName('favoriteTabs');
+    if(userFebTab && userFebTab != null && userFebTab.length > 0){
+      let match = -1;
+      for (let index = 0; index < userFebTab.length; index++) {
+        const element = userFebTab[index];
+        if(element._id == tabId ){
+          match = index;
+          break;
+        }     
+      }
+      if(match > -1){
+        if(parent != ''){
+          const submenu = userFebTab[match]['tab'];
+          let subMatchIndex = -1;
+          if(submenu && submenu.length > 0){
+            for (let j = 0; j < submenu.length; j++) {
+              const subMenu = submenu[j];
+              if(subMenu._id == tab._id){
+                subMatchIndex = j;
+                break;
+              }
+              
+            }
+          }
+          if(subMatchIndex > -1){
+            return true
+          }else{
+            return false;
+          }
+        }else{
+          return true;
+        }      
+      }else{
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
+  
+ }
 
 

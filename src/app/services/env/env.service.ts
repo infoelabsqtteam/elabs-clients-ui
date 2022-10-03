@@ -99,42 +99,30 @@ export class EnvService {
   setDinamicallyHost(){
     let setHostName = this.storageService.getHostNameDinamically();
     let serverHostName = this.getHostKeyValue('serverEndpoint');
-    let projectFolderName = this.getHostKeyValue('folder');
-    let menuType = this.getHostKeyValue('menu_type');
-    let tempTheme = this.getHostKeyValue('theme');
-    let giolocation = this.getHostKeyValue('google_map');
-    let tempName = this.getHostKeyValue('temp_name');
-    let themedata = this.getHostKeyValue('theme_setting');
-    let pageTitle = this.getHostKeyValue('title');
-    let verify_type = this.getHostKeyValue('varify_mode');
-    let team_name = this.getHostKeyValue('teamname');
+    //let themedata = this.getHostKeyValue('theme_setting');    
+    //this.setApplicationSetting();
     if(serverHostName != '' || serverHostName != setHostName) {
       const hostName = serverHostName +'/rest/';
-      const path = 'assets/img/logo/' + projectFolderName + '/';
       this.storageService.setHostNameDinamically(hostName);
-      this.storageService.setLogoPath(path); 
-      this.storageService.SetMenuType(menuType);
-      this.setGoogleLocation(giolocation); 
-      this.storageService.setTempName(tempName);
-      this.setApplicationSetting(themedata);
-      this.storageService.setPageTitle(pageTitle);
-      if(verify_type){
-        this.storageService.setVerifyType(verify_type);
-      }      
-      this.storageService.setPageTheme(tempTheme);
-      this.storageService.setTeamName(team_name);
+      //this.setThemeSetting(themedata);
     }
   }
   
   getHostKeyValue(keyName){
     let hostname = this.getHostName('hostname');
-    let value = '';    
+    let value:any = '';    
     if(serverHostList && serverHostList.length > 0){
       for (let index = 0; index < serverHostList.length; index++) {
         const element = serverHostList[index];
         if(hostname == element.clientEndpoint){
-          value = element[keyName];
-          break;
+          if(keyName == "object"){
+            value = element;
+            break;
+          }else{
+            value = element[keyName];
+            break;
+          }
+          
         }        
       }
     }
@@ -149,7 +137,29 @@ export class EnvService {
     (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
   }
 
-  setApplicationSetting(settingObj) {
+  setApplicationSetting(){
+    let applicationSettingObj = this.storageService.getApplicationSetting();
+    let projectFolderName = applicationSettingObj['folder'];
+    let menuType = applicationSettingObj['menu_type'];
+    let tempTheme = applicationSettingObj['theme'];
+    let giolocation = applicationSettingObj['google_map'];
+    let tempName = applicationSettingObj['temp_name'];
+    let pageTitle = applicationSettingObj['title'];
+    let verify_type = applicationSettingObj['varify_mode'];
+    let team_name = applicationSettingObj['teamname'];
+    const path = 'assets/img/logo/' + projectFolderName + '/';      
+    this.storageService.setLogoPath(path); 
+    this.storageService.SetMenuType(menuType);
+    this.storageService.setPageTheme(tempTheme);
+    this.setGoogleLocation(giolocation); 
+    this.storageService.setTempName(tempName);      
+    this.storageService.setPageTitle(pageTitle);
+    if(verify_type){
+      this.storageService.setVerifyType(verify_type);
+    }            
+    this.storageService.setTeamName(team_name);
+  }
+  setThemeSetting(settingObj) {
       if(settingObj.header_bg_color != "" ) {
         document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
       }
@@ -189,9 +199,9 @@ export class EnvService {
   }
   checkRedirectionUrl(){
     let redirectURL = '';
-    const url = this.getHostKeyValue('redirect_url')
-    if(url){
-      redirectURL = url;
+    const url = this.storageService.getApplicationSetting();
+    if(url && url['redirect_url']){
+      redirectURL = url['redirect_url'];
     }
     return redirectURL;
   }

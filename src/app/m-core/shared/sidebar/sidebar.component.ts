@@ -4,9 +4,11 @@ import { Router, NavigationEnd } from '@angular/router';
 import { StorageService } from '../../../services/storage/storage.service';
 import { PermissionService } from '../../../services/permission/permission.service';
 import { MENU } from './menu';
-import { MenuItem } from './menu.model';
 import { ApiService } from '../../../services/api/api.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
+import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,7 +23,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   AllModuleList:any=[];
   modal:any='';
   sidebar2 = true;
-   
+  pageNumber: number = 0;
+  itemNumOfGrid: any = 25;
+  favrotedata;
+  favDataSubscription;
+  saveResponceSubscription:Subscription;
+  userPreferenceSubscription:Subscription;
+  
   @Output() moduleSelect = new EventEmitter();
 
   constructor( 
@@ -29,9 +37,30 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private storageService:StorageService,
     private permissionService:PermissionService, 
     private notificationService: NotificationService,
-    private apiService:ApiService
+    private commonFunctionService:CommonFunctionService,
+    private dataShareService:DataShareService,
+    private apiService:ApiService,
+    private commonfunctionService:CommonFunctionService
   ) {
-   
+    
+    // this.dataShareService.otherSaveCall.subscribe(responce => {
+    //   this.setSaveResponce(responce);
+    // })
+  }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  userPreferenceSubscribe(menu,field,parent){
+    this.userPreferenceSubscription = this.dataShareService.userPreference.subscribe(responce =>{      
+        this.updateUserPreference(menu,field,parent);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -43,7 +72,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     
   }
 
-  
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+        if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+            if (saveFromDataRsponce.success == 'success') {
+                this.commonfunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+            }
+        }
+    }
+    this.unsubscribe(this.saveResponceSubscription);
+}
 
   /**
    * Initialize
@@ -125,6 +163,61 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 }
 setAppId(module){
   this.storageService.setModule(module.name);
+}
+addFebMenu(menu,parent){
+  this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+  this.userPreferenceSubscribe(menu,'favoriteMenus',parent);
+  // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  // this.saveCallSubscribe();
+}
+updateUserPreference(menu,field,parent){
+  this.unsubscribe(this.userPreferenceSubscription);
+  this.commonFunctionService.updateUserPreference(menu,field,parent);
+  this.saveCallSubscribe();
+}
+checkFebMenuAddOrNot(menu,parent){
+  let menuId = menu._id;
+  if(parent != ''){
+    menuId = parent._id;
+  }
+  let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
+  if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
+    let match = -1;
+    for (let index = 0; index < userFebMenu.length; index++) {
+      const element = userFebMenu[index];
+      if(element._id == menuId ){
+        match = index;
+        break;
+      }     
+    }
+    if(match > -1){
+      if(parent != ''){
+        const submenu = userFebMenu[match]['submenu'];
+        let subMatchIndex = -1;
+        if(submenu && submenu.length > 0){
+          for (let j = 0; j < submenu.length; j++) {
+            const subMenu = submenu[j];
+            if(subMenu._id == menu._id){
+              subMatchIndex = j;
+              break;
+            }
+            
+          }
+        }
+        if(subMatchIndex > -1){
+          return true
+        }else{
+          return false;
+        }
+      }else{
+        return true;
+      }      
+    }else{
+      return false;
+    }
+  }else{
+    return false;
+  }
 }
 
 }

@@ -3,28 +3,29 @@
         <app-sidebar-search (sidebarSearch)="sidebarSearchResponce($event)"></app-sidebar-search>
     </div>
     <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
-        <!-- <div class="mat-tab-label-container pt-2">
-            <div class="mat-tab-list">
-                <div class="mat-tab-labels">
-                    <div class="mat-tab-label" *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
-                        <div class="mat-tab-label-content cursor-pointer" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }}<span *ngIf="selectTabIndex == i">({{total}})</span></div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <div class="tablist">
-          <mat-tab-group animationDuration="0ms">
+
+        <div class="tablist position-relative">
+          <mat-tab-group animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
             <mat-tab *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
               <ng-template mat-tab-label>
-                <div class="mat-tab-label-content cursor-pointer" (click)="getTab(i,tab.tab_name)">
-                    {{ gateTabName(tab) }}
-                    <!-- <span *ngIf="selectTabIndex == i">({{gridCountByTab[tab.tab_name]}})</span> -->
-                    <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span>
-                </div>
+                <div class="mat-tab-label-content pl-3 pr-1 py-2" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
+                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
               </ng-template>
             </mat-tab>
           </mat-tab-group>
-        </div>
+          </div>
+        <!-- <div class="tablist position-relative">
+            <button class="preview" id="firstbtn" (click)="previous()" *ngIf="tabs.length > 6"><mat-icon>arrow_back_ios</mat-icon></button>
+          <div class="gridtabs" id="tabdiv">
+            <div class="tabsmenu" *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
+                <div class="tabtitle" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
+                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
+            </div>
+          </div>
+          <button class="next" id="lastbtn" (click)="next()" *ngIf="tabs.length > 6"><mat-icon>arrow_forward_ios</mat-icon></button>
+        </div> -->
+
+
         <div *ngIf="grid_view_mode == 'tableView' && tabs.length > 0">
             <app-grid-table-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact' ></app-grid-table-view>
         </div>

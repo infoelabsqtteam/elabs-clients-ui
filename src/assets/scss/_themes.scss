@@ -1,25 +1,21 @@
 .service-block-two .inner-box .lower-content .link a i, .form-tab h4.active, .mat-form-field.mat-focused.mat-primary .mat-select-arrow{color:$themetext!important}
-.sec-title:before, .sec-title .dotted-box .dotted, .service-block-two .inner-box .lower-content .link:before, .page-title .content-box .title-box:before, .theme-btn-two, .ngx-pagination .current, .float, .page-title .content-box .title-box .dotted-box .dotted{background:$themecolor!important}
+.sec-title:before, .sec-title .dotted-box .dotted, .service-block-two .inner-box .lower-content .link:before, .page-title .content-box .title-box:before, .theme-btn-two, .float, .page-title .content-box .title-box .dotted-box .dotted{background:$themecolor!important}
 
 
 .theme-color3, .copyright{background:$footerbg!important;color:$white!important}
+.ngx-pagination .current {background:$footerbg!important;}
 
-
-.modal-footer .btn-outline-primary,  .modal-footer .btn-outline-primary.active, .modal-footer
-.btn-outline-primary:active, .modal-footer .btn-outline-primary:active:focus, .btn-outline-primary:focus, .modal-footer .btn-outline-primary:hover {border:2px solid $themecolor!important; color:$themecolor!important;}
-
-.activetxt {background:var(--activebg) !important}
-
+// .modal-footer .btn-outline-primary,  .modal-footer .btn-outline-primary.active, .modal-footer
+// .btn-outline-primary:active, .modal-footer .btn-outline-primary:active:focus, .btn-outline-primary:focus, .modal-footer .btn-outline-primary:hover {border:2px solid $themecolor!important; color:$themecolor!important;}
 
 // Button Color
-.bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;
+.bg-cerulean, .filebtn {background:$buttoncolor !important;transition:all 1s;color:$white !important;border-radius:0.25rem !important;margin:0 10px;
   &:hover {background:$buttonHovercolor !important;transition:all 1s;}
 }
 .optiondropdown {margin:30px 10px 0;min-width:100% !important;}
 .filteroption {margin:30px 30px 0;}
 .dropdownmenu {margin-top:15px;min-height:0px;
   mat-icon {font-size:16px;margin-right:5px !important;line-height:30px;width:auto;height:auto;}
-  .mat-menu-content:not(:empty) {padding:0px;}
   button {height:auto;line-height:30px;font-size:13px;
       &:focus {outline:none;}
   }
@@ -38,7 +34,6 @@
 }
 .dropdownmenu {margin-top:15px;min-height:0px;max-width:100% !important;
   mat-icon {font-size:16px;margin-right:5px !important;line-height:30px;width:auto;height:auto;}
-  .mat-menu-content:not(:empty) {padding:0px;}
   button {height:auto;line-height:30px;font-size:13px;
       &:focus {outline:none;}
   }
@@ -202,7 +197,7 @@
 .google-visualization-table>div:first-child {height:auto !important;border-width:1px !important;}
 .bg-light-50 {background:#efefef;}
 .searchdropdown {position:sticky;top:0;z-index:99;}
-.modal-dialog .angular-editor-textarea {padding:0 !important; border:none !important;resize:none !important;}
+// .modal-dialog .angular-editor-textarea {padding:0 !important; border:none !important;resize:none !important;}
 
 .travel-management {
   span {opacity:0.7}

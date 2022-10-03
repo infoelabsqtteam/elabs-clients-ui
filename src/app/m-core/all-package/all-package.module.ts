@@ -14,7 +14,7 @@ import {NgxPrintModule} from 'ngx-print';
 import { NgxTimerModule } from 'ngx-timer';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { EditorModule } from '@tinymce/tinymce-angular';
-
+import { NgxDiff2htmlModule } from 'ngx-diff2html';
 
 const packages = [
   CommonModule,
@@ -31,7 +31,8 @@ const packages = [
   NgxTimerModule,
   MomentDateModule,
   EditorModule,
-  CarouselModule  
+  CarouselModule,
+  NgxDiff2htmlModule
 ]
 
 @NgModule({

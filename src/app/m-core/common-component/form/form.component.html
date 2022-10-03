@@ -228,7 +228,6 @@
                                 </mat-select>
                                 <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term" [ngModelOptions]="{standalone: true}"></div>
-                                    <!-- <mat-option></mat-option> -->
                                     <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                 </mat-select>
@@ -310,8 +309,11 @@
                                     <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
                                 </div>
                             </div>
+                            <div class="row" *ngIf="copyStaticData[tableField.ddn_field].length > 16">
+                                <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                            </div>
                             <div class="row" [formArrayName]="tableField.field_name">
-                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field]; let i = index">
+                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field] | filter:term; let i = index">
                                     <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{getddnDisplayVal(order)}}</mat-checkbox>
                                 </div>
                             </div>
@@ -392,7 +394,7 @@
                                     <div *ngIf="fields.type == 'gst_number'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
                                             <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
                                                 {{ fields.label | titlecase}} is <strong>required</strong>
                                             </mat-error>
@@ -405,7 +407,7 @@
                                         <div class="w-100 position-relative">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
                                                 <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
                                                     {{ fields.label | titlecase}} is <strong>required</strong>
                                                 </mat-error>
@@ -446,28 +448,35 @@
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                             <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue(tableField,fields,false)" [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
+                                                <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
-                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term" [value]="staticValue">
                                                     {{getddnDisplayVal(staticValue)}}
                                                 </mat-option>
                                                 <mat-option *ngIf="fields.add_new_enabled"  [value]="{'_id':'tests','value':'add_new'}">+ Add New </mat-option>
                                             </mat-select>
                                         </mat-form-field>
+
+
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype != 'object' && fields.datatype != 'key_value'">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                             <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue(tableField,fields,false)"  [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
+                                                <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
-                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term" [value]="staticValue">
                                                     {{getddnDisplayVal(staticValue)}}
                                                 </mat-option>
                                                 <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                             </mat-select>
                                         </mat-form-field>
+
+
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'key_value'">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                             <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue(tableField,fields,false)"  [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
+                                                <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
-                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term" [value]="staticValue">
                                                     {{getddnDisplayVal(staticValue)}}
                                                 </mat-option>
                                                 <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
@@ -532,7 +541,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="fields.type == 'checkbox'">
-                                        <mat-checkbox color="primary" class="example-margin" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)">{{ fields.label | titlecase}}</mat-checkbox>
+                                        <mat-checkbox color="primary" class="example-margin" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)" [id]="fields._id+'_'+fields.field_name">{{ fields.label | titlecase}}</mat-checkbox>
                                     </div>
                                     <div *ngIf="fields.type == 'list_of_string'">
                                         <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips' || fields.datatype == 'chips_with_mask'">
@@ -590,23 +599,22 @@
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
                                             <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" disableOptionCentering panelClass="optiondropdown">
-                                                <mat-option *ngFor="let data of treeViewData[fields.field_name]" [value]="data">
+                                                <mat-option *ngFor="let data of treeViewOptionData(tableField,fields)" [value]="data">
                                                     {{getddnDisplayVal(data)}}
                                                 </mat-option>
                                             </mat-select>
-                                            <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView('',fields)">Tree View</span>
+                                            <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView(tableField,fields)">Tree View</span>
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'textarea'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <textarea matInput [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name"></textarea>                
+                                            <textarea matInput [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"></textarea>                
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'file'">
-                                        <button class="btn bg-cerulean btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled">{{fields.label}}</button> 
-                                        <!-- list of attachment files -->
-                                        <div *ngIf="dataListForUpload[fields.field_name] && dataListForUpload[fields.field_name].length > 0">
+                                        <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
+                                        <div *ngIf="checkDataListForUpload(tableField,fields)">
                                             <table mdbTable small="true" bordered="true">
                                                 <thead class="black white-text">
                                                     <tr>
@@ -614,18 +622,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr mdbTableCol *ngFor="let file of dataListForUpload[fields.field_name]; let i = index">
-                                                        <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
-                                                        <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
+                                                    <tr mdbTableCol *ngFor="let file of getDataListForUpload(tableField,fields); let i = index">
+                                                        <td scope="row">
+                                                            <span *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</span>
+                                                        </td>
                                                         <td>
-                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
+                                                            <span *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</span>
+                                                        </td>
+                                                        <td>
+                                                            <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,tableField,fields,file,'delete')" ></mdb-icon>
                                                             <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
+                                                            <!-- <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon> -->
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>                           
-                                    </div> 
+                                    </div>
                                     <div *ngIf="fields.type == 'input_with_uploadfile'">
                                         <div class="w-100 position-relative">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -743,7 +756,7 @@
                                 <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" disableOptionCentering panelClass="optiondropdown">
-                                        <mat-option *ngFor="let data of treeViewData[tableField.field_name]" [value]="data">
+                                        <mat-option *ngFor="let data of treeViewOptionData('',tableField)" [value]="data">
                                             {{getddnDisplayVal(data)}}
                                         </mat-option>
                                     </mat-select>
@@ -915,6 +928,7 @@
                         <div *ngIf="tableField.type == 'button'">
                             <button mdbBtn type="button" size="sm" class="btn-public rounded bg-cerulean text-white" (click)="partialDataSave(tableField.onclick, tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button>
                         </div>
+
                         <div *ngIf="tableField.type == 'file'">
                             <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                             <!-- list of attachment files -->
@@ -930,7 +944,7 @@
                                             <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                             <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                             <td>
-                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,tableField.field_name)"></mdb-icon>
+                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,'',tableField,file,'delete')"></mdb-icon>
                                                 <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                 <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
                                             </td>
@@ -1039,7 +1053,7 @@
                                                 <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                                 <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                                 <td>
-                                                    <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,tableField.field_name)"></mdb-icon>
+                                                    <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList('',tableField,i)"></mdb-icon>
                                                     <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                 </td>
                                             </tr>
@@ -1490,7 +1504,7 @@
                                                             <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
                                                             <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
                                                             <td>
-                                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(i,fields.field_name)"></mdb-icon>
+                                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="removeAttachedDataFromList(tableField,fields,i)"></mdb-icon>
                                                                 <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon>
                                                             </td>
                                                         </tr>

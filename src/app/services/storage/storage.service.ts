@@ -38,6 +38,7 @@ export class StorageService {
   VERIFY_TYPE:string = "VERIFY_TYPE";
   MODULE:string = "MODULE";
   TEAM_NAME:string = "TEAM_NAME";
+  USER_PREFERENCE:any;
   
   
   constructor(private http: HttpClient) { }
@@ -47,6 +48,26 @@ export class StorageService {
   }
   getModule(){
     return localStorage.getItem('MODULE');
+  }
+  setUserPreference(user_preference:any){
+    localStorage.setItem("USER_PREFERENCE",JSON.stringify(user_preference));
+  }
+  getUserPreference(){
+    return JSON.parse(localStorage.getItem('USER_PREFERENCE'));
+  }
+
+  setThemeSetting(settingObj:any){
+    localStorage.setItem("THEME_SETTING",JSON.stringify(settingObj));
+  }
+  getThemeSetting(){
+    return JSON.parse(localStorage.getItem('THEME_SETTING'));
+  }
+
+  setApplicationSetting(applicationSetting:any){
+    localStorage.setItem("APPLICATION_SETTING",JSON.stringify(applicationSetting));
+  }
+  getApplicationSetting(){
+    return JSON.parse(localStorage.getItem('APPLICATION_SETTING'));
   }
 
   setAppId(appId:string){

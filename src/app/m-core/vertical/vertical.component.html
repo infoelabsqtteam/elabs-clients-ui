@@ -1,13 +1,37 @@
-<div id="layout-wrapper">
-    <!-- <app-topbar (mobileMenuButtonClicked)="onToggleMobileMenu()" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-topbar> -->
-  <div class="d-flex align-items-center verticleheader" id="page-topbar">
-    <button mat-icon-button (click)="onToggleMobileMenu()" class="mx-2 togglemenu"><mat-icon style="font-size:14px;">sort</mat-icon></button>
+<!-- <div id="layout-wrapper">
+  <div class="d-flex align-items-center verticleheader pr-2" id="page-topbar">
+    <div class="logoitem d-flex align-items-center justify-content-between px-2">
+        <a class="logo px-2" [routerLink]="['/home']"><img [src]="logoPath" alt=""></a>
+        <button mat-icon-button (click)="onToggleMobileMenu()"><mat-icon>sort</mat-icon></button>
+    </div>
     <app-header class="w-100" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-header>
+    <button mat-icon-button><mat-icon>settings</mat-icon></button>
   </div>
-  <app-sidebar (moduleSelect)="changeModul($event)" ></app-sidebar>
+  <app-sidebar (moduleSelect)="changeModul($event)"></app-sidebar>
   <div class="main-content">
-    <div class="page-content" [ngClass]="dashbordPage?'dashboard_bg':''" style="min-height: calc(100vh - 70px)"><router-outlet></router-outlet></div>
+    <div class="page-content" [ngClass]="dashbordPage?'dashboard_bg':''" style="min-height: calc(100vh - 70px)">
+      <router-outlet></router-outlet>
+    </div>
     <app-footer></app-footer>
   </div>
 
-</div>
+</div> -->
+ 
+<mat-toolbar class="header pl-0 w-100">
+  <div class="logoitem d-flex align-items-center justify-content-between px-2">
+    <a class="logo px-2" [routerLink]="['/home']"><img [src]="logoPath" alt=""></a>
+    <button mat-icon-button (click)="drawer.toggle()"><mat-icon>sort</mat-icon></button>
+  </div>
+  <div class="topheader"><app-header class="w-100" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-header></div>
+  <div class="settingmenu"><button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>account_circle</mat-icon></button></div>
+</mat-toolbar>
+
+
+<mat-drawer-container>
+  <mat-drawer #drawer [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'"><app-sidebar (moduleSelect)="changeModul($event)"></app-sidebar></mat-drawer>
+  <mat-drawer #rightsidenav mode="over" position="end" class="rightsidebar"><app-setting-menu></app-setting-menu></mat-drawer>
+  <div class="pt-3">
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+  </div>
+</mat-drawer-container>

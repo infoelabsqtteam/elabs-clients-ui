@@ -49,16 +49,20 @@ export class DataShareService {
   fileDownloadUrl:EventEmitter<any> = new EventEmitter<any>();
   chartData:EventEmitter<any> = new EventEmitter<any>();
   applicationSetting:EventEmitter<any> = new EventEmitter<any>();
+  themeSetting:EventEmitter<any> = new EventEmitter<any>();
   fieldDinamicResponce:EventEmitter<any> = new EventEmitter<any>();
   checkValidation:EventEmitter<any> = new EventEmitter<any>();
   dashletMaster:EventEmitter<any> = new EventEmitter<any>();
   gitVirsion:EventEmitter<any> = new EventEmitter<any>();
   forgot:EventEmitter<any> = new EventEmitter<any>();
-  nextFormData:EventEmitter<any> = new EventEmitter<any>();
-  
+  nextFormData:EventEmitter<any> = new EventEmitter<any>();  
   getReportLoadData:EventEmitter<any> = new EventEmitter<any>();
   getIsGridSelectionOpen:EventEmitter<any> = new EventEmitter<any>();
   chartModelShowHide:EventEmitter<any> = new EventEmitter<any>();
+  auditHistoryList:EventEmitter<any> = new EventEmitter<any>();
+  applicationSettings:EventEmitter<any> = new EventEmitter<any>();
+  userNotification:EventEmitter<any> = new EventEmitter<any>();
+  userPreference:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -74,7 +78,6 @@ export class DataShareService {
   getCurrentPage(){
     return this.currentpage;
   }
-
   shareData(responce:any){
     this.sharedData.emit(responce);
   }
@@ -219,7 +222,16 @@ export class DataShareService {
     this.chartData.emit(responce)
   }
   setThemeSetting(responce){
-    this.applicationSetting.emit(responce)
+    this.themeSetting.emit(responce)
+  }
+  setApplicationSetting(responce:any){
+    this.applicationSetting.emit(responce);
+  }
+  resetThemeSetting(responce){
+    this.themeSetting.emit(responce);
+  }
+  resetApplicationSetting(responce:any){
+    this.applicationSetting.emit(responce);
   }
   setFieldDinamicApiResponce(responce){
     this.fieldDinamicResponce.emit(responce);
@@ -244,5 +256,17 @@ export class DataShareService {
   }
   setChartModelShowHide(value){
     this.chartModelShowHide.emit(value);
+  }
+  setAuditHistoryData(data){
+    this.auditHistoryList.emit(data);
+  }
+  shareUserNotification(responce){
+    this.userNotification.emit(responce);
+  }
+  setUserPreference(userPreference){
+    this.userPreference.emit(userPreference);
+  }
+  subscribeTemeSetting(responce){
+    this.applicationSettings.emit(responce);
   }
 }

@@ -11,6 +11,8 @@ import { NotificationService } from "src/app/services/notify/notification.servic
 import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
 import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
+import { Subscription } from "rxjs";
+import { FormControl } from "@angular/forms";
 
 
 @Component({
@@ -22,7 +24,7 @@ import { CommonFunctionService } from "src/app/services/common-utils/common-func
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     @Input() public pageName;
     @Input() moduleIndex: any;
-
+    selected = new FormControl(0);
     subscription: any;
     menuDataSubscription;
 
@@ -51,6 +53,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     currentPage: any;
     logedin: boolean = false;
     gitVersionSubscription: any;
+    userNotificationSubscription:Subscription;
+    saveResponceSubscription:Subscription;
     gitVersion: any;
 
     logoPath = ''
@@ -64,6 +68,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     getTemplateByMenu:boolean=false;
     showsearchmenu = false;
     module:boolean=true;
+    headerNotificationList:any=[];
+
+    notificationlist = []
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -104,7 +111,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         private authService: AuthService,
         private notificationService: NotificationService,
         public envService: EnvService,
-        private commonFunctionService:CommonFunctionService
+        private commonfunctionService:CommonFunctionService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -114,6 +121,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.gitVersion = data['git.build.version'];
             }
         });
+        this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
+            if (data && data.data && data.data.length > 0) {
+                this.setUserNotification(data.data);
+            }
+        });
+        
 
 
         this.AllModuleList = this.storageService.GetModules();
@@ -191,12 +204,37 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     chartModel() {
         this.modelService.open('chart_model', {})
     }
+    saveCallSubscribe(){
+        this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
+          this.setSaveResponce(responce);
+        })
+      }
+      unsubscribe(variable){
+        if(variable){
+          variable.unsubscribe();
+        }
+      }
+    
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
         if (this.menuDataSubscription) {
             this.menuDataSubscription.unsubscribe();
         }
+        if(this.userNotificationSubscription){
+            this.userNotificationSubscription.unsubscribe();
+        }
+    }
+    setSaveResponce(saveFromDataRsponce){
+        if (saveFromDataRsponce) {
+            if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+                if (saveFromDataRsponce.success == 'success') {
+                    this.commonfunctionService.getUserNotification(1);
+                }
+            }
+        }
+        this.unsubscribe(this.saveResponceSubscription);
+
     }
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -277,7 +315,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.getMenuByModule()
+        this.getMenuByModule();
+        this.commonfunctionService.getUserNotification(1);
     }
 
     getMenuByModule() {
@@ -347,7 +386,63 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.getTemplateByMenu = false;
         }
     }
+    setUserNotification(data){
+        this.notificationlist = data;
+        this.headerNotificationList = [];
+        if(this.notificationlist && this.notificationlist.length > 0){
+            for (let index = 0; index < this.notificationlist.length; index++) {
+                const element = this.notificationlist[index];
+                if(index == 10){
+                    break;
+                }
+                this.headerNotificationList.push(element);                
+            }
+        }
 
+    }
+    getUnreadNotificationLength(){
+        let length = 0;
+        if(this.notificationlist && this.notificationlist.length > 0){
+            this.notificationlist.forEach(element => {
+                if(element.notificationStatus == 'UNREAD'){
+                    length = length + 1;
+                }
+            });
+        }
+        return length;
+    }
+
+    readNotification(index){
+        let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
+        let url = notification.url;
+        let rout = "notification/"+url;
+        let list = rout.split("/");
+        let moduleId = list[1];
+        let menuId = list[2];
+        let submenuId = list[3];
+        let moduleIndex = this.commonfunctionService.moduleIndex(moduleId);
+        //this.dataShareService.setModuleIndex(moduleIndex);
+        if(moduleIndex != undefined){
+        let moduleList = this.storageService.GetModules();
+        let module = moduleList[moduleIndex];
+        let menuName = this.commonfunctionService.getMenuName(module,menuId,submenuId);
+        let menu = {
+            "name" : menuName
+        }
+        this.storageService.SetActiveMenu(menu);
+        this.router.navigate([rout]); 
+        }
+        if(notification.notificationStatus == 'UNREAD'){
+            notification['notificationStatus'] = 'READ';
+            const payload = {
+                'curTemp' : 'user_notification',
+                'data' : notification
+            }
+            this.apiService.SaveFormData(payload);
+            this.saveCallSubscribe();
+        }
+        
+    }
 
     onLogout() {
         this.logOut();
@@ -549,7 +644,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
     goToMOdule() {
         this.dataShareService.sendCurrentPage('MODULE')
-        this.menuData = [];
+        //this.menuData = [];
         this.apiService.resetMenuData();
         const menuType = this.storageService.GetMenuType()
         if (menuType == 'Horizontal') {
@@ -648,12 +743,13 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.modelService.open('feedback_model', {})
      }
     GoToSelectedModule(item){
+        this.selected = new FormControl(1);
         this.storageService.setModule(item.name); 
         this.dataShareService.sendCurrentPage('DASHBOARD')
         // const menuSearchModule = { "value": "menu", key2: item.name }
         // this.apiService.GetTempMenu(menuSearchModule)
         const criteria = "module_name;eq;"+item.name+";STATIC";        
-        const payload = this.commonFunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
+        const payload = this.commonfunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
         this.apiService.GetTempMenu(payload);
         this.getTemplateByMenu = true;
         this.showsearchmenu = false;

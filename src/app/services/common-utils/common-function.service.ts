@@ -17,6 +17,8 @@ import { NotificationService } from '../notify/notification.service';
 import { ApiService } from '../api/api.service';
 import { ModelService } from '../model/model.service';
 import { EnvService } from '../env/env.service';
+import { I, L } from '@angular/cdk/keycodes';
+import { Common } from 'src/app/shared/enums/common.enum';
 
 
 @Injectable({
@@ -26,8 +28,8 @@ export class CommonFunctionService {
   userInfo: any;
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
-  pageNumber: number = 1;
-  itemNumOfGrid: any = 25;
+  pageNumber: number = Common.PAGE_NO;
+  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -256,7 +258,7 @@ export class CommonFunctionService {
       const showIf = field.show_if.split(';')
       let checkIf = true;
       for (let index = 0; index < showIf.length; index++) {
-        checkIf = this.checkIfCondition(showIf[index], formValue);
+        checkIf = this.checkIfConditionForArrayListValue(showIf[index], formValue);
         if (!checkIf) {
           return;
         }
@@ -269,6 +271,53 @@ export class CommonFunctionService {
     } else {
       return true;
     }
+  }
+  checkIfConditionForArrayListValue(data, formValue){
+    let condition = []
+    condition = data.split('#');
+    if (condition.length == 4 && condition[3] != 'dynamic' && condition[3] != 'STATIC') {
+      let check = "";
+      let checkList = [];      
+      let setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
+      if(setValue && setValue.length > 0){
+        for (let index = 0; index < setValue.length; index++) {
+          const element = setValue[index];
+          let value = this.getObjectValue(condition[3],element);
+          if(value && value != ''){
+            check = check + value + "#";
+            for (let index = 0; index < condition.length; index++) {
+              const conditons = condition[index];
+              if(index == 1){
+                check = check + conditons + '#';
+              }else if(index == 2){
+                check = check + conditons + '#STATIC';
+              }        
+            }
+            checkList.push(check);
+            check = "";
+          }else{
+            return false;
+          }
+        }        
+      }else{
+        return false;
+      }
+      if(checkList && checkList.length > 0){
+        for (let index = 0; index < checkList.length; index++) {
+          const condition = checkList[index];
+          let result = this.checkIfCondition(condition,formValue);
+          if(result){
+            return true;
+          }
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }else{
+      return this.checkIfCondition(data,formValue);
+    }
+
   }
     calculateAdditionalCost(obj){
     
@@ -298,32 +347,19 @@ export class CommonFunctionService {
       if (tableField.disable_if && tableField.disable_if != '') {
         return this.checkIfCondition(tableField.disable_if, formValue)
       }
+     
       if (updateMode) {
         if (tableField.disable_on_update != undefined && tableField.disable_on_update) {
-          if (tableField.can_update_if != undefined && tableField.can_update_if.has_role != null && tableField.can_update_if.has_role != undefined && Array.isArray(tableField.can_update_if.has_role) && tableField.can_update_if.has_role.length > 0) {
-            let check = 0;
-            for (let index = 0; index < tableField.can_update_if.has_role.length; index++) {
-              const element = tableField.can_update_if.has_role[index];
-              if (this.is_check_role(element._id)) {
-                check = 1;
-                break;
-              } else {
-                check = 0;
-              }
-            }
-            if(check == 1){
-              return false;
-            }else{
-              return true;
-            }
-          } else {
-            return true;
-          }
+          return this.checkAddUpdateIf(tableField,'can_update_if');
         } else {
           return false;
         }
       } else {
-        return false;
+        if (tableField.disable_on_add != undefined && tableField.disable_on_add) {
+          return this.checkAddUpdateIf(tableField,'can_add_if');
+        }else{
+          return false;
+        }
       }
     }
   }
@@ -365,7 +401,15 @@ export class CommonFunctionService {
     let condition = []
     condition = data.split('#')
     if (condition.length >= 2) {
-      let setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
+      if(condition[3] != null && condition[3] != "" && condition[3] == 'dynamic'){
+        condition[2] = this.getObjectValue(condition[2], formValue)+"";
+      }
+      let setValue = "";
+      if(condition.length > 3 && condition[3] == 'STATIC'){
+        setValue = condition[0];
+      }else{
+        setValue = formValue ? this.getObjectValue(condition[0], formValue) : "";
+      }      
       if (setValue === undefined || setValue === "") {
         setValue = "";
       } else {
@@ -425,6 +469,30 @@ export class CommonFunctionService {
       return true;
     }
   }
+
+  checkAddUpdateIf(tableField,fieldName){
+    let fieldValue = tableField[fieldName];
+    if (fieldValue != undefined && fieldValue.has_role != null && fieldValue.has_role != undefined && Array.isArray(fieldValue.has_role) && fieldValue.has_role.length > 0) {
+      let check = 0;
+      for (let index = 0; index < fieldValue.has_role.length; index++) {
+        const element = fieldValue.has_role[index];
+        if (this.is_check_role(element._id)) {
+          check = 1;
+          break;
+        } else {
+          check = 0;
+        }
+      }
+      if(check == 1){
+        return false;
+      }else{
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
   openTreeModal(fieldLabel, ddnField, modalName) {
     const alertData = {
       "event": true,
@@ -479,7 +547,7 @@ export class CommonFunctionService {
               }
             }
             break;
-            case "number":
+          case "number":
               if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
                 if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                   element.api_params_criteria.forEach(cri => {
@@ -531,6 +599,7 @@ export class CommonFunctionService {
             }
             break;
             case "reference_names":
+            case "chips":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
               if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
@@ -762,6 +831,17 @@ export class CommonFunctionService {
         }
     }
   }
+
+  getFixedDivClass(field,fieldsLangth){
+    const fields = {...field}
+    if (!fields.type) {
+      fields.type = "text";
+    }
+    if(fields.field_class && field.field_class != ''){
+      return fields.field_class;
+    }
+  }
+
   getButtonDivClass(field){
     const fields = {...field}    
     if(fields.field_class && field.field_class != ''){
@@ -1286,6 +1366,26 @@ export class CommonFunctionService {
     templateValue["quotation_param_methods"] = updatedParamsList;
     return this.calculateQquoteAmount(templateValue, {field_name:"quotation_param_methods"});
   }
+
+  calculateInvoiceTotalAmount(formValue, invoiceInfos){
+    let list = invoiceInfos;
+    let total = 0;
+    for(let i=0; i<list.length;i++){
+      total +=  list[i]['netpayableAmount']
+    }
+
+    let lumpSumAmount = formValue['lumpSumAmount']
+    let advanceAmount = formValue['advanceAmount'];
+    let toatallumsumOrAdvance= lumpSumAmount+advanceAmount;
+    let totalFair = total-toatallumsumOrAdvance;
+
+    let obj = {
+      totalAmount:(total).toFixed(2),
+      payAmount:(totalFair).toFixed(2)
+    }
+    return obj;
+  }
+
   quote_amount_via_discount_percent(listOfParm,templateValue){    
     let discount = templateValue.discount_percent;
     let quantity = templateValue.qty;
@@ -1316,7 +1416,6 @@ export class CommonFunctionService {
     return templateValue;
 
   }
-  
   samplingAmountAddition(templateValue){    
     let net_amount = templateValue['net_amount'];
     let sampling_charge = templateValue['sampling_charge'];
@@ -1325,6 +1424,8 @@ export class CommonFunctionService {
     templateValue['final_amount'] = totl
     return templateValue;
   }
+  
+
   calculateParameterLimsSegmentWise(lims_segment, data, fieldName){
     switch(lims_segment){
       case 'standard':
@@ -1663,13 +1764,13 @@ break;
 
   net_amount =gross_amount-discount_amount;
   taxable_amount = gross_amount-discount_amount+surcharge;
-  this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+  this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount,field);
        
   return templateValue;
  }
 
 
-update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount){
+update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount,field?){
   let	gst_amount	=0;
   let	cgst_amount	=0;
   let	sgst_amount	=0;
@@ -1745,6 +1846,10 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     total['net_amount'] = this.getDecimalAmount(net_amount);
     total['net_payble'] = this.getDecimalAmount(net_payble);
 
+    if(field != null && field.field_name != null && field != ""){
+      delete total[field.field_name]
+    }
+
     templateValue['total_amount'] = total;
     return templateValue;
   
@@ -1774,6 +1879,20 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   }
 
 
+   getDateInStringFunction(templateValue){
+  //var froD = templateValue.getFromDate;
+  const fromDate = templateValue['fromDate'];
+  const  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var monthNumber = templateValue.fromDate.toDate().getMonth()
+  var monthName = months[monthNumber]; 
+  let year = templateValue.fromDate.toDate().getFullYear();
+  let result = {
+    "labelName": monthName+'-'+year
+  }
+
+  return result;
+
+}
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
     if(quantity >0 && gross_amount > 0){
       current_disount = discount_amount*100/gross_amount;
@@ -1895,55 +2014,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   
   
 
-  buggetForcastCalc(templateForm: FormGroup){
-    let templateValue = templateForm.getRawValue();
-    let actualCurYr = templateValue.actual_current;
-    let actualLastYr = templateValue.actuals;
-    let budget = templateValue.this_year;
-    let growthpers = {};
-    let budgetpers = {};
-    let value = [];
-    let value1 = [];
-    Object.keys(actualCurYr).forEach(key => {
-      let growthper=0;
-      let budgetper=0;
-      let actualCurYrMonth = actualCurYr[key];
-      let actualLastYrMonth = actualLastYr[key];
-      if(actualLastYrMonth != 0){
-        growthper = actualCurYrMonth/actualLastYrMonth;
-      }
-
-      let budgetcurYrMonth = budget[key];
-      if(budgetcurYrMonth != 0){
-        budgetper = actualCurYrMonth/budgetcurYrMonth;
-      }
-
-        growthpers[key] = growthper;
-        let obj = {
-          field: key, value: growthpers[key] 
-        }
-        value.push(obj)
-
-        budgetpers[key] = budgetper;
-        let obj1 = {
-          field: key, value: budgetpers[key] 
-        }
-        value1.push(obj1)
-    })
-    const fieldWithValueforgrowth = {
-      field: 'growth_per', value: value
-    }
-    fieldWithValueforgrowth.value.forEach(element => {
-        (<FormGroup>templateForm.controls[fieldWithValueforgrowth.field]).controls[element.field].patchValue(element.value);
-    })
-
-    const fieldWithValueforBudget = {
-      field: 'budget_per', value: value1
-    }
-    fieldWithValueforBudget.value.forEach(element => {
-        (<FormGroup>templateForm.controls[fieldWithValueforBudget.field]).controls[element.field].patchValue(element.value);
-    })
-  }
+  
 
   calculateParameterAmtOnInjection(data,rate,quantity){
             let totalInjection = data.no_of_injection;
@@ -1962,7 +2033,15 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
                   totalInjection = this.getDecimalAmount(totalInjection + (quantity-1)*no_of_injection2);
                   totalAmount = this.getDecimalAmount(totalInjection * rate_per_injection);
                 }
-              }else{
+              }
+              else if(data.no_of_injection > 0 && data.no_of_injection2<=0){
+                let no_of_injection = data.no_of_injection;
+                if(quantity > 1 && no_of_injection>0){
+                  totalInjection = this.getDecimalAmount(totalInjection + (quantity-1)*no_of_injection);
+                  totalAmount = this.getDecimalAmount(totalInjection * rate_per_injection);
+                }
+              }
+              else{
                 totalAmount = this.getDecimalAmount(quantity*totalInjection * rate_per_injection);
               }
               // data["quotation_effective_rate"]= totalAmount;
@@ -2443,8 +2522,20 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     });
   }
 
-  populatefields(value, populate_fields,multipleFormCollection?) {
+  populatefields(value, populate_fields,field,multipleFormCollection?) {
     let obj = {}
+    let check = false;
+    if(field && field.field_name){
+      let fieldName = "";
+      if(field.parent && field.parent.field_name && field.parent.field_name != ''){
+        fieldName = field.parent.field_name+'.'+field.field_name;
+      }else{
+        fieldName = field.field_name;
+      }
+      if(field.type == "checkbox" && this.getObjectValue(fieldName,value)){
+        check = true;
+      }
+    }
     if(populate_fields && populate_fields.length > 0){
       populate_fields.forEach(el =>{
             value = this.getFormDataInMultiformCollection(multipleFormCollection, value);
@@ -2453,10 +2544,18 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
           const parent = toList[0];
           if (!obj[parent]) obj[parent] = {};
           const child = toList[1];
-          obj[parent][child] =this.mergeMultiFieldsValues(el.from, value);  
+          if(check){
+            obj[parent][child] =this.mergeMultiFieldsValues(el.from, value);
+          }else{
+            obj[parent][child] = "";
+          }            
         }else{
           const field = toList[0];
-          obj[field] =this.mergeMultiFieldsValues(el.from, value);
+          if(check){
+            obj[field] =this.mergeMultiFieldsValues(el.from, value);
+          }else{
+            obj[field] = "";
+          }
         }
       });
     }
@@ -2498,13 +2597,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
 
   }
 
-  manufactured_as_customer(templateForm: FormGroup) {
-    (<FormGroup>templateForm.controls["sample_details"]).controls["mfg_by"].patchValue(templateForm.value.account.name);
-  }
-
-  supplied_as_customer(templateForm: FormGroup) {
-    (<FormGroup>templateForm.controls["sample_details"]).controls["supplied_by"].patchValue(templateForm.value.account.name);
-  }
+  
 
 
   getDecimalAmount(value) {
@@ -2536,13 +2629,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     return templateForm;
   }
 
-  setValueInVieldsForChild(templateForm: FormGroup, field: any) {
-    (<FormGroup>templateForm.controls['total_amount']).addControl('discount_amount', new FormControl(''))
-    field.value.forEach(element => {
-      (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
-    });
-    return templateForm;
-  }
+  
 
   claimAmountCalculation(field1, field2, field3) {
     let total = 0;
@@ -2684,6 +2771,10 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
       this.apiService.GetQr(data);
     }
 
+    getAuditHistory(data,object){
+      this.apiService.getAuditHistory(data);
+    }
+
     getFormForTds(data,currentMenu, object){
       let payloadData = {};
       if(currentMenu != ''){
@@ -2720,6 +2811,47 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
       'editemode': editemode
     }
     this.modalService.open(id, alertData);
+  }
+  custmizedKey(parentfield){
+    let custmizedKey = parentfield.field_name;
+    switch (parentfield.type) {
+      case "list_of_fields":
+      case "group_of_fields":
+        custmizedKey = parentfield.field_name+'_'+parentfield.type                
+        break;          
+      default:
+        custmizedKey = parentfield.field_name;
+        break;
+    }
+    return custmizedKey;
+  }
+  checkStorageValue(object,parent,chield){
+    let check = false;
+    if(parent != '' && parent != undefined && parent != null){
+      const parentKey = this.custmizedKey(parent);
+      if(object[parentKey] && object[parentKey][chield.field_name] && object[parentKey][chield.field_name].length > 0){
+        check = true;
+      }
+    }else{
+      if(object[chield.field_name]){
+        check = true;
+      }
+    }
+    return check;
+  }
+  getVariableStorageValue(object,parent,chield): Array<any>{
+    let data = [];    
+    if(parent != '' && parent != undefined && parent != null){
+      const parentKey = this.custmizedKey(parent); 
+      if(this.checkStorageValue(object,parent,chield)){
+        data = object[parentKey][chield.field_name] 
+      }       
+    }else {
+      if(this.checkStorageValue(object,'',chield)){
+        data = object[chield.field_name]
+      }      
+    }
+     return data;
   }
 
   calculation_of_script_for_tds(object, field: any) {
@@ -2817,9 +2949,7 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
   if(this.isGridFieldExist(tab,"api_params_criteria")){
     grid_api_params_criteria = tab.grid.api_params_criteria;
   }
-  const data = this.getPaylodWithCriteria(currentMenu.name,'',grid_api_params_criteria,'');
-  data['pageNo'] = page - 1;
-  data['pageSize'] = this.itemNumOfGrid;    
+  const data = this.setPageNoAndSize(this.getPaylodWithCriteria(currentMenu.name,'',grid_api_params_criteria,''),page);     
   this.getfilterCrlist(headElements,filterForm).forEach(element => {
     data.crList.push(element);
   });
@@ -2836,6 +2966,11 @@ getDataForGrid(page,tab,currentMenu,headElements,filterForm,selectContact){
     path: null
   }
   return getFilterData;
+}
+setPageNoAndSize(payload,page){
+  payload['pageNo'] = page - 1;
+  payload['pageSize'] = this.itemNumOfGrid; 
+  return payload;
 }
 setPageNumverAndSize(payload,page,){
   payload['pageNo'] = page - 1;
@@ -2854,13 +2989,15 @@ isGridFieldExist(tab,fieldName){
 
 getIndexInArrayById(array,id,key?){
   let index = -1;
-  array.forEach((element,i) => {
-    if(element._id && element._id == id){
-      index = i;
-    }else if(element[key] && element[key] == id){
-      index = i;
-    }
-  });
+  if(array && array.length > 0){
+    array.forEach((element,i) => {
+      if(element._id && element._id == id){
+        index = i;
+      }else if(element[key] && element[key] == id){
+        index = i;
+      }
+    });
+  }
   return index;
 }
 
@@ -2987,4 +3124,293 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
   });
    return listOfObjects;
   }
+
+  getUserPrefrerence(user) {
+    let criteria = "userId._id;eq;"+user._id+";STATIC";
+    let myData = this.setPageNoAndSize(this.getPaylodWithCriteria("user_preference", "", [criteria], {}),1);
+    const payloadData = {
+      path: null,
+      data : myData
+    }
+    this.apiService.getFavouriteData(payloadData);
+  }
+  updateUserPreference(data,fieldName,parent?){
+    let payloadData = this.getUserPreferenceObj(data,fieldName,parent);
+    let payload = {
+      "curTemp" : "user_preference",
+      "data" : payloadData
+    }
+    this.apiService.SaveFormData(payload);
+  }
+  getUserPreferenceByFieldName(fieldName){
+    let data = [];
+    let userPreference = this.storageService.getUserPreference();
+    if(userPreference && userPreference[fieldName]){
+      data = userPreference[fieldName];
+    }
+    return data;
+  }
+
+  getUserPreferenceObj(data,fieldName,parent?){
+    let refObj:any = this.getReferenceObject(data);
+    if(parent != ''){
+      refObj = parent;
+    }
+    if(fieldName == "favoriteMenus"){
+      refObj = data;
+    }
+    let uRef = {};
+    let userPreference = this.storageService.getUserPreference();
+    if(userPreference && userPreference._id && userPreference._id != null && userPreference._id != ''){
+      let fieldData = userPreference[fieldName];
+      if(fieldData && fieldData.length > 0){
+        let matchIndex = -1;
+        for (let index = 0; index < fieldData.length; index++) {
+          const element = fieldData[index];
+          if(element._id == refObj._id){
+            matchIndex = index;
+            break;
+          }         
+        }
+        if(matchIndex  > -1){
+          if(parent != ''){
+            let submenu = fieldData[matchIndex].submenu;
+            let submenuMatchIndex = -1;
+            if(submenu && submenu.length > 0){
+              for (let j = 0; j < submenu.length; j++) {
+                const subMenu = submenu[j];
+                if(subMenu._id == data._id){
+                  submenuMatchIndex = j;
+                  break;
+                }         
+              }
+            }
+            if(submenuMatchIndex > -1){
+              submenu.splice(submenuMatchIndex);
+              if(fieldData[matchIndex].submenu.length == 0){
+                fieldData.splice(matchIndex);
+              }else{
+                fieldData[matchIndex].submenu = submenu;
+              }
+            }else{
+              if(submenu.length > 0){
+                fieldData[matchIndex].submenu.push(data);
+              }else{
+                fieldData[matchIndex].submenu = []
+                fieldData[matchIndex].submenu.push(data);
+              }
+            }
+          }else{
+            fieldData.splice(matchIndex);
+          }
+        }else{
+          if(parent != ''){
+            refObj['submenu'] = [];
+            refObj['submenu'].push(data);
+            fieldData.push(refObj);
+          }else{
+            fieldData.push(refObj);
+          }
+        }        
+      }else{
+        fieldData = [];
+        fieldData.push(refObj);
+      }
+      userPreference[fieldName] = fieldData;
+      uRef = userPreference;
+    }else{
+      let user = this.storageService.GetUserInfo();
+      let userRef = this.getReferenceObject(user);
+      let dataList = [];
+      dataList.push(refObj);
+      uRef['userId'] = userRef;
+      uRef[fieldName] = dataList;
+    }    
+    return uRef
+  }
+  getReferenceObject(obj){
+    let ref = {}
+    ref["_id"]=obj._id;
+    ref["code"] = obj.code;
+    ref["name"] = obj.name;
+    if(obj.version != null){
+      ref["version"] = obj.version
+    }
+    return ref;
+  }
+  moduleIndex(moduleId){
+    let moduleList = this.storageService.GetModules();
+    return this.getIndexInArrayById(moduleList,moduleId);    
+  }
+  getMenuName(module,menuId,submenuId){
+    let menuList = module.menu_list;
+    let menuIndex = this.getIndexInArrayById(menuList,menuId);
+    let menu = menuList[menuIndex];
+    let menuName = "";
+    if(submenuId != ""){
+      if(menu.submenu){
+        let subMenuList = menu.submenu;
+        if(subMenuList && subMenuList.length > 0){
+            let subMenuIndex = this.getIndexInArrayById(subMenuList,submenuId);
+            let submenu = subMenuList[subMenuIndex];
+            menuName = submenu.name;
+        }
+      }
+    }else{
+      menuName = menu.name;
+    }
+    return menuName;
+  }
+  dateDiff(dateSent){
+    let obj={};
+    let currentDate = new Date();
+    dateSent = new Date(dateSent);
+    // let diff = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate());
+    let diff = currentDate.getTime() - dateSent.getTime();
+    let days = Math.floor(diff / (60 * 60 * 24 * 1000));
+    let hours = Math.floor(diff / (60 * 60 * 1000)) - (days * 24);
+    let minutes = Math.floor(diff / (60 * 1000)) - ((days * 24 * 60) + (hours * 60));
+    let seconds = Math.floor(diff / 1000) - ((days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60));
+    obj['days'] = days;
+    obj['hours'] = hours;
+    obj['minutes'] = minutes;
+    obj['seconds'] = seconds;
+ 
+     return obj;
+   }
+  getUserNotification(pageNo){
+    let user = this.storageService.GetUserInfo();
+    const userId = user._id;
+    if(userId && userId != null && userId != ''){
+      const criteria = "userId._id;eq;"+userId+";STATIC";
+      const payload = this.setPageNoAndSize(this.getPaylodWithCriteria('user_notification','',[criteria],{}),pageNo);
+      const callPayload = {
+        "path" : null,
+        "data": payload
+      }
+      this.apiService.getUserNotification(callPayload);
+    }
+  }
+  updateFieldInList(fieldName,list){
+    let modifyList = [];
+    if(list && list.length > 0){
+      list.forEach(element => {
+        let value = JSON.parse(JSON.stringify(element));
+        value[fieldName] = true;
+        modifyList.push(value);        
+      });
+    }
+    return modifyList;
+  }
+  getApplicationAllSettings() {
+    const payload1 = this.setPageNoAndSize(this.getPaylodWithCriteria("application_setting", "", [], {}), 1);
+    this.apiService.getAplicationsSetting(payload1);
+    const payload = this.setPageNoAndSize(this.getPaylodWithCriteria("application_theme_setting", "", [], {}), 1);
+    this.apiService.getAplicationsThemeSetting(payload);
+  }
+
+  buggetForcastCalc(templateForm: FormGroup){
+    let templateValue = templateForm.getRawValue();
+    let actualCurYr = templateValue.actual_current;
+    let actualLastYr = templateValue.actuals;
+    let budget = templateValue.this_year;
+    let growthpers = {};
+    let budgetpers = {};
+    let value = [];
+    let value1 = [];
+    Object.keys(actualCurYr).forEach(key => {
+      let growthper=0;
+      let budgetper=0;
+      let actualCurYrMonth = actualCurYr[key];
+      let actualLastYrMonth = actualLastYr[key];
+      if(actualLastYrMonth != 0){
+        growthper = actualCurYrMonth/actualLastYrMonth;
+      }
+
+      let budgetcurYrMonth = budget[key];
+      if(budgetcurYrMonth != 0){
+        budgetper = actualCurYrMonth/budgetcurYrMonth;
+      }
+
+        growthpers[key] = growthper;
+        let obj = {
+          field: key, value: growthpers[key] 
+        }
+        value.push(obj)
+
+        budgetpers[key] = budgetper;
+        let obj1 = {
+          field: key, value: budgetpers[key] 
+        }
+        value1.push(obj1)
+    })
+    const fieldWithValueforgrowth = {
+      field: 'growth_per', value: value
+    }
+    fieldWithValueforgrowth.value.forEach(element => {
+        (<FormGroup>templateForm.controls[fieldWithValueforgrowth.field]).controls[element.field].patchValue(element.value);
+    })
+
+    const fieldWithValueforBudget = {
+      field: 'budget_per', value: value1
+    }
+    fieldWithValueforBudget.value.forEach(element => {
+        (<FormGroup>templateForm.controls[fieldWithValueforBudget.field]).controls[element.field].patchValue(element.value);
+    })
+  }
+  manufactured_as_customer(templateForm: FormGroup) {
+    (<FormGroup>templateForm.controls["sample_details"]).controls["mfg_by"].patchValue(templateForm.value.account.name);
+  }
+
+  supplied_as_customer(templateForm: FormGroup) {
+    (<FormGroup>templateForm.controls["sample_details"]).controls["supplied_by"].patchValue(templateForm.value.account.name);
+  }
+  setValueInVieldsForChild(templateForm: FormGroup, field: any) {
+    (<FormGroup>templateForm.controls['total_amount']).addControl('discount_amount', new FormControl(''))
+    field.value.forEach(element => {
+      (<FormGroup>templateForm.controls[field.field]).controls[element.field].patchValue(element.value);
+    });
+    return templateForm;
+  }
+
+
+
+  calculateTotalFair(value){
+    let totalFair = 0;
+    let claimSheet = value.claimSheet;
+    let travelFair = claimSheet.travelFare;
+    let localTa = claimSheet.localTa;
+    let dailyAllowance = claimSheet.dailyAllowance;
+    let foodHotel = claimSheet.foodHotel;
+    let miscellaneous = claimSheet.miscellaneous;
+
+    totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
+
+    let obj1 = {
+      totalForTheDay:totalFair
+    }
+
+    let obj = {
+      claimSheet:obj1
+    }
+
+    return obj;
+
+  }
+
+
+  calculateTotalAmount(formValue){
+    let list = formValue['claimSheet'];
+    let total = 0;
+    for(let i=0; i<list.length;i++){
+      total +=  list[i]['totalForTheDay']
+    }
+
+    let obj = {
+      totalAmountOfTravelCliam:total
+    }
+    return obj;
+  }
+
+  
 }

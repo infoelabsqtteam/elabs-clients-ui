@@ -1,4 +1,4 @@
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
@@ -12,6 +12,10 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
+import { Common } from 'src/app/shared/enums/common.enum';
+import { Subscription } from 'rxjs';
+import { V } from '@angular/cdk/keycodes';
+
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -35,6 +39,8 @@ export const MY_DATE_FORMATS = {
   ]
 })
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
+
+  
 
   filterForm: FormGroup;
   tabs: any = [];
@@ -65,10 +71,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   temView: boolean = false;
   treeView: boolean = false;
   public orderBy = '-';
-  pageNumber: number = 1;
+  pageNumber: number = Common.PAGE_NO;
   total: number;
   loading: boolean;
-  itemNumOfGrid: any = 25;
+  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
   userInfo: any;
   staticData: any = {};
   copyStaticData:any={};
@@ -108,7 +114,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   gridDataSubscription;
   staticDataSubscription;
   tempDataSubscription;
-  saveResponceSubscription;
+  saveResponceSubscription:Subscription;
   gridFilterDataSubscription;
   dinamicFormSubscription;
   fileDataSubscription;
@@ -118,9 +124,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   typeaheadDataSubscription;
 
   filterdata = '';
+  fixedcolwidth = 150;
+  recordId:any="";
+  updateNotification:boolean=true;
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
+
+  showColumnList:any={};
 
 
 
@@ -274,11 +285,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private modalService: ModelService, 
     private formBuilder: FormBuilder, 
     private router: Router, 
+    private routers: ActivatedRoute,
     private datePipe: DatePipe,
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private notificationService:NotificationService
   ) {
+    if(routers.snapshot.params["formName"]){
+      this.formName = routers.snapshot.params["formName"];
+    }  
+    if(routers.snapshot.params["recordId"]){      
+      this.recordId = routers.snapshot.params["recordId"];
+    } 
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
     })
@@ -288,9 +306,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
-    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
-      this.setSaveResponce(responce);
-    })
+    
     this.gridFilterDataSubscription = this.dataShareService.gridFilterData.subscribe(data =>{
       this.setGridFilterData(data);
     })
@@ -338,6 +354,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     
+  }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
+      this.setSaveResponce(responce);
+    })
+  }
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
   ngOnDestroy() {
@@ -434,6 +460,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(checkboxes != null){
           checkboxes['checked'] = false;
         }
+        if(this.recordId != '' && this.updateNotification){
+          this.updateNotification = false; 
+          let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);
+          if(index != -1){
+            this.editedRowData(index,"UPDATE");
+          }          
+        }
       } else {
         this.elements = [];
         this.total = 0;
@@ -481,7 +514,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       if(this.tab.grid && this.tab.grid != undefined){
         if(this.tab.grid.gridColumns && this.createFilterHeadElement){
-          this.headElements = this.tab.grid.gridColumns;          
+          this.headElements = this.commonFunctionService.updateFieldInList('show',this.tab.grid.gridColumns);          
           this.createFilterHeadElement = false;
         }
         if(this.tab.grid.gridColumns == undefined && this.tab.grid.gridColumns == null){
@@ -542,6 +575,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               case "info":
                 case "number":
                 case "reference_names":
+                case "chips" :
                 this.commonFunctionService.createFormControl(forControl, element, '', "text")
                 break;
               case "tree_view_selection":
@@ -598,6 +632,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
+  updateColumnList(field,index){
+    
+  }
   getTabsCount(tabs){
     this.commonFunctionService.getTabsCountPyload(tabs);    
   }
@@ -615,6 +652,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.updateGridData = false;
       this.apiService.ResetSaveResponce();
     }
+    this.unsubscribe(this.saveResponceSubscription);
   }
   setFileData(getfileData){
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
@@ -818,7 +856,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       curTemp: this.currentMenu.name,
       data: updateData
     }
-    this.apiService.SaveFormData(saveFromData)
+    this.apiService.SaveFormData(saveFromData);
+    this.saveCallSubscribe();
   }
   getTreeViewNode(node) {
     //console.log(node);
@@ -908,6 +947,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
     const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
+    if(this.recordId){
+      let crList = pagePayload.data.crList;
+      let criteria = "_id;eq;"+this.recordId+";STATIC"
+      this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
+        crList.push(element);
+      });
+      pagePayload.data.crList = crList;
+    }
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';
@@ -1138,6 +1185,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
+          case 'AUDIT_HISTORY':
+            if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
+              let obj = {
+                "aduitTabIndex": this.selectTabIndex,
+                "tabname": this.tabs
+              }
+              this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
+              this.modalService.open('audit-history',obj);
+            }else {
+              this.notificationService.notify("bg-danger", "Permission denied !!!");
+            }
+          break;
         default:
           this.editedRowData(index,button.onclick.action_name)
           break;
@@ -1218,6 +1277,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }    
   }
 
+  getDivClass(field) {
+    const fieldsLangth = this.headElements.length;
+    return this.commonFunctionService.getFixedDivClass(field,fieldsLangth);
+  }
+
   onBulkUpdate(){
     this.isBulkUpdate = true;
     this.addNewForm('NEW');
@@ -1293,7 +1357,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         for (let j = 0; j < crList.length; j++) {
           const child = crList[j];
           let modify = child.replaceAll(';', "#");
-          if(!this.commonFunctionService.checkIfCondition(modify,object)){
+          if(!this.commonFunctionService.checkIfConditionForArrayListValue(modify,object)){
             childConditionsMatched = false;
             break;
           }else{

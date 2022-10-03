@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationEnd } from '@angular/router';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vertical',
@@ -11,9 +14,29 @@ export class VerticalComponent implements OnInit {
   moduleIndex : any = -1;
   dashbordPage:boolean=false;
   navigationSubscription;
-  
+  applicationSettingSubscription:Subscription;
+  logoPath = ''
 
-  constructor(private router: Router, private dataShareService:DataShareService,) {
+
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
+
+  constructor(
+    private router: Router,
+    private dataShareService:DataShareService,
+    private storageService: StorageService,
+    changeDetectorRef: ChangeDetectorRef, media: MediaMatcher
+    ) {
+    this.mobileQuery = media.matchMedia('(max-width:991px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+    
+    this.pageload();
+    this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
+      if(setting == 'setting'){
+        this.pageload();
+      }
+    })
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
       // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
@@ -36,6 +59,11 @@ export class VerticalComponent implements OnInit {
       this.dashbordPage=false;
     }
   }
+
+  ngOnDestroy(): void {
+    this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
     const routIndex = window.location.href.indexOf("/dashboard");
@@ -67,5 +95,8 @@ export class VerticalComponent implements OnInit {
   goToHome(){
     this.moduleIndex = -1;
   } 
+  pageload(){
+    this.logoPath = this.storageService.getLogoPath() + "logo.png";
+  }
 
 }

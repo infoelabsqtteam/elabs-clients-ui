@@ -1,0 +1,78 @@
+<div mdbModal #auditHistory="mdbModal" class="modal fade">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center m-0">
+        <h4 class="modal-title font-weight-bold m-0">Audit History</h4>
+        <button class="closebtb" (click)="close()"><span>&times;</span></button>
+      </div>
+
+      <div class="modal-body auditdetails">
+
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <div class="d-flex align-items-center justify-content-between audittitle" *ngIf="auditHistoryList">
+              <h4 class="m-0">{{selectedTab.label}}</h4>
+              <div class="d-flex align-items-center">
+                <select (change)="handleChange($event.target.selectedIndex)">
+                  <option *ngFor="let data of auditHistoryList; let i = index" [value]="data.version">version: {{i}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="auditdata">
+              <p><strong>Updated By :</strong></p>
+              <p><strong>Updated Date :</strong></p>
+              <p><strong>Version:</strong></p>
+              <p><strong>Id:</strong></p>
+              <p><strong>Name:</strong></p>
+              <p><strong>Alt Name:</strong></p>
+            </div>
+          </div>
+
+
+          <div class="col-md-4" *ngIf="auditHistoryList">
+            <div class="audittitle"><h4 class="m-0">Old</h4></div>
+            <div class="auditdata text-danger" *ngIf="!showdata">
+              <p>No Data</p>
+              <p>No Data</p>
+              <p>No Data</p>
+              <p>No Data</p>
+              <p>No Data</p>
+              <p>No Data</p>
+            </div>
+            <div class="auditdata text-danger" *ngIf="showdata">
+              <p>{{previousAuditData.createdByName}}</p>
+              <p>{{previousAuditData.createdDate | date:'fullDate'}}</p>
+              <p>{{previousAuditData.version}}</p>
+              <p>{{previousAuditData._id}}</p>
+              <p>{{previousAuditData.currentObject.name}}</p>
+              <p>{{previousAuditData.currentObject.altname}}</p>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="auditHistoryList">
+            <div class="audittitle"><h4 class="m-0">New</h4></div>
+            <div class="auditdata text-success" *ngIf="!showdata">
+              <p>{{singleAuditHistoryList.createdByName}}</p>
+              <p>{{singleAuditHistoryList.createdDate | date:'fullDate'}}</p>
+              <p>{{singleAuditHistoryList.version}}</p>
+              <p>{{singleAuditHistoryList._id}}</p>
+              <p>{{singleAuditHistoryList.currentObject.name}}</p>
+              <p>{{singleAuditHistoryList.currentObject.altname}}</p>
+            </div>
+            <div class="auditdata text-danger" *ngIf="showdata">
+              <p>{{selectedObject.createdByName}}</p>
+              <p>{{selectedObject.createdDate | date:'fullDate'}}</p>
+              <p>{{selectedObject.version}}</p>
+              <p>{{selectedObject._id}}</p>
+              <p>{{selectedObject.currentObject.name}}</p>
+              <p>{{selectedObject.currentObject.altname}}</p>
+            </div>
+          </div>
+        </div>
+        <ngx-diff2html *ngIf="!showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{singleAuditHistoryList | json}}"></ngx-diff2html>
+        <ngx-diff2html *ngIf="showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{selectedObject | json}}"></ngx-diff2html>
+      </div>
+    </div>
+  </div>
+</div>

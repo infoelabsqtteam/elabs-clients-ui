@@ -9,6 +9,7 @@ import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { serverHostList } from '../../env/serverHostList';
+import { CommonFunctionService } from '../../common-utils/common-function.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class AuthService {
     private apiService:ApiService,
     private storageService:StorageService,
     private router:Router,
-    private encryptionService:EncryptionService
+    private encryptionService:EncryptionService,
+    private commonFunctionService:CommonFunctionService
   ) { }
 
 
@@ -67,6 +69,7 @@ export class AuthService {
     this.apiService.resetTempData();
     this.apiService.resetGridData();
     this.envService.setRequestType('PUBLIC');
+    this.commonFunctionService.getApplicationAllSettings();
     
   }
   logOutRedirection(){
@@ -88,9 +91,12 @@ export class AuthService {
         if (respData && respData.user) {
           this.storageService.SetUserInfo(respData);
           this.storageService.GetUserInfo();
-          this.envService.setRequestType('PRIVATE');          
+          this.envService.setRequestType('PRIVATE');  
+          this.commonFunctionService.getApplicationAllSettings();        
           this.dataShareService.restSettingModule('logged_in');
           this.apiService.gitVersion('');
+          this.commonFunctionService.getUserPrefrerence(respData.user);
+          this.commonFunctionService.getUserNotification(1);
           this.redirectionWithMenuType();                                  
         } else {
             this.envService.setRequestType('PUBLIC');
@@ -107,6 +113,7 @@ export class AuthService {
       }
     )
   }
+  
   redirectionWithMenuType(){
     const menuType = this.storageService.GetMenuType()
     if(menuType == 'Horizontal'){
@@ -185,10 +192,13 @@ export class AuthService {
       (error)=>{
         if(error && error.status == 403){
           this.notificationService.notify("bg-danger", "Username password does not match.");
+          console.log("Sign In first error handling." + JSON.stringify(error));
         }else if(error && error.error && error.error.message){
           this.notificationService.notify("bg-danger", error.error.message);
+          console.log("Sign In Secong error handling." + JSON.stringify(error));
         }else{
           this.notificationService.notify("bg-danger", error.message);
+          console.log("Sign In Third error handling." + JSON.stringify(error));
         }
       }
     )

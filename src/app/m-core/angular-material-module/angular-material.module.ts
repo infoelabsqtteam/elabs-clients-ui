@@ -34,6 +34,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSliderModule} from '@angular/material/slider';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatRippleModule} from '@angular/material/core';
+
 
 const modules =[
   MatCardModule,
@@ -67,7 +71,10 @@ const modules =[
   MatMenuModule,
   MatSnackBarModule,
   MatSliderModule,
-  MatMomentDateModule
+  MatMomentDateModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatRippleModule
 ]
 
 @NgModule({

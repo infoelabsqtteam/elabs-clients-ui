@@ -6,15 +6,19 @@
             .bg-cerulean{background:var(--buttonColor) !important;width:120px;height:35px;border-radius:4px !important;margin:0 0 0 20px;font-size:14px;}
         }
         .form-label {background:var(--formLabelBg);font-family:$roboto;}
-        .mat-form-field-label {color:#00000099;font-size:13px;}
+        .mat-form-field-label {color:#00000099;font-size:13px;text-transform:capitalize;}
         .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;}
         .mat-error {margin-top:15px;}
         .filterbtn {background:var(--formLabelBg);min-width:auto;
           .mat-button-wrapper {display:flex;align-items:center;}
         }
-        .modal-footer {height:$size50;padding:$size10;min-height:$auto;background:var(--popupHeaderBg);border:$no;
-          .btn.btn-sm {margin:0 10px;}
-        }
+        // .modal-footer {height:$size50;padding:$size10;min-height:$auto;background:var(--popupHeaderBg);border:$no;
+        //   .btn.btn-sm {margin:0 10px;
+        //     &:hover, &:focus {border:2px solid #285393;}
+        //   }
+          
+
+        // }
       
   }
     .mat-form-field-appearance-outline .mat-form-field-outline, .mat-form-field-appearance-outline .mat-form-field-outline-thick {color:#0000001F !important;}
@@ -24,7 +28,7 @@
     .mat-form-field-appearance-outline .mat-form-field-infix {padding:0.9em 0 !important;}
     .list-of-string-button {top:5px;}
     // .mat-select-arrow {content:url('../../assets/img/svg-icon/dropdown.svg');width:20px;height:15px;border:none;}
-    .mat-expansion-panel-header {font-size:13px;}
+    // .mat-expansion-panel-header {font-size:13px;}
     .charttitle {line-height:20px;font-family:$roboto;width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;}
     .mat-form-field {margin-bottom:12px;}
     .btn.btn-sm.filebtn {height:36px;padding:2px 10px;font-size:13px;

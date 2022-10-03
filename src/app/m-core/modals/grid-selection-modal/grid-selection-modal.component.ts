@@ -9,6 +9,8 @@ import { ModelService } from 'src/app/services/model/model.service';
 import { ApiService } from '../../../services/api/api.service';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+import {Sort} from '@angular/material/sort';
 
 
 @Component({
@@ -36,6 +38,7 @@ export class GridSelectionModalComponent implements OnInit {
   copyStaticData: [] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   selectable = true;
+  term: any={};
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -47,6 +50,78 @@ export class GridSelectionModalComponent implements OnInit {
   parentObj: any;
   fieldNameForDeletion: any;
   isGridSelectionOpen: boolean = true;
+  minieditorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '100px',
+    minHeight: '0',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    translate: 'yes',
+    enableToolbar: false,
+    showToolbar: true,
+    placeholder: 'Enter text here...',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    fonts: [
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
+    ],
+    customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    uploadUrl: 'v1/image',
+    uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      [],
+      ['fontSize',
+      'textColor',
+      'backgroundColor',
+      'customClasses',
+      'undo',
+      'redo',
+      'bold',
+      'italic',
+      'underline',
+      'link',
+      'unlink',
+      'insertImage',
+      'insertVideo',
+      'insertHorizontalRule',
+      'toggleEditorMode',
+      'justifyLeft',
+      'justifyCenter',
+      'justifyRight',
+      'justifyFull',
+      'indent',
+      'outdent',
+      'insertUnorderedList',
+      'insertOrderedList',
+      'heading',
+      'fontName',
+      'removeFormat',      
+      'strikeThrough']
+    ]
+  };
+  fixedcolwidth = 150;
 
   constructor(
     private modalService: ModelService,
@@ -73,6 +148,28 @@ export class GridSelectionModalComponent implements OnInit {
       this.setStaticData(data);
     })
     //this.treeViewData.data = TREE_DATA;
+  }
+
+
+  sortData(sort: Sort) {
+    const data = this.gridData.slice();
+    if (!sort.active || sort.direction === '') {
+      this.gridData = data;
+      return;
+    }
+    let fieldname = sort.active;
+    const columnIndex = this.CommonFunctionService.getIndexInArrayById(this.listOfGridFieldName,fieldname,'field_name');
+    let gridColumns = this.listOfGridFieldName[columnIndex];
+    if(gridColumns && gridColumns.field_name && gridColumns.field_name != ''){
+      this.gridData = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        const dataA = this.CommonFunctionService.getObjectValue(fieldname, a);
+        const dataB = this.CommonFunctionService.getObjectValue(fieldname, b);
+        return compare(dataA, dataB, isAsc);
+      });
+    }else {
+      return 0;
+    }
   }
 
   getddnDisplayVal(val) {
@@ -146,7 +243,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   typeaheadObjectWithtext;
   searchTypeaheadData(field, currentObject,chipsInputValue) {
-    console.log(chipsInputValue)
+    //console.log(chipsInputValue)
     this.typeaheadObjectWithtext = currentObject;
 
     this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
@@ -343,7 +440,8 @@ export class GridSelectionModalComponent implements OnInit {
       this.gridData = [];
     }
     if (this.field.gridColumns && this.field.gridColumns.length > 0) {
-      this.field.gridColumns.forEach(field => {
+      let gridColumns = this.CommonFunctionService.updateFieldInList('display',this.field.gridColumns);
+      gridColumns.forEach(field => {
         if (this.coreFunctionService.isNotBlank(field.show_if)) {
           if (!this.CommonFunctionService.showIf(field, this.parentObject)) {
             field['display'] = false;
@@ -354,7 +452,7 @@ export class GridSelectionModalComponent implements OnInit {
           field['display'] = true;
         }
       });
-      this.listOfGridFieldName = this.field.gridColumns;
+      this.listOfGridFieldName = gridColumns;
       this.gridViewModalSelection.show();
     } else {
       this.notificationService.notify("bg-danger", "Grid Columns are not available In This Field.")
@@ -373,6 +471,9 @@ export class GridSelectionModalComponent implements OnInit {
     //For dropdown data in grid selection
     this.getStaticDataWithDependentData()
 
+  }
+  updateColumnList(data,index){
+    //this.listOfGridFieldName[index].display = data.display;
   }
   selectGridData() {
     this.selectedData = [];
@@ -549,6 +650,12 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }
   }
+
+  getDivClass(field) {
+    const fieldsLangth = this.listOfGridFieldName.length;
+    return this.CommonFunctionService.getFixedDivClass(field,fieldsLangth);
+  }
+
   applyOnGridFilter(field) {
     if (field && field.etc_fields && field.etc_fields.on_grid_filter === 'false') {
       return false;
@@ -563,6 +670,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   isDisable(field, object) {
+    //console.log(field.field_name +":- " + field.display);
     const updateMode = false;
     let disabledrow = false;
     if (field.is_disabled) {
@@ -663,4 +771,9 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
 
+}
+
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
