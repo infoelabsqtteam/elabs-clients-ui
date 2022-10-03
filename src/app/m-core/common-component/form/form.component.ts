@@ -2327,8 +2327,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   
   inputOnChangeFunc(parent,field) {
-    if(parent && parent != ''){
-      field['parent'] = parent;
+    if(parent && parent != '' && parent.field_name && parent.field_name != ""){
+      field['parent'] = parent.field_name;
     }
     if(field.type == 'checkbox' || field.type == 'date'){
       if (field.onchange_api_params && field.onchange_call_back_field) {        
@@ -2534,7 +2534,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             ]
           }
           let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,multiCollection);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field,multiCollection);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.manufactured_as_customer(this.templateForm);
           break;
@@ -2557,7 +2557,7 @@ case 'populate_fields_for_report_for_new_order_flow':
             ]
           }
            let multiCollection1 = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,multiCollection1);
+          calFormValue = this.commonFunctionService.populatefields(this.templateForm.getRawValue(), list_of_populated_fields,field,multiCollection1);
           this.updateDataOnFormField(calFormValue);
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
@@ -4648,7 +4648,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                         case "grid_selection":
                         case 'grid_selection_vertical':
                         case "drag_drop":                    
-                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
+                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
                             this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
@@ -4656,13 +4656,13 @@ case 'populate_fields_for_report_for_new_order_flow':
                           break;
                         case "typeahead":
                           if(data.datatype == "list_of_object" || element.datatype == 'chips'){
-                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
+                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
                               this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                               this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                               //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                             }
                           }else{
-                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
+                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
                               const value = formValue[element.field_name][data.field_name];
                               this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                               //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
@@ -4670,7 +4670,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                           }
                           break;
                         default:
-                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
+                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
                             const value = formValue[element.field_name][data.field_name];
                             this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
