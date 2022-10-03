@@ -48,5 +48,8 @@ jobs:
     - name: Upload data
       run: aws s3 sync dist s3://prodclientslims.e-labs.ai
       
-    - name: Clean up cache
+    - name: Clean up cache for Elabs Subdomains
       run: aws cloudfront create-invalidation --distribution-id E2AT1IPS0R06SC --paths '/*'    
+
+    - name: Clean up cache for SraLabs
+      run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
