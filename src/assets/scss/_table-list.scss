@@ -7,7 +7,7 @@
 .mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
 .table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    .grid-data {width:auto !important;max-width:140px;}
+    // .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
@@ -24,7 +24,6 @@
         }
         .grid-button {background:rgba(0,0,0,0.1);}
     }
-
 
     tbody {
         tr {
