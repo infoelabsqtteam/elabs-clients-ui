@@ -10,7 +10,7 @@
     .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
-    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:4;
+    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:2;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {font-weight:500;position:relative;font-size:13px;}
