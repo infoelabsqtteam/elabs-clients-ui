@@ -746,10 +746,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.selected = new FormControl(1);
         this.storageService.setModule(item.name); 
         this.dataShareService.sendCurrentPage('DASHBOARD')
-        const menuSearchModule = { "value": "menu", key2: item.name }
-        const criteria = "appId;eq;"+item.name+";STATIC";
-        const payload = this.commonfunctionService.getPaylodWithCriteria('menu','',[criteria],{});
-        this.apiService.GetTempMenu(payload)
+        // const menuSearchModule = { "value": "menu", key2: item.name }
+        // this.apiService.GetTempMenu(menuSearchModule)
+        const criteria = "module_name;eq;"+item.name+";STATIC";        
+        const payload = this.commonfunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
+        this.apiService.GetTempMenu(payload);
         this.getTemplateByMenu = true;
         this.showsearchmenu = false;
         this.filterdata = '';
