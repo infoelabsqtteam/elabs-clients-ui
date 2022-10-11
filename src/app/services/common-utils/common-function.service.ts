@@ -2527,8 +2527,8 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     let check = false;
     if(field && field.field_name){
       let fieldName = "";
-      if(field.parent && field.parent.field_name && field.parent.field_name != ''){
-        fieldName = field.parent.field_name+'.'+field.field_name;
+      if(field.parent  && field.parent != ''){
+        fieldName = field.parent+'.'+field.field_name;
       }else{
         fieldName = field.field_name;
       }
