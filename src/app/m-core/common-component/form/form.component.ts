@@ -5106,58 +5106,58 @@ case 'populate_fields_for_report_for_new_order_flow':
       }else{
         buttonLabel = 'Add';
       }
-      if(field.list_of_fields && field.list_of_fields.length > 0){
-        let fieldList:any = JSON.parse(JSON.stringify(field.list_of_fields));
-        if(fieldList && fieldList.length > 0 && index == undefined){
-          let curField = JSON.parse(JSON.stringify(field));
-          curField['add_list_field'] = 'add';
-          fieldList.push(curField);
-        }
-        let form = {
-          "details": {
-              "class": "",
-              "collection_name":"",
-              "bulk_update":false
-              },
-          "tab_list_buttons": [
-              {
-                  "label": buttonLabel,
-                  "onclick": {
-                          "api": "add", 
-                          "action_name": "", 
-                          "close_form_on_succes": false
-                      },
-                  "type": "button",
-                  "field_name": "save",
-                  "api_params": "",
-                  "show_if":"",
-                  "disable_if":""
-              },
-              {
-                "label": "Ok",
-                "onclick": {
-                        "api": "close", 
-                        "action_name": "", 
-                        "close_form_on_succes": false
-                    },
-                "type": "button",
-                "field_name": "",
-                "api_params": "",
-                "show_if":"",
-                "disable_if":""
-            }
-          ],
-          "tableFields": fieldList,
-          "api_params": null,
-          "label": field.label
-          }
-        this.loadNextForm(form);
-      }else{
+      // if(field.list_of_fields && field.list_of_fields.length > 0){
+      //   let fieldList:any = JSON.parse(JSON.stringify(field.list_of_fields));
+      //   if(fieldList && fieldList.length > 0 && index == undefined){
+      //     let curField = JSON.parse(JSON.stringify(field));
+      //     curField['add_list_field'] = 'add';
+      //     fieldList.push(curField);
+      //   }
+      //   let form = {
+      //     "details": {
+      //         "class": "",
+      //         "collection_name":"",
+      //         "bulk_update":false
+      //         },
+      //     "tab_list_buttons": [
+      //         {
+      //             "label": buttonLabel,
+      //             "onclick": {
+      //                     "api": "add", 
+      //                     "action_name": "", 
+      //                     "close_form_on_succes": false
+      //                 },
+      //             "type": "button",
+      //             "field_name": "save",
+      //             "api_params": "",
+      //             "show_if":"",
+      //             "disable_if":""
+      //         },
+      //         {
+      //           "label": "Ok",
+      //           "onclick": {
+      //                   "api": "close", 
+      //                   "action_name": "", 
+      //                   "close_form_on_succes": false
+      //               },
+      //           "type": "button",
+      //           "field_name": "",
+      //           "api_params": "",
+      //           "show_if":"",
+      //           "disable_if":""
+      //       }
+      //     ],
+      //     "tableFields": fieldList,
+      //     "api_params": null,
+      //     "label": field.label
+      //     }
+      //   this.loadNextForm(form);
+      // }else{
         if(field.form && field.form._id){
           id = field.form._id;
         }
         this.getNextFormById(id);
-      }
+      // }
     }else{
       if(field.add_new_form && field.add_new_form._id){
         id = field.add_new_form._id;
