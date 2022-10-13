@@ -1487,8 +1487,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.dataSaveInProgress = true;
       }
     }
-    // this.unsubscribe(this.saveResponceSubscription);
-    this.saveResponceSubscription.unsubscribe();
+    this.unsubscribe(this.saveResponceSubscription);
   }
   setGridFilterData(gridFilterData){
     if (gridFilterData) {
@@ -4649,7 +4648,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                         case "grid_selection":
                         case 'grid_selection_vertical':
                         case "drag_drop":                    
-                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
+                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
                             this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
@@ -4657,13 +4656,13 @@ case 'populate_fields_for_report_for_new_order_flow':
                           break;
                         case "typeahead":
                           if(data.datatype == "list_of_object" || element.datatype == 'chips'){
-                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
+                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
                               this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                               this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                               //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                             }
                           }else{
-                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
+                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
                               const value = formValue[element.field_name][data.field_name];
                               this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                               //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
@@ -4671,7 +4670,7 @@ case 'populate_fields_for_report_for_new_order_flow':
                           }
                           break;
                         default:
-                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
+                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
                             const value = formValue[element.field_name][data.field_name];
                             this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
