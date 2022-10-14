@@ -4641,44 +4641,42 @@ case 'populate_fields_for_report_for_new_order_flow':
                 }else if(typeof formValue[element.field_name] == "object" && element.datatype == 'key_value'){
                   this.custmizedFormValue[element.field_name] = formValue[element.field_name]
                 }else{
-                  if(element.list_of_fields && element.list_of_fields.length > 0){
-                    element.list_of_fields.forEach(data => {
-                      switch (data.type) {
-                        case "list_of_string":
-                        case "grid_selection":
-                        case 'grid_selection_vertical':
-                        case "drag_drop":                    
-                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
+                  element.list_of_fields.forEach(data => {
+                    switch (data.type) {
+                      case "list_of_string":
+                      case "grid_selection":
+                      case 'grid_selection_vertical':
+                      case "drag_drop":                    
+                        if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
+                          this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue('')
+                          //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
+                        }
+                        break;
+                      case "typeahead":
+                        if(data.datatype == "list_of_object" || element.datatype == 'chips'){
+                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
                             this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                           }
-                          break;
-                        case "typeahead":
-                          if(data.datatype == "list_of_object" || element.datatype == 'chips'){
-                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
-                              this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
-                              this.templateForm.get(element.field_name).get(data.field_name).setValue('')
-                              //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
-                            }
-                          }else{
-                            if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
-                              const value = formValue[element.field_name][data.field_name];
-                              this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
-                              //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
-                            }
-                          }
-                          break;
-                        default:
-                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined && formValue[element.field_name][data.field_name] != ''){
+                        }else{
+                          if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
                             const value = formValue[element.field_name][data.field_name];
                             this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
                           }
-                          break;
-                      }
-                    });
-                  }
+                        }
+                        break;
+                      default:
+                        if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
+                          const value = formValue[element.field_name][data.field_name];
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
+                          //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
+                        }
+                        break;
+                    }
+                  });
                 }
               }
               break; 
