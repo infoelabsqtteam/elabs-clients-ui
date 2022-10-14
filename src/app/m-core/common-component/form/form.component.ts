@@ -2612,23 +2612,36 @@ case 'populate_fields_for_report_for_new_order_flow':
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
-        if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          if(field && field.formValueAsObjectForQtmp){            
-            let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
-            staticModal[0]["data"]=formValue;
-          }else{
-            let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
-            staticModal[0]["data"]=formValue;
-          }
-        }
+        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template)));      
+        // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
+        //   let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+        //   if(field && field.formValueAsObjectForQtmp){            
+        //     let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
+        //     staticModal[0]["data"]=formValue;
+        //   }else{
+        //     let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
+        //     staticModal[0]["data"]=formValue;
+        //   }
+        // }
         // this.store.dispatch(
         //   new CusTemGenAction.GetStaticData(staticModal)
         // )
         this.apiService.getStatiData(staticModal);
       }
    }
+  }
+  checkQtmpApi(params,field,payload){
+    if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
+      let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+      if(field && field.formValueAsObjectForQtmp){            
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
+        payload["data"]=formValue;
+      }else{
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
+        payload["data"]=formValue;
+      }
+    }
+    return payload;
   }
 
   clearTypeaheadData() {
@@ -4608,7 +4621,17 @@ case 'populate_fields_for_report_for_new_order_flow':
       }
     }
   };
-  
+  onClickLoadData(parent,field){
+    if(field && field.onClickApiParams && field.onClickApiParams != ''){        
+      let api_params = field.onClickApiParams;
+      let callBackfield = field.onClickCallBackField;
+      let criteria = field.onClickApiParamsCriteria
+      const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
+      let payloads = [];
+      payloads.push(this.checkQtmpApi(api_params,field,payload));
+      this.apiService.getStatiData(payloads);
+    }
+  }  
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !isArray(formValue)){
