@@ -1,5 +1,9 @@
 export const serverHostList = [
+<<<<<<< HEAD
   {"clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104"}, 
+=======
+  {"clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104"},
+>>>>>>> 1207173619f72eaadb5a7e26c9697d0cfe89372a
   {"clientEndpoint": "sit.e-labs.ai", "serverEndpoint": "https://sitserverelabs.e-labs.ai"},
   {"clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://devserverelabs.e-labs.ai"}, 
   {"clientEndpoint": "uat.e-labs.ai", "serverEndpoint": "https://uatserverelabs.e-labs.ai"},  
