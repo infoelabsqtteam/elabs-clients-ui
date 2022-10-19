@@ -425,7 +425,7 @@
                                     <div *ngIf="fields.type == 'date'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [matDatepicker]="picker2" [min]="fields.minDate" [max]="fields.maxDate"  [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput [matDatepicker]="picker2" [min]="fields.minDate" [max]="fields.maxDate"  [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" (dateChange)="inputOnChangeFunc(tableField,fields)" [id]="fields._id+'_'+fields.field_name">
                                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                             <mat-datepicker #picker2 color="primary"></mat-datepicker>
                                         </mat-form-field>
