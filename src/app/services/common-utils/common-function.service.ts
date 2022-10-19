@@ -1029,6 +1029,7 @@ export class CommonFunctionService {
       if(element.type != 'list_of_fields' && element.type != 'group_of_fields'){  
         switch (element.datatype) {
           case "list_of_object":
+          case "list_of_object_with_popup":
           case "chips":
           case "chips_with_mask":
             if(validatField){            
