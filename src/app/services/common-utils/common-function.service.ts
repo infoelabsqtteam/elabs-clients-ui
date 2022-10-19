@@ -752,7 +752,7 @@ export class CommonFunctionService {
         switch (element.type) {            
           case "list_of_fields":
           case "group_of_fields":
-            if (element.list_of_fields.length > 0) {
+            if (element.list_of_fields && element.list_of_fields.length > 0) {
               element.list_of_fields.forEach((data) => {
                 let call_back_field =  '';
                 let criteria = [];
@@ -774,7 +774,7 @@ export class CommonFunctionService {
             }
             break;
             case "stepper":
-            if (element.list_of_fields.length > 0) {
+            if (element.list_of_fields && element.list_of_fields.length > 0) {
               element.list_of_fields.forEach((step) => {
                 step.list_of_fields.forEach((data) => {
                   let call_back_field =  '';
@@ -1114,55 +1114,57 @@ export class CommonFunctionService {
                 }
               }
             } else {
-              for (let j = 0; j < element.list_of_fields.length; j++) {
-                const data = element.list_of_fields[j];
-                switch (data.datatype) {
-                  case "list_of_object":
-                  case "chips":
-                  case "chips_with_mask":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
-                          fiedlList[data.field_name] = null;
-                        }
-                      });
-                    }
-                    break;
-                  case "object":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (fiedlList[data.field_name] == "" && typeof fiedlList[data.field_name] != 'object') {
-                          fiedlList[data.field_name] = null;
-                        }
-                      });
-                    }
-                    break;
-                  case "number":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (!Number(fiedlList[data.field_name])) {
-                          fiedlList[data.field_name] = 0;
-                        }
+              if(element.list_of_fields && element.list_of_fields){
+                for (let j = 0; j < element.list_of_fields.length; j++) {
+                  const data = element.list_of_fields[j];
+                  switch (data.datatype) {
+                    case "list_of_object":
+                    case "chips":
+                    case "chips_with_mask":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
+                            fiedlList[data.field_name] = null;
+                          }
+                        });
+                      }
+                      break;
+                    case "object":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (fiedlList[data.field_name] == "" && typeof fiedlList[data.field_name] != 'object') {
+                            fiedlList[data.field_name] = null;
+                          }
+                        });
+                      }
+                      break;
+                    case "number":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (!Number(fiedlList[data.field_name])) {
+                            fiedlList[data.field_name] = 0;
+                          }
 
-                      });
-                    }
-                    break;
-                  default:
-                    break;
-                }
-                switch (data.type) {
-                  case "list_of_string":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
-                          fiedlList[data.field_name] = null;
-                        }
-                      });
-                    }
-                    break;
+                        });
+                      }
+                      break;
+                    default:
+                      break;
+                  }
+                  switch (data.type) {
+                    case "list_of_string":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
+                            fiedlList[data.field_name] = null;
+                          }
+                        });
+                      }
+                      break;
 
-                  default:
-                    break;
+                    default:
+                      break;
+                  }
                 }
               }
             }

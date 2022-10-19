@@ -827,75 +827,77 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             case "list_of_fields":
             case "group_of_fields":
               const list_of_fields = {};
-              if (element.list_of_fields.length > 0) {
-                for (let j = 0; j < element.list_of_fields.length; j++) {
-                  const data = element.list_of_fields[j];
-                  if(data == null){
-                    this.notifyFieldValueIsNull(element.name,j+1);
-                    break;
-                  }
-                  let modifyData = JSON.parse(JSON.stringify(data));
-                  modifyData.parent = element.field_name;
-                  //show if handling
-                  if(data.show_if && data.show_if != ''){
-                    this.showIfFieldList.push(modifyData);
-                  }
-                  //Mendetory If handling
-                  if(data.mandatory_if && data.mandatory_if != ''){
-                    this.mendetoryIfFieldList.push(modifyData);
-                  }
-                  //disable if handling
-                  if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null) || (data.disable_on_add && data.disable_on_add != '' && data.disable_on_add != undefined && data.disable_on_add != null)){                          
-                    this.disableIfFieldList.push(modifyData);
-                  }                      
-                  if(element.type == 'list_of_fields'){
-                    modifyData.is_mandatory=false;
-                  }
-                  if(data.field_name && data.field_name != ''){
-                    switch (data.type) {
-                      case "list_of_checkbox":
-                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, [], "list")
-                        this.checkBoxFieldListValue.push(modifyData);
-                        break;
-                      case "checkbox":
-                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, false, "checkbox")
-                        break;
-                      case "date":
-                        let currentYear = new Date().getFullYear();
-                        if(data.datatype == 'object'){
-                          this.minDate = new Date();
-                          if(data.etc_fields && data.etc_fields != null){
-                            if(data.etc_fields.minDate){
-                              if(data.etc_fields.minDate == '-1'){
-                                this.minDate = new Date(currentYear - 100, 0, 1);
-                              }else{
-                                this.minDate.setDate(new Date().getDate() - Number(data.etc_fields.minDate));
+              if(element && element.datatype != "list_of_object_with_popup"){
+                if (element.list_of_fields && element.list_of_fields.length > 0) {
+                  for (let j = 0; j < element.list_of_fields.length; j++) {
+                    const data = element.list_of_fields[j];
+                    if(data == null){
+                      this.notifyFieldValueIsNull(element.name,j+1);
+                      break;
+                    }
+                    let modifyData = JSON.parse(JSON.stringify(data));
+                    modifyData.parent = element.field_name;
+                    //show if handling
+                    if(data.show_if && data.show_if != ''){
+                      this.showIfFieldList.push(modifyData);
+                    }
+                    //Mendetory If handling
+                    if(data.mandatory_if && data.mandatory_if != ''){
+                      this.mendetoryIfFieldList.push(modifyData);
+                    }
+                    //disable if handling
+                    if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null) || (data.disable_on_add && data.disable_on_add != '' && data.disable_on_add != undefined && data.disable_on_add != null)){                          
+                      this.disableIfFieldList.push(modifyData);
+                    }                      
+                    if(element.type == 'list_of_fields'){
+                      modifyData.is_mandatory=false;
+                    }
+                    if(data.field_name && data.field_name != ''){
+                      switch (data.type) {
+                        case "list_of_checkbox":
+                          this.commonFunctionService.createFormControl(list_of_fields, modifyData, [], "list")
+                          this.checkBoxFieldListValue.push(modifyData);
+                          break;
+                        case "checkbox":
+                          this.commonFunctionService.createFormControl(list_of_fields, modifyData, false, "checkbox")
+                          break;
+                        case "date":
+                          let currentYear = new Date().getFullYear();
+                          if(data.datatype == 'object'){
+                            this.minDate = new Date();
+                            if(data.etc_fields && data.etc_fields != null){
+                              if(data.etc_fields.minDate){
+                                if(data.etc_fields.minDate == '-1'){
+                                  this.minDate = new Date(currentYear - 100, 0, 1);
+                                }else{
+                                  this.minDate.setDate(new Date().getDate() - Number(data.etc_fields.minDate));
+                                }
                               }
                             }
-                          }
-                          this.maxDate = new Date();
-                          if(data.etc_fields && data.etc_fields != null){
-                            if(data.etc_fields.maxDate){
-                              if(data.etc_fields.maxDate == '-1'){
-                                this.maxDate = new Date(currentYear + 1, 11, 31);
-                              }else{
-                                this.maxDate.setDate(new Date().getDate() + Number(data.etc_fields.maxDate));
+                            this.maxDate = new Date();
+                            if(data.etc_fields && data.etc_fields != null){
+                              if(data.etc_fields.maxDate){
+                                if(data.etc_fields.maxDate == '-1'){
+                                  this.maxDate = new Date(currentYear + 1, 11, 31);
+                                }else{
+                                  this.maxDate.setDate(new Date().getDate() + Number(data.etc_fields.maxDate));
+                                }
                               }
                             }
-                          }
-                        }else{
-                          this.minDate = new Date(currentYear - 100, 0, 1);
-                          this.maxDate = new Date(currentYear + 1, 11, 31);
-                        }                  
-                        data['minDate'] = this.minDate
-                        data['maxDate'] = this.maxDate;
-                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
-                        break; 
-                      default:
-                        this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
-                        break;
-                    } 
-                  }                 
+                          }else{
+                            this.minDate = new Date(currentYear - 100, 0, 1);
+                            this.maxDate = new Date(currentYear + 1, 11, 31);
+                          }                  
+                          data['minDate'] = this.minDate
+                          data['maxDate'] = this.maxDate;
+                          this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
+                          break; 
+                        default:
+                          this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
+                          break;
+                      } 
+                    }                 
+                  }
                 }
               }
               this.commonFunctionService.createFormControl(forControl, element, list_of_fields, "group")
@@ -910,7 +912,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             //   this.commonFunctionService.createFormControl(forControl, element, '', "text")
             //   break;
             case "stepper":                  
-              if(element.list_of_fields.length > 0) {
+              if(element.list_of_fields && element.list_of_fields.length > 0) {
                 element.list_of_fields.forEach((step) => {                      
                   if(step.list_of_fields != undefined){
                     const stepper_of_fields = {};
@@ -1181,20 +1183,22 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case "list_of_fields":
           case "group_of_fields":
-            element.list_of_fields.forEach(child => {
-              switch (child.type) {
-                case "typeahead":
-                  if (child.datatype == 'list_of_object') {
+            if(element.list_of_fields != undefined && element.list_of_fields != null){
+              element.list_of_fields.forEach(child => {
+                switch (child.type) {
+                  case "typeahead":
+                    if (child.datatype == 'list_of_object') {
+                      this.tempVal[element.field_name + '_' + child.field_name + "_add_button"] = true;
+                    }
+                    break;
+                  case "list_of_string":
                     this.tempVal[element.field_name + '_' + child.field_name + "_add_button"] = true;
-                  }
-                  break;
-                case "list_of_string":
-                  this.tempVal[element.field_name + '_' + child.field_name + "_add_button"] = true;
-                  break;                  
-                default:
-                  break;
-              }
-            });
+                    break;                  
+                  default:
+                    break;
+                }
+              });
+            }
             break;
           case "stepper":
                 if(element.list_of_fields != undefined && element.list_of_fields != null){
@@ -2208,7 +2212,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       //   let formValue = this.getFormValue(true);
       //   this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, formValue,field.onchange_data_template);
       // }else if(field.type != 'list_of_fields'){
-        let formValue = this.getFormValue(false);
+        //let formValue = this.getFormValue(false);
+        let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
         this.changeDropdown(field, formValue,field.onchange_data_template);
       // }
     }
@@ -2606,20 +2612,36 @@ case 'populate_fields_for_report_for_new_order_flow':
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
-        if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-          if(field && field.formValueAsObjectForQtmp){
-            staticModal[0]["data"]=this.getFormValue(false);
-          }else{
-            staticModal[0]["data"]=this.getFormValue(true);
-          }
-        }
+        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template)));      
+        // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
+        //   let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+        //   if(field && field.formValueAsObjectForQtmp){            
+        //     let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
+        //     staticModal[0]["data"]=formValue;
+        //   }else{
+        //     let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
+        //     staticModal[0]["data"]=formValue;
+        //   }
+        // }
         // this.store.dispatch(
         //   new CusTemGenAction.GetStaticData(staticModal)
         // )
         this.apiService.getStatiData(staticModal);
       }
    }
+  }
+  checkQtmpApi(params,field,payload){
+    if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
+      let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+      if(field && field.formValueAsObjectForQtmp){            
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
+        payload["data"]=formValue;
+      }else{
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
+        payload["data"]=formValue;
+      }
+    }
+    return payload;
   }
 
   clearTypeaheadData() {
@@ -4054,6 +4076,15 @@ case 'populate_fields_for_report_for_new_order_flow':
   custmizedFormValueData(parent,chield): Array<any>{
     return this.commonFunctionService.getVariableStorageValue(this.custmizedFormValue,parent,chield);
   }   
+  getListOfFieldsGridColumn(field): Array<any>{
+    let columns = [];
+    if(field && field.list_of_fields && field.list_of_fields.length > 0){
+      columns = JSON.parse(JSON.stringify(field.list_of_fields));
+    }else if(field && field.gridColumns && field.gridColumns.length > 0){
+      columns = JSON.parse(JSON.stringify(field.gridColumns));
+    }
+    return columns;
+  }
   modifyUploadFiles(files){
     const fileList = [];
     if(files && files.length > 0){
@@ -4590,7 +4621,17 @@ case 'populate_fields_for_report_for_new_order_flow':
       }
     }
   };
-  
+  onClickLoadData(parent,field){
+    if(field && field.onClickApiParams && field.onClickApiParams != ''){        
+      let api_params = field.onClickApiParams;
+      let callBackfield = field.onClickCallBackField;
+      let criteria = field.onClickApiParamsCriteria
+      const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
+      let payloads = [];
+      payloads.push(this.checkQtmpApi(api_params,field,payload));
+      this.apiService.getStatiData(payloads);
+    }
+  }  
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !isArray(formValue)){
@@ -4676,89 +4717,91 @@ case 'populate_fields_for_report_for_new_order_flow':
               }  
               break;
             case "group_of_fields":
-              element.list_of_fields.forEach(data => {
-                let ChildFieldData = formValue[element.field_name];
-                if(data && data.field_name && data.field_name != ''){
-                  switch (data.type) {
-                    case "list_of_string":
-                    case "grid_selection":
-                    case 'grid_selection_vertical':
-                    case "drag_drop": 
-                      if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
-                        if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
-                        const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
-                        this.custmizedFormValue[element.field_name][data.field_name] = value;
-                        this.templateForm.get(element.field_name).get(data.field_name).setValue('')
-                        //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
-                      }
-                      break;   
-                    case "typeahead":
-                      if(data.datatype == "list_of_object" || data.datatype == 'chips'){
+              if(element.list_of_fields && element.list_of_fields.length > 0){
+                element.list_of_fields.forEach(data => {
+                  let ChildFieldData = formValue[element.field_name];
+                  if(data && data.field_name && data.field_name != ''){
+                    switch (data.type) {
+                      case "list_of_string":
+                      case "grid_selection":
+                      case 'grid_selection_vertical':
+                      case "drag_drop": 
                         if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                           if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
                           const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
                           this.custmizedFormValue[element.field_name][data.field_name] = value;
-                          this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                         }
-                      }else{
+                        break;   
+                      case "typeahead":
+                        if(data.datatype == "list_of_object" || data.datatype == 'chips'){
+                          if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
+                            if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
+                            const value = JSON.parse(JSON.stringify(ChildFieldData[data.field_name]));
+                            this.custmizedFormValue[element.field_name][data.field_name] = value;
+                            this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
+                            //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
+                          }
+                        }else{
+                          if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
+                            const value = ChildFieldData[data.field_name];
+                            this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
+                            //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
+                          }
+                        }  
+                        break;               
+                      case "number":
+                        if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
+                          let gvalue;
+                          const value = ChildFieldData[data.field_name];
+                          if(value != null && value != ''){
+                            gvalue = value;
+                          }else{
+                            gvalue = 0;
+                          }
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue(gvalue)
+                          //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(gvalue);
+                        }else if(ChildFieldData && ChildFieldData.hasOwnProperty(data.field_name)){
+                          let gvalue = 0;
+                          this.templateForm.get(element.field_name).get(data.field_name).setValue(gvalue)
+                        }
+                        break;
+                      case "list_of_checkbox":
+                        this.templateForm.get(element.field_name).get(data.field_name).patchValue([])
+                        if(element.parent){
+                          this.selectedRow[element.parent] = {}
+                          this.selectedRow[element.parent][element.field_name] = ChildFieldData;
+                        }else{
+                          this.selectedRow[element.field_name] = ChildFieldData;
+                        }
+                        //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue([]);
+                        break;
+                      case "date":
+                        if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
+                          if(data.date_format && data.date_format !="" && typeof ChildFieldData[data.field_name] === 'string'){
+                            const date = ChildFieldData[data.field_name];
+                            const dateMonthYear = date.split('/');
+                            const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
+                            const value = new Date(formatedDate);
+                            this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
+                          }else{                  
+                            const value = formValue[element.field_name][data.field_name] == null ? null : formValue[element.field_name][data.field_name];
+                            this.templateForm.get(element.field_name).get(data.field_name).setValue(value);              
+                          }
+                        }
+                        break;
+                      default:
                         if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
                           const value = ChildFieldData[data.field_name];
                           this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
                         }
-                      }  
-                      break;               
-                    case "number":
-                      if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
-                        let gvalue;
-                        const value = ChildFieldData[data.field_name];
-                        if(value != null && value != ''){
-                          gvalue = value;
-                        }else{
-                          gvalue = 0;
-                        }
-                        this.templateForm.get(element.field_name).get(data.field_name).setValue(gvalue)
-                        //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(gvalue);
-                      }else if(ChildFieldData && ChildFieldData.hasOwnProperty(data.field_name)){
-                        let gvalue = 0;
-                        this.templateForm.get(element.field_name).get(data.field_name).setValue(gvalue)
-                      }
-                      break;
-                    case "list_of_checkbox":
-                      this.templateForm.get(element.field_name).get(data.field_name).patchValue([])
-                      if(element.parent){
-                        this.selectedRow[element.parent] = {}
-                        this.selectedRow[element.parent][element.field_name] = ChildFieldData;
-                      }else{
-                        this.selectedRow[element.field_name] = ChildFieldData;
-                      }
-                      //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue([]);
-                      break;
-                    case "date":
-                      if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
-                        if(data.date_format && data.date_format !="" && typeof ChildFieldData[data.field_name] === 'string'){
-                          const date = ChildFieldData[data.field_name];
-                          const dateMonthYear = date.split('/');
-                          const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
-                          const value = new Date(formatedDate);
-                          this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
-                        }else{                  
-                          const value = formValue[element.field_name][data.field_name] == null ? null : formValue[element.field_name][data.field_name];
-                          this.templateForm.get(element.field_name).get(data.field_name).setValue(value);              
-                        }
-                      }
-                      break;
-                    default:
-                      if(ChildFieldData && ChildFieldData[data.field_name] != null && ChildFieldData[data.field_name] != undefined && ChildFieldData[data.field_name] != ''){
-                        const value = ChildFieldData[data.field_name];
-                        this.templateForm.get(element.field_name).get(data.field_name).setValue(value)
-                        //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
-                      }
-                      break;
+                        break;
+                    }
                   }
-                }
-              });
+                });
+              }
               break;
             case "tree_view_selection":
               this.treeViewData[fieldName] = [];            
@@ -4767,64 +4810,68 @@ case 'populate_fields_for_report_for_new_order_flow':
               this.templateForm.controls[fieldName].setValue(treeDropdownValue)
               break;
             case "stepper":
-              element.list_of_fields.forEach(step => {
-                step.list_of_fields.forEach(data => {
-                  switch (data.type) {
-                    case "list_of_string":
-                    case "grid_selection":
-                    case 'grid_selection_vertical':
-                      if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){                                             
-                        this.custmizedFormValue[data.field_name] = formValue[data.field_name]                    
-                      }
-                      this.templateForm.get(step.field_name).get(data.field_name).setValue('')
-                      //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue('');
-                      break;
-                    case "typeahead":
-                      if(data.datatype == "list_of_object" || data.datatype == 'chips'){
-                        if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){                      
-                          this.custmizedFormValue[data.field_name] = formValue[data.field_name]
+              if(element.list_of_fields && element.list_of_fields.length > 0){
+                element.list_of_fields.forEach(step => {
+                  if(step.list_of_fields && step.list_of_fields.length > 0){
+                    step.list_of_fields.forEach(data => {
+                      switch (data.type) {
+                        case "list_of_string":
+                        case "grid_selection":
+                        case 'grid_selection_vertical':
+                          if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){                                             
+                            this.custmizedFormValue[data.field_name] = formValue[data.field_name]                    
+                          }
                           this.templateForm.get(step.field_name).get(data.field_name).setValue('')
                           //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue('');
-                        }
-                      }else{
-                        if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){
-                          const value = formValue[data.field_name];
-                          this.templateForm.get(step.field_name).get(data.field_name).setValue(value)
-                          //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(value);
-                        }
+                          break;
+                        case "typeahead":
+                          if(data.datatype == "list_of_object" || data.datatype == 'chips'){
+                            if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){                      
+                              this.custmizedFormValue[data.field_name] = formValue[data.field_name]
+                              this.templateForm.get(step.field_name).get(data.field_name).setValue('')
+                              //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue('');
+                            }
+                          }else{
+                            if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){
+                              const value = formValue[data.field_name];
+                              this.templateForm.get(step.field_name).get(data.field_name).setValue(value)
+                              //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(value);
+                            }
+                          }
+                          break;
+                        case "number":
+                            let gvalue;
+                            const value = formValue[data.field_name];
+                            if(value != null && value != ''){
+                              gvalue = value;
+                            }else{
+                              gvalue = 0;
+                            }
+                            this.templateForm.get(step.field_name).get(data.field_name).setValue(gvalue)
+                            //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(gvalue);
+                          break;
+                        case "list_of_checkbox":
+                          this.templateForm.get(step.field_name).get(data.field_name).patchValue([])
+                          //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue([]);
+                          break;
+                        default:
+                          if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){
+                            const value = formValue[data.field_name];
+                            this.templateForm.get(step.field_name).get(data.field_name).setValue(value)
+                            //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(value);
+                          }
+                          break;
                       }
-                      break;
-                    case "number":
-                        let gvalue;
-                        const value = formValue[data.field_name];
-                        if(value != null && value != ''){
-                          gvalue = value;
-                        }else{
-                          gvalue = 0;
-                        }
-                        this.templateForm.get(step.field_name).get(data.field_name).setValue(gvalue)
-                        //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(gvalue);
-                      break;
-                    case "list_of_checkbox":
-                      this.templateForm.get(step.field_name).get(data.field_name).patchValue([])
-                      //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue([]);
-                      break;
-                    default:
-                      if(formValue[data.field_name] != null && formValue[data.field_name] != undefined && formValue[data.field_name] != ''){
-                        const value = formValue[data.field_name];
-                        this.templateForm.get(step.field_name).get(data.field_name).setValue(value)
-                        //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue(value);
-                      }
-                      break;
+                      if(data.tree_view_object && data.tree_view_object.field_name != ""){
+                        let editeTreeModifyData = JSON.parse(JSON.stringify(data.tree_view_object));
+                        const treeObject = this.selectedRow[editeTreeModifyData.field_name];
+                        this.templateForm.get(step.field_name).get(editeTreeModifyData.field_name).setValue(treeObject)
+                        //(<FormGroup>this.templateForm.controls[step.field_name]).controls[editeTreeModifyData.field_name].patchValue(treeObject);
+                      } 
+                    });
                   }
-                  if(data.tree_view_object && data.tree_view_object.field_name != ""){
-                    let editeTreeModifyData = JSON.parse(JSON.stringify(data.tree_view_object));
-                    const treeObject = this.selectedRow[editeTreeModifyData.field_name];
-                    this.templateForm.get(step.field_name).get(editeTreeModifyData.field_name).setValue(treeObject)
-                    //(<FormGroup>this.templateForm.controls[step.field_name]).controls[editeTreeModifyData.field_name].patchValue(treeObject);
-                  } 
                 });
-              });
+              }
               break;            
             case "number":
               let value;
@@ -5080,55 +5127,58 @@ case 'populate_fields_for_report_for_new_order_flow':
       }else{
         buttonLabel = 'Add';
       }
-      if(field.list_of_fields && field.list_of_fields.length > 0){
-        let fieldList:any = JSON.parse(JSON.stringify(field.list_of_fields));
-        if(fieldList && fieldList.length > 0 && index == undefined){
-          let curField = JSON.parse(JSON.stringify(field));
-          curField['add_list_field'] = 'add';
-          fieldList.push(curField);
+      // if(field.list_of_fields && field.list_of_fields.length > 0){
+      //   let fieldList:any = JSON.parse(JSON.stringify(field.list_of_fields));
+      //   if(fieldList && fieldList.length > 0 && index == undefined){
+      //     let curField = JSON.parse(JSON.stringify(field));
+      //     curField['add_list_field'] = 'add';
+      //     fieldList.push(curField);
+      //   }
+      //   let form = {
+      //     "details": {
+      //         "class": "",
+      //         "collection_name":"",
+      //         "bulk_update":false
+      //         },
+      //     "tab_list_buttons": [
+      //         {
+      //             "label": buttonLabel,
+      //             "onclick": {
+      //                     "api": "add", 
+      //                     "action_name": "", 
+      //                     "close_form_on_succes": false
+      //                 },
+      //             "type": "button",
+      //             "field_name": "save",
+      //             "api_params": "",
+      //             "show_if":"",
+      //             "disable_if":""
+      //         },
+      //         {
+      //           "label": "Ok",
+      //           "onclick": {
+      //                   "api": "close", 
+      //                   "action_name": "", 
+      //                   "close_form_on_succes": false
+      //               },
+      //           "type": "button",
+      //           "field_name": "",
+      //           "api_params": "",
+      //           "show_if":"",
+      //           "disable_if":""
+      //       }
+      //     ],
+      //     "tableFields": fieldList,
+      //     "api_params": null,
+      //     "label": field.label
+      //     }
+      //   this.loadNextForm(form);
+      // }else{
+        if(field.form && field.form._id){
+          id = field.form._id;
         }
-        let form = {
-          "details": {
-              "class": "",
-              "collection_name":"",
-              "bulk_update":false
-              },
-          "tab_list_buttons": [
-              {
-                  "label": buttonLabel,
-                  "onclick": {
-                          "api": "add", 
-                          "action_name": "", 
-                          "close_form_on_succes": false
-                      },
-                  "type": "button",
-                  "field_name": "save",
-                  "api_params": "",
-                  "show_if":"",
-                  "disable_if":""
-              },
-              {
-                "label": "Ok",
-                "onclick": {
-                        "api": "close", 
-                        "action_name": "", 
-                        "close_form_on_succes": false
-                    },
-                "type": "button",
-                "field_name": "",
-                "api_params": "",
-                "show_if":"",
-                "disable_if":""
-            }
-          ],
-          "tableFields": fieldList,
-          "api_params": null,
-          "label": field.label
-          }
-        this.loadNextForm(form);
-      }else{
-
-      }
+        this.getNextFormById(id);
+      // }
     }else{
       if(field.add_new_form && field.add_new_form._id){
         id = field.add_new_form._id;
