@@ -18,7 +18,7 @@ export class StickyDirective implements AfterViewInit{
         const el = this.el.nativeElement as HTMLElement;
         const { x } = this.el.nativeElement.getBoundingClientRect();
         el.style.position = 'sticky';
-        el.style.zIndex = '3';
+        el.style.zIndex = '2';
         el.style.boxShadow='inset -1px 0px 0px #dee2e6';
         const leftValue = Math.floor(x) - Math.floor(this.table.x);      
         el.style.left = this.table ? leftValue+'px' : '0px';                         // <<<---using ()=> syntax

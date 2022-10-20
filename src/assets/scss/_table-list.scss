@@ -7,10 +7,10 @@
 .mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
 .table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    .grid-data {width:auto !important;max-width:140px;}
+    // .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
-    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:4;
+    thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:3;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {font-weight:500;position:relative;font-size:13px;}
@@ -25,11 +25,10 @@
         .grid-button {background:rgba(0,0,0,0.1);}
     }
 
-
     tbody {
         tr {
-            // &:nth-of-type(odd) td{background-color: #fff;}
-            // &:nth-of-type(even) td{background-color:#fafafa;}
+            &:nth-of-type(odd) td{background-color: #fff;}
+            &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
         .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
@@ -41,6 +40,13 @@
     .material-icons {font-size:inherit;}
     .form-control:focus {border-color:#80bdff;box-shadow:0 0 0 0.1rem rgb(0 123 255 / 25%);}
 }
+
+
+.activetxt {
+    td {background:var(--activebg) !important}
+}
+
+
 
 .datalist.table {
     tbody {

@@ -1,4 +1,4 @@
-<div mdbModal #gridViewModalSelection="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+<div mdbModal #gridViewModalSelection="mdbModal" class="modal fade top selectedparametermodule"  tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
     <div class="modal-content" >
@@ -36,7 +36,7 @@
                             <th *ngIf="grid_row_selection" class="text-center" sticky="true">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
-                            <th  *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'" [sticky]="fieldName.sticky"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span></div></th>
+                            <th  *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'" [sticky]="fieldName.sticky"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="getGridColumnWidth(fieldName)" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span></div></th>
                         </tr>
                     </thead>
                     <tbody>
