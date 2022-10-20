@@ -42,14 +42,12 @@ jobs:
      
 
   # Deploy Qualitek Labs
-    - name: Clean up existing deployment - Qualitek Labs
-      run: aws s3 rm s3://prodclientslims.e-labs.ai --recursive
+    - name: Clean up existing deployment
+      run: aws s3 rm s3://devclientslims.e-labs.ai --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://prodclientslims.e-labs.ai
+      run: aws s3 sync dist s3://devclientslims.e-labs.ai
       
-    - name: Clean up cache for Elabs Subdomains
-      run: aws cloudfront create-invalidation --distribution-id E2AT1IPS0R06SC --paths '/*'    
-
-    - name: Clean up cache for SraLabs
-      run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
+    - name: Clean up cache 
+      run: aws cloudfront create-invalidation --distribution-id E11OY9F5WT6SG3 --paths '/*'    
+ 
