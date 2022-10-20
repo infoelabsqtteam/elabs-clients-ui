@@ -32,3 +32,4 @@ export const serverHostList = [
   {"clientEndpoint": "lims-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai"},  
   {"clientEndpoint": "web.sralabs.com", "serverEndpoint": "https://prodsatiateserver.e-labs.ai"}
 ]
+
