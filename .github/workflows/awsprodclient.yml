@@ -22,34 +22,18 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.REGION }}
-        
-    - name: Set up Node
-      uses: actions/setup-node@v2
+    
+    - name: Extract all keywords from package.json
+      uses: sergeysova/jq-action@v2
+      id: keywords
       with:
-        node-version: '14'
-    
-    - name: Installing source NPM dependencies...
-      run: npm install
+        cmd: 'jq .keywords[] package.json -r'
+        multiline: true
       
-    - name: Installing Angular
-      run: npm install -g @angular/cli@11.0.5
-    
-    - name: Set Node Options
-      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
-    
-    - name: Building
-      run: ng build --configuration=develop
-     
-
-  # Deploy Qualitek Labs
-    - name: Clean up existing deployment - Qualitek Labs
-      run: aws s3 rm s3://prodclientslims.e-labs.ai --recursive
-
-    - name: Upload data
-      run: aws s3 sync dist s3://prodclientslims.e-labs.ai
-      
-    - name: Clean up cache for Elabs Subdomains
-      run: aws cloudfront create-invalidation --distribution-id E2AT1IPS0R06SC --paths '/*'    
-
-    - name: Clean up cache for SraLabs
-      run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
+    - name: Show keywords
+      run: |
+        distributions='aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json'
+        keywords="${{ steps.keywords.outputs.value }}"
+        for keyword in $keywords; do
+          echo "$keyword"
+        done
