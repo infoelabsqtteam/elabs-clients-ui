@@ -26,17 +26,17 @@ jobs:
     - name: Extract Distributions
       run: |
         distributions=$(aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json)
-        echo $distributions
-        echo  "distributions='$distributions'" >> $GITHUB_ENV
+        echo $distributions >> distributions.json
+        
 
     - name: List of the GitHub Actions environment variables on Ubuntu
-      run: env 
+      run: ls -lrt
       
     - name: Extract all disctibutions from env variable
       uses: sergeysova/jq-action@v2
       id: keywords
       with:
-        cmd: 'jq . $distributions -r'
+        cmd: 'jq . distributions.json -r'
         multiline: true
       
     - name: Show keywords
