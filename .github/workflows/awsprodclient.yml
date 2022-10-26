@@ -23,16 +23,41 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.REGION }}
     
+    
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Installing source NPM dependencies...
+      run: npm install
+      
+    - name: Installing Angular
+      run: npm install -g @angular/cli@11.0.5
+    
+    - name: Set Node Options
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
+    
+    - name: Building
+      run: ng build --configuration=develop
+     
+
+  # Deploy LIMS on Prod Environments Labs
+    - name: Clean up existing deployment - All Production Lims
+      run: aws s3 rm s3://prodclientslims.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://prodclientslims.e-labs.ai
+    
     - name: Extract Distributions
       run: |
         distributions=$(aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json)
         echo $distributions >> distributions.json
         
-
     - name: List of the GitHub Actions environment variables on Ubuntu
       run: ls -lrt
       
-    - name: Extract all disctibutions from env variable
+    - name: Extract all distibutions from distributions file
       uses: sergeysova/jq-action@v2
       id: keywords
       with:
