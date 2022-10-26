@@ -23,17 +23,24 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.REGION }}
     
-    - name: Extract all keywords from package.json
+    - name: Extract Distributions
+      run: |
+        distributions=$(aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json)
+        echo  "distributions=$(distributions)" >> $GITHUB_ENV
+
+    - name: List of the GitHub Actions environment variables on Ubuntu
+      run: env 
+      
+    - name: Extract all disctibutions from env variable
       uses: sergeysova/jq-action@v2
       id: keywords
       with:
-        cmd: 'jq .keywords[] package.json -r'
+        cmd: 'jq . $distributions -r'
         multiline: true
       
     - name: Show keywords
       run: |
-        distributions='aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json'
-        echo "$distributions"
+        echo "$keywords"
         keywords="${{ steps.keywords.outputs.value }}"
         for keyword in $keywords; do
           echo "$keyword"
