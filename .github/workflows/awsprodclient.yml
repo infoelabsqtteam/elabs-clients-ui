@@ -39,10 +39,10 @@ jobs:
         cmd: 'jq .[] distributions.json -r'
         multiline: true
       
-    - name: Show keywords
+    - name: Clear Cache all distributions
       run: |
-        echo "$keywords"
         keywords="${{ steps.keywords.outputs.value }}"
         for keyword in $keywords; do
-          echo "$keyword"
+           echo "clearing cache for $keyword"
+           aws cloudfront create-invalidation --distribution-id $keyword --paths '/*'
         done
