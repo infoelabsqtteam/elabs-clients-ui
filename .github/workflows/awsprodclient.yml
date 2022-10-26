@@ -33,6 +33,7 @@ jobs:
     - name: Show keywords
       run: |
         distributions='aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json'
+        echo "$distributions"
         keywords="${{ steps.keywords.outputs.value }}"
         for keyword in $keywords; do
           echo "$keyword"
