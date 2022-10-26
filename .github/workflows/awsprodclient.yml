@@ -27,7 +27,7 @@ jobs:
       run: |
         distributions=$(aws cloudfront list-distributions  --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='prodclientslims.e-labs.ai.s3.ap-south-1.amazonaws.com'].id" --output json)
         echo $distributions
-        echo  "distributions=$distributions" >> $GITHUB_ENV
+        echo  "distributions='$distributions'" >> $GITHUB_ENV
 
     - name: List of the GitHub Actions environment variables on Ubuntu
       run: env 
