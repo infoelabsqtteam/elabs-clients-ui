@@ -17,7 +17,7 @@ export const serverHostList = [
   {"clientEndpoint": "lims.itclabs.com", "serverEndpoint": "https://prodserveritclabs.e-labs.ai"},
   {"clientEndpoint": "qualiteklab.e-labs.ai", "serverEndpoint": "https://serverqualiteklab.e-labs.ai"},
   {"clientEndpoint": "uat-qualiteklab.e-labs.ai", "serverEndpoint": "https://uatserverqualiteklab.e-labs.ai"},
-  {"clientEndpoint": "lims.qualiteklab.com", "serverEndpoint": "https://serverqualiteklab.qualiteklab.com"},
+  {"clientEndpoint": "lims.qualiteklab.com", "serverEndpoint": "https://prodserverqualiteklab.e-labs.ai"},
   {"clientEndpoint": "dev-qualiteklab.e-labs.ai", "serverEndpoint": "https://devserverqualiteklab.e-labs.ai"},
   {"clientEndpoint": "sit-hitech.e-labs.ai", "serverEndpoint": "https://sithitechserver.e-labs.ai"},
   {"clientEndpoint": "lims-hitech.e-labs.ai", "serverEndpoint": "https://prodhitechserver.e-labs.ai"},
