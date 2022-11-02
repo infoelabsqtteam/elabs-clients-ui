@@ -2662,15 +2662,13 @@ case 'populate_fields_for_report_for_new_order_flow':
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template)));      
+        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))); 
+        // staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
         // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-        //   let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-        //   if(field && field.formValueAsObjectForQtmp){            
-        //     let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
-        //     staticModal[0]["data"]=formValue;
+        //   if(field && field.formValueAsObjectForQtmp){
+        //     staticModal[0]["data"]=this.getFormValue(false);
         //   }else{
-        //     let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
-        //     staticModal[0]["data"]=formValue;
+        //     staticModal[0]["data"]=this.getFormValue(true);
         //   }
         // }
         // this.store.dispatch(
@@ -2693,7 +2691,6 @@ case 'populate_fields_for_report_for_new_order_flow':
     }
     return payload;
   }
-
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
@@ -2705,6 +2702,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     const fieldsLangth = this.tableFields.length;
     return this.commonFunctionService.getDivClass(field,fieldsLangth);
   }
+  
   getButtonDivClass(field){
     return this.commonFunctionService.getButtonDivClass(field);
   }
@@ -4682,6 +4680,7 @@ case 'populate_fields_for_report_for_new_order_flow':
       this.apiService.getStatiData(payloads);
     }
   }  
+  
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !isArray(formValue)){
@@ -4695,7 +4694,9 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "list_of_string":
             case "drag_drop":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
+                if(isArray(formValue[element.field_name])){
+                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
+                }
                 this.templateForm.controls[element.field_name].setValue('')
               }
               break;
@@ -4721,7 +4722,10 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case 'grid_selection_vertical':
                       case "drag_drop":                    
                         if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
-                          this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                          if(isArray(formValue[element.field_name][data.field_name])){
+                            if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
+                            this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                          }
                           this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                         }
@@ -4729,7 +4733,10 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case "typeahead":
                         if(data.datatype == "list_of_object" || element.datatype == 'chips'){
                           if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
-                            this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                            if(isArray(formValue[element.field_name][data.field_name])){
+                              if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
+                              this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                            }
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                           }

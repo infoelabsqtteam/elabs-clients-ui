@@ -1,0 +1,55 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Angular CI with Node - awsprodclient
+
+on:
+  push:
+    branches: [ awsprodclient ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    ########################### Elabs Aws - ###########################
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.REGION }}
+        
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Installing source NPM dependencies...
+      run: npm install
+      
+    - name: Installing Angular
+      run: npm install -g @angular/cli@11.0.5
+    
+    - name: Set Node Options
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
+    
+    - name: Building
+      run: ng build --configuration=develop
+     
+
+  # Deploy Qualitek Labs
+    - name: Clean up existing deployment - Qualitek Labs
+      run: aws s3 rm s3://prodclientslims.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://prodclientslims.e-labs.ai
+      
+    - name: Clean up cache for Elabs Subdomains
+      run: aws cloudfront create-invalidation --distribution-id E2AT1IPS0R06SC --paths '/*'    
+
+    - name: Clean up cache for SraLabs
+      run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
