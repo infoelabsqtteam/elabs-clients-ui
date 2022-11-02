@@ -1,10 +1,7 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Docker Build - Release 
+name: Docker Build - DEVELOP
 on:
   push:
-    branches: [ 'release/v**' ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -37,7 +34,7 @@ jobs:
       run: echo "VERSION=$(date +%Y%m%d)" >> $GITHUB_ENV
       
     - name: Get Availability
-      run: echo "Availability=UI-GA" >> $GITHUB_ENV
+      run: echo "Availability=UI-RELEASE" >> $GITHUB_ENV
       
     - name: Build, tag, and push image to Amazon ECR
       env:
