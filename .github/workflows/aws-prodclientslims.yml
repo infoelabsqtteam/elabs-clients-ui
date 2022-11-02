@@ -53,3 +53,15 @@ jobs:
 
     - name: Clean up cache for SraLabs
       run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
+        
+    - name: Clean up cache for Lims ITC
+      run: aws cloudfront create-invalidation --distribution-id E1HN9LNO9SWJVM --paths '/*'    
+    
+    - name: Clean up cache for Qualitek LIMS
+      run: aws cloudfront create-invalidation --distribution-id E22VTDSRJMGYYT --paths '/*'    
+        
+    - name: Clean up cache for BBSR Qualitek LIMS
+      run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
+      
+    - name: Clean up cache for Document Library
+      run: aws cloudfront create-invalidation --distribution-id E204E1025HF47L --paths '/*'
