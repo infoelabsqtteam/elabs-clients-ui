@@ -397,7 +397,7 @@ export class CommonFunctionService {
     }
   }
 
-  checkIfCondition(data, formValue) {
+  checkIfCondition(data, formValue,datatype?) {
     let condition = []
     condition = data.split('#')
     if (condition.length >= 2) {
@@ -414,6 +414,16 @@ export class CommonFunctionService {
         setValue = "";
       } else {
         setValue = setValue + "";
+      }
+      if(datatype){
+        switch (datatype) {
+          case "date":
+            setValue = this.dateFormat(setValue);
+            condition[2] = this.dateFormat(condition[2]);
+            break;        
+          default:
+            break;
+        }
       }
       switch (condition[1]) {
         case 'eq':
