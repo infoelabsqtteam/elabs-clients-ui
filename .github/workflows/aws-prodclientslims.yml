@@ -19,9 +19,9 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.REGION }}
+        aws-access-key-id: ${{ secrets.ELABS_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ELABS_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.ELABS_REGION }}
         
     - name: Set up Node
       uses: actions/setup-node@v2
@@ -42,14 +42,23 @@ jobs:
      
 
   # Deploy Qualitek Labs
-    - name: Clean up existing deployment - Qualitek Labs
+    - name: Clean up existing deployment - For Production Only UI Client
       run: aws s3 rm s3://prodclientslims.e-labs.ai --recursive
 
     - name: Upload data
       run: aws s3 sync dist s3://prodclientslims.e-labs.ai
       
-    - name: Clean up cache for Elabs Subdomains
-      run: aws cloudfront create-invalidation --distribution-id E2AT1IPS0R06SC --paths '/*'    
-
     - name: Clean up cache for SraLabs
       run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
+        
+    - name: Clean up cache for Lims ITC
+      run: aws cloudfront create-invalidation --distribution-id E1HN9LNO9SWJVM --paths '/*'    
+    
+    - name: Clean up cache for Qualitek LIMS
+      run: aws cloudfront create-invalidation --distribution-id E22VTDSRJMGYYT --paths '/*'    
+        
+    - name: Clean up cache for BBSR Qualitek LIMS
+      run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
+      
+    - name: Clean up cache for Document Library
+      run: aws cloudfront create-invalidation --distribution-id E204E1025HF47L --paths '/*'
