@@ -1249,8 +1249,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.apiService.ResetStaticData(fieldName);
     }
     this.staticData = staticData; 
-    Object.keys(this.staticData).forEach(key => {        
-      this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+    Object.keys(this.staticData).forEach(key => {
+      if(this.staticData[key]) {      
+        this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+      }
     })
     this.tableFields.forEach(element => {
       switch (element.type) {              
@@ -1734,7 +1736,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     return gridColumns;
   }
 
-  checkDataAlreadyAddedInListOrNot(field,incomingData,alreadyDataAddedlist){
+  checkDataAlreadyAddedInListOrNot(field,incomingData,alreadyDataAddedlist,i?){
     if(field && field.type == "date"){
       incomingData = ""+incomingData;
     }
@@ -1771,39 +1773,43 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       else if(typeof incomingData == 'string'){
         for (let index = 0; index < alreadyDataAddedlist.length; index++) {
           const element = alreadyDataAddedlist[index];
-          if(typeof element == 'string'){
-            if(element == incomingData){
-              alreadyExist =  true;
-            }
-          }else{
-            if(primaryCriteriaList && primaryCriteriaList.length > 0){
-              for (let index = 0; index < primaryCriteriaList.length; index++) {
-                const cri = primaryCriteriaList[index];
-                alreadyExist = this.commonFunctionService.checkIfCondition(cri,element,field.type);
-                if(alreadyExist){
-                  const crList = cri.split("#");
-                  switch (crList[1]) {
-                    case "lte":
-                      checkStatus.msg = "Entered value for "+field.label+" is gretter then to "+crList[0]+". !!!";
-                      break;
-                    case "gte":
-                      checkStatus.msg = "Entered value for "+field.label+" is less then to "+crList[0]+". !!!";
-                      break;                  
-                    default:
-                      checkStatus.msg = "Entered value for "+field.label+" is already added. !!!";
-                      break;
-                  }
-                  break;
-                }                
+          if(i != undefined && i != index){
+            if(typeof element == 'string'){
+              if(element == incomingData){
+                alreadyExist =  true;
               }
+            }else{
+              if(primaryCriteriaList && primaryCriteriaList.length > 0){
+                for (let index = 0; index < primaryCriteriaList.length; index++) {
+                  const cri = primaryCriteriaList[index];
+                  alreadyExist = this.commonFunctionService.checkIfCondition(cri,element,field.type);
+                  if(alreadyExist){
+                    const crList = cri.split("#");
+                    switch (crList[1]) {
+                      case "lte":
+                        checkStatus.msg = "Entered value for "+field.label+" is gretter then to "+crList[0]+". !!!";
+                        break;
+                      case "gte":
+                        checkStatus.msg = "Entered value for "+field.label+" is less then to "+crList[0]+". !!!";
+                        break;                  
+                      default:
+                        checkStatus.msg = "Entered value for "+field.label+" is already added. !!!";
+                        break;
+                    }
+                    break;
+                  }                
+                }
+              }
+              // if(element[primary_key] == incomingData){
+              //   alreadyExist =  "true";
+              // }
             }
-            // if(element[primary_key] == incomingData){
-            //   alreadyExist =  "true";
-            // }
-          }
-          if(alreadyExist){
+            if(alreadyExist){
+              break;
+            } 
+          }else{
             break;
-          }        
+          }       
         };
       }else{
         alreadyExist =  false;
@@ -2124,7 +2130,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(this.custmizedFormValue[field.field_name]){
           list = this.custmizedFormValue[field.field_name];
         }
-        let checkDublicate = this.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,field);
+        let checkDublicate = this.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,this.listOfFieldsUpdateIndex,field);
         if (!checkDublicate.status) {
           if(this.listOfFieldsUpdateIndex != -1){
             //if(this.updateMode){
@@ -2636,7 +2642,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             let object = {}
             let fieldName = field.field_name;
             if(this.multipleFormCollection.length > 0){
-              object = this.commonFunctionService.getFormDataInMultiformCollection(this.multipleFormCollection,tamplateFormValue)
+              let multipleCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+              object = this.commonFunctionService.getFormDataInMultiformCollection(multipleCollection,tamplateFormValue)
             }else{
               object = tamplateFormValue;
             }
@@ -5151,7 +5158,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     targetFieldName['custom'] = [];
 
     let updateMode =  this.updateMode;
-    let formData = this.getFormValue(true);
+    let formData = JSON.parse(JSON.stringify(this.getFormValue(true)));
     if(field && field.form_field_name){
       const nextFormReference = {
         '_id':this.nextFormData._id,
@@ -5221,18 +5228,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       "current_field":field,
       "next_form_data":targetFieldName,
       "updateMode" : updateMode,
-      "form_value" : this.getFormValue(false)
+      "form_value" : JSON.parse(JSON.stringify(this.getFormValue(false)))
     }
     if(field){
-      switch (field.type) {
-        case "list_of_fields":
-        case "grid_selection":
-          form['index'] = index;
-          break;      
-        default:
-          break;
-      }
       
+        const type = field.type;
+        switch (type) {
+          case "list_of_fields":
+          case "grid_selection":
+            form['index'] = index;
+            break;      
+          default:
+            break;
+        }
+           
     }
     this.multipleFormCollection.push(form);
     let id = '';
@@ -5413,8 +5422,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;      
         default:
           break;
-      }     
-      
+      }       
     }    
     if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['updataModeInPopupType']){
       this.editedRowData(fData);
@@ -5469,9 +5477,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'list_of_fields':
         case 'grid_selection':
           let fieldData = previousformData[fieldName];
-          let checkDublicate = this.checkDublicateOnForm(this.tableFields,currentFormValue,fieldData);
-          if(!checkDublicate.status){
-            let index = previousFormCollection['index'];
+          let index = previousFormCollection['index'];
+          let checkDublicate = this.checkDublicateOnForm(this.tableFields,currentFormValue,fieldData,index);
+          if(!checkDublicate.status){            
             if(isArray(fieldData)){
               if(index != undefined && index >= 0){
                 fieldData[index] = currentFormValue;
@@ -5523,7 +5531,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.close();
     } 
   }
-  checkDublicateOnForm(fields,value,list,parent?){
+  checkDublicateOnForm(fields,value,list,i,parent?){
     let checkDublic = {
       status : false,
       msg : ""
@@ -5642,9 +5650,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             msg : ""
           };
           if(list && list.length > 0){
-            alreadyAdded = this.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list);
+            alreadyAdded = this.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list,i);
           }
-          if(alreadyAdded && alreadyAdded['status']){
+          if(alreadyAdded && alreadyAdded.status){
             checkDublic.status = true;
             if(alreadyAdded.msg && alreadyAdded.msg != ""){
               checkDublic.msg = alreadyAdded.msg;
