@@ -1760,11 +1760,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if(alreadyDataAddedlist == undefined){
         alreadyDataAddedlist = [];
       }
-      let alreadyExist = "false";
+      let alreadyExist = false;
       if(typeof incomingData == 'object'){
         alreadyDataAddedlist.forEach(element => {
           if(element._id == incomingData._id){
-            alreadyExist =  "true";
+            alreadyExist =  true;
           }
         });
       }
@@ -1773,7 +1773,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const element = alreadyDataAddedlist[index];
           if(typeof element == 'string'){
             if(element == incomingData){
-              alreadyExist =  "true";
+              alreadyExist =  true;
             }
           }else{
             if(primaryCriteriaList && primaryCriteriaList.length > 0){
@@ -1806,7 +1806,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }        
         };
       }else{
-        alreadyExist =  "false";
+        alreadyExist =  false;
       }
       if(alreadyExist){
         checkStatus.status = true;
