@@ -3654,6 +3654,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "list_of_string":
       case "list_of_checkbox":
       case "grid_selection":
+      case "list_of_fields":
         if(item["gridColumns"] && item["gridColumns"].length > 0){
           value['gridColumns']=item.gridColumns;
         }
