@@ -764,21 +764,23 @@ export class CommonFunctionService {
           case "group_of_fields":
             if (element.list_of_fields && element.list_of_fields.length > 0) {
               element.list_of_fields.forEach((data) => {
-                let call_back_field =  '';
-                let criteria = [];
-                if (data.api_params && data.api_params != '' && data.type != "typeahead") {
+                if(data && data != null){
+                  let call_back_field =  '';
+                  let criteria = [];
+                  if (data.api_params && data.api_params != '' && data.type != "typeahead") {
 
-                  if(data.call_back_field && data.call_back_field != ''){
-                    call_back_field =  data.call_back_field;
+                    if(data.call_back_field && data.call_back_field != ''){
+                      call_back_field =  data.call_back_field;
+                    }
+                    if(data.api_params_criteria && data.api_params_criteria != ''){
+                      criteria =  data.api_params_criteria;
+                    }
+                    const staticModalListOfFields = this.getPaylodWithCriteria(data.api_params,call_back_field,criteria,object?object:{},element.data_template);
+                    if(data.api_params.indexOf("html_view") >= 0){
+                      staticModalListOfFields["data"]=object;
+                    }
+                    staticModalGroup.push(staticModalListOfFields);
                   }
-                  if(data.api_params_criteria && data.api_params_criteria != ''){
-                    criteria =  data.api_params_criteria;
-                  }
-                  const staticModalListOfFields = this.getPaylodWithCriteria(data.api_params,call_back_field,criteria,object?object:{},element.data_template);
-                  if(data.api_params.indexOf("html_view") >= 0){
-                    staticModalListOfFields["data"]=object;
-                  }
-                  staticModalGroup.push(staticModalListOfFields);
                 }
               });
             }
