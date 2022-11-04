@@ -3341,8 +3341,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   editedRowData(object) {
     this.selectedRow = JSON.parse(JSON.stringify(object)); 
     this.updateMode = true;
-    this.updateDataOnFormField(this.selectedRow);
-    this.getStaticDataWithDependentData();    
+    this.getStaticDataWithDependentData();
+    this.updateDataOnFormField(this.selectedRow);        
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
       this.setCheckboxFileListValue();
       // this.checkBoxFieldListValue.forEach(element => {
@@ -5413,16 +5413,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;      
         default:
           break;
-      }
+      }     
       
-      
-    }
-    if(this.editedRowIndex >= 0){
-      this.getStaticDataWithDependentData();
-    }
+    }    
     if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['updataModeInPopupType']){
       this.editedRowData(fData);
     }else{
+      if(this.editedRowIndex >= 0){
+        this.getStaticDataWithDependentData();
+      }
       this.updateDataOnFormField(fData);    
     }
     let nextFormFocusedFieldname = '';
