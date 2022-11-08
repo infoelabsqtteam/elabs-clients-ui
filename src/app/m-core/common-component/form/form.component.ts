@@ -2638,7 +2638,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;   
         case 'checkSampleQuantity':          
           if(field && field.onchange_function_param_criteria && field.onchange_function_param_criteria != ''){
-            let check = false;
+            let check = true;
             let object = {}
             let fieldName = field.field_name;
             if(this.multipleFormCollection.length > 0){
@@ -2648,30 +2648,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               object = tamplateFormValue;
             }
             let value = this.commonFunctionService.getObjectValue(fieldName,object);
-            if(field.onchange_function_param_criteria.length > 0){
-              for (let index = 0; index < field.onchange_function_param_criteria.length; index++) {
-                const cr = field.onchange_function_param_criteria[index];
-                let crList = cr.split("#");            
-                let listValue = this.commonFunctionService.getObjectValue(crList[2],object);            
-                if(listValue && listValue != null && isArray(listValue) && listValue.length > 0){
-                  listValue.forEach(listData => {
-                    const val = +this.commonFunctionService.getObjectValue(fieldName,listData);
-                    value = value + val;
-                  });
-                }
-                let criteria = crList[0]+"#"+crList[1]+"#"+value;
-                check = this.commonFunctionService.checkIfCondition(criteria,object);
-                if(!check){
-                  break;
-                } 
-              }              
-            }         
-            let fieldControl = this.templateForm.controls[fieldName];
-            if(!check){              
-              fieldControl.setErrors({ notValid : true });
-              this.notificationService.notify("bg-danger","Error! Please update the sample Qty as all samples has consumed.");
-            }else{
-              fieldControl.setErrors(null);
+            if(value && value != null && value != ""){
+              if(field.onchange_function_param_criteria.length > 0){
+                for (let index = 0; index < field.onchange_function_param_criteria.length; index++) {
+                  const cr = field.onchange_function_param_criteria[index];
+                  let crList = cr.split("#");            
+                  let listValue = this.commonFunctionService.getObjectValue(crList[2],object);            
+                  if(listValue && listValue != null && isArray(listValue) && listValue.length > 0){
+                    listValue.forEach(listData => {
+                      const val = +this.commonFunctionService.getObjectValue(fieldName,listData);
+                      value = value + val;
+                    });
+                  }
+                  let criteria = crList[0]+"#"+crList[1]+"#"+value;
+                  check = this.commonFunctionService.checkIfCondition(criteria,object);
+                  if(!check){
+                    break;
+                  } 
+                }              
+              }         
+              let fieldControl = this.templateForm.controls[fieldName];
+              if(!check){              
+                fieldControl.setErrors({ notValid : true });
+                this.notificationService.notify("bg-danger","Error! Please update the sample Qty as all samples has consumed.");
+              }else{
+                fieldControl.setErrors(null);
+              }
             }
           }          
           break;       
@@ -4922,7 +4924,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
                 this.treeViewData[fieldName] = [];            
                 let treeDropdownValue = object == null ? null : object;
-                this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
+                if(treeDropdownValue != ""){
+                  this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
+                }
                 this.templateForm.controls[fieldName].setValue(treeDropdownValue)
               }
               break;
