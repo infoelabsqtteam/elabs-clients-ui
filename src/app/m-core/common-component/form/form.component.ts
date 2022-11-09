@@ -2606,14 +2606,15 @@ case 'populate_fields_for_report_for_new_order_flow':
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
-        if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-          if(field && field.formValueAsObjectForQtmp){
-            staticModal[0]["data"]=this.getFormValue(false);
-          }else{
-            staticModal[0]["data"]=this.getFormValue(true);
-          }
-        }
+        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))); 
+        // staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
+        // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
+        //   if(field && field.formValueAsObjectForQtmp){
+        //     staticModal[0]["data"]=this.getFormValue(false);
+        //   }else{
+        //     staticModal[0]["data"]=this.getFormValue(true);
+        //   }
+        // }
         // this.store.dispatch(
         //   new CusTemGenAction.GetStaticData(staticModal)
         // )
@@ -2622,6 +2623,19 @@ case 'populate_fields_for_report_for_new_order_flow':
    }
   }
 
+  checkQtmpApi(params,field,payload){
+    if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
+      let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+      if(field && field.formValueAsObjectForQtmp){            
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
+        payload["data"]=formValue;
+      }else{
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
+        payload["data"]=formValue;
+      }
+    }
+    return payload;
+  }
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
@@ -2633,6 +2647,7 @@ case 'populate_fields_for_report_for_new_order_flow':
     const fieldsLangth = this.tableFields.length;
     return this.commonFunctionService.getDivClass(field,fieldsLangth);
   }
+  
   getButtonDivClass(field){
     return this.commonFunctionService.getButtonDivClass(field);
   }
@@ -4054,6 +4069,15 @@ case 'populate_fields_for_report_for_new_order_flow':
   custmizedFormValueData(parent,chield): Array<any>{
     return this.commonFunctionService.getVariableStorageValue(this.custmizedFormValue,parent,chield);
   }   
+  getListOfFieldsGridColumn(field): Array<any>{
+    let columns = [];
+    if(field && field.list_of_fields && field.list_of_fields.length > 0){
+      columns = JSON.parse(JSON.stringify(field.list_of_fields));
+    }else if(field && field.gridColumns && field.gridColumns.length > 0){
+      columns = JSON.parse(JSON.stringify(field.gridColumns));
+    }
+    return columns;
+  }
   modifyUploadFiles(files){
     const fileList = [];
     if(files && files.length > 0){
@@ -4590,6 +4614,17 @@ case 'populate_fields_for_report_for_new_order_flow':
       }
     }
   };
+  onClickLoadData(parent,field){
+    if(field && field.onClickApiParams && field.onClickApiParams != ''){        
+      let api_params = field.onClickApiParams;
+      let callBackfield = field.onClickCallBackField;
+      let criteria = field.onClickApiParamsCriteria
+      const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
+      let payloads = [];
+      payloads.push(this.checkQtmpApi(api_params,field,payload));
+      this.apiService.getStatiData(payloads);
+    }
+  }  
   
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
@@ -4604,7 +4639,9 @@ case 'populate_fields_for_report_for_new_order_flow':
             case "list_of_string":
             case "drag_drop":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
+                if(isArray(formValue[element.field_name])){
+                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
+                }
                 this.templateForm.controls[element.field_name].setValue('')
               }
               break;
@@ -4630,7 +4667,10 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case 'grid_selection_vertical':
                       case "drag_drop":                    
                         if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
-                          this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                          if(isArray(formValue[element.field_name][data.field_name])){
+                            if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
+                            this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                          }
                           this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                           //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                         }
@@ -4638,7 +4678,10 @@ case 'populate_fields_for_report_for_new_order_flow':
                       case "typeahead":
                         if(data.datatype == "list_of_object" || element.datatype == 'chips'){
                           if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
-                            this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                            if(isArray(formValue[element.field_name][data.field_name])){
+                              if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
+                              this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
+                            }
                             this.templateForm.get(element.field_name).get(data.field_name).setValue('')
                             //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
                           }

@@ -1,5 +1,5 @@
 export const serverHostList = [
-  {"clientEndpoint": "localhost", "serverEndpoint": "https://sitmultaniserver.e-labs.ai"},
+  {"clientEndpoint": "localhost", "serverEndpoint": "http://localhost:8104"},
   {"clientEndpoint": "sit.e-labs.ai", "serverEndpoint": "https://sitserverelabs.e-labs.ai"},
   {"clientEndpoint": "dev.e-labs.ai", "serverEndpoint": "https://devserverelabs.e-labs.ai"}, 
   {"clientEndpoint": "uat.e-labs.ai", "serverEndpoint": "https://uatserverelabs.e-labs.ai"},  
@@ -15,16 +15,16 @@ export const serverHostList = [
   {"clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai"},
   {"clientEndpoint": "dev-itclabs.e-labs.ai", "serverEndpoint": "https://devserveritclabs.e-labs.ai"},
   {"clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai"},
-  {"clientEndpoint": "lims.itclabs.com", "serverEndpoint": "https://serveritclabs.itclabs.com"},
+  {"clientEndpoint": "lims.itclabs.com", "serverEndpoint": "https://prodserveritclabs.e-labs.ai"},
   {"clientEndpoint": "qualiteklab.e-labs.ai", "serverEndpoint": "https://serverqualiteklab.e-labs.ai"},
   {"clientEndpoint": "uat-qualiteklab.e-labs.ai", "serverEndpoint": "https://uatserverqualiteklab.e-labs.ai"},
-  {"clientEndpoint": "lims.qualiteklab.com", "serverEndpoint": "https://serverqualiteklab.qualiteklab.com"},
+  {"clientEndpoint": "lims.qualiteklab.com", "serverEndpoint": "https://prodserverqualiteklab.e-labs.ai"},
   {"clientEndpoint": "dev-qualiteklab.e-labs.ai", "serverEndpoint": "https://devserverqualiteklab.e-labs.ai"},
   {"clientEndpoint": "sit-hitech.e-labs.ai", "serverEndpoint": "https://sithitechserver.e-labs.ai"},
   {"clientEndpoint": "lims-hitech.e-labs.ai", "serverEndpoint": "https://prodhitechserver.e-labs.ai"},
   {"clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai"},
   {"clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai"},
-  {"clientEndpoint": "bbsr-lims.qualiteklab.com", "serverEndpoint": "https://serverbbsrqualiteklab.qualiteklab.com"},
+  {"clientEndpoint": "bbsr-lims.qualiteklab.com", "serverEndpoint": "https://prodserverbbsrqualiteklab.e-labs.ai"},
   {"clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai"},
   {"clientEndpoint": "app.multani.com", "serverEndpoint": "http://server.multani.com:30051"},
   {"clientEndpoint": "food.multani.com", "serverEndpoint": "http://server.multani.com:30051"},
@@ -33,3 +33,4 @@ export const serverHostList = [
   {"clientEndpoint": "lims-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai"},  
   {"clientEndpoint": "web.sralabs.com", "serverEndpoint": "https://prodsatiateserver.e-labs.ai"}
 ]
+

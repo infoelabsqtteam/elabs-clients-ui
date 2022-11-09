@@ -17,6 +17,8 @@ input.mat-input-element {font-size:$size13;}
 
 .modal.fade.in .modal-dialog {transform: inherit!important;}
 
+.cdk-overlay-container {z-index:9999 !important;}
+
 // Module Popup
 // .cdk-global-overlay-wrapper{z-index:$zindex1000!important}
 // .modal.fade{background:rgba($black,0.5)}
