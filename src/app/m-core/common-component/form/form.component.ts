@@ -620,7 +620,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.listOfFieldUpdateMode=false; 
     this.listOfFieldsUpdateIndex = -1; 
     this.checkFormFieldAutfocus = true;
-    this.filePreviewFields = [];
+    this.filePreviewFields = [];    
+    this.nextFormUpdateMode = false;
+    this.updateAddNew = false;
   }
 
 
@@ -1122,7 +1124,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         });
             
       }
-      if(this.tableFields.length > 0){
+      if(this.tableFields.length > 0 && this.editedRowIndex == -1){
         let object =this.getFormValue(true);
         let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
         if(staticModalG && staticModalG.length > 0){
@@ -1157,7 +1159,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(false)))
           
         }
-        if(staticModal.length > 0 && this.editedRowIndex == -1){
+        if(staticModal.length > 0){
           //console.log("staticModalGroup "+ Date.now());
           // this.store.dispatch(
           //   new CusTemGenAction.GetStaticData(staticModal)
@@ -1773,7 +1775,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       else if(typeof incomingData == 'string'){
         for (let index = 0; index < alreadyDataAddedlist.length; index++) {
           const element = alreadyDataAddedlist[index];
-          if(i != undefined && i != index){
+          if(i == undefined || i == -1){
             if(typeof element == 'string'){
               if(element == incomingData){
                 alreadyExist =  true;
@@ -2638,7 +2640,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;   
         case 'checkSampleQuantity':          
           if(field && field.onchange_function_param_criteria && field.onchange_function_param_criteria != ''){
-            let check = false;
+            let check = true;
             let object = {}
             let fieldName = field.field_name;
             if(this.multipleFormCollection.length > 0){
@@ -2648,30 +2650,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               object = tamplateFormValue;
             }
             let value = this.commonFunctionService.getObjectValue(fieldName,object);
-            if(field.onchange_function_param_criteria.length > 0){
-              for (let index = 0; index < field.onchange_function_param_criteria.length; index++) {
-                const cr = field.onchange_function_param_criteria[index];
-                let crList = cr.split("#");            
-                let listValue = this.commonFunctionService.getObjectValue(crList[2],object);            
-                if(listValue && listValue != null && isArray(listValue) && listValue.length > 0){
-                  listValue.forEach(listData => {
-                    const val = +this.commonFunctionService.getObjectValue(fieldName,listData);
-                    value = value + val;
-                  });
-                }
-                let criteria = crList[0]+"#"+crList[1]+"#"+value;
-                check = this.commonFunctionService.checkIfCondition(criteria,object);
-                if(!check){
-                  break;
-                } 
-              }              
-            }         
-            let fieldControl = this.templateForm.controls[fieldName];
-            if(!check){              
-              fieldControl.setErrors({ notValid : true });
-              this.notificationService.notify("bg-danger","Error! Please update the sample Qty as all samples has consumed.");
-            }else{
-              fieldControl.setErrors(null);
+            if(value && value != null && value != ""){
+              if(field.onchange_function_param_criteria.length > 0){
+                for (let index = 0; index < field.onchange_function_param_criteria.length; index++) {
+                  const cr = field.onchange_function_param_criteria[index];
+                  let crList = cr.split("#");            
+                  let listValue = this.commonFunctionService.getObjectValue(crList[2],object);            
+                  if(listValue && listValue != null && isArray(listValue) && listValue.length > 0){
+                    listValue.forEach(listData => {
+                      const val = +this.commonFunctionService.getObjectValue(fieldName,listData);
+                      value = value + val;
+                    });
+                  }
+                  let criteria = crList[0]+"#"+crList[1]+"#"+value;
+                  check = this.commonFunctionService.checkIfCondition(criteria,object);
+                  if(!check){
+                    break;
+                  } 
+                }              
+              }         
+              let fieldControl = this.templateForm.controls[fieldName];
+              if(!check){              
+                fieldControl.setErrors({ notValid : true });
+                this.notificationService.notify("bg-danger","Error! Please update the sample Qty as all samples has consumed.");
+              }else{
+                fieldControl.setErrors(null);
+              }
             }
           }          
           break;       
@@ -4922,7 +4926,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
                 this.treeViewData[fieldName] = [];            
                 let treeDropdownValue = object == null ? null : object;
-                this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
+                if(treeDropdownValue != ""){
+                  this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
+                }
                 this.templateForm.controls[fieldName].setValue(treeDropdownValue)
               }
               break;
@@ -5152,7 +5158,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.apiService.getStatiData(payload);
   }
   
-  storeFormDetails(parent_field:any,field:any,index?){
+  storeFormDetails(parent_field:any,field:any,index?:number){
     let targetFieldName ={}
     targetFieldName['form'] = {}
     targetFieldName['custom'] = [];
@@ -5228,15 +5234,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       "current_field":field,
       "next_form_data":targetFieldName,
       "updateMode" : updateMode,
-      "form_value" : JSON.parse(JSON.stringify(this.getFormValue(false)))
+      "form_value" : JSON.parse(JSON.stringify(this.getFormValue(false))),
+      "index": -1
     }
-    if(field){
-      
+    if(field){      
         const type = field.type;
         switch (type) {
           case "list_of_fields":
           case "grid_selection":
-            form['index'] = index;
+            if(index != undefined){
+              form['index'] = index;
+            }
             break;      
           default:
             break;
@@ -5334,8 +5342,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   loadPreviousForm(){
-    const lastIndex = this.multipleFormCollection.length - 1;
+    let multiFormLength = this.multipleFormCollection.length;
+    const lastIndex = multiFormLength - 1;
     const formCollecition = this.multipleFormCollection[lastIndex];
+    let previousFormData = {};
+    if(multiFormLength > 1){
+      previousFormData = this.multipleFormCollection[multiFormLength - 2];
+    }
     this.form = formCollecition['form'];
     this.resetFlagsForNewForm();
     const data = formCollecition['data'];
@@ -5362,6 +5375,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(formCollecition && formCollecition['next_form_data'] && formCollecition['next_form_data']['form']){
       nextFormData = formCollecition['next_form_data']['form']; 
     }
+    if(previousFormData && previousFormData['index'] != undefined && previousFormData['index'] >= 0){
+      this.nextFormUpdateMode = true;
+    } 
     let previousFormFocusFieldValue = '';
     if(this.coreFunctionService.isNotBlank(this.previousFormFocusField.add_new_target_field)){
       previousFormFocusFieldValue = nextFormData[this.previousFormFocusField.add_new_target_field];
@@ -5411,7 +5427,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.nextFormUpdateMode = true;
     } 
     
-    if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && nextFormData['index'] == undefined){
+    if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && (nextFormData['index'] == undefined || nextFormData['index'] == -1)){
       switch (nextFormData['current_field']['type']) {
         case 'list_of_fields':
         case 'grid_selection':
@@ -5498,7 +5514,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
               previousformData[fieldName] = this.custmizedFormValue[fieldName];
               this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
-              this.nextFormUpdateMode = false;
               this.close();
             }else{
               this.donotResetField();
