@@ -3354,8 +3354,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   editedRowData(object) {
     this.selectedRow = JSON.parse(JSON.stringify(object)); 
     this.updateMode = true;
-    this.getStaticDataWithDependentData();
-    this.updateDataOnFormField(this.selectedRow);        
+    this.updateDataOnFormField(this.selectedRow);
+    this.getStaticDataWithDependentData();      
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
       this.setCheckboxFileListValue();
       // this.checkBoxFieldListValue.forEach(element => {
