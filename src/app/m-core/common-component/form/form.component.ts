@@ -5570,6 +5570,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         if(custmizedKey && custmizedKey != '' && this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][element.field_name]){
           custmizedData = this.custmizedFormValue[custmizedKey][element.field_name]
+        }else{
+          if(this.custmizedFormValue[element.field_name] && this.custmizedFormValue[element.field_name].length > 0){
+            custmizedData = this.custmizedFormValue[element.field_name]
+          }          
         }
         let mendatory = false;
         if(element.is_mandatory){
