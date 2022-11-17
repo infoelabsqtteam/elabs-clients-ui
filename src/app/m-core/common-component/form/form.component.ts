@@ -5499,7 +5499,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           let fieldData = previousformData[fieldName];
           let index = previousFormCollection['index'];
-          let checkDublicate = this.checkDublicateOnForm(this.tableFields,currentFormValue,fieldData,index);
+          let checkDublicate = this.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index);
           if(!checkDublicate.status){            
             if(isArray(fieldData)){
               if(index != undefined && index >= 0){
