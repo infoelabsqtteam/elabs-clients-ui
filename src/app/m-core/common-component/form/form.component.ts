@@ -5589,29 +5589,33 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(mendatory && custmizedData == ''){
                 if(custmizedData.length == 0){
                   checkValue = 1;
+                  checkDublic.status = true
                   checkDublic.msg = "Please Enter " + element.label;
                   //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                  return;
+                  return checkDublic;
                 }
               }
             }else{
+              checkDublic.status = true
               checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
               //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return;
+              return checkDublic;
             }
             break; 
           case 'object':
             if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
               if(mendatory){                  
                 checkValue = 1;
+                checkDublic.status = true
                 checkDublic.msg = "Please Enter " + element.label;
                 //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                return;    
+                return checkDublic;    
               }
             }else if(typeof list_of_field_data[element.field_name] != 'object'){
+              checkDublic.status = true
               checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
               //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return;
+              return checkDublic;
             }
             break;         
           default:
@@ -5623,15 +5627,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(mendatory && custmizedData == ''){
                 if(custmizedData.length == 0){
                   checkValue = 1;
+                  checkDublic.status = true
                   checkDublic.msg = "Please Enter " + element.label;
                   //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                  return;
+                  return checkDublic;
                 }
               }
             }else{
+              checkDublic.status = true
               checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
               //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return;
+              return checkDublic;
             }
             break;  
           case 'typeahead':
@@ -5640,15 +5646,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(mendatory){
                   if(custmizedData.length == 0){
                     checkValue = 1;
+                    checkDublic.status = true
                     checkDublic.msg = "Please Enter " + element.label;
                     //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                    return;
+                    return checkDublic;
                   }
                 }
               }else if(field_control && field_control != "" && field_control.get(element.field_name).errors?.required || field_control.get(element.field_name).errors?.validDataText){
+                checkDublic.status = true
                 checkDublic.msg = 'Entered value for '+element.label+' is invalidData. !!!';
                 //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
-                return;
+                return checkDublic;
               }
 
             }
