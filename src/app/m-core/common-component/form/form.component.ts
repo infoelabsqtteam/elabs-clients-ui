@@ -2690,6 +2690,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let callback = field.onchange_call_back_field;
     let criteria = field.onchange_api_params_criteria;
     const paramlist = params.split(";");
+    let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+    let completeObject = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
     if(paramlist.length>1){
       
     }else{
@@ -2706,7 +2708,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))); 
+        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template))); 
         // staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
         // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
         //   if(field && field.formValueAsObjectForQtmp){
