@@ -909,7 +909,7 @@ export class CommonFunctionService {
   	  case "dropdown": return this.getddnDisplayVal(value);
       case "info":
         if (value && value != '') {
-          return '<i class="fa fa-eye"></i>';
+          return '<i class="fa fa-eye cursor-pointer"></i>';
         } else {
           return '-';
         }

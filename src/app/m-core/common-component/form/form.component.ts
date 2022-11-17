@@ -3603,7 +3603,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "typeahead":
           if(item.datatype == "list_of_object"){
             if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
-              return '<i class="fa fa-eye text-pointer"></i>';
+              return '<i class="fa fa-eye cursor-pointer"></i>';
             } else {
               return '-';
             }
@@ -3626,7 +3626,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "grid_selection":
       case "list_of_fields":
         if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
-          return '<i class="fa fa-eye text-pointer"></i>';
+          return '<i class="fa fa-eye cursor-pointer"></i>';
         } else {
           return '-';
         } 
@@ -3668,8 +3668,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "list_of_checkbox":
       case "grid_selection":
       case "list_of_fields":
+      case "info":
         if(item["gridColumns"] && item["gridColumns"].length > 0){
           value['gridColumns']=item.gridColumns;
+        }else if(item["fields"] && item["fields"].length > 0){
+          value['gridColumns']=item.fields;
         }
         this.viewModal('form_basic-modal', value, item,false);
         break;

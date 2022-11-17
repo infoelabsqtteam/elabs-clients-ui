@@ -8,6 +8,7 @@ import { ApiService } from '../../services/api/api.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
+import { CursorError } from '@angular/compiler/src/ml_parser/lexer';
 
 @Component({
   selector: 'app-modals',
@@ -29,6 +30,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
   currentPage: any = '';
   bulkDownload:boolean=false;
   field:any={};
+  multiGridDetails:any = [];
 
   @Input() id: string;
   private element: any;
@@ -54,6 +56,15 @@ export class ModalsComponent implements OnInit,OnDestroy {
       this.setDownloadPdfData(data);
     })
     this.element = el.nativeElement;
+  }
+  resetFlags(){
+    this.field = {};
+    this.coloumName = "";
+    this.data = [];
+    this.currentPage = "";
+    this.editeMode=false;
+    this.editedColumne=false;
+    this.gridColumns=[];
   }
 
   ngOnInit(): void {
@@ -108,6 +119,10 @@ export class ModalsComponent implements OnInit,OnDestroy {
  public rateShow:boolean=false;
 
   showModal(alert){
+    this.setGridDetails(alert);   
+    this.basicTableModal.show()    
+  }
+  setGridDetails(alert){
     this.field = alert.field;
     this.coloumName = this.field.label;
     this.data = JSON.parse(JSON.stringify(alert.data.data));
@@ -156,8 +171,28 @@ export class ModalsComponent implements OnInit,OnDestroy {
       this.rateShow=true;
       this.rateTotal=0;
       this.addRates();
-    }    
-    this.basicTableModal.show()    
+    } 
+  }
+  storeGridDetails(){
+    let object = {
+      "data" : this.data,
+      "gridColumns":this.gridColumns
+    }
+    const currentDetails = {
+      "field": this.field,
+      "data": object,
+      "menu_name": this.currentPage,
+      'editemode': this.editeMode
+    }
+    this.multiGridDetails.push(currentDetails);
+  }
+  loadNextGrid(nextGridData){
+    this.resetFlags();
+    this.setGridDetails(nextGridData);
+  }
+  loadPreviousGrid(previousGridData){
+    this.resetFlags();
+    this.setGridDetails(previousGridData);
   }
 
   createFormControl(forControl,fieldName,object,type,mandatory){
@@ -196,11 +231,19 @@ export class ModalsComponent implements OnInit,OnDestroy {
     this.editedColumne = true;
   }
   closeModal(){
-    this.basicTableModal.hide()
-    this.data=[];
-    this.editeMode=false;
-    this.editedColumne=false;
-    this.gridColumns=[];
+    let length = this.multiGridDetails.length;
+    if(this.multiGridDetails && length >= 1){
+      let previousGridIndex = (length - 1);
+      let previousGridDetails = this.multiGridDetails[previousGridIndex];
+      this.loadPreviousGrid(previousGridDetails);
+      this.multiGridDetails.splice(previousGridIndex,1);  
+    }else{
+      this.basicTableModal.hide()
+      this.data=[];
+      this.editeMode=false;
+      this.editedColumne=false;
+      this.gridColumns=[];
+    }    
   }
   getddnDisplayVal(val) {
     return this.commonFunctionService.getddnDisplayVal(val);    
@@ -216,6 +259,8 @@ export class ModalsComponent implements OnInit,OnDestroy {
     value['data'] = this.commonFunctionService.getObjectValue(field.field_name, object)
     if(field.gridColumns && field.gridColumns.length > 0){
       value['gridColumns'] = field.gridColumns;
+    }else if(field.fields && field.fields.length > 0){
+      value['gridColumns'] = field.fields;
     }
     let editemode = false;
     if(field.editable){
@@ -239,6 +284,17 @@ export class ModalsComponent implements OnInit,OnDestroy {
             this.commonFunctionService.viewModal('fileview-grid-modal', value, field,this.currentPage,editemode)
           }
         };
+        break;
+      case "info":
+        this.storeGridDetails();
+        let currentPage = JSON.parse(JSON.stringify(this.currentPage));
+        let nextGridDetails = {
+          "field": field,
+          "data": value,
+          "menu_name": currentPage,
+          'editemode': editemode
+        }
+        this.loadNextGrid(nextGridDetails);
         break;
       default: return;
     }
