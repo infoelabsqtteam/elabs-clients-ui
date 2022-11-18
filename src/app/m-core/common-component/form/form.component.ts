@@ -2690,6 +2690,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let callback = field.onchange_call_back_field;
     let criteria = field.onchange_api_params_criteria;
     const paramlist = params.split(";");
+    let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+    let completeObject = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
     if(paramlist.length>1){
       
     }else{
@@ -2706,7 +2708,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))); 
+        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template))); 
         // staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
         // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
         //   if(field && field.formValueAsObjectForQtmp){
@@ -3352,8 +3354,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   editedRowData(object) {
     this.selectedRow = JSON.parse(JSON.stringify(object)); 
     this.updateMode = true;
-    this.getStaticDataWithDependentData();
-    this.updateDataOnFormField(this.selectedRow);        
+    this.updateDataOnFormField(this.selectedRow);
+    this.getStaticDataWithDependentData();      
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
       this.setCheckboxFileListValue();
       // this.checkBoxFieldListValue.forEach(element => {
@@ -3601,7 +3603,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "typeahead":
           if(item.datatype == "list_of_object"){
             if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
-              return '<i class="fa fa-eye text-pointer"></i>';
+              return '<i class="fa fa-eye cursor-pointer"></i>';
             } else {
               return '-';
             }
@@ -3624,7 +3626,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "grid_selection":
       case "list_of_fields":
         if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
-          return '<i class="fa fa-eye text-pointer"></i>';
+          return '<i class="fa fa-eye cursor-pointer"></i>';
         } else {
           return '-';
         } 
@@ -3666,8 +3668,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "list_of_checkbox":
       case "grid_selection":
       case "list_of_fields":
+      case "info":
         if(item["gridColumns"] && item["gridColumns"].length > 0){
           value['gridColumns']=item.gridColumns;
+        }else if(item["fields"] && item["fields"].length > 0){
+          value['gridColumns']=item.fields;
         }
         this.viewModal('form_basic-modal', value, item,false);
         break;
@@ -5494,7 +5499,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           let fieldData = previousformData[fieldName];
           let index = previousFormCollection['index'];
-          let checkDublicate = this.checkDublicateOnForm(this.tableFields,currentFormValue,fieldData,index);
+          let checkDublicate = this.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index);
           if(!checkDublicate.status){            
             if(isArray(fieldData)){
               if(index != undefined && index >= 0){
@@ -5565,6 +5570,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         if(custmizedKey && custmizedKey != '' && this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][element.field_name]){
           custmizedData = this.custmizedFormValue[custmizedKey][element.field_name]
+        }else{
+          if(this.custmizedFormValue[element.field_name] && this.custmizedFormValue[element.field_name].length > 0){
+            custmizedData = this.custmizedFormValue[element.field_name]
+          }          
         }
         let mendatory = false;
         if(element.is_mandatory){
@@ -5584,29 +5593,33 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(mendatory && custmizedData == ''){
                 if(custmizedData.length == 0){
                   checkValue = 1;
+                  checkDublic.status = true
                   checkDublic.msg = "Please Enter " + element.label;
                   //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                  return;
+                  return checkDublic;
                 }
               }
             }else{
+              checkDublic.status = true
               checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
               //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return;
+              return checkDublic;
             }
             break; 
           case 'object':
             if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
               if(mendatory){                  
                 checkValue = 1;
+                checkDublic.status = true
                 checkDublic.msg = "Please Enter " + element.label;
                 //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                return;    
+                return checkDublic;    
               }
             }else if(typeof list_of_field_data[element.field_name] != 'object'){
+              checkDublic.status = true
               checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
               //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return;
+              return checkDublic;
             }
             break;         
           default:
@@ -5618,15 +5631,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(mendatory && custmizedData == ''){
                 if(custmizedData.length == 0){
                   checkValue = 1;
+                  checkDublic.status = true
                   checkDublic.msg = "Please Enter " + element.label;
                   //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                  return;
+                  return checkDublic;
                 }
               }
             }else{
+              checkDublic.status = true
               checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
               //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return;
+              return checkDublic;
             }
             break;  
           case 'typeahead':
@@ -5635,15 +5650,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(mendatory){
                   if(custmizedData.length == 0){
                     checkValue = 1;
+                    checkDublic.status = true
                     checkDublic.msg = "Please Enter " + element.label;
                     //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                    return;
+                    return checkDublic;
                   }
                 }
               }else if(field_control && field_control != "" && field_control.get(element.field_name).errors?.required || field_control.get(element.field_name).errors?.validDataText){
+                checkDublic.status = true
                 checkDublic.msg = 'Entered value for '+element.label+' is invalidData. !!!';
                 //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
-                return;
+                return checkDublic;
               }
 
             }
