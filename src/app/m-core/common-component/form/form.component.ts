@@ -284,10 +284,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
-  term: string;
+  term:any={};
 
   @HostListener('document:click') clickout() {
-    this.term = '';
+    this.term = {};
   }
 
   constructor(
