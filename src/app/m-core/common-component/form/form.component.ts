@@ -2437,6 +2437,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.commonFunctionService.getDateInStringFunction(tamplateFormValue);
           this.updateDataOnFormField(calFormValue); 
           break;
+          case 'getTaWithCalculation':
+            calFormValue = this.commonFunctionService.getTaWithCalculation(tamplateFormValue);
+            this.updateDataOnFormField(calFormValue); 
+            break;
 
       //   case 'quote_amount_via_sample_no':
       //       calFormValue = this.commonFunctionService.quote_amount_via_sample_no(tamplateFormValue,this.custmizedFormValue['quotation_param_methods']);

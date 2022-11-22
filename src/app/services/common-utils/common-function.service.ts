@@ -1908,6 +1908,26 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   return result;
 
 }
+getTaWithCalculation(value){
+  let localTas = 0;
+  let claimSheet = value.claimSheet;
+  let priceInKm = claimSheet.priceInKm;
+  let distanceInkm = claimSheet.distanceInKm;
+ 
+
+  localTas =priceInKm*distanceInkm;
+
+  let obj1 = {
+    localTa:localTas
+  }
+
+  let obj = {
+    claimSheet:obj1
+  }
+
+  return obj;
+
+}
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
     if(quantity >0 && gross_amount > 0){
       current_disount = discount_amount*100/gross_amount;
@@ -3393,8 +3413,8 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
   calculateTotalFair(value){
     let totalFair = 0;
     let claimSheet = value.claimSheet;
-    let travelFair = claimSheet.travelFare;
     let localTa = claimSheet.localTa;
+    let travelFair = claimSheet.travelFare;
     let dailyAllowance = claimSheet.dailyAllowance;
     let foodHotel = claimSheet.foodHotel;
     let miscellaneous = claimSheet.miscellaneous;
