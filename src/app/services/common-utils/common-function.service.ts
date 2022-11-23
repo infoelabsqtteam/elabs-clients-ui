@@ -26,6 +26,7 @@ import { Common } from 'src/app/shared/enums/common.enum';
 })
 export class CommonFunctionService {
   userInfo: any;
+  localTas:any;
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   pageNumber: number = Common.PAGE_NO;
@@ -1908,6 +1909,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   return result;
 
 }
+
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
     if(quantity >0 && gross_amount > 0){
       current_disount = discount_amount*100/gross_amount;
@@ -3391,15 +3393,20 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
 
   calculateTotalFair(value){
+    
     let totalFair = 0;
     let claimSheet = value.claimSheet;
-    let travelFair = claimSheet.travelFare;
     let localTa = claimSheet.localTa;
+    let travelFair = claimSheet.travelFare;
     let dailyAllowance = claimSheet.dailyAllowance;
-    let foodHotel = claimSheet.foodHotel;
+    let food = claimSheet.food;
+    let hotel = claimSheet.hotel;
+    let parking = claimSheet.parking;
+    let toolCharge = claimSheet.tollCharge;
     let miscellaneous = claimSheet.miscellaneous;
 
-    totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
+
+    totalFair = (+travelFair)+(+localTa)+(+dailyAllowance)+(+food)+(+hotel)+(+parking)+(+toolCharge)+(+miscellaneous);
 
     let obj1 = {
       totalForTheDay:totalFair
@@ -3413,7 +3420,6 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
   }
 
-
   calculateTotalAmount(formValue){
     let list = formValue['claimSheet'];
     let total = 0;
@@ -3423,6 +3429,45 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
     let obj = {
       totalAmountOfTravelCliam:total
+    }
+    return obj;
+  }
+
+  /***************
+   * Added By Praveen Singh
+   * Added On 22-Nov-22
+   **/
+  getTaWithCalculation(value){
+    
+    let localTas = 0;
+    let claimSheet = value.claimSheet;
+    let priceInKm = claimSheet.priceInKm;
+    let distanceInkm = claimSheet.distanceInKm;
+   
+    localTas = priceInKm*distanceInkm;
+  
+    let obj1 = {
+      localTa:localTas
+    }  
+    let obj = {
+      claimSheet:obj1
+    }  
+    return obj;
+  
+  }
+
+  /***************
+   * Added By Praveen Singh
+   * Added On 22-Nov-22
+   **/
+  funModeTravelChange(value){
+
+    let obj1 = {
+      distanceInKm:'',
+      localTa:''
+    }
+    let obj = {
+      claimSheet:obj1
     }
     return obj;
   }
