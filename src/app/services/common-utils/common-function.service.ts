@@ -3416,10 +3416,13 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     let localTa = claimSheet.localTa;
     let travelFair = claimSheet.travelFare;
     let dailyAllowance = claimSheet.dailyAllowance;
-    let foodHotel = claimSheet.foodHotel;
+    let food = claimSheet.food;
+    let hotel = claimSheet.hotel;
+    let parking = claimSheet.parking;
+    let toolCharge = claimSheet.tollCharge;
     let miscellaneous = claimSheet.miscellaneous;
 
-    totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
+    totalFair = travelFair+localTa+dailyAllowance+food+hotel+parking+toolCharge+miscellaneous;
 
     let obj1 = {
       totalForTheDay:totalFair
