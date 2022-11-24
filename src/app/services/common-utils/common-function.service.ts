@@ -26,6 +26,7 @@ import { Common } from 'src/app/shared/enums/common.enum';
 })
 export class CommonFunctionService {
   userInfo: any;
+  localTas:any;
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   pageNumber: number = Common.PAGE_NO;
@@ -397,7 +398,7 @@ export class CommonFunctionService {
     }
   }
 
-  checkIfCondition(data, formValue) {
+  checkIfCondition(data, formValue,datatype?) {
     let condition = []
     condition = data.split('#')
     if (condition.length >= 2) {
@@ -414,6 +415,16 @@ export class CommonFunctionService {
         setValue = "";
       } else {
         setValue = setValue + "";
+      }
+      if(datatype){
+        switch (datatype) {
+          case "date":
+            setValue = this.dateFormat(setValue);
+            condition[2] = this.dateFormat(condition[2]);
+            break;        
+          default:
+            break;
+        }
       }
       switch (condition[1]) {
         case 'eq':
@@ -752,29 +763,31 @@ export class CommonFunctionService {
         switch (element.type) {            
           case "list_of_fields":
           case "group_of_fields":
-            if (element.list_of_fields.length > 0) {
+            if (element.list_of_fields && element.list_of_fields.length > 0) {
               element.list_of_fields.forEach((data) => {
-                let call_back_field =  '';
-                let criteria = [];
-                if (data.api_params && data.api_params != '' && data.type != "typeahead") {
+                if(data && data != null){
+                  let call_back_field =  '';
+                  let criteria = [];
+                  if (data.api_params && data.api_params != '' && data.type != "typeahead") {
 
-                  if(data.call_back_field && data.call_back_field != ''){
-                    call_back_field =  data.call_back_field;
+                    if(data.call_back_field && data.call_back_field != ''){
+                      call_back_field =  data.call_back_field;
+                    }
+                    if(data.api_params_criteria && data.api_params_criteria != ''){
+                      criteria =  data.api_params_criteria;
+                    }
+                    const staticModalListOfFields = this.getPaylodWithCriteria(data.api_params,call_back_field,criteria,object?object:{},element.data_template);
+                    if(data.api_params.indexOf("html_view") >= 0){
+                      staticModalListOfFields["data"]=object;
+                    }
+                    staticModalGroup.push(staticModalListOfFields);
                   }
-                  if(data.api_params_criteria && data.api_params_criteria != ''){
-                    criteria =  data.api_params_criteria;
-                  }
-                  const staticModalListOfFields = this.getPaylodWithCriteria(data.api_params,call_back_field,criteria,object?object:{},element.data_template);
-                  if(data.api_params.indexOf("html_view") >= 0){
-                    staticModalListOfFields["data"]=object;
-                  }
-                  staticModalGroup.push(staticModalListOfFields);
                 }
               });
             }
             break;
             case "stepper":
-            if (element.list_of_fields.length > 0) {
+            if (element.list_of_fields && element.list_of_fields.length > 0) {
               element.list_of_fields.forEach((step) => {
                 step.list_of_fields.forEach((data) => {
                   let call_back_field =  '';
@@ -897,7 +910,7 @@ export class CommonFunctionService {
   	  case "dropdown": return this.getddnDisplayVal(value);
       case "info":
         if (value && value != '') {
-          return '<i class="fa fa-eye"></i>';
+          return '<i class="fa fa-eye cursor-pointer"></i>';
         } else {
           return '-';
         }
@@ -1114,55 +1127,57 @@ export class CommonFunctionService {
                 }
               }
             } else {
-              for (let j = 0; j < element.list_of_fields.length; j++) {
-                const data = element.list_of_fields[j];
-                switch (data.datatype) {
-                  case "list_of_object":
-                  case "chips":
-                  case "chips_with_mask":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
-                          fiedlList[data.field_name] = null;
-                        }
-                      });
-                    }
-                    break;
-                  case "object":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (fiedlList[data.field_name] == "" && typeof fiedlList[data.field_name] != 'object') {
-                          fiedlList[data.field_name] = null;
-                        }
-                      });
-                    }
-                    break;
-                  case "number":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (!Number(fiedlList[data.field_name])) {
-                          fiedlList[data.field_name] = 0;
-                        }
+              if(element.list_of_fields && element.list_of_fields){
+                for (let j = 0; j < element.list_of_fields.length; j++) {
+                  const data = element.list_of_fields[j];
+                  switch (data.datatype) {
+                    case "list_of_object":
+                    case "chips":
+                    case "chips_with_mask":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
+                            fiedlList[data.field_name] = null;
+                          }
+                        });
+                      }
+                      break;
+                    case "object":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (fiedlList[data.field_name] == "" && typeof fiedlList[data.field_name] != 'object') {
+                            fiedlList[data.field_name] = null;
+                          }
+                        });
+                      }
+                      break;
+                    case "number":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (!Number(fiedlList[data.field_name])) {
+                            fiedlList[data.field_name] = 0;
+                          }
 
-                      });
-                    }
-                    break;
-                  default:
-                    break;
-                }
-                switch (data.type) {
-                  case "list_of_string":
-                    if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
-                      formValue[element.field_name].forEach(fiedlList => {
-                        if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
-                          fiedlList[data.field_name] = null;
-                        }
-                      });
-                    }
-                    break;
+                        });
+                      }
+                      break;
+                    default:
+                      break;
+                  }
+                  switch (data.type) {
+                    case "list_of_string":
+                      if (formValue[element.field_name] && formValue[element.field_name].length > 0) {
+                        formValue[element.field_name].forEach(fiedlList => {
+                          if (fiedlList[data.field_name] == "" && !Array.isArray(fiedlList[data.field_name])) {
+                            fiedlList[data.field_name] = null;
+                          }
+                        });
+                      }
+                      break;
 
-                  default:
-                    break;
+                    default:
+                      break;
+                  }
                 }
               }
             }
@@ -1894,6 +1909,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
   return result;
 
 }
+
   getDiscountPercentage(current_disount, discount_amount, gross_amount, quantity){
     if(quantity >0 && gross_amount > 0){
       current_disount = discount_amount*100/gross_amount;
@@ -3377,15 +3393,20 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
 
   calculateTotalFair(value){
+    
     let totalFair = 0;
     let claimSheet = value.claimSheet;
-    let travelFair = claimSheet.travelFare;
     let localTa = claimSheet.localTa;
+    let travelFair = claimSheet.travelFare;
     let dailyAllowance = claimSheet.dailyAllowance;
-    let foodHotel = claimSheet.foodHotel;
+    let food = claimSheet.food;
+    let hotel = claimSheet.hotel;
+    let parking = claimSheet.parking;
+    let toolCharge = claimSheet.tollCharge;
     let miscellaneous = claimSheet.miscellaneous;
 
-    totalFair = travelFair+localTa+dailyAllowance+foodHotel+miscellaneous;
+
+    totalFair = (+travelFair)+(+localTa)+(+dailyAllowance)+(+food)+(+hotel)+(+parking)+(+toolCharge)+(+miscellaneous);
 
     let obj1 = {
       totalForTheDay:totalFair
@@ -3399,7 +3420,6 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
   }
 
-
   calculateTotalAmount(formValue){
     let list = formValue['claimSheet'];
     let total = 0;
@@ -3409,6 +3429,45 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
 
     let obj = {
       totalAmountOfTravelCliam:total
+    }
+    return obj;
+  }
+
+  /***************
+   * Added By Praveen Singh
+   * Added On 22-Nov-22
+   **/
+  getTaWithCalculation(value){
+    
+    let localTas = 0;
+    let claimSheet = value.claimSheet;
+    let priceInKm = claimSheet.priceInKm;
+    let distanceInkm = claimSheet.distanceInKm;
+   
+    localTas = priceInKm*distanceInkm;
+  
+    let obj1 = {
+      localTa:localTas
+    }  
+    let obj = {
+      claimSheet:obj1
+    }  
+    return obj;
+  
+  }
+
+  /***************
+   * Added By Praveen Singh
+   * Added On 22-Nov-22
+   **/
+  funModeTravelChange(value){
+
+    let obj1 = {
+      distanceInKm:'',
+      localTa:''
+    }
+    let obj = {
+      claimSheet:obj1
     }
     return obj;
   }

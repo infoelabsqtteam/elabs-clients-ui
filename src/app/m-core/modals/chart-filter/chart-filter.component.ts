@@ -287,8 +287,10 @@ export class ChartFilterComponent implements OnInit {
   setStaticData(staticData){
     if (staticData) {
       this.staticData = staticData;
-      Object.keys(this.staticData).forEach(key => {        
-        this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+      Object.keys(this.staticData).forEach(key => {  
+        if(this.staticData[key]){      
+          this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+        }
       }) 
     }
   }
