@@ -8,7 +8,7 @@ import { ApiService } from '../../services/api/api.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
-import { CursorError } from '@angular/compiler/src/ml_parser/lexer';
+//import { CursorError } from '@angular/compiler/src/ml_parser/lexer'; comment By Praveen singh / Akash Tyagi
 
 @Component({
   selector: 'app-modals',
