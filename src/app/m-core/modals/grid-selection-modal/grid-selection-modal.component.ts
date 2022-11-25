@@ -563,6 +563,9 @@ export class GridSelectionModalComponent implements OnInit {
     } else {
       index = indx;
     } 
+    if(index && index != indx){
+      index = indx;
+    }
     return index;
   }
 
