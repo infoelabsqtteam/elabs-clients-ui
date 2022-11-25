@@ -108,19 +108,19 @@
                                     <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
                                         <mat-label>{{ fieldName.label | titlecase}}</mat-label>
                                         <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
-                                            <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                            <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                             <mat-option></mat-option>
-                                            <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[fieldName.field_name]" [value]="staticValue">
+                                            <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">
                                                 {{getddnDisplayVal(staticValue)}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">
-                                        <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                        <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                        <mat-option></mat-option>
+                                        <mat-label>{{ fieldName.label | titlecase}}</mat-label>                                        
                                         <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data)">
-                                            <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[fieldName.field_name]" [value]="staticValue">
+                                            <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                            <mat-option></mat-option>
+                                            <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">
                                                 {{getddnDisplayVal(staticValue)}}
                                             </mat-option>
                                         </mat-select>
