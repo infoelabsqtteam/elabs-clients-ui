@@ -40,6 +40,7 @@ export class GridSelectionModalComponent implements OnInit {
   selectable = true;
   term: any={};
   setGridData:boolean=false;
+  onlySelected:boolean=false;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -567,6 +568,13 @@ export class GridSelectionModalComponent implements OnInit {
       index = indx;
     }
     return index;
+  }
+  onlySelectedRecord(event: MatCheckboxChange){
+    if(event.checked){
+      this.onlySelected = true;
+    }else{
+      this.onlySelected = false;
+    }
   }
 
   toggle(data, event: MatCheckboxChange, indx) {
