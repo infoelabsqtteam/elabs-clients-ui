@@ -372,7 +372,8 @@ export class GridSelectionModalComponent implements OnInit {
           }
 
           this.selecteData.forEach(element => {
-            this.gridData.forEach((row, i) => {
+            for (let i = 0; i < this.gridData.length; i++) {
+              const row = this.gridData[i];
               if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
                 var validity = true;
                 this.field.matching_fields_for_grid_selection.forEach(matchcriteria => {
@@ -388,6 +389,7 @@ export class GridSelectionModalComponent implements OnInit {
                   const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
                   grid_data.selected = true;
                   this.gridData[i] = grid_data;
+                  break;
                 }
               }
               else {
@@ -396,9 +398,10 @@ export class GridSelectionModalComponent implements OnInit {
                   const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
                   grid_data.selected = true;
                   this.gridData[i] = grid_data;
+                  break;
                 }
               }
-            });
+            };
           });          
           this.setGridData = false;
         }
@@ -526,12 +529,16 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   closeModal() {
+    this.resetFlagsOrVariables();
+    this.dataShareService.setIsGridSelectionOpenOrNot(true);
+    this.gridViewModalSelection.hide();
+  }
+  resetFlagsOrVariables(){
     this.gridData = [];
     this.selectedData = [];
     this.selecteData = [];
     this.data = '';
-    this.dataShareService.setIsGridSelectionOpenOrNot(true);
-    this.gridViewModalSelection.hide();
+    this.onlySelected=false;
   }
 
   getValueForGrid(field, object) {
