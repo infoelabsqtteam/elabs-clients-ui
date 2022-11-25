@@ -10,7 +10,7 @@
                 <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="data" [placeholder]="applyOnGridFilterLabel(field)"/>
             </div>
             <div class="w-25 float-left">
-                <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Only Selected</mat-checkbox>
+                <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Only Selected</mat-checkbox>
             </div>                    
         </div> 
         <div *ngIf="listOfGridFieldName && listOfGridFieldName.length > 0" style="position: absolute;

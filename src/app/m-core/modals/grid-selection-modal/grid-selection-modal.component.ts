@@ -376,14 +376,16 @@ export class GridSelectionModalComponent implements OnInit {
               const row = this.gridData[i];
               if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
                 var validity = true;
-                this.field.matching_fields_for_grid_selection.forEach(matchcriteria => {
+                for (let index = 0; index < this.field.matching_fields_for_grid_selection.length; index++) {
+                  const matchcriteria = this.field.matching_fields_for_grid_selection[index];
                   if (this.CommonFunctionService.getObjectValue(matchcriteria, element) == this.CommonFunctionService.getObjectValue(matchcriteria, row)) {
                     validity = validity && true;
                   }
                   else {
                     validity = validity && false;
+                    break;
                   }
-                });
+                };
                 if (validity == true) {
                   this.gridData[i] = element
                   const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
