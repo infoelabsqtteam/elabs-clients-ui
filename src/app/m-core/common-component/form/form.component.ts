@@ -3402,7 +3402,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         let object = this.selectedRow[fieldName];
         if (element.onchange_api_params && element.onchange_call_back_field && !element.do_not_auto_trigger_on_edit) {
           const checkFormGroup = element.onchange_call_back_field.indexOf("FORM_GROUP");
-          if(checkFormGroup == -1){
+          const checkCLTFN = element.onchange_api_params.indexOf('CLTFN')
+          if(checkFormGroup == -1 && checkCLTFN == -1){
 
             const payload = this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params, element.onchange_call_back_field, element.onchange_api_params_criteria, this.selectedRow)
             if(element.onchange_api_params.indexOf('QTMP') >= 0){
