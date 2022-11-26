@@ -31,8 +31,7 @@ import { AngularMaterialModule } from './m-core/angular-material-module/angular-
     AppLandingModule,
     AuthModule,
     CoreModule,
-    McoreModule,
-        
+    McoreModule,        
     ModelModule,
     AngularMaterialModule
   ],
@@ -43,7 +42,6 @@ import { AngularMaterialModule } from './m-core/angular-material-module/angular-
     Location , 
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
- 
   
 })
 export class AppModule { }

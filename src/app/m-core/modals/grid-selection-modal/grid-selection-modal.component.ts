@@ -39,6 +39,7 @@ export class GridSelectionModalComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   selectable = true;
   term: any={};
+  setGridData:boolean=false;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -145,7 +146,9 @@ export class GridSelectionModalComponent implements OnInit {
         this.responseData = [];
       }
       this.copyStaticData = data;
-      this.setStaticData(data);
+      if(this.setGridData && this.field.ddn_field && data[this.field.ddn_field] && data[this.field.ddn_field] != null){
+        this.setStaticData(data);
+      }
     })
     //this.treeViewData.data = TREE_DATA;
   }
@@ -395,7 +398,8 @@ export class GridSelectionModalComponent implements OnInit {
                 }
               }
             });
-          });
+          });          
+          this.setGridData = false;
         }
       }
     }
@@ -437,6 +441,7 @@ export class GridSelectionModalComponent implements OnInit {
       this.gridData = JSON.parse(JSON.stringify(alert.selectedData));
     }
     else {
+      this.setGridData = true;
       this.gridData = [];
     }
     if (this.field.gridColumns && this.field.gridColumns.length > 0) {
@@ -450,6 +455,9 @@ export class GridSelectionModalComponent implements OnInit {
           }
         } else {
           field['display'] = true;
+        }
+        if(field['field_class']){
+          field['field_class'] = field['field_class'].trim();
         }
       });
       this.listOfGridFieldName = gridColumns;

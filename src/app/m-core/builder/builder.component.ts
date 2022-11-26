@@ -201,7 +201,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.isTabFilter = false;          
       }
       if(this.tabs == undefined || this.tabs == null){
-        this.notificationService.notify('bg-danger','Template Tabs are not availabel !!!')
+        //this.notificationService.notify('bg-danger','Template Tabs are not availabel !!!')
         this.tabs = [];
       }else{
         if(this.envService.getRequestType() == 'PUBLIC'){
