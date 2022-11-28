@@ -1126,7 +1126,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       if(this.tableFields.length > 0 && this.editedRowIndex == -1){
         let object =this.getFormValue(true);
-        let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
+        let formValue = object;
+        if(this.multipleFormCollection && this.multipleFormCollection.length > 0){
+          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
+        }
+        let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
         if(staticModalG && staticModalG.length > 0){
           staticModalG.forEach(element => {
             staticModalGroup.push(element);
