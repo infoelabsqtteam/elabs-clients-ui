@@ -5,8 +5,13 @@
       <!--Header-->
       <div class="modal-header">
         <h3 class="modal-title m-0 text-uppercase">{{ field.label}}</h3>
-        <div *ngIf="applyOnGridFilter(field)" class="mr-auto ml-3">
-            <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="data" [placeholder]="applyOnGridFilterLabel(field)"/>
+        <div *ngIf="applyOnGridFilter(field)" class="mr-auto ml-3 w-75">
+            <div class="w-25 float-left">
+                <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="data" [placeholder]="applyOnGridFilterLabel(field)"/>
+            </div>
+            <div class="w-25 float-left">
+                <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Only Selected</mat-checkbox>
+            </div>                    
         </div> 
         <div *ngIf="listOfGridFieldName && listOfGridFieldName.length > 0" style="position: absolute;
             right: 50px;">
@@ -40,14 +45,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter">
+                        <tr *ngFor="let data of gridData|filter:data; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
                             <td class="text-center" *ngIf="grid_row_selection" sticky="true">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
-                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox>
+                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"></mat-checkbox>
                                   <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
                                 </div>
-                              </td>
-
+                            </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'" [sticky]="fieldName.sticky">
                               <!-- <div *ngIf="!editedColumne">
                                 <span  [innerHtml]="getValueForGrid(fieldName,data)" ></span>

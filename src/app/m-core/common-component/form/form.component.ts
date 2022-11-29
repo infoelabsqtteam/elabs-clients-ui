@@ -1126,7 +1126,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       if(this.tableFields.length > 0 && this.editedRowIndex == -1){
         let object =this.getFormValue(true);
-        let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,object);
+        let formValue = object;
+        if(this.multipleFormCollection && this.multipleFormCollection.length > 0){
+          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
+        }
+        let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
         if(staticModalG && staticModalG.length > 0){
           staticModalG.forEach(element => {
             staticModalGroup.push(element);
@@ -3396,6 +3401,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   getStaticDataWithDependentData(){
     const staticModal = []
+    let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+    let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
     this.tableFields.forEach(element => {
       if(element.field_name && element.field_name != ''){
         let fieldName = element.field_name;
@@ -3460,7 +3467,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,this.selectedRow))
       }
     });
-    let staticModalGroup = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,this.selectedRow);
+    
+    let staticModalGroup = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
     if(staticModalGroup.length > 0){
       staticModalGroup.forEach(element => {
         staticModal.push(element);
@@ -5460,11 +5468,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['updataModeInPopupType']){
       this.editedRowData(fData);
-    }else{
-      if(this.editedRowIndex >= 0){
+    }else{      
+      this.updateDataOnFormField(fData); 
+      if(this.editedRowIndex >= 0 || Object.keys(fData).length > 0){
         this.getStaticDataWithDependentData();
-      }
-      this.updateDataOnFormField(fData);    
+      }   
     }
     let nextFormFocusedFieldname = '';
     for (let key in fData) {
