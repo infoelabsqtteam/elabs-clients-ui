@@ -243,7 +243,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
   getTab(i, tabName) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
-      this.apiService.resetGridData(); 
+      if(this.selectTabIndex != i){
+        this.apiService.resetGridData();
+      }       
       this.selectTabIndex = i;       
       if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
         this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 

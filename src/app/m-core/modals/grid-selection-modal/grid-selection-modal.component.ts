@@ -40,6 +40,7 @@ export class GridSelectionModalComponent implements OnInit {
   selectable = true;
   term: any={};
   setGridData:boolean=false;
+  onlySelected:boolean=false;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -371,22 +372,26 @@ export class GridSelectionModalComponent implements OnInit {
           }
 
           this.selecteData.forEach(element => {
-            this.gridData.forEach((row, i) => {
+            for (let i = 0; i < this.gridData.length; i++) {
+              const row = this.gridData[i];
               if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
                 var validity = true;
-                this.field.matching_fields_for_grid_selection.forEach(matchcriteria => {
+                for (let index = 0; index < this.field.matching_fields_for_grid_selection.length; index++) {
+                  const matchcriteria = this.field.matching_fields_for_grid_selection[index];
                   if (this.CommonFunctionService.getObjectValue(matchcriteria, element) == this.CommonFunctionService.getObjectValue(matchcriteria, row)) {
                     validity = validity && true;
                   }
                   else {
                     validity = validity && false;
+                    break;
                   }
-                });
+                };
                 if (validity == true) {
                   this.gridData[i] = element
                   const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
                   grid_data.selected = true;
                   this.gridData[i] = grid_data;
+                  break;
                 }
               }
               else {
@@ -395,9 +400,10 @@ export class GridSelectionModalComponent implements OnInit {
                   const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
                   grid_data.selected = true;
                   this.gridData[i] = grid_data;
+                  break;
                 }
               }
-            });
+            };
           });          
           this.setGridData = false;
         }
@@ -525,12 +531,16 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   closeModal() {
+    this.resetFlagsOrVariables();
+    this.dataShareService.setIsGridSelectionOpenOrNot(true);
+    this.gridViewModalSelection.hide();
+  }
+  resetFlagsOrVariables(){
     this.gridData = [];
     this.selectedData = [];
     this.selecteData = [];
     this.data = '';
-    this.dataShareService.setIsGridSelectionOpenOrNot(true);
-    this.gridViewModalSelection.hide();
+    this.onlySelected=false;
   }
 
   getValueForGrid(field, object) {
@@ -563,7 +573,17 @@ export class GridSelectionModalComponent implements OnInit {
     } else {
       index = indx;
     } 
+    if(index && index != indx){
+      index = indx;
+    }
     return index;
+  }
+  onlySelectedRecord(event: MatCheckboxChange){
+    if(event.checked){
+      this.onlySelected = true;
+    }else{
+      this.onlySelected = false;
+    }
   }
 
   toggle(data, event: MatCheckboxChange, indx) {
