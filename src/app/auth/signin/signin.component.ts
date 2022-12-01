@@ -20,7 +20,7 @@ export class SigninComponent implements OnInit {
   @Input() public pageName;
   appName: string;
   signInForm:FormGroup;
-  showpasswrd = false;
+  checkShowPassword = false;
   template:string = "temp1";
   logoPath = '';
   title = "";
@@ -78,8 +78,8 @@ export class SigninComponent implements OnInit {
     this.title = this.storageService.getPageTitle();
   }
 
-  showpassword() {
-    this.showpasswrd = !this.showpasswrd;
+  showPassword() {
+    this.checkShowPassword = !this.checkShowPassword;
   }
 
 }
