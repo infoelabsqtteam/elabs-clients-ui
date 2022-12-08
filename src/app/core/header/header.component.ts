@@ -326,8 +326,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         if (this.moduleIndex != -1) {
             const module = this.AllModuleList[this.moduleIndex]
             if (module.menu_list != undefined && module.menu_list != null) {
-                this.menuData = module.menu_list;
+                let menuList = module.menu_list;
                 //const menu = this.menuData[0];
+                this.menuData = this.setDisplayInMenuWithPermission(menuList);
                 let menu = this.findMenuWithPermission(this.menuData);
                 this.getTemplateData(module,menu)
                 // if (menu && menu.submenu) {
@@ -342,28 +343,67 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.menuData = [];
         }
     }
+    setDisplayInMenuWithPermission(menuList){
+        let modifyMenuList = [];
+        if(menuList && menuList.length > 0){
+            for (let index = 0; index < menuList.length; index++) {
+                const menu = menuList[index];
+                if(menu.submenu && menu.submenu != null){
+                    let modifySubMenuList = [];
+                    let check = 0;
+                    for (let j = 0; j < menu.submenu.length; j++) {
+                        const submenu = menu.submenu[j];
+                        if(!this.checkPermission(submenu)){
+                            submenu['display'] = true;
+                            modifySubMenuList.push(submenu);
+                            check = 1;
+                        }else{
+                            submenu['display'] = false;
+                            modifySubMenuList.push(submenu);
+                        }
+                    }
+                    if(check == 1){
+                        menu['display'] = true;                        
+                    }else{
+                        menu['display'] = false;
+                    }
+                    menu.submenu = modifySubMenuList;
+                    modifyMenuList.push(menu);
+                }else{
+                    if(!this.checkPermission(menu)){
+                        menu['display'] = true;
+                        modifyMenuList.push(menu);
+                    }else{
+                        menu['display'] = false;
+                        modifyMenuList.push(menu); 
+                    }
+                }                
+            }
+        }
+        return modifyMenuList;
+    }
     findMenuWithPermission(menuList){
-        let findMenu = {};
+        let modifyMenu = {};
         if(menuList && menuList.length > 0){
             for (let index = 0; index < menuList.length; index++) {
                 const menu = menuList[index];
                 if(menu.submenu && menu.submenu != null){
                     for (let j = 0; j < menu.submenu.length; j++) {
                         const submenu = menu.submenu[j];
-                        if(!this.checkPermission(submenu)){
-                            findMenu = submenu;
+                        if(submenu.display){
+                            modifyMenu = submenu;
                             break;
                         }
                     }
                 }else{
-                    if(!this.checkPermission(menu)){
-                        findMenu = menu;
+                    if(menu.display){
+                        modifyMenu = menu;
                         break;
                     }
                 }                
             }
         }
-        return findMenu;
+        return modifyMenu;
     }
 
     setMenuData(menuData) {
@@ -544,21 +584,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }else{
             this.notificationService.notify("bg-danger", "Permission denied !!!");
         }
-    }
-    checkSubmenuListPermission(submenuList){
-        let check = false;
-        if(submenuList && submenuList.length > 0){
-            for (let index = 0; index < submenuList.length; index++) {
-                const submenu = submenuList[index];
-                if(this.permissionService.checkPermission(submenu.name, 'view')){
-                    check = false;
-                    break;
-                }else{
-                    check = true;
-                }
-            }
-        }
-        return check;
     }
     checkPermission(menu){
         return !this.permissionService.checkPermission(menu.name, 'view')

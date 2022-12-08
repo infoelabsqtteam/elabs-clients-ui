@@ -64,13 +64,68 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.AllModuleList = this.storageService.GetModules();
+    let moduleList = this.storageService.GetModules();
+    this.AllModuleList = this.modifyModuleListWithPermission(moduleList);;
     this.initialize();
   }
 
   ngAfterViewInit() {
     
   }
+  modifyModuleListWithPermission(moduleList){
+    let modifyModuleList = [];
+    if(moduleList && moduleList.length > 0){
+      moduleList.forEach(module => {
+        if(module && module.menu_list && module.menu_list.length > 0){
+          let menuList = module.menu_list;
+          module.menu_list = this.setDisplayInMenuWithPermission(menuList);
+          modifyModuleList.push(module);
+        }else{
+          modifyModuleList.push(module);
+        }
+      });
+    }
+    return modifyModuleList;
+  }
+  setDisplayInMenuWithPermission(menuList){
+    let modifyMenuList = [];
+    if(menuList && menuList.length > 0){
+        for (let index = 0; index < menuList.length; index++) {
+            const menu = menuList[index];
+            if(menu.submenu && menu.submenu != null){
+                let modifySubMenuList = [];
+                let check = 0;
+                for (let j = 0; j < menu.submenu.length; j++) {
+                    const submenu = menu.submenu[j];
+                    if(!this.checkPermission(submenu)){
+                        submenu['display'] = true;
+                        modifySubMenuList.push(submenu);
+                        check = 1;
+                    }else{
+                        submenu['display'] = false;
+                        modifySubMenuList.push(submenu);
+                    }
+                }
+                if(check == 1){
+                    menu['display'] = true;                        
+                }else{
+                    menu['display'] = false;
+                }
+                menu.submenu = modifySubMenuList;
+                modifyMenuList.push(menu);
+            }else{
+                if(!this.checkPermission(menu)){
+                    menu['display'] = true;
+                    modifyMenuList.push(menu);
+                }else{
+                    menu['display'] = false;
+                    modifyMenuList.push(menu); 
+                }
+            }                
+        }
+    }
+    return modifyMenuList;
+}
 
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
@@ -160,21 +215,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }else{
         this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
-}
-checkSubmenuListPermission(submenuList){
-  let check = false;
-  if(submenuList && submenuList.length > 0){
-      for (let index = 0; index < submenuList.length; index++) {
-          const submenu = submenuList[index];
-          if(this.permissionService.checkPermission(submenu.name, 'view')){
-              check = false;
-              break;
-          }else{
-              check = true;
-          }
-      }
-  }
-  return check;
 }
 checkPermission(menu){
   return !this.permissionService.checkPermission(menu.name, 'view')
