@@ -3319,6 +3319,22 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
     return modifyList;
   }
+  modifiedGridColumns(gridColumns,object){
+    if(gridColumns.length > 0){     
+      gridColumns.forEach(field => {
+        if(this.coreFunctionService.isNotBlank(field.show_if)){
+          if(!this.showIf(field,object)){
+            field['display'] = false;
+          }else{
+            field['display'] = true;
+          }                
+        }else{
+          field['display'] = true;
+        }
+      });
+    }
+    return gridColumns;
+  }
   getApplicationAllSettings() {
     const payload1 = this.setPageNoAndSize(this.getPaylodWithCriteria("application_setting", "", [], {}), 1);
     this.apiService.getAplicationsSetting(payload1);
