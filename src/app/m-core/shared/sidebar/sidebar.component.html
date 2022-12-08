@@ -11,15 +11,15 @@
 
           <div *ngIf="hasMenu(item)" class="menulist">
             <div class="menuitems" *ngFor="let subitem of item.menu_list">
-              <div class="position-relative" *ngIf="!hasSubMenu(subitem)">
+              <div class="position-relative" *ngIf="!hasSubMenu(subitem)" [ngClass]="{'d-none': checkPermission(subitem)}">
                 <a [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
                 <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
               </div>
               
               <mat-accordion *ngIf="hasSubMenu(subitem)">
                 <mat-expansion-panel>
-                  <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId">{{ subitem.label }}</mat-expansion-panel-header>
-                  <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu">
+                  <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" [ngClass]="{'d-none': checkSubmenuListPermission(subitem.submenu)}">{{ subitem.label }}</mat-expansion-panel-header>
+                  <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu" [ngClass]="{'d-none': checkPermission(subSubitem)}">
                     <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }}</small>
                     <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span>
                   </div>

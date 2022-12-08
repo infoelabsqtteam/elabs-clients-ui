@@ -10,11 +10,11 @@
           <mat-tab *ngFor="let menu of menuData" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
             <ng-template mat-tab-label>
               <a class="px-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu)"
-                #tooltip="matTooltip" matTooltip="Press Ctrl + c">{{ menu.label }}</a>
+                #tooltip="matTooltip" matTooltip="Press Ctrl + c" [ngClass]="{'d-none': checkPermission(menu)}">{{ menu.label }}</a>
               <a class="px-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
-                (click)="activeLinkD(menu.label,false)">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
+                (click)="activeLinkD(menu.label,false)" [ngClass]="{'d-none': checkSubmenuListPermission(menu.submenu)}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
-                <button mat-menu-item *ngFor="let submenu of menu.submenu" (click)="getTemplateMenuData(submenu)">{{
+                <button mat-menu-item *ngFor="let submenu of menu.submenu" (click)="getTemplateMenuData(submenu)" [ngClass]="{'d-none': checkPermission(submenu)}">{{
                   submenu.label }}</button>
               </mat-menu>
             </ng-template>

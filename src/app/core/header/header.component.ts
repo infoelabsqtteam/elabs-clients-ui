@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy,EventEmitter, HostListener, AfterViewInit, OnChanges, SimpleChanges, Output } from "@angular/core";
 import { Router } from '@angular/router';
 import { StorageService } from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
@@ -24,6 +24,7 @@ import { FormControl } from "@angular/forms";
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     @Input() public pageName;
     @Input() moduleIndex: any;
+    @Output() goToHome = new EventEmitter();
     selected = new FormControl(0);
     subscription: any;
     menuDataSubscription;
@@ -131,7 +132,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
         this.AllModuleList = this.storageService.GetModules();
         if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
-          if(this.AllModuleList.length == 1){
+          const menuType =  this.storageService.GetMenuType();
+          if(this.AllModuleList.length == 1 && menuType == 'Horizontal'){
             this.GoToSelectedModule(this.AllModuleList[0]);
           }      
         };
@@ -325,18 +327,43 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             const module = this.AllModuleList[this.moduleIndex]
             if (module.menu_list != undefined && module.menu_list != null) {
                 this.menuData = module.menu_list;
-                const menu = this.menuData[0];
-                if (menu && menu.submenu) {
-                    this.getTemplateData(module, menu.submenu[0]);
-                } else {
-                    this.getTemplateData(module,menu)
-                }
+                //const menu = this.menuData[0];
+                let menu = this.findMenuWithPermission(this.menuData);
+                this.getTemplateData(module,menu)
+                // if (menu && menu.submenu) {
+                //     this.getTemplateData(module, menu.submenu[0]);
+                // } else {
+                //     this.getTemplateData(module,menu)
+                // }
             } else {
                 this.menuData = [];
             }
         } else {
             this.menuData = [];
         }
+    }
+    findMenuWithPermission(menuList){
+        let findMenu = {};
+        if(menuList && menuList.length > 0){
+            for (let index = 0; index < menuList.length; index++) {
+                const menu = menuList[index];
+                if(menu.submenu && menu.submenu != null){
+                    for (let j = 0; j < menu.submenu.length; j++) {
+                        const submenu = menu.submenu[j];
+                        if(!this.checkPermission(submenu)){
+                            findMenu = submenu;
+                            break;
+                        }
+                    }
+                }else{
+                    if(!this.checkPermission(menu)){
+                        findMenu = menu;
+                        break;
+                    }
+                }                
+            }
+        }
+        return findMenu;
     }
 
     setMenuData(menuData) {
@@ -518,6 +545,24 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.notificationService.notify("bg-danger", "Permission denied !!!");
         }
     }
+    checkSubmenuListPermission(submenuList){
+        let check = false;
+        if(submenuList && submenuList.length > 0){
+            for (let index = 0; index < submenuList.length; index++) {
+                const submenu = submenuList[index];
+                if(this.permissionService.checkPermission(submenu.name, 'view')){
+                    check = false;
+                    break;
+                }else{
+                    check = true;
+                }
+            }
+        }
+        return check;
+    }
+    checkPermission(menu){
+        return !this.permissionService.checkPermission(menu.name, 'view')
+    }
 
 
 
@@ -645,6 +690,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     goToMOdule() {
         this.dataShareService.sendCurrentPage('MODULE')
         //this.menuData = [];
+        this.goToHome.emit();
         this.apiService.resetMenuData();
         const menuType = this.storageService.GetMenuType()
         if (menuType == 'Horizontal') {
@@ -748,10 +794,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.dataShareService.sendCurrentPage('DASHBOARD')
         // const menuSearchModule = { "value": "menu", key2: item.name }
         // this.apiService.GetTempMenu(menuSearchModule)
-        const criteria = "module_name;eq;"+item.name+";STATIC";        
-        const payload = this.commonfunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
-        this.apiService.GetTempMenu(payload);
-        this.getTemplateByMenu = true;
+        if(this.moduleIndex == -1){
+            const criteria = "module_name;eq;"+item.name+";STATIC";        
+            const payload = this.commonfunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
+            this.apiService.GetTempMenu(payload);
+            this.getTemplateByMenu = true;
+        }
         this.showsearchmenu = false;
         this.filterdata = '';
     }

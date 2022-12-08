@@ -161,6 +161,24 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
 }
+checkSubmenuListPermission(submenuList){
+  let check = false;
+  if(submenuList && submenuList.length > 0){
+      for (let index = 0; index < submenuList.length; index++) {
+          const submenu = submenuList[index];
+          if(this.permissionService.checkPermission(submenu.name, 'view')){
+              check = false;
+              break;
+          }else{
+              check = true;
+          }
+      }
+  }
+  return check;
+}
+checkPermission(menu){
+  return !this.permissionService.checkPermission(menu.name, 'view')
+}
 setAppId(module){
   this.storageService.setModule(module.name);
 }
