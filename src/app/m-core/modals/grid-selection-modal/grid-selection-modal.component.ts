@@ -553,9 +553,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   getCorrectIndex(data, indx){
     let index;
-    if (data._id != undefined) {
-      index = this.CommonFunctionService.getIndexInArrayById(this.gridData, data._id);
-    } else if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
+    if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
       this.gridData.forEach((row, i) => {
         var validity = true;
         this.field.matching_fields_for_grid_selection.forEach(matchcriteria => {
@@ -570,10 +568,12 @@ export class GridSelectionModalComponent implements OnInit {
           index = i;
         }
       });
+    }else if (data._id != undefined) {
+      index = this.CommonFunctionService.getIndexInArrayById(this.gridData, data._id);
     } else {
       index = indx;
     } 
-    if(index && index != indx){
+    if(index && index != indx && this.data == ''){
       index = indx;
     }
     return index;
