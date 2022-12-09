@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy,EventEmitter, HostListener, AfterViewInit, OnChanges, SimpleChanges, Output } from "@angular/core";
+import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
 import { StorageService } from '../../services/storage/storage.service';
 import { PermissionService } from '../../services/permission/permission.service';
@@ -9,9 +9,9 @@ import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
 import { NotificationService } from "src/app/services/notify/notification.service";
 import { EnvService } from "src/app/services/env/env.service";
-import { Common } from "src/app/shared/enums/common.enum";
 import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 import { Subscription } from "rxjs";
+import { MenuOrModuleCommonService } from "src/app/services/menu-or-module-common/menu-or-module-common.service";
 import { FormControl } from "@angular/forms";
 
 
@@ -21,17 +21,12 @@ import { FormControl } from "@angular/forms";
     styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-    @Input() public pageName;
-    @Input() moduleIndex: any;
-    @Output() goToHome = new EventEmitter();
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {    
+    
     selected = new FormControl(0);
-    subscription: any;
-    menuDataSubscription;
-
-    active_menu: any = '';
+    subscription: any;    
     active_menu_d: any = 'custom-template';
-    main_active_menu: any = '';
+    moduleIndex:any=-1;
 
     menuBoxHome: boolean = false;
     menuBoxDashboard: boolean = false;
@@ -47,15 +42,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     public userName: any;
     public userEmail: any;
     public userFirstLetter: any;
-    public custmizedUserName: any;
     public menuData: any = [];
-    public ourSolutionDropDown: any;
-    public aboutUsDropDown: any;
     currentPage: any;
     logedin: boolean = false;
     gitVersionSubscription: any;
-    userNotificationSubscription:Subscription;
-    saveResponceSubscription:Subscription;
+    moduleIndexSubscription:Subscription;
     gitVersion: any;
 
     logoPath = ''
@@ -66,12 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     filterdata = '';
     public teamname: any;
     teamNameMenu = '';
-    getTemplateByMenu:boolean=false;
     showsearchmenu = false;
-    module:boolean=true;
-    headerNotificationList:any=[];
-
-    notificationlist = []
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -98,10 +84,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }
     }
 
-
-
-
-
     constructor(
         private router: Router,
         private storageService: StorageService,
@@ -112,7 +94,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         private authService: AuthService,
         private notificationService: NotificationService,
         public envService: EnvService,
-        private commonfunctionService:CommonFunctionService
+        private commonfunctionService:CommonFunctionService,
+        private menuOrModuleCommounService:MenuOrModuleCommonService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -122,11 +105,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.gitVersion = data['git.build.version'];
             }
         });
-        this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
-            if (data && data.data && data.data.length > 0) {
-                this.setUserNotification(data.data);
+        this.moduleIndexSubscription = this.dataShareService.moduleIndex.subscribe(index =>{
+            if(index != -1){
+                this.getMenuByModuleIndex(index);
+                this.moduleIndex = index;
+            }else{
+                this.moduleIndex = -1;
             }
-        });
+        })
         
 
 
@@ -160,42 +146,10 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 console.log(error)
             },
             () => console.log(this.myData)
-        );
-        this.menuDataSubscription = this.dataShareService.menu.subscribe(menu => {
-            this.setMenuData(menu);
-        })
+        );        
         this.dataShareService.chartModelShowHide.subscribe(data => {
             this.isShow = data;
         });
-
-        this.ourSolutionDropDown = [
-            { name: 'Food Products', value: 'food-product' },
-            { name: 'Agriculture & Chemicals Products ', value: 'agriculture-chemicals' },
-            { name: 'Drugs & Pharmaceuticals', value: 'drugs-pharmaceuticals' },
-            { name: 'Biological', value: 'biological' },
-            { name: 'Water', value: 'water' },
-            { name: 'Textile', value: 'textile' },
-            { name: 'Environment Monitoring', value: 'environment-monitoring' },
-            { name: 'Cosmetics', value: 'cosmetics' },
-            { name: 'Construction & Building Materials', value: 'construction-buldings' },
-            { name: 'Toxicology & Pharmacology (Preclinical) Division ', value: 'toxicology-pharmacology-division' },
-            { name: 'Ayurvedic & Herbal medicines', value: 'ayurvedic-herbal-medicine' },
-            { name: 'Helmet', value: 'helmet' },
-            { name: 'Food Packaging Regulations', value: 'food-packging' },
-            { name: 'Pharma Packaging Testing Solutions', value: 'pharma-packging' },
-        ]
-
-        this.aboutUsDropDown = [
-            { name: 'About us', value: 'about-us' },
-            { name: 'Our History', value: 'our-history' },
-            { name: 'Our Capabilities', value: 'our-capabilities' },
-            { name: 'Our Vision, Mission & Core Value', value: 'our-vision-mission-core-value' },
-            { name: 'Our Clients & Testimonials', value: 'our-clients-testimonials' },
-            { name: 'Our Quality Policy', value: 'our-quality-policy' },
-            { name: 'Our Environment, Health & Safety Policy', value: 'environment-health-policy' },
-            { name: 'Our Locations', value: 'our-locations' },
-        ]
-
     }
 
 
@@ -206,37 +160,15 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     chartModel() {
         this.modelService.open('chart_model', {})
     }
-    saveCallSubscribe(){
-        this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
-          this.setSaveResponce(responce);
-        })
-      }
-      unsubscribe(variable){
-        if(variable){
-          variable.unsubscribe();
-        }
-      }
     
+    unsubscribe(variable){
+        if(variable){
+            variable.unsubscribe();
+        }
+    }   
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
-        if (this.menuDataSubscription) {
-            this.menuDataSubscription.unsubscribe();
-        }
-        if(this.userNotificationSubscription){
-            this.userNotificationSubscription.unsubscribe();
-        }
-    }
-    setSaveResponce(saveFromDataRsponce){
-        if (saveFromDataRsponce) {
-            if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
-                if (saveFromDataRsponce.success == 'success') {
-                    this.commonfunctionService.getUserNotification(1);
-                }
-            }
-        }
-        this.unsubscribe(this.saveResponceSubscription);
-
     }
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -316,210 +248,25 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     ngOnInit() {
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        this.getMenuByModule();
+    ngOnChanges(changes: SimpleChanges) {        
         this.commonfunctionService.getUserNotification(1);
-    }
-
-    getMenuByModule() {
-        this.AllModuleList = this.storageService.GetModules();
-        if (this.moduleIndex != -1) {
-            const module = this.AllModuleList[this.moduleIndex]
+    }    
+    getMenuByModuleIndex(moduleIndex:any){
+        if (moduleIndex != -1) {
+            const module = this.AllModuleList[moduleIndex]
             if (module.menu_list != undefined && module.menu_list != null) {
                 let menuList = module.menu_list;
-                //const menu = this.menuData[0];
-                this.menuData = this.setDisplayInMenuWithPermission(menuList);
-                let menu = this.findMenuWithPermission(this.menuData);
+                this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
+                let menu = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);
                 this.getTemplateData(module,menu)
-                // if (menu && menu.submenu) {
-                //     this.getTemplateData(module, menu.submenu[0]);
-                // } else {
-                //     this.getTemplateData(module,menu)
-                // }
             } else {
                 this.menuData = [];
             }
         } else {
             this.menuData = [];
         }
-    }
-    setDisplayInMenuWithPermission(menuList){
-        let modifyMenuList = [];
-        if(menuList && menuList.length > 0){
-            for (let index = 0; index < menuList.length; index++) {
-                const menu = menuList[index];
-                if(menu.submenu && menu.submenu != null){
-                    let modifySubMenuList = [];
-                    let check = 0;
-                    for (let j = 0; j < menu.submenu.length; j++) {
-                        const submenu = menu.submenu[j];
-                        if(!this.checkPermission(submenu)){
-                            submenu['display'] = true;
-                            modifySubMenuList.push(submenu);
-                            check = 1;
-                        }else{
-                            submenu['display'] = false;
-                            modifySubMenuList.push(submenu);
-                        }
-                    }
-                    if(check == 1){
-                        menu['display'] = true;                        
-                    }else{
-                        menu['display'] = false;
-                    }
-                    menu.submenu = modifySubMenuList;
-                    modifyMenuList.push(menu);
-                }else{
-                    if(!this.checkPermission(menu)){
-                        menu['display'] = true;
-                        modifyMenuList.push(menu);
-                    }else{
-                        menu['display'] = false;
-                        modifyMenuList.push(menu); 
-                    }
-                }                
-            }
-        }
-        return modifyMenuList;
-    }
-    findMenuWithPermission(menuList){
-        let modifyMenu = {};
-        if(menuList && menuList.length > 0){
-            for (let index = 0; index < menuList.length; index++) {
-                const menu = menuList[index];
-                if(menu.submenu && menu.submenu != null){
-                    for (let j = 0; j < menu.submenu.length; j++) {
-                        const submenu = menu.submenu[j];
-                        if(submenu.display){
-                            modifyMenu = submenu;
-                            break;
-                        }
-                    }
-                }else{
-                    if(menu.display){
-                        modifyMenu = menu;
-                        break;
-                    }
-                }                
-            }
-        }
-        return modifyMenu;
-    }
-
-    setMenuData(menuData) {
-        if (menuData && menuData.length > 0) {
-            this.menuData = menuData;
-            if(this.getTemplateByMenu){
-                let defaultmenuIndex = 0;
-                for (let index = 0; index <  this.menuData.length; index++) {
-                  if(this.menuData[index].defaultMenu){
-                    defaultmenuIndex = index;
-                    break;
-                  }            
-                }
-                let defaultSubmenuIndex = -1;
-                const defaultMenu =this.menuData[defaultmenuIndex];
-                if(defaultMenu.submenu && defaultMenu.submenu.length > 0){
-                  for (let index = 0; index < defaultMenu.submenu.length; index++) {
-                    if(defaultMenu.submenu[index].defaultMenu){
-                      defaultSubmenuIndex = index;
-                      break;
-                    }              
-                  }
-                  if(defaultSubmenuIndex == -1){
-                    defaultSubmenuIndex = 0;
-                  }
-                }
-                if(defaultSubmenuIndex > -1){
-                  this.storageService.SetActiveMenu(this.menuData[defaultmenuIndex].submenu[defaultSubmenuIndex]);              
-                  this.apiService.resetTempData();
-                  this.apiService.resetGridData();            
-                  this.router.navigate(['template']);
-                }else{
-                  const menu = this.menuData[defaultmenuIndex];
-                  if(menu.name == "document_library"){
-                    this.router.navigate(['vdr']);
-                  }else if(menu.name == "report"){
-                    this.router.navigate(['report']);
-                  }
-                  else{
-                    this.storageService.SetActiveMenu(this.menuData[defaultmenuIndex]);              
-                    this.apiService.resetTempData();
-                    this.apiService.resetGridData();
-                    this.router.navigate(['template']);
-                  }
-                }          
-              }
-            this.getTemplateByMenu = false;
-        }
-    }
-    setUserNotification(data){
-        this.notificationlist = data;
-        this.headerNotificationList = [];
-        if(this.notificationlist && this.notificationlist.length > 0){
-            for (let index = 0; index < this.notificationlist.length; index++) {
-                const element = this.notificationlist[index];
-                if(index == 10){
-                    break;
-                }
-                this.headerNotificationList.push(element);                
-            }
-        }
-
-    }
-    getUnreadNotificationLength(){
-        let length = 0;
-        if(this.notificationlist && this.notificationlist.length > 0){
-            this.notificationlist.forEach(element => {
-                if(element.notificationStatus == 'UNREAD'){
-                    length = length + 1;
-                }
-            });
-        }
-        return length;
-    }
-
-    readNotification(index){
-        let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
-        let url = notification.url;
-        let rout = "notification/"+url;
-        let list = rout.split("/");
-        let moduleId = list[1];
-        let menuId = list[2];
-        let submenuId = list[3];
-        let moduleIndex = this.commonfunctionService.moduleIndex(moduleId);
-        //this.dataShareService.setModuleIndex(moduleIndex);
-        if(moduleIndex != undefined){
-        let moduleList = this.storageService.GetModules();
-        let module = moduleList[moduleIndex];
-        let menuName = this.commonfunctionService.getMenuName(module,menuId,submenuId);
-        let menu = {
-            "name" : menuName
-        }
-        this.storageService.SetActiveMenu(menu);
-        this.router.navigate([rout]); 
-        }
-        if(notification.notificationStatus == 'UNREAD'){
-            notification['notificationStatus'] = 'READ';
-            const payload = {
-                'curTemp' : 'user_notification',
-                'data' : notification
-            }
-            this.apiService.SaveFormData(payload);
-            this.saveCallSubscribe();
-        }
-        
-    }
-
-    onLogout() {
-        this.logOut();
-    }
-    activeLink(activelink) {
-        this.active_menu = activelink;
-    }
-    mainActiveMenu(activelink) {
-        this.main_active_menu = activelink;
-    }
+    }     
+    
     activeLinkD(link, check) {
         this.active_menu_d = link;
         if (check) {
@@ -555,168 +302,15 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.notificationService.notify("bg-danger", "Permission denied !!!");
         }
     }
-
-
-
-
     getTemplateMenuData(submenu) {
-        if(this.permissionService.checkPermission(submenu.name,'view')){
-            this.storageService.SetActiveMenu(submenu);
-            if (submenu.label == "Navigation") {
-                this.router.navigate(['Navigation']);
-            }
-            else if (submenu.label == "Permissions") {
-                this.router.navigate(['permissions']);
-            }
-            else {
-              const menu = submenu;
-              if(menu.name == "document_library"){
-                this.router.navigate(['vdr']);
-              }else if(menu.name == "report"){
-                this.router.navigate(['report']);
-              }
-              else{
-                this.apiService.resetTempData();
-                this.apiService.resetGridData();
-                this.router.navigate(['template']);  
-              }           
-            }
-        }else{
-            this.notificationService.notify("bg-danger", "Permission denied !!!");
-        }
+        let module = {};
+        this.getTemplateData(module,submenu);
     }
-    checkPermission(menu){
-        return !this.permissionService.checkPermission(menu.name, 'view')
-    }
-
-
-
-
-
-
-
-    goToEditeProfile(link) {
-        this.dataShareService.sendCurrentPage('DASHBOARD');
-        this.router.navigate([link])
-    }
-    goToChangePassword(){
-        this.router.navigate(['createpwd']);
-    }
-    navigateSigninPage() {
-        let loginType: any = Common.AUTH_TYPE;
-        if (loginType == 'ADMIN') {
-            this.router.navigate(['admin'])
-        } else {
-            this.router.navigate(['signin'])
-        }
-
-    }
-    getUserColorCode(n) {
-        switch (n) {
-            case "A":
-                this.userColorCode = "#ff4444";
-                break;
-            case "B":
-                this.userColorCode = "#ffbb33";
-                break;
-            case "C":
-                this.userColorCode = "#00C851";
-                break;
-            case "D":
-                this.userColorCode = "#33b5e5";
-                break;
-            case "E":
-                this.userColorCode = "#2BBBAD";
-                break;
-            case "F":
-                this.userColorCode = "#4285F4";
-                break;
-            case "G":
-                this.userColorCode = "#aa66cc";
-                break;
-            case "H":
-                this.userColorCode = "#ef5350";
-                break;
-            case "I":
-                this.userColorCode = "#ec407a";
-                break;
-            case "J":
-                this.userColorCode = "#ab47bc";
-                break;
-            case "K":
-                this.userColorCode = "#7e57c2";
-                break;
-            case "L":
-                this.userColorCode = "#5c6bc0";
-                break;
-            case "M":
-                this.userColorCode = "#42a5f5";
-                break;
-            case "N":
-                this.userColorCode = "#29b6f6";
-                break;
-            case "O":
-                this.userColorCode = "#26c6da";
-                break;
-            case "P":
-                this.userColorCode = "#26a69a";
-                break;
-            case "Q":
-                this.userColorCode = "#00b0ff";
-                break;
-            case "R":
-                this.userColorCode = "#43a047";
-                break;
-            case "S":
-                this.userColorCode = "#7cb342";
-                break;
-            case "T":
-                this.userColorCode = "#c0ca33";
-                break;
-            case "U":
-                this.userColorCode = "#00c853";
-                break;
-            case "V":
-                this.userColorCode = "#64dd17";
-                break;
-            case "W":
-                this.userColorCode = "#fb8c00";
-                break;
-            case "X":
-                this.userColorCode = "#ffab00";
-                break;
-            case "Y":
-                this.userColorCode = "#f4511e";
-                break;
-            default:
-                this.userColorCode = "#dd2c00";
-                break;
-        }
-    }
-    logOut() {
-        const payload = {
-            appName: this.envService.getAppName(),
-            data: {
-                accessToken: this.storageService.GetAccessToken()
-            }
-        }
-        this.authService.Logout(payload);
-    }
-
-    changeOurSolution(menu) {
-        this.dataShareService.sendCurrentPage('HOME2')
-        this.router.navigate([menu]);
-    }
-
-    changeAboutUs(menu) {
-        this.dataShareService.sendCurrentPage('HOME2')
-        this.router.navigate([menu]);
-    }
+        
     goToMOdule() {
-        this.dataShareService.sendCurrentPage('MODULE')
-        //this.menuData = [];
-        this.goToHome.emit();
-        this.apiService.resetMenuData();
+        this.dataShareService.sendCurrentPage('MODULE');
+        this.menuData = []; 
+        this.dataShareService.setModuleIndex(-1);       
         const menuType = this.storageService.GetMenuType()
         if (menuType == 'Horizontal') {
             this.router.navigate(['/home']);
@@ -724,9 +318,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.router.navigate(['/dashboard']);
         }
     }
-    goToVdr() {
-        this.router.navigate(['/vdr']);
-    }
+    
 
     @HostListener('window:scroll', ['$event'])
 
@@ -742,38 +334,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }
 
     }
-
-    selectClass() {
-        if (this.currentPage == 'HOME') {
-            return 'home fixed-top';
-        }
-        else if (this.currentPage == 'HOME2') {
-            let element = document.querySelector('.navbar');
-            element.classList.add('navbar-inverse', 'shadow');
-            return 'fixed-top'
-        }
-        else {
-            return ''
-        }
-    }
-
-    gotoStaticMenu(menu) {
-        if (menu == 'home_page') {
-            this.dataShareService.sendCurrentPage('HOME')
-            let element = document.querySelector('.navbar');
-            element.classList.remove('navbar-inverse', 'shadow');
-        }
-        else {
-            this.dataShareService.sendCurrentPage('HOME2')
-        }
-
-        this.router.navigate([menu])
-    }
-
-    onBarIconSelection() {
-        let ele = document.querySelector("links");
-        ele.classList.toggle('d-block')
-    }
+  
     getCurrentMenu() {
         const currentMenu = this.storageService.GetActiveMenu();
         if (currentMenu && currentMenu.name && currentMenu.name != null) {
@@ -781,50 +342,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         } else {
             return;
         }
-    }
-    navigateDashboard() {
-        this.fullHeader = false;
-        this.menuBoxHome = false;
-        this.menuBoxDashboard = false;
-        this.loginUserIcon = false;
-        this.showUserAccount = false;
-        const menuType = this.storageService.GetMenuType()
-        if (menuType == 'Horizontal') {
-            this.router.navigate(['/home']);
-        } else {
-            this.router.navigate(['/dashboard']);
+    }  
+    
+    GoToSelectedModule(item){        
+        if(item && item.name){
+            this.selected = new FormControl(1);
+            this.menuOrModuleCommounService.setModuleName(item.name);
         }
-        if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
-            const idToken = this.storageService.GetIdToken();
-            this.authService.GetUserInfoFromToken(idToken);
-        } else {
-            const payload = {
-                appName: this.envService.getAppName(),
-                data: {
-                    accessToken: this.storageService.GetAccessToken()
-                }
-            }
-            this.authService.SessionExpired(payload);
-        }
-    }
-    gitInfo() {
-        this.modelService.open('git_version', {})
-    }
-    feedback() {
-        this.modelService.open('feedback_model', {})
-     }
-    GoToSelectedModule(item){
-        this.selected = new FormControl(1);
-        this.storageService.setModule(item.name); 
-        this.dataShareService.sendCurrentPage('DASHBOARD')
-        // const menuSearchModule = { "value": "menu", key2: item.name }
-        // this.apiService.GetTempMenu(menuSearchModule)
-        if(this.moduleIndex == -1){
-            const criteria = "module_name;eq;"+item.name+";STATIC";        
-            const payload = this.commonfunctionService.getPaylodWithCriteria("menu",'',[criteria],{});        
-            this.apiService.GetTempMenu(payload);
-            this.getTemplateByMenu = true;
-        }
+        this.dataShareService.sendCurrentPage('DASHBOARD');
         this.showsearchmenu = false;
         this.filterdata = '';
     }

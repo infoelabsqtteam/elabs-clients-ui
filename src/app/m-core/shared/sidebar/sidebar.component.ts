@@ -9,6 +9,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { Subscription } from 'rxjs';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,15 +24,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   AllModuleList:any=[];
   modal:any='';
   sidebar2 = true;
-  pageNumber: number = 0;
-  itemNumOfGrid: any = 25;
-  favrotedata;
-  favDataSubscription;
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
   
-  @Output() moduleSelect = new EventEmitter();
-
   constructor( 
     private router: Router,
     private storageService:StorageService,
@@ -40,7 +35,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
     private apiService:ApiService,
-    private commonfunctionService:CommonFunctionService
+    private commonfunctionService:CommonFunctionService,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {
     
     // this.dataShareService.otherSaveCall.subscribe(responce => {
@@ -65,67 +61,14 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     let moduleList = this.storageService.GetModules();
-    this.AllModuleList = this.modifyModuleListWithPermission(moduleList);;
+    this.AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList);
     this.initialize();
   }
 
   ngAfterViewInit() {
     
   }
-  modifyModuleListWithPermission(moduleList){
-    let modifyModuleList = [];
-    if(moduleList && moduleList.length > 0){
-      moduleList.forEach(module => {
-        if(module && module.menu_list && module.menu_list.length > 0){
-          let menuList = module.menu_list;
-          module.menu_list = this.setDisplayInMenuWithPermission(menuList);
-          modifyModuleList.push(module);
-        }else{
-          modifyModuleList.push(module);
-        }
-      });
-    }
-    return modifyModuleList;
-  }
-  setDisplayInMenuWithPermission(menuList){
-    let modifyMenuList = [];
-    if(menuList && menuList.length > 0){
-        for (let index = 0; index < menuList.length; index++) {
-            const menu = menuList[index];
-            if(menu.submenu && menu.submenu != null){
-                let modifySubMenuList = [];
-                let check = 0;
-                for (let j = 0; j < menu.submenu.length; j++) {
-                    const submenu = menu.submenu[j];
-                    if(!this.checkPermission(submenu)){
-                        submenu['display'] = true;
-                        modifySubMenuList.push(submenu);
-                        check = 1;
-                    }else{
-                        submenu['display'] = false;
-                        modifySubMenuList.push(submenu);
-                    }
-                }
-                if(check == 1){
-                    menu['display'] = true;                        
-                }else{
-                    menu['display'] = false;
-                }
-                menu.submenu = modifySubMenuList;
-                modifyMenuList.push(menu);
-            }else{
-                if(!this.checkPermission(menu)){
-                    menu['display'] = true;
-                    modifyMenuList.push(menu);
-                }else{
-                    menu['display'] = false;
-                    modifyMenuList.push(menu); 
-                }
-            }                
-        }
-    }
-    return modifyMenuList;
-}
+  
 
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
@@ -174,22 +117,14 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   
   
-  GoToSelectedModule(module){ 
-    // console.log(index)
-    const moduleList = this.storageService.GetModules();
-    let index = -1;
-    moduleList.forEach((elem, i) => {
-      if(elem._id == module._id){
-        index = i;
-      }
-    });
-    if(index != -1){
-      const moduleObject=this.AllModuleList[index];
-      this.setAppId(moduleObject);
-      this.moduleSelect.emit(index);
-    }    
+  GoToSelectedModule(module,moduleIndex){
+      this.menuOrModuleCommounService.setModuleName(module.name);
+      this.dataShareService.sendCurrentPage('DASHBOARD')
+      if(moduleIndex != -1){
+        this.dataShareService.setModuleIndex(moduleIndex);    
+      }    
   }
-  getTemplateData(module,submenu) {
+  getTemplateData(module,submenu,moduleIndex) {
     if(this.permissionService.checkPermission(submenu.name,'view')){
         this.storageService.SetActiveMenu(submenu);
         if (submenu.label == "Navigation") {
@@ -208,19 +143,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           else{
             this.apiService.resetTempData();
             this.apiService.resetGridData();
-            this.GoToSelectedModule(module);
+            this.GoToSelectedModule(module,-1);
             this.router.navigate(['template']);  
           }           
         }
     }else{
         this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
-}
-checkPermission(menu){
-  return !this.permissionService.checkPermission(menu.name, 'view')
-}
-setAppId(module){
-  this.storageService.setModule(module.name);
 }
 addFebMenu(menu,parent){
   this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());

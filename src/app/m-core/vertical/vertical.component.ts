@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./vertical.component.css']
 })
 export class VerticalComponent implements OnInit {
-  moduleIndex : any = -1;
+  //moduleIndex : any = -1;
   dashbordPage:boolean=false;
   navigationSubscription;
   applicationSettingSubscription:Subscription;
@@ -86,15 +86,15 @@ export class VerticalComponent implements OnInit {
       document.body.classList.remove('vertical-collpsed');
     }
   }
-  changeModul(moduleIndex){
-    this.moduleIndex = moduleIndex;
-    if(this.moduleIndex != -1) {
-      this.dataShareService.sendCurrentPage('DASHBOARD')
-    }
-  }
-  goToHome(){
-    this.moduleIndex = -1;
-  } 
+  // changeModul(moduleIndex){
+  //   this.moduleIndex = moduleIndex;
+  //   if(this.moduleIndex != -1) {
+  //     this.dataShareService.sendCurrentPage('DASHBOARD')
+  //   }
+  // }
+  // goToHome(){
+  //   this.moduleIndex = -1;
+  // } 
   pageload(){
     this.logoPath = this.storageService.getLogoPath() + "logo.png";
   }

@@ -4,15 +4,15 @@
   <perfect-scrollbar>
     <div class="metismenu list-unstyled mb-5" #sideMenu>
       <mat-accordion>
-        <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index">
-          <mat-expansion-panel-header *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item)">
+        <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index" [ngClass]="{'d-none': !item.display}">
+          <mat-expansion-panel-header *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" (click)="GoToSelectedModule(item,i)">
             <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="20"><span class="ml-2 menutitle">{{ item.title }}</span></mat-panel-title>
           </mat-expansion-panel-header>
 
           <div *ngIf="hasMenu(item)" class="menulist">
             <div class="menuitems" *ngFor="let subitem of item.menu_list">
               <div class="position-relative" *ngIf="!hasSubMenu(subitem)" [ngClass]="{'d-none': !subitem.display}">
-                <a [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem)">{{ subitem.label }}</a>
+                <a [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem,i)">{{ subitem.label }}</a>
                 <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
               </div>
               
@@ -20,7 +20,7 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" [ngClass]="{'d-none': !subitem.display}">{{ subitem.label }}</mat-expansion-panel-header>
                   <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu" [ngClass]="{'d-none': !subSubitem.display}">
-                    <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem)">{{ subSubitem.label }}</small>
+                    <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getTemplateData(item,subSubitem,i)">{{ subSubitem.label }}</small>
                     <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span>
                   </div>
                 </mat-expansion-panel>
