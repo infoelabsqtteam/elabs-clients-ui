@@ -10,8 +10,8 @@
           </mat-expansion-panel-header>
 
           <div *ngIf="hasMenu(item)" class="menulist">
-            <div class="menuitems" *ngFor="let subitem of item.menu_list">
-              <div class="position-relative" *ngIf="!hasSubMenu(subitem)" [ngClass]="{'d-none': !subitem.display}">
+            <div class="menuitems" *ngFor="let subitem of item.menu_list" [ngClass]="{'d-none': !subitem.display}">
+              <div class="position-relative" *ngIf="!hasSubMenu(subitem)" >
                 <a [attr.data-parent]="subitem.parentId" (click)="getTemplateData(item,subitem,i)">{{ subitem.label }}</a>
                 <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
               </div>
