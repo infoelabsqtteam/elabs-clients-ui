@@ -3749,7 +3749,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     return display;
   }
   checkGridSelectionButtonCondition(field,button){
-    let check = false;
+    let check = true;
     switch (button) {
       case 'add':
         if(field && field.addNewButtonIf && field.addNewButtonIf != ''){
