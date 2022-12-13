@@ -3307,17 +3307,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           data = this.custmizedFormValue[field.field_name];
         }
         if(field.mendetory_fields && field.mendetory_fields.length > 0){
+          field.mendetory_fields = this.modifiedGridColumns(field.mendetory_fields)
           if(data && data.length > 0){
             field.mendetory_fields.forEach(mField => {
               const fieldName = mField.field_name;
-              data.forEach(row => {
-                if(row && row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null){
-                  if(validation.msg == ''){
-                    validation.msg = mField.label + ' of ' + field.label+' is required.';
+              if(mField.display){
+                data.forEach(row => {
+                  if(row && row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null){
+                    if(validation.msg == ''){
+                      validation.msg = mField.label + ' of ' + field.label+' is required.';
+                    }
+                    check = 1;
                   }
-                  check = 1;
-                }
-              });
+                });
+              }
             });
           }
         }     
@@ -3744,6 +3747,21 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     modifiedField['display'] = display; 
     field = modifiedField;
     return display;
+  }
+  checkGridSelectionButtonCondition(field,button){
+    let check = false;
+    switch (button) {
+      case 'add':
+        if(field && field.addNewButtonIf && field.addNewButtonIf != ''){
+          let modifyedField:any = {};
+          modifyedField['show_if'] = field.addNewButtonIf;
+          check = this.showIf(modifyedField);
+        }
+        break;    
+      default:
+        break;
+    }
+    return check;
   }
   editListOfFiedls(object,index){
     this.listOfFieldUpdateMode = true;
