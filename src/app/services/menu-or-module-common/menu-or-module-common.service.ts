@@ -151,7 +151,7 @@ constructor(
       if(menuList && menuList.length > 0){
           for (let index = 0; index < menuList.length; index++) {
               const menu = menuList[index];
-              if(menu.submenu && menu.submenu != null){
+              if(menu.display && menu.submenu && menu.submenu != null){
                   for (let j = 0; j < menu.submenu.length; j++) {
                       const submenu = menu.submenu[j];
                       if(submenu.display){
