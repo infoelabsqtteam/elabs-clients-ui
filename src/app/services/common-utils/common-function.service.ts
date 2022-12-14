@@ -19,6 +19,7 @@ import { ModelService } from '../model/model.service';
 import { EnvService } from '../env/env.service';
 import { I, L } from '@angular/cdk/keycodes';
 import { Common } from 'src/app/shared/enums/common.enum';
+import { PermissionService } from '../permission/permission.service';
 
 
 @Injectable({
@@ -45,7 +46,8 @@ export class CommonFunctionService {
     private notificationService:NotificationService,
     private apiService:ApiService,
     private coreFunctionService:CoreFunctionService,
-    private envService:EnvService
+    private envService:EnvService,
+    private permissionService:PermissionService
     ) {
     this.userInfo = this.storageService.GetUserInfo();
   }
@@ -3254,30 +3256,7 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       ref["version"] = obj.version
     }
     return ref;
-  }
-  moduleIndex(moduleId){
-    let moduleList = this.storageService.GetModules();
-    return this.getIndexInArrayById(moduleList,moduleId);    
-  }
-  getMenuName(module,menuId,submenuId){
-    let menuList = module.menu_list;
-    let menuIndex = this.getIndexInArrayById(menuList,menuId);
-    let menu = menuList[menuIndex];
-    let menuName = "";
-    if(submenuId != ""){
-      if(menu.submenu){
-        let subMenuList = menu.submenu;
-        if(subMenuList && subMenuList.length > 0){
-            let subMenuIndex = this.getIndexInArrayById(subMenuList,submenuId);
-            let submenu = subMenuList[subMenuIndex];
-            menuName = submenu.name;
-        }
-      }
-    }else{
-      menuName = menu.name;
-    }
-    return menuName;
-  }
+  }  
   dateDiff(dateSent){
     let obj={};
     let currentDate = new Date();
@@ -3335,6 +3314,7 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     }
     return gridColumns;
   }
+  
   getApplicationAllSettings() {
     const payload1 = this.setPageNoAndSize(this.getPaylodWithCriteria("application_setting", "", [], {}), 1);
     this.apiService.getAplicationsSetting(payload1);

@@ -7,6 +7,7 @@ import { Common } from 'src/app/shared/enums/common.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ApiService } from 'src/app/services/api/api.service';
 import { Router } from '@angular/router';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 @Component({
   selector: 'app-notification-list',
@@ -30,7 +31,8 @@ export class NotificationListComponent implements OnInit {
     private dataShareService:DataShareService,
     private CommonFunctionService:CommonFunctionService,
     private apiService:ApiService,
-    private router: Router
+    private router: Router,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
   )
   { 
     this.CommonFunctionService.getUserNotification(this.pageNumber);
@@ -199,12 +201,12 @@ export class NotificationListComponent implements OnInit {
     let moduleId = list[1];
     let menuId = list[2];
     let submenuId = list[3];
-    let moduleIndex = this.CommonFunctionService.moduleIndex(moduleId);
+    let moduleIndex = this.menuOrModuleCommounService.getModuleIndexById(moduleId);
     //this.dataShareService.setModuleIndex(moduleIndex);
     if(moduleIndex != undefined){
       let moduleList = this.storageService.GetModules();
       let module = moduleList[moduleIndex];
-      let menuName = this.CommonFunctionService.getMenuName(module,menuId,submenuId);
+      let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
       let menu = {
         "name" : menuName
       }

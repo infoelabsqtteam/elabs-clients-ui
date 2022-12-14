@@ -1,4 +1,5 @@
 import { Injectable,EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -63,6 +64,7 @@ export class DataShareService {
   applicationSettings:EventEmitter<any> = new EventEmitter<any>();
   userNotification:EventEmitter<any> = new EventEmitter<any>();
   userPreference:EventEmitter<any> = new EventEmitter<any>();
+  moduleIndex:Subject<any> = new Subject<any>();
 
   constructor() { }
 
@@ -268,5 +270,8 @@ export class DataShareService {
   }
   subscribeTemeSetting(responce){
     this.applicationSettings.emit(responce);
+  }
+  setModuleIndex(index){
+    this.moduleIndex.next(index);
   }
 }

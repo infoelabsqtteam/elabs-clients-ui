@@ -9,6 +9,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { Subscription } from 'rxjs';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,15 +24,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   AllModuleList:any=[];
   modal:any='';
   sidebar2 = true;
-  pageNumber: number = 0;
-  itemNumOfGrid: any = 25;
-  favrotedata;
-  favDataSubscription;
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
   
-  @Output() moduleSelect = new EventEmitter();
-
   constructor( 
     private router: Router,
     private storageService:StorageService,
@@ -40,7 +35,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
     private apiService:ApiService,
-    private commonfunctionService:CommonFunctionService
+    private commonfunctionService:CommonFunctionService,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {
     
     // this.dataShareService.otherSaveCall.subscribe(responce => {
@@ -64,13 +60,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.AllModuleList = this.storageService.GetModules();
+    let moduleList = this.storageService.GetModules();
+    this.AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList);
     this.initialize();
   }
 
   ngAfterViewInit() {
     
   }
+  
 
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
@@ -119,22 +117,14 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   
   
-  GoToSelectedModule(module){ 
-    // console.log(index)
-    const moduleList = this.storageService.GetModules();
-    let index = -1;
-    moduleList.forEach((elem, i) => {
-      if(elem._id == module._id){
-        index = i;
-      }
-    });
-    if(index != -1){
-      const moduleObject=this.AllModuleList[index];
-      this.setAppId(moduleObject);
-      this.moduleSelect.emit(index);
-    }    
+  GoToSelectedModule(module,moduleIndex){
+      this.menuOrModuleCommounService.setModuleName(module.name);
+      this.dataShareService.sendCurrentPage('DASHBOARD')
+      if(moduleIndex != -1){
+        this.dataShareService.setModuleIndex(moduleIndex);    
+      }    
   }
-  getTemplateData(module,submenu) {
+  getTemplateData(module,submenu,moduleIndex) {
     if(this.permissionService.checkPermission(submenu.name,'view')){
         this.storageService.SetActiveMenu(submenu);
         if (submenu.label == "Navigation") {
@@ -153,16 +143,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           else{
             this.apiService.resetTempData();
             this.apiService.resetGridData();
-            this.GoToSelectedModule(module);
+            this.GoToSelectedModule(module,-1);
             this.router.navigate(['template']);  
           }           
         }
     }else{
         this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
-}
-setAppId(module){
-  this.storageService.setModule(module.name);
 }
 addFebMenu(menu,parent){
   this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
