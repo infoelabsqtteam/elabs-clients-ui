@@ -507,18 +507,21 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if(this.field && this.field.mendetory_fields && this.field.mendetory_fields.length > 0){            
       if(this.selectedData && this.selectedData.length > 0){
-        this.field.mendetory_fields.forEach(mField => {
+        this.field.mendetory_fields = this.CommonFunctionService.modifiedGridColumns(this.field.mendetory_fields,this.parentObject)
+        this.field.mendetory_fields.forEach(mField => {          
           const fieldName = mField.field_name;
-          this.selectedData.forEach((row,i) => {
-            let checkDisable = this.isDisable(mField,row);
-            if(row && !checkDisable && (row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null)){
-              if(validation.msg == ''){
-                const rowNo = i + 1;
-                validation.msg = mField.label+'( '+rowNo+' ) is required.';
+          if(mField.display){
+            this.selectedData.forEach((row,i) => {
+              let checkDisable = this.isDisable(mField,row);
+              if(row && !checkDisable && (row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null)){
+                if(validation.msg == ''){
+                  const rowNo = i + 1;
+                  validation.msg = mField.label+'( '+rowNo+' ) is required.';
+                }
+                check = 1;
               }
-              check = 1;
-            }
-          });
+            });
+          }
         });        
       }
     }
@@ -553,9 +556,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   getCorrectIndex(data, indx){
     let index;
-    if (data._id != undefined) {
-      index = this.CommonFunctionService.getIndexInArrayById(this.gridData, data._id);
-    } else if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
+    if (this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length > 0) {
       this.gridData.forEach((row, i) => {
         var validity = true;
         this.field.matching_fields_for_grid_selection.forEach(matchcriteria => {
@@ -570,10 +571,12 @@ export class GridSelectionModalComponent implements OnInit {
           index = i;
         }
       });
+    }else if (data._id != undefined) {
+      index = this.CommonFunctionService.getIndexInArrayById(this.gridData, data._id);
     } else {
       index = indx;
     } 
-    if(index && index != indx){
+    if(index && index != indx && this.data == ''){
       index = indx;
     }
     return index;

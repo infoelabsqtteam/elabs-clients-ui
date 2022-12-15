@@ -260,6 +260,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   } 
+  checkPermission(tab){
+    return !this.permissionService.checkPermission(tab.tab_name, 'view')
+  }
   
   gateTabName(tab) {
     if (tab.label && tab.label != '' && tab.label != null) {

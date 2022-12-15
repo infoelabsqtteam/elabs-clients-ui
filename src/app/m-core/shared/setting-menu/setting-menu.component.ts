@@ -12,6 +12,7 @@ import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
 import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 import { Subscription } from "rxjs";
+import { MenuOrModuleCommonService } from "src/app/services/menu-or-module-common/menu-or-module-common.service";
 
 
 
@@ -112,7 +113,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         private authService: AuthService,
         private notificationService: NotificationService,
         public envService: EnvService,
-        private commonfunctionService:CommonFunctionService
+        private commonfunctionService:CommonFunctionService,
+        private menuOrModuleCommounService:MenuOrModuleCommonService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -421,12 +423,12 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         let moduleId = list[1];
         let menuId = list[2];
         let submenuId = list[3];
-        let moduleIndex = this.commonfunctionService.moduleIndex(moduleId);
+        let moduleIndex = this.menuOrModuleCommounService.getModuleIndexById(moduleId);
         //this.dataShareService.setModuleIndex(moduleIndex);
         if(moduleIndex != undefined){
         let moduleList = this.storageService.GetModules();
         let module = moduleList[moduleIndex];
-        let menuName = this.commonfunctionService.getMenuName(module,menuId,submenuId);
+        let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
         let menu = {
             "name" : menuName
         }

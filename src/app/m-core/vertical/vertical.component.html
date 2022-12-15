@@ -22,13 +22,13 @@
     <a class="logo px-2" [routerLink]="['/home']"><img [src]="logoPath" alt=""></a>
     <button mat-icon-button (click)="drawer.toggle()"><mat-icon>sort</mat-icon></button>
   </div>
-  <div class="topheader"><app-header class="w-100" [moduleIndex]="moduleIndex" (goToHome)="goToHome()"></app-header></div>
+  <div class="topheader"><app-header class="w-100"></app-header></div>
   <div class="settingmenu"><button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>account_circle</mat-icon></button></div>
 </mat-toolbar>
 
 
 <mat-drawer-container>
-  <mat-drawer #drawer [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'"><app-sidebar (moduleSelect)="changeModul($event)"></app-sidebar></mat-drawer>
+  <mat-drawer #drawer [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'"><app-sidebar></app-sidebar></mat-drawer>
   <mat-drawer #rightsidenav mode="over" position="end" class="rightsidebar"><app-setting-menu></app-setting-menu></mat-drawer>
   <div class="pt-3">
     <router-outlet></router-outlet>
