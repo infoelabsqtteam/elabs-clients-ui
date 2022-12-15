@@ -5,8 +5,6 @@ import { DocDataShareService } from 'src/app/services/data-share/doc-data-share/
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { ModelService } from '../../../../services/model/model.service';
-import {ThemePalette} from '@angular/material/core';
-import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 import * as S3 from 'aws-sdk/clients/s3';
 import { config } from '../../config.modal';
 
@@ -56,35 +54,40 @@ export class DocFileDownloadComponent implements OnInit {
     this.downloadDocFileModal.show()    
     this.vdrprentfolder = object.folder; 
     //console.log(this.vdrprentfolder);
-    const bucket = new S3(config);	
-		const params = {        
-			Bucket: 'documents-e-labs-ai',
-			Key: this.vdrprentfolder.key
-		 };
+    let bucketaName = this.storageService.getBucketName();
+    if(bucketaName != ''){
+      const bucket = new S3(config);	
+      const params = {        
+        Bucket: bucketaName,
+        Key: this.vdrprentfolder.key
+      };
 
-		bucket.getObject(params, (err:any, data:any) =>{
-		if (err) {
-			this.notificationService.notify('bg-danger',err);
-		}else{
-			let link = document.createElement('a');
-			link.setAttribute('type', 'hidden');
-			const file = new Blob([data.Body], { type: data.ContentType });
-			const url = window.URL.createObjectURL(file);
-			link.href = url;
-			link.download = this.vdrprentfolder.rollName;
-			document.body.appendChild(link);
-			link.click();
-			link.remove();
-      const dataDownload = this.vdrprentfolder;
-      dataDownload.log = this.storageService.getUserLog();
-      this.docApiService.SetDocFileAutditAfterDownload(dataDownload);
-      this.cancel();
-		}
-		}).on('httpDownloadProgress',(progress) => {  
-         
-			this.downloadProgressValue = Math.round(100.0 * (progress.loaded / progress.total));
-			//console.log(this.downloadProgressValue + ' %' + progress.loaded + ' of ' + progress.total + ' Bytes');
-		});
+      bucket.getObject(params, (err:any, data:any) =>{
+      if (err) {
+        this.notificationService.notify('bg-danger',err);
+      }else{
+        let link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        const file = new Blob([data.Body], { type: data.ContentType });
+        const url = window.URL.createObjectURL(file);
+        link.href = url;
+        link.download = this.vdrprentfolder.rollName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        const dataDownload = this.vdrprentfolder;
+        dataDownload.log = this.storageService.getUserLog();
+        this.docApiService.SetDocFileAutditAfterDownload(dataDownload);
+        this.cancel();
+      }
+      }).on('httpDownloadProgress',(progress) => {  
+          
+        this.downloadProgressValue = Math.round(100.0 * (progress.loaded / progress.total));
+        //console.log(this.downloadProgressValue + ' %' + progress.loaded + ' of ' + progress.total + ' Bytes');
+      });
+    }else{
+      this.notificationService.notify('bg-danger','Bucket Name is Required !!!');
+    }
   }
   cancel(){
     this.close()

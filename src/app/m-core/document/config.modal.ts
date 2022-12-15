@@ -1,5 +1,5 @@
 export const config = {
-    accessKeyId: 'AKIA2FN5UBQH66NW7I5L',
-    secretAccessKey: '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',
+    accessKeyId: 'AKIAUIGGVCG3ISXY3VBL',
+    secretAccessKey: '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',
     region: 'ap-south-1'
 }

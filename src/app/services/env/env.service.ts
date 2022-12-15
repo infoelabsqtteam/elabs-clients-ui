@@ -139,25 +139,8 @@ export class EnvService {
 
   setApplicationSetting(){
     let applicationSettingObj = this.storageService.getApplicationSetting();
-    let projectFolderName = applicationSettingObj['folder'];
-    let menuType = applicationSettingObj['menu_type'];
-    let tempTheme = applicationSettingObj['theme'];
     let giolocation = applicationSettingObj['google_map'];
-    let tempName = applicationSettingObj['temp_name'];
-    let pageTitle = applicationSettingObj['title'];
-    let verify_type = applicationSettingObj['varify_mode'];
-    let team_name = applicationSettingObj['teamname'];
-    const path = 'assets/img/logo/' + projectFolderName + '/';      
-    this.storageService.setLogoPath(path); 
-    this.storageService.SetMenuType(menuType);
-    this.storageService.setPageTheme(tempTheme);
-    this.setGoogleLocation(giolocation); 
-    this.storageService.setTempName(tempName);      
-    this.storageService.setPageTitle(pageTitle);
-    if(verify_type){
-      this.storageService.setVerifyType(verify_type);
-    }            
-    this.storageService.setTeamName(team_name);
+    this.setGoogleLocation(giolocation);   
   }
   setThemeSetting(settingObj) {
       if(settingObj.header_bg_color != "" ) {
