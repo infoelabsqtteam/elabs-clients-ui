@@ -229,16 +229,7 @@ export class StorageService {
     }    
   }
   GetMenuType(){
-    // const obj = JSON.parse(localStorage.getItem(this.USER_KEY));
-    // if(obj && obj[this.appName]){
-    //   if(obj[this.appName].menu_type){
-    //     return obj[this.appName].menu_type
-    //   }
-    //   else{
-    //     return null;
-    //   }
-    // } 
-    const menu_Type = JSON.parse(localStorage.getItem(this.MENU_TYPE));
+    const menu_Type = this.getApplicationValueByKey('menu_type');
     if(menu_Type){
         return menu_Type;
       }
@@ -246,14 +237,6 @@ export class StorageService {
         return null;
     }
   }
-
-
-  SetMenuType(menu_Type) {
-    localStorage.setItem(this.MENU_TYPE, JSON.stringify(menu_Type));
-  }
-
-
-
   getUserLog() {
     const userObj = JSON.parse(localStorage.getItem(this.USER_KEY));
     if(userObj && userObj[this.appName]){
@@ -550,57 +533,36 @@ export class StorageService {
   getHostNameDinamically(){
     return localStorage.getItem(this.HOST_NAME);
   }
-
-  setLogoPath(path:string){
-    localStorage.setItem(this.PROJECT_FOLDER_NAME, path);
-  }
-
   getLogoPath(){
-    return localStorage.getItem(this.PROJECT_FOLDER_NAME);
+    let projectFolderName = this.getApplicationValueByKey('folder')
+    return 'assets/img/logo/' + projectFolderName + '/';
   }
-
-
-  setPageTitle(title:string){
-    localStorage.setItem(this.PAGE_TITLE, title);
-  }
-
   getPageTitle(){
-    return localStorage.getItem(this.PAGE_TITLE);
-  }
-
-  setVerifyType(type){
-    localStorage.setItem(this.VERIFY_TYPE, type);
+    return this.getApplicationValueByKey('title');
   }
   getVerifyType(){
-    return localStorage.getItem(this.VERIFY_TYPE);
+    return this.getApplicationValueByKey('varify_mode');
   }
-
-
-  setPageTheme(theme:string){
-    localStorage.setItem(this.TEMP_THEME, theme);
-  }
-
   getPageThmem(){
-    return localStorage.getItem(this.TEMP_THEME);
-  }
-
-
-
-  setTempName(temp){
-    localStorage.setItem(this.TEMP_NAME,temp);
+    return this.getApplicationValueByKey('theme');    
   }
   getTemplateName(){
-    const template:string=localStorage.getItem(this.TEMP_NAME);
-    return template;
+    return this.getApplicationValueByKey('temp_name');
   }
-
-
-  setTeamName(teamname:string){
-    localStorage.setItem(this.TEAM_NAME, teamname);
-  }
-
   getTeamName(){
-    return localStorage.getItem(this.TEAM_NAME);
+    return this.getApplicationValueByKey('teamname');
+  }
+
+  getBucketName(){    
+    return this.getApplicationValueByKey('bucket');
+  }
+  getApplicationValueByKey(key){
+    let value = "";
+    let applicationSetting = this.getApplicationSetting();
+    if(applicationSetting && applicationSetting[key]){
+      value = applicationSetting[key];
+    }    
+    return value;
   }
 
 
