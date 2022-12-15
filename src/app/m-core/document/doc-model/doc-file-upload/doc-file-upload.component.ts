@@ -5,8 +5,6 @@ import { DocDataShareService } from 'src/app/services/data-share/doc-data-share/
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { ModelService } from '../../../../services/model/model.service';
-import {ThemePalette} from '@angular/material/core';
-import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 import * as S3 from 'aws-sdk/clients/s3';
 import { config } from '../../config.modal';
 
@@ -203,34 +201,39 @@ export class DocFileUploadComponent implements OnInit {
 		this.uploadByS3(newObj,file);	
 	}
 	uploadByS3(newObj,file){
-		const bucket = new S3(config);	        
-		const params = {
-			Bucket: 'documents-e-labs-ai',
-			Key: newObj.key + file.name,
-			Body: file,
-			ACL: 'private',
-			ContentType: file.type
-		};
-		
-		bucket.upload(params).on('httpUploadProgress', (evt) => {        
-			this.uploadProgressValue = Math.round(100.0 * (evt.loaded / evt.total));
-			//console.log(this.uploadProgressValue + ' %' + evt.loaded + ' of ' + evt.total + ' Bytes');
-		}).send( (err, data) => {
-			if (err) {
-				this.notificationService.notify("success","There was an error uploading your file: "+ err);
-				//console.log('There was an error uploading your file: ', err);
-				return false;
-			}			
-			const key = data.Key;
-			newObj.key = key;
-			newObj.capKey = key.toUpperCase();
-			newObj.bucket = data.Bucket;
-			this.files[this.currentFileIndex].upload = true;
-			this.uploadProgressValue = 0;
-			this.docApiService.SaveUploadFile(newObj);
-			this.uploadFilesData = [];					
-			return true;
-		});
+		let bucketaName = this.storageService.getBucketName();
+		if(bucketaName != ''){
+			const bucket = new S3(config);	        
+			const params = {
+				Bucket: bucketaName,
+				Key: newObj.key + file.name,
+				Body: file,
+				ACL: 'private',
+				ContentType: file.type
+			};
+			
+			bucket.upload(params).on('httpUploadProgress', (evt) => {        
+				this.uploadProgressValue = Math.round(100.0 * (evt.loaded / evt.total));
+				//console.log(this.uploadProgressValue + ' %' + evt.loaded + ' of ' + evt.total + ' Bytes');
+			}).send( (err, data) => {
+				if (err) {
+					this.notificationService.notify("success","There was an error uploading your file: "+ err);
+					//console.log('There was an error uploading your file: ', err);
+					return false;
+				}			
+				const key = data.Key;
+				newObj.key = key;
+				newObj.capKey = key.toUpperCase();
+				newObj.bucket = data.Bucket;
+				this.files[this.currentFileIndex].upload = true;
+				this.uploadProgressValue = 0;
+				this.docApiService.SaveUploadFile(newObj);
+				this.uploadFilesData = [];					
+				return true;
+			});
+		}else{
+			this.notificationService.notify('bg-danger','Bucket Name is Required !!!');
+		}
 	}
 	useDetails() {
 		this.newFolder = {
