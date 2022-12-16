@@ -92,12 +92,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {     
     this.router.events.subscribe(event =>{
-      // if (event instanceof NavigationStart){
-      //   console.log("Navigation Start :-"+event.url)
-      //   if(event.url == '/' || event.url == '/home_page' || event.url == '/template'){
-          
-      //   }
-      // }
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
           this.redirectToHomePage();
@@ -110,60 +104,47 @@ export class AppComponent implements OnInit {
         }
       }      
    })
-   
-  
-
-    // if (this.storageService != null && this.storageService.GetIdToken() != null) {
-    //   const idToken = this.storageService.GetIdToken();
-    //   if(this.storageService.GetIdTokenStatus() == appConstant.TOKEN_STATUS.ID_TOKEN_ACTIVE){
-    //     this.store.dispatch(
-    //       new authAction.GetUserInfoFromToken(idToken)
-    //     )
-    //   }else{        
-    //     const payload = {
-    //       appName: appConstant.appName,
-    //       data:{
-    //           accessToken:this.storageService.GetAccessToken()
-    //       }
-    //     }
-    //     this.store.dispatch(
-    //         new authAction.SessionExpired(payload)
-    //     );
-    //   }
-      
-    // }else if(this.router.url){
-    //   console.log(this.router.url.indexOf('/template'));
-    // }else{
-      
-    // }
-
-    // if(this.router.url == '/'){
-    //   this.redirectToHomePage();
-    // }
-
-    // if(this.router.url == '/'){
-    //   this.redirectToHomePage();
-    // }
     
     Amplify.configure(awsconfig);
   }
 
   redirectToHomePage(){
-    this.storageService.removeDataFormStorage();
+    //this.storageService.removeDataFormStorage();
     //this.localSetting();
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
-    if (this.storageService != null && this.storageService.GetIdToken() != null) {
-        const idToken = this.storageService.GetIdToken();
-        if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
-          this.authApiService.redirectionWithMenuType();            
-        }else{
-          this.authApiService.redirectToSignPage(); 
-        }
+    if(!this.checkApplicationSetting()){
+      this.commonfunctionService.getApplicationAllSettings();
+    }
+    if(this.checkIdTokenStatus()){
+      this.authApiService.redirectionWithMenuType();
+    }else{
+      this.authApiService.redirectToSignPage();
+    }
+  }
+  checkIdTokenStatus(){
+    let tokenStatus = false;
+    if (this.storageService != null && this.storageService.GetIdToken() != null) {      
+      if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
+        tokenStatus = true;           
       }else{
-        this.authApiService.redirectToSignPage(); 
+        tokenStatus = false; 
       }
+    }else{
+      tokenStatus = false; 
+    }
+    return tokenStatus;
+  }
+  checkApplicationSetting(){
+    let exists = false;
+    let applicationSetting = this.storageService.getApplicationSetting();
+    if(applicationSetting){
+      exists = true;
+    }else{
+      exists = false;
+    }
+    return exists;
   }
 
   @HostListener("window:onbeforeunload",["$event"])
@@ -188,13 +169,13 @@ export class AppComponent implements OnInit {
     this.themeName = this.storageService.getPageThmem();
   }
 
-  localSetting(){
-    const settingObj = this.envService.getHostKeyValue('object');
-    this.storageService.setApplicationSetting(settingObj);
-    this.envService.setApplicationSetting();
-    const themSettingObj = this.envService.getHostKeyValue('theme_setting');
-    this.storageService.setThemeSetting(themSettingObj);
-    this.envService.setThemeSetting(themSettingObj);
-    this.loadPage();
-  }
+  // localSetting(){
+  //   const settingObj = this.envService.getHostKeyValue('object');
+  //   this.storageService.setApplicationSetting(settingObj);
+  //   this.envService.setApplicationSetting();
+  //   const themSettingObj = this.envService.getHostKeyValue('theme_setting');
+  //   this.storageService.setThemeSetting(themSettingObj);
+  //   this.envService.setThemeSetting(themSettingObj);
+  //   this.loadPage();
+  // }
 }
