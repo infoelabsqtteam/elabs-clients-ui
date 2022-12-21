@@ -271,7 +271,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                     if(activeMenu && activeMenu.name){
                         menu = this.getMenuByActiveMenu(activeMenu);
                     }else{
-                        this.selected.setValue(0);
+                        this.selected.setValue(1);
                     }
                     module = {};
                 }
