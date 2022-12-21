@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList);
     if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
       if(this.AllModuleList.length == 1){
-        this.GoToSelectedModule(this.AllModuleList[0],0);
+        this.GoToSelectedModule(this.AllModuleList[0]);
       }      
     }else{
       this.module = false;
@@ -44,10 +44,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     
   }  
-  GoToSelectedModule(module,index){
+  GoToSelectedModule(module){
     this.menuOrModuleCommounService.setModuleName(module.name); 
     this.dataShareService.sendCurrentPage('DASHBOARD');
-    this.dataShareService.setModuleIndex(index);    
+    let mIndex = this.commonFunctionService.getIndexInArrayById(this.AllModuleList,module.name,'name');      
+    if(mIndex != -1){
+      this.dataShareService.setModuleIndex(mIndex);    
+    }     
   }
   gotoHomePage(){
     this.authService.Logout(this.commonFunctionService.gotoHomePage());
