@@ -1701,7 +1701,7 @@ export class CommonFunctionService {
               taxable_amount=net_amount+surcharge;
           });
         }
-        this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+        templateValue = this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
          return templateValue;
       }
 
@@ -1867,7 +1867,7 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     if(field != null && field.field_name != null && field != ""){
       delete total[field.field_name]
     }
-
+    templateValue = {};
     templateValue['total_amount'] = total;
     return templateValue;
   
