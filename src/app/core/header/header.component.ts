@@ -253,11 +253,28 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }    
     getMenuByModuleIndex(moduleIndex:any){
         if (moduleIndex != -1) {
-            const module = this.AllModuleList[moduleIndex]
+            let module = this.AllModuleList[moduleIndex];         
             if (module.menu_list != undefined && module.menu_list != null) {
                 let menuList = module.menu_list;
                 this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
-                let menu = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);
+                let menu = {}
+                menu = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);
+                if(this.moduleIndex != moduleIndex){                    
+                    let activeMenu = this.storageService.GetActiveMenu();
+                    if(activeMenu && activeMenu.name){
+                        menu = this.getMenuByActiveMenu(activeMenu);
+                    }else{
+                        this.selected.setValue(0);
+                    }
+                }else if(this.moduleIndex == moduleIndex){
+                    let activeMenu = this.storageService.GetActiveMenu();
+                    if(activeMenu && activeMenu.name){
+                        menu = this.getMenuByActiveMenu(activeMenu);
+                    }else{
+                        this.selected.setValue(1);
+                    }
+                    module = {};
+                }
                 this.getTemplateData(module,menu)
             } else {
                 this.menuData = [];
@@ -265,7 +282,23 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         } else {
             this.menuData = [];
         }
-    }     
+    }   
+    getMenuByActiveMenu(activeMenu){
+        let activeMenuIndex = 0;
+        if(activeMenu.menuIndex){
+            activeMenuIndex = activeMenu.menuIndex
+        }
+        this.selected.setValue(activeMenuIndex+1); 
+        let menuList = this.menuData;
+        if(activeMenu.child){                        
+            let subMenu = this.menuData[activeMenuIndex].submenu;
+            if(subMenu && subMenu.length > 0){
+                menuList = subMenu;
+            }                        
+        }
+        let menuIndex = this.commonfunctionService.getIndexInArrayById(menuList,activeMenu.name,'name');        
+        return menuList[menuIndex];
+    }  
     
     activeLinkD(link, check) {
         this.active_menu_d = link;
@@ -346,7 +379,10 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     
     GoToSelectedModule(item){        
         if(item && item.name){
-            this.selected = new FormControl(1);
+            let selectedValue = this.selected.value;
+            if(selectedValue == 0){
+                this.selected = new FormControl(1);
+            }            
             this.menuOrModuleCommounService.setModuleName(item.name);
         }
         this.dataShareService.sendCurrentPage('DASHBOARD');
