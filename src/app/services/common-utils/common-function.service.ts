@@ -1782,7 +1782,7 @@ break;
 
   net_amount =gross_amount-discount_amount;
   taxable_amount = gross_amount-discount_amount+surcharge;
-  this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount,field);
+  templateValue = this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount,field);
        
   return templateValue;
  }
