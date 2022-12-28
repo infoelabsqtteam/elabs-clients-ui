@@ -117,14 +117,29 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   
   
-  GoToSelectedModule(module,moduleIndex){
+  GoToSelectedModule(module){
+    this.storageService.SetActiveMenu({}); 
+    this.setSelectedModule(module);
+  }
+  setSelectedModule(module){
       this.menuOrModuleCommounService.setModuleName(module.name);
       this.dataShareService.sendCurrentPage('DASHBOARD')
-      if(moduleIndex != -1){
-        this.dataShareService.setModuleIndex(moduleIndex);    
-      }    
+      let mIndex = this.commonFunctionService.getIndexInArrayById(this.AllModuleList,module.name,'name');      
+      if(mIndex != -1){
+        this.dataShareService.setModuleIndex(mIndex);    
+      } 
   }
-  getTemplateData(module,submenu,moduleIndex) {
+  getSubmenuTemplateData(module,submenu,menuIndex){
+    submenu['child'] = true;
+    submenu['menuIndex'] = menuIndex;
+    this.getTemplateData(module,submenu);
+  }
+  getmenuTemplateData(module,submenu,menuIndex){
+    submenu['child'] = false;
+    submenu['menuIndex'] = menuIndex;
+    this.getTemplateData(module,submenu);
+}
+  getTemplateData(module,submenu) {
     if(this.permissionService.checkPermission(submenu.name,'view')){
         this.storageService.SetActiveMenu(submenu);
         if (submenu.label == "Navigation") {
@@ -143,7 +158,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           else{
             this.apiService.resetTempData();
             this.apiService.resetGridData();
-            this.GoToSelectedModule(module,-1);
+            this.setSelectedModule(module);
             this.router.navigate(['template']);  
           }           
         }
