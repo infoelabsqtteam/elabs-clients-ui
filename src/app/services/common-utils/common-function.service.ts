@@ -916,6 +916,12 @@ export class CommonFunctionService {
         } else {
           return '-';
         }
+      case "html" :
+        if (value && value != '') {
+          return '<span class="material-icons cursor-pointer">preview</span>';
+        } else {
+          return '-';
+        }        
       case "file":
         if (value && value != '') {
           return '<span class="material-icons cursor-pointer">text_snippet</span>';
@@ -1008,15 +1014,12 @@ export class CommonFunctionService {
       case 'time': return this.datePipe.transform(value, 'h:mm a');
       case "boolean": return value ? "Yes" : "No";
       case "currency": return this.CurrencyPipe.transform(value, 'INR');
-      case "info":        
-          return '';
+      case "info": 
       case "file":
-          return '';
       case "template":
-          return '';
       case "image":
-          return '';
       case "icon":
+      case "html":
           return '';
       default: return value;
     }
