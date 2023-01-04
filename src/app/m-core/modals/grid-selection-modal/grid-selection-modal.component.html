@@ -92,6 +92,8 @@
                                       </mat-chip-list>
                                   </mat-form-field>                                
                                 </div>
+
+
                                 <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'userinput_chips'">
                                     <mat-form-field appearance="outline" class="example-full-width w-100">
                                         <mat-chip-list #chipList aria-label="Item selection">
@@ -105,6 +107,53 @@
                                             </mat-autocomplete>
                                         </mat-chip-list>
                                     </mat-form-field>                                
+                                </div>
+
+
+
+                                <div *ngIf="fieldName.type.toLowerCase() == 'typeahead'">
+                                    <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
+                                                [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value)" autocomplete="off">
+                                            <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadInput,data)"  [displayWith]="getOptionText">
+                                                <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                            </mat-autocomplete>                                  
+                                        </mat-form-field>
+                                    </div>
+
+
+
+
+                                    <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                            <mat-chip-list #chipList aria-label="Item selection">
+                                                <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data)">{{getddnDisplayVal(item)}}
+                                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                </mat-chip>
+                                                <input type="text" #typeheadchips [placeholder]="fieldName.label" aria-label="Number" matInput
+                                                    [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadchips,data)" [displayWith]="getOptionText">
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                </mat-autocomplete>
+                                            </mat-chip-list>
+                                        </mat-form-field>                                
+                                    </div>
+
+
+
+
+<!-- 
+
+
+                                    
+                                    <mat-form-field appearance="outline" class="example-full-width w-100">
+                                        <input type="text" [placeholder]="fieldName.label" matInput
+                                            [matAutocomplete]="first" (keyup)="searchTypeaheadData(fieldName,data,chipsInput)" [id]="fieldName._id+'_'+fieldName.field_name" autocomplete="off">
+                                        <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)"  [displayWith]="getOptionText">
+                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                        </mat-autocomplete>                                  
+                                    </mat-form-field> -->
                                 </div>
 
 
