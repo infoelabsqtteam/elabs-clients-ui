@@ -16,6 +16,7 @@ export class FooterComponent implements OnInit {
   subscription:any;
   template:string = "temp1";
   title = "";
+  currentYear:any;
 
   constructor(
     private dataShareService:DataShareService,
@@ -32,7 +33,8 @@ export class FooterComponent implements OnInit {
             console.log(error)
         },
         () => console.log('test')
-    );
+    );    
+    this.currentYear=(new Date()).getFullYear();
   }
 
   ngOnInit(): void {
