@@ -46,6 +46,11 @@ export class GridSelectionModalComponent implements OnInit {
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
   @ViewChild('chipsInput') chipsInput: ElementRef<HTMLInputElement>;
+
+  @ViewChild('typeheadInput') typeheadInput: ElementRef<HTMLInputElement>;
+  @ViewChild('typeheadchips') typeheadchips: ElementRef<HTMLInputElement>;
+
+
   typeAheadData: any;
   addedDataInList: any;
   deleteIndex: any;
@@ -225,16 +230,25 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   setData(selectedData, field, index,chipsInput){
-    if (this.gridData[index][field.field_name] == null) this.gridData[index][field.field_name] = [];
-    if(this.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.gridData[index][field.field_name])){
-      this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
-    }else{
-      this.gridData[index][field.field_name].push(selectedData);
-    }
-    
-    this.chipsInput.nativeElement.value = "";
-    this.typeAheadData = [];
-    chipsInput.value = "";
+    if(field.type != "typeahead"){
+      if (this.gridData[index][field.field_name] == null) this.gridData[index][field.field_name] = [];
+      if(this.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.gridData[index][field.field_name])){
+        this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+      }else{
+        this.gridData[index][field.field_name].push(selectedData);
+      }
+      if(this.chipsInput && this.chipsInput.nativeElement && this.chipsInput.nativeElement.value){
+        this.chipsInput.nativeElement.value = "";
+      }
+      if(this.typeheadchips && this.typeheadchips.nativeElement && this.typeheadchips.nativeElement.value){
+        this.typeheadchips.nativeElement.value = "";
+      }
+      if(this.typeheadInput && this.typeheadInput.nativeElement && this.typeheadInput.nativeElement.value){
+        this.typeheadInput.nativeElement.value = "";
+      }
+      chipsInput.value = "";
+    }    
+    this.typeAheadData = [];    
   }
 
   getOptionText(option) {
@@ -244,6 +258,9 @@ export class GridSelectionModalComponent implements OnInit {
       return option;
     }
   }
+
+  
+
 
   typeaheadObjectWithtext;
   searchTypeaheadData(field, currentObject,chipsInputValue) {
