@@ -910,6 +910,7 @@ export class CommonFunctionService {
       case "boolean": return value ? "Yes" : "No";
       case "currency": return this.CurrencyPipe.transform(value, 'INR');
   	  case "dropdown": return this.getddnDisplayVal(value);
+      case "typeahead": return this.getddnDisplayVal(value);
       case "info":
         if (value && value != '') {
           return '<i class="fa fa-eye cursor-pointer"></i>';
