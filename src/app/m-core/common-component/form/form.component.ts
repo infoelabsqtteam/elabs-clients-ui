@@ -5696,11 +5696,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                     return checkDublic;
                   }
                 }
-              }else if(field_control && field_control != "" && field_control.get(element.field_name).errors?.required || field_control.get(element.field_name).errors?.validDataText){
-                checkDublic.status = true
-                checkDublic.msg = 'Entered value for '+element.label+' is invalidData. !!!';
-                //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
-                return checkDublic;
+              }else if(field_control && field_control != "" ){
+                if( field_control.get(element.field_name).errors?.required || field_control.get(element.field_name).errors?.validDataText){
+                  checkDublic.status = true
+                  checkDublic.msg = 'Entered value for '+element.label+' is invalidData. !!!';
+                  //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
+                  return checkDublic;
+                }
               }
 
             }
