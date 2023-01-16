@@ -12,6 +12,7 @@
                                 [innerHtml]="getddnDisplayVal(data)">
                             </mat-option>
                         </mat-select>
+                        <input type="hidden" [formControlName]="'collectionName'">
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Name</mat-label>
@@ -128,7 +129,7 @@
                     <button mat-button class="w-100 reportbtn mb-3" (click)="loadquerymodal()">Load Query</button>
                     <button mat-button class="w-100 reportbtn mb-3" [disabled]="!(gridData.length > 0)"
                         (click)="exportExcel()">Download Excel</button>
-                    <button mat-button class="w-100 reportbtn">Schedule</button>
+                    <!-- <button mat-button class="w-100 reportbtn">Schedule</button> -->
                 </div>
             </div>
         </div>

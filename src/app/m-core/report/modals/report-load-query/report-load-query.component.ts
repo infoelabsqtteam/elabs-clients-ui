@@ -23,7 +23,7 @@ export class ReportLoadQueryComponent implements OnInit {
 
   columns = [
     {"label": "Report Name", "type": "text", "field_name": "name"},
-    {"label": "Query", "type": "chips", "field_name": "query.crList"}
+    {"label": "Query", "type": "chips_list", "field_name": "query.crList"}
   ]
   
   loadQueryForm: FormGroup;
