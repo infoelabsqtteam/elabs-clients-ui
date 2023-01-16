@@ -3012,13 +3012,19 @@ isGridFieldExist(tab,fieldName){
 getIndexInArrayById(array,id,key?){
   let index = -1;
   if(array && array.length > 0){
-    array.forEach((element,i) => {
-      if(element._id && element._id == id){
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      if(key != undefined && key != null){
+        const idValue = this.getObjectValue(key,element);
+        if(id && id == idValue){
+          index = i;
+          break;
+        }
+      }else if(element._id && element._id == id){
         index = i;
-      }else if(element[key] && element[key] == id){
-        index = i;
+        break;
       }
-    });
+    };
   }
   return index;
 }
