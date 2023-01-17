@@ -75,6 +75,10 @@ export class ReportFormComponent implements OnInit {
 
   gridDataSubscription;
   exportExcelSubscription;
+  btnColour:string="#0052cc";
+  btnTxtColour:string="#ffffff";
+  queryExpand:boolean=false;
+  queryActionExpand:boolean=false;
   
   
   constructor(
@@ -219,6 +223,9 @@ export class ReportFormComponent implements OnInit {
   }
  
   addCrlist(){
+    if(!this.queryExpand){
+      this.toggleQuery();
+    }    
     const value = this.reportForm.getRawValue();
     const criteria = this.createCrList(value);
     if(this.commonFunctionService.checkDataAlreadyAddedInListOrNot('fName',criteria.fName,this.crList)){
@@ -280,8 +287,10 @@ export class ReportFormComponent implements OnInit {
   clear(){
     const value = this.reportForm.getRawValue();
     const collectionValue = value['collection_name'];
+    const collectionName = value['collectionName'];
     this.resetForm();
     this.reportForm.get('collection_name').setValue(collectionValue);
+    this.reportForm.get('collectionName').setValue(collectionName);
   }
 
   alertResponce(responce) {
@@ -327,6 +336,9 @@ export class ReportFormComponent implements OnInit {
   
 
   submitdata() {
+    if(this.queryExpand){
+      this.toggleQuery();
+    }
     const payload = this.getQuery();
     this.loadQuery(payload);
   }
@@ -383,6 +395,7 @@ export class ReportFormComponent implements OnInit {
   }
   loadQueryResponce(responce){
     if (responce.action == 'load' || responce.action == 'edit') {
+      this.clear(); 
       const collection_list = this.staticData['collection_name'];
       const query = responce.data.query;
       this.mySaveQueryData = responce.data;
@@ -399,8 +412,11 @@ export class ReportFormComponent implements OnInit {
         this.reportForm.get('collectionName').setValue(collectionName);
       }
       this.crList = query.crList;
-      this.updatemode = true;    
-      if(responce.action == 'load'){        
+      this.updatemode = true;         
+      if(responce.action == 'load'){   
+        if(this.queryExpand){
+          this.toggleQuery();
+        }     
         const getFilterData = {
           data: query,
           path: null
@@ -490,6 +506,12 @@ export class ReportFormComponent implements OnInit {
     }else{
       return Number('12');
     }    
+  }
+  toggleQuery(){
+    this.queryExpand = !this.queryExpand;
+  }
+  toggleQueryAction(){
+    this.queryActionExpand = !this.queryActionExpand;
   }
 
 }
