@@ -1,10 +1,13 @@
-import { Component, OnInit, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit,OnDestroy, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ModelService } from 'src/app/services/model/model.service';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { input } from 'aws-amplify';
+import { Subscription } from 'rxjs';
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { NotificationService } from 'src/app/services/notify/notification.service';
 
 @Component({
   selector: 'app-report-save-query',
@@ -12,7 +15,7 @@ import { input } from 'aws-amplify';
   styles: [
   ]
 })
-export class ReportSaveQueryComponent implements OnInit {
+export class ReportSaveQueryComponent implements OnInit,OnDestroy {
 
   @Output() saveQueryResponce = new EventEmitter();
   @Input() id: string;
@@ -22,14 +25,19 @@ export class ReportSaveQueryComponent implements OnInit {
   @Input() mode;
   saveQueryForm: FormGroup;
   crList:any = [];
+  saveResponceSubscription:Subscription;
 
   constructor(
     private commonFunctionService:CommonFunctionService,
     private modalService: ModelService,
     private apiService:ApiService,
     private formBuilder: FormBuilder,
+    private dataShareService:DataShareService,
+    private notificationService:NotificationService
     ) {
-      
+      this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+        this.setSaveResponce(responce);
+      })
     }
 
 
@@ -44,6 +52,11 @@ export class ReportSaveQueryComponent implements OnInit {
     this.modalService.add(this);
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.saveResponceSubscription.unsubscribe();
+  }
   showModal(object){ 
     if(this.saveQurydata && this.saveQurydata.data && this.saveQurydata.data.crList){
       this.crList = this.saveQurydata.data.crList;           
@@ -110,8 +123,28 @@ export class ReportSaveQueryComponent implements OnInit {
       data: data
     }
     this.apiService.SaveFormData(saveFromData)
-    this.close();
-    this.saveQueryResponce.emit(true);
+    
+  }
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+      if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
+        if (saveFromDataRsponce.success == 'success' && !this.mode) {
+            this.notificationService.notify("bg-success", " Form Data Save successfull !!!");
+        } else if (saveFromDataRsponce.success == 'success' && this.mode) {
+            this.notificationService.notify("bg-success", " Form Data Update successfull !!!");         
+        }  
+        this.close();
+        this.saveQueryResponce.emit(true);      
+      }
+      else if (saveFromDataRsponce.error && saveFromDataRsponce.error != '') {
+        this.notificationService.notify("bg-danger", saveFromDataRsponce.error);
+        this.apiService.ResetSaveResponce()
+      }
+      else{
+        this.notificationService.notify("bg-danger", "No data return");
+      }
+    }
+    
   }
 
 
