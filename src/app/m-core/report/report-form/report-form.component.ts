@@ -75,10 +75,6 @@ export class ReportFormComponent implements OnInit {
 
   gridDataSubscription;
   exportExcelSubscription;
-  btnColour:string="#0052cc";
-  btnTxtColour:string="#ffffff";
-  queryExpand:boolean=false;
-  queryActionExpand:boolean=false;
   
   
   constructor(
@@ -223,9 +219,6 @@ export class ReportFormComponent implements OnInit {
   }
  
   addCrlist(){
-    if(!this.queryExpand){
-      this.toggleQuery();
-    }    
     const value = this.reportForm.getRawValue();
     const criteria = this.createCrList(value);
     if(this.commonFunctionService.checkDataAlreadyAddedInListOrNot('fName',criteria.fName,this.crList)){
@@ -336,9 +329,6 @@ export class ReportFormComponent implements OnInit {
   
 
   submitdata() {
-    if(this.queryExpand){
-      this.toggleQuery();
-    }
     const payload = this.getQuery();
     this.loadQuery(payload);
   }
@@ -412,11 +402,8 @@ export class ReportFormComponent implements OnInit {
         this.reportForm.get('collectionName').setValue(collectionName);
       }
       this.crList = query.crList;
-      this.updatemode = true;         
-      if(responce.action == 'load'){   
-        if(this.queryExpand){
-          this.toggleQuery();
-        }     
+      this.updatemode = true;    
+      if(responce.action == 'load'){        
         const getFilterData = {
           data: query,
           path: null
@@ -429,7 +416,7 @@ export class ReportFormComponent implements OnInit {
   }
 
   exportExcel() {  
-    let tempNme = this.reportForm.get('collection_name').value.name;
+    let tempNme = this.reportForm.get('collectionName').value;
     if(this.permissionService.checkPermission(tempNme,'export')){  
       let gridName = '';
       let grid_api_params_criteria = [];
@@ -506,12 +493,6 @@ export class ReportFormComponent implements OnInit {
     }else{
       return Number('12');
     }    
-  }
-  toggleQuery(){
-    this.queryExpand = !this.queryExpand;
-  }
-  toggleQueryAction(){
-    this.queryActionExpand = !this.queryActionExpand;
   }
 
 }
