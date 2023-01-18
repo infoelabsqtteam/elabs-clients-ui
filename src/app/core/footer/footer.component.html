@@ -115,17 +115,17 @@
   <div class="copyright py-2" *ngIf="currentPage">
     <div class="container-fluid">
       <div class="row" *ngIf="template == 'temp1'">
-        <div class="col-md-6"><p class="m-0 text-white">© Copyright 2021 | {{title}}</p></div>
+        <div class="col-md-6"><p class="m-0 text-white">© Copyright {{currentYear}} | {{title}}</p></div>
         <div class="col-md-6 text-md-right"> <a href="javascript:void(0)">Terms</a> | <a href="javascript:void(0)">Privacy &amp; Policy</a> | <a href="javascript:void(0)">Sitemap</a> </div>
       </div>
 
       <div class="row" *ngIf="template == 'temp3'">
-        <div class="col-md-6"><p class="text-white m-0">(&copy;) 2021 All Rights Reserved {{title}}. Website Designed By E-Labs.</p></div>
+        <div class="col-md-6"><p class="text-white m-0">(&copy;) {{currentYear}} All Rights Reserved {{title}}. Website Designed By E-Labs.</p></div>
         <div class="col-md-6"><div class="text-md-right"><a [routerLink]="['/home_page']" class="text-white">Powered by E-Labs.ai</a></div></div>
       </div>
 
       <div class="row" *ngIf="template == 'temp2'">
-          <div class="col-md-6"><p class="text-white m-0">Copyright © 2020 ITC Lab. All Rights Reserved.</p></div>
+          <div class="col-md-6"><p class="text-white m-0">Copyright © {{currentYear}} ITC Lab. All Rights Reserved.</p></div>
           <div class="col-md-6">
               <div class="text-md-right footer-links d-none d-md-block">
                   <a href="javascript: void(0);" class="text-white mr-2">About</a>
@@ -173,5 +173,5 @@
       </div>
     </div>
   </div>
-  <div class="text-center py-3 text-dark" style="background: #f7f7fd;">Copyright © 2020 E-Labs. All Rights Reserved. </div>
+  <div class="text-center py-3 text-dark" style="background: #f7f7fd;">Copyright © {{currentYear}} E-Labs. All Rights Reserved. </div>
 </footer>

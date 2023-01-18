@@ -910,12 +910,19 @@ export class CommonFunctionService {
       case "boolean": return value ? "Yes" : "No";
       case "currency": return this.CurrencyPipe.transform(value, 'INR');
   	  case "dropdown": return this.getddnDisplayVal(value);
+      case "typeahead": return this.getddnDisplayVal(value);
       case "info":
         if (value && value != '') {
           return '<i class="fa fa-eye cursor-pointer"></i>';
         } else {
           return '-';
         }
+      case "html" :
+        if (value && value != '') {
+          return '<span class="material-icons cursor-pointer">preview</span>';
+        } else {
+          return '-';
+        }        
       case "file":
         if (value && value != '') {
           return '<span class="material-icons cursor-pointer">text_snippet</span>';
@@ -1008,15 +1015,12 @@ export class CommonFunctionService {
       case 'time': return this.datePipe.transform(value, 'h:mm a');
       case "boolean": return value ? "Yes" : "No";
       case "currency": return this.CurrencyPipe.transform(value, 'INR');
-      case "info":        
-          return '';
+      case "info": 
       case "file":
-          return '';
       case "template":
-          return '';
       case "image":
-          return '';
       case "icon":
+      case "html":
           return '';
       default: return value;
     }
@@ -3009,13 +3013,19 @@ isGridFieldExist(tab,fieldName){
 getIndexInArrayById(array,id,key?){
   let index = -1;
   if(array && array.length > 0){
-    array.forEach((element,i) => {
-      if(element._id && element._id == id){
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      if(key != undefined && key != null){
+        const idValue = this.getObjectValue(key,element);
+        if(id && id == idValue){
+          index = i;
+          break;
+        }
+      }else if(element._id && element._id == id){
         index = i;
-      }else if(element[key] && element[key] == id){
-        index = i;
+        break;
       }
-    });
+    };
   }
   return index;
 }

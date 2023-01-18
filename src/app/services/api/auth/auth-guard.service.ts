@@ -1,7 +1,7 @@
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { map, take } from 'rxjs/operators';
-import { DataShareService } from '../services/data-share/data-share.service';
+import { DataShareService } from '../../data-share/data-share.service';
 
 
 @Injectable()

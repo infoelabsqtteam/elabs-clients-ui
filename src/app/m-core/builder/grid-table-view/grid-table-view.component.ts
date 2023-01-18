@@ -908,6 +908,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.templateModal('template-modal',object,i, field.field_name)
         };
         break;
+      case "html":
+        if (value && value != '') {
+          this.viewModal('grid-html-view-modal', value, field, i, field.field_name,editemode);
+        };
+        break;
       case "file":
         if (value['data'] && value['data'] != '') {
           this.selectedViewRowIndex = -1;

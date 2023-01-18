@@ -8,9 +8,6 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { StorageService} from '../../../services/storage/storage.service';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { ModelService } from "src/app/services/model/model.service";
-import { exists } from 'fs';
-import { platform } from 'os';
-import { fn } from '@angular/compiler/src/output/output_ast';
 
 
 export const MY_DATE_FORMATS = {
@@ -142,6 +139,7 @@ export class ReportFormComponent implements OnInit {
   initForm(){
     this.reportForm = this.formBuilder.group({
       "collection_name" : new FormControl('',Validators.required),
+      "collectionName" : new FormControl(""),
       "name" : new FormControl('',Validators.required),
       "operator" : new FormControl('',Validators.required),
       "value" : new FormControl('',Validators.required),
@@ -163,6 +161,11 @@ export class ReportFormComponent implements OnInit {
     switch (fieldName) {
       case 'collection_name':
         if(reportFormValue.collection_name != ''){
+          const selectedCollection = reportFormValue["collection_name"];
+          if(selectedCollection.FORM_GROUP && selectedCollection.FORM_GROUP.collection_name && selectedCollection.FORM_GROUP.collection_name != ""){
+            const collectionName = selectedCollection.FORM_GROUP.collection_name;
+            this.reportForm.get('collectionName').setValue(collectionName);
+          }
           this.reportForm.get('name').setValue('');
           this.reportForm.get('operator').setValue('');
           this.reportForm.get('value').setValue('');
@@ -277,8 +280,10 @@ export class ReportFormComponent implements OnInit {
   clear(){
     const value = this.reportForm.getRawValue();
     const collectionValue = value['collection_name'];
+    const collectionName = value['collectionName'];
     this.resetForm();
     this.reportForm.get('collection_name').setValue(collectionValue);
+    this.reportForm.get('collectionName').setValue(collectionName);
   }
 
   alertResponce(responce) {
@@ -334,7 +339,7 @@ export class ReportFormComponent implements OnInit {
 
   private getQuery() {
     let reportFormValue = this.reportForm.getRawValue();
-    let apiprams = reportFormValue.collection_name.name;
+    let apiprams = reportFormValue.collectionName;
     const payload = this.commonFunctionService.getDataForGrid(1, {}, { 'name': apiprams }, [], {}, '');
     payload.data.crList = this.crList;
     return payload;
@@ -380,17 +385,22 @@ export class ReportFormComponent implements OnInit {
   }
   loadQueryResponce(responce){
     if (responce.action == 'load' || responce.action == 'edit') {
+      this.clear(); 
       const collection_list = this.staticData['collection_name'];
       const query = responce.data.query;
       this.mySaveQueryData = responce.data;
       const value =  query.value;  
-      const index = this.commonFunctionService.getIndexInArrayById(collection_list,value,'name');
+      const index = this.commonFunctionService.getIndexInArrayById(collection_list,value,'FORM_GROUP.collection_name');
       const collection = collection_list[index];
       const data ={
         'collection_name' : collection
       }
       this.getFielsAndColumn(data);
       this.reportForm.get('collection_name').setValue(collection);
+      if(collection.FORM_GROUP && collection.FORM_GROUP.collection_name && collection.FORM_GROUP.collection_name != ""){
+        const collectionName = collection.FORM_GROUP.collection_name;
+        this.reportForm.get('collectionName').setValue(collectionName);
+      }
       this.crList = query.crList;
       this.updatemode = true;    
       if(responce.action == 'load'){        
@@ -405,18 +415,8 @@ export class ReportFormComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
   exportExcel() {  
-    let tempNme = this.reportForm.get('collection_name').value.name;
+    let tempNme = this.reportForm.get('collectionName').value;
     if(this.permissionService.checkPermission(tempNme,'export')){  
       let gridName = '';
       let grid_api_params_criteria = [];

@@ -31,10 +31,10 @@
                                 <tr *ngFor="let data of gridData; let j = index">
                                     <th scope="row">{{j + 1}}</th>
                                     <td *ngFor="let elId of columns; let j = index">
-                                        <div class="grid-data" *ngIf="elId.type != 'chips'">
+                                        <div class="grid-data" *ngIf="elId.type != 'chips_list'">
                                             <span [innerHtml]="getValueForGrid(elId,data)" [matTooltip]="getValueForGridTooltip(elId,data)" [matTooltipPosition]="'above'"></span>
                                         </div>
-                                        <div class="grid-data" *ngIf="elId.type == 'chips'">
+                                        <div class="grid-data" *ngIf="elId.type == 'chips_list'">
                                             <span class="chips" *ngFor="let chips of getValueForGrid(elId,data); let i = index">
                                                 <span [innerHtml]="getChipsForGrid(chips)"></span>
                                             </span>
