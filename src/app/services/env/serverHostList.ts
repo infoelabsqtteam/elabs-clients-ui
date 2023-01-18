@@ -25,6 +25,7 @@ export const serverHostList = [
   {"clientEndpoint": "sit-aalbiosciences.e-labs.ai", "serverEndpoint": "https://sitaalbiosciencesserver.e-labs.ai"},
   {"clientEndpoint": "lims-aalbiosciences.e-labs.ai", "serverEndpoint": "https://prodaalbiosciencesserver.e-labs.ai"},
   {"clientEndpoint": "bbsr-lims.qualiteklab.com", "serverEndpoint": "https://prodserverbbsrqualiteklab.e-labs.ai"},
+  {"clientEndpoint": "bbsr-lims.e-labs.ai", "serverEndpoint": "https://prodserverbbsrqualiteklab.e-labs.ai"},
   {"clientEndpoint": "sit-multani.e-labs.ai", "serverEndpoint": "https://sitmultaniserver.e-labs.ai"},
   {"clientEndpoint": "app.multani.com", "serverEndpoint": "http://server.multani.com:30051"},
   {"clientEndpoint": "food.multani.com", "serverEndpoint": "http://server.multani.com:30051"},
