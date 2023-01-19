@@ -21,6 +21,7 @@ import {Sort} from '@angular/material/sort';
 export class GridSelectionModalComponent implements OnInit {
 
   gridData: any = [];
+  modifiedGridData:any = [];
   selectedData: any = [];
   selecteData: any = [];
   listOfGridFieldName: any = [];
@@ -154,6 +155,11 @@ export class GridSelectionModalComponent implements OnInit {
       this.copyStaticData = data;
       if(this.setGridData && this.field.ddn_field && data[this.field.ddn_field] && data[this.field.ddn_field] != null){
         this.setStaticData(data);
+        if(this.gridData.length > 0 && this.listOfGridFieldName.length > 0){
+          this.modifiedGridData = this.modifyGridData(this.gridData,this.listOfGridFieldName);
+        }else{
+          this.modifiedGridData = [];
+        }        
       }
     })
     //this.treeViewData.data = TREE_DATA;
@@ -427,6 +433,46 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }
   }
+  modifyGridData(gridData,gridColumns){
+    let modifiedData = [];
+    if(gridColumns.length > 0){      
+      for (let i = 0; i < gridData.length; i++) {
+        const row = gridData[i];
+        let modifyRow = JSON.parse(JSON.stringify(row));
+        for (let j = 0; j < gridColumns.length; j++) {
+          const column = gridColumns[j];          
+          modifyRow[column.field_name] = this.getValueForGrid(column,row);
+          modifyRow["tooltip"] = this.getValueForGridTooltip(column,row);
+          modifyRow["disabled"] = this.checkRowIf(row);
+        }
+        modifiedData.push(modifyRow);
+      }
+    }
+    return modifiedData;
+  }
+  modifyGridColumns(gridColumns){
+    let modifyGridColumns = [];
+    if(gridColumns && gridColumns.length > 0){
+      modifyGridColumns = this.CommonFunctionService.updateFieldInList('display',gridColumns);
+      for (let i = 0; i < modifyGridColumns.length; i++) {
+        const field = modifyGridColumns[i];
+        if (this.coreFunctionService.isNotBlank(field.show_if)) {
+          if (!this.CommonFunctionService.showIf(field, this.parentObject)) {
+            field['display'] = false;
+          } else {
+            field['display'] = true;
+          }
+        } else {
+          field['display'] = true;
+        }
+        if(field['field_class']){
+          field['field_class'] = field['field_class'].trim();
+        }
+        field['width'] = this.getGridColumnWidth(field);
+      };
+    }
+    return modifyGridColumns;
+  }
 
   refreshRowWithMasterData(index) {
     let rowData = this.gridData[index];
@@ -467,23 +513,8 @@ export class GridSelectionModalComponent implements OnInit {
       this.setGridData = true;
       this.gridData = [];
     }
-    if (this.field.gridColumns && this.field.gridColumns.length > 0) {
-      let gridColumns = this.CommonFunctionService.updateFieldInList('display',this.field.gridColumns);
-      gridColumns.forEach(field => {
-        if (this.coreFunctionService.isNotBlank(field.show_if)) {
-          if (!this.CommonFunctionService.showIf(field, this.parentObject)) {
-            field['display'] = false;
-          } else {
-            field['display'] = true;
-          }
-        } else {
-          field['display'] = true;
-        }
-        if(field['field_class']){
-          field['field_class'] = field['field_class'].trim();
-        }
-      });
-      this.listOfGridFieldName = gridColumns;
+    if (this.field.gridColumns && this.field.gridColumns.length > 0) {      
+      this.listOfGridFieldName = this.modifyGridColumns(JSON.parse(JSON.stringify(this.field.gridColumns)));
       this.gridViewModalSelection.show();
     } else {
       this.notificationService.notify("bg-danger", "Grid Columns are not available In This Field.")
@@ -720,15 +751,18 @@ export class GridSelectionModalComponent implements OnInit {
   isDisable(field, object) {
     //console.log(field.field_name +":- " + field.display);
     const updateMode = false;
-    let disabledrow = false;
+    //let disabledrow = false;
     if (field.is_disabled) {
       return true;
     } 
-    if(this.field.disableRowIf && this.field.disableRowIf != ''){
-      disabledrow = this.checkRowIf(object);
-    }
-    if(disabledrow){
-      return true;
+    // if(this.field.disableRowIf && this.field.disableRowIf != ''){
+    //   disabledrow = this.checkRowIf(object);
+    // }
+    // if(disabledrow){
+    //   return true;
+    // }
+    if(object.disabled){
+      return object.disabled;
     }
     if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
       return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, object);
