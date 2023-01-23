@@ -783,6 +783,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               break; 
             case "date":
               let currentYear = new Date().getFullYear();
+              let value:any = "";
+              if(element.default_value && element.default_value != null && element.default_value != ''){
+                let today = new Date();
+                today.setHours(0,0,0,0);
+                let yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                yesterday.setHours(0,0,0,0);
+                switch (element.default_value) {
+                  case "Today":
+                    value = today;
+                    break;
+                  case "Yesterday":
+                    value = yesterday;
+                    break;
+                  default:
+                    break;
+                }
+              }
               if(element.datatype == 'object'){
                 this.minDate = new Date();
                 if(element.etc_fields && element.etc_fields != null){
@@ -810,7 +828,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }                  
               element['minDate'] = this.minDate
               element['maxDate'] = this.maxDate;
-              this.commonFunctionService.createFormControl(forControl, element, '', "text")
+              this.commonFunctionService.createFormControl(forControl, element, value, "text")
               break; 
             case "daterange":
               const date_range = {};
