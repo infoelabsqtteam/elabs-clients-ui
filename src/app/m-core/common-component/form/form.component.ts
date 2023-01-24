@@ -784,13 +784,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             case "date":
               let currentYear = new Date().getFullYear();
               let value:any = "";
-              if(element.default_value && element.default_value != null && element.default_value != ''){
+              if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
                 let today = new Date();
                 today.setHours(0,0,0,0);
                 let yesterday = new Date(today);
                 yesterday.setDate(yesterday.getDate() - 1);
                 yesterday.setHours(0,0,0,0);
-                switch (element.default_value) {
+                switch (element.defaultValue) {
                   case "Today":
                     value = today;
                     break;
