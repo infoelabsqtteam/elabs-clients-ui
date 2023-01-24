@@ -785,21 +785,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               let currentYear = new Date().getFullYear();
               let value:any = "";
               if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
-                let today = new Date();
-                today.setHours(0,0,0,0);
-                let yesterday = new Date(today);
-                yesterday.setDate(yesterday.getDate() - 1);
-                yesterday.setHours(0,0,0,0);
-                switch (element.defaultValue) {
-                  case "Today":
-                    value = today;
-                    break;
-                  case "Yesterday":
-                    value = yesterday;
-                    break;
-                  default:
-                    break;
-                }
+                value = this.setDefaultDate(element);
               }
               if(element.datatype == 'object'){
                 this.minDate = new Date();
@@ -1257,6 +1243,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     
     
+  }
+  setDefaultDate(element){
+    let value:any = "";
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    let yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0,0,0,0);
+    switch (element.defaultValue) {
+      case "Today":
+        value = today;
+        break;
+      case "Yesterday":
+        value = yesterday;
+        break;
+      default:
+        break;
+    }
+    return value;
   }
   notifyFieldValueIsNull(formName,fieldNo){
     let msg = "Field No. "+ fieldNo + " value is null";
