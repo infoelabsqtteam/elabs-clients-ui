@@ -783,6 +783,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               break; 
             case "date":
               let currentYear = new Date().getFullYear();
+              let value:any = "";
+              if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
+                value = this.setDefaultDate(element);
+              }
               if(element.datatype == 'object'){
                 this.minDate = new Date();
                 if(element.etc_fields && element.etc_fields != null){
@@ -810,7 +814,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }                  
               element['minDate'] = this.minDate
               element['maxDate'] = this.maxDate;
-              this.commonFunctionService.createFormControl(forControl, element, '', "text")
+              this.commonFunctionService.createFormControl(forControl, element, value, "text")
               break; 
             case "daterange":
               const date_range = {};
@@ -1239,6 +1243,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     
     
+  }
+  setDefaultDate(element){
+    let value:any = "";
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    let yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0,0,0,0);
+    switch (element.defaultValue) {
+      case "Today":
+        value = today;
+        break;
+      case "Yesterday":
+        value = yesterday;
+        break;
+      default:
+        break;
+    }
+    return value;
   }
   notifyFieldValueIsNull(formName,fieldNo){
     let msg = "Field No. "+ fieldNo + " value is null";
@@ -5779,7 +5802,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const data = this.custmizedFormValue[field.field_name][index];
     const condition = field.disableRowIf;
     if(condition){
-      return !this.commonFunctionService.checkDisableRowIf(condition,data);
+      if(field.disableRowIfOnlySelection){
+        return true;
+      }else{
+        return !this.commonFunctionService.checkDisableRowIf(condition,data);
+      }      
     }
     return true;    
   }
