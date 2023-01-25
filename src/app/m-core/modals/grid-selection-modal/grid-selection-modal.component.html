@@ -5,9 +5,9 @@
       <!--Header-->
       <div class="modal-header">
         <h3 class="modal-title m-0 text-uppercase">{{ field.label}}</h3>
-        <div *ngIf="applyOnGridFilter(field)" class="mr-auto ml-3 w-75">
+        <div *ngIf="field.isFilter" class="mr-auto ml-3 w-75">
             <div class="w-25 float-left">
-                <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="data" [placeholder]="applyOnGridFilterLabel(field)"/>
+                <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
             </div>
             <div class="w-25 float-left">
                 <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Only Selected</mat-checkbox>
@@ -45,7 +45,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let data of modifiedGridData | filter:data; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
+                        <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
                             <td class="text-center" *ngIf="grid_row_selection" sticky="true">
                                 <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
                                   <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled"></mat-checkbox>
@@ -191,7 +191,7 @@
                                 <span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}</span>
                             </div>
                         </td>
-                        <td *ngFor="let data of modifiedGridData|filter:data; let i = index"  class="grid-filter" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
+                        <td *ngFor="let data of modifiedGridData|filter:filterData; let i = index"  class="grid-filter" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
                             <div>
                                 <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
                                     <span class="grid-coloumn-nowrap" [matTooltip]="data['tooltip']" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="data[fieldName.field_name]" ></span>
@@ -220,7 +220,7 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
-        <button type="button" [disabled]="'false'" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ fieldButtonLabel(field)}}</button>
+        <button type="button" [disabled]="false" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ field.label }}</button>
         <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
       </div>
     </div>
