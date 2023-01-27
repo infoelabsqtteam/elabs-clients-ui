@@ -5802,7 +5802,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const data = this.custmizedFormValue[field.field_name][index];
     const condition = field.disableRowIf;
     if(condition){
-      return !this.commonFunctionService.checkDisableRowIf(condition,data);
+      if(field.disableRowIfOnlySelection){
+        return true;
+      }else{
+        return !this.commonFunctionService.checkDisableRowIf(condition,data);
+      }      
     }
     return true;    
   }
