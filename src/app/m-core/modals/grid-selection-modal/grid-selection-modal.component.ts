@@ -537,7 +537,7 @@ export class GridSelectionModalComponent implements OnInit {
           const fieldName = mField.field_name;
           if(mField.display){
             this.selectedData.forEach((row,i) => {
-              let checkDisable = this.isDisable(mField,row,i);
+              let checkDisable = this.gridCommonFunctionService.isDisableRuntime(mField,row,i,this.gridData,this.field,this.filterData);
               if(row && !checkDisable && (row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null)){
                 if(validation.msg == ''){
                   const rowNo = i + 1;
@@ -647,20 +647,7 @@ export class GridSelectionModalComponent implements OnInit {
     this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
   }  
 
-  isDisable(field, data,i) {
-    const updateMode = false;
-    if (field.is_disabled) {
-      return true;
-    } 
-    if(data.disabled){
-      return data.disabled;
-    }
-    if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
-      data = this.gridData[i];
-      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, data);
-    }   
-    return false;
-  }
+  
   checkValidator() {
     // if(this.preSelectedData){
     //   let selectedItem = 0;

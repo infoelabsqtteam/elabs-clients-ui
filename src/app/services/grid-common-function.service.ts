@@ -22,6 +22,9 @@ constructor(
           modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
           modifyRow["tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);
           modifyRow["disabled"] = this.checkRowIf(row,field);
+          if(column.editable){
+            modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);
+          }
         }
         modifiedData.push(modifyRow);
       }
@@ -44,6 +47,34 @@ constructor(
       }
     }
     return check;
+  }
+  isDisable(field, data) {
+    const updateMode = false;
+    if (field.is_disabled) {
+      return true;
+    } 
+    if(data.disabled){
+      return data.disabled;
+    }
+    if (field.etc_fields && field.etc_fields.disable_if && field.etc_fields.disable_if != '') {
+      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, data);
+    }   
+    return false;
+  }
+  isDisableRuntime(column, data,i,gridData,field,filterData) {
+    const updateMode = false;
+    if (column.is_disabled) {
+      return true;
+    } 
+    if(data.disabled){
+      return data.disabled;
+    }
+    if (column.etc_fields && column.etc_fields.disable_if && column.etc_fields.disable_if != '') {
+      let indx = this.getCorrectIndex(data,i,field,gridData,filterData);
+      data = gridData[indx];
+      return this.CommonFunctionService.isDisable(field.etc_fields, updateMode, data);
+    }   
+    return false;
   }
   getListByKeyValueToList(list,key,value){
     let getlist = [];

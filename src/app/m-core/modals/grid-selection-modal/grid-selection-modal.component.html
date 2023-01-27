@@ -62,30 +62,30 @@
                                 </div>
                                 <div *ngIf="fieldName.editable">
                                     <div *ngIf="fieldName.type == 'boolean'">
-                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)"></mat-checkbox>
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type == 'checkbox'">
-                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)"></mat-checkbox>
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'text'">
-                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)" >
+                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'textarea'">
-                                        <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)"></textarea>
+                                        <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></textarea>
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'number'">
-                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)">
+                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                     </div>
 
 
                                     <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                     <mat-form-field appearance="outline" class="example-full-width w-100">
                                         <mat-chip-list #chipList aria-label="Item selection">
-                                            <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data,i)">{{getddnDisplayVal(item)}}
+                                            <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
                                                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                             </mat-chip>
                                             <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data,i)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                             <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
                                                 <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                             </mat-autocomplete>
@@ -97,11 +97,11 @@
                                     <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'userinput_chips'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-chip-list #chipList aria-label="Item selection">
-                                                <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data,i)">{{getddnDisplayVal(item)}}
+                                                <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
                                                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                                 </mat-chip>
                                                 <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                    [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data,i)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                    [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                 <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
                                                     <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                 </mat-autocomplete>
@@ -126,11 +126,11 @@
                                         <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-chip-list #chipList aria-label="Item selection">
-                                                    <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="isDisable(fieldName,data,i)">{{getddnDisplayVal(item)}}
+                                                    <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
                                                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                                     </mat-chip>
                                                     <input type="text" #typeheadchips [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="isDisable(fieldName,data,i)"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadchips,data)" [displayWith]="getOptionText">
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>
@@ -143,7 +143,7 @@
                                     <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
                                             <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                            <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)">
+                                            <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                                 <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
                                                 <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">
@@ -153,7 +153,7 @@
                                         </mat-form-field>
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">
                                             <mat-label>{{ fieldName.label | titlecase}}</mat-label>                                        
-                                            <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)">
+                                            <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                                 <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
                                                 <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">
@@ -198,16 +198,16 @@
                                 </div>
                                 <div *ngIf="fieldName.editable">
                                     <div *ngIf="fieldName.type == 'boolean'">
-                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)"></mat-checkbox>
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type == 'checkbox'">
-                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)"></mat-checkbox>
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'text'">
-                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)" >
+                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'number'">
-                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="isDisable(fieldName,data,i)">
+                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                     </div>
                                 </div>
                             </div>
