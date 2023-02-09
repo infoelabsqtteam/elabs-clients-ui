@@ -24,6 +24,7 @@ constructor(
           modifyRow["disabled"] = this.checkRowIf(row,field);
           if(column.editable){
             modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);
+            modifyRow[column.field_name+"_edit"] = false;
           }
         }
         modifiedData.push(modifyRow);

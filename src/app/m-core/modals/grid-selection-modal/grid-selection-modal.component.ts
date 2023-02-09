@@ -24,6 +24,10 @@ export class GridSelectionModalComponent implements OnInit {
 
   gridData: any = [];
   modifiedGridData:any = [];
+  viewData:any=[];
+  pageNo:any=1;
+  pageSize:any=25;
+  total:any=0;
   selectedData: any = [];
   selecteData: any = [];
   listOfGridFieldName: any = [];
@@ -45,6 +49,7 @@ export class GridSelectionModalComponent implements OnInit {
   term: any={};
   setGridData:boolean=false;
   onlySelected:boolean=false;
+  checkSelectedData:boolean = false;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -55,7 +60,7 @@ export class GridSelectionModalComponent implements OnInit {
   @ViewChild('typeheadchips') typeheadchips: ElementRef<HTMLInputElement>;
 
 
-  typeAheadData: any;
+  typeAheadData: any=[];
   addedDataInList: any;
   deleteIndex: any;
   parentObj: any;
@@ -161,6 +166,7 @@ export class GridSelectionModalComponent implements OnInit {
         this.setStaticData(data);
         if(this.gridData.length > 0 && this.listOfGridFieldName.length > 0){
           this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field);
+          //this.getViewData();
         }else{
           this.modifiedGridData = [];
         }        
@@ -169,6 +175,23 @@ export class GridSelectionModalComponent implements OnInit {
     //this.treeViewData.data = TREE_DATA;
   }
 
+  getViewData(){
+    if (this.modifiedGridData && this.modifiedGridData.length > 0) {
+      this.total = this.modifiedGridData.length;
+      this.viewData = [];
+      let i = 0;
+      if(this.pageNo > 1){
+        i = this.pageSize * (this.pageNo - 1);
+      }
+      for (i = 0; i < this.modifiedGridData.length; i++) {
+        const element = this.modifiedGridData[i];
+        this.viewData.push(element);
+        if(this.viewData.length == this.pageSize){
+          break;
+        }              
+      }
+    }
+  }
 
   sortData(sort: Sort) {
     const data = this.gridData.slice();
@@ -236,7 +259,8 @@ export class GridSelectionModalComponent implements OnInit {
     let indx = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
     if(selectedData != ""){ 
       this.setData(selectedData,field, indx,chipsInput);  
-    }  
+    } 
+    this.editeColumn(data,field); 
   }
 
   setData(selectedData, field, index,chipsInput){
@@ -269,32 +293,40 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
 
+  getValueForGrid(column,row){
+    return this.CommonFunctionService.getValueForGrid(column,row);
+  }
+
   
 
 
   typeaheadObjectWithtext;
   searchTypeaheadData(field, currentObject,chipsInputValue) {
     //console.log(chipsInputValue)
-    this.typeaheadObjectWithtext = currentObject;
+    if(chipsInputValue != ''){
+      this.typeaheadObjectWithtext = currentObject;
 
-    this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
+      this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
 
-    this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
+      this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
 
-    let call_back_field = '';
-    let criteria = [];
-    const staticModal = []
-    if (field.call_back_field && field.call_back_field != '') {
-      call_back_field = field.call_back_field;
+      let call_back_field = '';
+      let criteria = [];
+      const staticModal = []
+      if (field.call_back_field && field.call_back_field != '') {
+        call_back_field = field.call_back_field;
+      }
+      if(field.api_params_criteria && field.api_params_criteria != ''){
+        criteria =  field.api_params_criteria;
+      }
+      let staticModalGroup = this.CommonFunctionService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
+      staticModal.push(staticModalGroup);
+      this.apiservice.GetTypeaheadData(staticModal);
+
+      this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
+    }else{
+      this.typeAheadData = [];
     }
-    if(field.api_params_criteria && field.api_params_criteria != ''){
-      criteria =  field.api_params_criteria;
-    }
-    let staticModalGroup = this.CommonFunctionService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
-    staticModal.push(staticModalGroup);
-    this.apiservice.GetTypeaheadData(staticModal);
-
-    this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
   }
 
 
@@ -591,6 +623,25 @@ export class GridSelectionModalComponent implements OnInit {
       this.gridData[index].selected = false;
       this.modifiedGridData[index].selected = false;
     }
+    this.checkSelectedDataLength();
+  }
+  checkSelectedDataLength(){
+    if(this.modifiedGridData.length > 0 && this.editableGridColumns && this.editableGridColumns.length > 0){
+      let count = 0;
+      for (let i = 0; i < this.modifiedGridData.length; i++) {
+        const data = this.modifiedGridData[i];        
+        if(data.selected){
+          count++;
+        }
+        if(count >= 2){
+          this.checkSelectedData = true;
+          break;
+        }else{
+          this.checkSelectedData = false;
+        }
+        
+      }
+    }
   }
   checkDisableRowIf(index){
     const data = this.gridData[index];
@@ -639,6 +690,7 @@ export class GridSelectionModalComponent implements OnInit {
         });
       }
     }
+    this.checkSelectedDataLength();
     //console.log(this.selected3);
   }
 
@@ -646,6 +698,9 @@ export class GridSelectionModalComponent implements OnInit {
 
     this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
   }  
+  editeColumn(data,column){
+    data[column.field_name+"_edit"] = !data[column.field_name+"_edit"];
+  }
 
   
   checkValidator() {
@@ -681,6 +736,36 @@ export class GridSelectionModalComponent implements OnInit {
       this.cancel();
     }
   }
+  bulkUpdate(){
+    let object = {};
+    let data = {};
+    object["editedColumns"] = this.editableGridColumns;
+    for (let i = 0; i < this.modifiedGridData.length; i++) {
+      const row = this.modifiedGridData[i];
+      if(row.selected){
+        for (let j = 0; j < this.editableGridColumns.length; j++) {
+          const column = this.editableGridColumns[j];
+          data[column.field_name] = row[column.field_name];            
+        }
+        break;
+      }      
+    }
+    object["data"] = data;
+    this.modalService.open("bulk-update-modal",object);
+  }
+  bulkUpdateResponce(responce){
+    if(this.modifiedGridData && this.modifiedGridData.length > 0){
+      for (let i = 0; i < this.modifiedGridData.length; i++) {
+        const data = this.modifiedGridData[i];
+        if(data.selected){
+          for (let j = 0; j < this.editableGridColumns.length; j++) {
+            const column = this.editableGridColumns[j];
+            data[column.field_name] = responce[column.field_name];            
+          }
+        }        
+      }
+    }
+  }
   cancel() {
     this.deleteIndex = -1;
     this.fieldNameForDeletion = {};
@@ -688,6 +773,7 @@ export class GridSelectionModalComponent implements OnInit {
   deleteitem() {
     this.parentObj[this.fieldNameForDeletion.field_name].splice(this.deleteIndex, 1)
   }
+  
 }
 
 

@@ -5,7 +5,7 @@ import { DndDirective } from '../../directives/dnd.directive';
 import { NumberOnly } from '../../directives/NumberOnly.directive';
 import { IsDecimalDirective } from 'src/app/directives/IsDecimalDirective.directive';
 import { StickyTableDirective } from 'src/app/directives/sticky-table/StickyTable.directive';
-import { StickyDirective } from 'src/app/directives/sticky/sticky.directive';
+import { StickyDirective, StickyHeadDirective } from 'src/app/directives/sticky/sticky.directive';
 
 const directives = [
   DirectiveModuleComponent,
@@ -13,7 +13,8 @@ const directives = [
     NumberOnly,
     IsDecimalDirective,
     StickyTableDirective,
-    StickyDirective
+    StickyDirective,
+    StickyHeadDirective
 ]
 
 @NgModule({

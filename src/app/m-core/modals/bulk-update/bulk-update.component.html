@@ -1,0 +1,193 @@
+<div mdbModal #bulkUpdateModal="mdbModal" class="modal fade top selectedparametermodule"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content" >
+      <!--Header-->
+      <div class="modal-header">
+        <h3 class="modal-title m-0 text-uppercase">Bulk Update</h3>      
+        <a class="h5 m-0 closebtb" (click)="closeModal()"><span>×</span></a>
+      </div>
+      <!--Body-->
+      
+      <div class="modal-body pt-0 popuptable">
+        <div class="">
+            <div class="table without-filter mb-2">
+                <div *ngIf="editableGridColumns.length > 0">
+                    <div *ngFor="let fieldName of editableGridColumns">
+                        <div *ngIf="fieldName.type == 'boolean'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" ></mat-checkbox>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div *ngIf="fieldName.type == 'checkbox'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" ></mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="fieldName.type.toLowerCase() == 'text'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input  type="text" class="form-control form-control-sm d-inline mr-2 mb-2"  [(ngModel)]="data[fieldName.field_name]"  >
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="fieldName.type.toLowerCase() == 'textarea'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control form-control-sm d-inline mr-2 mb-2" [(ngModel)]="data[fieldName.field_name]" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="fieldName.type.toLowerCase() == 'number'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2 mb-2"   [(ngModel)]="data[fieldName.field_name]" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
+                                        <mat-chip-list #chipList aria-label="Item selection">
+                                            <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag >{{getddnDisplayVal(item)}}
+                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                            </mat-chip>
+                                            <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
+                                                [matAutocomplete]="first" [matChipInputFor]="chipList"                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                            <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
+                                                <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                            </mat-autocomplete>
+                                        </mat-chip-list>
+                                    </mat-form-field> 
+                                </div>
+                            </div>                               
+                        </div>
+                        <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'userinput_chips'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
+                                        <mat-chip-list #chipList aria-label="Item selection">
+                                            <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag >{{getddnDisplayVal(item)}}
+                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                            </mat-chip>
+                                            <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
+                                                [matAutocomplete]="first" [matChipInputFor]="chipList"                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                            <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
+                                                <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                            </mat-autocomplete>
+                                        </mat-chip-list>
+                                    </mat-form-field>
+                                </div>
+                            </div>                                
+                        </div>
+                        <div *ngIf="fieldName.type.toLowerCase() == 'typeahead'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100 m-0" >
+                                            <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
+                                                [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value)" autocomplete="off">
+                                            <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadInput,data)"  [displayWith]="getOptionText">
+                                                <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                            </mat-autocomplete>                                  
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
+                                        <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
+                                            <mat-chip-list #chipList aria-label="Item selection">
+                                                <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag >{{getddnDisplayVal(item)}}
+                                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                </mat-chip>
+                                                <input type="text" #typeheadchips [placeholder]="fieldName.label" aria-label="Number" matInput
+                                                    [matAutocomplete]="first" [matChipInputFor]="chipList"                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadchips,data)" [displayWith]="getOptionText">
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                </mat-autocomplete>
+                                            </mat-chip-list>
+                                        </mat-form-field>                                
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="fieldName.datatype == 'object'">
+                                        <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                        <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" >
+                                            <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                            <mat-option></mat-option>
+                                            <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[fieldName.field_name]" [value]="staticValue">
+                                                {{getddnDisplayVal(staticValue)}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="fieldName.datatype != 'object'">
+                                        <mat-label>{{ fieldName.label | titlecase}}</mat-label>                                        
+                                        <mat-select [(ngModel)]="data[fieldName.field_name]" >
+                                            <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                            <mat-option></mat-option>
+                                            <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[fieldName.field_name]" [value]="staticValue">
+                                                {{getddnDisplayVal(staticValue)}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div> 
+                        <div *ngIf="fieldName.type.toLowerCase() == 'mini-html'">
+                            <div class="row m-0 w-100">
+                                <div class="col-lg-6">
+                                    <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <angular-editor [(ngModel)]="data[fieldName.field_name]" [config]="minieditorConfig"></angular-editor>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button" [disabled]="false" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="bulkUpdate()">Bulk Update</button>
+        <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-confirm-modal *ngIf="!isBulkUpdateOpen" id="confirm-modal" (alertResponce)="bulkUpdateAlertResponce($event)"></app-confirm-modal>
