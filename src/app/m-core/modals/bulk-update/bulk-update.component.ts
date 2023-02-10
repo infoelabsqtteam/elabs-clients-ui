@@ -8,6 +8,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,6 +32,7 @@ export class BulkUpdateComponent implements OnInit {
   term: any={};
   copyStaticData: [] = [];
   typeaheadDataSubscription:Subscription;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   minieditorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -248,7 +250,7 @@ export class BulkUpdateComponent implements OnInit {
       this.setData(selectedData,field, chipsInput) 
     }
   }
-  setValue(event: MatChipInputEvent, field, index,chipsInput,data) {
+  setValue(event: MatChipInputEvent, field,chipsInput,data) {
     let selectedData = "";
     if(event && event["option"] && event["option"].value){
       selectedData = event["option"].value

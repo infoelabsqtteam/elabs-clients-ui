@@ -107,7 +107,7 @@
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'typeahead'">
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
-                                                <mat-form-field appearance="outline" class="example-full-width w-100" (blur)="editeColumn(data,fieldName)">
+                                                <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
                                                         [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value)" autocomplete="off">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadInput,data)"  [displayWith]="getOptionText">
@@ -173,7 +173,7 @@
                     <tbody>
                     <tr *ngIf="grid_row_selection">
                         <td *ngIf="selectGridData" class="text-center"><mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox></td>
-                        <td *ngFor="let data of modifiedGridData|filter:data; let i = index" class="text-center" >
+                        <td *ngFor="let data of modifiedGridData|filter:filterData; let i = index" class="text-center" >
                             <mat-checkbox color="primary" (click)="$event.stopPropagation()"(change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected">
                             </mat-checkbox>
                         </td>
