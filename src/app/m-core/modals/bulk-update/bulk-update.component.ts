@@ -241,7 +241,7 @@ export class BulkUpdateComponent implements OnInit {
     }
 
   }
-  add(event: MatChipInputEvent, field, index,chipsInput,data){
+  add(event: MatChipInputEvent, field, chipsInput,data){
     let selectedData = "";
     if(event && event.value){
       selectedData = event.value
