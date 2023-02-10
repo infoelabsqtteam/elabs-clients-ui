@@ -9,9 +9,9 @@
             <div class="w-25 float-left">
                 <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
             </div>
-            <div class="w-25 float-left">
-                <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Only Selected</mat-checkbox>
-            </div>                    
+            <div class="w-25 float-left" *ngIf="checkSelectedData">
+                <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Show Only Selected</mat-checkbox>
+            </div>
         </div> 
         <div *ngIf="listOfGridFieldName && listOfGridFieldName.length > 0" style="position: absolute;
             right: 50px;">
@@ -47,24 +47,21 @@
                     <tbody>
                         <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
                             <td *ngIf="grid_row_selection" class="text-center colSticky firstCol">
-                                <div  [ngClass]="grid_row_refresh_icon?'checkeditmode':''">
-                                  <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled"></mat-checkbox>
-                                  <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
+                                <div  [ngClass]="grid_row_refresh_icon ?'checkeditmode':''">
+                                    <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled"></mat-checkbox>
+                                    <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
                                 </div>
                             </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
-                              <!-- <div *ngIf="!editedColumne">
-                                <span  [innerHtml]="getValueForGrid(fieldName,data)" ></span>
-                              </div> -->
                               <div>
                                 <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
                                     <span class="grid-coloumn-nowrap" [matTooltip]="data['tooltip']" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="data[fieldName.field_name]" ></span>
                                 </div>
                                 <div *ngIf="fieldName.editable" style="position: relative;">
-                                    <div *ngIf="!data[fieldName.field_name+'_edit']">
+                                    <div *ngIf="!data['column_edit']">
                                         <span class="grid-coloumn-nowrap" [matTooltip]="data['tooltip']" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="getValueForGrid(fieldName,data)" ></span>
                                     </div>
-                                    <div *ngIf="data[fieldName.field_name+'_edit']">
+                                    <div *ngIf="data['column_edit']">
                                         <div *ngIf="fieldName.type == 'boolean'">
                                             <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
                                         </div>
@@ -118,10 +115,6 @@
                                                     </mat-autocomplete>                                  
                                                 </mat-form-field>
                                             </div>
-
-
-
-
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <mat-chip-list #chipList aria-label="Item selection">
@@ -139,7 +132,6 @@
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                             <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
-                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
                                                 <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                     <mat-option></mat-option>
@@ -148,8 +140,12 @@
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
-                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">
-                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>                                        
+                                            <!-- <div *ngIf="fieldName.datatype == 'object'">
+                                                <select [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" class="form-control form-control-sm">
+                                                    <option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">                                                        {{getddnDisplayVal(staticValue)}}</option>
+                                                </select>
+                                            </div> -->
+                                            <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">                                       
                                                 <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                     <mat-option></mat-option>
@@ -167,8 +163,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <span *ngIf="!data[fieldName.field_name+'_edit']" class="material-icons editedColumneIcon" (click)="editeColumn(data,fieldName)">edit</span>
-                                    <span *ngIf="data[fieldName.field_name+'_edit']" class="material-icons editedColumneIcon" (click)="editeColumn(data,fieldName)">save</span>
                                 </div>
                               </div>
                             </td>
@@ -219,6 +213,9 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
+        <span class="float-left" *ngIf="checkSelectedData">
+            <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="editEnable" (change)="enableSelectedEdit($event)" [matTooltip]="'Edite Selected Items'">Edit Selected</mat-checkbox>
+        </span>
         <button type="button" *ngIf="checkSelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>
         <button type="button" [disabled]="false" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ field.label }}</button>
         <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>

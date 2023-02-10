@@ -29,6 +29,7 @@ export class BulkUpdateComponent implements OnInit {
   addedDataInList: any;
   typeaheadObjectWithtext;
   term: any={};
+  copyStaticData: [] = [];
   typeaheadDataSubscription:Subscription;
   minieditorConfig: AngularEditorConfig = {
     editable: true,
@@ -136,6 +137,7 @@ export class BulkUpdateComponent implements OnInit {
     if(alert.editedColumns && alert.editedColumns.length > 0){
       this.editableGridColumns = alert.editedColumns;
       this.data = alert.data;
+      this.copyStaticData = alert.copyStaticData;
     }  
     this.bulkUpdateModal.show();
   }

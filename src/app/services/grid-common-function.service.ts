@@ -23,10 +23,10 @@ constructor(
           modifyRow["tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);
           modifyRow["disabled"] = this.checkRowIf(row,field);
           if(column.editable){
-            modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);
-            modifyRow[column.field_name+"_edit"] = false;
+            modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
           }
         }
+        modifyRow["column_edit"] = false;
         modifiedData.push(modifyRow);
       }
     }

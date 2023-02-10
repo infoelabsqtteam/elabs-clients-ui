@@ -11,7 +11,6 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { ElementFlags } from 'typescript';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
 
 
@@ -50,6 +49,7 @@ export class GridSelectionModalComponent implements OnInit {
   setGridData:boolean=false;
   onlySelected:boolean=false;
   checkSelectedData:boolean = false;
+  editEnable:boolean=false;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -251,16 +251,15 @@ export class GridSelectionModalComponent implements OnInit {
       this.setData(selectedData,field, indx,chipsInput) 
     }
   }
-  setValue(event: MatChipInputEvent, field, index,chipsInput,data) {
+  setValue(event:MatChipInputEvent, field, index,chipsInput,data) {
     let selectedData = "";
     if(event && event["option"] && event["option"].value){
       selectedData = event["option"].value
-    }  
+    } 
     let indx = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
     if(selectedData != ""){ 
       this.setData(selectedData,field, indx,chipsInput);  
     } 
-    this.editeColumn(data,field); 
   }
 
   setData(selectedData, field, index,chipsInput){
@@ -281,7 +280,12 @@ export class GridSelectionModalComponent implements OnInit {
         this.typeheadInput.nativeElement.value = "";
       }
       chipsInput.value = "";
-    }    
+    } 
+    if(field.type == "typeahead"){
+      if(field.datatype != 'chips'){
+        this.modifiedGridData[index][field.field_name]= selectedData;
+      }
+    }   
     this.typeAheadData = [];    
   }
 
@@ -352,54 +356,6 @@ export class GridSelectionModalComponent implements OnInit {
     }
     this.modalService.remove(this.id);
     this.modalService.add(this);
-    // this.store.select('staticData').subscribe((state => {
-    //   if(state.staticData){
-    //     this.gridData = [];
-    //     if(this.field.ddn_field && state.staticData[this.field.ddn_field] && state.staticData[this.field.ddn_field] != null){
-    //       if(state.staticData[this.field.ddn_field] && state.staticData[this.field.ddn_field].length>0){
-    //         state.staticData[this.field.ddn_field].forEach(element => {
-    //           const gridData = JSON.parse(JSON.stringify(element))
-    //           if(gridData.selected && this.selecteData.length < 0){
-    //             gridData.selected = false;
-    //           }
-    //           this.gridData.push(gridData);
-    //         });
-    //       }
-
-    //       if(this.gridData && this.gridData.length > 0){
-    //         this.selecteData.forEach(element => {
-    //           this.gridData.forEach((row, i) => {
-    //             if(this.field.matching_fields_for_grid_selection && this.field.matching_fields_for_grid_selection.length>0){
-    //               var validity = true;
-    //               this.field.matching_fields_for_grid_selection.forEach(matchcriteria => {
-    //                 if(this.CommonFunctionService.getObjectValue(matchcriteria,element) == this.CommonFunctionService.getObjectValue(matchcriteria,row)){
-    //                   validity = validity && true;
-    //                 }
-    //                 else{
-    //                   validity = validity && false;
-    //                 }
-    //               });
-    //               if(validity == true){
-    //                 this.gridData[i]= element
-    //               const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
-    //               grid_data.selected = true;
-    //               this.gridData[i] = grid_data;
-    //               }
-    //             }
-    //             else{
-    //                if(this.CommonFunctionService.getObjectValue("_id",element) == this.CommonFunctionService.getObjectValue('_id',row)){
-    //                 this.gridData[i]= element
-    //                 const grid_data = JSON.parse(JSON.stringify(this.gridData[i]))
-    //                 grid_data.selected = true;
-    //                 this.gridData[i] = grid_data;
-    //               }
-    //             }
-    //           });
-    //         });          
-    //       }
-    //     }        
-    //   }
-    // }))
   }
   ngOnDestroy() {
     if (this.staticDataSubscriber) {
@@ -613,6 +569,24 @@ export class GridSelectionModalComponent implements OnInit {
       this.onlySelected = false;
     }
   }
+  enableSelectedEdit(event: MatCheckboxChange){
+    if(event.checked){
+      this.setEditableInSelected(true);
+    }else{
+      this.setEditableInSelected(false);
+    }
+  }
+  setEditableInSelected(value){
+    if(this.modifiedGridData.length > 0){
+      for (let i = 0; i < this.modifiedGridData.length; i++) {
+        const row = this.modifiedGridData[i];
+        if (row.selected) {
+          row['column_edit'] = value;
+        }
+        
+      }
+    }
+  }
 
   toggle(data, event: MatCheckboxChange, indx) {
     let index = this.gridCommonFunctionService.getCorrectIndex(data,indx,this.field,this.gridData,this.filterData);
@@ -633,7 +607,7 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected){
           count++;
         }
-        if(count >= 2){
+        if(count >= 1){
           this.checkSelectedData = true;
           break;
         }else{
@@ -642,6 +616,7 @@ export class GridSelectionModalComponent implements OnInit {
         
       }
     }
+    this.checkSelectedData = false;
   }
   checkDisableRowIf(index){
     const data = this.gridData[index];
@@ -695,12 +670,10 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   calculateNetAmount(data, fieldName, index) {
-
-    this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
-  }  
-  editeColumn(data,column){
-    data[column.field_name+"_edit"] = !data[column.field_name+"_edit"];
-  }
+    if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
+      this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
+    }
+  } 
 
   
   checkValidator() {
@@ -751,6 +724,7 @@ export class GridSelectionModalComponent implements OnInit {
       }      
     }
     object["data"] = data;
+    object["copyStaticData"] = this.copyStaticData;
     this.modalService.open("bulk-update-modal",object);
   }
   bulkUpdateResponce(responce){
@@ -760,6 +734,17 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
+            switch (column.type) {
+              case 'text':
+              case 'number':
+                if(column)
+                if(column["grid_cell_function"] && column["grid_cell_function"] != ''){
+                  this.CommonFunctionService.calculateNetAmount(data, column, column["grid_cell_function"]);
+                }
+                break;            
+              default:
+                break;
+            }
             data[column.field_name] = responce[column.field_name];            
           }
         }        
