@@ -560,6 +560,8 @@ export class GridSelectionModalComponent implements OnInit {
     this.filterData = '';
     this.onlySelected=false;
     this.modifiedGridData = [];
+    this.typeAheadData = [];
+    this.apiservice.clearTypeaheadData();
   }
   
   //SELECT ALL FUNCTIONLITY  
@@ -624,6 +626,8 @@ export class GridSelectionModalComponent implements OnInit {
             this.onlySelectedData = true;
           }          
           break;
+        }else if(count >= 1){
+          this.onlySelectedData = true;
         }else{
           this.checkSelectedData = false;
           this.onlySelectedData = false;

@@ -18,8 +18,10 @@ constructor(
         const row = gridData[i];
         let modifyRow = JSON.parse(JSON.stringify(row));
         for (let j = 0; j < gridColumns.length; j++) {
-          const column = gridColumns[j];          
-          modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
+          const column = gridColumns[j];  
+          if(!column.editable){        
+            modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
+          }          
           modifyRow["tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);
           modifyRow["disabled"] = this.checkRowIf(row,field);
           if(column.editable){

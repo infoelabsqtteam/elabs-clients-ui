@@ -155,6 +155,8 @@ export class BulkUpdateComponent implements OnInit {
   }
   closeModal() {
     this.dataShareService.setIsGridSelectionOpenOrNot(true);
+    this.typeAheadData = [];
+    this.apiservice.clearTypeaheadData();
     this.bulkUpdateModal.hide();
   }
   bulkUpdate(){
