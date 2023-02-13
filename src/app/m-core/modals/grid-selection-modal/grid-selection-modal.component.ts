@@ -49,6 +49,7 @@ export class GridSelectionModalComponent implements OnInit {
   setGridData:boolean=false;
   onlySelected:boolean=false;
   checkSelectedData:boolean = false;
+  onlySelectedData:boolean = false;
   editEnable:boolean=false;
 
   @Input() id: string;
@@ -600,23 +601,37 @@ export class GridSelectionModalComponent implements OnInit {
     this.checkSelectedDataLength();
   }
   checkSelectedDataLength(){
-    if(this.modifiedGridData.length > 0 && this.editableGridColumns && this.editableGridColumns.length > 0){
+    if(this.modifiedGridData.length > 0){
       let count = 0;
       for (let i = 0; i < this.modifiedGridData.length; i++) {
         const data = this.modifiedGridData[i];        
         if(data.selected){
           count++;
         }
-        if(count >= 1){
-          this.checkSelectedData = true;
+        if(count >= 2){
+          if(this.editableGridColumns && this.editableGridColumns.length > 0){
+            this.checkSelectedData = true;
+            this.onlySelectedData = true;
+          }else{
+            this.checkSelectedData = false;
+            this.onlySelectedData = true;
+          }          
           break;
+        }else if(count == 1){
+          if(this.editableGridColumns && this.editableGridColumns.length > 0){
+            this.checkSelectedData = true;
+            this.onlySelectedData = false;
+          }else{
+            this.checkSelectedData = false;
+            this.onlySelectedData = false;
+          }
         }else{
           this.checkSelectedData = false;
+          this.onlySelectedData = false;
         }
         
       }
     }
-    this.checkSelectedData = false;
   }
   checkDisableRowIf(index){
     const data = this.gridData[index];

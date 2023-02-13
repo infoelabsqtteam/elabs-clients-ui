@@ -9,7 +9,7 @@
             <div class="w-25 float-left">
                 <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
             </div>
-            <div class="w-25 float-left" *ngIf="checkSelectedData">
+            <div class="w-25 float-left" *ngIf="onlySelectedData">
                 <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Show Only Selected</mat-checkbox>
             </div>
         </div> 
