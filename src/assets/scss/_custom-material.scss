@@ -12,6 +12,20 @@
 
 .mat-icon-button:focus {outline:$zero;}
 input.mat-input-element {font-size:$size13;}
+.theme1 {
+    .grid-selection-modal{
+        input.mat-input-element{
+            font-size:$size12;
+        }
+        .mat-form-field{
+            margin-bottom: inherit!important;
+        }
+        .mat-form-field-appearance-outline .mat-form-field-infix{
+            padding: 0.7em 0 !important;
+        }
+    }
+}
+
 
 .login2 .mat-form-field-appearance-outline .mat-form-field-label {margin-top:6px;font-size:11px;}
 
