@@ -588,15 +588,22 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }
   }
+  singleRowEdit(data){
+    data['column_edit'] = !data['column_edit'];
+  }
 
   toggle(data, event: MatCheckboxChange, indx) {
     let index = this.gridCommonFunctionService.getCorrectIndex(data,indx,this.field,this.gridData,this.filterData);
     if (event.checked) {
       this.gridData[index].selected = true;
       this.modifiedGridData[index].selected = true;
+      if(this.editEnable){
+        this.modifiedGridData[index].column_edit = true;
+      }
     } else {
       this.gridData[index].selected = false;
       this.modifiedGridData[index].selected = false;
+      this.modifiedGridData[index].column_edit = false;
     }
     this.checkSelectedDataLength();
   }
@@ -617,14 +624,6 @@ export class GridSelectionModalComponent implements OnInit {
             this.onlySelectedData = true;
           }          
           break;
-        }else if(count == 1){
-          if(this.editableGridColumns && this.editableGridColumns.length > 0){
-            this.checkSelectedData = true;
-            this.onlySelectedData = false;
-          }else{
-            this.checkSelectedData = false;
-            this.onlySelectedData = false;
-          }
         }else{
           this.checkSelectedData = false;
           this.onlySelectedData = false;

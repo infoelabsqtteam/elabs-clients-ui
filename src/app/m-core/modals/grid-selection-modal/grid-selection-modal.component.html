@@ -47,9 +47,11 @@
                     <tbody>
                         <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
                             <td *ngIf="grid_row_selection" class="text-center colSticky firstCol">
-                                <div  [ngClass]="grid_row_refresh_icon ?'checkeditmode':''">
-                                    <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled"></mat-checkbox>
-                                    <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)">edit</span>
+                                <div  [ngClass]="grid_row_refresh_icon || data['column_edit'] || !data['column_edit'] ?'checkeditmode':''">
+                                    <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled" [matTooltip]="'Select'"></mat-checkbox>
+                                    <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)" [matTooltip]="'Refresh'">refresh</span>
+                                    <span *ngIf="data.selected && !data['column_edit']" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'">edit</span>
+                                    <span *ngIf="data.selected && data['column_edit']" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Save'">save</span>
                                 </div>
                             </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
@@ -213,10 +215,10 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
-        <span class="float-left" *ngIf="checkSelectedData">
+        <span class="float-left" *ngIf="checkSelectedData && onlySelectedData">
             <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="editEnable" (change)="enableSelectedEdit($event)" [matTooltip]="'Edite Selected Items'">Edit Selected</mat-checkbox>
         </span>
-        <button type="button" *ngIf="checkSelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>
+        <button type="button" *ngIf="checkSelectedData && onlySelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>
         <button type="button" [disabled]="false" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ field.label }}</button>
         <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
       </div>
