@@ -635,6 +635,7 @@ export class GridSelectionModalComponent implements OnInit {
           break;
         }else if(count >= 1){
           this.onlySelectedData = true;
+          this.checkSelectedData = false;
         }else{
           this.checkSelectedData = false;
           this.onlySelectedData = false;
