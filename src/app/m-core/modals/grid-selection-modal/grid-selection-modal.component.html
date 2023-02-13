@@ -47,7 +47,7 @@
                     <tbody>
                         <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
                             <td *ngIf="grid_row_selection" class="text-center colSticky firstCol">
-                                <div  [ngClass]="grid_row_refresh_icon || data['column_edit'] || !data['column_edit'] ?'checkeditmode':''">
+                                <div  [ngClass]="data.selected && grid_row_refresh_icon || (data['column_edit'] || !data['column_edit'] && editableGridColumns.length > 1) ?'checkeditmode':''">
                                     <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled" [matTooltip]="'Select'"></mat-checkbox>
                                     <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)" [matTooltip]="'Refresh'">refresh</span>
                                     <span *ngIf="data.selected && editableGridColumns.length > 1" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
