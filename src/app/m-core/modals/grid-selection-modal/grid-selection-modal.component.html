@@ -50,7 +50,7 @@
                                 <div  [ngClass]="grid_row_refresh_icon || data['column_edit'] || !data['column_edit'] ?'checkeditmode':''">
                                     <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled" [matTooltip]="'Select'"></mat-checkbox>
                                     <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)" [matTooltip]="'Refresh'">refresh</span>
-                                    <span *ngIf="data.selected && editableGridColumns.length > 0" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
+                                    <span *ngIf="data.selected && editableGridColumns.length > 1" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
                                 </div>
                             </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
@@ -214,7 +214,7 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
-        <span class="float-left" *ngIf="checkSelectedData && onlySelectedData">
+        <span class="float-left" *ngIf="checkSelectedData && onlySelectedData && editableGridColumns.length > 1">
             <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="editEnable" (change)="enableSelectedEdit($event)" [matTooltip]="'Edite Selected Items'">Edit Selected</mat-checkbox>
         </span>
         <button type="button" *ngIf="checkSelectedData && onlySelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>

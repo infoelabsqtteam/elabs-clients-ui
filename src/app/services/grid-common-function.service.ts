@@ -11,7 +11,7 @@ constructor(
   private CommonFunctionService:CommonFunctionService,
   private coreFunctionService:CoreFunctionService
 ) { }
-  modifyGridData(gridData,gridColumns,field){
+  modifyGridData(gridData,gridColumns,field,editableGridColumns){
     let modifiedData = [];
     if(gridColumns.length > 0){      
       for (let i = 0; i < gridData.length; i++) {
@@ -28,7 +28,11 @@ constructor(
             modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
           }
         }
-        modifyRow["column_edit"] = false;
+        if(editableGridColumns && editableGridColumns.length > 1){
+          modifyRow["column_edit"] = false;
+        }else{
+          modifyRow["column_edit"] = true;
+        }        
         modifiedData.push(modifyRow);
       }
     }
