@@ -50,8 +50,7 @@
                                 <div  [ngClass]="grid_row_refresh_icon || data['column_edit'] || !data['column_edit'] ?'checkeditmode':''">
                                     <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled" [matTooltip]="'Select'"></mat-checkbox>
                                     <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)" [matTooltip]="'Refresh'">refresh</span>
-                                    <span *ngIf="data.selected && !data['column_edit']" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'">edit</span>
-                                    <span *ngIf="data.selected && data['column_edit']" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Save'">save</span>
+                                    <span *ngIf="data.selected && editableGridColumns.length > 0" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
                                 </div>
                             </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">

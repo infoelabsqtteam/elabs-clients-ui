@@ -559,8 +559,12 @@ export class GridSelectionModalComponent implements OnInit {
     this.selecteData = [];
     this.filterData = '';
     this.onlySelected=false;
+    this.checkSelectedData = false;
+    this.onlySelectedData = false;
+    this.editEnable=false;
     this.modifiedGridData = [];
     this.typeAheadData = [];
+    this.editableGridColumns = [];
     this.apiservice.clearTypeaheadData();
   }
   
