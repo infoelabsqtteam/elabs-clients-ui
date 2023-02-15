@@ -499,6 +499,9 @@ export class GridSelectionModalComponent implements OnInit {
     if (alert.field.onchange_api_params == "" || alert.field.onchange_api_params == null) {
       this.gridData = this.selecteData;
       this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns);      
+      if(this.grid_row_selection && this.modifiedGridData && this.modifiedGridData.length < 50){
+        this.editEnable = true;
+      }
     }
     else {
       this.setGridData = true;
@@ -767,18 +770,20 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
-            switch (column.type) {
-              case 'text':
-              case 'number':
-                if(column)
-                if(column["grid_cell_function"] && column["grid_cell_function"] != ''){
-                  this.CommonFunctionService.calculateNetAmount(data, column, column["grid_cell_function"]);
-                }
-                break;            
-              default:
-                break;
-            }
-            data[column.field_name] = responce[column.field_name];            
+            if(data && !data[column.field_name+"_disabled"]){
+              switch (column.type) {
+                case 'text':
+                case 'number':
+                  if(column)
+                  if(column["grid_cell_function"] && column["grid_cell_function"] != ''){
+                    this.CommonFunctionService.calculateNetAmount(data, column, column["grid_cell_function"]);
+                  }
+                  break;            
+                default:
+                  break;
+              }
+              data[column.field_name] = responce[column.field_name]; 
+            }           
           }
         }        
       }

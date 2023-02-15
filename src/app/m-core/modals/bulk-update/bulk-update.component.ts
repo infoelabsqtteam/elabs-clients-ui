@@ -138,16 +138,16 @@ export class BulkUpdateComponent implements OnInit {
   showModal(alert) {  
     if(alert.editedColumns && alert.editedColumns.length > 0){
       this.editableGridColumns = alert.editedColumns;
-      for (let i = 0; i < this.editableGridColumns.length; i++) {
-        const column = this.editableGridColumns[i];
-        if (column.is_disabled) {
-          column['disabled'] = true;
-        }else if(column.etc_fields && column.etc_fields.disable_if && column.etc_fields.disable_if != ''){
-          column['disabled'] = true;
-        }else{
-          column['disabled'] = false;
-        }        
-      }
+      // for (let i = 0; i < this.editableGridColumns.length; i++) {
+      //   const column = this.editableGridColumns[i];
+      //   if (column.is_disabled) {
+      //     column['disabled'] = true;
+      //   }else if(column.etc_fields && column.etc_fields.disable_if && column.etc_fields.disable_if != ''){
+      //     column['disabled'] = true;
+      //   }else{
+      //     column['disabled'] = false;
+      //   }        
+      // }
       this.data = alert.data;
       this.copyStaticData = alert.copyStaticData;
     }  
