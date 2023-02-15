@@ -28,10 +28,10 @@ constructor(
             modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
           }
         }
-        if(editableGridColumns && editableGridColumns.length > 1){
-          modifyRow["column_edit"] = false;
-        }else{
+        if(editableGridColumns && (editableGridColumns.length == 1 || (field && !field.grid_row_selection))){
           modifyRow["column_edit"] = true;
+        }else{
+          modifyRow["column_edit"] = false;
         }        
         modifiedData.push(modifyRow);
       }

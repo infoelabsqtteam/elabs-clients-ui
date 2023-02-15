@@ -9,7 +9,7 @@
             <div class="w-25 float-left">
                 <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
             </div>
-            <div class="w-25 float-left" *ngIf="onlySelectedData">
+            <div class="w-25 float-left" *ngIf="onlySelectedData && grid_row_selection">
                 <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Show Only Selected</mat-checkbox>
             </div>
         </div> 
@@ -214,7 +214,7 @@
       </div>
       <!--Footer-->
       <div class="modal-footer">
-        <span class="float-left" *ngIf="checkSelectedData && onlySelectedData && editableGridColumns.length > 1">
+        <span class="float-left" *ngIf="checkSelectedData && onlySelectedData && editableGridColumns.length > 1 && grid_row_selection">
             <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="editEnable" (change)="enableSelectedEdit($event)" [matTooltip]="'Edite Selected Items'">Edit Selected</mat-checkbox>
         </span>
         <button type="button" *ngIf="checkSelectedData && onlySelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>

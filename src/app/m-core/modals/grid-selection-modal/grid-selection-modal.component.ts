@@ -480,6 +480,13 @@ export class GridSelectionModalComponent implements OnInit {
     if(this.field && this.field.grid_selection_button_label != null && this.field.grid_selection_button_label != ''){
       this.field.label = this.field.grid_selection_button_label;
     }
+    if (this.field && this.field.grid_row_selection) {
+      this.grid_row_selection = true;
+    } else {
+      this.grid_row_selection = false;
+      this.checkSelectedData = true;
+      this.onlySelectedData = true;
+    }
     this.field['isFilter'] = this.gridCommonFunctionService.applyOnGridFilter(this.field);
     this.field['filterLabel'] = this.gridCommonFunctionService.applyOnGridFilterLabel(this.field);
     if (this.field.gridColumns && this.field.gridColumns.length > 0) {      
@@ -498,11 +505,7 @@ export class GridSelectionModalComponent implements OnInit {
       this.gridData = [];
       this.modifiedGridData = [];
     }
-    if (this.field && this.field.grid_row_selection) {
-      this.grid_row_selection = true;
-    } else {
-      this.grid_row_selection = false;
-    }
+    
     if (this.field && this.field.grid_row_refresh_icon) {
       this.grid_row_refresh_icon = true;
     } else {
