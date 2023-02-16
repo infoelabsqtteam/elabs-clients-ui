@@ -751,7 +751,7 @@ export class GridSelectionModalComponent implements OnInit {
     object["editedColumns"] = this.editableGridColumns;
     for (let i = 0; i < this.modifiedGridData.length; i++) {
       const row = this.modifiedGridData[i];
-      if(row.selected){
+      if(row.selected || !this.grid_row_selection){
         for (let j = 0; j < this.editableGridColumns.length; j++) {
           const column = this.editableGridColumns[j];
           data[column.field_name] = row[column.field_name];            
@@ -767,10 +767,10 @@ export class GridSelectionModalComponent implements OnInit {
     if(this.modifiedGridData && this.modifiedGridData.length > 0){
       for (let i = 0; i < this.modifiedGridData.length; i++) {
         const data = this.modifiedGridData[i];
-        if(data.selected){
+        if(data.selected || !this.grid_row_selection){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
-            if(data && !data[column.field_name+"_disabled"]){
+            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name]){
               switch (column.type) {
                 case 'text':
                 case 'number':

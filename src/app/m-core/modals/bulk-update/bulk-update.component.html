@@ -1,6 +1,6 @@
 <div mdbModal #bulkUpdateModal="mdbModal" class="modal fade top selectedparametermodule"  tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content" >
       <!--Header-->
       <div class="modal-header">
@@ -17,60 +17,75 @@
                         <div *ngIf="fieldName.display">
                             <div *ngIf="fieldName.type == 'boolean'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" ></mat-checkbox>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
                                     </div>
                                 </div>                            
                             </div>
                             <div *ngIf="fieldName.type == 'checkbox'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" ></mat-checkbox>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
                                     </div>
                                 </div>
                             </div>
                             <div *ngIf="fieldName.type.toLowerCase() == 'text'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <input  type="text" class="form-control form-control-sm d-inline mr-2 mb-2"  [(ngModel)]="data[fieldName.field_name]"  >
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
                                     </div>
                                 </div>
                             </div>
                             <div *ngIf="fieldName.type.toLowerCase() == 'textarea'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <textarea class="form-control form-control-sm d-inline mr-2 mb-2" [(ngModel)]="data[fieldName.field_name]" ></textarea>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
                                     </div>
                                 </div>
                             </div>
                             <div *ngIf="fieldName.type.toLowerCase() == 'number'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2 mb-2"   [(ngModel)]="data[fieldName.field_name]" >
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
                                     </div>
                                 </div>
                             </div>
                             <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
                                             <mat-chip-list #chipList aria-label="Item selection">
                                                 <mat-chip *ngFor="let item of custmizedFormValueData(fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag >{{getddnDisplayVal(item)}}
@@ -84,14 +99,17 @@
                                             </mat-chip-list>
                                         </mat-form-field> 
                                     </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
+                                    </div>
                                 </div>                               
                             </div>
                             <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'userinput_chips'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
                                             <mat-chip-list #chipList aria-label="Item selection">
                                                 <mat-chip *ngFor="let item of custmizedFormValueData(fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag >{{getddnDisplayVal(item)}}
@@ -105,14 +123,17 @@
                                             </mat-chip-list>
                                         </mat-form-field>
                                     </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
+                                    </div>
                                 </div>                                
                             </div>
                             <div *ngIf="fieldName.type.toLowerCase() == 'typeahead'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100 m-0" >
                                                 <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
@@ -137,14 +158,17 @@
                                             </mat-form-field>                                
                                         </div>
                                     </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
+                                    </div>
                                 </div>
                             </div>
                             <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="fieldName.datatype == 'object'">
                                             <mat-label>{{ fieldName.label | titlecase}}</mat-label>
                                             <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" >
@@ -166,15 +190,21 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
+                                    </div>
                                 </div>
                             </div> 
                             <div *ngIf="fieldName.type.toLowerCase() == 'mini-html'">
                                 <div class="row m-0 w-100">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-5">
                                         <angular-editor [(ngModel)]="data[fieldName.field_name]" [config]="minieditorConfig" ></angular-editor>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Not Update</mat-checkbox>
                                     </div>
                                 </div>
                             </div>

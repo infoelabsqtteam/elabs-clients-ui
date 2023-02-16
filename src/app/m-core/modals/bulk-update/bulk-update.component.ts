@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-bulk-update',
@@ -20,6 +21,7 @@ export class BulkUpdateComponent implements OnInit {
 
   editableGridColumns:any = [];
   data:any={};
+  notUpdate:any={};
   selectable = true;
   deleteIndex: any;
   parentObj: any;
@@ -138,17 +140,20 @@ export class BulkUpdateComponent implements OnInit {
   showModal(alert) {  
     if(alert.editedColumns && alert.editedColumns.length > 0){
       this.editableGridColumns = alert.editedColumns;
-      // for (let i = 0; i < this.editableGridColumns.length; i++) {
-      //   const column = this.editableGridColumns[i];
-      //   if (column.is_disabled) {
-      //     column['disabled'] = true;
-      //   }else if(column.etc_fields && column.etc_fields.disable_if && column.etc_fields.disable_if != ''){
-      //     column['disabled'] = true;
-      //   }else{
-      //     column['disabled'] = false;
-      //   }        
-      // }
-      this.data = alert.data;
+      for (let i = 0; i < this.editableGridColumns.length; i++) {
+        const column = this.editableGridColumns[i];
+        if(column && column.field_name){
+          this.data[column.field_name] = JSON.parse(JSON.stringify(alert.data[column.field_name]));
+          this.notUpdate[column.field_name] = false;
+        }        
+        // if (column.is_disabled) {
+        //   column['disabled'] = true;
+        // }else if(column.etc_fields && column.etc_fields.disable_if && column.etc_fields.disable_if != ''){
+        //   column['disabled'] = true;
+        // }else{
+        //   column['disabled'] = false;
+        // }        
+      }      
       this.copyStaticData = alert.copyStaticData;
     }  
     this.bulkUpdateModal.show();
@@ -160,6 +165,11 @@ export class BulkUpdateComponent implements OnInit {
     this.bulkUpdateModal.hide();
   }
   bulkUpdate(){
+    Object.keys(this.notUpdate).forEach(key =>{
+      if(this.notUpdate[key]){
+        delete this.data[key];
+      }
+    });
     this.bulkUpdateResponce.emit(this.data);
     this.closeModal();
   }
