@@ -775,7 +775,7 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected || !this.grid_row_selection){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
-            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name]){
+            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
               switch (column.type) {
                 case 'text':
                 case 'number':
