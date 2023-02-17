@@ -432,14 +432,14 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
   updateRowData(element,i){
-    //this.gridData[i] = element
+    this.gridData[i] = element
     const grid_data = JSON.parse(JSON.stringify(this.gridData[i]));
     grid_data.selected = true;
-    if(this.editableGridColumns.length > 0){
-      this.editableGridColumns.forEach(column => {
-        grid_data[column.field_name] = element[column.field_name];
-      });
-    }
+    // if(this.editableGridColumns.length > 0){
+    //   this.editableGridColumns.forEach(column => {
+    //     grid_data[column.field_name] = element[column.field_name];
+    //   });
+    // }
     this.gridData[i] = grid_data;
   }
   
