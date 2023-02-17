@@ -143,7 +143,7 @@ export class BulkUpdateComponent implements OnInit {
       for (let i = 0; i < this.editableGridColumns.length; i++) {
         const column = this.editableGridColumns[i];
         if(column && column.field_name){
-          this.data[column.field_name] = JSON.parse(JSON.stringify(alert.data[column.field_name]));
+          this.data[column.field_name] = alert.data[column.field_name];
           this.notUpdate[column.field_name] = false;
         }        
         // if (column.is_disabled) {
