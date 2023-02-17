@@ -612,13 +612,16 @@ export class GridSelectionModalComponent implements OnInit {
     if (event.checked) {
       this.gridData[index].selected = true;
       this.modifiedGridData[index].selected = true;
-      if(this.editEnable){
+      if(this.editEnable && this.editableGridColumns && this.editableGridColumns.length > 1){
         this.modifiedGridData[index].column_edit = true;
       }
     } else {
       this.gridData[index].selected = false;
       this.modifiedGridData[index].selected = false;
-      this.modifiedGridData[index].column_edit = false;
+      if(this.editableGridColumns && this.editableGridColumns.length > 1){
+        this.modifiedGridData[index].column_edit = false;
+      }
+      
     }
     this.checkSelectedDataLength();
   }
@@ -684,7 +687,7 @@ export class GridSelectionModalComponent implements OnInit {
           if(!this.checkDisableRowIf(i)){
             row.selected = true;
             this.modifiedGridData[i].selected = true;
-            if(this.editEnable){
+            if(this.editEnable && this.editableGridColumns && this.editableGridColumns.length > 1){
               this.modifiedGridData[i].column_edit = true;
             }
           }
@@ -696,7 +699,9 @@ export class GridSelectionModalComponent implements OnInit {
           if(!this.checkDisableRowIf(i)){
             row.selected = false;
             this.modifiedGridData[i].selected = false;
-            this.modifiedGridData[i].column_edit = false;
+            if(this.editableGridColumns && this.editableGridColumns.length > 1){
+              this.modifiedGridData[i].column_edit = false;
+            }            
           }
         });
       }
