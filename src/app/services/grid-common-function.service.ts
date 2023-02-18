@@ -28,7 +28,7 @@ constructor(
             modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
           }
         }
-        if(editableGridColumns && (editableGridColumns.length == 1 || (field && !field.grid_row_selection))){
+        if(editableGridColumns && (editableGridColumns.length == 1 || (field && !field.grid_row_selection) || row.selected)){
           modifyRow["column_edit"] = true;
         }else{
           modifyRow["column_edit"] = false;
@@ -37,6 +37,12 @@ constructor(
       }
     }
     return modifiedData;
+  }
+  checkDisableInRow(editedColumns,row){
+    for (let index = 0; index < editedColumns.length; index++) {
+      const column = editedColumns[index];
+      row[column.field_name+"_disabled"] = this.isDisable(column,row);
+    }
   }
   checkRowIf(data,field){
     let check = false;

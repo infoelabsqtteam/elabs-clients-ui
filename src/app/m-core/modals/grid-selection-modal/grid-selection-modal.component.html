@@ -64,16 +64,16 @@
                                     </div>
                                     <div *ngIf="data['column_edit']">
                                         <div *ngIf="fieldName.type == 'boolean'">
-                                            <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
+                                            <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></mat-checkbox>
                                         </div>
                                         <div *ngIf="fieldName.type == 'checkbox'">
-                                            <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
+                                            <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></mat-checkbox>
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'text'">
                                             <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'textarea'">
-                                            <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></textarea>
+                                            <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></textarea>
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'number'">
                                             <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
@@ -133,7 +133,7 @@
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'dropdown'">
                                             <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype == 'object'">
-                                                <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <mat-select [compareWith]="compareObjects" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (selectionChange)="checkDisableIf(data)">
                                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                     <mat-option></mat-option>
                                                     <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">
@@ -147,7 +147,7 @@
                                                 </select>
                                             </div> -->
                                             <mat-form-field appearance="outline" class="w-100" *ngIf="fieldName.datatype != 'object'">                                       
-                                                <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <mat-select [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (selectionChange)="checkDisableIf(data)">
                                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[i+'_'+fieldName.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                     <mat-option></mat-option>
                                                     <mat-option *ngFor="let staticValue of copyStaticData[fieldName.ddn_field] | filter:term[i+'_'+fieldName.field_name]" [value]="staticValue">
@@ -192,10 +192,10 @@
                                 </div>
                                 <div *ngIf="fieldName.editable">
                                     <div *ngIf="fieldName.type == 'boolean'">
-                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type == 'checkbox'">
-                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"></mat-checkbox>
+                                        <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'text'">
                                         <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >

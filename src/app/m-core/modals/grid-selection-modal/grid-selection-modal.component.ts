@@ -263,7 +263,8 @@ export class GridSelectionModalComponent implements OnInit {
     let indx = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
     if(selectedData != ""){ 
       this.setData(selectedData,field, indx,chipsInput);  
-    } 
+    }
+    this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data); 
   }
 
   setData(selectedData, field, index,chipsInput){
@@ -714,7 +715,11 @@ export class GridSelectionModalComponent implements OnInit {
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
       this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }
+    this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
   } 
+  checkDisableIf(data){
+    this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
+  }
 
   
   checkValidator() {
