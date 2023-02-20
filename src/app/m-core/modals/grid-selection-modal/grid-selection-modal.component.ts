@@ -170,6 +170,7 @@ export class GridSelectionModalComponent implements OnInit {
           if(this.modifiedGridData && this.modifiedGridData.length < 50){
             this.editEnable = true;
           }
+          this.checkSelectedDataLength();
           //this.getViewData();
         }else{
           this.modifiedGridData = [];
