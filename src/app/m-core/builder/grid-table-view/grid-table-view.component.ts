@@ -626,7 +626,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.currentMenu.name = this.tab.tab_name;
           this.apiService.resetGridCountAllData();
           this.getPage(1);
-          this.getTabsCount(this.tabs);
+          if(index == 0){
+            this.getTabsCount(this.tabs);
+          }
         }
 
       }
@@ -754,7 +756,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.bulkuploadList = [];
     this.formName = '';
     this.getPage(this.pageNumber);
-    this.getTabsCount(this.tabs);   
+    //this.getTabsCount(this.tabs);   
   }
   
   addNewForm(formName){

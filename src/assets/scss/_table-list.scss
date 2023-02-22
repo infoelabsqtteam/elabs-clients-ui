@@ -156,3 +156,8 @@
     }
    
 }
+.colSticky{
+    position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;  
+}
+.firstCol{left: 0;}
+.editedColumneIcon{position: absolute;right: 0;top: 5px;cursor: pointer;z-index: 1;}
