@@ -13,17 +13,37 @@ export class StickyDirective implements AfterViewInit{
     @Optional() private table: StickyTableDirective
   ) { }
   ngAfterViewInit(): void {
-    if(this.sticky){
+    if(this.sticky){ 
+        const el = this.el.nativeElement as HTMLElement;
+        const { x } = this.el.nativeElement.getBoundingClientRect();
+        const leftValue = Math.floor(x) - Math.floor(this.table.x);      
+        el.style.left = this.table ? leftValue+'px' : '0px';                         // <<<---using ()=> syntax 
+    }
+  }
+
+  
+
+
+}
+@Directive({
+  selector: '[stickyHeader]'
+})
+export class StickyHeadDirective implements AfterViewInit{
+
+  @Input() stickyHeader: boolean;
+
+  constructor(
+    private el: ElementRef,
+    @Optional() private table: StickyTableDirective
+  ) { }
+  ngAfterViewInit(): void {
+    if(this.stickyHeader){
       setTimeout(()=>{  
         const el = this.el.nativeElement as HTMLElement;
         const { x } = this.el.nativeElement.getBoundingClientRect();
-        el.style.position = 'sticky';
-        el.style.zIndex = '2';
-        el.style.boxShadow='inset -1px 0px 0px #dee2e6';
         const leftValue = Math.floor(x) - Math.floor(this.table.x);      
-        el.style.left = this.table ? leftValue+'px' : '0px';                         // <<<---using ()=> syntax
-          
-     }, 100);
+        el.style.left = this.table ? leftValue+'px' : '0px';  // <<<---using ()=> syntax          
+     }, 150);
       
     }
   }

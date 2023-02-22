@@ -12,6 +12,20 @@
 
 .mat-icon-button:focus {outline:$zero;}
 input.mat-input-element {font-size:$size13;}
+.theme1 {
+    .grid-selection-modal{
+        input.mat-input-element{
+            font-size:$size12;
+        }
+        .mat-form-field{
+            margin-bottom: inherit!important;
+        }
+        .mat-form-field-appearance-outline .mat-form-field-infix{
+            padding: 0.7em 0 !important;
+        }
+    }
+}
+
 
 .login2 .mat-form-field-appearance-outline .mat-form-field-label {margin-top:6px;font-size:11px;}
 
@@ -40,7 +54,7 @@ body.modal-open .modal-backdrop {display:none !important;}
     .mat-form-field-label > * {background:$white;padding-right:$size8;}
 
     .modal-content {
-        .grid-button {width:$size25;height:$size25;line-height:30px;margin:$size3 $zero;color:#555;}
+        .grid-button {width:$size25;height:$size25;line-height:$size25;margin:$size3 $zero;color:#555;}
         .removebtn {
             span {font-weight:bold;}
         }

@@ -34,6 +34,7 @@ import { FeedbackComponent } from './feedback/feedback.component';
 import { DownloadProgressComponent } from './download-progress/download-progress.component';
 import { AuditHistoryComponent } from './audit-history/audit-history.component';
 import { HtmlViewModalComponent } from './html-view-modal/html-view-modal.component';
+import { BulkUpdateComponent } from './bulk-update/bulk-update.component';
 
 
 const models = [
@@ -63,7 +64,8 @@ const models = [
   FeedbackComponent,
   DownloadProgressComponent,
   AuditHistoryComponent,
-  HtmlViewModalComponent
+  HtmlViewModalComponent,
+  BulkUpdateComponent
 ]
 
 @NgModule({
