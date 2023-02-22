@@ -24,8 +24,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   AllModuleList:any=[];
   modal:any='';
   sidebar2 = true;
+  moduleIndex:number=-1;
+  menuIndex:number=-1;
+  subMenuIndex:number=-1;
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
+  moduleIndexSubscription:Subscription;
   
   constructor( 
     private router: Router,
@@ -42,6 +46,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     // this.dataShareService.otherSaveCall.subscribe(responce => {
     //   this.setSaveResponce(responce);
     // })
+    this.moduleIndexSubscription = this.dataShareService.moduleIndex.subscribe(index =>{
+      if(index != -1){
+          this.moduleIndex = index;
+      }else{
+          this.moduleIndex = -1;
+      }
+    })
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
@@ -127,16 +138,20 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       let mIndex = this.commonFunctionService.getIndexInArrayById(this.AllModuleList,module.name,'name');      
       if(mIndex != -1){
         this.dataShareService.setModuleIndex(mIndex);    
-      } 
+      }
+      this.moduleIndex = mIndex; 
   }
-  getSubmenuTemplateData(module,submenu,menuIndex){
+  getSubmenuTemplateData(module,submenu,submenuIndex,menuIndex){
     submenu['child'] = true;
     submenu['menuIndex'] = menuIndex;
+    this.menuIndex = menuIndex;
+    this.subMenuIndex = submenuIndex;
     this.getTemplateData(module,submenu);
   }
   getmenuTemplateData(module,submenu,menuIndex){
     submenu['child'] = false;
     submenu['menuIndex'] = menuIndex;
+    this.menuIndex = menuIndex;
     this.getTemplateData(module,submenu);
 }
   getTemplateData(module,submenu) {

@@ -426,14 +426,26 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         let moduleIndex = this.menuOrModuleCommounService.getModuleIndexById(moduleId);
         //this.dataShareService.setModuleIndex(moduleIndex);
         if(moduleIndex != undefined){
-        let moduleList = this.storageService.GetModules();
-        let module = moduleList[moduleIndex];
-        let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
-        let menu = {
-            "name" : menuName
-        }
-        this.storageService.SetActiveMenu(menu);
-        this.router.navigate([rout]); 
+            let moduleList = this.storageService.GetModules();
+            let module = moduleList[moduleIndex];
+            let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
+            let menu = {
+                "name" : menuName.name
+            }
+            if(menuName.subMenuIndex){
+                menu['child'] = true;
+                menu['menuIndex'] = menuName.subMenuIndex;
+            }else{
+                menu['child'] = false;
+                menu['menuIndex'] = menuName.menuIndex;
+            }
+            this.storageService.SetActiveMenu(menu);
+            this.menuOrModuleCommounService.setModuleName(module.name);
+            this.dataShareService.sendCurrentPage('DASHBOARD')             
+            if(moduleIndex != -1){
+                this.dataShareService.setModuleIndex(moduleIndex);    
+            } 
+            this.router.navigate([rout]); 
         }
         if(notification.notificationStatus == 'UNREAD'){
             notification['notificationStatus'] = 'READ';
