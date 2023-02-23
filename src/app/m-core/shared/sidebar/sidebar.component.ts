@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
   moduleIndexSubscription:Subscription;
+  menuIndexSubscription:Subscription;
   
   constructor( 
     private router: Router,
@@ -52,6 +53,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }else{
           this.moduleIndex = -1;
       }
+    })
+    this.menuIndexSubscription = this.dataShareService.menuIndexs.subscribe(indexs =>{      
+      this.subMenuIndex = indexs.submenuIndex;      
+      this.menuIndex = indexs.menuIndex;      
     })
   }
   saveCallSubscribe(){
@@ -152,8 +157,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     submenu['child'] = false;
     submenu['menuIndex'] = menuIndex;
     this.menuIndex = menuIndex;
+    this.subMenuIndex = -1;
     this.getTemplateData(module,submenu);
-}
+  }
   getTemplateData(module,submenu) {
     if(this.permissionService.checkPermission(submenu.name,'view')){
         this.storageService.SetActiveMenu(submenu);

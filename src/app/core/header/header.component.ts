@@ -258,23 +258,26 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 let menuList = module.menu_list;
                 this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
                 let menu = {}
-                menu = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);
+                let menuWithIndex = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);                              
                 if(this.moduleIndex != moduleIndex){                    
                     let activeMenu = this.storageService.GetActiveMenu();
-                    if(activeMenu && activeMenu.name){
-                        menu = this.getMenuByActiveMenu(activeMenu);
+                    if(activeMenu && activeMenu.name){                        
+                        menuWithIndex = this.getMenuByActiveMenu(activeMenu);
                     }else{
                         this.selected.setValue(0);
                     }
                 }else if(this.moduleIndex == moduleIndex){
                     let activeMenu = this.storageService.GetActiveMenu();
                     if(activeMenu && activeMenu.name){
-                        menu = this.getMenuByActiveMenu(activeMenu);
+                        menuWithIndex = this.getMenuByActiveMenu(activeMenu);
                     }else{
                         this.selected.setValue(1);
                     }
                     module = {};
-                }
+                }  
+                menu = menuWithIndex.menu; 
+                let menuIndexs = menuWithIndex.indexs;               
+                this.shareMenuIndex(menuIndexs.defaultmenuIndex,menuIndexs.defaultSubmenuIndex);
                 this.getTemplateData(module,menu)
             } else {
                 this.menuData = [];
@@ -282,11 +285,22 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         } else {
             this.menuData = [];
         }
-    }   
+    }  
+    shareMenuIndex(menuIndex,subMenuIndex){
+        let indexs = {};
+        indexs['menuIndex'] = menuIndex;
+        indexs['submenuIndex'] = subMenuIndex;
+        this.dataShareService.setMenuIndexs(indexs);
+    } 
     getMenuByActiveMenu(activeMenu){
+        let menu = {};
         let activeMenuIndex = 0;
-        if(activeMenu.menuIndex){
+        let indexs:any = {};
+        if(activeMenu.menuIndex != -1){
             activeMenuIndex = activeMenu.menuIndex
+            indexs['defaultmenuIndex'] = activeMenuIndex;
+        }else{
+            indexs['defaultmenuIndex'] = -1;
         }
         this.selected.setValue(activeMenuIndex+1); 
         let menuList = this.menuData;
@@ -296,8 +310,15 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 menuList = subMenu;
             }                        
         }
-        let menuIndex = this.commonfunctionService.getIndexInArrayById(menuList,activeMenu.name,'name');        
-        return menuList[menuIndex];
+        let menuIndex = this.commonfunctionService.getIndexInArrayById(menuList,activeMenu.name,'name'); 
+        if(activeMenu.child){
+            indexs['defaultSubmenuIndex'] = menuIndex;
+        }else{
+            indexs['defaultSubmenuIndex'] = -1;
+        }   
+        menu['indexs'] = indexs;
+        menu['menu'] = menuList[menuIndex]; 
+        return menu;
     }  
     
     activeLinkD(link, check) {
@@ -335,8 +356,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.notificationService.notify("bg-danger", "Permission denied !!!");
         }
     }
-    getTemplateMenuData(submenu) {
+    getTemplateMenuData(submenu,menuIndex,subMenuIndex) {
         let module = {};
+        this.shareMenuIndex(menuIndex,subMenuIndex);
         this.getTemplateData(module,submenu);
     }
         

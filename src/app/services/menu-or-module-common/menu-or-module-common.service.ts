@@ -130,9 +130,10 @@ constructor(
     return check;
   }
   getDefaultMenu(menuList){
-      let menu = {};
+      let menu:any = {};
       let defaultMenu:any = {};
       let defaultMenuIndexs = this.getDefaultMenuIndex(menuList);
+      menu['indexs'] = defaultMenuIndexs;
       if(defaultMenuIndexs.defaultSubmenuIndex > -1){
           defaultMenu = menuList[defaultMenuIndexs.defaultmenuIndex].submenu[defaultMenuIndexs.defaultSubmenuIndex];
       }else{
@@ -140,9 +141,9 @@ constructor(
       }
 
       if(defaultMenu.display){
-        menu = defaultMenu; 
+        menu['menu'] = defaultMenu; 
       }else{
-          menu = this.findMenuWithPermission(menuList);
+          menu['menu'] = this.findMenuWithPermission(menuList);
       }
       return menu;
   }
