@@ -525,7 +525,7 @@ export class GridSelectionModalComponent implements OnInit {
     //this.listOfGridFieldName[index].display = data.display;
   }
   selectGridData() {    
-    this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.editableGridColumns);
+    this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
     let check = 0;
     let validation = {
       'msg' : ''
@@ -782,18 +782,17 @@ export class GridSelectionModalComponent implements OnInit {
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
             if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
-              switch (column.type) {
+              data[column.field_name] = responce[column.field_name];
+              switch (column.type.toLowerCase()) {
                 case 'text':
                 case 'number':
-                  if(column)
                   if(column["grid_cell_function"] && column["grid_cell_function"] != ''){
                     this.CommonFunctionService.calculateNetAmount(data, column, column["grid_cell_function"]);
                   }
                   break;            
                 default:
                   break;
-              }
-              data[column.field_name] = responce[column.field_name]; 
+              }               
             }           
           }
         }        
