@@ -617,12 +617,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.dataSaveInProgress = true; 
     this.isLinear=true;
     this.isStepper = false;
-    this.listOfFieldUpdateMode=false; 
-    this.listOfFieldsUpdateIndex = -1; 
+    // this.listOfFieldUpdateMode=false; 
+    // this.listOfFieldsUpdateIndex = -1; 
     this.checkFormFieldAutfocus = true;
     this.filePreviewFields = [];    
     this.nextFormUpdateMode = false;
-    this.updateAddNew = false;
+    // this.updateAddNew = false;
+    this.focusFieldParent={};
   }
 
 
@@ -5873,7 +5874,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let formValue = formData['data'];
       let fieldValue:any = '';
       if(parent != ''){
-        fieldValue = formValue[parent.field_name][child.field_name];
+        if(parent.type == 'list_of_fields'){
+          fieldValue = formValue[parent.field_name][this.listOfFieldsUpdateIndex][child.field_name];
+        }else{
+          fieldValue = formValue[parent.field_name][child.field_name];
+        }
       }else{
         fieldValue = formValue[child.field_name];
       }    
