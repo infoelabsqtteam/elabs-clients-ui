@@ -629,6 +629,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.filePreviewFields = [];    
     this.nextFormUpdateMode = false;
     this.updateAddNew = false;
+    this.serverReq = false;
   }
 
 
