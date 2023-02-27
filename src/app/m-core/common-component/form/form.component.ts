@@ -281,10 +281,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   dinamicFieldApiSubscription:Subscription;
   validationConditionSubscription:Subscription;
   nextFormSubscription:Subscription;
+  requestResponceSubscription:Subscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
   term:any={};
+  serverReq:boolean = false;
 
   @HostListener('document:click') clickout() {
     this.term = {};
@@ -374,7 +376,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
-    })    
+    })   
+    this.requestResponceSubscription = this.dataShareService.requestResponce.subscribe(responce =>{      
+      this.serverReq = responce;
+      console.log(this.serverReq);
+    }) 
     this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
       this.setGridRowDeleteResponce(responce);
     })
@@ -760,7 +766,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.createFormgroup = false;
       const forControl = {};
       this.checkBoxFieldListValue = []
-      let staticModalGroup = [];
+      let staticModal=[];
       // this.filePreviewFields=[];
       for (let index = 0; index < this.tableFields.length; index++) {
         const element = this.tableFields[index];
@@ -770,7 +776,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         if(element.type == 'pdf_view'){
           const object = this.elements[this.selectedRowIndex];
-          staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
+          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
         } 
         if(element.field_name && element.field_name != ''){             
           switch (element.type) {
@@ -953,7 +959,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               break;
             case "pdf_view" : 
               const object = this.elements[this.selectedRowIndex];
-              staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
+              staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
             break;
             case "input_with_uploadfile":
               element.is_disabled = true;
@@ -1003,9 +1009,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null) || (element.disable_on_add && element.disable_on_add != '' && element.disable_on_add != undefined && element.disable_on_add != null)){                  
           this.disableIfFieldList.push(element);
         }
-        // if(element.type && element.type == 'pdf_view'){
-        //   this.filePreviewFields.push(element)
-        // }
         if(element.type && element.type == 'info_html'){
           this.filePreviewFields.push(element)
         }
@@ -1053,8 +1056,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.next();
         }
       }
-      
-      let staticModal=[];
       if(this.selectContact != ''){
         let selectContactObject = this.selectContact;
         let account={};
@@ -1129,53 +1130,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             
       }
       if(this.tableFields.length > 0 && this.editedRowIndex == -1){
-        let object =this.getFormValue(true);
-        let formValue = object;
-        if(this.multipleFormCollection && this.multipleFormCollection.length > 0){
-          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
-        }
-        let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
-        if(staticModalG && staticModalG.length > 0){
-          staticModalG.forEach(element => {
-            staticModalGroup.push(element);
-          });
-        }
-        if(staticModalGroup != undefined && staticModalGroup != null){
-          if(staticModalGroup.length > 0){
-            staticModalGroup.forEach(data =>{
-              staticModal.push(data);
-            })
-          }
-        }
-        if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){      
-          let criteria = [];
-          if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
-            criteria=this.tab.api_params_criteria
-          }
-          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
-          
-        }
-        if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined && this.selectedRowIndex == -1){  
-              
-          if(this.form.api_params == 'QTMP:EMAIL_WITH_TEMP:QUOTATION_LETTER'){
-            object = this.saveResponceData;
-          }          
-          let criteria = [];
-          if(this.form.api_params_criteria && this.form.api_params_criteria != null){
-            criteria=this.form.api_params_criteria
-          }
-          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(false)))
-          
-        }
-        if(staticModal.length > 0){
-          //console.log("staticModalGroup "+ Date.now());
-          // this.store.dispatch(
-          //   new CusTemGenAction.GetStaticData(staticModal)
-          // )
-          this.apiService.getStatiData(staticModal);
-          
-        }
+        this.getStaticData(staticModal);
       }    
 
     }
@@ -1291,8 +1246,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             const data = this.copyStaticData[element.ddn_field][0];
             if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
               const arrayBuffer = data['bytes'];
-              // this.pdfViewLink = encodeURIComponent(escape(window.atob( arrayBuffer )));
-              // this.pdfViewLink = decodeURIComponent(escape(window.atob( arrayBuffer )));
               this.pdfViewLink = arrayBuffer;
               this.pdfViewListData = JSON.parse(JSON.stringify(this.copyStaticData[element.ddn_field]))
             }
@@ -1316,23 +1269,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         "field" : "FORM_GROUP"
       }
       this.apiService.ResetStaticData(fieldName);
-      // this.store.dispatch(
-      //   new CusTemGenAction.ResetStaticData(fieldName)
-      // )
       
     }
 
     if(this.staticData["CHILD_OBJECT"] && this.staticData["CHILD_OBJECT"] != null){
-      this.updateDataOnFormField(this.staticData["CHILD_OBJECT"]);          
-      // this.selectedRow = this.staticData["CHILD_OBJECT"];
-      // this.updateMode = true;
+      this.updateDataOnFormField(this.staticData["CHILD_OBJECT"]);  
       const fieldName = {
         "field" : "CHILD_OBJECT"
       }
       this.apiService.ResetStaticData(fieldName);
-      // this.store.dispatch(
-      //   new CusTemGenAction.ResetStaticData(fieldName)
-      // )
       
     }
 
@@ -1349,9 +1294,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         "field" : "COMPLETE_OBJECT"
       }
       this.apiService.ResetStaticData(fieldName);
-      // this.store.dispatch(
-      //   new CusTemGenAction.ResetStaticData(fieldName)
-      // )
       
     }
 
@@ -1361,10 +1303,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         "field" : "FORM_GROUP_FIELDS"
       }
       this.apiService.ResetStaticData(fieldName);
-      // this.store.dispatch(
-      //   new CusTemGenAction.ResetStaticData(fieldName)
-      // )
-      /// Set state.staticData["FORM_GROUP_FIELDS"] to null
 
     }
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
@@ -1831,9 +1769,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   }                
                 }
               }
-              // if(element[primary_key] == incomingData){
-              //   alreadyExist =  "true";
-              // }
             }
             if(alreadyExist){
               break;
@@ -2049,114 +1984,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         break;
       case "list_of_fields":
-        // let checkValue = 0;
-        // let list_of_field_data = formValue[field.field_name]
-        // let field_control = this.templateForm.get(field.field_name);        
-        // for (let index = 0; index < field.list_of_fields.length; index++) {
-        //   const element = field.list_of_fields[index];
-        //   const custmizedKey = this.commonFunctionService.custmizedKey(field);
-        //   let custmizedData = '';
-        //   let mendatory = false;
-        //   if(element.is_mandatory){
-        //     if(element && element.show_if && element.show_if != ''){
-        //       if(this.checkFieldShowOrHide(element)){
-        //         mendatory = true;
-        //       }else{
-        //         mendatory = false;
-        //       }
-        //     }else{
-        //       mendatory = true;
-        //     }            
-        //   }
-        //   if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][element.field_name]){
-        //     custmizedData = this.custmizedFormValue[custmizedKey][element.field_name]
-        //   }         
-        //   switch (element.datatype) {
-        //     case 'list_of_object':              
-        //       if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-        //         if(mendatory && custmizedData == ''){
-        //           if(custmizedData.length == 0){
-        //             checkValue = 1;
-        //             this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-        //             return;
-        //           }
-        //         }
-        //       }else{
-        //         this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-        //         return;
-        //       }
-        //       break; 
-        //     case 'object':
-        //       if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-        //         if(mendatory){                  
-        //           checkValue = 1;
-        //           this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-        //           return;    
-        //         }
-        //       }else if(typeof list_of_field_data[element.field_name] != 'object'){
-        //         this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-        //         return;
-        //       }
-        //       break;         
-        //     default:
-        //       break;
-        //   }
-        //   switch (element.type) {
-        //     case 'list_of_string':
-        //       if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-        //         if(mendatory && custmizedData == ''){
-        //           if(custmizedData.length == 0){
-        //             checkValue = 1;
-        //             this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-        //             return;
-        //           }
-        //         }
-        //       }else{
-        //         this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-        //         return;
-        //       }
-        //       break;  
-        //     case 'typeahead':
-        //       if(element.datatype == "text"){
-        //         if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-        //           if(mendatory){
-        //             if(custmizedData.length == 0){
-        //               checkValue = 1;
-        //               this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-        //               return;
-        //             }
-        //           }
-        //         }else if(field_control.get(element.field_name).errors?.required || field_control.get(element.field_name).errors?.validDataText){
-        //           this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
-        //           return;
-        //         }
-
-        //       }
-        //       break;        
-        //     default:
-        //       if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-        //         if(mendatory ){
-        //           checkValue = 1;
-        //           this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-        //         }
-        //       }
-        //       break;
-        //   }
-        //   if(element.primary_key_for_list){
-        //     let primary_key_field_value = formValue[field.field_name][element.field_name];            
-        //     let alreadyAdded = {
-        //       status : false
-        //     };
-        //     if(this.custmizedFormValue[field.field_name]){
-        //       let list = this.custmizedFormValue[field.field_name];
-        //       alreadyAdded = this.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list);
-        //     }
-        //     if(alreadyAdded.status){
-        //       this.notificationService.notify('bg-danger','Entered value for '+element.label+' is already added. !!!');
-        //       return;
-        //     }
-        //   }          
-        // };
         let list = [];
         if(this.custmizedFormValue[field.field_name]){
           list = this.custmizedFormValue[field.field_name];
@@ -2164,13 +1991,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         let checkDublicate = this.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,this.listOfFieldsUpdateIndex,field);
         if (!checkDublicate.status) {
           if(this.listOfFieldsUpdateIndex != -1){
-            //if(this.updateMode){
               let updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
               Object.keys(formValue[field.field_name]).forEach(key => {
                 updateCustmizedValue[this.listOfFieldsUpdateIndex][key] = formValue[field.field_name][key];
               })
-// pending for review by vikash (from)
-              //const keyName=field.field_name+'_'+field.type;
               let keyName = this.commonFunctionService.custmizedKey(field);
               if(this.custmizedFormValue[keyName]){
                 Object.keys(this.custmizedFormValue[keyName]).forEach(childkey => {
@@ -2200,17 +2024,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   }
                 });
               }
-              // pending for review by vikash (to)
               this.custmizedFormValue[field.field_name] =   updateCustmizedValue; 
               this.custmizedFormValue[keyName] = {};
               this.dataListForUpload[keyName] = {};
-            // }else{
-            //   const updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
-            //   updateCustmizedValue[this.listOfFieldsUpdateIndex] = JSON.parse(JSON.stringify(formValue[field.field_name]))
-            //   this.custmizedFormValue[field.field_name] =   updateCustmizedValue  ;  
-            //   const keyName=field.field_name+'_'+field.type;
-            //   this.custmizedFormValue[keyName] = {}        
-            // }
             this.refreshListofField(field,false);            
           }else{
             if(field.datatype == 'key_value'){
@@ -2255,10 +2071,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               
               custmizedFormValue.push(listOfFieldData);
               this.custmizedFormValue[field.field_name] = custmizedFormValue;
-              // if (field.onchange_api_params && field.onchange_call_back_field) {
-              //   const value = this.getFormValue(false);
-              //   this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, value,field.onchange_data_template);
-              // }
               this.custmizedFormValue[keyName] = {}              
             }
             this.refreshListofField(field,true);
@@ -2301,15 +2113,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     
     if (field.onchange_api_params && field.onchange_call_back_field) {
-      // if(field.type == 'list_of_fields' && field.onchange_api_params.indexOf("CLTFN") >= 0){
-      //   let formValue = this.getFormValue(true);
-      //   this.changeDropdown(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, formValue,field.onchange_data_template);
-      // }else if(field.type != 'list_of_fields'){
-        //let formValue = this.getFormValue(false);
         let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
         let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
         this.changeDropdown(field, formValue,field.onchange_data_template);
-      // }
     }
 
     if (field.onchange_function && field.onchange_function_param && field.onchange_function_param != "") {
@@ -2736,31 +2542,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(paramlist.length>1){
       
     }else{
-      // if(callback != ''){        
-      //   const fieldName = {
-      //     "field" : callback
-      //   }
-      //   this.commonFunctionService.resetStaticDataByKey(fieldName);
-      // }
-      const staticModal = []
-      
+      const staticModal = []      
       if( params.indexOf("CLTFN") >= 0){
         const calculatedCost =  this.commonFunctionService.calculateAdditionalCost(this.getFormValue(true));
         this.updateDataOnFormField(calculatedCost);
       }
       else{
         staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template))); 
-        // staticModal.push(this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object,data_template))      
-        // if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-        //   if(field && field.formValueAsObjectForQtmp){
-        //     staticModal[0]["data"]=this.getFormValue(false);
-        //   }else{
-        //     staticModal[0]["data"]=this.getFormValue(true);
-        //   }
-        // }
-        // this.store.dispatch(
-        //   new CusTemGenAction.GetStaticData(staticModal)
-        // )
         this.apiService.getStatiData(staticModal);
       }
    }
@@ -2783,9 +2571,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   getDivClass(field) {
-    // if(!this.commonFunctionService.showIf(field,this.templateForm.getRawValue())){
-    //   return "d-none"
-    // }
     const fieldsLangth = this.tableFields.length;
     return this.commonFunctionService.getDivClass(field,fieldsLangth);
   }
@@ -2871,7 +2656,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   isEnable(parent,field, elementType) {
-    //this.tempVal[field+"_"+elementType] = true;
     if(parent != ''){
       return this.tempVal[parent + '_' + field + "_" + elementType];
     }else{
@@ -2888,12 +2672,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.deletefieldName['child'] = child;
     }
-    // this.alertData = {
-    //   "event": true,
-    //   "type": alertType,
-    //   "data": data
-    // }
-    // this.modalService.open(id, this.alertData);
     this.commonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
   }
 
@@ -2909,15 +2687,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   deleteitem() {
-    // if(this.updateMode){
-    //   const custmizedKeyChild = this.deletefieldName['child'].field_name;
-    //   if(this.deletefieldName['parent'] != undefined && this.deletefieldName['parent'] != null && this.deletefieldName['parent'] != ''){
-    //     const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent'])        
-    //     this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild][this.deleteIndex]['status'] = 'I';
-    //   }else{
-    //     this.custmizedFormValue[custmizedKeyChild][this.deleteIndex]['status'] = 'I';
-    //   }
-    // }else{
       const custmizedKeyChild = this.deletefieldName['child'].field_name;
       if(this.deletefieldName['parent'] != undefined && this.deletefieldName['parent'] != null && this.deletefieldName['parent'] != ''){
         const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent']) 
@@ -3402,38 +3171,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.getStaticDataWithDependentData();      
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
       this.setCheckboxFileListValue();
-      // this.checkBoxFieldListValue.forEach(element => {
-      //   if (this.staticData[element.ddn_field]) {
-      //     const arrayData = this.selectedRow[element.field_name];
-      //     const checkArray: FormArray = this.templateForm.get(element.field_name) as FormArray;
-      //     this.staticData[element.ddn_field].forEach((data, i) => {
-      //       let selected = false;
-      //       if (arrayData != undefined && arrayData != null) {
-      //         for (let index = 0; index < arrayData.length; index++) {
-      //           if (this.checkObjecOrString(data) == this.checkObjecOrString(arrayData[index])) {
-      //             selected = true;
-      //             break;
-      //           }
-      //         }
-      //       }
-      //       if (selected) {
-      //         checkArray.push(new FormControl(true));
-      //       } else {
-      //         checkArray.push(new FormControl(false));
-      //       }
-      //     });
-      //   }
-      // });
     }
   }
   getStaticDataWithDependentData(){
     const staticModal = []
-    let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-    let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
     this.tableFields.forEach(element => {
       if(element.field_name && element.field_name != ''){
-        let fieldName = element.field_name;
-        let object = this.selectedRow[fieldName];
         if (element.onchange_api_params && element.onchange_call_back_field && !element.do_not_auto_trigger_on_edit) {
           const checkFormGroup = element.onchange_call_back_field.indexOf("FORM_GROUP");
           const checkCLTFN = element.onchange_api_params.indexOf('CLTFN')
@@ -3494,24 +3237,43 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,this.selectedRow))
       }
     });
-    
-    let staticModalGroup = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
-    if(staticModalGroup.length > 0){
-      staticModalGroup.forEach(element => {
+    this.getStaticData(staticModal);    
+  }
+  getStaticData(staticModal){
+    let object =this.getFormValue(true);
+    let formValue = object;
+    if(this.multipleFormCollection && this.multipleFormCollection.length > 0){
+      let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+      formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
+    }
+    let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
+    if(staticModalG && staticModalG.length > 0){
+      staticModalG.forEach(element => {
         staticModal.push(element);
       });
-    } 
-    if(this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined){
+    }
+    if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){      
+      let criteria = [];
+      if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
+        criteria=this.tab.api_params_criteria
+      }
+      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
       
+    }
+    if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined && this.selectedRowIndex == -1){  
+          
+      if(this.form.api_params == 'QTMP:EMAIL_WITH_TEMP:QUOTATION_LETTER'){
+        object = this.saveResponceData;
+      }          
       let criteria = [];
       if(this.form.api_params_criteria && this.form.api_params_criteria != null){
         criteria=this.form.api_params_criteria
       }
-      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(true)))
+      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(false)))
       
     }
-    if(staticModal.length > 0){    
-      this.apiService.getStatiData(staticModal);
+    if(staticModal.length > 0){
+      this.apiService.getStatiData(staticModal);        
     }
   }
   checkObjecOrString(data){
@@ -4082,10 +3844,18 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       case "save":
       case "update":
       case "updateandnext":
-      case "send_email":
-        return !this.templateForm.valid;
+      case "send_email":         
+        if(!this.templateForm.valid || this.serverReq){
+          return true;
+        }else{
+          return false;
+        }
       default:
-        return;
+        if(this.serverReq){
+          return true;
+        }else{
+          return false;
+        }
     }      
   }
   donotResetField(){
@@ -5221,8 +4991,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   refreshApiCall(field:any,check:any){
     const fields = [field];
-    const payload = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true))
-    //this.commonFunctionService.getStaticData(payload);
+    const payload = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
     this.apiService.getStatiData(payload);
   }
   

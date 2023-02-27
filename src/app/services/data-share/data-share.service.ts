@@ -66,6 +66,7 @@ export class DataShareService {
   userPreference:EventEmitter<any> = new EventEmitter<any>();
   moduleIndex:Subject<any> = new Subject<any>();
   menuIndexs:Subject<any> = new Subject<any>();
+  requestResponce:Subject<boolean> = new Subject<boolean>();
 
   constructor() { }
 
@@ -277,5 +278,8 @@ export class DataShareService {
   }
   setMenuIndexs(indexs){
     this.menuIndexs.next(indexs)
+  }
+  setReqResponce(responce:boolean){
+    this.requestResponce.next(responce)
   }
 }
