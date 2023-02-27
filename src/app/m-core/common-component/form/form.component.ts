@@ -1408,8 +1408,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.close();
         }else{
           //this.commonFunctionService.getStaticData();
-          const payload = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,this.getFormValue(false));
-          this.apiService.getStatiData(payload);
+          const payloads = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,this.getFormValue(false));
+          this.callStaticData(payloads);
         }
         if(this.isStepper){
           this.stepper.reset();
@@ -2542,14 +2542,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(paramlist.length>1){
       
     }else{
-      const staticModal = []      
+      const payloads = []      
       if( params.indexOf("CLTFN") >= 0){
         const calculatedCost =  this.commonFunctionService.calculateAdditionalCost(this.getFormValue(true));
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        staticModal.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template))); 
-        this.apiService.getStatiData(staticModal);
+        payloads.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template))); 
+        this.callStaticData(payloads);
       }
    }
   }
@@ -3272,8 +3272,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,this.getFormValue(false)))
       
     }
-    if(staticModal.length > 0){
-      this.apiService.getStatiData(staticModal);        
+    this.callStaticData(staticModal);
+  }
+  callStaticData(payloads){
+    if(payloads.length > 0){
+      this.apiService.getStatiData(payloads);        
     }
   }
   checkObjecOrString(data){
@@ -3359,9 +3362,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (fieldName.api_params && fieldName.api_params != '') {
       staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, this.templateForm.getRawValue()));
     }
-    if(staticModalGroup.length > 0){
-      this.apiService.getStatiData(staticModalGroup)
-    }    
+    this.callStaticData(staticModalGroup);   
     this.commonFunctionService.openTreeModal(fieldName.label, fieldName.ddn_field, 'tree-view-modal');   
   }
 
@@ -3704,10 +3705,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     if(this.curTreeViewField && this.curTreeViewField.onchange_function_param != '' && this.curTreeViewField.onchange_function_param != null){
       if(this.curTreeViewField.onchange_function_param.indexOf('QTMP') >= 0){
-        const staticModalGroup = []
-        staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
-        //this.commonFunctionService.getStaticData(staticModalGroup);
-        this.apiService.getStatiData(staticModalGroup);
+        const payloads = []
+        payloads.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
+        this.callStaticData(payloads);
       }
     }
 
@@ -4575,7 +4575,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
       let payloads = [];
       payloads.push(this.checkQtmpApi(api_params,field,payload));
-      this.apiService.getStatiData(payloads);
+      this.callStaticData(payloads);
     }
   }  
   
@@ -4991,8 +4991,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   refreshApiCall(field:any,check:any){
     const fields = [field];
-    const payload = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
-    this.apiService.getStatiData(payload);
+    const payloads = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
+    this.callStaticData(payloads);
   }
   
   storeFormDetails(parent_field:any,field:any,index?:number){
