@@ -3253,7 +3253,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         staticModal.push(element);
       });
     }
-    if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){      
+    if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined){      
       let criteria = [];
       if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
         criteria=this.tab.api_params_criteria
@@ -3261,7 +3261,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
       
     }
-    if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined && this.selectedRowIndex == -1){  
+    if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined){  
           
       if(this.form.api_params == 'QTMP:EMAIL_WITH_TEMP:QUOTATION_LETTER'){
         object = this.saveResponceData;
