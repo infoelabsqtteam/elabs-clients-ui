@@ -133,7 +133,7 @@ constructor(
       }
     }
   }
-  updateGridDataToModifiedData(grid_row_selection,gridData,modifiedGridData,editableGridColumns){  
+  updateGridDataToModifiedData(grid_row_selection,gridData,modifiedGridData,listOfGridFieldName){  
     let gridSelectedData = []; 
     let modifiedSelectedData = [];
     if (grid_row_selection == false) {
@@ -144,10 +144,12 @@ constructor(
       gridSelectedData = this.getListByKeyValueToList(gridData,"selected",true); 
       modifiedSelectedData = this.getListByKeyValueToList(modifiedGridData,"selected",true);
     } 
-    if(editableGridColumns.length > 0){  
+    if(listOfGridFieldName.length > 0){  
       gridSelectedData.forEach((data,i) => {
-        editableGridColumns.forEach(column => {
-          gridSelectedData[i][column.field_name] = modifiedSelectedData[i][column.field_name];
+        listOfGridFieldName.forEach(column => {
+          if(column.editable || column.type == 'number'){
+            gridSelectedData[i][column.field_name] = modifiedSelectedData[i][column.field_name];
+          }         
         });
       });
     }  
