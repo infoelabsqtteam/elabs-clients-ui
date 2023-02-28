@@ -569,6 +569,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         const forControl = {};
         if(this.headElements.length > 0){
           this.headElements.forEach(element => {
+            if(element != null && element.type != null){
             let fieldName = element.field_name;
             let mandatory = false;
             let disabled = false;
@@ -604,7 +605,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               default:
                 break;
             }      
-
+          }
           });
         }
 
