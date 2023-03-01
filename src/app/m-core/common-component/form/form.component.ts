@@ -3270,11 +3270,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if(this.form.api_params_criteria && this.form.api_params_criteria != null){
         criteria=this.form.api_params_criteria
       }
-      let formValue = this.getFormValue(false);
+      let formDataObject = this.getFormValue(false);
       if(this.editedRowIndex > -1){
-        formValue = formValue;
+        formDataObject = formValue;
       }
-      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,formValue))
+      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,formDataObject))
       
     }
     this.callStaticData(staticModal);
