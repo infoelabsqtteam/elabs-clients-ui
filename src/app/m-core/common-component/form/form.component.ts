@@ -379,7 +379,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })   
     this.requestResponceSubscription = this.dataShareService.requestResponce.subscribe(responce =>{      
       this.serverReq = responce;
-      console.log(this.serverReq);
     }) 
     this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
       this.setGridRowDeleteResponce(responce);
@@ -1357,7 +1356,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   setGridRowDeleteResponce(responce){
-    console.log(responce);
+    //console.log(responce);
     this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
     this.dataSaveInProgress = true;
   }
