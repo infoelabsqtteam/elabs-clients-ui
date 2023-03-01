@@ -519,7 +519,8 @@ export class CommonFunctionService {
     const filterList = []
     if(formValue != undefined){
       const criteria = [];
-      headElements.forEach(element => {        
+      headElements.forEach(element => {  
+        if(element != null && element.type != null){      
         switch (element.type.toLowerCase()) {
           case "text":
           case "tree_view_selection":
@@ -682,6 +683,7 @@ export class CommonFunctionService {
           default:
             break;
         }
+      }
       });
       if(criteria && criteria.length > 0){
         const crList = this.getCriteriaList(criteria,formValue);
