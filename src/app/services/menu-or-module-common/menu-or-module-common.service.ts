@@ -130,9 +130,10 @@ constructor(
     return check;
   }
   getDefaultMenu(menuList){
-      let menu = {};
+      let menu:any = {};
       let defaultMenu:any = {};
       let defaultMenuIndexs = this.getDefaultMenuIndex(menuList);
+      menu['indexs'] = defaultMenuIndexs;
       if(defaultMenuIndexs.defaultSubmenuIndex > -1){
           defaultMenu = menuList[defaultMenuIndexs.defaultmenuIndex].submenu[defaultMenuIndexs.defaultSubmenuIndex];
       }else{
@@ -140,9 +141,9 @@ constructor(
       }
 
       if(defaultMenu.display){
-        menu = defaultMenu; 
+        menu['menu'] = defaultMenu; 
       }else{
-          menu = this.findMenuWithPermission(menuList);
+          menu['menu'] = this.findMenuWithPermission(menuList);
       }
       return menu;
   }
@@ -176,22 +177,24 @@ constructor(
     let moduleList = this.storageService.GetModules();
     return this.commonFunctionService.getIndexInArrayById(moduleList,moduleId);    
   }
-  getMenuNameById(module,menuId,submenuId){
+  getMenuNameById(module,menuId,submenuId,key?){
+    let menuName:any = {};
     let menuList = module.menu_list;
-    let menuIndex = this.commonFunctionService.getIndexInArrayById(menuList,menuId);
-    let menu = menuList[menuIndex];
-    let menuName = "";
+    let menuIndex = this.commonFunctionService.getIndexInArrayById(menuList,menuId,key);
+    menuName['menuIndex'] = menuIndex;
+    let menu = menuList[menuIndex];    
     if(submenuId != ""){
       if(menu.submenu){
         let subMenuList = menu.submenu;
         if(subMenuList && subMenuList.length > 0){
-            let subMenuIndex = this.commonFunctionService.getIndexInArrayById(subMenuList,submenuId);
+            let subMenuIndex = this.commonFunctionService.getIndexInArrayById(subMenuList,submenuId,key);
+            menuName['subMenuIndex'] = subMenuIndex;
             let submenu = subMenuList[subMenuIndex];
-            menuName = submenu.name;
+            menuName['name'] = submenu.name;
         }
       }
     }else{
-      menuName = menu.name;
+      menuName['name'] = menu.name;
     }
     return menuName;
   }

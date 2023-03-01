@@ -112,6 +112,10 @@ body {font-family:$roboto;font-size:13px;}
 
 .matdropdown{margin:25px 8px 0;min-width:100% !important;}
 .mat-form-field-disabled { cursor: no-drop;}
+.form-body-loader{
+    position: absolute;top: 0;bottom: 0;width: 100%;left: 0;right: 0;background: rgb(255 255 255 / 20%);z-index: 4;
+    .custom-spinner{left:50%;top:50%}
+}
 
 
 
