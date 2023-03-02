@@ -349,7 +349,10 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.apiService.resetTempData();
                 this.apiService.resetGridData();
                 this.GoToSelectedModule(module);
-                this.router.navigate(['template']);  
+                const route = module.name+"/"+submenu.name;
+                //console.log(route);
+                this.router.navigate([route]);  
+                //this.router.navigate(['template']);  
               }           
             }
         }else{
@@ -358,6 +361,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
     getTemplateMenuData(submenu,menuIndex,subMenuIndex) {
         let module = {};
+        if(this.moduleIndex != -1){
+            module = this.AllModuleList[this.moduleIndex];
+        }
         this.shareMenuIndex(menuIndex,subMenuIndex);
         this.getTemplateData(module,submenu);
     }

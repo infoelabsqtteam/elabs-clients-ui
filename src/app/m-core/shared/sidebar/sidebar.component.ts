@@ -180,7 +180,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             this.apiService.resetTempData();
             this.apiService.resetGridData();
             this.setSelectedModule(module);
-            this.router.navigate(['template']);  
+            const route = module.name+"/"+submenu.name;
+            //console.log(route);
+            this.router.navigate([route]);  
+            //this.router.navigate(['template']); 
           }           
         }
     }else{
