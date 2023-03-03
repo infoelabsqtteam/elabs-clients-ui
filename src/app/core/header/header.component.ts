@@ -163,7 +163,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         });
     }
 
-
+    GoToSelectedModule(module){
+        this.menuOrModuleCommounService.GoToSelectedModule(module);
+    }
+    getTemplateData(module,menu){
+        this.menuOrModuleCommounService.getTemplateData(module,menu)
+    }
 
     shortcutinfo() {
         this.modelService.open('shortcutinfo_model', {})
