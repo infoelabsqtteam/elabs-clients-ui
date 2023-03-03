@@ -115,12 +115,19 @@ export class AuthService {
   }
   
   redirectionWithMenuType(){
-    const menuType = this.storageService.GetMenuType()
+    const menuType = this.storageService.GetMenuType();
+    const redirectUrl = this.storageService.getRedirectUrl();
+    const childWindowUrl = this.storageService.getChildWindowUrl();
+    let route = '/dashboard';
     if(menuType == 'Horizontal'){
-      this.router.navigate(['/home']);
-    }else{
-      this.router.navigate(['/dashboard']);
+      route = '/home'; 
+    }
+    if(redirectUrl && redirectUrl != '' && redirectUrl != '/'){
+      route = redirectUrl;
+    }else if(childWindowUrl && childWindowUrl != '' && childWindowUrl != '/'){
+      route = childWindowUrl;
     } 
+    this.router.navigate([route]);
   }
   redirectToSignPage(){
     this.router.navigate(['/signin']);

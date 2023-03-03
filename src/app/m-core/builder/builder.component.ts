@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { EnvService } from 'src/app/services/env/env.service';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 
 
@@ -65,7 +66,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private dataShareService:DataShareService,
     private apiService:ApiService,
     private notificationService:NotificationService,
-    private envService:EnvService
+    private envService:EnvService,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {  
     if(routers.snapshot.params["key1"]){
       const index = JSON.stringify(routers.snapshot.params["key1"]);
@@ -96,7 +98,55 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.tabId = routers.snapshot.params["tabId"]; 
       // let moduleId =  routers.snapshot.params["moduleId"];     
       // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
-    }   
+    }else if(routers.snapshot.params["moduleId"]){
+      const AllModuleList = this.storageService.GetModules();
+      if(AllModuleList != undefined && Array.isArray(AllModuleList)){
+        const moduleName = routers.snapshot.params["moduleId"];
+        const moduleIndex = this.commonFunctionService.getIndexInArrayById(AllModuleList,moduleName,'name');
+        if(routers.snapshot.params["menuId"]){
+            if(moduleIndex != -1){
+                const module = AllModuleList[moduleIndex];
+                let menuList = [];
+                if(module && module.menu_list && module.menu_list.length > 0){
+                    menuList = module.menu_list
+                    const menuName = routers.snapshot.params["menuId"];                            
+                    const menuIndexs = this.menuOrModuleCommounService.getIndexsByMenuName(menuList,menuName);
+                    const menuIndex = menuIndexs.menuindex;
+                    const submenuIndex = menuIndexs.submenuindex;
+                    let menu = {'name':menuName};
+                    if(menuIndexs.submenuindex != -1){
+                        menu = menuList[menuIndex].submenu[submenuIndex];
+                    }else{
+                        if(menuIndex != -1){
+                            menu = menuList[menuIndex];
+                        }else{
+                            this.notificationService.notify('bg-info',"Menu not exits,connect to admin!");
+                            this.storageService.SetActiveMenu({});
+                            this.dataShareService.setModuleIndex(moduleIndex);
+                        }
+                    }
+                    this.menuOrModuleCommounService.shareMenuIndex(menuIndex,submenuIndex,moduleIndex);
+                    this.menuOrModuleCommounService.getTemplateData(module,menu);
+                }else{
+                    this.storageService.SetActiveMenu({});
+                    this.dataShareService.setModuleIndex(moduleIndex);
+                }                        
+            }else{
+                this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
+                this.router.navigate['/dashboard'];
+            }                    
+        }else{
+            if(moduleIndex != -1){
+                this.storageService.SetActiveMenu({});
+                this.dataShareService.setModuleIndex(moduleIndex);
+            }else{
+                this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
+                this.router.navigate['/dashboard'];
+            }
+        }  
+      }
+      this.storageService.setChildWindowUrl('/');             
+    }    
     this.userInfo = this.storageService.GetUserInfo();
     
     

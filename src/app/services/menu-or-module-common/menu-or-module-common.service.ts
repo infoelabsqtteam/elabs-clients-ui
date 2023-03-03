@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApiService } from '../api/api.service';
 import { CommonFunctionService } from '../common-utils/common-function.service';
+import { DataShareService } from '../data-share/data-share.service';
+import { NotificationService } from '../notify/notification.service';
 import { PermissionService } from '../permission/permission.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -11,7 +15,11 @@ export class MenuOrModuleCommonService {
 constructor(
   private storageService: StorageService, 
   private permissionService:PermissionService,
-  private commonFunctionService:CommonFunctionService
+  private commonFunctionService:CommonFunctionService,
+  private dataShareService:DataShareService,
+  private notificationService:NotificationService,
+  private apiService:ApiService,
+  private router:Router
 ) { }
 
   modifyModuleListWithPermission(moduleList){
@@ -177,6 +185,37 @@ constructor(
     let moduleList = this.storageService.GetModules();
     return this.commonFunctionService.getIndexInArrayById(moduleList,moduleId);    
   }
+  shareMenuIndex(menuIndex,subMenuIndex,moduleIndex?){
+    let indexs = {};
+    indexs['menuIndex'] = menuIndex;
+    indexs['submenuIndex'] = subMenuIndex;
+    indexs['moduleIndex'] = moduleIndex;
+    this.dataShareService.setMenuIndexs(indexs);
+}
+  getIndexsByMenuName(menuList,menuName){
+    let indexs= {
+      'menuindex':-1,
+      'submenuindex':-1
+    }
+    for (let index = 0; index < menuList.length; index++) {
+      const menu = menuList[index];
+      if(menu.name == menuName){
+        indexs.menuindex = index;
+        indexs.submenuindex = -1;
+      }else{
+        if(menu.submenu && menu.submenu.length > 0){
+          for (let j = 0; j < menu.submenu.length; j++) {
+            const subMenu = menu.submenu[j];
+            if(subMenu.name == menuName){
+              indexs.menuindex = index;
+              indexs.submenuindex = j;
+            }
+          }
+        }
+      }      
+    }
+    return indexs;
+  }
   getMenuNameById(module,menuId,submenuId,key?){
     let menuName:any = {};
     let menuList = module.menu_list;
@@ -200,6 +239,42 @@ constructor(
   }
   checkPermission(menu){
       return !this.permissionService.checkPermission(menu.name, 'view')
+  }
+  getTemplateData(module,submenu) {
+    if(this.permissionService.checkPermission(submenu.name,'view')){
+        this.storageService.SetActiveMenu(submenu);
+        if (submenu.label == "Navigation") {
+            this.router.navigate(['Navigation']);
+        }
+        else if (submenu.label == "Permissions") {
+            this.router.navigate(['permissions']);
+        }
+        else {
+          const menu = submenu;
+          if(menu.name == "document_library"){
+            this.router.navigate(['vdr']);
+          }else if(menu.name == "report"){
+            this.router.navigate(['report']);
+          }
+          else{
+            this.apiService.resetTempData();
+            this.apiService.resetGridData();
+            this.GoToSelectedModule(module);
+            const route = 'browse/'+module.name+"/"+submenu.name;
+            //console.log(route);
+            this.router.navigate([route]);  
+            //this.router.navigate(['template']);  
+          }           
+        }
+    }else{
+        this.notificationService.notify("bg-danger", "Permission denied !!!");
+    }
+  }
+  GoToSelectedModule(item){        
+    if(item && item.name){           
+        this.setModuleName(item.name);
+    }
+    this.dataShareService.sendCurrentPage('DASHBOARD');
   }
 
 }

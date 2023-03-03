@@ -39,15 +39,29 @@ export class StorageService {
   MODULE:string = "MODULE";
   TEAM_NAME:string = "TEAM_NAME";
   USER_PREFERENCE:any;
+  REDIRECT_URL:string = "REDIRECT_URL";
+  CHILD_WINDOW_URL:string = "CHILD_WINDOW_URL";
   
   
   constructor(private http: HttpClient) { }
 
   setModule(module:string){
-    localStorage.setItem("MODULE",module);
+    sessionStorage.setItem("MODULE",module);
   }
   getModule(){
-    return localStorage.getItem('MODULE');
+    return sessionStorage.getItem('MODULE');
+  }
+  setChildWindowUrl(url:string){
+    localStorage.setItem("CHILD_WINDOW_URL",url);
+  }
+  getChildWindowUrl(){
+    return localStorage.getItem('CHILD_WINDOW_URL');
+  }
+  setRedirectUrl(url:string){
+    sessionStorage.setItem("REDIRECT_URL",url);
+  }
+  getRedirectUrl(){
+    return sessionStorage.getItem('REDIRECT_URL');
   }
   setUserPreference(user_preference:any){
     localStorage.setItem("USER_PREFERENCE",JSON.stringify(user_preference));
@@ -255,10 +269,10 @@ export class StorageService {
   SetActiveMenu(menu: any) {
     const menuObj = {};
     menuObj[this.appName] = menu;
-    localStorage.setItem(this.ACTIVE_MENU, JSON.stringify(menuObj));
+    sessionStorage.setItem(this.ACTIVE_MENU, JSON.stringify(menuObj));
   }
   GetActiveMenu() {
-    let obj = JSON.parse(localStorage.getItem(this.ACTIVE_MENU));
+    let obj = JSON.parse(sessionStorage.getItem(this.ACTIVE_MENU));
     if(obj && obj[this.appName]){
       const menu = (obj[this.appName]);
       return menu;

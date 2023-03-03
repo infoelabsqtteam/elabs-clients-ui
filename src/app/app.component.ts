@@ -1,14 +1,11 @@
-import { Component, OnInit ,HostListener, Inject } from '@angular/core';
-import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../aws-exports';
+import { Component, OnInit ,HostListener } from '@angular/core';
+import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { StorageService } from './services/storage/storage.service';
 import { DataShareService } from './services/data-share/data-share.service';
 import { ModelService } from './services/model/model.service';
 import { CommonFunctionService } from './services/common-utils/common-function.service';
 import { LoaderService } from './services/loader/loader.service';
-import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
 import { StorageTokenStatus } from './shared/enums/storage-token-status.enum';
 import { AuthService } from './services/api/auth/auth.service';
@@ -47,7 +44,6 @@ export class AppComponent implements OnInit {
 
   ) {
     
-
     //this.localSetting();
     this.commonfunctionService.getApplicationAllSettings();
     if(this.dataShareService.themeSetting != undefined){
@@ -94,18 +90,20 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
+          this.storageService.setRedirectUrl(event.urlAfterRedirects);
           this.redirectToHomePage();
         }
         if (
           event.id === 1 &&
           event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/privacy-policy")
         ) {
+          this.storageService.setRedirectUrl(event.urlAfterRedirects);
           this.redirectToHomePageWithStorage();
         }
       }      
    })
     
-    Amplify.configure(awsconfig);
+    //Amplify.configure(awsconfig);
   }
 
   redirectToHomePage(){

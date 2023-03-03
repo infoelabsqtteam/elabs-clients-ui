@@ -56,7 +56,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     })
     this.menuIndexSubscription = this.dataShareService.menuIndexs.subscribe(indexs =>{      
       this.subMenuIndex = indexs.submenuIndex;      
-      this.menuIndex = indexs.menuIndex;      
+      this.menuIndex = indexs.menuIndex;
+      if(indexs.moduleIndex != undefined && indexs.moduleIndex != -1){
+        this.moduleIndex = indexs.moduleIndex;
+      }  
+         
     })
   }
   saveCallSubscribe(){
@@ -133,9 +137,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   
   
-  GoToSelectedModule(module){
-    this.storageService.SetActiveMenu({}); 
-    this.setSelectedModule(module);
+  GoToSelectedModule(module,event){
+    if(event.ctrlKey){
+      const rout = 'browse/'+module.name;
+      this.storageService.setChildWindowUrl(rout);
+      window.open(rout, '_blank');
+    }else{      
+      this.storageService.SetActiveMenu({}); 
+      this.setSelectedModule(module);
+    }
   }
   setSelectedModule(module){
       this.menuOrModuleCommounService.setModuleName(module.name);
@@ -151,45 +161,45 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     submenu['menuIndex'] = menuIndex;
     this.menuIndex = menuIndex;
     this.subMenuIndex = submenuIndex;
-    this.getTemplateData(module,submenu);
+    this.menuOrModuleCommounService.getTemplateData(module,submenu);
   }
   getmenuTemplateData(module,submenu,menuIndex){
     submenu['child'] = false;
     submenu['menuIndex'] = menuIndex;
     this.menuIndex = menuIndex;
     this.subMenuIndex = -1;
-    this.getTemplateData(module,submenu);
+    this.menuOrModuleCommounService.getTemplateData(module,submenu);
   }
-  getTemplateData(module,submenu) {
-    if(this.permissionService.checkPermission(submenu.name,'view')){
-        this.storageService.SetActiveMenu(submenu);
-        if (submenu.label == "Navigation") {
-            this.router.navigate(['Navigation']);
-        }
-        else if (submenu.label == "Permissions") {
-            this.router.navigate(['permissions']);
-        }
-        else {
-          const menu = submenu;
-          if(menu.name == "document_library"){
-            this.router.navigate(['vdr']);
-          }else if(menu.name == "report"){
-            this.router.navigate(['report']);
-          }
-          else{
-            this.apiService.resetTempData();
-            this.apiService.resetGridData();
-            this.setSelectedModule(module);
-            const route = module.name+"/"+submenu.name;
-            //console.log(route);
-            this.router.navigate([route]);  
-            //this.router.navigate(['template']); 
-          }           
-        }
-    }else{
-        this.notificationService.notify("bg-danger", "Permission denied !!!");
-    }
-}
+//   getTemplateData(module,submenu) {
+//     if(this.permissionService.checkPermission(submenu.name,'view')){
+//         this.storageService.SetActiveMenu(submenu);
+//         if (submenu.label == "Navigation") {
+//             this.router.navigate(['Navigation']);
+//         }
+//         else if (submenu.label == "Permissions") {
+//             this.router.navigate(['permissions']);
+//         }
+//         else {
+//           const menu = submenu;
+//           if(menu.name == "document_library"){
+//             this.router.navigate(['vdr']);
+//           }else if(menu.name == "report"){
+//             this.router.navigate(['report']);
+//           }
+//           else{
+//             this.apiService.resetTempData();
+//             this.apiService.resetGridData();
+//             this.setSelectedModule(module);
+//             const route = module.name+"/"+submenu.name;
+//             //console.log(route);
+//             this.router.navigate([route]);  
+//             //this.router.navigate(['template']); 
+//           }           
+//         }
+//     }else{
+//         this.notificationService.notify("bg-danger", "Permission denied !!!");
+//     }
+// }
 addFebMenu(menu,parent){
   this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
   this.userPreferenceSubscribe(menu,'favoriteMenus',parent);
