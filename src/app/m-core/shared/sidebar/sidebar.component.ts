@@ -147,6 +147,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       this.setSelectedModule(module);
     }
   }
+  openInNewTab(module,menu){
+    const rout = 'browse/'+module.name+'/'+menu.name;
+    this.storageService.setChildWindowUrl(rout);
+    window.open(rout, '_blank');
+  }
   setSelectedModule(module){
       this.menuOrModuleCommounService.setModuleName(module.name);
       this.dataShareService.sendCurrentPage('DASHBOARD')
@@ -156,19 +161,31 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }
       this.moduleIndex = mIndex; 
   }
-  getSubmenuTemplateData(module,submenu,submenuIndex,menuIndex){
-    submenu['child'] = true;
-    submenu['menuIndex'] = menuIndex;
-    this.menuIndex = menuIndex;
-    this.subMenuIndex = submenuIndex;
-    this.menuOrModuleCommounService.getTemplateData(module,submenu);
+  getSubmenuTemplateData(module,submenu,submenuIndex,menuIndex,event){
+    if(event.ctrlKey){
+      const rout = 'browse/'+module.name+'/'+submenu.name;
+      this.storageService.setChildWindowUrl(rout);
+      window.open(rout, '_blank');
+    }else{
+      submenu['child'] = true;
+      submenu['menuIndex'] = menuIndex;
+      this.menuIndex = menuIndex;
+      this.subMenuIndex = submenuIndex;
+      this.menuOrModuleCommounService.getTemplateData(module,submenu);
+    }
   }
-  getmenuTemplateData(module,submenu,menuIndex){
-    submenu['child'] = false;
-    submenu['menuIndex'] = menuIndex;
-    this.menuIndex = menuIndex;
-    this.subMenuIndex = -1;
-    this.menuOrModuleCommounService.getTemplateData(module,submenu);
+  getmenuTemplateData(module,submenu,menuIndex,event){
+    if(event.ctrlKey){
+      const rout = 'browse/'+module.name+'/'+submenu.name;
+      this.storageService.setChildWindowUrl(rout);
+      window.open(rout, '_blank');
+    }else{
+      submenu['child'] = false;
+      submenu['menuIndex'] = menuIndex;
+      this.menuIndex = menuIndex;
+      this.subMenuIndex = -1;
+      this.menuOrModuleCommounService.getTemplateData(module,submenu);
+    }
   }
 //   getTemplateData(module,submenu) {
 //     if(this.permissionService.checkPermission(submenu.name,'view')){
