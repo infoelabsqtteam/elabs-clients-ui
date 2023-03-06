@@ -82,6 +82,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     let moduleList = this.storageService.GetModules();
     this.AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList);
+    this.storageService.SetModifyModules(this.AllModuleList);
     this.initialize();
   }
 

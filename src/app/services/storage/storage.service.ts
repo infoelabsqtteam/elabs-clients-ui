@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
 import { StorageTokenStatus } from 'src/app/shared/enums/storage-token-status.enum';
-import { EnvService } from '../env/env.service';
-
 
 
 @Injectable({
@@ -16,7 +13,6 @@ export class StorageService {
   ACCESS_TOKEN: string = 'ACCESS_TOKEN';
   REFRESH_TOKEN: string = 'REFRESH_TOKEN';
   RESET_PASS_SESSION:string = 'RESET_PASS_SESSION';
-  // EXPIRY_IN:any=86400;
   EXPIRY_IN:any= 'EXPIRY_IN';
   USER_KEY: string = 'USER';
   ACTIVE_MENU: string = 'MENU';
@@ -27,7 +23,6 @@ export class StorageService {
   log: any;
   age:any=3540000; //59 minuts 
   refreshTokenAge:any=2505600000 //refresh token age 29 days
-  appName:any = environment.appName;
   packDetails: any = {};
 
   HOST_NAME : string = 'HOST_NAME';
@@ -41,6 +36,7 @@ export class StorageService {
   USER_PREFERENCE:any;
   REDIRECT_URL:string = "REDIRECT_URL";
   CHILD_WINDOW_URL:string = "CHILD_WINDOW_URL";
+  MODIFY_MODULES:any = 'MODIFY_MODULES';
   
   
   constructor(private http: HttpClient) { }
@@ -106,20 +102,12 @@ export class StorageService {
     return localStorage.getItem(this.EXPIRY_IN);
   }
   SetIdToken(token: any) {
-    const setTokenObj = {};
-    setTokenObj[this.appName] = token
-    localStorage.setItem(this.ID_TOKEN, JSON.stringify(setTokenObj))
-    //this.setIdTokenExpiry();
+    localStorage.setItem(this.ID_TOKEN, JSON.stringify(token));
   }
-  GetIdToken() {  
-    let id_token = localStorage.getItem(this.ID_TOKEN);
-    if(this.IsJsonString(id_token)){
-      let obj = JSON.parse(localStorage.getItem(this.ID_TOKEN));
-      if(obj && obj != null && obj[this.appName]){
-        return (obj[this.appName]);
-      }else{
-        return null;
-      }
+  GetIdToken() { 
+    let obj = JSON.parse(localStorage.getItem(this.ID_TOKEN));
+    if(obj && obj != null ){
+      return obj;
     }else{
       return null;
     }
@@ -133,19 +121,13 @@ export class StorageService {
       return true;
   }
   SetAccessToken(token: any) {
-    const setAccessTokenObj = {};
-    setAccessTokenObj[this.appName] = token
-    localStorage.setItem(this.ACCESS_TOKEN, JSON.stringify(setAccessTokenObj));
+    localStorage.setItem(this.ACCESS_TOKEN, JSON.stringify(token));
   }
-  GetAccessToken() {  
-    if(this.IsJsonString(localStorage.getItem(this.ACCESS_TOKEN))){ 
-      let obj = JSON.parse(localStorage.getItem(this.ACCESS_TOKEN));
-      if(obj && obj[this.appName]){
-          return (obj[this.appName]);
-      }
-    }else{
-      return null;
-    }  
+  GetAccessToken() {
+    let obj = JSON.parse(localStorage.getItem(this.ACCESS_TOKEN));
+    if(obj && obj != null){
+        return obj;
+    } 
   }
   SetRefreshToken(token: string) {
     localStorage.setItem(this.REFRESH_TOKEN, token);
@@ -192,55 +174,40 @@ export class StorageService {
   }
 
   SetUserInfo(user: any) {
-    const userObj = {};
-    userObj[this.appName] = user;
-    localStorage.setItem(this.USER_KEY, JSON.stringify(userObj));
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
   GetUserInfo() {
-    const obj = JSON.parse(localStorage.getItem(this.USER_KEY));
-    if(obj && obj[this.appName]){
-      if(obj[this.appName].user){
-        return obj[this.appName].user
-      }
-      else{
-        return null;
-      }
+    const obj:any = JSON.parse(localStorage.getItem(this.USER_KEY));    
+    if(obj && obj.user){
+      return obj.user
+    }else{
+      return {};
     }
-    // if (user && user.user) {
-    //   return user.user;
-    // } else {
-    //   return null;
-    // }
-
   }
   GetPermission() {
-    const obj = JSON.parse(localStorage.getItem(this.USER_KEY));
-    if(obj && obj[this.appName]){
-      if(obj[this.appName].permission){
-        return obj[this.appName].permission
-      }
-      else{
-        return null;
-      }
+    const obj = JSON.parse(localStorage.getItem(this.USER_KEY));    
+    if(obj && obj.permission){
+      return obj.permission
     }
-    // if (user && user.user) {
-    //   return user.user;
-    // } else {
-    //   return null;
-    // }
-
+    else{
+      return [];
+    }
   }
 
   GetModules(){
-    const obj = JSON.parse(localStorage.getItem(this.USER_KEY));
-    if(obj && obj[this.appName]){
-      if(obj[this.appName].modules){
-        return obj[this.appName].modules
-      }
-      else{
-        return null;
-      }
-    }    
+    const obj = JSON.parse(localStorage.getItem(this.USER_KEY));    
+    if(obj && obj.modules){
+      return obj.modules
+    }
+    else{
+      return [];
+    } 
+  }
+  SetModifyModules(modules:any){
+    sessionStorage.setItem(this.MODIFY_MODULES,JSON.stringify(modules));
+  }
+  GetModifyModules(){
+    return JSON.parse(sessionStorage.getItem(this.MODIFY_MODULES));
   }
   GetMenuType(){
     const menu_Type = this.getApplicationValueByKey('menu_type');
@@ -252,33 +219,20 @@ export class StorageService {
     }
   }
   getUserLog() {
-    const userObj = JSON.parse(localStorage.getItem(this.USER_KEY));
-    if(userObj && userObj[this.appName]){
-      const user = userObj[this.appName];
-      if(user && user != null && user != undefined && user.user){
-        this.userInfo = user.user;
-        this.log = { userId: this.userInfo.email, appId: this.getAppId(), refCode: this.userInfo.refCode };
-        return this.log;
-      }else{
-        return null;
-      } 
-    }
-      
-
+    const user = JSON.parse(localStorage.getItem(this.USER_KEY));     
+    if(user && user != null && user != undefined && user.user){
+      this.userInfo = user.user;
+      this.log = { userId: this.userInfo.email, appId: this.getAppId(), refCode: this.userInfo.refCode };
+      return this.log;
+    }else{
+      return null;
+    } 
   }
   SetActiveMenu(menu: any) {
-    const menuObj = {};
-    menuObj[this.appName] = menu;
-    sessionStorage.setItem(this.ACTIVE_MENU, JSON.stringify(menuObj));
+    sessionStorage.setItem(this.ACTIVE_MENU, JSON.stringify(menu));
   }
   GetActiveMenu() {
-    let obj = JSON.parse(sessionStorage.getItem(this.ACTIVE_MENU));
-    if(obj && obj[this.appName]){
-      const menu = (obj[this.appName]);
-      return menu;
-    } 
-    // const menu = JSON.parse(localStorage.getItem(this.ACTIVE_MENU));
-    // return menu;
+    return JSON.parse(sessionStorage.getItem(this.ACTIVE_MENU));
   }
   getRefCode() {
     const userinfo = this.GetUserInfo();
@@ -292,6 +246,7 @@ export class StorageService {
   }
   removeDataFormStorage() {
     localStorage.clear();
+    sessionStorage.clear();
   }
 
   setIdTokenExpiry(){

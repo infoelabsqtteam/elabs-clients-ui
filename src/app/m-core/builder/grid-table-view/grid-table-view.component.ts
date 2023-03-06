@@ -1,6 +1,6 @@
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject } from '@angular/core';
+import { DatePipe, Location,DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
 import { StorageService} from '../../../services/storage/storage.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
@@ -126,7 +126,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   filterdata = '';
   fixedcolwidth = 150;
   recordId:any="";
+  rowId:any="";
   updateNotification:boolean=true;
+  currentBrowseUrl:string="";
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -289,13 +291,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private datePipe: DatePipe,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private _location:Location,
+    @Inject(DOCUMENT) private document: Document,
   ) {
     if(routers.snapshot.params["formName"]){
       this.formName = routers.snapshot.params["formName"];
     }  
     if(routers.snapshot.params["recordId"]){      
       this.recordId = routers.snapshot.params["recordId"];
+    } 
+    if(routers.snapshot.params["rowId"]){      
+      this.rowId = routers.snapshot.params["rowId"];
     } 
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
@@ -427,6 +434,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.details = {};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
+    this.currentBrowseUrl = this.document.location.hash.substring(1)
     if(this.selectTabIndex != -1){
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
@@ -463,6 +471,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(this.recordId != '' && this.updateNotification){
           this.updateNotification = false; 
           let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);
+          if(index != -1){
+            this.editedRowData(index,"UPDATE");
+          }          
+        }
+        if(this.rowId != ''){
+          let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.rowId,"serialId");
           if(index != -1){
             this.editedRowData(index,"UPDATE");
           }          
@@ -727,10 +741,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
   
-
+  updateRouteUrl(recordId){
+    if(recordId != ""){
+      this._location.go(this.currentBrowseUrl+"/"+recordId); 
+    }else{
+      this._location.go(this.currentBrowseUrl); 
+    }
+  }
   editedRowData(id,formName) {
     if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
       this.selectedRowIndex = id;
+      let recordSrId = this.elements[id].serialId;
+      this.updateRouteUrl(recordSrId);
       if(formName == 'UPDATE'){   
         if(this.checkUpdatePermission(this.elements[id])){
           return;
@@ -756,6 +778,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = false;
     this.bulkuploadList = [];
     this.formName = '';
+    this.updateRouteUrl("");
+    this.rowId = "";
+    this.recordId = "";
     this.getPage(this.pageNumber);
     //this.getTabsCount(this.tabs);   
   }
@@ -960,6 +985,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(this.recordId){
       let crList = pagePayload.data.crList;
       let criteria = "_id;eq;"+this.recordId+";STATIC"
+      this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
+        crList.push(element);
+      });
+      pagePayload.data.crList = crList;
+    }
+    if(this.rowId){
+      let crList = pagePayload.data.crList;
+      let criteria = "serialId;eq;"+this.rowId+";STATIC";
       this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
         crList.push(element);
       });

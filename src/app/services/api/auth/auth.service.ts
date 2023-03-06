@@ -8,8 +8,8 @@ import { DataShareService } from '../../data-share/data-share.service';
 import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
 import { Common } from 'src/app/shared/enums/common.enum';
-import { serverHostList } from '../../env/serverHostList';
 import { CommonFunctionService } from '../../common-utils/common-function.service';
+import { StorageTokenStatus } from 'src/app/shared/enums/storage-token-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -405,5 +405,28 @@ export class AuthService {
         this.notificationService.notify("bg-danger", error.message);
       }
     )
+  }
+  checkIdTokenStatus(){
+    let tokenStatus = false;
+    if (this.storageService != null && this.storageService.GetIdToken() != null) {      
+      if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
+        tokenStatus = true;           
+      }else{
+        tokenStatus = false; 
+      }
+    }else{
+      tokenStatus = false; 
+    }
+    return tokenStatus;
+  }
+  checkApplicationSetting(){
+    let exists = false;
+    let applicationSetting = this.storageService.getApplicationSetting();
+    if(applicationSetting){
+      exists = true;
+    }else{
+      exists = false;
+    }
+    return exists;
   }
 }

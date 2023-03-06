@@ -352,7 +352,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     goToMOdule() {
         this.dataShareService.sendCurrentPage('MODULE');
         this.menuData = []; 
-        this.dataShareService.setModuleIndex(-1);       
+        this.dataShareService.setModuleIndex(-1);
+        this.dataShareService.setMenuIndexs({menuIndex:-1,submenuIndex:-1});       
         const menuType = this.storageService.GetMenuType()
         if (menuType == 'Horizontal') {
             this.router.navigate(['/home']);

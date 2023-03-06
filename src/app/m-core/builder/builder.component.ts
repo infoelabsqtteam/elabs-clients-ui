@@ -11,6 +11,8 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
+import { threadId } from 'worker_threads';
+import { Location } from '@angular/common';
 
 
 
@@ -26,7 +28,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   navigationSubscription;  
   selectTabIndex: number = 0;
   tabId:any = "";
-  selectedRowIndex: any = -1;
+  tabid:any = "";
   currentMenu:any;
   userInfo: any;
   tabs:any=[];
@@ -42,6 +44,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
   selected = new FormControl(0);
+  getTempData:boolean = true;
+  currentUrl :String = "";
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -67,89 +71,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private apiService:ApiService,
     private notificationService:NotificationService,
     private envService:EnvService,
-    private menuOrModuleCommounService:MenuOrModuleCommonService
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private _location:Location
   ) {  
-    if(routers.snapshot.params["key1"]){
-      const index = JSON.stringify(routers.snapshot.params["key1"]);
-      if(index != ''){
-        const action = routers.snapshot.params["action"];
-        const key1 = routers.snapshot.params["key1"];
-        const key2 = routers.snapshot.params["key2"];
-        const key3 = routers.snapshot.params["key3"];
-        
-        this.apiService.resetTempData();
-        const data = {
-          "obj":action,
-          "key":key1,
-          "key1": key2,
-          "key2" : key3
-        }
-        let payloaddata = {};
-        this.storageService.removeDataFormStorage();
-        const getFormData = {
-          data: payloaddata,
-          _id:key1
-        }
-        getFormData.data=data;
-        this.apiService.GetForm(getFormData);
-        // alert('Index is:-' + index);
-      }
-    }else if(routers.snapshot.params["tabId"]){
-      this.tabId = routers.snapshot.params["tabId"]; 
-      // let moduleId =  routers.snapshot.params["moduleId"];     
-      // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
-    }else if(routers.snapshot.params["moduleId"]){
-      const AllModuleList = this.storageService.GetModules();
-      if(AllModuleList != undefined && Array.isArray(AllModuleList)){
-        const moduleName = routers.snapshot.params["moduleId"];
-        const moduleIndex = this.commonFunctionService.getIndexInArrayById(AllModuleList,moduleName,'name');
-        if(routers.snapshot.params["menuId"]){
-            if(moduleIndex != -1){
-                const module = AllModuleList[moduleIndex];
-                let menuList = [];
-                if(module && module.menu_list && module.menu_list.length > 0){
-                    menuList = module.menu_list
-                    const menuName = routers.snapshot.params["menuId"];                            
-                    const menuIndexs = this.menuOrModuleCommounService.getIndexsByMenuName(menuList,menuName);
-                    const menuIndex = menuIndexs.menuindex;
-                    const submenuIndex = menuIndexs.submenuindex;
-                    let menu = {'name':menuName};
-                    if(menuIndexs.submenuindex != -1){
-                        menu = menuList[menuIndex].submenu[submenuIndex];
-                    }else{
-                        if(menuIndex != -1){
-                            menu = menuList[menuIndex];
-                        }else{
-                            this.notificationService.notify('bg-info',"Menu not exits,connect to admin!");
-                            this.storageService.SetActiveMenu({});
-                            this.dataShareService.setModuleIndex(moduleIndex);
-                        }
-                    }
-                    this.menuOrModuleCommounService.shareMenuIndex(menuIndex,submenuIndex,moduleIndex);
-                    this.menuOrModuleCommounService.getTemplateData(module,menu);
-                }else{
-                    this.storageService.SetActiveMenu({});
-                    this.dataShareService.setModuleIndex(moduleIndex);
-                }                        
-            }else{
-                this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
-                this.router.navigate['/dashboard'];
-            }                    
-        }else{
-            if(moduleIndex != -1){
-                this.storageService.SetActiveMenu({});
-                this.dataShareService.setModuleIndex(moduleIndex);
-            }else{
-                this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
-                this.router.navigate['/dashboard'];
-            }
-        }  
-      }
-      this.storageService.setChildWindowUrl('/');             
-    }    
-    this.userInfo = this.storageService.GetUserInfo();
-    
-    
+    this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
       // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
@@ -159,7 +84,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
     })
-    this.tempDataSubscription = this.dataShareService.tempData.subscribe(data =>{
+    this.tempDataSubscription = this.dataShareService.tempData.subscribe(data =>{      
       this.setTempData(data);
     })
     this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
@@ -198,16 +123,112 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
   initialiseInvites() {    
     // Set default values and re-fetch any data you need.
-    this.selectContact = '';
-    this.selectTabIndex = 0;
-    this.selected = new FormControl(0);   
-    this.currentMenu = this.storageService.GetActiveMenu();
-    if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
-      this.apiService.GetTempData(payload);     
+    if(this.getTempData){
+      this.getNavigationRouteData();
+      this.getTempData = false;
+      this.selectContact = '';
+      this.selectTabIndex = 0;
+      this.selected = new FormControl(0);   
+      this.currentMenu = this.storageService.GetActiveMenu();
+      if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
+        const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
+        this.apiService.GetTempData(payload);     
+      }
     }
     
     
+  }
+  getNavigationRouteData(){
+    let routers = this.routers;
+    if(routers.snapshot.params["key1"]){
+      const index = JSON.stringify(routers.snapshot.params["key1"]);
+      if(index != ''){
+        const action = routers.snapshot.params["action"];
+        const key1 = routers.snapshot.params["key1"];
+        const key2 = routers.snapshot.params["key2"];
+        const key3 = routers.snapshot.params["key3"];
+        
+        this.apiService.resetTempData();
+        const data = {
+          "obj":action,
+          "key":key1,
+          "key1": key2,
+          "key2" : key3
+        }
+        let payloaddata = {};
+        this.storageService.removeDataFormStorage();
+        const getFormData = {
+          data: payloaddata,
+          _id:key1
+        }
+        getFormData.data=data;
+        this.apiService.GetForm(getFormData);
+        // alert('Index is:-' + index);
+      }
+    }
+    if(routers.snapshot.params["tabId"]){
+      this.tabId = routers.snapshot.params["tabId"]; 
+      // let moduleId =  routers.snapshot.params["moduleId"];     
+      // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
+    }
+    if(routers.snapshot.params["tabid"]){
+      this.tabid = routers.snapshot.params["tabid"]; 
+      // let moduleId =  routers.snapshot.params["moduleId"];     
+      // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
+    }
+    if(routers.snapshot.params["moduleId"]){
+      const moduleList = this.storageService.GetModifyModules();
+      const AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList)
+      if(AllModuleList != undefined && Array.isArray(AllModuleList)){
+        const moduleName = routers.snapshot.params["moduleId"];
+        const moduleIndex = this.commonFunctionService.getIndexInArrayById(AllModuleList,moduleName,'name');
+        if(routers.snapshot.params["menuId"]){
+            if(moduleIndex != -1 && AllModuleList[moduleIndex].display){
+              const module = AllModuleList[moduleIndex];
+              let menuList = [];
+              if(module && module.menu_list && module.menu_list.length > 0){
+                  menuList = module.menu_list
+                  const menuName = routers.snapshot.params["menuId"];                            
+                  const menuIndexs = this.menuOrModuleCommounService.getIndexsByMenuName(menuList,menuName);
+                  const menuIndex = menuIndexs.menuindex;
+                  const submenuIndex = menuIndexs.submenuindex;
+                  let menu = {'name':menuName};
+                  if(menuIndexs.submenuindex != -1){
+                      menu = menuList[menuIndex].submenu[submenuIndex];
+                  }else{
+                      if(menuIndex != -1){
+                          menu = menuList[menuIndex];
+                      }else{
+                          this.notificationService.notify('bg-info',"Menu not exits,connect to admin!");
+                          this.storageService.SetActiveMenu({});
+                          this.dataShareService.setModuleIndex(moduleIndex);
+                      }
+                  }
+                  this.menuOrModuleCommounService.shareMenuIndex(menuIndex,submenuIndex,moduleIndex);
+                  this.storageService.SetActiveMenu(menu);
+                  this.menuOrModuleCommounService.GoToSelectedModule(module);
+                  const url = '/browse/'+module.name+"/"+menu.name;
+                  this.currentUrl = url;
+                  this._location.go(url);                  
+              }else{
+                  this.storageService.SetActiveMenu({});
+                  this.dataShareService.setModuleIndex(moduleIndex);
+              }                        
+            }else{
+                this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
+                this.router.navigate['/dashboard'];
+            }                    
+        }else{
+            if(moduleIndex != -1){
+                this.storageService.SetActiveMenu({});
+                this.dataShareService.setModuleIndex(moduleIndex);
+            }else{
+                this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
+                this.router.navigate['/dashboard'];
+            }
+        }  
+      }                   
+    } 
   }
   
   
@@ -224,10 +245,13 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if(this.dinamicFormSubscription){
       this.dinamicFormSubscription.unsubscribe();
     } 
+    if(this.navigationSubscription){
+      this.navigationSubscription.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
-    
+    console.log('this is builder oninit function');
 
 
   }
@@ -240,32 +264,40 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
+      this.getTempData=true;
+      this.storageService.setChildWindowUrl('/');
+      this.storageService.setRedirectUrl('/');
       this.tabs = tempData[0].templateTabs; 
-      if(this.tabId != ""){
-        this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
-      }
-      this.filterTab = tempData[0].filterTab;
-      if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
-        this.isTabFilter = true;
-      }else{
-        this.isTabFilter = false;          
-      }
       if(this.tabs == undefined || this.tabs == null){
         //this.notificationService.notify('bg-danger','Template Tabs are not availabel !!!')
         this.tabs = [];
+      }
+      if(this.tabs.length > 0){
+        this.filterTab = tempData[0].filterTab;
+        if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
+          this.isTabFilter = true;
+        }else{
+          this.isTabFilter = false;          
+        }
+        if(this.tabId != ""){
+          this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
+        }
+        if(this.tabid != ""){
+          this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabid,'tab_name');
+        }
+        
+        if(!this.permissionService.checkPermission(this.tabs[this.selectTabIndex].tab_name,'view')){          
+          for (let i = 0; i < this.tabs.length; i++) {
+            const tab = this.tabs[i];            
+            if(this.permissionService.checkPermission(tab.tab_name,'view')){
+              this.selectTabIndex = i;
+            }
+          }          
+        }      
+        this.getViewMode(); 
       }else{
-        if(this.envService.getRequestType() == 'PUBLIC'){
-          this.grid_view_mode="inlineFormView";
-        }
-        else{
-          if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
-            this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
-          }else{
-            this.grid_view_mode="tableView";
-          }
-        }
-       
-      }    
+        this.grid_view_mode = '';
+      }  
     }
   }
   setGridData(gridData){
@@ -296,22 +328,32 @@ export class BuilderComponent implements OnInit,OnDestroy {
       if(this.selectTabIndex != i){
         this.apiService.resetGridData();
       }       
-      this.selectTabIndex = i;       
-      if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
-        this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
-      }
-      else if(this.tabs[this.selectTabIndex].chart_list != null && this.tabs[this.selectTabIndex].chart_list != undefined && this.tabs[this.selectTabIndex].chart_list != ''){
-        this.grid_view_mode="chartView";
-      }
-      else{
-        this.grid_view_mode="tableView";
-      }          
+      this.selectTabIndex = i;  
+      this.getViewMode();        
     } else {
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   } 
   checkPermission(tab){
     return !this.permissionService.checkPermission(tab.tab_name, 'view')
+  }
+  getViewMode(){    
+      if(this.envService.getRequestType() == 'PUBLIC'){
+        this.grid_view_mode="inlineFormView";
+      }
+      else{
+        if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
+          this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
+        }
+        else if(this.tabs[this.selectTabIndex].chart_list != null && this.tabs[this.selectTabIndex].chart_list != undefined && this.tabs[this.selectTabIndex].chart_list != ''){
+          this.grid_view_mode="chartView";
+        }
+        else{
+          this.grid_view_mode="tableView";
+        } 
+      }
+      const url = this.currentUrl+"/"+this.tabs[this.selectTabIndex].tab_name;
+      this._location.go(url); 
   }
   
   gateTabName(tab) {
