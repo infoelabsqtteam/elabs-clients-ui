@@ -295,15 +295,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private _location:Location,
     @Inject(DOCUMENT) private document: Document,
   ) {
-    if(routers.snapshot.params["formName"]){
-      this.formName = routers.snapshot.params["formName"];
-    }  
-    if(routers.snapshot.params["recordId"]){      
-      this.recordId = routers.snapshot.params["recordId"];
-    } 
-    if(routers.snapshot.params["rowId"]){      
-      this.rowId = routers.snapshot.params["rowId"];
-    } 
+    this.getUrlParameter();
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
     })
@@ -345,6 +337,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     });   
 
   }
+  getUrlParameter(){
+    let routers = this.routers;
+    if(routers.snapshot.params["formName"]){
+      this.formName = routers.snapshot.params["formName"];
+    }  
+    if(routers.snapshot.params["recordId"]){      
+      this.recordId = routers.snapshot.params["recordId"];
+    } 
+    if(routers.snapshot.params["rowId"]){      
+      this.rowId = routers.snapshot.params["rowId"];
+    } 
+  }
   initialiseInvites() {
     this.loadngAfterOnInit = true
     this.temView = false;
@@ -360,7 +364,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.details = {};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
-    
+    this.getUrlParameter();    
+  }
+  getCurrentBrowseUrl(){
+    return this.document.location.hash.substring(1);
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
@@ -434,7 +441,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.details = {};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
-    this.currentBrowseUrl = this.document.location.hash.substring(1)
     if(this.selectTabIndex != -1){
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
@@ -743,16 +749,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   
   updateRouteUrl(recordId){
     if(recordId != ""){
+      this.currentBrowseUrl = this.getCurrentBrowseUrl();
       this._location.go(this.currentBrowseUrl+"/"+recordId); 
     }else{
       this._location.go(this.currentBrowseUrl); 
+      this.currentBrowseUrl = "";
     }
   }
   editedRowData(id,formName) {
     if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
-      this.selectedRowIndex = id;
-      let recordSrId = this.elements[id].serialId;
-      this.updateRouteUrl(recordSrId);
+      this.selectedRowIndex = id;      
       if(formName == 'UPDATE'){   
         if(this.checkUpdatePermission(this.elements[id])){
           return;
@@ -831,6 +837,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //   }
       // });
       let formData = {}
+      let recordSrId = this.elements[this.selectedRowIndex].serialId;
+      this.updateRouteUrl(recordSrId);
       this.modalService.open('form-modal',formData)
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')

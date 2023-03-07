@@ -177,8 +177,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
       // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
     }
     if(routers.snapshot.params["moduleId"]){
-      const moduleList = this.storageService.GetModifyModules();
-      const AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList)
+      let AllModuleList = this.storageService.GetModifyModules();
+      if(AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
+        AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules())
+      }
       if(AllModuleList != undefined && Array.isArray(AllModuleList)){
         const moduleName = routers.snapshot.params["moduleId"];
         const moduleIndex = this.commonFunctionService.getIndexInArrayById(AllModuleList,moduleName,'name');
