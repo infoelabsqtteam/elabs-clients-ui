@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api/api.service';
+import { AuthService } from '../api/auth/auth.service';
 import { CommonFunctionService } from '../common-utils/common-function.service';
 import { DataShareService } from '../data-share/data-share.service';
 import { NotificationService } from '../notify/notification.service';
@@ -19,7 +20,8 @@ constructor(
   private dataShareService:DataShareService,
   private notificationService:NotificationService,
   private apiService:ApiService,
-  private router:Router
+  private router:Router,
+  private authService:AuthService
 ) { }
 
   modifyModuleListWithPermission(moduleList){
@@ -267,7 +269,15 @@ constructor(
           }           
         }
     }else{
+      let getTokenStatus = this.authService.checkIdTokenStatus()
+      if(getTokenStatus.status){
         this.notificationService.notify("bg-danger", "Permission denied !!!");
+      }else{
+        if(getTokenStatus.msg != ""){
+          this.notificationService.notify("bg-info", getTokenStatus.msg);
+        }
+        this.authService.gotToSigninPage();
+      }        
     }
   }
   GoToSelectedModule(item){        

@@ -114,7 +114,7 @@ export class AppComponent implements OnInit {
     if(!this.authService.checkApplicationSetting()){
       this.commonfunctionService.getApplicationAllSettings();
     }
-    if(this.authService.checkIdTokenStatus()){
+    if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
     }else{
       this.authService.redirectToSignPage();

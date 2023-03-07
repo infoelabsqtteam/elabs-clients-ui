@@ -204,10 +204,10 @@ export class StorageService {
     } 
   }
   SetModifyModules(modules:any){
-    sessionStorage.setItem(this.MODIFY_MODULES,JSON.stringify(modules));
+    localStorage.setItem(this.MODIFY_MODULES,JSON.stringify(modules));
   }
   GetModifyModules(){
-    return JSON.parse(sessionStorage.getItem(this.MODIFY_MODULES));
+    return JSON.parse(localStorage.getItem(this.MODIFY_MODULES));
   }
   GetMenuType(){
     const menu_Type = this.getApplicationValueByKey('menu_type');

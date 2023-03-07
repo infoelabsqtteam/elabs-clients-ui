@@ -46,7 +46,7 @@ export class AuthService {
     this.notificationService.notify("bg-info","Log out Successful.");                
     this.dataShareService.restSettingModule('logged_out');
   }
-  SessionExpired(payload:any){
+  SessionExpired(payload?:any){
     // let api = this.envService.getAuthApi('AUTH_SIGNOUT');
     // this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
     //   (respData) =>{
@@ -407,17 +407,22 @@ export class AuthService {
     )
   }
   checkIdTokenStatus(){
-    let tokenStatus = false;
+    let statusWithMsg={
+      "status":false,
+      "msg" : ""
+    };
     if (this.storageService != null && this.storageService.GetIdToken() != null) {      
       if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
-        tokenStatus = true;           
+        statusWithMsg.status = true;           
       }else{
-        tokenStatus = false; 
+        statusWithMsg.status = false; 
+        this.SessionExpired();
       }
     }else{
-      tokenStatus = false; 
+      statusWithMsg.status=false;
+      statusWithMsg.msg="Your are already logout !!!";
     }
-    return tokenStatus;
+    return statusWithMsg;
   }
   checkApplicationSetting(){
     let exists = false;

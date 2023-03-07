@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate{
       if(state.url.startsWith("/browse") && (childWindowUrl == undefined || childWindowUrl == '/')){
         this.storageService.setRedirectUrl(state.url);
       }
-      var isAuthenticated = this.authService.checkIdTokenStatus();
+      var isAuthenticated = this.authService.checkIdTokenStatus().status;
       if (!isAuthenticated) {        
         this.authService.redirectToSignPage();
       }
