@@ -21,6 +21,7 @@ import { CoreFunctionService } from 'src/app/services/common-utils/core-function
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
 import { Subscription } from 'rxjs';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 declare var tinymce: any;
 
@@ -310,7 +311,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private notificationService:NotificationService,
     private envService:EnvService,
     private coreFunctionService:CoreFunctionService,
-    private customValidationService:CustomvalidationService
+    private customValidationService:CustomvalidationService,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
 ) {
 
     this.tinymceConfig = {
@@ -3063,7 +3065,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }else{
       this.getSavePayload = false;
-      this.notificationService.notify("bg-danger", "Permission denied !!!");
+      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
  saveFormData(){

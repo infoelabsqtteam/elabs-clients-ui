@@ -53,12 +53,12 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if((this.tabs.length-1) == this.selectTabIndex){
       this.selectTabIndex = 0;
       tab = this.tabs[this.selectTabIndex];
-      this.getTab(this.selectTabIndex,tab["tab_name"])
+      this.getTab(this.selectTabIndex,tab["tab_name"],"")
     }
     else if (this.selectTabIndex >= 0) {
       this.selectTabIndex = this.selectTabIndex + 1;
       tab = this.tabs[this.selectTabIndex];
-      this.getTab(this.selectTabIndex,tab["tab_name"])
+      this.getTab(this.selectTabIndex,tab["tab_name"],"")
     }
 }
   constructor(
@@ -178,8 +178,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
     if(routers.snapshot.params["moduleId"]){
       let AllModuleList = this.storageService.GetModifyModules();
-      if(AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
-        AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules())
+      if(AllModuleList == undefined || AllModuleList == undefined || AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
+        AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules());
+        this.storageService.SetModifyModules(AllModuleList);
       }
       if(AllModuleList != undefined && Array.isArray(AllModuleList)){
         const moduleName = routers.snapshot.params["moduleId"];
@@ -211,7 +212,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
                   this.menuOrModuleCommounService.GoToSelectedModule(module);
                   const url = '/browse/'+module.name+"/"+menu.name;
                   this.currentUrl = url;
-                  this._location.go(url);                  
+                  if(this.tabid == ""){
+                    this._location.go(url);   
+                  }               
               }else{
                   this.storageService.SetActiveMenu({});
                   this.dataShareService.setModuleIndex(moduleIndex);
@@ -253,7 +256,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('this is builder oninit function');
+    //console.log('this is builder oninit function');
 
 
   }
@@ -295,7 +298,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
               this.selectTabIndex = i;
             }
           }          
-        }      
+        } 
+        this.selected = new FormControl(this.selectTabIndex);    
         this.getViewMode(); 
       }else{
         this.grid_view_mode = '';
@@ -325,14 +329,21 @@ export class BuilderComponent implements OnInit,OnDestroy {
     const data = this.dataShareService.getTempData();
     this.setTempData(data);
   }
-  getTab(i, tabName) {
+  getTab(i, tabName,event) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
-      if(this.selectTabIndex != i){
-        this.apiService.resetGridData();
+      if(event != "" && event.ctrlKey){
+        const url = this.currentUrl+"/"+tabName;
+        this.storageService.setChildWindowUrl(url);
+        window.open(url, '_blank');
+      }else{
+        if(this.selectTabIndex != i){
+          this.apiService.resetGridData();
+        }       
+        this.selectTabIndex = i;  
+        this.getViewMode(); 
       }       
-      this.selectTabIndex = i;  
-      this.getViewMode();        
     } else {
+      this.menuOrModuleCommounService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   } 

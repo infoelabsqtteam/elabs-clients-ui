@@ -269,15 +269,18 @@ constructor(
           }           
         }
     }else{
-      let getTokenStatus = this.authService.checkIdTokenStatus()
-      if(getTokenStatus.status){
-        this.notificationService.notify("bg-danger", "Permission denied !!!");
-      }else{
-        if(getTokenStatus.msg != ""){
-          this.notificationService.notify("bg-info", getTokenStatus.msg);
-        }
-        this.authService.gotToSigninPage();
-      }        
+      this.checkTokenStatusForPermission();       
+    }
+  }
+  checkTokenStatusForPermission(){
+    let getTokenStatus = this.authService.checkIdTokenStatus()
+    if(getTokenStatus.status){
+      this.notificationService.notify("bg-danger", "Permission denied !!!");
+    }else{
+      if(getTokenStatus.msg != ""){
+        this.notificationService.notify("bg-info", getTokenStatus.msg);
+      }
+      this.authService.gotToSigninPage();
     }
   }
   GoToSelectedModule(item){        

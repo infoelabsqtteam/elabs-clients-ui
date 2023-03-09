@@ -166,8 +166,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     GoToSelectedModule(module){
         this.menuOrModuleCommounService.GoToSelectedModule(module);
     }
-    getTemplateData(module,menu){
-        this.menuOrModuleCommounService.getTemplateData(module,menu)
+    getTemplateData(module,menu,event){
+        if(event.ctrlKey){
+            const rout = 'browse/'+module.name+'/'+menu.name;
+            this.storageService.setChildWindowUrl(rout);
+            window.open(rout, '_blank');
+        }else{
+            this.menuOrModuleCommounService.getTemplateData(module,menu)
+        }
     }
 
     shortcutinfo() {
@@ -340,13 +346,19 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     }
     
-    getTemplateMenuData(submenu,menuIndex,subMenuIndex) {
-        let module = {};
+    getTemplateMenuData(submenu,menuIndex,subMenuIndex,event) {
+        let module:any = {};
         if(this.moduleIndex != -1){
             module = this.AllModuleList[this.moduleIndex];
         }
-        this.menuOrModuleCommounService.shareMenuIndex(menuIndex,subMenuIndex);
-        this.menuOrModuleCommounService.getTemplateData(module,submenu);
+        if(event.ctrlKey && module && module.name){
+            const rout = 'browse/'+module.name+'/'+submenu.name;
+            this.storageService.setChildWindowUrl(rout);
+            window.open(rout, '_blank');
+        }else{
+            this.menuOrModuleCommounService.shareMenuIndex(menuIndex,subMenuIndex);
+            this.menuOrModuleCommounService.getTemplateData(module,submenu);
+        }
     }
         
     goToMOdule() {

@@ -15,6 +15,7 @@ import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -294,6 +295,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private notificationService:NotificationService,
     private _location:Location,
     @Inject(DOCUMENT) private document: Document,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {
     this.getUrlParameter();
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -490,7 +492,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       } else {
         this.elements = [];
         this.total = 0;
+        this.rowId = "";
       }
+    }else{
+      this.rowId = "";
     }
   }
   setStaticData(staticData){
@@ -644,10 +649,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if (this.tabs.length >= 1) {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
-          this.currentMenu.name = this.tab.tab_name;
-          this.apiService.resetGridCountAllData();
+          this.currentMenu.name = this.tab.tab_name;          
           this.getPage(1);
-          if(index == 0){
+          let gridCount = this.dataShareService.getGridCountData(); 
+          let gridCountKey = this.tab.tab_name+"_"+this.tab.name;
+          if(index == 0 || gridCount[gridCountKey] == undefined){
+            this.apiService.resetGridCountAllData();
             this.getTabsCount(this.tabs);
           }
         }
@@ -773,7 +780,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       this.selectedRowIndex = id;    
     } else {
-      this.notificationService.notify("bg-danger", "Permission denied !!!");
+      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
   addAndUpdateResponce(element) {
@@ -1052,7 +1060,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
       this.apiService.GetExportExclLink(getExportData);
     }else{
-      this.notificationService.notify("bg-danger", "Permission denied !!!");
+      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
 
@@ -1233,7 +1242,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
             this.editedRowData(index,button.onclick.action_name)
           }else{
-            this.notificationService.notify("bg-danger", "Permission denied !!!");
+            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
           case 'AUDIT_HISTORY':
@@ -1245,7 +1255,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
               this.modalService.open('audit-history',obj);
             }else {
-              this.notificationService.notify("bg-danger", "Permission denied !!!");
+              this.menuOrModuleCommounService.checkTokenStatusForPermission();
+              //this.notificationService.notify("bg-danger", "Permission denied !!!");
             }
           break;
         default:
