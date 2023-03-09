@@ -79,25 +79,29 @@
                                             <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
-                                        <mat-form-field appearance="outline" class="example-full-width w-100">
-                                            <mat-chip-list #chipList aria-label="Item selection">
-                                                <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
-                                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                </mat-chip>
-                                                <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                    [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
-                                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
-                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
-                                                </mat-autocomplete>
-                                            </mat-chip-list>
-                                        </mat-form-field>                                
+                                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                                                <mat-chip-list #chipList aria-label="Item selection">
+                                                    <span *ngIf="data && data[fieldName.field_name] && data[fieldName.field_name].length > 0">
+                                                        <mat-chip *ngFor="let item of data[fieldName.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
+                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                        </mat-chip>
+                                                    </span>
+                                                    <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
+                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                    <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
+                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-chip-list>
+                                            </mat-form-field>                                
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'userinput_chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-chip-list #chipList aria-label="Item selection">
-                                                    <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
-                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                    </mat-chip>
+                                                    <span *ngIf="data && data[fieldName.field_name] && data[fieldName.field_name].length > 0">
+                                                        <mat-chip *ngFor="let item of data[fieldName.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
+                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                        </mat-chip>
+                                                    </span>
                                                     <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
                                                         [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                     <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
@@ -119,9 +123,11 @@
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <mat-chip-list #chipList aria-label="Item selection">
-                                                        <mat-chip *ngFor="let item of custmizedFormValueData(data,fieldName); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
-                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                        </mat-chip>
+                                                        <span *ngIf="data && data[fieldName.field_name] && data[fieldName.field_name].length > 0">
+                                                            <mat-chip *ngFor="let item of data[fieldName.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,data,fieldName,'delete')" cdkDrag [disabled]="data[fieldName.field_name+'_disabled']">{{getddnDisplayVal(item)}}
+                                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                            </mat-chip>
+                                                        </span>
                                                         <input type="text" #typeheadchips [placeholder]="fieldName.label" aria-label="Number" matInput
                                                             [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadchips,data)" [displayWith]="getOptionText">
