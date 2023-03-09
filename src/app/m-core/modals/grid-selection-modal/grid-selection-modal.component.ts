@@ -240,11 +240,11 @@ export class GridSelectionModalComponent implements OnInit {
 
   }
 
-  custmizedFormValueData(data, fieldName) {
-    if (data && data[fieldName.field_name] && data[fieldName.field_name].length > 0) {
-      return data[fieldName.field_name];
-    }
-  }
+  // custmizedFormValueData(data, fieldName) {
+  //   if (data && data[fieldName.field_name] && data[fieldName.field_name].length > 0) {
+  //     return data[fieldName.field_name];
+  //   }
+  // }
 
   add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
@@ -270,29 +270,50 @@ export class GridSelectionModalComponent implements OnInit {
 
   setData(selectedData, field, index,chipsInput){
     if(field.type != "typeahead"){
-      if (this.gridData[index][field.field_name] == null) this.gridData[index][field.field_name] = [];
-      if(this.gridCommonFunctionService.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.gridData[index][field.field_name])){
-        this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
-      }else{
-        this.gridData[index][field.field_name].push(selectedData);
-      }
-      if(this.chipsInput && this.chipsInput.nativeElement && this.chipsInput.nativeElement.value){
-        this.chipsInput.nativeElement.value = "";
-      }
-      if(this.typeheadchips && this.typeheadchips.nativeElement && this.typeheadchips.nativeElement.value){
-        this.typeheadchips.nativeElement.value = "";
-      }
-      if(this.typeheadInput && this.typeheadInput.nativeElement && this.typeheadInput.nativeElement.value){
-        this.typeheadInput.nativeElement.value = "";
-      }
-      chipsInput.value = "";
+      this.checkDataInListOrAdd(field,index,selectedData,chipsInput);
+      // if (this.modifiedGridData[index][field.field_name] == null) this.modifiedGridData[index][field.field_name] = [];
+      // if(this.gridCommonFunctionService.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.modifiedGridData[index][field.field_name])){
+      //   this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+      // }else{
+      //   this.modifiedGridData[index][field.field_name].push(selectedData);
+      // }
+      // if(this.chipsInput && this.chipsInput.nativeElement && this.chipsInput.nativeElement.value){
+      //   this.chipsInput.nativeElement.value = "";
+      // }
+      // if(this.typeheadchips && this.typeheadchips.nativeElement && this.typeheadchips.nativeElement.value){
+      //   this.typeheadchips.nativeElement.value = "";
+      // }
+      // if(this.typeheadInput && this.typeheadInput.nativeElement && this.typeheadInput.nativeElement.value){
+      //   this.typeheadInput.nativeElement.value = "";
+      // }
+      // chipsInput.value = "";
     } 
     if(field.type == "typeahead"){
       if(field.datatype != 'chips'){
         this.modifiedGridData[index][field.field_name]= selectedData;
+      }else if(field.datatype == 'chips'){
+        this.checkDataInListOrAdd(field,index,selectedData,chipsInput);
       }
     }   
     this.typeAheadData = [];    
+  }
+  checkDataInListOrAdd(field,index,selectedData,chipsInput){
+    if (this.modifiedGridData[index][field.field_name] == null) this.modifiedGridData[index][field.field_name] = [];
+    if(this.gridCommonFunctionService.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.modifiedGridData[index][field.field_name])){
+      this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
+    }else{
+      this.modifiedGridData[index][field.field_name].push(selectedData);
+    }
+    if(this.chipsInput && this.chipsInput.nativeElement && this.chipsInput.nativeElement.value){
+      this.chipsInput.nativeElement.value = "";
+    }
+    if(this.typeheadchips && this.typeheadchips.nativeElement && this.typeheadchips.nativeElement.value){
+      this.typeheadchips.nativeElement.value = "";
+    }
+    if(this.typeheadInput && this.typeheadInput.nativeElement && this.typeheadInput.nativeElement.value){
+      this.typeheadInput.nativeElement.value = "";
+    }
+    chipsInput.value = "";
   }
 
   getOptionText(option) {
