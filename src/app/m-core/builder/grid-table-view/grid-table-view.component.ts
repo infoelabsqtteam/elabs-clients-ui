@@ -130,6 +130,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   rowId:any="";
   updateNotification:boolean=true;
   currentBrowseUrl:string="";
+  queryParams:any={};
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -297,7 +298,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     @Inject(DOCUMENT) private document: Document,
     private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {
-    this.getUrlParameter();
+    this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
     })
@@ -350,6 +351,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(routers.snapshot.params["rowId"]){      
       this.rowId = routers.snapshot.params["rowId"];
     } 
+    this.routers.queryParams.subscribe(params => {
+      this.queryParams = params;
+    });
   }
   initialiseInvites() {
     this.loadngAfterOnInit = true
@@ -476,18 +480,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(checkboxes != null){
           checkboxes['checked'] = false;
         }
+        let index = -1;
         if(this.recordId != '' && this.updateNotification){
           this.updateNotification = false; 
-          let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);
-          if(index != -1){
-            this.editedRowData(index,"UPDATE");
-          }          
+          index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);                   
+        }else if(this.rowId != ''){
+          index = this.commonFunctionService.getIndexInArrayById(this.elements,this.rowId,"serialId");                    
+        }else if(Object.keys(this.queryParams).length > 0){
+          let keys = Object.keys(this.queryParams); 
+          index = this.commonFunctionService.getIndexInArrayById(this.elements,this.queryParams,keys);
         }
-        if(this.rowId != ''){
-          let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.rowId,"serialId");
-          if(index != -1){
-            this.editedRowData(index,"UPDATE");
-          }          
+        if(index != -1){
+          this.editedRowData(index,"UPDATE");
         }
       } else {
         this.elements = [];
@@ -754,10 +758,36 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
   
-  updateRouteUrl(recordId){
-    if(recordId != ""){
+  updateRouteUrl(){    
+    let record = "";
+    if(this.selectedRowIndex != -1){
+      record = this.elements[this.selectedRowIndex];
+    }    
+    let routeQuery = '';
+    let routeQueryCriteri = ['serialId'];
+    if(record != ""){
+      let queryList = [];
+      routeQueryCriteri.forEach(criteria => {
+        if(record && record[criteria]){
+          const query = criteria+"="+record[criteria];
+          queryList.push(query);
+        }
+      });
+      if(queryList && queryList.length > 0){
+        queryList.forEach((query,i) =>{
+          if(i == 0){
+            routeQuery = routeQuery + query;
+          }else {
+            routeQuery = routeQuery +"&"+ query;
+          }
+        })
+      }      
       this.currentBrowseUrl = this.getCurrentBrowseUrl();
-      this._location.go(this.currentBrowseUrl+"/"+recordId); 
+      if(routeQuery && routeQuery != ''){
+        this._location.go(this.currentBrowseUrl+"?"+routeQuery);
+      }else {
+        this._location.go(this.currentBrowseUrl);
+      }       
     }else{
       this._location.go(this.currentBrowseUrl); 
       this.currentBrowseUrl = "";
@@ -792,9 +822,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = false;
     this.bulkuploadList = [];
     this.formName = '';
-    this.updateRouteUrl("");
+    this.updateRouteUrl();
     this.rowId = "";
     this.recordId = "";
+    this.queryParams = {};
     this.getPage(this.pageNumber);
     //this.getTabsCount(this.tabs);   
   }
@@ -845,8 +876,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //   }
       // });
       let formData = {}
-      let recordSrId = this.elements[this.selectedRowIndex].serialId;
-      this.updateRouteUrl(recordSrId);
+      this.updateRouteUrl();
       this.modalService.open('form-modal',formData)
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
@@ -984,6 +1014,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   
   
   getPage(page: number) {
+    this.apiService.resetGridData();
     this.pageNumber = page;
     let contact = {};
     let leadId = '';
@@ -998,22 +1029,28 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
     const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
-    if(this.recordId){
-      let crList = pagePayload.data.crList;
-      let criteria = "_id;eq;"+this.recordId+";STATIC"
-      this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
-        crList.push(element);
-      });
-      pagePayload.data.crList = crList;
+    let crList = pagePayload.data.crList;
+    let criteriaList = [];
+    if(this.recordId){      
+      let criteria = "_id;eq;"+this.recordId+";STATIC";
+      criteriaList.push(criteria);            
     }
-    if(this.rowId){
-      let crList = pagePayload.data.crList;
+    if(this.rowId){      
       let criteria = "serialId;eq;"+this.rowId+";STATIC";
-      this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
+      criteriaList.push(criteria);
+    }
+    if(Object.keys(this.queryParams).length > 0){     
+      Object.keys(this.queryParams).forEach(key =>{
+        let criteria = key+";eq;"+this.queryParams[key]+";STATIC";
+        criteriaList.push(criteria);
+      })
+    }
+    if(criteriaList.length > 0){
+      this.commonFunctionService.getCriteriaList(criteriaList,{}).forEach(element => {
         crList.push(element);
       });
       pagePayload.data.crList = crList;
-    }
+    }    
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';

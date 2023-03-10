@@ -243,7 +243,7 @@ constructor(
       return !this.permissionService.checkPermission(menu.name, 'view')
   }
   getTemplateData(module,submenu) {
-    if(this.permissionService.checkPermission(submenu.name,'view')){
+    if(submenu && submenu.name && this.permissionService.checkPermission(submenu.name,'view')){
         this.storageService.SetActiveMenu(submenu);
         if (submenu.label == "Navigation") {
             this.router.navigate(['Navigation']);

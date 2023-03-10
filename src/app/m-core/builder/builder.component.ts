@@ -172,7 +172,18 @@ export class BuilderComponent implements OnInit,OnDestroy {
       // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
     }
     if(routers.snapshot.params["tabid"]){
-      this.tabid = routers.snapshot.params["tabid"]; 
+      const tabid = routers.snapshot.params["tabid"]; 
+      let index = tabid.indexOf('?');
+      if(index != -1){
+        this.tabid = tabid.substring(0, index);
+      }else{
+        index = tabid.indexOf('%');
+        if(index != -1){
+          this.tabid = tabid.substring(0, index);
+        }else{
+          this.tabid = tabid;
+        }        
+      }
       // let moduleId =  routers.snapshot.params["moduleId"];     
       // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
     }
@@ -270,8 +281,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
       this.getTempData=true;
-      this.storageService.setChildWindowUrl('/');
-      this.storageService.setRedirectUrl('/');
+      this.storageService.setChildWindowUrl('/');    
+      this.storageService.setRedirectUrl('/');  
       this.tabs = tempData[0].templateTabs; 
       if(this.tabs == undefined || this.tabs == null){
         //this.notificationService.notify('bg-danger','Template Tabs are not availabel !!!')
@@ -290,7 +301,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
         if(this.tabid != ""){
           this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabid,'tab_name');
         }
-        
+        if(this.selectTabIndex == -1){
+          this.selectTabIndex = 0;
+        }
         if(!this.permissionService.checkPermission(this.tabs[this.selectTabIndex].tab_name,'view')){          
           for (let i = 0; i < this.tabs.length; i++) {
             const tab = this.tabs[i];            
