@@ -1,7 +1,5 @@
 import { Component, OnInit ,HostListener, Inject } from '@angular/core';
 import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../aws-exports';
 import {Title} from "@angular/platform-browser";
 import { StorageService } from './services/storage/storage.service';
 import { DataShareService } from './services/data-share/data-share.service';
@@ -105,7 +103,6 @@ export class AppComponent implements OnInit {
       }      
    })
     
-    Amplify.configure(awsconfig);
   }
 
   redirectToHomePage(){
