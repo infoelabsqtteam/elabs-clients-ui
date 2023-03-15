@@ -5,7 +5,6 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { AgmDirectionModule } from 'agm-direction';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { GoogleMapsModule } from "@angular/google-maps";
 import {NgxPaginationModule} from 'ngx-pagination';
@@ -23,7 +22,6 @@ const packages = [
   NgxExtendedPdfViewerModule,
   AgmDirectionModule,
   Ng2SearchPipeModule,
-  NgApexchartsModule,
   GoogleChartsModule,
   GoogleMapsModule,
   NgxPaginationModule,
