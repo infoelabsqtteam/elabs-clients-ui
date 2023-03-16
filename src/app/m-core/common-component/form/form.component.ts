@@ -2256,6 +2256,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.commonFunctionService.calculate_po_row_item(tamplateFormValue1,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
+        case 'calculate_manual_row_item':          
+          calFormValue = this.commonFunctionService.calculate_manual_row_item(tamplateFormValue1,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         case 'update_invoice_total_on_custom_field':          
           calFormValue = this.commonFunctionService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
@@ -2267,7 +2271,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'calculate_lims_invoice_with_po_items':
           let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
           this.updateDataOnFormField(val);
-          break;          
+          break; 
+        case 'calculate_lims_invoice_with_manual_items':
+          let val1 = this.commonFunctionService.calculate_lims_invoice_with_manual_items(tamplateFormValue,"",field);
+          this.updateDataOnFormField(val1);
+          break;         
         case 'getDateInStringFunction':
           calFormValue = this.commonFunctionService.getDateInStringFunction(tamplateFormValue);
           this.updateDataOnFormField(calFormValue); 
