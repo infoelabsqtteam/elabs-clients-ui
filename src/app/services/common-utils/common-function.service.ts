@@ -1897,10 +1897,67 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
        
       }
 
+      calculate_manual_row_item(templateValue,lims_segment, calculate_on_field: any){
+        var manualItemsList = templateValue['manualItemsList'];
+
+        var qty= manualItemsList['sampleQty'];
+        var cost= manualItemsList['sampleCost'];
+        if(qty && cost){ 
+          manualItemsList['sampleTotal'] = qty*cost;
+        }else{
+          manualItemsList['sampleTotal'] =0;
+        }
+        manualItemsList['discount_amount'] =0;
+        manualItemsList['net_amount'] = manualItemsList['sampleTotal'];
+        templateValue['manualItemsList']=manualItemsList;
+
+      return templateValue;
+       
+      }
+
 
   calculate_lims_invoice_with_po_items(templateValue,lims_segment, calculate_on_field: any){
     return this.calculate_lims_invoice(templateValue,lims_segment, 'po_items')
   }
+
+  calculate_lims_invoice_with_manual_items(templateValue,lims_segment, calculate_on_field: any){
+    let calculateOnField = "";
+    if(calculate_on_field == null || calculate_on_field == ''){
+      calculateOnField = 'manualItemsList';
+    }else {
+      calculateOnField = calculate_on_field['field_name'] 
+    }
+    let	surcharge	=0;
+    let	gross_amount	=0;
+    let	discount_percent	=0;
+    let	discount_amount	=0;
+    let	taxable_amount	=0;
+    let	net_amount	=0;
+   
+        if (this.coreFunctionService.isNotBlank(templateValue[calculateOnField]) && templateValue[calculateOnField].length > 0) {
+          templateValue[calculateOnField].forEach(element => {
+            if(this.coreFunctionService.isNotBlank(element.sampleTotal)){
+              // gross_amount=gross_amount+element.gross_amount
+              gross_amount=gross_amount+element.sampleTotal
+            }
+            if(this.coreFunctionService.isNotBlank(element.sampling_charge)) {
+              // surcharge=surcharge+element.surcharge
+              surcharge=surcharge+element.sampling_charge
+            }
+            if(this.coreFunctionService.isNotBlank(element.discount_amount)){
+              discount_amount=discount_amount+element.discount_amount
+            }
+            if(this.coreFunctionService.isNotBlank(element.net_amount)){
+              net_amount=net_amount+element.net_amount
+            }else{
+              net_amount=net_amount+element.sampleTotal
+            }
+              taxable_amount=net_amount+surcharge;
+          });
+        }
+        templateValue = this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+         return templateValue;
+      }
 
 
    getDateInStringFunction(templateValue){
