@@ -8,8 +8,8 @@ import { DataShareService } from '../../data-share/data-share.service';
 import { NotificationService } from '../../notify/notification.service';
 import { EncryptionService } from '../../encryption/encryption.service';
 import { Common } from 'src/app/shared/enums/common.enum';
-import { serverHostList } from '../../env/serverHostList';
 import { CommonFunctionService } from '../../common-utils/common-function.service';
+import { StorageTokenStatus } from 'src/app/shared/enums/storage-token-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,7 @@ export class AuthService {
     this.notificationService.notify("bg-info","Log out Successful.");                
     this.dataShareService.restSettingModule('logged_out');
   }
-  SessionExpired(payload:any){
+  SessionExpired(payload?:any){
     // let api = this.envService.getAuthApi('AUTH_SIGNOUT');
     // this.http.post(api + payload.appName, this.encryptionService.encryptRequest(payload.data)).subscribe(
     //   (respData) =>{
@@ -115,12 +115,19 @@ export class AuthService {
   }
   
   redirectionWithMenuType(){
-    const menuType = this.storageService.GetMenuType()
+    const menuType = this.storageService.GetMenuType();
+    const redirectUrl = this.storageService.getRedirectUrl();
+    const childWindowUrl = this.storageService.getChildWindowUrl();
+    let route = '/dashboard';
     if(menuType == 'Horizontal'){
-      this.router.navigate(['/home']);
-    }else{
-      this.router.navigate(['/dashboard']);
+      route = '/home'; 
+    }
+    if(redirectUrl && redirectUrl != '' && redirectUrl != '/'){
+      route = redirectUrl;
+    }else if(childWindowUrl && childWindowUrl != '' && childWindowUrl != '/'){
+      route = childWindowUrl;
     } 
+    this.router.navigate([route]);
   }
   redirectToSignPage(){
     this.router.navigate(['/signin']);
@@ -398,5 +405,33 @@ export class AuthService {
         this.notificationService.notify("bg-danger", error.message);
       }
     )
+  }
+  checkIdTokenStatus(){
+    let statusWithMsg={
+      "status":false,
+      "msg" : ""
+    };
+    if (this.storageService != null && this.storageService.GetIdToken() != null) {      
+      if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
+        statusWithMsg.status = true;           
+      }else{
+        statusWithMsg.status = false; 
+        this.SessionExpired();
+      }
+    }else{
+      statusWithMsg.status=false;
+      statusWithMsg.msg="Your are already logout !!!";
+    }
+    return statusWithMsg;
+  }
+  checkApplicationSetting(){
+    let exists = false;
+    let applicationSetting = this.storageService.getApplicationSetting();
+    if(applicationSetting){
+      exists = true;
+    }else{
+      exists = false;
+    }
+    return exists;
   }
 }

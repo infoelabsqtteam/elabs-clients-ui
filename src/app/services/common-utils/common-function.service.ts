@@ -1897,10 +1897,67 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
        
       }
 
+      calculate_manual_row_item(templateValue,lims_segment, calculate_on_field: any){
+        var manualItemsList = templateValue['manualItemsList'];
+
+        var qty= manualItemsList['sampleQty'];
+        var cost= manualItemsList['sampleCost'];
+        if(qty && cost){ 
+          manualItemsList['sampleTotal'] = qty*cost;
+        }else{
+          manualItemsList['sampleTotal'] =0;
+        }
+        manualItemsList['discount_amount'] =0;
+        manualItemsList['net_amount'] = manualItemsList['sampleTotal'];
+        templateValue['manualItemsList']=manualItemsList;
+
+      return templateValue;
+       
+      }
+
 
   calculate_lims_invoice_with_po_items(templateValue,lims_segment, calculate_on_field: any){
     return this.calculate_lims_invoice(templateValue,lims_segment, 'po_items')
   }
+
+  calculate_lims_invoice_with_manual_items(templateValue,lims_segment, calculate_on_field: any){
+    let calculateOnField = "";
+    if(calculate_on_field == null || calculate_on_field == ''){
+      calculateOnField = 'manualItemsList';
+    }else {
+      calculateOnField = calculate_on_field['field_name'] 
+    }
+    let	surcharge	=0;
+    let	gross_amount	=0;
+    let	discount_percent	=0;
+    let	discount_amount	=0;
+    let	taxable_amount	=0;
+    let	net_amount	=0;
+   
+        if (this.coreFunctionService.isNotBlank(templateValue[calculateOnField]) && templateValue[calculateOnField].length > 0) {
+          templateValue[calculateOnField].forEach(element => {
+            if(this.coreFunctionService.isNotBlank(element.sampleTotal)){
+              // gross_amount=gross_amount+element.gross_amount
+              gross_amount=gross_amount+element.sampleTotal
+            }
+            if(this.coreFunctionService.isNotBlank(element.sampling_charge)) {
+              // surcharge=surcharge+element.surcharge
+              surcharge=surcharge+element.sampling_charge
+            }
+            if(this.coreFunctionService.isNotBlank(element.discount_amount)){
+              discount_amount=discount_amount+element.discount_amount
+            }
+            if(this.coreFunctionService.isNotBlank(element.net_amount)){
+              net_amount=net_amount+element.net_amount
+            }else{
+              net_amount=net_amount+element.sampleTotal
+            }
+              taxable_amount=net_amount+surcharge;
+          });
+        }
+        templateValue = this.update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percent,net_amount,surcharge,taxable_amount);
+         return templateValue;
+      }
 
 
    getDateInStringFunction(templateValue){
@@ -3011,6 +3068,18 @@ isGridFieldExist(tab,fieldName){
   }
   return false;
 }
+getMatchingInList(list,IncomingData,existData){
+  var validity = true;
+  list.forEach(matchcriteria => {
+    if (this.getObjectValue(matchcriteria, IncomingData) == this.getObjectValue(matchcriteria, existData)) {
+      validity = validity && true;
+    }
+    else {
+      validity = validity && false;
+    }
+  });
+  return validity;
+}
 
 getIndexInArrayById(array,id,key?){
   let index = -1;
@@ -3018,10 +3087,16 @@ getIndexInArrayById(array,id,key?){
     for (let i = 0; i < array.length; i++) {
       const element = array[i];
       if(key != undefined && key != null){
-        const idValue = this.getObjectValue(key,element);
-        if(id && id == idValue){
-          index = i;
-          break;
+        if(Array.isArray(key) && key.length > 0 && Object.keys(id).length > 0){          
+          if (this.getMatchingInList(key,id,element)) {
+            index = i;
+          }
+        }else{
+          const idValue = this.getObjectValue(key,element);
+          if(id && id == idValue){
+            index = i;
+            break;
+          }
         }
       }else if(element._id && element._id == id){
         index = i;
@@ -3107,6 +3182,27 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       check = false;
     }
     return check;
+  }
+
+  getRouthQueryToRedirectUrl(){
+    const redirectUrl = this.storageService.getRedirectUrl();
+      let searchKey = '';
+      if(redirectUrl.indexOf('?') != -1 ){
+        searchKey = '?';
+      }
+      if(redirectUrl.indexOf('%') != -1){
+        searchKey = '%';
+      }
+      
+      let newUrlWithQuery = '';
+      if(searchKey != ''){
+        const index = redirectUrl.indexOf(searchKey);
+        const stringLength = redirectUrl.length;
+        const queryPrams = redirectUrl.substring(index,stringLength);
+        const newParam = queryPrams.replace('%3F','');
+        newUrlWithQuery = newParam.replace('%3D',':');
+      }      
+      return {newUrlWithQuery};
   }
 
 

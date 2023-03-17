@@ -65,11 +65,11 @@ export class SigninComponent implements OnInit {
     this.authService.Signin({ userId: userId, password: password })   
   }
 
-  @HostListener('window:popstate', ['$event'])
-  onPopState(event) {
+  // @HostListener('window:popstate', ['$event'])
+  // onPopState(event) {
    
-    this.router.navigate(['home_page'])
-  }
+  //   this.router.navigate(['home_page'])
+  // }
 
 
   pageloded(){
