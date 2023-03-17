@@ -1,16 +1,12 @@
-import { Component, OnInit ,HostListener, Inject } from '@angular/core';
-import { Router,ActivatedRoute,NavigationStart,NavigationEnd } from '@angular/router';
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../aws-exports';
+import { Component, OnInit ,HostListener } from '@angular/core';
+import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { StorageService } from './services/storage/storage.service';
 import { DataShareService } from './services/data-share/data-share.service';
 import { ModelService } from './services/model/model.service';
 import { CommonFunctionService } from './services/common-utils/common-function.service';
 import { LoaderService } from './services/loader/loader.service';
-import { ApiService } from './services/api/api.service';
 import { EnvService } from './services/env/env.service';
-import { StorageTokenStatus } from './shared/enums/storage-token-status.enum';
 import { AuthService } from './services/api/auth/auth.service';
 import { Subscription } from 'rxjs';
 
@@ -40,14 +36,13 @@ export class AppComponent implements OnInit {
     private dataShareService:DataShareService,
     private modelService:ModelService,
     public loaderService:LoaderService,
-    private authApiService: AuthService,
+    private authService: AuthService,
     private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
     
 
   ) {
     
-
     //this.localSetting();
     this.commonfunctionService.getApplicationAllSettings();
     if(this.dataShareService.themeSetting != undefined){
@@ -95,17 +90,19 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
           this.redirectToHomePage();
-        }
-        if (
+        }else if(
           event.id === 1 &&
           event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/privacy-policy")
-        ) {
+        ) { 
+          // if(event.url.startsWith("/browse") && this.storageService.getChildWindowUrl() == '/'){
+          //   this.storageService.setRedirectUrl(event.urlAfterRedirects);
+          // }         
           this.redirectToHomePageWithStorage();
         }
       }      
    })
     
-    Amplify.configure(awsconfig);
+    //Amplify.configure(awsconfig);
   }
 
   redirectToHomePage(){
@@ -114,38 +111,16 @@ export class AppComponent implements OnInit {
     this.redirectToHomePageWithStorage();
   }
   redirectToHomePageWithStorage(){
-    if(!this.checkApplicationSetting()){
+    if(!this.authService.checkApplicationSetting()){
       this.commonfunctionService.getApplicationAllSettings();
     }
-    if(this.checkIdTokenStatus()){
-      this.authApiService.redirectionWithMenuType();
+    if(this.authService.checkIdTokenStatus().status){
+      this.authService.redirectionWithMenuType();
     }else{
-      this.authApiService.redirectToSignPage();
+      this.authService.redirectToSignPage();
     }
   }
-  checkIdTokenStatus(){
-    let tokenStatus = false;
-    if (this.storageService != null && this.storageService.GetIdToken() != null) {      
-      if(this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE){
-        tokenStatus = true;           
-      }else{
-        tokenStatus = false; 
-      }
-    }else{
-      tokenStatus = false; 
-    }
-    return tokenStatus;
-  }
-  checkApplicationSetting(){
-    let exists = false;
-    let applicationSetting = this.storageService.getApplicationSetting();
-    if(applicationSetting){
-      exists = true;
-    }else{
-      exists = false;
-    }
-    return exists;
-  }
+  
 
   @HostListener("window:onbeforeunload",["$event"])
     clearLocalStorage(event){
@@ -168,14 +143,4 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.storageService.getPageTitle());
     this.themeName = this.storageService.getPageThmem();
   }
-
-  // localSetting(){
-  //   const settingObj = this.envService.getHostKeyValue('object');
-  //   this.storageService.setApplicationSetting(settingObj);
-  //   this.envService.setApplicationSetting();
-  //   const themSettingObj = this.envService.getHostKeyValue('theme_setting');
-  //   this.storageService.setThemeSetting(themSettingObj);
-  //   this.envService.setThemeSetting(themSettingObj);
-  //   this.loadPage();
-  // }
 }

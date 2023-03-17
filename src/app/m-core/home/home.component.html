@@ -7,7 +7,7 @@
     <ng-container *ngIf="module">
         <div class="row">
             <div class="col-md-6 col-lg-4 mb-4" *ngFor="let module of AllModuleList  | filter:filterdata; index as i" [ngClass]="{'d-none': !module.display}">
-                <button mat-button class="moduleitem text-left w-100" (click)="GoToSelectedModule(module)" title="{{module.mouseHover}}">
+                <button mat-button class="moduleitem text-left w-100" (click)="GoToSelectedModule(module,$event)" title="{{module.mouseHover}}">
                     <div class="px-3 py-2 d-flex align-items-center">
                         <div class="moduleicon"><img src="assets/img/svg-icon/{{module.imgPath}}.svg"></div>
                         <div class="moduleinfo ml-4">
