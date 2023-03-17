@@ -102,7 +102,6 @@ export class AppComponent implements OnInit {
       }      
    })
     
-    //Amplify.configure(awsconfig);
   }
 
   redirectToHomePage(){
