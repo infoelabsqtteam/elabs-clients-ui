@@ -12,7 +12,6 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { isArray } from 'util';
 import { NotificationService } from '../notify/notification.service';
 import { ApiService } from '../api/api.service';
 import { ModelService } from '../model/model.service';
@@ -526,7 +525,7 @@ export class CommonFunctionService {
           case "tree_view_selection":
           case "dropdown":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0 && element.type != 'dropdown'){
+              if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0 && element.type != 'dropdown'){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -563,7 +562,7 @@ export class CommonFunctionService {
             break;
           case "number":
               if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-                if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+                if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                   element.api_params_criteria.forEach(cri => {
                     criteria.push(cri)
                   });
@@ -580,7 +579,7 @@ export class CommonFunctionService {
               break;
           case "typeahead":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){ 
-              if(isArray(element.dataFilterCriteria) && element.dataFilterCriteria.length > 0){
+              if(Array.isArray(element.dataFilterCriteria) && element.dataFilterCriteria.length > 0){
                 element.dataFilterCriteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -597,7 +596,7 @@ export class CommonFunctionService {
             break;
           case "info":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -615,7 +614,7 @@ export class CommonFunctionService {
             case "reference_names":
             case "chips":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -633,7 +632,7 @@ export class CommonFunctionService {
           case "date":
           case "datetime":
             if(formValue && formValue[element.field_name] && formValue[element.field_name] != ''){
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -650,7 +649,7 @@ export class CommonFunctionService {
             break;
           case "daterange":
             if(formValue && formValue[element.field_name] && formValue[element.field_name].start != '' && formValue[element.field_name].end != null){              
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -665,7 +664,7 @@ export class CommonFunctionService {
               }          
             }
             if(formValue && formValue[element.field_name] && formValue[element.field_name].end != '' && formValue[element.field_name].end != null){
-              if(isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
+              if(Array.isArray(element.api_params_criteria) && element.api_params_criteria.length > 0){
                 element.api_params_criteria.forEach(cri => {
                   criteria.push(cri)
                 });
@@ -2950,9 +2949,9 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
         case "grid_selection":
         case "list_of_string":
           if (element.is_mandatory) {
-            if (value[element.field_name] === undefined || value[element.field_name] === '' || value[element.field_name] === null || !isArray(value[element.field_name])) {
+            if (value[element.field_name] === undefined || value[element.field_name] === '' || value[element.field_name] === null || !Array.isArray(value[element.field_name])) {
               validate.push(element);
-            } else if (isArray(value[element.field_name])) {
+            } else if (Array.isArray(value[element.field_name])) {
               if (value[element.field_name].length <= 0) {
                 validate.push(element);
               }
