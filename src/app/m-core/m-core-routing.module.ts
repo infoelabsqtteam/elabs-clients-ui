@@ -17,12 +17,15 @@ import { PageNotFoundComponent } from '../core/error/page-not-found.component';
 import { ReportFormComponent } from './report/report-form/report-form.component';
 import { NotificationSettingComponent } from './shared/notification-setting/notification-setting.component';
 import { NotificationListComponent } from './shared/notification-list/notification-list.component';
+import { AuthGuard } from '../services/api/auth/auth-guard.service';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
-                { path : 'template', component:BuilderComponent } ,
-                { path : 'template/:moduleId', component:BuilderComponent } ,
-                { path : 'template/:moduleId/:menuId', component:BuilderComponent } ,
+                { path : 'template', component:BuilderComponent} ,//will not in use this time
+                { path : 'browse/:moduleId', component:BuilderComponent, canActivate: [AuthGuard] } ,
+                { path : 'browse/:moduleId/:menuId', component:BuilderComponent, canActivate: [AuthGuard] } ,
+                { path : 'browse/:moduleId/:menuId/:tabid', component:BuilderComponent, canActivate: [AuthGuard] } ,
+                { path : 'browse/:moduleId/:menuId/:tabid/:rowId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'pbl/:action/:key1/:key2/:key3', component:BuilderComponent },
                 { path : 'sort', component: SortTestComponent },
                 { path : 'Navigation', component: NavigationComponent },
