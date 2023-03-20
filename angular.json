@@ -159,14 +159,14 @@
                   "maximumError": "150kb"
                 }
               ]
-            }
+            },
+            "development": {}
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "e-labs-client:build"
           },
           "configurations": {
             "production": {
@@ -180,8 +180,12 @@
             },
             "uat": {
               "browserTarget": "e-labs-client:build:uat"
+            },
+            "development": {
+              "browserTarget": "e-labs-client:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
