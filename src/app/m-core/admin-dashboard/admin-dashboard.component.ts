@@ -6,6 +6,7 @@ import { CommonFunctionService } from '../../services/common-utils/common-functi
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
 //import { MapsAPILoader } from '@agm/core';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -73,6 +74,23 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
       message: ['', [Validators.required]],
     });
     this._fetchData();
+    const sdk = new ChartsEmbedSDK({
+      baseUrl: "https://charts.mongodb.com/charts-nonproduction-cgurq", // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+      getUserToken: () =>
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdGtlc2hhdjFAZ21haWwuY29tIiwiaWF0IjoxNjc5MzExMDM5LCJleHAiOjE2NzkzOTc0Mzl9.KXz_8mZEssrB520cVNS2-CZlX79TGd47tigzCuhk66w"
+    });
+    const chart = sdk.createChart({
+      chartId: "63fe85ff-8729-439c-83f5-2c1affec9e69", // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
+      height: "200px",
+      width: "200px"
+    });
+    console.log(chart);
+    const portalDiv = document.getElementById('chart')!;
+    if(portalDiv){
+      chart
+    .render(portalDiv)
+    .catch(() => window.alert('Chart failed to initialise'));
+    }
   }
 
   
