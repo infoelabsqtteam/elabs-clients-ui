@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { StorageService } from '../../../../services/storage/storage.service';
 import { DocDataShareService } from '../../../../services/data-share/doc-data-share/doc-data-share.service';
 

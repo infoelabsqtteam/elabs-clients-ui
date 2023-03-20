@@ -3068,6 +3068,18 @@ isGridFieldExist(tab,fieldName){
   }
   return false;
 }
+getMatchingInList(list,IncomingData,existData){
+  var validity = true;
+  list.forEach(matchcriteria => {
+    if (this.getObjectValue(matchcriteria, IncomingData) == this.getObjectValue(matchcriteria, existData)) {
+      validity = validity && true;
+    }
+    else {
+      validity = validity && false;
+    }
+  });
+  return validity;
+}
 
 getIndexInArrayById(array,id,key?){
   let index = -1;
@@ -3075,10 +3087,16 @@ getIndexInArrayById(array,id,key?){
     for (let i = 0; i < array.length; i++) {
       const element = array[i];
       if(key != undefined && key != null){
-        const idValue = this.getObjectValue(key,element);
-        if(id && id == idValue){
-          index = i;
-          break;
+        if(Array.isArray(key) && key.length > 0 && Object.keys(id).length > 0){          
+          if (this.getMatchingInList(key,id,element)) {
+            index = i;
+          }
+        }else{
+          const idValue = this.getObjectValue(key,element);
+          if(id && id == idValue){
+            index = i;
+            break;
+          }
         }
       }else if(element._id && element._id == id){
         index = i;
@@ -3164,6 +3182,27 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
       check = false;
     }
     return check;
+  }
+
+  getRouthQueryToRedirectUrl(){
+    const redirectUrl = this.storageService.getRedirectUrl();
+      let searchKey = '';
+      if(redirectUrl.indexOf('?') != -1 ){
+        searchKey = '?';
+      }
+      if(redirectUrl.indexOf('%') != -1){
+        searchKey = '%';
+      }
+      
+      let newUrlWithQuery = '';
+      if(searchKey != ''){
+        const index = redirectUrl.indexOf(searchKey);
+        const stringLength = redirectUrl.length;
+        const queryPrams = redirectUrl.substring(index,stringLength);
+        const newParam = queryPrams.replace('%3F','');
+        newUrlWithQuery = newParam.replace('%3D',':');
+      }      
+      return {newUrlWithQuery};
   }
 
 

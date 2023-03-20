@@ -46,7 +46,7 @@ constructor(
   }
   checkRowIf(data,field){
     let check = false;
-    if(data.selected){
+    if(data.selected || field.checkDisableRowIf){
       let condition = '';
       if(field.disableRowIf && field.disableRowIf != ''){
         condition = field.disableRowIf;
