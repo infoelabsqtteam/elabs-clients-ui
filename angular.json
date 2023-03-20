@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "my-second-project": {
+    "e-labs": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -159,27 +159,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "my-second-project:build"
+            "browserTarget": "e-labs:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "my-second-project:build:production"
+              "browserTarget": "e-labs:build:production"
             },
             "develop": {
-              "browserTarget": "my-second-project:build:develop"
+              "browserTarget": "e-labs:build:develop"
             },
             "sit": {
-              "browserTarget": "my-second-project:build:sit"
+              "browserTarget": "e-labs:build:sit"
             },
             "uat": {
-              "browserTarget": "my-second-project:build:uat"
+              "browserTarget": "e-labs:build:uat"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "my-second-project:build"
+            "browserTarget": "e-labs:build"
           }
         },
         "test": {
@@ -217,20 +217,20 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "my-second-project:serve"
+            "devServerTarget": "e-labs:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "my-second-project:serve:production"
+              "devServerTarget": "e-labs:serve:production"
             },
             "develop": {
-              "devServerTarget": "my-second-project:serve:develop"
+              "devServerTarget": "e-labs:serve:develop"
             },
             "sit": {
-              "devServerTarget": "my-second-project:serve:sit"
+              "devServerTarget": "e-labs:serve:sit"
             },
             "uat": {
-              "devServerTarget": "my-second-project:serve:uat"
+              "devServerTarget": "e-labs:serve:uat"
             }
           }
         },
@@ -299,7 +299,7 @@
       }
     }
   },
-  "defaultProject": "my-second-project",
+  "defaultProject": "e-labs",
   "cli": {
     "analytics": false
   }

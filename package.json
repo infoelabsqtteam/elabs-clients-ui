@@ -1,5 +1,5 @@
 {
-  "name": "my-second-project",
+  "name": "e-labs",
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
@@ -11,7 +11,7 @@
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
-    "build:client-and-server-bundles": "ng build --prod && ng run my-second-project:server:production --bundleDependencies none"
+    "build:client-and-server-bundles": "ng build --prod && ng run e-labs:server:production --bundleDependencies none"
   },
   "private": true,
   "dependencies": {
