@@ -210,7 +210,6 @@
       }
     }
   },
-  "defaultProject": "e-labs-client",
   "cli": {
     "analytics": false
   }
