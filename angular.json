@@ -19,7 +19,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "allowedCommonJsDependencies":["hogan.js","aws-sdk/clients/s3"],
+            "allowedCommonJsDependencies":["hogan.js","aws-sdk/clients/s3","lodash/isEqual","lodash/isEmpty","@looker/chatty"],
             "assets": [
               "src/favicon.ico",
               "src/assets"
