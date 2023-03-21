@@ -31,7 +31,6 @@
     "@angular/router": "^13.3.12",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@kolkov/angular-editor": "^1.2.0",
-    "@mongodb-js/charts-embed-dom": "^3.0.0",
     "@ng-bootstrap/ng-bootstrap": "^11.0.1",
     "@tinymce/tinymce-angular": "^4.2.4",
     "@types/chart.js": "^2.7.40",
