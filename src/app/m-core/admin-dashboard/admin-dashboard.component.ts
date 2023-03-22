@@ -1,12 +1,14 @@
-import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 //import { latLng, tileLayer } from 'leaflet';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-//import { MapsAPILoader } from '@agm/core';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
+import { timeStamp } from 'console';
+import { StorageService } from 'src/app/services/storage/storage.service';
+//import { MapsAPILoader } from '@agm/core';
+
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -19,6 +21,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   chatData: Chat[];
   transactions: Transaction[];
   statData: Stat[];
+  isAdmin:boolean = false;
   
   
 
@@ -41,6 +44,8 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   isShow:boolean = false;
 
   formData: FormGroup;
+  mongodbChartShow:boolean = false;
+  
 
 
   // options = {
@@ -57,10 +62,14 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     //private mapsAPILoader: MapsAPILoader,
     //private ngZone: NgZone,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private storageService:StorageService
   ) {
     this.isShow = true;
-
+      const userInfo = this.storageService.GetUserInfo();
+      if(userInfo && userInfo.admin){
+        this.isAdmin = userInfo.admin;
+      }
     }
 
   ngOnDestroy(){
@@ -74,22 +83,16 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
       message: ['', [Validators.required]],
     });
     this._fetchData();
-    const sdk = new ChartsEmbedSDK({
-      baseUrl: "https://charts.mongodb.com/charts-nonproduction-cgurq", // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
-      getUserToken: () =>
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdGtlc2hhdjFAZ21haWwuY29tIiwiaWF0IjoxNjc5NDAwMjQzLCJleHAiOjE2Nzk0ODY2NDN9.MeGGOeyiSIr2A6eQ0_WfiCdV7nnteNF95Vzyy6gFxIg"
-    });
-    const chart = sdk.createChart({
-      chartId: "63fe85ff-8729-439c-83f5-2c1affec9e69", // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-      height: "200px",
-      width: "200px"
-    });
-    console.log(chart);
-    const portalDiv = document.getElementById('chart')!;
-    if(portalDiv){
-      chart
-    .render(portalDiv)
-    .catch(() => window.alert('Chart failed to initialise'));
+    
+    
+      
+    
+  }
+  getTabIndex(event){
+    if(event == 1){
+      this.mongodbChartShow = true;
+    }else{
+      this.mongodbChartShow = false;
     }
   }
 
