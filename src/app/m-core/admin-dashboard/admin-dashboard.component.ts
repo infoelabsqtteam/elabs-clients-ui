@@ -7,6 +7,7 @@ import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMont
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { timeStamp } from 'console';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { Subscription } from 'rxjs';
 //import { MapsAPILoader } from '@agm/core';
 
 
@@ -45,6 +46,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
 
   formData: FormGroup;
   mongodbChartShow:boolean = false;
+  gridDataSubscription:Subscription;
   
 
 
@@ -65,11 +67,8 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private dataShareService:DataShareService,
     private storageService:StorageService
   ) {
-    this.isShow = true;
-      const userInfo = this.storageService.GetUserInfo();
-      if(userInfo && userInfo.admin){
-        this.isAdmin = userInfo.admin;
-      }
+      
+      
     }
 
   ngOnDestroy(){
@@ -90,9 +89,11 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   }
   getTabIndex(event){
     if(event == 1){
-      this.mongodbChartShow = true;
-    }else{
+      this.isShow = true;
       this.mongodbChartShow = false;
+    }else{
+      this.isShow = false;
+      this.mongodbChartShow = true;
     }
   }
 

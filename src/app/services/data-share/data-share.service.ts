@@ -54,6 +54,7 @@ export class DataShareService {
   fieldDinamicResponce:EventEmitter<any> = new EventEmitter<any>();
   checkValidation:EventEmitter<any> = new EventEmitter<any>();
   dashletMaster:EventEmitter<any> = new EventEmitter<any>();
+  DashletMaster:any = [];
   gitVirsion:EventEmitter<any> = new EventEmitter<any>();
   forgot:EventEmitter<any> = new EventEmitter<any>();
   nextFormData:EventEmitter<any> = new EventEmitter<any>();  
@@ -67,6 +68,8 @@ export class DataShareService {
   moduleIndex:Subject<any> = new Subject<any>();
   menuIndexs:Subject<any> = new Subject<any>();
   requestResponce:Subject<boolean> = new Subject<boolean>();
+  mongoDbChartList:Subject<any> = new Subject<any>();
+  MongoDbChartList:any = [];
 
   constructor() { }
 
@@ -103,7 +106,18 @@ export class DataShareService {
     this.gridData.emit(gridData);
   }
   shareDashletMaster(responce){
-    this.dashletMaster.emit(responce)
+    this.dashletMaster.emit(responce);
+    this.DashletMaster = responce;
+  }
+  getDashletMaster(){
+    return this.DashletMaster;
+  }
+  shareMongoChart(chartData:any){
+    this.mongoDbChartList.next(chartData);
+    this.MongoDbChartList = chartData;
+  }
+  getMongoChart(){
+    return this.MongoDbChartList;
   }
   shareMenuData(menuData:any){
     this.menu.emit(menuData);

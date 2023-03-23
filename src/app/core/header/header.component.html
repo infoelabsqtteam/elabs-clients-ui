@@ -12,7 +12,11 @@
               <a class="px-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
                 #tooltip="matTooltip" matTooltip="Press Ctrl + c" [ngClass]="{'d-none': !menu.display}">{{ menu.label }}</a>
               <a class="px-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
-                (click)="activeLinkD(menu.label,false)" [ngClass]="{'d-none': !menu.display}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
+                (click)="activeLinkD(menu.label,false)" [ngClass]="{'d-none': !menu.display}">{{ menu.label }} 
+                <mat-icon>
+                  <span class="material-icons">
+                    arrow_drop_down
+                    </span></mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
                 <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" [ngClass]="{'d-none': !submenu.display}">{{
                   submenu.label }}</button>

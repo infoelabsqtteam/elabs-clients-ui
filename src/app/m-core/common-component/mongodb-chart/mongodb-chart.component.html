@@ -1,5 +1,6 @@
 <div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
-  <div class="col-lg-4" *ngFor="let chartid of chartIdList" [id]="chartid"></div>
+  <div class="col-lg-4" *ngFor="let chart of chartIdList" [id]="chart.chartId"></div>
 </div>
+<div *ngIf="chartIdList.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
 
 
