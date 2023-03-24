@@ -8,6 +8,8 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import * as XLSX from 'xlsx';
 import * as _moment from 'moment';
+import { StorageService } from 'src/app/services/storage/storage.service';
+import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
 
@@ -37,6 +39,8 @@ export class ChartFilterComponent implements OnInit {
   @ViewChild('chartFilterModal') public chartFilterModal: ModalDirective;  
   dashboardItem :any = {};
   dashletData:any = {};
+  accessToken:string="";
+  mongoChartUrl:string="https://charts.mongodb.com/charts-nonproduction-cgurq";
 
   dashboardFilter:FormGroup;
 
@@ -73,8 +77,9 @@ export class ChartFilterComponent implements OnInit {
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private envService:EnvService,
-    private modelService: ModelService,
+    private storageService: StorageService,
   ) {
+    this.accessToken = this.storageService.GetIdToken();
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
@@ -314,12 +319,41 @@ export class ChartFilterComponent implements OnInit {
         this.setFilterForm(this.dashboardItem);
       }else{
         this.showFilter = false;
-      }      
-      this.setDashLetData(this.dashletData);
+      }   
+      if(this.dashletData && this.dashletData != ''){
+        this.setDashLetData(this.dashletData);
+      }
       this.chartFilterModal.show();
-      this.dashboardFilter.reset();
+      if(object.filter){
+        this.dashboardFilter.reset();
+      }
+      if(this.dashboardItem.package_name == "mongodb_chart"){
+        setTimeout(() => {
+          this.populateMongodbChart(this.dashboardItem);
+        }, 100);
+      }
     }    
     
+  }
+  populateMongodbChart(chart){
+    if(this.accessToken != "" && this.accessToken != null){
+      const sdk = new ChartsEmbedSDK({
+        baseUrl: this.mongoChartUrl, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+        getUserToken: () => this.accessToken
+      });
+      if(chart && chart.chartId){        
+        const id = "filter_"+chart.chartId;
+        const idRef = document.getElementById(id);
+        if(idRef){
+          sdk.createChart({
+            chartId: chart.chartId, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
+            height: "500px"
+          })
+          .render(idRef)
+          .catch(() => window.alert('Chart failed to initialise'));
+        }        
+      }
+    }
   }
   close(item){
     this.checkGetDashletData = false;
@@ -328,7 +362,7 @@ export class ChartFilterComponent implements OnInit {
   }
 
   reset(item){
-    if(this.showFilter){
+    if(this.showFilter && this.dashboardItem.package_name != "mongodb_chart"){
       this.dashboardFilter.reset();
       this.getDashletData([item]);
     }    

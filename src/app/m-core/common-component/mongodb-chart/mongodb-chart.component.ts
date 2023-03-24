@@ -5,6 +5,9 @@ import { StorageService } from '../../../services/storage/storage.service';
 import { Subscription } from 'rxjs';
 import { ApiService } from '../../../services/api/api.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
+import { ModelService } from 'src/app/services/model/model.service';
+import { chatData } from '../../admin-dashboard/data';
+import { ChartService } from 'src/app/services/chart/chart.service';
 
 @Component({
   selector: 'app-mongodb-chart',
@@ -14,18 +17,22 @@ import { CommonFunctionService } from '../../../services/common-utils/common-fun
 export class MongodbChartComponent implements OnInit,AfterViewInit {
 
   chartIdList:any = [];
+  createdChartList:any=[];
   accessToken:string="";
   mongoChartUrl:string="https://charts.mongodb.com/charts-nonproduction-cgurq";
   @Input() showMongoChart:boolean;
   pageNumber:any=1;
   itemNumOfGrid: any = 12;
   gridDataSubscription:Subscription;
+  darkTheme:any={};
 
   constructor(
     private dataShareService:DataShareService,
     private storageService:StorageService,
     private apiService:ApiService,
-    private commonFunctionService:CommonFunctionService
+    private commonFunctionService:CommonFunctionService,
+    private modelService:ModelService,
+    private chartService:ChartService
   ) {
       this.getMongoChartList([]);
       this.accessToken = this.storageService.GetIdToken();      
@@ -73,21 +80,59 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
         baseUrl: this.mongoChartUrl, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
         getUserToken: () => this.accessToken
       });
+      let height = '350px';
       if(this.chartIdList && this.chartIdList.length > 0){
+        this.createdChartList = [];
         for (let i = 0; i < this.chartIdList.length; i++) {
-          const id = this.chartIdList[i].chartId;
+          let chart = this.chartIdList[i];
+          const id = chart.chartId;
           const idRef = document.getElementById(id);
+          if(chart && chart.height && chart.height != ""){
+            height = chart.height;
+          }
           if(idRef){
-            sdk.createChart({
+            let cretedChart = sdk.createChart({
               chartId: id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-              height: "350px"
-            })
+              height: height
+            });
+            this.createdChartList[id] = cretedChart;
+            cretedChart
             .render(idRef)
             .catch(() => window.alert('Chart failed to initialise'));
           }
         }
         
       }
+    }
+  }
+
+  filterModel(data:any,filter:any){
+    data.fields = [];
+    let object = {
+      'dashboardItem' : data,
+      'dashletData' : "",
+      'filter':filter
+    }
+    this.modelService.open('chart-filter',object);
+  }
+  download(object){
+    let chartId = object.chartId;
+    let chart = this.createdChartList[chartId];
+    let fileName = object.name;
+    let DataList = [];
+    DataList = this.chartService.getDownloadData(chart);
+    if(DataList && DataList.length > 0){      
+      this.chartService.downloadFile(DataList,fileName);
+    }
+
+  }  
+  changeTheme(object,value){
+    let chartId = object.chartId;
+    let chart = this.createdChartList[chartId];
+    if(value){
+      chart.setTheme("dark");
+    }else{
+      chart.setTheme("light");
     }
   }
 
