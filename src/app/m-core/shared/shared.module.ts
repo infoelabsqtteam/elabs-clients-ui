@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+//import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CoreModule } from '../../core/core.module';
 import { MDBBootstrapModule  } from 'angular-bootstrap-md';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
@@ -30,7 +30,7 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
     ReactiveFormsModule,
     FormsModule,
     PerfectScrollbarModule,
-    NgbDropdownModule,
+    //NgbDropdownModule,
     RouterModule,
     CoreModule,
     MDBBootstrapModule.forRoot(),
@@ -38,7 +38,7 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
     AngularMaterialModule,
     AllPackageModule
   ],
-  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,Ng2SearchPipeModule,NgbDropdownModule,SettingMenuComponent],
+  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,Ng2SearchPipeModule,SettingMenuComponent],
   providers: []
 })
 export class SharedModule { }

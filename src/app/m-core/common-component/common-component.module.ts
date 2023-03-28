@@ -6,15 +6,16 @@ import { DirectiveModuleModule } from '../directive-module/directive-module.modu
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FormComponent } from './form/form.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
-import { AgmCoreModule } from '@agm/core';
 import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
 import { PipesModule } from '../../pipes/pipes.module';
+import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 
 const components = [
   FormComponent,
   ChartComponent,
+  MongodbChartComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
@@ -30,10 +31,6 @@ const maskConfig: Partial<IConfig> = {
     ReactiveFormsModule,
     FormsModule,
     NgxMaskModule.forRoot(maskConfig),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyA--cLc1-rZJvuV18t0jxlzIbzxahuH-EQ',
-      libraries: ['places']
-  }),
   ModelModule,
   AllPackageModule,
   PipesModule

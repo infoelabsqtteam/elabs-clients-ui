@@ -2,8 +2,7 @@ import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, El
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service'
-import { isArray } from 'util';
+import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { ApiService } from '../../services/api/api.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
@@ -279,7 +278,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
     }
     switch (field.type.toLowerCase()) {
       case "file":
-        if (value['data'] && value['data'] != '' && isArray(value['data'])) {
+        if (value['data'] && value['data'] != '' && Array.isArray(value['data'])) {
           if(value['data'].length > 0){
             this.commonFunctionService.viewModal('fileview-grid-modal', value, field,this.currentPage,editemode)
           }
