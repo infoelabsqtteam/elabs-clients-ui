@@ -37,7 +37,6 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatRippleModule} from '@angular/material/core';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 const modules =[
@@ -75,8 +74,7 @@ const modules =[
   MatMomentDateModule,
   MatSidenavModule,
   MatToolbarModule,
-  MatRippleModule,
-  MatSlideToggleModule
+  MatRippleModule
 ]
 
 @NgModule({

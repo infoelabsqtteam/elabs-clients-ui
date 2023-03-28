@@ -3,11 +3,11 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header justify-content-center mb-0"
-          *ngIf="dashboardItem && dashboardItem.name">
+          *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0">
           <h4 class="modal-title m-0 active d-block" style="font-size:20px;">{{dashboardItem.name}}</h4>
           <a class="h5 m-0 closebtb" (click)="close(dashboardItem)">×</a>
         </div>
-        <div class="modal-body p-0">
+        <div class="modal-body p-0" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0">
           <div class="chartfilter px-3 pt-2 mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
             <div class="row align-items-center mx-0">
               <div class="col-sm-3 pl-0" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
@@ -116,9 +116,6 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                 [columns]="chartLabels[dashboardItem.call_back_field]"
                 [options]="chartOptions[dashboardItem.call_back_field]">
               </google-chart>
-              <div *ngIf="dashboardItem.package_name == 'mongodb_chart'">
-                <div [id]="'filter_'+dashboardItem.chartId"></div>
-              </div>
             </ng-container>
           </div>
   
