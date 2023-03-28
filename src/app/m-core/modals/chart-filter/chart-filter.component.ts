@@ -57,6 +57,7 @@ export class ChartFilterComponent implements OnInit {
   copyStaticData:any={};
   typeAheadData:any=[];
   showFilter:boolean=false;
+  createdChartList:any=[];
 
   staticDataSubscription;
   dashletDataSubscription;
@@ -236,9 +237,29 @@ export class ChartFilterComponent implements OnInit {
 
 
   dashletFilter(item){
-    this.getDashletData([item]);
+    if(item.package_name == "mongodb_chart"){
+      this.setFilterInMongodbChart(item);
+    }else{
+      this.getDashletData([item]);
+    }
   }
-
+  getMongodbFilterObject(data){
+    let object = {};
+    if(Object.keys(data).length > 0){
+      Object.keys(data).forEach(key => {
+        if(data[key] && data[key] != ''){
+          object[key] = data[key];
+        }
+      });
+    }
+    return object;
+  }
+  setFilterInMongodbChart(chart){
+    let id = "filter_"+chart.chartId;
+    let chartObject = this.createdChartList[id];
+    let filterData = this.getMongodbFilterObject(this.dashboardFilter.getRawValue());
+    chartObject.setFilter(filterData);
+  }
   setFilterForm(dashlet){    
     if(this.checkGetDashletData && dashlet._id && dashlet._id != ''){
       this.checkGetDashletData = false;
@@ -344,11 +365,14 @@ export class ChartFilterComponent implements OnInit {
       if(chart && chart.chartId){        
         const id = "filter_"+chart.chartId;
         const idRef = document.getElementById(id);
+        let height = "500px";
         if(idRef){
-          sdk.createChart({
+          let cretedChart = sdk.createChart({
             chartId: chart.chartId, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-            height: "500px"
-          })
+            height: height
+          });
+          this.createdChartList[id] = cretedChart;
+          cretedChart
           .render(idRef)
           .catch(() => window.alert('Chart failed to initialise'));
         }        
@@ -362,9 +386,13 @@ export class ChartFilterComponent implements OnInit {
   }
 
   reset(item){
-    if(this.showFilter && this.dashboardItem.package_name != "mongodb_chart"){
-      this.dashboardFilter.reset();
-      this.getDashletData([item]);
+    this.dashboardFilter.reset();
+    if(this.showFilter){      
+      if(this.dashboardItem.package_name == "mongodb_chart"){
+        this.setFilterInMongodbChart(item);
+      }else{
+        this.getDashletData([item]);
+      }
     }    
   }
 

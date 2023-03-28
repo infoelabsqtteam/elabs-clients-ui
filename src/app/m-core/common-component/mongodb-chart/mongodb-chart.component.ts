@@ -107,7 +107,6 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   }
 
   filterModel(data:any,filter:any){
-    data.fields = [];
     let object = {
       'dashboardItem' : data,
       'dashletData' : "",
@@ -117,14 +116,8 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   }
   download(object){
     let chartId = object.chartId;
-    let chart = this.createdChartList[chartId];
-    let fileName = object.name;
-    let DataList = [];
-    DataList = this.chartService.getDownloadData(chart);
-    if(DataList && DataList.length > 0){      
-      this.chartService.downloadFile(DataList,fileName);
-    }
-
+    let chart = this.createdChartList[chartId];    
+    this.chartService.getDownloadData(chart,object);
   }  
   changeTheme(object,value){
     let chartId = object.chartId;

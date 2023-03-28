@@ -7,8 +7,9 @@ export class ChartService {
 
   constructor() { }
 
-  getDownloadData(chart:any){
+  getDownloadData(chart:any,object:any){
     let DataList = [];
+    let fileName = object.name;
     chart.getData().then((chartdata: any) => {      
       let data = chartdata.documents;
       let fields = chartdata.fields;
@@ -21,9 +22,12 @@ export class ChartService {
           });
           DataList.push(modifyObj);
         });
+      }      
+      if(DataList && DataList.length > 0){      
+        this.downloadFile(DataList,fileName);
       }
     });
-    return DataList;
+    
   }
   downloadFile(data: any,fileName:any) {
     const replacer = (key, value) => (value === null ? '' : value); // specify how you want to handle null values here
