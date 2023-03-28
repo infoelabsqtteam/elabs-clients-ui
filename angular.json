@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "e-labs-client": {
+    "my-second-project": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -19,7 +19,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "allowedCommonJsDependencies":["hogan.js","aws-sdk/clients/s3","lodash/isEqual","lodash/isEmpty","@looker/chatty","moment","luxon"],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -38,14 +37,9 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"              
             ],
             "scripts": [
-              "./node_modules/chart.js/dist/Chart.js"
-            ],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+              "./node_modules/chart.js/dist/Chart.js",
+              "./node_modules/hammerjs/hammer.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -159,38 +153,33 @@
                   "maximumError": "150kb"
                 }
               ]
-            },
-            "development": {}
-          },
-          "defaultConfiguration": "production"
+            }
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "browserTarget": "my-second-project:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "e-labs-client:build:production"
+              "browserTarget": "my-second-project:build:production"
             },
             "develop": {
-              "browserTarget": "e-labs-client:build:develop"
+              "browserTarget": "my-second-project:build:develop"
             },
             "sit": {
-              "browserTarget": "e-labs-client:build:sit"
+              "browserTarget": "my-second-project:build:sit"
             },
             "uat": {
-              "browserTarget": "e-labs-client:build:uat"
-            },
-            "development": {
-              "browserTarget": "e-labs-client:build:development"
+              "browserTarget": "my-second-project:build:uat"
             }
-          },
-          "defaultConfiguration": "development"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "e-labs-client:build"
+            "browserTarget": "my-second-project:build"
           }
         },
         "test": {
@@ -210,10 +199,107 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "my-second-project:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "my-second-project:serve:production"
+            },
+            "develop": {
+              "devServerTarget": "my-second-project:serve:develop"
+            },
+            "sit": {
+              "devServerTarget": "my-second-project:serve:sit"
+            },
+            "uat": {
+              "devServerTarget": "my-second-project:serve:uat"
+            }
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              },
+              "develop": {
+                "fileReplacements": [
+                  {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.develop.ts"
+                  }
+                ],
+                "sourceMap": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": true
+                }
+              },
+              "sit": {
+                "fileReplacements": [
+                  {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.sit.ts"
+                  }
+                ],
+                "sourceMap": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": true
+                }
+              },
+              "uat": {
+                "fileReplacements": [
+                  {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.uat.ts"
+                  }
+                ],
+                "sourceMap": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": true
+                }
+              }
+            }
+          }
         }
       }
     }
   },
+  "defaultProject": "my-second-project",
   "cli": {
     "analytics": false
   }

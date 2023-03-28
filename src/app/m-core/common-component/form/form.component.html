@@ -1558,10 +1558,10 @@
                             <div class="form-group">
                                 <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
                               </div>
-                            <!-- <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
+                            <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
                                 <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
                                   ></agm-marker>
-                            </agm-map> -->
+                            </agm-map>
                         </div>
                         <div *ngIf="tableField.type == 'step_progress_bar'">
                             <div class="row">

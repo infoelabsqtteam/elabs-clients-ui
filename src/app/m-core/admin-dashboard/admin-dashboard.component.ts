@@ -1,15 +1,11 @@
-import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 //import { latLng, tileLayer } from 'leaflet';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { timeStamp } from 'console';
-import { StorageService } from 'src/app/services/storage/storage.service';
-import { Subscription } from 'rxjs';
 //import { MapsAPILoader } from '@agm/core';
-
+import { DataShareService } from 'src/app/services/data-share/data-share.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -22,7 +18,6 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   chatData: Chat[];
   transactions: Transaction[];
   statData: Stat[];
-  isAdmin:boolean = false;
   
   
 
@@ -45,9 +40,6 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   isShow:boolean = false;
 
   formData: FormGroup;
-  mongodbChartShow:boolean = false;
-  gridDataSubscription:Subscription;
-  
 
 
   // options = {
@@ -64,11 +56,10 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     //private mapsAPILoader: MapsAPILoader,
     //private ngZone: NgZone,
-    private dataShareService:DataShareService,
-    private storageService:StorageService
+    private dataShareService:DataShareService
   ) {
-      
-      
+    this.isShow = true;
+
     }
 
   ngOnDestroy(){
@@ -82,19 +73,6 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
       message: ['', [Validators.required]],
     });
     this._fetchData();
-    
-    
-      
-    
-  }
-  getTabIndex(event){
-    if(event == 1){
-      this.isShow = true;
-      this.mongodbChartShow = false;
-    }else{
-      this.isShow = false;
-      this.mongodbChartShow = true;
-    }
   }
 
   

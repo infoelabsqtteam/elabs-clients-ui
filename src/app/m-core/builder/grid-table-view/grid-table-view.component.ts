@@ -9,13 +9,13 @@ import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { KeyCode} from '../../../shared/enums/keycodes.enum';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { NotificationService } from '../../../services/notify/notification.service';
-import { ModelService } from '../../../services/model/model.service';
+import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
-import { Common } from '../../../shared/enums/common.enum';
+import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
-import { MenuOrModuleCommonService } from '../../../services/menu-or-module-common/menu-or-module-common.service';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -597,7 +597,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         this.createFilterFormgroup = false;
         const forControl = {};
         if(this.headElements.length > 0){
-          this.headElements.forEach((element:any) => {
+          this.headElements.forEach(element => {
             if(element != null && element.type != null){
             let fieldName = element.field_name;
             let mandatory = false;
@@ -765,9 +765,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }    
     let routeQuery = '';
     let routeQueryCriteri = ['serialId'];
-    this.currentBrowseUrl = this.getCurrentBrowseUrl();
     if(record != ""){
-      let queryList:any = [];
+      let queryList = [];
       routeQueryCriteri.forEach(criteria => {
         if(record && record[criteria]){
           const query = criteria+"="+record[criteria];
@@ -782,7 +781,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             routeQuery = routeQuery +"&"+ query;
           }
         })
-      } 
+      }      
+      this.currentBrowseUrl = this.getCurrentBrowseUrl();
       if(routeQuery && routeQuery != ''){
         this._location.go(this.currentBrowseUrl+"?"+routeQuery);
       }else {
@@ -1030,7 +1030,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
     let crList = pagePayload.data.crList;
-    let criteriaList:any = [];
+    let criteriaList = [];
     if(this.recordId){      
       let criteria = "_id;eq;"+this.recordId+";STATIC";
       criteriaList.push(criteria);            
@@ -1154,7 +1154,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if (!this.treeViewData[fieldName.field_name]) this.treeViewData[fieldName.field_name] = [];
     this.treeViewData[fieldName.field_name] = [];
     this.curTreeViewField = fieldName;
-    const staticModalGroup:any = [];
+    const staticModalGroup = [];
     if (fieldName.api_params && fieldName.api_params != '') {
       staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, {}));
     }
@@ -1174,7 +1174,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
       }
     });
-    this.filterForm.get([this.curTreeViewField.field_name])!.setValue(obj);
+    this.filterForm.get([this.curTreeViewField.field_name]).setValue(obj);
     this.applyFilter();
     if (!this.treeViewData[this.curTreeViewField.field_name]) this.treeViewData[this.curTreeViewField.field_name] = [];
     this.treeViewData[this.curTreeViewField.field_name].push(obj);
@@ -1348,7 +1348,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(paramlist.length>1){
       
     }else{
-      const staticModal:any = []
+      const staticModal = []
       const staticModalPayload = this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object);
       // staticModalPayload['adkeys'] = {'index':i};
       staticModal.push(staticModalPayload)      
@@ -1408,12 +1408,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
   selectAll(){
-    let SelectAllcheckboxe:any = document.getElementById("selectAllCheckbox");
+    let SelectAllcheckboxe = document.getElementById("selectAllCheckbox");
     this.selectAllcheck = SelectAllcheckboxe['checked']
     this.bulkuploadList = [];
     for(let i=0; i<this.elements.length;i++){
       let id = 'checkbox'+i;
-      let checkboxes:any = document.getElementById(id);
+      let checkboxes = document.getElementById(id);
       checkboxes['checked'] = this.selectAllcheck;
       if(this.selectAllcheck){
         this.bulkuploadList.push(this.elements[i]._id);
@@ -1435,7 +1435,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   callTypeaheadData(field,objectValue){
     this.clearTypeaheadData();   
-    const payload:any = [];
+    const payload = [];
     const params = field.api_params;
     const criteria = field.api_params_criteria;
     payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
@@ -1491,7 +1491,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
       (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
     }else{
-      this.filterForm.get([fieldName])!.setValue('');
+      this.filterForm.get([fieldName]).setValue('');
     }    
     this.applyFilter();
   }
