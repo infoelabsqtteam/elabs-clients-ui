@@ -9,7 +9,6 @@ import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import { isArray } from 'util';
 import { MapsAPILoader } from '@agm/core';
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { ApiService } from '../../../services/api/api.service';
@@ -1244,7 +1243,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.tableFields.forEach(element => {
       switch (element.type) {              
         case 'pdf_view':
-          if(isArray(this.copyStaticData[element.ddn_field]) && this.copyStaticData[element.ddn_field] != null){
+          if(Array.isArray(this.copyStaticData[element.ddn_field]) && this.copyStaticData[element.ddn_field] != null){
             const data = this.copyStaticData[element.ddn_field][0];
             if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
               const arrayBuffer = data['bytes'];
@@ -1723,7 +1722,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let criteria = primary_key+"#eq#"+incomingData;
       let primaryCriteriaList=[];
       primaryCriteriaList.push(criteria);
-      if(field && field.primaryKeyCriteria && isArray(field.primaryKeyCriteria) && field.primaryKeyCriteria.length > 0){
+      if(field && field.primaryKeyCriteria && Array.isArray(field.primaryKeyCriteria) && field.primaryKeyCriteria.length > 0){
         field.primaryKeyCriteria.forEach(criteria => {          
           const crList = criteria.split("#");
           const cr = crList[0]+"#"+crList[1]+"#"+incomingData;
@@ -2513,7 +2512,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   const cr = field.onchange_function_param_criteria[index];
                   let crList = cr.split("#");            
                   let listValue = this.commonFunctionService.getObjectValue(crList[2],object);            
-                  if(listValue && listValue != null && isArray(listValue) && listValue.length > 0){
+                  if(listValue && listValue != null && Array.isArray(listValue) && listValue.length > 0){
                     listValue.forEach(listData => {
                       const val = +this.commonFunctionService.getObjectValue(fieldName,listData);
                       value = value + val;
@@ -4596,7 +4595,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
-    if(checkDataType == 'object' && !isArray(formValue)){
+    if(checkDataType == 'object' && !Array.isArray(formValue)){
       this.tableFields.forEach(element => {
         let fieldName = element.field_name;
         let object = formValue[fieldName];
@@ -4607,7 +4606,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             case "list_of_string":
             case "drag_drop":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                if(isArray(formValue[element.field_name])){
+                if(Array.isArray(formValue[element.field_name])){
                   this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                 }
                 this.templateForm.controls[element.field_name].setValue('')
@@ -4623,7 +4622,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               break;
             case "list_of_fields":
               if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                if(isArray(formValue[element.field_name])){
+                if(Array.isArray(formValue[element.field_name])){
                   this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
                 }else if(typeof formValue[element.field_name] == "object" && element.datatype == 'key_value'){
                   this.custmizedFormValue[element.field_name] = formValue[element.field_name]
@@ -4636,7 +4635,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         case 'grid_selection_vertical':
                         case "drag_drop":                    
                           if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
-                            if(isArray(formValue[element.field_name][data.field_name])){
+                            if(Array.isArray(formValue[element.field_name][data.field_name])){
                               if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
                               this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                             }
@@ -4647,7 +4646,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         case "typeahead":
                           if(data.datatype == "list_of_object" || element.datatype == 'chips'){
                             if(formValue[element.field_name] && formValue[element.field_name][data.field_name] != null && formValue[element.field_name][data.field_name] != undefined){
-                              if(isArray(formValue[element.field_name][data.field_name])){
+                              if(Array.isArray(formValue[element.field_name][data.field_name])){
                                 if (!this.custmizedFormValue[element.field_name]) this.custmizedFormValue[element.field_name] = {};
                                 this.custmizedFormValue[element.field_name][data.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name][data.field_name]));
                               }
@@ -5033,7 +5032,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case "list_of_fields":
         case "grid_selection":
           let currentFieldData = formData[field.field_name];
-          if(currentFieldData && isArray(currentFieldData)){
+          if(currentFieldData && Array.isArray(currentFieldData)){
               if(index != undefined && index >= 0){        
                 targetFieldName['form'] = currentFieldData[index];
                 targetFieldName['updataModeInPopupType'] = true;
@@ -5284,7 +5283,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'list_of_fields':
         case 'grid_selection':
           const fieldName = nextFormData['current_field']['field_name'];
-          if(isArray(cdata)){
+          if(Array.isArray(cdata)){
             this.custmizedFormValue[fieldName] = cdata;
           }
           break;      
@@ -5348,7 +5347,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           let index = previousFormCollection['index'];
           let checkDublicate = this.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index);
           if(!checkDublicate.status){            
-            if(isArray(fieldData)){
+            if(Array.isArray(fieldData)){
               if(index != undefined && index >= 0){
                 fieldData[index] = currentFormValue;
               }else{
