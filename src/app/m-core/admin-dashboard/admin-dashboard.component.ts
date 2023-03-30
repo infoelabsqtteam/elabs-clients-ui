@@ -6,6 +6,7 @@ import { CommonFunctionService } from '../../services/common-utils/common-functi
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
 //import { MapsAPILoader } from '@agm/core';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -40,6 +41,8 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   isShow:boolean = false;
 
   formData: FormGroup;
+  mongodbChartShow:boolean = false;
+  
 
 
   // options = {
@@ -56,10 +59,11 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     //private mapsAPILoader: MapsAPILoader,
     //private ngZone: NgZone,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private storageService:StorageService
   ) {
-    this.isShow = true;
-
+      
+      
     }
 
   ngOnDestroy(){
@@ -73,6 +77,19 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
       message: ['', [Validators.required]],
     });
     this._fetchData();
+    
+    
+      
+    
+  }
+  getTabIndex(event){
+    if(event == 1){
+      this.isShow = true;
+      this.mongodbChartShow = false;
+    }else{
+      this.isShow = false;
+      this.mongodbChartShow = true;
+    }
   }
 
   
