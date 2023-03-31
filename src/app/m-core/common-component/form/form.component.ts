@@ -2436,6 +2436,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let tamplateFormValue = this.getFormValue(true);
       let tamplateFormValue1 = this.getFormValue(false);
       let tamplateFormValue3 = this.custmizedFormValue;
+      let multipleCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+      let multiFormValue = this.commonFunctionService.getFormDataInMultiformCollection(multipleCollection,tamplateFormValue)
       let calFormValue = {};
       let list_of_populated_fields = [];
       switch (field.onchange_function_param) {        
@@ -2720,7 +2722,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
             }
           }          
-          break;       
+          break;  
+        case "calculate_balance_amount_engagement_letter":
+          calFormValue = this.commonFunctionService.calculateBalanceAmountEngLetter(tamplateFormValue,multiFormValue);
+          this.updateDataOnFormField(calFormValue); 
+        break;
+
         default:
           break;
       }
