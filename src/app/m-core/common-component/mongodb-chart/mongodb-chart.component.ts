@@ -98,7 +98,10 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
             this.createdChartList[id] = cretedChart;
             cretedChart
             .render(idRef)
-            .catch(() => window.alert('Chart failed to initialise'));
+            .catch(() =>
+            console.log('Chart failed to initialise')
+            // window.alert('Chart failed to initialise')
+            );
           }
         }
         

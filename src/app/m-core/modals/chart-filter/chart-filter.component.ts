@@ -374,7 +374,10 @@ export class ChartFilterComponent implements OnInit {
           this.createdChartList[id] = cretedChart;
           cretedChart
           .render(idRef)
-          .catch(() => window.alert('Chart failed to initialise'));
+          .catch(() => 
+          console.log('Chart failed to initialise')
+          //window.alert('Chart failed to initialise')
+          );
         }        
       }
     }
