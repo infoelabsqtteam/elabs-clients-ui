@@ -3575,5 +3575,24 @@ calculate_next_calibration_due_date(templateForm: FormGroup){
     return obj;
   }
 
+  calculateBalanceAmountEngLetter(tamplateFormValue,multiFormValue){
+    let list = tamplateFormValue['billingPlan'];
+    let fees = +multiFormValue['totalFees'];
+    let milestoneAchievedtotal = 0;
+    let total = 0;
+    if(list != null && list != undefined){
+      for(let i=0; i<list.length;i++){
+        milestoneAchievedtotal +=  list[i]['feesOnMilestoneAchieved']
+      }
+    }
+    total = milestoneAchievedtotal+tamplateFormValue['feesOnMilestoneAchieved'];
+    let remaningAmount = fees-total;
+
+    let obj = {
+      balanceAmount:remaningAmount
+    }
+    return obj;
+  }
+
   
 }
