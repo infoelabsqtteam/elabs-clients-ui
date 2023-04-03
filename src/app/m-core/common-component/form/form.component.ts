@@ -596,6 +596,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
   }
   changeForm(){
+    this.resetFlagForOnchage();
     this.resetFlagsForNewForm();
     const form = this.dataShareService.getDinamicForm();
     this.setDinamicForm(form)
@@ -623,13 +624,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.pageLoading = true;
     this.dataSaveInProgress = true; 
     this.isLinear=true;
-    this.isStepper = false;
-    // this.listOfFieldUpdateMode=false; 
-    // this.listOfFieldsUpdateIndex = -1; 
+    this.isStepper = false;    
     this.checkFormFieldAutfocus = true;
     this.filePreviewFields = [];    
     this.nextFormUpdateMode = false;
     this.updateAddNew = false;
+  }
+  resetFlagForOnchage(){
+    this.listOfFieldUpdateMode=false; 
+    this.listOfFieldsUpdateIndex = -1; 
+    this.serverReq = false;
   }
 
 
