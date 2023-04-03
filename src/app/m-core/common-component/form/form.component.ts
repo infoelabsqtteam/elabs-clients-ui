@@ -627,13 +627,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.isStepper = false;    
     this.checkFormFieldAutfocus = true;
     this.filePreviewFields = [];    
-    this.nextFormUpdateMode = false;
-    this.updateAddNew = false;
+    this.nextFormUpdateMode = false;    
+    this.focusFieldParent={};
   }
   resetFlagForOnchage(){
     this.listOfFieldUpdateMode=false; 
     this.listOfFieldsUpdateIndex = -1; 
     this.serverReq = false;
+    this.updateAddNew = false;
   }
 
 
@@ -3575,73 +3576,75 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     return check;
   }
-  editListOfFiedls(object,index){
+  editListOfFiedls(object,index,field){
     this.listOfFieldUpdateMode = true;
     this.listOfFieldsUpdateIndex = index;
     
     this.tableFields.forEach(element => {
       switch (element.type) {        
         case "list_of_fields":
-          this.templateForm.get(element.field_name).reset(); 
-          if (element.list_of_fields.length > 0) {
-            element.list_of_fields.forEach((data) => {
-              switch (data.type) {                
-                case "list_of_string":
-                  const custmisedKey = this.commonFunctionService.custmizedKey(element);
-                  if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
-                  this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];
-                  break;
-                case "typeahead":
-                  if (data.datatype == 'list_of_object') {
+          if(element.field_name == field.field_name){
+            this.templateForm.get(element.field_name).reset(); 
+            if (element.list_of_fields.length > 0) {
+              element.list_of_fields.forEach((data) => {
+                switch (data.type) {                
+                  case "list_of_string":
                     const custmisedKey = this.commonFunctionService.custmizedKey(element);
                     if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
-                    this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];    
-                  } else {
-                    this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
-                    //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
-                  }
-                  break;
-                case "list_of_checkbox":
-                  let checkboxListValue = [];
-                  if(this.staticData && this.staticData[data.ddn_field] && this.staticData[data.ddn_field].length > 0){
-                    this.staticData[data.ddn_field].forEach((value, i) => {                      
-                      let arrayData = object[data.field_name];                        
-                      let selected = false;
-                      if (arrayData != undefined && arrayData != null) {
-                        for (let index = 0; index < arrayData.length; index++) {
-                          if (this.checkObjecOrString(value) == this.checkObjecOrString(arrayData[index])) {
-                            selected = true;
-                            break;
+                    this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];
+                    break;
+                  case "typeahead":
+                    if (data.datatype == 'list_of_object') {
+                      const custmisedKey = this.commonFunctionService.custmizedKey(element);
+                      if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
+                      this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];    
+                    } else {
+                      this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
+                      //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
+                    }
+                    break;
+                  case "list_of_checkbox":
+                    let checkboxListValue = [];
+                    if(this.staticData && this.staticData[data.ddn_field] && this.staticData[data.ddn_field].length > 0){
+                      this.staticData[data.ddn_field].forEach((value, i) => {                      
+                        let arrayData = object[data.field_name];                        
+                        let selected = false;
+                        if (arrayData != undefined && arrayData != null) {
+                          for (let index = 0; index < arrayData.length; index++) {
+                            if (this.checkObjecOrString(value) == this.checkObjecOrString(arrayData[index])) {
+                              selected = true;
+                              break;
+                            }
                           }
                         }
-                      }
-                      if (selected) {
-                        checkboxListValue.push(true);
-                      } else {
-                        checkboxListValue.push(false);
-                      }               
-                    });
-                  }
-                  this.templateForm.get(element.field_name).get(data.field_name).setValue(checkboxListValue);
-                  //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(checkboxListValue);
-                  break; 
-                case "file":
-                case "input_with_uploadfile":
-                  if(object[data.field_name] != null && object[data.field_name] != undefined){
-                    let custmizedKey = this.commonFunctionService.custmizedKey(element);
-                    if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
-                    if (!this.dataListForUpload[custmizedKey][data.field_name]) this.dataListForUpload[custmizedKey][data.field_name] = [];
-                    this.dataListForUpload[custmizedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                    const value = this.modifyFileSetValue(object[data.field_name]);
-                    this.templateForm.get(element.field_name).get(data.field_name).setValue(value);
-                  }
-                  break;               
-                default:
-                  this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
-                  //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
-                  break;
-              }              
-            })
+                        if (selected) {
+                          checkboxListValue.push(true);
+                        } else {
+                          checkboxListValue.push(false);
+                        }               
+                      });
+                    }
+                    this.templateForm.get(element.field_name).get(data.field_name).setValue(checkboxListValue);
+                    //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(checkboxListValue);
+                    break; 
+                  case "file":
+                  case "input_with_uploadfile":
+                    if(object[data.field_name] != null && object[data.field_name] != undefined){
+                      let custmizedKey = this.commonFunctionService.custmizedKey(element);
+                      if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
+                      if (!this.dataListForUpload[custmizedKey][data.field_name]) this.dataListForUpload[custmizedKey][data.field_name] = [];
+                      this.dataListForUpload[custmizedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
+                      const value = this.modifyFileSetValue(object[data.field_name]);
+                      this.templateForm.get(element.field_name).get(data.field_name).setValue(value);
+                    }
+                    break;               
+                  default:
+                    this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
+                    //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(object[data.field_name]);
+                    break;
+                }              
+              })
+            }
           }
           break;
         default:          
@@ -5097,7 +5100,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       "next_form_data":targetFieldName,
       "updateMode" : updateMode,
       "form_value" : JSON.parse(JSON.stringify(this.getFormValue(false))),
-      "index": -1
+      "index": -1,
+      "listOfFieldUpdateMode":this.listOfFieldUpdateMode,
+      "listOfFieldsUpdateIndex":this.listOfFieldsUpdateIndex
     }
     if(field){      
         const type = field.type;
@@ -5227,6 +5232,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.previousFormFocusField = formCollecition['current_field']; 
 
     this.focusFieldParent = formCollecition['parent_field'];
+   
   
     if(this.previousFormFocusField && this.previousFormFocusField['add_next_form_button']){
       this.enableNextButton = true;
@@ -5262,6 +5268,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       default:
         break;
+    }
+    if(this.focusFieldParent && this.focusFieldParent.type == "list_of_fields" && this.focusFieldParent.datatype == "list_of_object"){
+      const listOfFieldUpdateMode = formCollecition['listOfFieldUpdateMode'];
+      if(listOfFieldUpdateMode){
+        const listOfFieldsUpdateIndex = formCollecition['listOfFieldsUpdateIndex'];
+        if(listOfFieldsUpdateIndex != -1){
+          const fieldName = this.focusFieldParent.field_name;
+          if(fieldName && fieldName != ""){
+            const listData = data[fieldName];
+            const editedData = listData[listOfFieldsUpdateIndex];
+            this.editListOfFiedls(editedData,listOfFieldsUpdateIndex,this.focusFieldParent);
+          }          
+        }
+      }
     }
     
     this.multipleFormCollection.splice(lastIndex,1);    
