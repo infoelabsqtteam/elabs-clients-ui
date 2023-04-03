@@ -1,6 +1,6 @@
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject } from '@angular/core';
+import { DatePipe, Location,DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
 import { StorageService} from '../../../services/storage/storage.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
@@ -15,6 +15,7 @@ import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -126,7 +127,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   filterdata = '';
   fixedcolwidth = 150;
   recordId:any="";
+  rowId:any="";
   updateNotification:boolean=true;
+  currentBrowseUrl:string="";
+  queryParams:any={};
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -289,14 +293,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private datePipe: DatePipe,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private _location:Location,
+    @Inject(DOCUMENT) private document: Document,
+    private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {
-    if(routers.snapshot.params["formName"]){
-      this.formName = routers.snapshot.params["formName"];
-    }  
-    if(routers.snapshot.params["recordId"]){      
-      this.recordId = routers.snapshot.params["recordId"];
-    } 
+    this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
     })
@@ -338,6 +340,21 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     });   
 
   }
+  getUrlParameter(){
+    let routers = this.routers;
+    if(routers.snapshot.params["formName"]){
+      this.formName = routers.snapshot.params["formName"];
+    }  
+    if(routers.snapshot.params["recordId"]){      
+      this.recordId = routers.snapshot.params["recordId"];
+    } 
+    if(routers.snapshot.params["rowId"]){      
+      this.rowId = routers.snapshot.params["rowId"];
+    } 
+    this.routers.queryParams.subscribe(params => {
+      this.queryParams = params;
+    });
+  }
   initialiseInvites() {
     this.loadngAfterOnInit = true
     this.temView = false;
@@ -353,7 +370,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.details = {};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
-    
+    this.getUrlParameter();    
+  }
+  getCurrentBrowseUrl(){
+    return this.document.location.hash.substring(1);
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
@@ -460,17 +480,26 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(checkboxes != null){
           checkboxes['checked'] = false;
         }
+        let index = -1;
         if(this.recordId != '' && this.updateNotification){
           this.updateNotification = false; 
-          let index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);
-          if(index != -1){
-            this.editedRowData(index,"UPDATE");
-          }          
+          index = this.commonFunctionService.getIndexInArrayById(this.elements,this.recordId);                   
+        }else if(this.rowId != ''){
+          index = this.commonFunctionService.getIndexInArrayById(this.elements,this.rowId,"serialId");                    
+        }else if(Object.keys(this.queryParams).length > 0){
+          let keys = Object.keys(this.queryParams); 
+          index = this.commonFunctionService.getIndexInArrayById(this.elements,this.queryParams,keys);
+        }
+        if(index != -1){
+          this.editedRowData(index,"UPDATE");
         }
       } else {
         this.elements = [];
         this.total = 0;
+        this.rowId = "";
       }
+    }else{
+      this.rowId = "";
     }
   }
   setStaticData(staticData){
@@ -569,6 +598,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         const forControl = {};
         if(this.headElements.length > 0){
           this.headElements.forEach(element => {
+            if(element != null && element.type != null){
             let fieldName = element.field_name;
             let mandatory = false;
             let disabled = false;
@@ -604,7 +634,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               default:
                 break;
             }      
-
+          }
           });
         }
 
@@ -623,10 +653,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if (this.tabs.length >= 1) {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
-          this.currentMenu.name = this.tab.tab_name;
-          this.apiService.resetGridCountAllData();
+          this.currentMenu.name = this.tab.tab_name;          
           this.getPage(1);
-          if(index == 0){
+          let gridCount = this.dataShareService.getGridCountData(); 
+          let gridCountKey = this.tab.tab_name+"_"+this.tab.name;
+          if(index == 0 || gridCount[gridCountKey] == undefined){
+            this.apiService.resetGridCountAllData();
             this.getTabsCount(this.tabs);
           }
         }
@@ -726,10 +758,44 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
   
-
+  updateRouteUrl(){    
+    let record = "";
+    if(this.selectedRowIndex != -1){
+      record = this.elements[this.selectedRowIndex];
+    }    
+    let routeQuery = '';
+    let routeQueryCriteri = ['serialId'];
+    if(record != ""){
+      let queryList = [];
+      routeQueryCriteri.forEach(criteria => {
+        if(record && record[criteria]){
+          const query = criteria+"="+record[criteria];
+          queryList.push(query);
+        }
+      });
+      if(queryList && queryList.length > 0){
+        queryList.forEach((query,i) =>{
+          if(i == 0){
+            routeQuery = routeQuery + query;
+          }else {
+            routeQuery = routeQuery +"&"+ query;
+          }
+        })
+      }      
+      this.currentBrowseUrl = this.getCurrentBrowseUrl();
+      if(routeQuery && routeQuery != ''){
+        this._location.go(this.currentBrowseUrl+"?"+routeQuery);
+      }else {
+        this._location.go(this.currentBrowseUrl);
+      }       
+    }else{
+      this._location.go(this.currentBrowseUrl); 
+      this.currentBrowseUrl = "";
+    }
+  }
   editedRowData(id,formName) {
     if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
-      this.selectedRowIndex = id;
+      this.selectedRowIndex = id;      
       if(formName == 'UPDATE'){   
         if(this.checkUpdatePermission(this.elements[id])){
           return;
@@ -744,7 +810,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       this.selectedRowIndex = id;    
     } else {
-      this.notificationService.notify("bg-danger", "Permission denied !!!");
+      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
   addAndUpdateResponce(element) {
@@ -755,6 +822,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = false;
     this.bulkuploadList = [];
     this.formName = '';
+    this.updateRouteUrl();
+    this.rowId = "";
+    this.recordId = "";
+    this.queryParams = {};
     this.getPage(this.pageNumber);
     //this.getTabsCount(this.tabs);   
   }
@@ -805,6 +876,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //   }
       // });
       let formData = {}
+      this.updateRouteUrl();
       this.modalService.open('form-modal',formData)
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
@@ -942,6 +1014,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   
   
   getPage(page: number) {
+    this.apiService.resetGridData();
     this.pageNumber = page;
     let contact = {};
     let leadId = '';
@@ -956,14 +1029,28 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
     const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
-    if(this.recordId){
-      let crList = pagePayload.data.crList;
-      let criteria = "_id;eq;"+this.recordId+";STATIC"
-      this.commonFunctionService.getCriteriaList([criteria],{}).forEach(element => {
+    let crList = pagePayload.data.crList;
+    let criteriaList = [];
+    if(this.recordId){      
+      let criteria = "_id;eq;"+this.recordId+";STATIC";
+      criteriaList.push(criteria);            
+    }
+    if(this.rowId){      
+      let criteria = "serialId;eq;"+this.rowId+";STATIC";
+      criteriaList.push(criteria);
+    }
+    if(Object.keys(this.queryParams).length > 0){     
+      Object.keys(this.queryParams).forEach(key =>{
+        let criteria = key+";eq;"+this.queryParams[key]+";STATIC";
+        criteriaList.push(criteria);
+      })
+    }
+    if(criteriaList.length > 0){
+      this.commonFunctionService.getCriteriaList(criteriaList,{}).forEach(element => {
         crList.push(element);
       });
       pagePayload.data.crList = crList;
-    }
+    }    
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';
@@ -1010,7 +1097,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
       this.apiService.GetExportExclLink(getExportData);
     }else{
-      this.notificationService.notify("bg-danger", "Permission denied !!!");
+      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
 
@@ -1191,7 +1279,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
             this.editedRowData(index,button.onclick.action_name)
           }else{
-            this.notificationService.notify("bg-danger", "Permission denied !!!");
+            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
           case 'AUDIT_HISTORY':
@@ -1203,7 +1292,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
               this.modalService.open('audit-history',obj);
             }else {
-              this.notificationService.notify("bg-danger", "Permission denied !!!");
+              this.menuOrModuleCommounService.checkTokenStatusForPermission();
+              //this.notificationService.notify("bg-danger", "Permission denied !!!");
             }
           break;
         default:

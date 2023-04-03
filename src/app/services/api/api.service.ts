@@ -13,6 +13,7 @@ import { StorageService } from '../storage/storage.service';
   providedIn: 'root'
 })
 export class ApiService {
+  serverReq:boolean = false;
 
 constructor(
   private dataShareService:DataShareService,
@@ -22,19 +23,10 @@ constructor(
   private modalService: ModelService, 
   private stroageService:StorageService
 ) { }
-  getStatiData(payloads){    
-    // let api = this.envService.getApi('GET_STATIC_DATA');
-    // let time = new Date();
-    // console.log("Before Get static data call:- "+ new Date())
-    // this.http.post(api, payload).subscribe(
-    //   (respData) => {
-    //       console.log("Before Get static data call:- "+ new Date());
-    //       this.setStaticData(respData['success'])
-    //     },
-    //   (error) => {
-    //       console.log(error);
-    //     }
-    // ) 
+  getStatiData(payloads){ 
+    this.dataShareService.setReqResponce(true);
+    let reqLength = payloads.length;
+    let responceCount = 0;
     from(payloads)
     .pipe(
       mergeMap((payload)=>         
@@ -43,6 +35,10 @@ constructor(
       .subscribe(
         (res) => {
           this.setStaticData(res['success'])
+          responceCount = responceCount + 1;
+          if(responceCount == reqLength){
+            this.dataShareService.setReqResponce(false);
+          }
         },
         (error)=>{
           console.log(error);

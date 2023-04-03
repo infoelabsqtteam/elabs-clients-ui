@@ -4,7 +4,6 @@ import { ModalDirective } from 'angular-bootstrap-md';
 import { ModelService } from 'src/app/services/model/model.service';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { input } from 'aws-amplify';
 import { Subscription } from 'rxjs';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';

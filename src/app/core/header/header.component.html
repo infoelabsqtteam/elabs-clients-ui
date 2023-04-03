@@ -7,14 +7,14 @@
                 [ngClass]="activeclass ? 'selectedclass' : ''" (click)="goToMOdule()" *ngIf="menuBoxDashboard"
                 #tooltip="matTooltip" matTooltip="Press B">Home</a></ng-template>
           </mat-tab>
-          <mat-tab *ngFor="let menu of menuData" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
+          <mat-tab *ngFor="let menu of menuData;let i = index" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
             <ng-template mat-tab-label>
-              <a class="px-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu)"
+              <a class="px-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
                 #tooltip="matTooltip" matTooltip="Press Ctrl + c" [ngClass]="{'d-none': !menu.display}">{{ menu.label }}</a>
               <a class="px-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
                 (click)="activeLinkD(menu.label,false)" [ngClass]="{'d-none': !menu.display}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
-                <button mat-menu-item *ngFor="let submenu of menu.submenu" (click)="getTemplateMenuData(submenu)" [ngClass]="{'d-none': !submenu.display}">{{
+                <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" [ngClass]="{'d-none': !submenu.display}">{{
                   submenu.label }}</button>
               </mat-menu>
             </ng-template>
@@ -33,9 +33,9 @@
               <div *ngFor="let item of AllModuleList |filter:filterdata; let i = index">
                 <button mat-button *ngIf="item.title" class="text-left w-100" (click)="GoToSelectedModule(item)">{{ item.title }}</button>
                 <div *ngFor="let subitem of item.menu_list |filter:filterdata">
-                  <button mat-button class="text-left w-100" (click)="getTemplateData(item,subitem)"><small>{{ item.title }} > {{ subitem.label }}</small></button>
+                  <button mat-button class="text-left w-100" (click)="getTemplateData(item,subitem,$event)"><small>{{ item.title }} > {{ subitem.label }}</small></button>
                   <div class="px-2" *ngFor="let subSubitem of subitem.submenu |filter:filterdata">
-                    <button mat-button class="text-left w-100" (click)="getTemplateData(item,subSubitem)"><small>{{ item.title }} > {{ subitem.label }} > {{ subSubitem.label }}</small></button>
+                    <button mat-button class="text-left w-100" (click)="getTemplateData(item,subSubitem,$event)"><small>{{ item.title }} > {{ subitem.label }} > {{ subSubitem.label }}</small></button>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApiService } from '../api/api.service';
+import { AuthService } from '../api/auth/auth.service';
 import { CommonFunctionService } from '../common-utils/common-function.service';
+import { DataShareService } from '../data-share/data-share.service';
+import { NotificationService } from '../notify/notification.service';
 import { PermissionService } from '../permission/permission.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -11,7 +16,12 @@ export class MenuOrModuleCommonService {
 constructor(
   private storageService: StorageService, 
   private permissionService:PermissionService,
-  private commonFunctionService:CommonFunctionService
+  private commonFunctionService:CommonFunctionService,
+  private dataShareService:DataShareService,
+  private notificationService:NotificationService,
+  private apiService:ApiService,
+  private router:Router,
+  private authService:AuthService
 ) { }
 
   modifyModuleListWithPermission(moduleList){
@@ -130,9 +140,10 @@ constructor(
     return check;
   }
   getDefaultMenu(menuList){
-      let menu = {};
+      let menu:any = {};
       let defaultMenu:any = {};
       let defaultMenuIndexs = this.getDefaultMenuIndex(menuList);
+      menu['indexs'] = defaultMenuIndexs;
       if(defaultMenuIndexs.defaultSubmenuIndex > -1){
           defaultMenu = menuList[defaultMenuIndexs.defaultmenuIndex].submenu[defaultMenuIndexs.defaultSubmenuIndex];
       }else{
@@ -140,9 +151,9 @@ constructor(
       }
 
       if(defaultMenu.display){
-        menu = defaultMenu; 
+        menu['menu'] = defaultMenu; 
       }else{
-          menu = this.findMenuWithPermission(menuList);
+          menu['menu'] = this.findMenuWithPermission(menuList);
       }
       return menu;
   }
@@ -176,27 +187,107 @@ constructor(
     let moduleList = this.storageService.GetModules();
     return this.commonFunctionService.getIndexInArrayById(moduleList,moduleId);    
   }
-  getMenuNameById(module,menuId,submenuId){
+  shareMenuIndex(menuIndex,subMenuIndex,moduleIndex?){
+    let indexs = {};
+    indexs['menuIndex'] = menuIndex;
+    indexs['submenuIndex'] = subMenuIndex;
+    indexs['moduleIndex'] = moduleIndex;
+    this.dataShareService.setMenuIndexs(indexs);
+}
+  getIndexsByMenuName(menuList,menuName){
+    let indexs= {
+      'menuindex':-1,
+      'submenuindex':-1
+    }
+    for (let index = 0; index < menuList.length; index++) {
+      const menu = menuList[index];
+      if(menu.name == menuName){
+        indexs.menuindex = index;
+        indexs.submenuindex = -1;
+      }else{
+        if(menu.submenu && menu.submenu.length > 0){
+          for (let j = 0; j < menu.submenu.length; j++) {
+            const subMenu = menu.submenu[j];
+            if(subMenu.name == menuName){
+              indexs.menuindex = index;
+              indexs.submenuindex = j;
+            }
+          }
+        }
+      }      
+    }
+    return indexs;
+  }
+  getMenuNameById(module,menuId,submenuId,key?){
+    let menuName:any = {};
     let menuList = module.menu_list;
-    let menuIndex = this.commonFunctionService.getIndexInArrayById(menuList,menuId);
-    let menu = menuList[menuIndex];
-    let menuName = "";
+    let menuIndex = this.commonFunctionService.getIndexInArrayById(menuList,menuId,key);
+    menuName['menuIndex'] = menuIndex;
+    let menu = menuList[menuIndex];    
     if(submenuId != ""){
       if(menu.submenu){
         let subMenuList = menu.submenu;
         if(subMenuList && subMenuList.length > 0){
-            let subMenuIndex = this.commonFunctionService.getIndexInArrayById(subMenuList,submenuId);
+            let subMenuIndex = this.commonFunctionService.getIndexInArrayById(subMenuList,submenuId,key);
+            menuName['subMenuIndex'] = subMenuIndex;
             let submenu = subMenuList[subMenuIndex];
-            menuName = submenu.name;
+            menuName['name'] = submenu.name;
         }
       }
     }else{
-      menuName = menu.name;
+      menuName['name'] = menu.name;
     }
     return menuName;
   }
   checkPermission(menu){
       return !this.permissionService.checkPermission(menu.name, 'view')
+  }
+  getTemplateData(module,submenu) {
+    if(submenu && submenu.name && this.permissionService.checkPermission(submenu.name,'view')){
+        this.storageService.SetActiveMenu(submenu);
+        if (submenu.label == "Navigation") {
+            this.router.navigate(['Navigation']);
+        }
+        else if (submenu.label == "Permissions") {
+            this.router.navigate(['permissions']);
+        }
+        else {
+          const menu = submenu;
+          if(menu.name == "document_library"){
+            this.router.navigate(['vdr']);
+          }else if(menu.name == "report"){
+            this.router.navigate(['report']);
+          }
+          else{
+            this.apiService.resetTempData();
+            this.apiService.resetGridData();
+            this.GoToSelectedModule(module);
+            const route = 'browse/'+module.name+"/"+submenu.name;
+            //console.log(route);
+            this.router.navigate([route]);  
+            //this.router.navigate(['template']);  
+          }           
+        }
+    }else{
+      this.checkTokenStatusForPermission();       
+    }
+  }
+  checkTokenStatusForPermission(){
+    let getTokenStatus = this.authService.checkIdTokenStatus()
+    if(getTokenStatus.status){
+      this.notificationService.notify("bg-danger", "Permission denied !!!");
+    }else{
+      if(getTokenStatus.msg != ""){
+        this.notificationService.notify("bg-info", getTokenStatus.msg);
+      }
+      this.authService.gotToSigninPage();
+    }
+  }
+  GoToSelectedModule(item){        
+    if(item && item.name){           
+        this.setModuleName(item.name);
+    }
+    this.dataShareService.sendCurrentPage('DASHBOARD');
   }
 
 }

@@ -27,9 +27,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     
     let moduleList = this.storageService.GetModules();
     this.AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList);
+    this.storageService.SetModifyModules(this.AllModuleList);
     if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
       if(this.AllModuleList.length == 1){
-        this.GoToSelectedModule(this.AllModuleList[0]);
+        this.GoToSelectedModule(this.AllModuleList[0],"");
       }      
     }else{
       this.module = false;
@@ -44,12 +45,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     
   }  
-  GoToSelectedModule(module){
-    this.menuOrModuleCommounService.setModuleName(module.name); 
-    this.dataShareService.sendCurrentPage('DASHBOARD');
-    let mIndex = this.commonFunctionService.getIndexInArrayById(this.AllModuleList,module.name,'name');      
-    if(mIndex != -1){
-      this.dataShareService.setModuleIndex(mIndex);    
+  GoToSelectedModule(module,event){
+    if(event != "" && event.ctrlKey){
+      const rout = 'browse/'+module.name;
+      this.storageService.setChildWindowUrl(rout);
+      window.open(rout, '_blank');
+    }else{
+      this.menuOrModuleCommounService.setModuleName(module.name); 
+      this.dataShareService.sendCurrentPage('DASHBOARD');
+      let mIndex = this.commonFunctionService.getIndexInArrayById(this.AllModuleList,module.name,'name');      
+      if(mIndex != -1){
+        this.dataShareService.setModuleIndex(mIndex);    
+      }
     }     
   }
   gotoHomePage(){

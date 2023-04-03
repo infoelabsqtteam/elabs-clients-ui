@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
 import { StorageService } from '../../services/storage/storage.service';
-import { PermissionService } from '../../services/permission/permission.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
-import { ApiService } from '../../services/api/api.service';
 import { ModelService } from "src/app/services/model/model.service";
 import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
-import { NotificationService } from "src/app/services/notify/notification.service";
 import { EnvService } from "src/app/services/env/env.service";
 import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 import { Subscription } from "rxjs";
@@ -47,6 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     logedin: boolean = false;
     gitVersionSubscription: any;
     moduleIndexSubscription:Subscription;
+    menuIndexSubscription:Subscription;
     gitVersion: any;
 
     logoPath = ''
@@ -87,12 +85,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     constructor(
         private router: Router,
         private storageService: StorageService,
-        private permissionService: PermissionService,
         private dataShareService: DataShareService,
-        private apiService: ApiService,
         private modelService: ModelService,
         private authService: AuthService,
-        private notificationService: NotificationService,
         public envService: EnvService,
         private commonfunctionService:CommonFunctionService,
         private menuOrModuleCommounService:MenuOrModuleCommonService
@@ -113,15 +108,31 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.moduleIndex = -1;
             }
         })
+        this.menuIndexSubscription = this.dataShareService.menuIndexs.subscribe(indexs =>{ 
+            if(indexs.moduleIndex != undefined && indexs.moduleIndex != -1){
+                this.moduleIndex = indexs.moduleIndex;
+                let module = this.AllModuleList[this.moduleIndex]; 
+                let menuList = module.menu_list;
+                this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
+            }               
+            const menuIndex = indexs.menuIndex;
+            if(menuIndex != -1){
+                this.selected.setValue(menuIndex+1);
+            }else{
+                this.selected.setValue(1);
+            }   
+            this.showsearchmenu = false;
+            this.filterdata = '';   
+        })
         
 
 
         this.AllModuleList = this.storageService.GetModules();
         if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
-          const menuType =  this.storageService.GetMenuType();
-          if(this.AllModuleList.length == 1 && menuType == 'Horizontal'){
-            this.GoToSelectedModule(this.AllModuleList[0]);
-          }      
+            const menuType =  this.storageService.GetMenuType();
+            if(this.AllModuleList.length == 1 && menuType == 'Horizontal'){
+                this.menuOrModuleCommounService.GoToSelectedModule(this.AllModuleList[0]);
+            }     
         };
 
         if (this.storageService.GetUserInfo()) {
@@ -152,7 +163,18 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         });
     }
 
-
+    GoToSelectedModule(module){
+        this.menuOrModuleCommounService.GoToSelectedModule(module);
+    }
+    getTemplateData(module,menu,event){
+        if(event.ctrlKey){
+            const rout = 'browse/'+module.name+'/'+menu.name;
+            this.storageService.setChildWindowUrl(rout);
+            window.open(rout, '_blank');
+        }else{
+            this.menuOrModuleCommounService.getTemplateData(module,menu)
+        }
+    }
 
     shortcutinfo() {
         this.modelService.open('shortcutinfo_model', {})
@@ -258,35 +280,43 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 let menuList = module.menu_list;
                 this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
                 let menu = {}
-                menu = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);
+                let menuWithIndex = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);                              
                 if(this.moduleIndex != moduleIndex){                    
                     let activeMenu = this.storageService.GetActiveMenu();
-                    if(activeMenu && activeMenu.name){
-                        menu = this.getMenuByActiveMenu(activeMenu);
+                    if(activeMenu && activeMenu.name){                        
+                        menuWithIndex = this.getMenuByActiveMenu(activeMenu);
                     }else{
                         this.selected.setValue(0);
                     }
                 }else if(this.moduleIndex == moduleIndex){
                     let activeMenu = this.storageService.GetActiveMenu();
                     if(activeMenu && activeMenu.name){
-                        menu = this.getMenuByActiveMenu(activeMenu);
+                        menuWithIndex = this.getMenuByActiveMenu(activeMenu);
                     }else{
                         this.selected.setValue(1);
                     }
-                    module = {};
-                }
-                this.getTemplateData(module,menu)
+                }  
+                menu = menuWithIndex.menu; 
+                let menuIndexs = menuWithIndex.indexs;               
+                this.menuOrModuleCommounService.shareMenuIndex(menuIndexs.defaultmenuIndex,menuIndexs.defaultSubmenuIndex);
+                this.menuOrModuleCommounService.getTemplateData(module,menu)
             } else {
                 this.menuData = [];
             }
         } else {
             this.menuData = [];
         }
-    }   
+    }  
+     
     getMenuByActiveMenu(activeMenu){
+        let menu = {};
         let activeMenuIndex = 0;
-        if(activeMenu.menuIndex){
+        let indexs:any = {};
+        if(activeMenu.menuIndex != -1){
             activeMenuIndex = activeMenu.menuIndex
+            indexs['defaultmenuIndex'] = activeMenuIndex;
+        }else{
+            indexs['defaultmenuIndex'] = -1;
         }
         this.selected.setValue(activeMenuIndex+1); 
         let menuList = this.menuData;
@@ -296,8 +326,15 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 menuList = subMenu;
             }                        
         }
-        let menuIndex = this.commonfunctionService.getIndexInArrayById(menuList,activeMenu.name,'name');        
-        return menuList[menuIndex];
+        let menuIndex = this.commonfunctionService.getIndexInArrayById(menuList,activeMenu.name,'name'); 
+        if(activeMenu.child){
+            indexs['defaultSubmenuIndex'] = menuIndex;
+        }else{
+            indexs['defaultSubmenuIndex'] = -1;
+        }   
+        menu['indexs'] = indexs;
+        menu['menu'] = menuList[menuIndex]; 
+        return menu;
     }  
     
     activeLinkD(link, check) {
@@ -308,42 +345,27 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }
 
     }
-    getTemplateData(module,submenu) {
-        if(this.permissionService.checkPermission(submenu.name,'view')){
-            this.storageService.SetActiveMenu(submenu);
-            if (submenu.label == "Navigation") {
-                this.router.navigate(['Navigation']);
-            }
-            else if (submenu.label == "Permissions") {
-                this.router.navigate(['permissions']);
-            }
-            else {
-              const menu = submenu;
-              if(menu.name == "document_library"){
-                this.router.navigate(['vdr']);
-              }else if(menu.name == "report"){
-                this.router.navigate(['report']);
-              }
-              else{
-                this.apiService.resetTempData();
-                this.apiService.resetGridData();
-                this.GoToSelectedModule(module);
-                this.router.navigate(['template']);  
-              }           
-            }
-        }else{
-            this.notificationService.notify("bg-danger", "Permission denied !!!");
+    
+    getTemplateMenuData(submenu,menuIndex,subMenuIndex,event) {
+        let module:any = {};
+        if(this.moduleIndex != -1){
+            module = this.AllModuleList[this.moduleIndex];
         }
-    }
-    getTemplateMenuData(submenu) {
-        let module = {};
-        this.getTemplateData(module,submenu);
+        if(event.ctrlKey && module && module.name){
+            const rout = 'browse/'+module.name+'/'+submenu.name;
+            this.storageService.setChildWindowUrl(rout);
+            window.open(rout, '_blank');
+        }else{
+            this.menuOrModuleCommounService.shareMenuIndex(menuIndex,subMenuIndex);
+            this.menuOrModuleCommounService.getTemplateData(module,submenu);
+        }
     }
         
     goToMOdule() {
         this.dataShareService.sendCurrentPage('MODULE');
         this.menuData = []; 
-        this.dataShareService.setModuleIndex(-1);       
+        this.dataShareService.setModuleIndex(-1);
+        this.dataShareService.setMenuIndexs({menuIndex:-1,submenuIndex:-1});       
         const menuType = this.storageService.GetMenuType()
         if (menuType == 'Horizontal') {
             this.router.navigate(['/home']);
@@ -375,20 +397,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         } else {
             return;
         }
-    }  
+    }     
     
-    GoToSelectedModule(item){        
-        if(item && item.name){
-            let selectedValue = this.selected.value;
-            if(selectedValue == 0){
-                this.selected = new FormControl(1);
-            }            
-            this.menuOrModuleCommounService.setModuleName(item.name);
-        }
-        this.dataShareService.sendCurrentPage('DASHBOARD');
-        this.showsearchmenu = false;
-        this.filterdata = '';
-    }
     searchmodel() {
         if(this.filterdata != ''){
             this.showsearchmenu = true;
