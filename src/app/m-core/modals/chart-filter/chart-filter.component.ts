@@ -40,7 +40,6 @@ export class ChartFilterComponent implements OnInit {
   dashboardItem :any = {};
   dashletData:any = {};
   accessToken:string="";
-  mongoChartUrl:string="https://charts.mongodb.com/charts-nonproduction-cgurq";
 
   dashboardFilter:FormGroup;
 
@@ -359,7 +358,7 @@ export class ChartFilterComponent implements OnInit {
   populateMongodbChart(chart){
     if(this.accessToken != "" && this.accessToken != null){
       const sdk = new ChartsEmbedSDK({
-        baseUrl: this.mongoChartUrl, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+        baseUrl: chart.chartUrl, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
         getUserToken: () => this.accessToken
       });
       if(chart && chart.chartId){        
