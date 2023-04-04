@@ -19,7 +19,6 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   chartIdList:any = [];
   createdChartList:any=[];
   accessToken:string="";
-  mongoChartUrl:string="https://charts.mongodb.com/charts-nonproduction-cgurq";
   @Input() showMongoChart:boolean;
   pageNumber:any=1;
   itemNumOfGrid: any = 12;
@@ -75,36 +74,38 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     }
   }
   populateMongodbChart(){
-    if(this.accessToken != "" && this.accessToken != null){
-      const sdk = new ChartsEmbedSDK({
-        baseUrl: this.mongoChartUrl, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
-        getUserToken: () => this.accessToken
-      });
+    if(this.accessToken != "" && this.accessToken != null){      
       let height = '350px';
-      if(this.chartIdList && this.chartIdList.length > 0){
+      if(this.chartIdList && this.chartIdList.length > 0){        
         this.createdChartList = [];
         for (let i = 0; i < this.chartIdList.length; i++) {
-          let chart = this.chartIdList[i];
-          const id = chart.chartId;
-          const idRef = document.getElementById(id);
-          if(chart && chart.height && chart.height != ""){
-            height = chart.height;
-          }
-          if(idRef){
-            let cretedChart = sdk.createChart({
-              chartId: id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-              height: height
+          const url = this.chartIdList[i].chartUrl;
+          if(url && url != ''){
+            const sdk = new ChartsEmbedSDK({
+              baseUrl: url, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+              getUserToken: () => this.accessToken
             });
-            this.createdChartList[id] = cretedChart;
-            cretedChart
-            .render(idRef)
-            .catch(() =>
-            console.log('Chart failed to initialise')
-            // window.alert('Chart failed to initialise')
-            );
+            let chart = this.chartIdList[i];
+            const id = chart.chartId;
+            const idRef = document.getElementById(id);
+            if(chart && chart.height && chart.height != ""){
+              height = chart.height;
+            }
+            if(idRef){
+              let cretedChart = sdk.createChart({
+                chartId: id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
+                height: height
+              });
+              this.createdChartList[id] = cretedChart;
+              cretedChart
+              .render(idRef)
+              .catch(() =>
+              console.log('Chart failed to initialise')
+              // window.alert('Chart failed to initialise')
+              );
+            }
           }
-        }
-        
+        }        
       }
     }
   }
