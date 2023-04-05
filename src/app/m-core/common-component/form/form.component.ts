@@ -9,7 +9,6 @@ import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import { MapsAPILoader } from '@agm/core';
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
@@ -302,7 +301,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private routers: ActivatedRoute,
     @Inject(DOCUMENT) document,
     private datePipe: DatePipe,
-    private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private apiService:ApiService,
     private dataShareService:DataShareService,
@@ -654,32 +652,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.funCallOnFormLoad(this.form.tableFields)
     }
     if(Common.GOOGLE_MAP_IN_FORM == "true"){
-      this.mapsAPILoader.load().then(() => {      
-        this.geoCoder = new google.maps.Geocoder;
-        if(this.longitude == 0 && this.latitude == 0){
-          this.setCurrentLocation();
-        }    
-        if(this.searchElementRef != undefined){
-          let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-          autocomplete.addListener("place_changed", () => {
-            this.ngZone.run(() => {
-              let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+      // this.mapsAPILoader.load().then(() => {      
+      //   this.geoCoder = new google.maps.Geocoder;
+      //   if(this.longitude == 0 && this.latitude == 0){
+      //     this.setCurrentLocation();
+      //   }    
+      //   if(this.searchElementRef != undefined){
+      //     let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+      //     autocomplete.addListener("place_changed", () => {
+      //       this.ngZone.run(() => {
+      //         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
       
-              if (place.geometry === undefined || place.geometry === null) {
-                return;
-              }
-              this.searchElementRef.nativeElement.value = place.name;
-              if(this.templateForm.get('address')){
-                this.templateForm.get('address').setValue(place.formatted_address);
-              }
-              this.latitude = place.geometry.location.lat();
-              this.longitude = place.geometry.location.lng();
-              this.zoom = 12;
-              this.getAddress(this.latitude, this.longitude);
-            });
-          });
-        }
-      });
+      //         if (place.geometry === undefined || place.geometry === null) {
+      //           return;
+      //         }
+      //         this.searchElementRef.nativeElement.value = place.name;
+      //         if(this.templateForm.get('address')){
+      //           this.templateForm.get('address').setValue(place.formatted_address);
+      //         }
+      //         this.latitude = place.geometry.location.lat();
+      //         this.longitude = place.geometry.location.lng();
+      //         this.zoom = 12;
+      //         this.getAddress(this.latitude, this.longitude);
+      //       });
+      //     });
+      //   }
+      // });
     }
 
 

@@ -6,7 +6,6 @@ import { DirectiveModuleModule } from '../directive-module/directive-module.modu
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FormComponent } from './form/form.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
-import { AgmCoreModule } from '@agm/core';
 import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
@@ -32,13 +31,9 @@ const maskConfig: Partial<IConfig> = {
     ReactiveFormsModule,
     FormsModule,
     NgxMaskModule.forRoot(maskConfig),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyA--cLc1-rZJvuV18t0jxlzIbzxahuH-EQ',
-      libraries: ['places']
-  }),
-  ModelModule,
-  AllPackageModule,
-  PipesModule
+    ModelModule,
+    AllPackageModule,
+    PipesModule
   ],
   exports:components,
   declarations: components

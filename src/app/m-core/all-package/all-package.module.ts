@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
-import { AgmDirectionModule } from 'agm-direction';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { GoogleMapsModule } from "@angular/google-maps";
@@ -19,7 +18,6 @@ const packages = [
   NgxMaterialTimepickerModule,
   AngularEditorModule,
   NgxExtendedPdfViewerModule,
-  AgmDirectionModule,
   Ng2SearchPipeModule,
   GoogleChartsModule,
   GoogleMapsModule,
