@@ -9,7 +9,6 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { GoogleMapsModule } from "@angular/google-maps";
 import {NgxPaginationModule} from 'ngx-pagination';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import {NgxPrintModule} from 'ngx-print';
 import { NgxTimerModule } from 'ngx-timer';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { EditorModule } from '@tinymce/tinymce-angular';
@@ -25,7 +24,6 @@ const packages = [
   GoogleChartsModule,
   GoogleMapsModule,
   NgxPaginationModule,
-  NgxPrintModule,
   NgxTimerModule,
   MomentDateModule,
   EditorModule,
