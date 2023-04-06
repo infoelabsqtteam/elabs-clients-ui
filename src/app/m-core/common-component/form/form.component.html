@@ -691,7 +691,7 @@
                                             <tr *ngFor="let listOfField of custmizedFormValue[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
                                                 <td class="px-1" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">
                                                     <a  mdbBtn floating="true" size="sm" *ngIf="tableField.datatype == 'list_of_object_with_popup' && checkRowDisabledIf(tableField,i)" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
-                                                    <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup' && checkRowDisabledIf(tableField,i)" (click)="editListOfFiedls(listOfField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                                    <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup' && checkRowDisabledIf(tableField,i)" (click)="editListOfFiedls(listOfField,i,tableField)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a *ngIf="checkRowDisabledIf(tableField,i)" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,listOfField,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                                                 </td>
                                                 <td *ngFor="let item of getListOfFieldsGridColumn(tableField)" [ngClass]="item.hide_in_inline_grid  || checkShowIfListOfFiedlds(tableField,item,i) ? 'd-none' : ''" (click)="showListOfFieldData(listOfField, item)" [innerHtml]="showListFieldValue(listOfField, item)"></td>                                                
@@ -1558,10 +1558,10 @@
                             <div class="form-group">
                                 <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
                               </div>
-                            <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
+                            <!-- <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
                                 <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
                                   ></agm-marker>
-                            </agm-map>
+                            </agm-map> -->
                         </div>
                         <div *ngIf="tableField.type == 'step_progress_bar'">
                             <div class="row">

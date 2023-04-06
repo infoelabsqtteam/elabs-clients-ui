@@ -8,6 +8,8 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import * as XLSX from 'xlsx';
 import * as _moment from 'moment';
+import { StorageService } from 'src/app/services/storage/storage.service';
+import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 // import {default as _rollupMoment} from 'moment';
 // const moment = _rollupMoment || _moment;
 
@@ -37,6 +39,7 @@ export class ChartFilterComponent implements OnInit {
   @ViewChild('chartFilterModal') public chartFilterModal: ModalDirective;  
   dashboardItem :any = {};
   dashletData:any = {};
+  accessToken:string="";
 
   dashboardFilter:FormGroup;
 
@@ -53,6 +56,7 @@ export class ChartFilterComponent implements OnInit {
   copyStaticData:any={};
   typeAheadData:any=[];
   showFilter:boolean=false;
+  createdChartList:any=[];
 
   staticDataSubscription;
   dashletDataSubscription;
@@ -73,8 +77,9 @@ export class ChartFilterComponent implements OnInit {
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private envService:EnvService,
-    private modelService: ModelService,
+    private storageService: StorageService,
   ) {
+    this.accessToken = this.storageService.GetIdToken();
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
@@ -231,9 +236,29 @@ export class ChartFilterComponent implements OnInit {
 
 
   dashletFilter(item){
-    this.getDashletData([item]);
+    if(item.package_name == "mongodb_chart"){
+      this.setFilterInMongodbChart(item);
+    }else{
+      this.getDashletData([item]);
+    }
   }
-
+  getMongodbFilterObject(data){
+    let object = {};
+    if(Object.keys(data).length > 0){
+      Object.keys(data).forEach(key => {
+        if(data[key] && data[key] != ''){
+          object[key] = data[key];
+        }
+      });
+    }
+    return object;
+  }
+  setFilterInMongodbChart(chart){
+    let id = "filter_"+chart.chartId;
+    let chartObject = this.createdChartList[id];
+    let filterData = this.getMongodbFilterObject(this.dashboardFilter.getRawValue());
+    chartObject.setFilter(filterData);
+  }
   setFilterForm(dashlet){    
     if(this.checkGetDashletData && dashlet._id && dashlet._id != ''){
       this.checkGetDashletData = false;
@@ -314,12 +339,47 @@ export class ChartFilterComponent implements OnInit {
         this.setFilterForm(this.dashboardItem);
       }else{
         this.showFilter = false;
-      }      
-      this.setDashLetData(this.dashletData);
+      }   
+      if(this.dashletData && this.dashletData != ''){
+        this.setDashLetData(this.dashletData);
+      }
       this.chartFilterModal.show();
-      this.dashboardFilter.reset();
+      if(object.filter){
+        this.dashboardFilter.reset();
+      }
+      if(this.dashboardItem.package_name == "mongodb_chart"){
+        setTimeout(() => {
+          this.populateMongodbChart(this.dashboardItem);
+        }, 100);
+      }
     }    
     
+  }
+  populateMongodbChart(chart){
+    if(this.accessToken != "" && this.accessToken != null){
+      const sdk = new ChartsEmbedSDK({
+        baseUrl: chart.chartUrl, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+        getUserToken: () => this.accessToken
+      });
+      if(chart && chart.chartId){        
+        const id = "filter_"+chart.chartId;
+        const idRef = document.getElementById(id);
+        let height = "500px";
+        if(idRef){
+          let cretedChart = sdk.createChart({
+            chartId: chart.chartId, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
+            height: height
+          });
+          this.createdChartList[id] = cretedChart;
+          cretedChart
+          .render(idRef)
+          .catch(() => 
+          console.log('Chart failed to initialise')
+          //window.alert('Chart failed to initialise')
+          );
+        }        
+      }
+    }
   }
   close(item){
     this.checkGetDashletData = false;
@@ -328,9 +388,15 @@ export class ChartFilterComponent implements OnInit {
   }
 
   reset(item){
-    if(this.showFilter){
+    if(this.dashboardFilter){
       this.dashboardFilter.reset();
-      this.getDashletData([item]);
+    }    
+    if(this.showFilter){      
+      if(this.dashboardItem.package_name == "mongodb_chart"){
+        this.setFilterInMongodbChart(item);
+      }else{
+        this.getDashletData([item]);
+      }
     }    
   }
 
