@@ -827,6 +827,25 @@ export class GridSelectionModalComponent implements OnInit {
   deleteitem() {
     this.parentObj[this.fieldNameForDeletion.field_name].splice(this.deleteIndex, 1)
   }
+  showGriddData(index,column){
+    let value={};
+    let rowData = this.gridData[index];
+    let columnData = rowData[column.field_name];
+    value['data'] = columnData;
+    let editemode = false; 
+    switch (column.type) {
+      case "info":
+        if(column["gridColumns"] && column["gridColumns"].length > 0){
+          value['gridColumns']=column.gridColumns;
+        }else if(column["fields"] && column["fields"].length > 0){
+          value['gridColumns']=column.fields;
+        }
+        this.CommonFunctionService.viewModal('form_basic-modal', value, column, "",editemode);
+        break;
+      default:
+        break;
+    }
+  }
   
 }
 
