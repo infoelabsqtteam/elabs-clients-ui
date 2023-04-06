@@ -37,7 +37,7 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
       this.accessToken = this.storageService.GetIdToken();      
       this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
         const chartData = data.data;
-        if(chartData.length > 0){
+        if(chartData && chartData.length > 0){
           this.chartIdList = chartData;
           setTimeout(() => {
             this.populateMongodbChart();
