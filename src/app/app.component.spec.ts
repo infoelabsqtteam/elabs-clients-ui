@@ -16,16 +16,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'my-second-project'`, () => {
+  it(`should have as title 'elabs-client-ui'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('my-second-project');
+    expect(app.title).toEqual('elabs-client-ui');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('my-second-project app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('elabs-client-ui app is running!');
   });
 });

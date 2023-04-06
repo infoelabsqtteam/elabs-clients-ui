@@ -12,7 +12,6 @@ import { AllPackageModule } from './all-package/all-package.module';
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
-import { AgmCoreModule } from '@agm/core';
 
 import { McoreComponent } from './m-core.component';
 import { HomeComponent } from './home/home.component';
@@ -82,11 +81,7 @@ const maskConfig: Partial<IConfig> = {
         MDBBootstrapModule.forRoot(),         
         NgxMaskModule.forRoot(maskConfig),
         CoreModule,
-        SharedModule,
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyA--cLc1-rZJvuV18t0jxlzIbzxahuH-EQ',
-            libraries: ['places']
-        }),    
+        SharedModule,   
         DocumentModule,
         AngularMaterialModule,
         DirectiveModuleModule,

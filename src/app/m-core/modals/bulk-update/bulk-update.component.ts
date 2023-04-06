@@ -10,7 +10,6 @@ import { NotificationService } from 'src/app/services/notify/notification.servic
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-bulk-update',
