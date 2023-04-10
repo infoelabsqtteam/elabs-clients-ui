@@ -235,5 +235,25 @@ constructor(
   //     return field.label;
   //   }
   // }
+  modifyTableFields(tablefields){
+    
+  }
+  gridDataModify(modifyData,data,fields,key){
+    if(fields && fields.length > 0){
+      for (let i = 0; i < fields.length; i++) {
+        const element = fields[i];
+        const type = element.type;
+        
+      }
+    }
+    switch (key) {
+      case 'grid_selection':
+      case 'grid_selection_vertical':
+        
+        break;    
+      default:
+        break;
+    }
+  }
 
 }

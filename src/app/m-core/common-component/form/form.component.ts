@@ -20,6 +20,7 @@ import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
 import { Subscription } from 'rxjs';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
+import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
 
 declare var tinymce: any;
 
@@ -209,6 +210,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   selectedRowIndex: any = -1;
   userInfo: any;
   custmizedFormValue: any = {};
+  modifyCustmizedFormValue: any = {};
   customEntryData:any={};
   typeAheadData: string[] = [];
   public tempVal = {};
@@ -301,15 +303,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private routers: ActivatedRoute,
     @Inject(DOCUMENT) document,
     private datePipe: DatePipe,
-    private ngZone: NgZone,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private modelService: ModelService,
     private notificationService:NotificationService,
     private envService:EnvService,
     private coreFunctionService:CoreFunctionService,
     private customValidationService:CustomvalidationService,
-    private menuOrModuleCommounService:MenuOrModuleCommonService
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private gridCommonFunctionService:GridCommonFunctionService
 ) {
 
     this.tinymceConfig = {
@@ -610,6 +611,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.customValidationFiels = [];
     this.canUpdateIfFieldList=[];
     this.custmizedFormValue = {};
+    this.modifyCustmizedFormValue = {};
     this.dataListForUpload = {};
     this.checkBoxFieldListValue = [];
     this.selectedRow = {}
@@ -1401,6 +1403,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.updateMode = false;
           }                     
           this.custmizedFormValue = {};  
+          this.modifyCustmizedFormValue = {};
           this.dataListForUpload = {} 
           this.saveResponceData = saveFromDataRsponce.data;
         }
@@ -3340,6 +3343,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }else{
       this.custmizedFormValue = {};
+      this.modifyCustmizedFormValue = {};
     }
     this.updateMode=false;
     this.addAndUpdateResponce.emit('close');    
@@ -3735,8 +3739,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.callStaticData(payloads);
       }
     }
-
-
+    this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,'grid-selection');
+    
 
 
     // if(this.templateForm.controls['quotation_param_methods']){
@@ -3818,6 +3822,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   showModal(object){
     this.custmizedFormValue = {}    
+    this.modifyCustmizedFormValue = {};
     this.formModal.show();
   }
   closeModal(){
@@ -3833,6 +3838,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }else{
       this.custmizedFormValue = {};
+      this.modifyCustmizedFormValue = {};
     }
     this.resetForm();
     //this.templateForm.reset();
@@ -3924,12 +3930,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     if(Object.keys(this.donotResetFieldLists).length > 0){
       this.custmizedFormValue = {};
+      this.modifyCustmizedFormValue = {};
       this.dataListForUpload = {};
       this.updateDataOnFormField(this.donotResetFieldLists);
       this.donotResetFieldLists = {};
     }else{
       this.dataListForUpload={};
       this.custmizedFormValue = {};
+      this.modifyCustmizedFormValue = {};
     }  
     if(this.tableFields.length > 0){ 
       this.tableFields.forEach(element => {
@@ -5390,6 +5398,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             
             if(index != undefined && index >= 0){
               this.custmizedFormValue = {};
+              this.modifyCustmizedFormValue = {};
               this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
               previousformData[fieldName] = this.custmizedFormValue[fieldName];
               this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
@@ -5397,6 +5406,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }else{
               this.donotResetField();
               this.custmizedFormValue = {};
+              this.modifyCustmizedFormValue = {};
               this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
               previousformData[fieldName] = this.custmizedFormValue[fieldName];
               this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
