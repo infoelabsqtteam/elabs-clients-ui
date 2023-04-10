@@ -62,7 +62,6 @@
     "ngx-perfect-scrollbar": "^10.1.1",
     "ngx-timer": "^1.0.6",
     "rxjs": "^7.8.0",
-    "save-dev": "0.0.1-security",
     "sonar-scanner": "^3.1.0",
     "tinymce": "^5.10.2",
     "tslib": "^2.5.0",
