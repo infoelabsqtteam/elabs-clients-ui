@@ -6,7 +6,8 @@ import { DataShareService } from 'src/app/services/data-share/data-share.service
 import { PermissionService } from 'src/app/services/permission/permission.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { StorageService} from '../../../services/storage/storage.service';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { ModelService } from "src/app/services/model/model.service";
 
 
@@ -28,7 +29,9 @@ export const MY_DATE_FORMATS = {
   styles: [
   ],
   providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}
   ]
 })
 export class ReportFormComponent implements OnInit {
