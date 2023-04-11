@@ -766,8 +766,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }    
     let routeQuery = '';
     let routeQueryCriteri = ['serialId'];
+    this.currentBrowseUrl = this.getCurrentBrowseUrl();
     if(record != ""){
-      let queryList = [];
+      let queryList:any = [];
       routeQueryCriteri.forEach(criteria => {
         if(record && record[criteria]){
           const query = criteria+"="+record[criteria];
@@ -782,8 +783,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             routeQuery = routeQuery +"&"+ query;
           }
         })
-      }      
-      this.currentBrowseUrl = this.getCurrentBrowseUrl();
+      }   
       if(routeQuery && routeQuery != ''){
         this._location.go(this.currentBrowseUrl+"?"+routeQuery);
       }else {
