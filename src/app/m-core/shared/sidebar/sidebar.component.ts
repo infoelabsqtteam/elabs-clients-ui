@@ -51,7 +51,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       if(index != -1){
           this.moduleIndex = index;
       }else{
-          this.moduleIndex = -1;
+          this.modal = '';
+          setTimeout(() => {
+            this.moduleIndex = -1;  
+          }, 10);                   
       }
     })
     this.menuIndexSubscription = this.dataShareService.menuIndexs.subscribe(indexs =>{      
