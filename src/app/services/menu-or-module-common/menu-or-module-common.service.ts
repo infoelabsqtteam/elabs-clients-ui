@@ -289,5 +289,17 @@ constructor(
     }
     this.dataShareService.sendCurrentPage('DASHBOARD');
   }
+  goToMOdule() {
+    this.dataShareService.sendCurrentPage('MODULE');
+    this.dataShareService.resetHeaderMenu([]);
+    this.dataShareService.setModuleIndex(-1);
+    this.dataShareService.setMenuIndexs({menuIndex:-1,submenuIndex:-1});       
+    const menuType = this.storageService.GetMenuType()
+    if (menuType == 'Horizontal') {
+        this.router.navigate(['/home']);
+    } else {
+        this.router.navigate(['/dashboard']);
+    }
+  }
 
 }

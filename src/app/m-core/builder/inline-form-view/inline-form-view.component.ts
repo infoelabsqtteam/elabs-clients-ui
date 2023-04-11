@@ -8,7 +8,8 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@ang
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { ModelService } from 'src/app/services/model/model.service';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -26,6 +27,8 @@ export const MY_DATE_FORMATS = {
   templateUrl: './inline-form-view.component.html',
   styleUrls: ['./inline-form-view.component.css'],
   providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })

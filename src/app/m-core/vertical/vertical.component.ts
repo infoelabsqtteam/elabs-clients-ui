@@ -4,6 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { Subscription } from 'rxjs';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 @Component({
   selector: 'app-vertical',
@@ -25,7 +26,9 @@ export class VerticalComponent implements OnInit {
     private router: Router,
     private dataShareService:DataShareService,
     private storageService: StorageService,
-    changeDetectorRef: ChangeDetectorRef, media: MediaMatcher
+    private menuOrModuleCommonService:MenuOrModuleCommonService,
+    changeDetectorRef: ChangeDetectorRef, 
+    media: MediaMatcher
     ) {
     this.mobileQuery = media.matchMedia('(max-width:991px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -97,6 +100,9 @@ export class VerticalComponent implements OnInit {
   // } 
   pageload(){
     this.logoPath = this.storageService.getLogoPath() + "logo.png";
+  }
+  goToHomePage(){
+    this.menuOrModuleCommonService.goToMOdule();
   }
 
 }

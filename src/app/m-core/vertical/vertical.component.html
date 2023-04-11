@@ -19,7 +19,7 @@
  
 <mat-toolbar class="header pl-0 w-100">
   <div class="logoitem d-flex align-items-center justify-content-between px-2">
-    <a class="logo px-2" [routerLink]="['/home']"><img [src]="logoPath" alt=""></a>
+    <a class="logo px-2" (click)="goToHomePage()"><img [src]="logoPath" alt=""></a>
     <button mat-icon-button (click)="drawer.toggle()"><mat-icon>sort</mat-icon></button>
   </div>
   <div class="topheader"><app-header class="w-100"></app-header></div>

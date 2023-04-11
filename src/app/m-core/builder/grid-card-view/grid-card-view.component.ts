@@ -7,7 +7,8 @@ import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -25,6 +26,8 @@ export const MY_DATE_FORMATS = {
   templateUrl: './grid-card-view.component.html',
   styleUrls: ['./grid-card-view.component.css'],
   providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })

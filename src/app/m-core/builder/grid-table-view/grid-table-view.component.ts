@@ -8,7 +8,8 @@ import { PermissionService } from '../../../services/permission/permission.servi
 import { ApiService } from '../../../services/api/api.service';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import { KeyCode} from '../../../shared/enums/keycodes.enum';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { NotificationService } from 'src/app/services/notify/notification.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
@@ -34,8 +35,8 @@ export const MY_DATE_FORMATS = {
   templateUrl: './grid-table-view.component.html',
   styleUrls: ['./grid-table-view.component.css'],
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-   // {provide: DateAdapter, useClass: MomentUtcDateAdapter},
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
@@ -765,8 +766,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }    
     let routeQuery = '';
     let routeQueryCriteri = ['serialId'];
+    this.currentBrowseUrl = this.getCurrentBrowseUrl();
     if(record != ""){
-      let queryList = [];
+      let queryList:any = [];
       routeQueryCriteri.forEach(criteria => {
         if(record && record[criteria]){
           const query = criteria+"="+record[criteria];
@@ -781,8 +783,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             routeQuery = routeQuery +"&"+ query;
           }
         })
-      }      
-      this.currentBrowseUrl = this.getCurrentBrowseUrl();
+      }   
       if(routeQuery && routeQuery != ''){
         this._location.go(this.currentBrowseUrl+"?"+routeQuery);
       }else {

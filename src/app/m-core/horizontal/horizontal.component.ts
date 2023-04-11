@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 
 @Component({
   selector: 'app-horizontal',
@@ -14,6 +15,7 @@ export class HorizontalComponent implements OnInit {
     private dataShareService:DataShareService,
     private envService:EnvService,
     private storageService: StorageService,
+    private menuOrModuleCommonService:MenuOrModuleCommonService
   ) {
     this.logoPath = this.storageService.getLogoPath() + "logo.png";
   }
@@ -24,6 +26,9 @@ export class HorizontalComponent implements OnInit {
     }else{
       this.dataShareService.sendCurrentPage('MODULE');
     }
+  }
+  goToHomePage(){
+    this.menuOrModuleCommonService.goToMOdule();
   }
 
 

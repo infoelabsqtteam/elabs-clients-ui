@@ -1,6 +1,5 @@
 <section class="vertical-menu sidenav">
-  <div class="sidefilter px-3 mb-4"><input type="text" [(ngModel)]="modal" [placeholder]="'Type Modal...'"/></div>
-
+  <div class="sidefilter px-3 mb-4"><input type="text" [(ngModel)]="modal" [placeholder]="'Search Modules...'"/></div>
   <perfect-scrollbar>
     <div class="metismenu list-unstyled mb-5" #sideMenu>
       <mat-accordion>
@@ -11,7 +10,7 @@
 
           <div *ngIf="hasMenu(item)" class="menulist">
             <div class="menuitems" *ngFor="let subitem of item.menu_list;let j = index" [ngClass]="{'d-none': !subitem.display}">
-              <div class="position-relative" *ngIf="!hasSubMenu(subitem)" [ngClass]="{'activetxt':j == menuIndex}">
+              <div class="position-relative" *ngIf="!hasSubMenu(subitem)" [ngClass]="{'sidebaractive':j == menuIndex}">
                 <a [attr.data-parent]="subitem.parentId" (click)="getmenuTemplateData(item,subitem,j,$event)">{{ subitem.label }}</a>
                 <span class="favibtn" style="right: 20px;"  (click)="openInNewTab(item,subitem)"><mat-icon>open_in_new</mat-icon></span>
                 <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subitem,'')}" (click)="addFebMenu(subitem,'')"><mat-icon>grade</mat-icon></span>
@@ -19,9 +18,12 @@
               
               <mat-accordion *ngIf="hasSubMenu(subitem)">
                 <mat-expansion-panel [expanded]="j == menuIndex">
-                  <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" [ngClass]="{'d-none': !subitem.display,'activetxt':j == menuIndex}">{{ subitem.label }}</mat-expansion-panel-header>
-                  <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu;let k = index" [ngClass]="{'d-none': !subSubitem.display,'activetxt':k == subMenuIndex}" >
-                    <small class="dropdownmenulist" [attr.data-parent]="subSubitem.parentId" (click)="getSubmenuTemplateData(item,subSubitem,k,j,$event)">{{ subSubitem.label }}</small>
+                  <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" [ngClass]="{'d-none': !subitem.display,'sidebaractive':j == menuIndex}">{{ subitem.label }}</mat-expansion-panel-header>
+                  
+                  <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu;let k = index" [ngClass]="{'d-none': !subSubitem.display,'sidebarsubmenuactive':k == subMenuIndex}" >
+                    
+                    <small class="dropdownmenulist pl-4" [attr.data-parent]="subSubitem.parentId" (click)="getSubmenuTemplateData(item,subSubitem,k,j,$event)">{{ subSubitem.label }}</small>
+
                     <span class="favibtn" style="right: 20px;"  (click)="openInNewTab(item,subSubitem)"><mat-icon>open_in_new</mat-icon></span>
                     <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span>
                   </div>

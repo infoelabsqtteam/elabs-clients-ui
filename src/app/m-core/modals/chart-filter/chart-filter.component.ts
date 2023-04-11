@@ -6,8 +6,9 @@ import { CommonFunctionService } from 'src/app/services/common-utils/common-func
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
+import { MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as XLSX from 'xlsx';
-import * as _moment from 'moment';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 // import {default as _rollupMoment} from 'moment';
@@ -30,7 +31,15 @@ export const MY_DATE_FORMATS = {
   selector: 'app-chart-filter',
   templateUrl: './chart-filter.component.html',
   styles: [
-  ]
+  ],
+  providers: [
+    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
+    // `MatMomentDateModule` in your applications root module. We provide it at the component level
+    // here, due to limitations of our example generation script.
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
+  ],
 })
 export class ChartFilterComponent implements OnInit {
   
