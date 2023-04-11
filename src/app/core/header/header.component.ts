@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     gitVersionSubscription: any;
     moduleIndexSubscription:Subscription;
     menuIndexSubscription:Subscription;
+    headerMenuSubscription:Subscription;
     gitVersion: any;
 
     logoPath = ''
@@ -123,6 +124,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             }   
             this.showsearchmenu = false;
             this.filterdata = '';   
+        })
+        this.headerMenuSubscription = this.dataShareService.headerMenu.subscribe(data =>{
+            this.menuData=data;
         })
         
 
@@ -362,16 +366,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
         
     goToMOdule() {
-        this.dataShareService.sendCurrentPage('MODULE');
-        this.menuData = []; 
-        this.dataShareService.setModuleIndex(-1);
-        this.dataShareService.setMenuIndexs({menuIndex:-1,submenuIndex:-1});       
-        const menuType = this.storageService.GetMenuType()
-        if (menuType == 'Horizontal') {
-            this.router.navigate(['/home']);
-        } else {
-            this.router.navigate(['/dashboard']);
-        }
+        this.menuOrModuleCommounService.goToMOdule();
     }
     
 
