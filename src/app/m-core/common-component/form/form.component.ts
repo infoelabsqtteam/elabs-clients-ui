@@ -3654,21 +3654,21 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     });
   }
   gridSelectionResponce(responce){ 
-
-    if (!this.custmizedFormValue[this.curTreeViewField.field_name]) this.custmizedFormValue[this.curTreeViewField.field_name] = [];
-    this.custmizedFormValue[this.curTreeViewField.field_name] = JSON.parse(JSON.stringify(responce));
-    if(this.customEntryData[this.curTreeViewField.field_name] && this.customEntryData[this.curTreeViewField.field_name].length > 0){
-      this.customEntryData[this.curTreeViewField.field_name].forEach(data => {
-        this.custmizedFormValue[this.curTreeViewField.field_name].push(data);
+    const fieldName = this.curTreeViewField.field_name;
+    if (!this.custmizedFormValue[fieldName]) this.custmizedFormValue[fieldName] = [];
+    this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(responce));
+    if(this.customEntryData[fieldName] && this.customEntryData[fieldName].length > 0){
+      this.customEntryData[fieldName].forEach(data => {
+        this.custmizedFormValue[fieldName].push(data);
       });
-      this.customEntryData[this.curTreeViewField.field_name] = [];
+      this.customEntryData[fieldName] = [];
     }
 
     if(this.curTreeViewField && this.curTreeViewField.onchange_function && this.curTreeViewField.onchange_function_param){
       // if(this.currentTreeViewFieldParent != ''){
-      //   this.templateForm.get([this.currentTreeViewFieldParent.field_name]).get([this.curTreeViewField.field_name]).setValue(this.custmizedFormValue[this.curTreeViewField.field_name]);
+      //   this.templateForm.get([this.currentTreeViewFieldParent.field_name]).get([fieldName]).setValue(this.custmizedFormValue[fieldName]);
       // }else{
-      //   this.templateForm.controls[this.curTreeViewField.field_name].setValue(this.custmizedFormValue[this.curTreeViewField.field_name]);
+      //   this.templateForm.controls[fieldName].setValue(this.custmizedFormValue[fieldName]);
       // }      
       // this.templateForm = this.commonFunctionService[this.curTreeViewField.onchange_function_param](this.getFormValue, this.curTreeViewField);
       let function_name = this.curTreeViewField.onchange_function_param;
@@ -3739,10 +3739,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.callStaticData(payloads);
       }
     }
-    this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,'grid-selection');
-    
-
-
+    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',this.getFormValue(true));
+    this.modifyCustmizedFormValue = modifyObject.modifyData;
+    this.tableFields = modifyObject.fields;
     // if(this.templateForm.controls['quotation_param_methods']){
     //   this.templateForm.controls['quotation_param_methods'].setValue(this.custmizedFormValue['quotation_param_methods']);
     //   this.templateForm = this.commonFunctionService.calculateQquoteAmount(this.templateForm, this.curTreeViewField);
@@ -4345,9 +4344,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       return 'Add Form';
     }
   }
-  getTitlecase(value){
-    return this.commonFunctionService.getTitlecase(value)
-  }
+  // getTitlecase(value){
+  //   return this.commonFunctionService.getTitlecase(value)
+  // }
   take_action_on_click(action_button){
     let api='';
     this.currentActionButton=action_button;
@@ -4618,17 +4617,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.tableFields.forEach(element => {
         let fieldName = element.field_name;
         let object = formValue[fieldName];
-        if(element && element.field_name && element.field_name != ''){
+        if(element && fieldName && fieldName != ''){
           switch (element.type) { 
             case "grid_selection":
             case 'grid_selection_vertical':
             case "list_of_string":
             case "drag_drop":
-              if(formValue[element.field_name] != null && formValue[element.field_name] != undefined){
-                if(Array.isArray(formValue[element.field_name])){
-                  this.custmizedFormValue[element.field_name] = JSON.parse(JSON.stringify(formValue[element.field_name]));
+              if(formValue[fieldName] != null && formValue[fieldName] != undefined){
+                if(Array.isArray(formValue[fieldName])){
+                  this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(formValue[fieldName]));
+                  if(element.type.startsWith("grid_selection")){
+                    const modifyData = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,"grid_selection",formValue);
+                    this.modifyCustmizedFormValue = modifyData.modifyData;
+                    if(modifyData.field_index != -1){
+                      const index = modifyData.field_index;
+                      this.tableFields[index] = modifyData.fields[index];
+                    }                    
+                  }
                 }
-                this.templateForm.controls[element.field_name].setValue('')
+                this.templateForm.controls[fieldName].setValue('')
               }
               break;
             case "file":
