@@ -287,6 +287,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   deleteGridRowData: boolean = false;
   filterdata = '';
   term:any={};
+  showGridData:any={};
   serverReq:boolean = false;
 
   @HostListener('document:click') clickout() {
@@ -5660,13 +5661,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.storeFormDetails('', field);
   }
 
-  getTimeFormat(field){
-    if(field && field.time_format && field.time_format != ''){
-      return Number(field.time_format);
-    }else{
-      return Number('12');
-    }    
-  }
+  // getTimeFormat(field){
+  //   if(field && field.time_format && field.time_format != ''){
+  //     return Number(field.time_format);
+  //   }else{
+  //     return Number('12');
+  //   }    
+  // }
   
   updateAddNewField(parent,child){
     if(child && child.onchange_get_next_form){
@@ -5748,6 +5749,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
     return value;
+  }
+  showData(parent,field){
+    if(parent != ''){
+
+    }else{
+      this.showGridData[field.field_name] = !this.showGridData[field.field_name];
+    }
+
   }
   
 
