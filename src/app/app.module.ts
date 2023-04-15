@@ -40,7 +40,7 @@ import { AngularMaterialModule } from './m-core/angular-material-module/angular-
     CurrencyPipe,
     TitleCasePipe, 
     Location , 
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    {provide: LocationStrategy, useClass: PathLocationStrategy}
   ],
   
 })
