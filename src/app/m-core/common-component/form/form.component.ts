@@ -287,6 +287,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   deleteGridRowData: boolean = false;
   filterdata = '';
   term:any={};
+  pageNo:any={};
+  pageSize:any=25;
   showGridData:any={};
   serverReq:boolean = false;
 
@@ -1226,18 +1228,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.closeModal();
   }
   customValidationFiels=[];
-  setStaticData(staticData){
+  setStaticData(staticData){    
     if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
       this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
-      const fieldName = {
-        "field" : "staticDataMessgae"
-      }
-      this.apiService.ResetStaticData(fieldName);
+      // const fieldName = {
+      //   "field" : "staticDataMessgae"
+      // }
+      // this.apiService.ResetStaticData(fieldName);
     }
-    this.staticData = staticData; 
-    Object.keys(this.staticData).forEach(key => {
-      if(this.staticData[key]) {      
-        this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
+    //this.staticData = staticData; 
+    Object.keys(staticData).forEach(key => {
+      if(staticData[key]) {      
+        this.copyStaticData[key] = JSON.parse(JSON.stringify(staticData[key]));
+        this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
       }
     })
     this.tableFields.forEach(element => {
@@ -1266,19 +1269,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })  
     if(this.staticData["FORM_GROUP"] && this.staticData["FORM_GROUP"] != null){          
       this.updateDataOnFormField(this.staticData["FORM_GROUP"]);          
-      const fieldName = {
-        "field" : "FORM_GROUP"
-      }
-      this.apiService.ResetStaticData(fieldName);
+      // const fieldName = {
+      //   "field" : "FORM_GROUP"
+      // }
+      // this.apiService.ResetStaticData(fieldName);
       
     }
 
     if(this.staticData["CHILD_OBJECT"] && this.staticData["CHILD_OBJECT"] != null){
       this.updateDataOnFormField(this.staticData["CHILD_OBJECT"]);  
-      const fieldName = {
-        "field" : "CHILD_OBJECT"
-      }
-      this.apiService.ResetStaticData(fieldName);
+      // const fieldName = {
+      //   "field" : "CHILD_OBJECT"
+      // }
+      // this.apiService.ResetStaticData(fieldName);
       
     }
 
@@ -1291,19 +1294,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.updateDataOnFormField(this.staticData["COMPLETE_OBJECT"]);          
       this.selectedRow = this.staticData["COMPLETE_OBJECT"];
       this.complete_object_payload_mode = true;
-      const fieldName = {
-        "field" : "COMPLETE_OBJECT"
-      }
-      this.apiService.ResetStaticData(fieldName);
+      // const fieldName = {
+      //   "field" : "COMPLETE_OBJECT"
+      // }
+      // this.apiService.ResetStaticData(fieldName);
       
     }
 
     if(this.staticData["FORM_GROUP_FIELDS"] && this.staticData["FORM_GROUP_FIELDS"] != null){
       this.updateDataOnFormField(this.staticData["FORM_GROUP_FIELDS"]);
-      const fieldName = {
-        "field" : "FORM_GROUP_FIELDS"
-      }
-      this.apiService.ResetStaticData(fieldName);
+      // const fieldName = {
+      //   "field" : "FORM_GROUP_FIELDS"
+      // }
+      // this.apiService.ResetStaticData(fieldName);
 
     }
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {

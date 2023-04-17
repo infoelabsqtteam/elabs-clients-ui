@@ -370,9 +370,9 @@
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
-                                <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object'">
+                                <!-- <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object'">
                                     <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" (click)="showData('',tableField)" [matTooltip]="showGridData[tableField.field_name] ? 'Expand Less':'Expand More'" [matTooltipPosition]="'above'"><span *ngIf="!showGridData[tableField.field_name]" class="material-icons">expand_more</span><span *ngIf="showGridData[tableField.field_name]" class="material-icons">expand_less</span></button>
-                                </div>
+                                </div> -->
                                 <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object_with_popup'">                            
                                     <div class="grid-selection-buttons" *ngIf="tableField.type == 'list_of_fields' && !tableField.add_list_field && tableField.add_list_field != 'add'">
                                         <button *ngIf="updateMode && tableField.onClickLoadData" [disabled]="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" [id]="tableField._id+'_'+tableField.field_name" class="plusicon" mat-icon-button  (click)="onClickLoadData('',tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Load Data'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">update</span></button>
@@ -694,7 +694,7 @@
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
                                 </div>
                             </div>
-                            <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value' && showGridData[tableField.field_name]">
+                            <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter mt-2" *ngIf="custmizedFormValue[tableField.field_name]">
                                     <div class="row px-2" *ngIf="custmizedFormValue[tableField.field_name].length > 25">
                                         <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
@@ -720,7 +720,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype == 'key_value' && showGridData[tableField.field_name]">
+                            <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype == 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter" *ngIf="custmizedFormValue[tableField.field_name]">
                                     <table class="table-bordered table-striped table-hover" *ngIf="checkObjectSize(custmizedFormValue[tableField.field_name])">
                                         <thead>
@@ -808,8 +808,8 @@
                             </div>
 
                             <div class="row" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
-                                <div class="col-lg-12 table-responsive py-2" >
-                                    <table mdbTable class="maxheightdata verticaltable">
+                                <div class="col-lg-12 table-responsive py-2 maxheightdata" >
+                                    <table mdbTable class="z-depth-1 verticaltable">
                                         <tbody>
                                         <tr *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
                                             <td ><strong>{{ fieldName.label | titlecase}}</strong></td>
@@ -838,14 +838,10 @@
                             </div>
 
                             <div class="" *ngIf="modifyCustmizedFormValue[tableField.field_name] && showGridData[tableField.field_name]">
+                                <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 25">
+                                    <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                </div>                                
                                 <div class="table-responsive table maxheightdata">
-
-                                    <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 25">
-                                        <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
-                                    </div>
-
-
-                                    
                                     <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 
@@ -855,7 +851,7 @@
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                             <tr *ngFor="let data of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name] | paginate
-                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: 25, currentPage: tableField.field_name} ; let i = index" cdkDrag cdkDragLockAxis="y">
+                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y">
 
                                                 <td *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled">
                                                     <div class="example-handle cursor-move" cdkDragHandle *ngIf="!tableField.add_new_enabled || tableField.draggable" [ngClass]="{'d-inline-block': tableField.draggable}">
@@ -876,9 +872,13 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                    </table>
-                                    <pagination-controls (pageChange)="tableField.field_name = $event" [id]="tableField.field_name + '_' + tableField.type"></pagination-controls>
+                                    </table>                                    
                                 </div>
+                                <section *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 25">
+                                    <mat-card-content class="m-0 pt-0 text-center">
+                                        <pagination-controls (pageChange)="pageNo[tableField.field_name] = $event" [id]="tableField.field_name + '_' + tableField.type"></pagination-controls>
+                                    </mat-card-content>
+                                </section>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'tabular_data_selector'"> 
@@ -1003,7 +1003,7 @@
                         </div> 
                         <div *ngIf="tableField.type == 'html_view'">
                             <!-- <div [innerHtml]="copyStaticData[tableField.ddn_field]"></div>  -->
-                            <!-- <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                           -->
+                            <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                          
                         </div>
                         <div *ngIf="tableField.type == 'pdf_view'">
                             <div *ngIf="pdfViewLink != ''">
