@@ -1,4 +1,4 @@
-<div class="modal-content" [formGroup]="templateForm" *ngIf="tableFields.length > 0" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
+<div class="modal-content" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
     <!--Header-->
     <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
         <div class="form-tab">
