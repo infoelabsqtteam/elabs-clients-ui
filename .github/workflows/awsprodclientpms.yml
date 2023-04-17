@@ -1,0 +1,53 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Angular CI with Node - awsuatclient
+
+on:
+  push:
+    branches: [ awsprodclientpms ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    ########################### Elabs Aws - ###########################
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ELABS_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ELABS_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.ELABS_REGION }}
+        
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Installing source NPM dependencies...
+      run: npm install
+      
+    - name: Installing Angular
+      run: npm install -g @angular/cli@13.0.0
+    
+    - name: Set Node Options
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
+    
+    - name: Building
+      run: ng build --configuration=develop
+     
+
+  # Deploy Qualitek Labs
+    - name: Clean up existing deployment - For UAT Only UI Client
+      run: aws s3 rm s3://prodclientspms.e-labs.ai --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://prodclientspms.e-labs.ai
+      
+    - name: Clean up cache for PMS Prod Client
+      run: aws cloudfront create-invalidation --distribution-id E10XAS3QQZ9QZC --paths '/*'    
+       
