@@ -42,7 +42,7 @@ jobs:
      
 
   # Deploy Qualitek Labs
-    - name: Clean up existing deployment - For UAT Only UI Client
+    - name: Clean up existing deployment
       run: aws s3 rm s3://prodclientspms.e-labs.ai --recursive
 
     - name: Upload data
