@@ -11,7 +11,7 @@ export const serverHostList = [
   {"clientEndpoint": "standard-demolab.e-labs.ai", "serverEndpoint": "https://serverhardgoodlabs.e-labs.ai"},
   {"clientEndpoint": "ascgroup.e-labs.ai", "serverEndpoint": "https://sitserverascgroup.e-labs.ai"},
   {"clientEndpoint": "uatclients.e-labs.ai", "serverEndpoint": "https://sitserverascgroup.e-labs.ai"},
-  {"clientEndpoint": "pms.ascgroup.in", "serverEndpoint": "https://prodserverascgroup.e-labs.ai"},
+  {"clientEndpoint": "pms.ascgroup.in", "serverEndpoint": "https://sitserverascgroup.e-labs.ai"},
   {"clientEndpoint": "itclabs.e-labs.ai", "serverEndpoint": "https://serveritclabs.e-labs.ai"},
   {"clientEndpoint": "dev-itclabs.e-labs.ai", "serverEndpoint": "https://devserveritclabs.e-labs.ai"},
   {"clientEndpoint": "uat-itclabs.e-labs.ai", "serverEndpoint": "https://uatserveritclabs.e-labs.ai"},
