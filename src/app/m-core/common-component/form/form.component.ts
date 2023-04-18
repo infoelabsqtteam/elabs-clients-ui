@@ -225,7 +225,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   curParentFormField:any={};
   treeViewData: any = {};
   dataSaveInProgress: boolean = true;
-  copyStaticData:any={};
   submitted:boolean=false;
   forms:any={};
   form:any={};
@@ -1236,22 +1235,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       // }
       // this.apiService.ResetStaticData(fieldName);
     }
-    //this.staticData = staticData; 
     Object.keys(staticData).forEach(key => {
-      if(staticData[key]) {      
-        this.copyStaticData[key] = JSON.parse(JSON.stringify(staticData[key]));
+      if(staticData[key]) { 
         this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
       }
     })
     this.tableFields.forEach(element => {
       switch (element.type) {              
         case 'pdf_view':
-          if(Array.isArray(this.copyStaticData[element.ddn_field]) && this.copyStaticData[element.ddn_field] != null){
-            const data = this.copyStaticData[element.ddn_field][0];
+          if(Array.isArray(this.staticData[element.ddn_field]) && this.staticData[element.ddn_field] != null){
+            const data = this.staticData[element.ddn_field][0];
             if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
               const arrayBuffer = data['bytes'];
               this.pdfViewLink = arrayBuffer;
-              this.pdfViewListData = JSON.parse(JSON.stringify(this.copyStaticData[element.ddn_field]))
+              this.pdfViewListData = JSON.parse(JSON.stringify(this.staticData[element.ddn_field]))
             }
           }else{
             this.pdfViewLink = '';
@@ -1259,8 +1256,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
         case 'info_html':
         case 'html_view':
-          if(this.copyStaticData[element.ddn_field] && this.copyStaticData[element.ddn_field] != null){
-            this.templateForm.controls[element.field_name].setValue(this.copyStaticData[element.ddn_field])
+          if(this.staticData[element.ddn_field] && this.staticData[element.ddn_field] != null){
+            this.templateForm.controls[element.field_name].setValue(this.staticData[element.ddn_field])
           }
           break;
         default:              
@@ -1268,21 +1265,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     })  
     if(this.staticData["FORM_GROUP"] && this.staticData["FORM_GROUP"] != null){          
-      this.updateDataOnFormField(this.staticData["FORM_GROUP"]);          
-      // const fieldName = {
-      //   "field" : "FORM_GROUP"
-      // }
-      // this.apiService.ResetStaticData(fieldName);
-      
+      this.updateDataOnFormField(this.staticData["FORM_GROUP"]);      
     }
 
     if(this.staticData["CHILD_OBJECT"] && this.staticData["CHILD_OBJECT"] != null){
-      this.updateDataOnFormField(this.staticData["CHILD_OBJECT"]);  
-      // const fieldName = {
-      //   "field" : "CHILD_OBJECT"
-      // }
-      // this.apiService.ResetStaticData(fieldName);
-      
+      this.updateDataOnFormField(this.staticData["CHILD_OBJECT"]); 
     }
 
     if(this.staticData["COMPLETE_OBJECT"] && this.staticData["COMPLETE_OBJECT"] != null){
@@ -1293,21 +1280,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       this.updateDataOnFormField(this.staticData["COMPLETE_OBJECT"]);          
       this.selectedRow = this.staticData["COMPLETE_OBJECT"];
-      this.complete_object_payload_mode = true;
-      // const fieldName = {
-      //   "field" : "COMPLETE_OBJECT"
-      // }
-      // this.apiService.ResetStaticData(fieldName);
-      
+      this.complete_object_payload_mode = true;      
     }
 
     if(this.staticData["FORM_GROUP_FIELDS"] && this.staticData["FORM_GROUP_FIELDS"] != null){
       this.updateDataOnFormField(this.staticData["FORM_GROUP_FIELDS"]);
-      // const fieldName = {
-      //   "field" : "FORM_GROUP_FIELDS"
-      // }
-      // this.apiService.ResetStaticData(fieldName);
-
     }
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
       this.setCheckboxFileListValue();
@@ -1359,7 +1336,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   setGridRowDeleteResponce(responce){
-    //console.log(responce);
     this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
     this.dataSaveInProgress = true;
   }
@@ -1375,13 +1351,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }else{
             this.notificationService.notify("bg-success", " Form Data Save successfull !!!");
           }
-          //this.templateForm.reset();
-          //this.formGroupDirective.resetForm()
           
-          this.resetForm();
-          // this.custmizedFormValue = {};
-           this.dataListForUpload = {}
-          //this.addAndUpdateResponce.emit('add');
+          this.checkBeforeResetForm();
+          this.dataListForUpload = {}
           this.saveResponceData = saveFromDataRsponce.data;
         } else if (saveFromDataRsponce.success == 'success' && this.updateMode) {
           if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick.success_msg && this.currentActionButton.onclick.success_msg != ''){
@@ -1391,34 +1363,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }else{
             this.notificationService.notify("bg-success", " Form Data Update successfull !!!");
           }
-          //this.templateForm.reset();
-          //this.formGroupDirective.resetForm()
           if(this.nextIndex){              
             this.next();
           }else{
-            this.resetForm();
-            //this.addAndUpdateResponce.emit('update'); 
+            this.checkBeforeResetForm();
             this.updateMode = false;
           }                     
           this.custmizedFormValue = {};  
           this.modifyCustmizedFormValue = {};
           this.dataListForUpload = {} 
           this.saveResponceData = saveFromDataRsponce.data;
-        }
-        if(this.close_form_on_success){
-          this.close_form_on_success=false;
-          this.close();
-        }else if(this.multipleFormCollection.length > 0){
-          this.close();
-        }else{
-          //this.commonFunctionService.getStaticData();
-          const payloads = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,this.getFormValue(false));
-          this.callStaticData(payloads);
-        }
+        }        
         if(this.isStepper){
           this.stepper.reset();
         }
-
         if(this.envService.getRequestType() == 'PUBLIC'){
           this.complete_object_payload_mode = false;
           let _id = this.saveResponceData["_id"];
@@ -1445,8 +1403,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
          
         }
-        
-        //this.close()
         this.showNotify = false;
         this.dataSaveInProgress = true;
         this.apiService.ResetSaveResponce()
@@ -3756,7 +3712,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.formModal.show();
   }
   closeModal(){
-    if(this.updateMode){      
+    if(this.updateMode && this.multipleFormCollection.length > 0){      
       Object.keys(this.custmizedFormValue).forEach(key => {
         if(this.custmizedFormValue[key] != null && Array.isArray(this.custmizedFormValue[key])){
           this.custmizedFormValue[key].forEach(element => {
@@ -3770,22 +3726,18 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.custmizedFormValue = {};
       this.modifyCustmizedFormValue = {};
     }
-    this.resetForm();
-    //this.templateForm.reset();
-    //this.formGroupDirective.resetForm()
+    //this.resetForm();
+    if(this.multipleFormCollection.length > 0){
+      this.setPreviousFormTargetFieldData();
+    }
     this.updateMode=false;
     this.dataListForUpload = []
     this.filePreviewFields = [];
-    this.copyStaticData = {};
-    this.apiService.resetStaticAllData();
-    this.checkFormAfterCloseModel();
-    //this.commonFunctionService.resetStaticAllData();
+    this.close();
   }  
   close(){    
-    this.apiService.resetStaticAllData();
-    this.copyStaticData = {};
+    this.staticData = {};
     this.typeAheadData = [];
-    //this.commonFunctionService.resetStaticAllData();
     this.selectedRow = {};
     this.checkFormAfterCloseModel();
   }
@@ -3850,9 +3802,22 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
+  checkBeforeResetForm(){
+    if(this.close_form_on_success){
+      this.close_form_on_success=false;
+      this.close();
+    }else if(this.multipleFormCollection.length > 0){
+      this.close();
+    }else{
+      this.resetForm()
+      // const payloads = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,this.getFormValue(false));
+      // this.callStaticData(payloads);
+    }
+  }
   resetForm(){
-    //this.formGroupDirective.resetForm();
-    this.setPreviousFormTargetFieldData();
+    if(this.multipleFormCollection.length > 0){
+      this.setPreviousFormTargetFieldData();
+    }
     this.donotResetField();
     if(this.templateForm && this.templateForm.controls){
       this.templateForm.reset()
@@ -4067,12 +4032,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   toggle(index,event: MatCheckboxChange,field) {
     if (event.checked) {
-      this.copyStaticData[field.ddn_field][index].selected=true;
+      this.staticData[field.ddn_field][index].selected=true;
     } else {
-      this.copyStaticData[field.ddn_field][index].selected=false;
+      this.staticData[field.ddn_field][index].selected=false;
     }
     this.custmizedFormValue[field.field_name] = [];
-    this.copyStaticData[field.ddn_field].forEach(element => {      
+    this.staticData[field.ddn_field].forEach(element => {      
       if(element.selected){
         this.custmizedFormValue[field.field_name].push(element);
       }
@@ -4080,8 +4045,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   isIndeterminate(ddn_field) {
     let check = 0;
-    if(this.copyStaticData[ddn_field].length > 0){
-      this.copyStaticData[ddn_field].forEach(row => {
+    if(this.staticData[ddn_field].length > 0){
+      this.staticData[ddn_field].forEach(row => {
         if(row.selected){
           check = check + 1;
         }
@@ -4091,31 +4056,31 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   };
   isChecked(ddn_field) {
     let check = 0;
-    if(this.copyStaticData[ddn_field].length > 0){
-      this.copyStaticData[ddn_field].forEach(row => {
+    if(this.staticData[ddn_field].length > 0){
+      this.staticData[ddn_field].forEach(row => {
         if(row.selected){
           check = check + 1;
         }
       });
     }
-    return this.copyStaticData[ddn_field].length === check;
+    return this.staticData[ddn_field].length === check;
   };
   toggleAll(event: MatCheckboxChange,field) {    
     if ( event.checked ) {
-      if(this.copyStaticData[field.ddn_field].length > 0){
-        this.copyStaticData[field.ddn_field].forEach(row => {
+      if(this.staticData[field.ddn_field].length > 0){
+        this.staticData[field.ddn_field].forEach(row => {
           row.selected=true;
         });
       }
     }else{
-      if(this.copyStaticData[field.ddn_field].length > 0){
-        this.copyStaticData[field.ddn_field].forEach(row => {
+      if(this.staticData[field.ddn_field].length > 0){
+        this.staticData[field.ddn_field].forEach(row => {
           row.selected=false;
         });
       }
     }
     this.custmizedFormValue[field.field_name] = [];
-    this.copyStaticData[field.ddn_field].forEach(element => {      
+    this.staticData[field.ddn_field].forEach(element => {      
       if(element.selected){
         this.custmizedFormValue[field.field_name].push(element);
       }
@@ -4267,7 +4232,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.filePreviewFields.length > 0){
       let checkInfoHtml = 0;
       this.filePreviewFields.forEach(element => {
-        if(this.copyStaticData[element.ddn_field] && this.copyStaticData[element.ddn_field] != '' && this.copyStaticData[element.ddn_field] != null){
+        if(this.staticData[element.ddn_field] && this.staticData[element.ddn_field] != '' && this.staticData[element.ddn_field] != null){
           checkInfoHtml += 1;
         }
       });
@@ -4299,7 +4264,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   onchangeHtmlView(){
-    if(this.copyStaticData['onchangeHtmlView'] && this.copyStaticData['onchangeHtmlView'] != null && this.copyStaticData['onchangeHtmlView'] != ''){
+    if(this.staticData['onchangeHtmlView'] && this.staticData['onchangeHtmlView'] != null && this.staticData['onchangeHtmlView'] != ''){
       return true;
     }else{
       return false;
@@ -4756,10 +4721,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(object != undefined && object != null){
             this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));     
           } 
-          if(Array.isArray(this.copyStaticData[ddn_field]) && Array.isArray(this.custmizedFormValue[fieldName])){
+          if(Array.isArray(this.staticData[ddn_field]) && Array.isArray(this.custmizedFormValue[fieldName])){
             this.custmizedFormValue[fieldName].forEach(staData => {
-              if(this.copyStaticData[ddn_field][staData._id]){
-                this.copyStaticData[ddn_field][staData._id].selected = true;
+              if(this.staticData[ddn_field][staData._id]){
+                this.staticData[ddn_field][staData._id].selected = true;
               }
             });
           }          

@@ -311,11 +311,11 @@
                                     <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="copyStaticData[tableField.ddn_field] && copyStaticData[tableField.ddn_field].length > 16">
+                            <div class="row" *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 16">
                                 <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                             </div>
                             <div class="row" [formArrayName]="tableField.field_name">
-                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field] | filter:term[tableField.field_name]; let i = index">
+                                <div class="col-lg-3" *ngFor="let order of staticData[tableField.ddn_field] | filter:term[tableField.field_name]; let i = index">
                                     <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{order.name ? order.name : order}}</mat-checkbox>
                                 </div>
                             </div>
@@ -914,7 +914,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let data of copyStaticData[tableField.ddn_field]; let i = index">
+                                            <tr *ngFor="let data of staticData[tableField.ddn_field]; let i = index">
                                                 <td><mat-checkbox color="primary" (click)="$event.stopPropagation()"
                                                     (change)="$event ? toggle(i, $event,tableField) : null"
                                                     [checked]="data.selected">
@@ -948,10 +948,10 @@
                                 <div class="card-header border-0 font-italic px-2 py-1 mb-1">Select From Below (drag & drop to selection list)</div>                            
                                 <div
                                     cdkDropList
-                                    [cdkDropListData]="copyStaticData[tableField.ddn_field]"
+                                    [cdkDropListData]="staticData[tableField.ddn_field]"
                                     class="example-list row m-0 w-100"
                                     (cdkDropListDropped)="drop($event)">
-                                    <mat-card  class="example-box example-box-right" *ngFor="let item of copyStaticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span></mat-card>                                    
+                                    <mat-card  class="example-box example-box-right" *ngFor="let item of staticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span></mat-card>                                    
                                 </div>
                                 </div>
                             </div>
@@ -1002,14 +1002,14 @@
                             </div>
                         </div> 
                         <div *ngIf="tableField.type == 'html_view'">
-                            <!-- <div [innerHtml]="copyStaticData[tableField.ddn_field]"></div>  -->
+                            <!-- <div [innerHtml]="staticData[tableField.ddn_field]"></div>  -->
                             <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                          
                         </div>
                         <div *ngIf="tableField.type == 'pdf_view'">
                             <div *ngIf="pdfViewLink != ''">
                                 <ngx-extended-pdf-viewer [base64Src]="pdfViewLink"  height="58vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer>
                                 <!-- list of attachment files -->
-                                <div *ngIf="copyStaticData[tableField.ddn_field] && copyStaticData[tableField.ddn_field].length > 0">
+                                <div *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 0">
                                     <table mdbTable small="true" bordered="true">
                                         <thead class="black white-text">
                                             <tr>
@@ -1017,7 +1017,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr mdbTableCol *ngFor="let file of copyStaticData[tableField.ddn_field]; let i = index">
+                                            <tr mdbTableCol *ngFor="let file of staticData[tableField.ddn_field]; let i = index">
                                                 <th scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)"><a (click)="changePdfView(file)">{{file.fileName || file.rollName}}</a></th>
                                             </tr>
                                         </tbody>
