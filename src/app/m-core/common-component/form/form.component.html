@@ -27,9 +27,6 @@
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
 	                            <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'email'">
@@ -86,9 +83,6 @@
                                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'date'">
@@ -97,9 +91,6 @@
                                 <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc('',tableField)" [id]="tableField._id+'_'+tableField.field_name">
                                 <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                 <mat-datepicker #picker2 color="primary" ></mat-datepicker>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.notValid">
                                     {{ tableField.label | titlecase}} is <strong>invalid Date</strong>
                                 </mat-error>
@@ -122,9 +113,6 @@
                                 <input matInput [ngxTimepicker]="picker" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
                                     readonly [id]="tableField._id+'_'+tableField.field_name" [format]="tableField.time_format ? (tableField.time_format | number) : 12">
                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                             </mat-form-field>
                         </div> 
                         <div *ngIf="tableField.type == 'radio'">
@@ -266,10 +254,10 @@
                                         {{ tableField.label | titlecase}} is <strong>invalidData</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')">
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
                                     <mdb-icon fas icon="plus"></mdb-icon>
                                 </button>
-                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !isEnable('',tableField.field_name, 'add_button')"  (click)="updateAddNewField('',tableField)" >
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !tempVal[tableField.field_name+'_add_button']"  (click)="updateAddNewField('',tableField)" >
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
                             </div>
@@ -348,7 +336,7 @@
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>                                   
                                 </mat-form-field> 
-                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                             </div> 
 
 
@@ -508,10 +496,10 @@
                                                     <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-autocomplete>
                                             </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                 <mdb-icon fas icon="plus"></mdb-icon>
                                             </button>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !isEnable(tableField.field_name,fields.field_name, 'add_button')"  (click)="updateAddNewField(tableField,fields)">
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
                                                 <mdb-icon fas icon="edit"></mdb-icon>
                                             </button>
                                         </div>
@@ -580,7 +568,7 @@
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
                                             </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                            <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                                         </div>
 
                                         <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
@@ -1370,7 +1358,7 @@
                                                         <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                     </mat-autocomplete>
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
+                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                     <mdb-icon fas icon="plus"></mdb-icon>
                                                 </button>
                                             </div>
@@ -1440,7 +1428,7 @@
                                                     <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                     <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(step,fields,false)">
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="isEnable(step.field_name,fields.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                                <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="tempVal[step.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                                             </div>
                                             <!-- <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <div *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">

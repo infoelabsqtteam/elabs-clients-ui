@@ -2611,33 +2611,33 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
 
-  onCheckboxChange(e, field, ddnField, index) {
-    const checkArray: FormArray = this.templateForm.get(field) as FormArray;
-    const data = this.staticData[ddnField];
-    const selectedData = data[index];
+  // onCheckboxChange(e, field, ddnField, index) {
+  //   const checkArray: FormArray = this.templateForm.get(field) as FormArray;
+  //   const data = this.staticData[ddnField];
+  //   const selectedData = data[index];
 
-    if (e.checked) {
-      checkArray.push(new FormControl(selectedData));
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item: FormControl) => {
-        if (item.value._id == selectedData._id) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
-  }
+  //   if (e.checked) {
+  //     checkArray.push(new FormControl(selectedData));
+  //   } else {
+  //     let i: number = 0;
+  //     checkArray.controls.forEach((item: FormControl) => {
+  //       if (item.value._id == selectedData._id) {
+  //         checkArray.removeAt(i);
+  //         return;
+  //       }
+  //       i++;
+  //     });
+  //   }
+  // }
 
-  isEnable(parent,field, elementType) {
-    if(parent != ''){
-      return this.tempVal[parent + '_' + field + "_" + elementType];
-    }else{
-      return this.tempVal[field + "_" + elementType];
-    }
+  // isEnable(parent,field, elementType) {
+  //   if(parent != ''){
+  //     return this.tempVal[parent + '_' + field + "_" + elementType];
+  //   }else{
+  //     return this.tempVal[field + "_" + elementType];
+  //   }
     
-  }
+  // }
 
   openModal(id, index, parent,child, data, alertType) {
     this.deleteIndex = index;
@@ -3739,6 +3739,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.staticData = {};
     this.typeAheadData = [];
     this.selectedRow = {};
+    this.showGridData={};
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
