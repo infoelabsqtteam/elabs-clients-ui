@@ -48,8 +48,5 @@ jobs:
     - name: Upload data
       run: aws s3 sync dist s3://prodclientspms.e-labs.ai
       
-    - name: Clean up cache for PMS Prod Client
-      run: aws cloudfront create-invalidation --distribution-id E136HAGWQUKKO2 --paths '/*'  
-    
-    - name: Clean up cache for PMS Prod Client
-      run: aws cloudfront create-invalidation --distribution-id E21MAX31OKYIRR --paths '/*'
+    - name: Clean up cache Client
+      run: aws cloudfront create-invalidation --distribution-id E3ER8DXGFMHTZS --paths '/*'
