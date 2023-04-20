@@ -684,7 +684,7 @@
                             </div>
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter mt-2" *ngIf="custmizedFormValue[tableField.field_name]">
-                                    <div class="row px-2" *ngIf="custmizedFormValue[tableField.field_name].length > 25">
+                                    <div class="row px-2" *ngIf="custmizedFormValue[tableField.field_name].length > pageSize">
                                         <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                     </div>
 
@@ -826,7 +826,7 @@
                             </div>
 
                             <div class="" *ngIf="modifyCustmizedFormValue[tableField.field_name] && showGridData[tableField.field_name]">
-                                <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 25">
+                                <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
                                     <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                 </div>                                
                                 <div class="table-responsive table maxheightdata">
@@ -852,17 +852,19 @@
                                                     <a *ngIf="tableField.add_new_enabled && checkRowDisabledIf(tableField,i)" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
                                                 <td *ngFor="let fieldName of tableField.gridColumns" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <span disabled *ngIf="fieldName.type=='checkbox'" >
-                                                        <mat-checkbox color="primary" 
-                                                            [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
-                                                    </span>
-                                                    <span *ngIf="fieldName.type!='checkbox'" (click)="showListOfFieldData(data, fieldName)" [innerHtml]="data[fieldName.field_name]"></span>
+                                                    <div [style.width]="fieldName.width">
+                                                        <span disabled *ngIf="fieldName.type=='checkbox'" >
+                                                            <mat-checkbox color="primary" 
+                                                                [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
+                                                        </span>
+                                                        <span *ngIf="fieldName.type!='checkbox'"  (click)="showListOfFieldData(data, fieldName)" [innerHtml]="data[fieldName.field_name]"></span>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>                                    
                                 </div>
-                                <section *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 25">
+                                <section *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
                                     <mat-card-content class="m-0 pt-0 text-center">
                                         <pagination-controls (pageChange)="pageNo[tableField.field_name] = $event" [id]="tableField.field_name + '_' + tableField.type"></pagination-controls>
                                     </mat-card-content>

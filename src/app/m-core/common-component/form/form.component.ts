@@ -287,7 +287,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   filterdata = '';
   term:any={};
   pageNo:any={};
-  pageSize:any=25;
+  pageSize:any=100;
   showGridData:any={};
   serverReq:boolean = false;
 
@@ -984,6 +984,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   this.gridSelectionMendetoryList.push(colParField);
                   element['mendetory_fields'] = colParField['mendetory_fields'];
                 }
+                this.showGridData[element.field_name] = true;
               }
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
