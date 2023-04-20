@@ -1,4 +1,4 @@
-<div class="modal-content" [formGroup]="templateForm" *ngIf="tableFields.length > 0" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
+<div class="modal-content" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
     <!--Header-->
     <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
         <div class="form-tab">
@@ -25,17 +25,14 @@
                         <div *ngIf="tableField.type == 'text'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
-	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
+                                <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
+	                            <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'email'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="email" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                <input matInput type="email" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.email" autocomplete="off">
                                         Email must be a valid email address
                                     </mat-error>
@@ -44,7 +41,7 @@
                         <div *ngIf="tableField.type == 'gst_number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" (change)="setValue('',tableField,false)" autocomplete="off"> 
+                                <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" (change)="setValue('',tableField,false)" autocomplete="off"> 
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -56,7 +53,7 @@
                         <div *ngIf="tableField.type == 'po_number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" pattern="^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$" autocomplete="off">
+                                <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" pattern="^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$" autocomplete="off">
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">{{ tableField.label | titlecase}} is <strong>required</strong></mat-error>
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.pattern">{{ tableField.label | titlecase}} is <strong>Invalid</strong></mat-error>
                             </mat-form-field>
@@ -65,7 +62,7 @@
                             <div class="w-100 position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>
@@ -82,24 +79,18 @@
                         <div *ngIf="tableField.type == 'password'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name">
+                                <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [id]="tableField._id+'_'+tableField.field_name">
                                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'date'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc('',tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc('',tableField)" [id]="tableField._id+'_'+tableField.field_name">
                                 <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                 <mat-datepicker #picker2 color="primary" ></mat-datepicker>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.notValid">
                                     {{ tableField.label | titlecase}} is <strong>invalid Date</strong>
                                 </mat-error>
@@ -119,12 +110,9 @@
                         <div *ngIf="tableField.type == 'time'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
-                                    readonly [id]="tableField._id+'_'+tableField.field_name" [format]="getTimeFormat(tableField)">
+                                <input matInput [ngxTimepicker]="picker" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
+                                    readonly [id]="tableField._id+'_'+tableField.field_name" [format]="tableField.time_format ? (tableField.time_format | number) : 12">
                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
-                                <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
-                                    {{ tableField.label | titlecase}} is <strong>required</strong>
-                                </mat-error> -->
                             </mat-form-field>
                         </div> 
                         <div *ngIf="tableField.type == 'radio'">
@@ -135,12 +123,12 @@
                             </div>
                             <div class="row m-0 w-100" *ngIf="tableField.datatype == 'key_value'">
                                 <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)" >
-                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{staticValue.value}}</mat-radio-button>
                                 </mat-radio-group>
                             </div>
                             <div class="row m-0 w-100" *ngIf="tableField.datatype != 'key_value'">
                                 <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)">
-                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{staticValue.name ? staticValue.name : staticValue}}</mat-radio-button>
                                 </mat-radio-group>
                             </div>
                         </div>
@@ -150,9 +138,9 @@
                         <div *ngIf="tableField.type == 'number'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="number" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc('',tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
-                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
-                                <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">          
+                                <input matInput type="number" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc('',tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                                <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">          
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -167,7 +155,7 @@
                         <div *ngIf="tableField.type == 'mobile'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input  [mask]="tableField.mask" matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" maxlength="20" OnlyNumber="true" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                <input  [mask]="tableField.mask" matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" maxlength="20" OnlyNumber="true" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -176,7 +164,7 @@
                         <div *ngIf="tableField.type == 'color'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input  [mask]="tableField.mask" matInput type="color" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name">
+                                <input  [mask]="tableField.mask" matInput type="color" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name">
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -186,15 +174,15 @@
                            <div class="d-flex position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" (change)="colorchange(tableField, colortxt.value)" #colortxt [value]="colortype.value">                              
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" (change)="colorchange(tableField, colortxt.value)" #colortxt [value]="colortype.value">                              
                                 </mat-form-field>
-                                <div class="colorplate"><input type="color" #colortype [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></div>
+                                <div class="colorplate"><input type="color" #colortype [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></div>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'textarea'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <textarea matInput [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></textarea>
+                                <textarea matInput [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></textarea>
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                     {{ tableField.label | titlecase}} is <strong>required</strong>
                                 </mat-error>
@@ -206,13 +194,13 @@
                                 <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                     <mat-option></mat-option>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" [innerHtml]="staticValue.name">
                                     </mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="{'_id':'tests','value':'add_new'}">+ Add New</mat-option>
                                 </mat-select>
                                 <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
                                     </mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="{'_id':'tests','value':'add_new'}">+ Add New</mat-option>
                                 </mat-select>
@@ -223,12 +211,12 @@
                                 <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                     <mat-option></mat-option>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" [innerHtml]="staticValue"></mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                 </mat-select>
                                 <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" ><span [innerHtml]="staticValue"></span></mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                 </mat-select>
                                 <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
@@ -241,7 +229,7 @@
                                 <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="optiondropdown">
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                     <mat-option></mat-option>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue |filter:term[tableField.field_name]" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue |filter:term[tableField.field_name]" [value]="staticValue.key" [innerHtml]="staticValue.value"></mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -250,10 +238,10 @@
                             <div class="w-100 position-relative" *ngIf="tableField.datatype != 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
                                     <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                    <input type="text" [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
+                                    <input type="text" [placeholder]="tableField.label | titlecase" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
                                         [matAutocomplete]="first" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                     <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,false)" [displayWith]="getOptionText">
-                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-autocomplete>                                  
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
@@ -266,10 +254,10 @@
                                         {{ tableField.label | titlecase}} is <strong>invalidData</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')">
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
                                     <mdb-icon fas icon="plus"></mdb-icon>
                                 </button>
-                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !isEnable('',tableField.field_name, 'add_button')"  (click)="updateAddNewField('',tableField)" >
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !tempVal[tableField.field_name+'_add_button']"  (click)="updateAddNewField('',tableField)" >
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
                             </div>
@@ -277,14 +265,16 @@
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
                                     <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'chips'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                     <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                        <mat-chip *ngFor="let item of custmizedFormValueData('',tableField); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
-                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                        </mat-chip>
-                                        <input type="text" #chipsInput [placeholder]="tableField.label" [required]="tableField.is_mandatory && tableField.datatype != 'chips'" aria-label="Number" matInput [formControlName]="tableField.field_name"
+                                        <span *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">
+                                            <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
+                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                            </mat-chip>
+                                        </span>
+                                        <input type="text" #chipsInput [placeholder]="tableField.label | titlecase" [required]="tableField.is_mandatory && tableField.datatype != 'chips'" aria-label="Number" matInput [formControlName]="tableField.field_name"
                                             [matAutocomplete]="first" [matChipInputFor]="chipList"
                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,'',tableField)" [id]="tableField._id+'_'+tableField.field_name">
                                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue('',tableField,true,chipsInput)" [displayWith]="getOptionText">
-                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                             <mat-option *ngIf="tableField.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                         </mat-autocomplete>
                                     </mat-chip-list>
@@ -295,9 +285,9 @@
                             </div>
 
                             <div *ngIf="tableField.datatype == 'list_of_object'">
-                                <div *ngIf="checkCustmizedFormValueData('',tableField)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData('',tableField); let i = index" cdkDrag>
-                                        <p class="m-0">{{ getddnDisplayVal(item) }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
+                                        <p class="m-0">{{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
                                     </div>
                                 </div>
                             </div>
@@ -309,12 +299,12 @@
                                     <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="copyStaticData[tableField.ddn_field] && copyStaticData[tableField.ddn_field].length > 16">
+                            <div class="row" *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 16">
                                 <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                             </div>
                             <div class="row" [formArrayName]="tableField.field_name">
-                                <div class="col-lg-3" *ngFor="let order of copyStaticData[tableField.ddn_field] | filter:term[tableField.field_name]; let i = index">
-                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{getddnDisplayVal(order)}}</mat-checkbox>
+                                <div class="col-lg-3" *ngFor="let order of staticData[tableField.ddn_field] | filter:term[tableField.field_name]; let i = index">
+                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{order.name ? order.name : order}}</mat-checkbox>
                                 </div>
                             </div>
                         </div>
@@ -325,33 +315,35 @@
                             <mat-form-field appearance="outline" class="example-full-width w-100"  *ngIf="tableField.datatype == 'chips' || tableField.datatype == 'chips_with_mask'">
                                 <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                 <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                    <mat-chip *ngFor="let item of custmizedFormValueData('',tableField); let i = index" cdkDrag [selectable]="selectable"
-                                            [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')">
-                                            {{getddnDisplayVal(item)}}
-                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                    </mat-chip>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" *ngIf="tableField.datatype == 'chips'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
-                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'chips_with_mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                    <span *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">
+                                        <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag [selectable]="selectable"
+                                                [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')">
+                                                {{ item.name ? item.name : item }}
+                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                        </mat-chip>
+                                    </span>
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" *ngIf="tableField.datatype == 'chips'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
+                                    <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'chips_with_mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                 </mat-chip-list >
                             </mat-form-field>
 
                             <div class="w-100 position-relative d-flex" *ngIf="tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                     <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                    
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [formControlName]="tableField.field_name" (keyup)="setValue('',tableField,false)" class="pr-4" *ngIf="tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name"/> 
-                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)"  [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" (keyup)="setValue('',tableField,false)" [id]="tableField._id+'_'+tableField.field_name"> 
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [formControlName]="tableField.field_name" (keyup)="setValue('',tableField,false)" class="pr-4" *ngIf="tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name"/> 
+                                    <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase"  [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" (keyup)="setValue('',tableField,false)" [id]="tableField._id+'_'+tableField.field_name"> 
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>                                   
                                 </mat-form-field> 
-                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="isEnable('',tableField.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                             </div> 
 
 
 
                             <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
-                                <div *ngIf="checkCustmizedFormValueData('',tableField)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData('',tableField); let i = index" cdkDrag>
+                                <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
                                         <p>{{item}} <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
                                     </div>
                                 </div>
@@ -361,10 +353,13 @@
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                <!-- <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object'">
+                                    <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" (click)="showData('',tableField)" [matTooltip]="showGridData[tableField.field_name] ? 'Expand Less':'Expand More'" [matTooltipPosition]="'above'"><span *ngIf="!showGridData[tableField.field_name]" class="material-icons">expand_more</span><span *ngIf="showGridData[tableField.field_name]" class="material-icons">expand_less</span></button>
+                                </div> -->
                                 <div class="grid-selection-buttons" *ngIf="tableField.datatype == 'list_of_object_with_popup'">                            
                                     <div class="grid-selection-buttons" *ngIf="tableField.type == 'list_of_fields' && !tableField.add_list_field && tableField.add_list_field != 'add'">
                                         <button *ngIf="updateMode && tableField.onClickLoadData" [disabled]="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" [id]="tableField._id+'_'+tableField.field_name" class="plusicon" mat-icon-button  (click)="onClickLoadData('',tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Load Data'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">update</span></button>
-                                        <button [id]="tableField._id+'_'+tableField.field_name" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>
+                                        <button [id]="tableField._id+'_'+tableField.field_name" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                        
                                     </div>
                                 </div>
                             </div>
@@ -373,14 +368,14 @@
                                     <div *ngIf="fields.type == 'text'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                           
-                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" *ngIf="fields.datatype != 'first_cap'" [id]="fields._id+'_'+fields.field_name">               
-                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" appTitleCase *ngIf="fields.datatype == 'first_cap'" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" *ngIf="fields.datatype != 'first_cap'" [id]="fields._id+'_'+fields.field_name">               
+                                            <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" appTitleCase *ngIf="fields.datatype == 'first_cap'" [id]="fields._id+'_'+fields.field_name">
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'password'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="fields.placeholder | titlecase"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                             </button>
@@ -389,13 +384,13 @@
                                     <div *ngIf="fields.type == 'email'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <input matInput type="email" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="email" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                         </mat-form-field>                            
                                     </div>
                                     <div *ngIf="fields.type == 'gst_number'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                            <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
                                             <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
                                                 {{ fields.label | titlecase}} is <strong>required</strong>
                                             </mat-error>
@@ -408,7 +403,7 @@
                                         <div class="w-100 position-relative">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
+                                                <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"> 
                                                 <mat-error class="text-danger" *ngIf="templateForm.get(tableField.field_name)['controls'][fields.field_name].touched && templateForm.get(tableField.field_name)['controls'][fields.field_name].errors?.required">
                                                     {{ fields.label | titlecase}} is <strong>required</strong>
                                                 </mat-error>
@@ -425,7 +420,7 @@
                                     <div *ngIf="fields.type == 'date'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [matDatepicker]="picker2" [min]="fields.minDate" [max]="fields.maxDate"  [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" (dateChange)="inputOnChangeFunc(tableField,fields)" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput [matDatepicker]="picker2" [min]="fields.minDate" [max]="fields.maxDate"  [placeholder]="fields.placeholder | titlecase"   [formControlName]="fields.field_name" (dateChange)="inputOnChangeFunc(tableField,fields)" [id]="fields._id+'_'+fields.field_name">
                                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                             <mat-datepicker #picker2 color="primary"></mat-datepicker>
                                         </mat-form-field>
@@ -433,16 +428,16 @@
                                     <div *ngIf="fields.type == 'time'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly [format]="getTimeFormat(fields)">
+                                            <input matInput [ngxTimepicker]="picker" [placeholder]="fields.placeholder | titlecase"    [formControlName]="fields.field_name" readonly [format]="fields.time_format ? (fields.time_format | number) : 12">
                                             <ngx-material-timepicker #picker></ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'number'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                            <input matInput type="number" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" (keyup)="inputOnChangeFunc(tableField,fields)" *ngIf="fields.datatype != 'text' && fields.datatype != 'numberOnly'" [id]="fields._id+'_'+fields.field_name">
-                                            <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [minlength]="fields.min_length" [maxlength]="fields.max_length" NumberOnly="true" *ngIf="fields.datatype == 'text'" [id]="fields._id+'_'+fields.field_name">
-                                            <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" NumberOnly="true" (keyup)="inputOnChangeFunc(tableField,fields)" *ngIf="fields.datatype == 'numberOnly'" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="number" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="inputOnChangeFunc(tableField,fields)" *ngIf="fields.datatype != 'text' && fields.datatype != 'numberOnly'" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="tel" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [minlength]="fields.min_length" [maxlength]="fields.max_length" NumberOnly="true" *ngIf="fields.datatype == 'text'" [id]="fields._id+'_'+fields.field_name">
+                                            <input matInput type="tel" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" NumberOnly="true" (keyup)="inputOnChangeFunc(tableField,fields)" *ngIf="fields.datatype == 'numberOnly'" [id]="fields._id+'_'+fields.field_name">
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'dropdown'">
@@ -452,7 +447,7 @@
                                                 <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
                                                 <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term[tableField.field_name+'_'+fields.field_name]" [value]="staticValue">
-                                                    {{getddnDisplayVal(staticValue)}}
+                                                    {{ staticValue.name ? staticValue.name : staticValue }}
                                                 </mat-option>
                                                 <mat-option *ngIf="fields.add_new_enabled"  [value]="{'_id':'tests','value':'add_new'}">+ Add New </mat-option>
                                             </mat-select>
@@ -465,7 +460,7 @@
                                                 <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
                                                 <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term[tableField.field_name+'_'+fields.field_name]" [value]="staticValue">
-                                                    {{getddnDisplayVal(staticValue)}}
+                                                    {{ staticValue.name ? staticValue.name : staticValue }}
                                                 </mat-option>
                                                 <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                             </mat-select>
@@ -477,13 +472,14 @@
                                             <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue(tableField,fields,false)"  [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
                                                 <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
-                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term[tableField.field_name+'_'+fields.field_name]" [value]="staticValue">
-                                                    {{getddnDisplayVal(staticValue)}}
+                                                <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term[tableField.field_name+'_'+fields.field_name]" [value]="staticValue.key">
+                                                    {{ staticValue.value }}
                                                 </mat-option>
                                                 <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
+
                                     <div *ngIf="fields.type == 'typeahead'">
                                         <div class="w-100 position-relative d-flex" *ngIf="fields.datatype != 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
@@ -491,14 +487,14 @@
                                                 <input type="text" [placeholder]="fields.label"   aria-label="Number" matInput [formControlName]="fields.field_name" [matAutocomplete]="first"
                                                     (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
                                                 <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,false)" [displayWith]="getOptionText">
-                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                                     <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-autocomplete>
                                             </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                 <mdb-icon fas icon="plus"></mdb-icon>
                                             </button>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !isEnable(tableField.field_name,fields.field_name, 'add_button')"  (click)="updateAddNewField(tableField,fields)">
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
                                                 <mdb-icon fas icon="edit"></mdb-icon>
                                             </button>
                                         </div>
@@ -506,24 +502,25 @@
                                             <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
                                                 <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                    <mat-chip *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
-                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                    </mat-chip>
+                                                    <span *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
+                                                        <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
+                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                        </mat-chip>
+                                                    </span>
                                                     <input type="text" #chipsInput [placeholder]="fields.label" [required]="fields.is_mandatory && fields.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="fields.field_name"
                                                         [matAutocomplete]="first" [matChipInputFor]="chipList"
                                                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,true,chipsInput)" [displayWith]="getOptionText">
-                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                                         <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                     </mat-autocomplete>
                                                 </mat-chip-list>
                                             </mat-form-field>                                
                                         </div>
-
                                         <div *ngIf="fields.datatype == 'list_of_object'">
-                                            <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
-                                                    <p>{{ getddnDisplayVal(item) }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                            <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
+                                                    <p>{{ item.name ? item.name : item }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                 </div>                                                
                                             </div>
                                         </div>
@@ -537,7 +534,7 @@
                                         </div>
                                         <div class="row w-100 m-0" [formArrayName]="fields.field_name">
                                             <div class="col-lg-3" *ngFor="let order of staticData[fields.ddn_field]; let i = index">
-                                                <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ getddnDisplayVal(order) }}</mat-checkbox>
+                                                <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ order.name ? order.name : order }}</mat-checkbox>
                                             </div>
                                         </div>
                                     </div>
@@ -549,27 +546,29 @@
                                             <mat-form-field appearance="outline" class="example-full-width w-100"  >
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                    <mat-chip *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag [selectable]="selectable"
-                                                            [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')">
-                                                            {{getddnDisplayVal(item)}}
-                                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                    </mat-chip>
-                                                    <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
-                                                    <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
+                                                    <span *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
+                                                        <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag [selectable]="selectable"
+                                                                [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')">
+                                                                {{ item.name ? item.name : item }}
+                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                        </mat-chip>
+                                                    </span>
+                                                    <input matInput type="text" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
+                                                    <input matInput type="tel" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
                                                 </mat-chip-list>
                                             </mat-form-field>   
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
+                                                <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
                                             </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                            <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                                         </div>
 
                                         <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
-                                            <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
+                                            <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
                                                     <p class="m-0 small">{{item}} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                 </div>
                                             </div>
@@ -600,8 +599,8 @@
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
                                             <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" disableOptionCentering panelClass="optiondropdown">
-                                                <mat-option *ngFor="let data of treeViewOptionData(tableField,fields)" [value]="data">
-                                                    {{getddnDisplayVal(data)}}
+                                                <mat-option *ngFor="let data of treeViewData[tableField.field_name][fields.field_name] && treeViewData[tableField.field_name][fields.field_name].length > 0 ? treeViewData[tableField.field_name][fields.field_name] : []" [value]="data">
+                                                    {{ data && data.name ? data.name : data }}
                                                 </mat-option>
                                             </mat-select>
                                             <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView(tableField,fields)">Tree View</span>
@@ -610,12 +609,12 @@
                                     <div *ngIf="fields.type == 'textarea'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                            <textarea matInput [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"></textarea>                
+                                            <textarea matInput [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"></textarea>                
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'file'">
                                         <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
-                                        <div *ngIf="checkDataListForUpload(tableField,fields)">
+                                        <div *ngIf="dataListForUpload && dataListForUpload[tableField.field_name+'_'+tableField.type] && dataListForUpload[tableField.field_name+'_'+tableField.type][fields.field_name] && dataListForUpload[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
                                             <table mdbTable small="true" bordered="true">
                                                 <thead class="black white-text">
                                                     <tr>
@@ -623,7 +622,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr mdbTableCol *ngFor="let file of getDataListForUpload(tableField,fields); let i = index">
+                                                    <tr mdbTableCol *ngFor="let file of dataListForUpload[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index">
                                                         <td scope="row">
                                                             <span *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</span>
                                                         </td>
@@ -644,7 +643,7 @@
                                         <div class="w-100 position-relative">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name">
+                                                <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name">
                                             </mat-form-field>
                                             <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(tableField,fields)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList(tableField,fields)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
                                                 ></button>
@@ -658,12 +657,12 @@
                                         </div>
                                         <div class="row m-0 w-100" *ngIf="fields.datatype == 'key_value'">
                                             <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)">
-                                                <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                                <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]| keyvalue" [value]="staticValue.key">{{staticValue.value}}</mat-radio-button>
                                             </mat-radio-group>
                                         </div>
                                         <div class="row m-0 w-100" *ngIf="fields.datatype != 'key_value'">
                                             <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)">
-                                                <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                                <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">{{ staticValue.name ? staticValue.name : staticValue }}</mat-radio-button>
                                             </mat-radio-group>
                                         </div>
                                     </div>
@@ -680,7 +679,11 @@
                             </div>
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter mt-2" *ngIf="custmizedFormValue[tableField.field_name]">
-                                    <table class="table-bordered table-striped table-hover one-line-text" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
+                                    <div class="row px-2" *ngIf="custmizedFormValue[tableField.field_name].length > pageSize">
+                                        <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                    </div>
+
+                                    <table class="table-bordered table-striped table-hover one-line-text maxheightdata" *ngIf="custmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr>
                                                 <th width="10%" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">Action</th>
@@ -688,7 +691,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let listOfField of custmizedFormValue[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
+                                            <tr *ngFor="let listOfField of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
                                                 <td class="px-1" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">
                                                     <a  mdbBtn floating="true" size="sm" *ngIf="tableField.datatype == 'list_of_object_with_popup' && checkRowDisabledIf(tableField,i)" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup' && checkRowDisabledIf(tableField,i)" (click)="editListOfFiedls(listOfField,i,tableField)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
@@ -715,7 +718,7 @@
                                                     <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',myobject.key,'',tableField,{},'delete')" mdbWavesEffect class="grid-button btn-danger text-white" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                                        
                                                 </td>
                                                 <td  [innerHtml]="myobject.key"></td>
-                                                <td  [innerHtml]="getddnDisplayVal(myobject.value)"></td>                                       
+                                                <td  [innerHtml]="myobject.value && myobject.value.name ? myobject.value.name : myobject.value"></td>                                       
                                             </tr>
                                         </tbody>
                                     </table>
@@ -728,7 +731,7 @@
                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <angular-editor [formControlName]="tableField.field_name" [config]="editorConfig"></angular-editor>
+                                    <!-- <angular-editor [formControlName]="tableField.field_name" [config]="editorConfig"></angular-editor> -->
                                 </div>
                             </div>
                         </div>
@@ -738,7 +741,7 @@
                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <angular-editor [formControlName]="tableField.field_name" [config]="minieditorConfig"></angular-editor>
+                                    <!-- <angular-editor [formControlName]="tableField.field_name" [config]="minieditorConfig"></angular-editor> -->
                                 </div>
                             </div>
                         </div>
@@ -757,8 +760,8 @@
                                 <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" disableOptionCentering panelClass="optiondropdown">
-                                        <mat-option *ngFor="let data of treeViewOptionData('',tableField)" [value]="data">
-                                            {{getddnDisplayVal(data)}}
+                                        <mat-option *ngFor="let data of treeViewData[tableField.field_name] treeViewData[tableField.field_name].length > 0 ? treeViewData[tableField.field_name] : []" [value]="data">
+                                            {{ data && data.name ? data.name : data }}
                                         </mat-option>
                                     </mat-select>
                                     <a href="javascript:void(0)" class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_sup'" (click)="openTreeView('',tableField)">Tree View</a>
@@ -769,32 +772,35 @@
                             <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" disableOptionCentering panelClass="optiondropdown">
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue.name ? staticValue.name : staticValue"></mat-option>
                                 </mat-select>
                                 <span class="tree_view_class cursor-pointer" (click)="openTreeView('',tableField)">Tree View</span>
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'grid_selection_vertical'">
-                            <div class="row card-header border-0 px-2 py-0 mb-1 m-0 w-100">
-                                <div class="col-lg-6 px-0 grid-selection-title">
-                                    <div class="">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
-                                </div>
-                                <div class="col-lg-6 px-0">
-                                    <button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">keyboard_arrow_down</span></button>
-                                    <button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
+                          
+                            <div class="form-label d-flex justify-content-between">
+                                <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+
+                                <div class="grid-selection-buttons">
+
+                                    <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">keyboard_arrow_down</span></button>
+
+                                    <button *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" class="plusicon" mat-icon-button (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 table-responsive  py-2" >
-                                    <table mdbTable class="z-depth-1">
+
+                            <div class="row" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
+                                <div class="col-lg-12 table-responsive py-2 maxheightdata" >
+                                    <table mdbTable class="z-depth-1 verticaltable">
                                         <tbody>
-                                        <tr *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
-                                            <td >{{ fieldName.label | titlecase}}</td>
-                                            <td *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index">
+                                        <tr *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
+                                            <td ><strong>{{ fieldName.label | titlecase}}</strong></td>
+                                            <td *ngFor="let data of modifyCustmizedFormValue[tableField.field_name]; let i = index">
                                                     <span disabled *ngIf="fieldName.type=='checkbox'" >
                                                         <mat-checkbox color="primary"[checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                     </span>
-                                                <span *ngIf="fieldName.type!='checkbox'"  [innerHtml]="getValueForGrid(fieldName,data)"></span>
+                                                <span *ngIf="fieldName.type!='checkbox'" [innerHtml]="data[fieldName.field_name]"></span>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -810,19 +816,26 @@
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled && !tableField.is_disabled && checkGridSelectionButtonCondition(tableField,'add')" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="checkIfCondition(tableField,'addNewButtonProperty','toolTip') ? getValue(tableField,'addNewButtonProperty','toolTip') : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="checkIfCondition(tableField,'selectButtonProperty','toolTip') ? getValue(tableField,'selectButtonProperty','toolTip') : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
                                     <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="checkIfCondition(tableField,'reviewButtonProperty','toolTip') ? getValue(tableField,'reviewButtonProperty','toolTip') : 'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
+                                    <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" (click)="showData('',tableField)" [matTooltip]="showGridData[tableField.field_name] ? 'Expand Less':'Expand More'" [matTooltipPosition]="'above'"><span *ngIf="!showGridData[tableField.field_name]" class="material-icons">expand_more</span><span *ngIf="showGridData[tableField.field_name]" class="material-icons">expand_less</span></button>
                                 </div>
-                            </div>                            
-                            <div class="" *ngIf="custmizedFormValue[tableField.field_name]">
-                                <div class="table-responsive table">
-                                    <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="custmizedFormValue[tableField.field_name].length > 0">
+                            </div>
+
+                            <div class="" *ngIf="modifyCustmizedFormValue[tableField.field_name] && showGridData[tableField.field_name]">
+                                <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
+                                    <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                </div>                                
+                                <div class="table-responsive table maxheightdata">
+                                    <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
-                                                <th *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
+                                                <th *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                            <tr *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag cdkDragLockAxis="y">
+                                            <tr *ngFor="let data of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name] | paginate
+                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y">
+
                                                 <td *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled">
                                                     <div class="example-handle cursor-move" cdkDragHandle *ngIf="!tableField.add_new_enabled || tableField.draggable" [ngClass]="{'d-inline-block': tableField.draggable}">
                                                         <svg width="16px" fill="currentColor" viewBox="0 0 24 24">
@@ -833,17 +846,24 @@
                                                     <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled &&  checkRowDisabledIf(tableField,i)" (click)="updateListofFields(tableField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
                                                     <a *ngIf="tableField.add_new_enabled && checkRowDisabledIf(tableField,i)" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
-                                                <td *ngFor="let fieldName of modifiedGridColumns(tableField.gridColumns)" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <span disabled *ngIf="fieldName.type=='checkbox'" >
-                                                        <mat-checkbox color="primary" 
-                                                            [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
-                                                    </span>
-                                                    <span *ngIf="fieldName.type!='checkbox'" (click)="showListOfFieldData(data, fieldName)" [innerHtml]="getValueForGrid(fieldName,data)"></span>
+                                                <td *ngFor="let fieldName of tableField.gridColumns" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                                                    <div [style.width]="fieldName.width">
+                                                        <span disabled *ngIf="fieldName.type=='checkbox'" >
+                                                            <mat-checkbox color="primary" 
+                                                                [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
+                                                        </span>
+                                                        <span *ngIf="fieldName.type!='checkbox'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']" (click)="showListOfFieldData(data, fieldName)" [innerHtml]="data[fieldName.field_name]"></span>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
-                                    </table>
+                                    </table>                                    
                                 </div>
+                                <section *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
+                                    <mat-card-content class="m-0 pt-0 text-center">
+                                        <pagination-controls (pageChange)="pageNo[tableField.field_name] = $event" [id]="tableField.field_name + '_' + tableField.type"></pagination-controls>
+                                    </mat-card-content>
+                                </section>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'tabular_data_selector'"> 
@@ -864,7 +884,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let data of custmizedFormValue[tableField.field_name]; let i = index">
-                                                    <td *ngFor="let fieldName of tableField.gridColumns"><span  [innerHtml]="getValueForGrid(fieldName,data)" ></span></td>
+                                                    <td *ngFor="let fieldName of tableField.gridColumns"><span  [innerHtml]="data[fieldName.field_name]" ></span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -879,12 +899,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let data of copyStaticData[tableField.ddn_field]; let i = index">
+                                            <tr *ngFor="let data of staticData[tableField.ddn_field]; let i = index">
                                                 <td><mat-checkbox color="primary" (click)="$event.stopPropagation()"
                                                     (change)="$event ? toggle(i, $event,tableField) : null"
                                                     [checked]="data.selected">
                                                     </mat-checkbox></td>
-                                                <td *ngFor="let fieldName of tableField.gridColumns"><span  [innerHtml]="getValueForGrid(fieldName,data)" ></span></td>
+                                                <td *ngFor="let fieldName of tableField.gridColumns"><span  [innerHtml]="data[fieldName.field_name]" ></span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -902,10 +922,10 @@
                                 <div class="card-header border-0 font-italic px-2 py-1 mb-1">{{ tableField.label | titlecase }}</div> 
                                 <div
                                     cdkDropList
-                                    [cdkDropListData]="custmizedFormData(tableField)"
+                                    [cdkDropListData]="custmizedFormValue[tableField.field_name]?custmizedFormValue[tableField.field_name] : []"
                                     class="example-list row m-0 w-100"
                                     (cdkDropListDropped)="drop($event)">                                    
-                                    <mat-card  class="example-box" *ngFor="let item of custmizedFormData(tableField)" cdkDrag> <span *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="getValueForGrid(field,item)"></span> </mat-card>
+                                    <mat-card  class="example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]?custmizedFormValue[tableField.field_name] : []" cdkDrag> <span *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span> </mat-card>
                                 </div>
                                 </div>
                             
@@ -913,10 +933,10 @@
                                 <div class="card-header border-0 font-italic px-2 py-1 mb-1">Select From Below (drag & drop to selection list)</div>                            
                                 <div
                                     cdkDropList
-                                    [cdkDropListData]="copyStaticData[tableField.ddn_field]"
+                                    [cdkDropListData]="staticData[tableField.ddn_field]"
                                     class="example-list row m-0 w-100"
                                     (cdkDropListDropped)="drop($event)">
-                                    <mat-card  class="example-box example-box-right" *ngFor="let item of copyStaticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="getValueForGrid(field,item)"></span></mat-card>                                    
+                                    <mat-card  class="example-box example-box-right" *ngFor="let item of staticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span></mat-card>                                    
                                 </div>
                                 </div>
                             </div>
@@ -957,7 +977,7 @@
                             <div class="w-100 position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" >
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" >
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>
@@ -967,14 +987,14 @@
                             </div>
                         </div> 
                         <div *ngIf="tableField.type == 'html_view'">
-                            <!-- <div [innerHtml]="copyStaticData[tableField.ddn_field]"></div>  -->
+                            <!-- <div [innerHtml]="staticData[tableField.ddn_field]"></div>  -->
                             <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                          
                         </div>
                         <div *ngIf="tableField.type == 'pdf_view'">
                             <div *ngIf="pdfViewLink != ''">
                                 <ngx-extended-pdf-viewer [base64Src]="pdfViewLink"  height="58vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer>
                                 <!-- list of attachment files -->
-                                <div *ngIf="copyStaticData[tableField.ddn_field] && copyStaticData[tableField.ddn_field].length > 0">
+                                <div *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 0">
                                     <table mdbTable small="true" bordered="true">
                                         <thead class="black white-text">
                                             <tr>
@@ -982,7 +1002,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr mdbTableCol *ngFor="let file of copyStaticData[tableField.ddn_field]; let i = index">
+                                            <tr mdbTableCol *ngFor="let file of staticData[tableField.ddn_field]; let i = index">
                                                 <th scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)"><a (click)="changePdfView(file)">{{file.fileName || file.rollName}}</a></th>
                                             </tr>
                                         </tbody>
@@ -995,14 +1015,14 @@
                             <div class="col-md-4 labelfiled">
                                 <mat-form-field appearance="standard" class="w-100 m-0">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
-                                    <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
+                                    <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                                 </mat-form-field>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'information'" class="labeltitle">
                             <mat-form-field  appearance="standard" class="example-full-width w-100">
-	                            <input matInput type="text" readonly [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+	                            <input matInput type="text" readonly [placeholder]="tableField.placeholder" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                             </mat-form-field>
                         </div>
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_dropdown'">
@@ -1012,11 +1032,11 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]=" staticValue && staticValue.name ? staticValue.name : staticValue ">
                                         </mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></span>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -1024,17 +1044,17 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></span></mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field class="w-100" *ngIf="tableField.datatype == 'key_value'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -1073,12 +1093,12 @@
                             <div class="col-md-4 labelfiled">
                                 <div *ngIf="tableField.datatype == 'key_value'">
                                     <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)" >
-                                        <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                        <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{staticValue.value}}</mat-radio-button>
                                     </mat-radio-group>
                                 </div>
                                 <div *ngIf="tableField.datatype != 'key_value'">
                                     <mat-radio-group aria-label="Select an option" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)">
-                                        <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                        <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{staticValue && staticValue.name ? staticValue.name : staticValue}}</mat-radio-button>
                                     </mat-radio-group>
                                 </div>
                               
@@ -1088,7 +1108,7 @@
                             <div class="labeltitle mr-4">{{ tableField.label | titlecase}} :</div>
                             <div class="labelfiled dateinfo">
                                 <mat-form-field appearance="fill" class="w-100 m-0">
-                                    <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc('',tableField)" [id]="tableField._id+'_'+tableField.field_name">
+                                    <input matInput [matDatepicker]="picker2" [min]="tableField.minDate" [max]="tableField.maxDate" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (dateChange)="inputOnChangeFunc('',tableField)" [id]="tableField._id+'_'+tableField.field_name">
                                     <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                     <mat-datepicker #picker2 color="primary" ></mat-datepicker>
                                 </mat-form-field>
@@ -1096,7 +1116,7 @@
                             <div class="labelfiled timeinfo ml-3">
                                 <mat-form-field appearance="fill" class="w-100 m-0">
                                     <mat-label>Time</mat-label>
-                                    <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
+                                    <input matInput [ngxTimepicker]="picker" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
                                         readonly [id]="tableField._id+'_'+tableField.field_name">
                                     <ngx-material-timepicker #picker></ngx-material-timepicker>
                                 </mat-form-field>
@@ -1109,11 +1129,11 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue.name ? staticValue.name : staticValue">
                                         </mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue.name ? staticValue.name : staticValue"></span>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -1121,17 +1141,17 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue.name ? staticValue.name : staticValue"></mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue.name ? staticValue.name : staticValue"></span></mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'key_value'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="staticValue.value ? staticValue.name : staticValue"></mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -1142,11 +1162,11 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue.name ? staticValue.name : staticValue">
                                         </mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue.name ? staticValue.name : staticValue"></span>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -1154,17 +1174,17 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue.name ? staticValue.name : staticValue"></mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="configdropdown">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue.name ? staticValue.name : staticValue"></span></mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'key_value'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="configdropdown">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="staticValue.value"></mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -1174,9 +1194,9 @@
                             <div class="labelfiled mr-2">
                                 <mat-form-field appearance="fill" class="w-100 m-0">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                    <input matInput type="number" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc('',tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name">
-                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" > 
-                                    <input matInput type="tel" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name">          
+                                    <input matInput type="number" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" (keyup)="inputOnChangeFunc('',tableField)" *ngIf="tableField.datatype != 'numberOnly' && tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name">
+                                    <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" [minlength]="tableField.min_length" [maxlength]="tableField.max_length" NumberOnly="true" *ngIf="tableField.datatype == 'numberOnly'"[id]="tableField._id+'_'+tableField.field_name" > 
+                                    <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'mask'" [id]="tableField._id+'_'+tableField.field_name">          
                                 </mat-form-field>
                             </div>
                         </div>
@@ -1186,12 +1206,12 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="schedulemenu">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue">
                                         </mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="schedulemenu">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></span>
                                         </mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New</mat-option>
                                     </mat-select>
@@ -1200,11 +1220,11 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="schedulemenu">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-select>
                                     <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple disableOptionCentering panelClass="schedulemenu">
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="getddnDisplayVal(staticValue)"></span></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue" ><span [innerHtml]="staticValue && staticValue.name ? staticValue.name : staticValue"></span></mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -1212,7 +1232,7 @@
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)"  [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" disableOptionCentering panelClass="schedulemenu">
                                         <mat-option></mat-option>
-                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                                        <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key" [innerHtml]="staticValue.value"></mat-option>
                                         <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -1226,20 +1246,20 @@
                             </div>
                             <div class="row m-0 w-100" *ngIf="tableField.datatype == 'key_value'">
                                 <mat-radio-group [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)" >
-                                    <mat-radio-button color="primary" class="p-2" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}} </mat-radio-button>
+                                    <mat-radio-button color="primary" class="p-2" *ngFor="let staticValue of staticData[tableField.ddn_field]| keyvalue" [value]="staticValue.key">{{staticValue.value}} </mat-radio-button>
                                 </mat-radio-group>
                             </div>
                             <div class="row m-0 w-100" *ngIf="tableField.datatype != 'key_value'">
                                 <mat-radio-group [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)">
-                                    <mat-radio-button color="primary" class="p-2" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}} </mat-radio-button>
+                                    <mat-radio-button color="primary" class="p-2" *ngFor="let staticValue of staticData[tableField.ddn_field]" [value]="staticValue">{{staticValue.name ? staticValue.name : staticValue}} </mat-radio-button>
                                 </mat-radio-group>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'scheduletext'">
                             <mat-form-field appearance="fill" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
-	                            <input matInput type="text" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
+                                <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
+	                            <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
                             </mat-form-field>
                         </div>
                         <mat-vertical-stepper [linear]="isLinear" #stepper *ngIf="tableField.type == 'stepper' && tableField.list_of_fields != null">
@@ -1250,14 +1270,14 @@
                                         <div *ngIf="fields.type == 'text'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>                                           
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" *ngIf="fields.datatype != 'first_cap'" [id]="fields._id+'_'+fields.field_name">               
-                                                <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" appTitleCase *ngIf="fields.datatype == 'first_cap'" [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" *ngIf="fields.datatype != 'first_cap'" [id]="fields._id+'_'+fields.field_name">               
+                                                <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" appTitleCase *ngIf="fields.datatype == 'first_cap'" [id]="fields._id+'_'+fields.field_name">
                                             </mat-form-field>
                                         </div>
                                         <div *ngIf="fields.type == 'password'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput [type]="hide ? 'password' : 'text'" [placeholder]="fields.placeholder | titlecase"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                                 </button>
@@ -1266,13 +1286,13 @@
                                         <div *ngIf="fields.type == 'email'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput type="email" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput type="email" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                             </mat-form-field>                            
                                         </div>
                                         <div *ngIf="fields.type == 'date'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput [matDatepicker]="picker2" [placeholder]="getTitlecase(fields.placeholder)"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput [matDatepicker]="picker2" [placeholder]="fields.placeholder | titlecase"   [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
                                                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                                 <mat-datepicker #picker2 color="primary"></mat-datepicker>
                                             </mat-form-field>
@@ -1280,16 +1300,16 @@
                                         <div *ngIf="fields.type == 'time'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput [ngxTimepicker]="picker" [placeholder]="getTitlecase(fields.placeholder)"    [formControlName]="fields.field_name" readonly [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fields.placeholder | titlecase"    [formControlName]="fields.field_name" readonly [id]="fields._id+'_'+fields.field_name">
                                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                                             </mat-form-field>
                                         </div>
                                         <div *ngIf="fields.type == 'number'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                <input matInput type="number" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" (keyup)="inputOnChangeFunc(tableField,fields)" *ngIf="fields.datatype != 'numberOnly' && fields.datatype != 'mask'" [id]="fields._id+'_'+fields.field_name">
-                                                <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [minlength]="fields.min_length" [maxlength]="fields.max_length" NumberOnly="true" *ngIf="fields.datatype == 'numberOnly'" [id]="fields._id+'_'+fields.field_name"> 
-                                                <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [required]="fields.is_mandatory" [formControlName]="fields.field_name" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'mask'" [id]="fields._id+'_'+fields.field_name"> 
+                                                <input matInput type="number" [placeholder]="fields.placeholder | titlecase" [required]="fields.is_mandatory" [formControlName]="fields.field_name" (keyup)="inputOnChangeFunc(tableField,fields)" *ngIf="fields.datatype != 'numberOnly' && fields.datatype != 'mask'" [id]="fields._id+'_'+fields.field_name">
+                                                <input matInput type="tel" [placeholder]="fields.placeholder | titlecase" [required]="fields.is_mandatory" [formControlName]="fields.field_name" [minlength]="fields.min_length" [maxlength]="fields.max_length" NumberOnly="true" *ngIf="fields.datatype == 'numberOnly'" [id]="fields._id+'_'+fields.field_name"> 
+                                                <input matInput type="tel" [placeholder]="fields.placeholder | titlecase" [required]="fields.is_mandatory" [formControlName]="fields.field_name" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'mask'" [id]="fields._id+'_'+fields.field_name"> 
                                             </mat-form-field>
                                         </div>
                                         <div *ngIf="fields.type == 'dropdown'">
@@ -1298,7 +1318,7 @@
                                                 <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
                                                     <mat-option></mat-option>
                                                     <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
-                                                        {{getddnDisplayVal(staticValue)}}
+                                                        {{staticValue.name ? staticValue.name : staticValue}}
                                                     </mat-option>
                                                     <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-select>
@@ -1308,7 +1328,7 @@
                                                 <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
                                                     <mat-option></mat-option>
                                                     <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
-                                                        {{getddnDisplayVal(staticValue)}}
+                                                        {{staticValue}}
                                                     </mat-option>
                                                     <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-select>
@@ -1317,8 +1337,8 @@
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)"  [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
                                                     <mat-option></mat-option>
-                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">
-                                                        {{getddnDisplayVal(staticValue)}}
+                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue.key">
+                                                        {{staticValue.value}}
                                                     </mat-option>
                                                     <mat-option *ngIf="fields.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-select>
@@ -1331,11 +1351,11 @@
                                                     <input type="text" [placeholder]="fields.label"   aria-label="Number" matInput [formControlName]="fields.field_name" [matAutocomplete]="first"
                                                         (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,false)" [displayWith]="getOptionText">
-                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                                         <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                     </mat-autocomplete>
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="isEnable(tableField.field_name,fields.field_name, 'add_button')">
+                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                     <mdb-icon fas icon="plus"></mdb-icon>
                                                 </button>
                                             </div>
@@ -1343,14 +1363,16 @@
                                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
                                                     <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                     <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                        <mat-chip *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{getddnDisplayVal(item)}}
-                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                        </mat-chip>
+                                                        <span *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
+                                                            <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
+                                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                            </mat-chip>
+                                                        </span>
                                                         <input type="text" #chipsInput [placeholder]="fields.label" [required]="fields.is_mandatory && fields.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="fields.field_name"
                                                             [matAutocomplete]="first" [matChipInputFor]="chipList"
                                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
                                                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,true,chipsInput)" [displayWith]="getOptionText">
-                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option && option.name ? option.name : option"></mat-option>
                                                             <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                         </mat-autocomplete>
                                                     </mat-chip-list>
@@ -1358,9 +1380,9 @@
                                             </div>
 
                                             <div *ngIf="fields.datatype == 'list_of_object'">
-                                                <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
-                                                        <p class="m-0 small">{{ getddnDisplayVal(item) }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                <div *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
+                                                        <p class="m-0 small">{{ item && item.name ? item.name : item }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                     </div>                                                
                                                 </div>
                                             </div>
@@ -1372,9 +1394,9 @@
                                                     <div class="card-header border-0  px-2 py-1 mb-1">{{ fields.label | titlecase}}</div>
                                                 </div>
                                             </div>
-                                            <div class="row" [formArrayName]="fields.field_name">
+                                            <div *ngIf="staticData[fields.ddn_field] && staticData[fields.ddn_field].length > 0" class="row" [formArrayName]="fields.field_name">
                                                 <div class="col-lg-3" *ngFor="let order of staticData[fields.ddn_field]; let i = index">
-                                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ getddnDisplayVal(order) }}</mat-checkbox>
+                                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{ order.name ? order.name : order }}</mat-checkbox>
                                                 </div>
                                             </div>
                                         </div>
@@ -1386,26 +1408,28 @@
                                                 <mat-form-field appearance="outline" class="example-full-width w-100"  >
                                                     <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                     <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,step,fields)">
-                                                        <mat-chip *ngFor="let item of custmizedFormValueData(step,fields); let i = index" cdkDrag [selectable]="selectable"
-                                                                [removable]="removable" (removed)="openModal('confirm-modal',i,step,fields,item,'delete')">
-                                                                {{getddnDisplayVal(item)}}
-                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                        </mat-chip>
-                                                        <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
-                                                        <input matInput type="tel" [placeholder]="getTitlecase(fields.placeholder)" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
+                                                        <span *ngIf ="custmizedFormValue[fields.field_name] && custmizedFormValue[fields.field_name].length > 0">
+                                                            <mat-chip *ngFor="let item of custmizedFormValue[fields.field_name]; let i = index" cdkDrag [selectable]="selectable"
+                                                                    [removable]="removable" (removed)="openModal('confirm-modal',i,step,fields,item,'delete')">
+                                                                    {{ item.name ? item.name : item }}
+                                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                            </mat-chip>
+                                                        </span>
+                                                        <input matInput type="text" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
+                                                        <input matInput type="tel" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
                                                     </mat-chip-list>
                                                 </mat-form-field>   
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                    <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name" (keyup)="setValue(step,fields,false)">
+                                                    <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(step,fields,false)">
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="isEnable(step.field_name,fields.field_name, 'add_button')"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                                <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="tempVal[step.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                                             </div>
                                             <!-- <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
-                                                <div *ngIf="checkCustmizedFormValueData(tableField,fields)" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                    <div class="row border-bottom typeahead-example-box" *ngFor="let item of custmizedFormValueData(tableField,fields); let i = index" cdkDrag>
+                                                <div *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <div class="row border-bottom typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
                                                         <div class="col-lg-9">
                                                             <p class="m-0 small">{{item}}</p>
                                                         </div>
@@ -1441,7 +1465,7 @@
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
                                                 <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue('',fields,false)" disableOptionCentering panelClass="optiondropdown">
                                                     <mat-option *ngFor="let data of treeViewData[step.field_name][fields.field_name]" [value]="data">
-                                                        {{getddnDisplayVal(data)}}
+                                                        {{ data.name ? data.name : data }}
                                                     </mat-option>
                                                 </mat-select>
                                                 <span class="tree_view_class cursor-pointer" [id]="tableField.field_name+'_'+fields.field_name+'_sup'" (click)="openTreeView(step,fields)">Tree View</span>
@@ -1451,7 +1475,7 @@
                                             <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
                                                 <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue(step,fields,false)" disableOptionCentering panelClass="optiondropdown">
-                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)"></mat-option>
+                                                    <mat-option *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue" [innerHtml]="staticValue.name ? staticValue.name : staticValue"></mat-option>
                                                 </mat-select>
                                                 <span class="tree_view_class cursor-pointer" (click)="openTreeView(step,fields)">Tree View</span>
                                             </mat-form-field>
@@ -1466,9 +1490,9 @@
                                                     <button *ngIf="custmizedFormValue[fields.field_name] && custmizedFormValue[fields.field_name].length > 0 && fields.datatype == 'grid_review'" (click)="reviewParameters(fields,custmizedFormValue[fields.field_name])" mdbBtn type="button"  size="sm"  mdbWavesEffect class="m-0 ml-2 grid-button px-1 py-0 float-right" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateForm.get(tableField.field_name)['controls'][fields.field_name].disabled"><span class="material-icons">reviews</span></button>
                                                 </div>
                                             </div>                            
-                                            <div class="row" *ngIf="custmizedFormValue[fields.field_name]">
+                                            <div class="row" *ngIf="custmizedFormValue[fields.field_name] && fields.gridColumns">
                                                 <div class="col-lg-12 table-responsive py-2" >
-                                                    <table mdbTable class="z-depth-1" *ngIf="custmizedFormValue[fields.field_name].length > 0">
+                                                    <table mdbTable class="z-depth-1" *ngIf="custmizedFormValue[fields.field_name].length > 0 && fields.gridColumns.length > 0">
                                                         <thead>
                                                             <tr>                                
                                                                 <th *ngFor="let fieldName of fields.gridColumns" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
@@ -1481,7 +1505,7 @@
                                                                         <mat-checkbox color="primary" 
                                                                             [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                                     </span>
-                                                                    <span *ngIf="fieldName.type!='checkbox'"  [innerHtml]="getValueForGrid(fieldName,data)"></span>
+                                                                    <span *ngIf="fieldName.type!='checkbox'"  [innerHtml]="data[fieldName.field_name]"></span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -1516,7 +1540,7 @@
                                             <div class="w-100 position-relative">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <mat-label>{{ fields.label | titlecase}}</mat-label>
-                                                    <input matInput type="text" [placeholder]="getTitlecase(fields.placeholder)"  [formControlName]="fields.field_name">
+                                                    <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name">
                                                 </mat-form-field>
                                                 <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(step,fields)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList(step,fields)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
                                                     ></button>
@@ -1530,12 +1554,12 @@
                                             </div>
                                             <div class="row m-0 w-100" *ngIf="fields.datatype == 'key_value'">
                                                 <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)">
-                                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]| keyvalue" [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}</mat-radio-button>
+                                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]| keyvalue" [value]="staticValue.key">{{ staticValue.value }}</mat-radio-button>
                                                 </mat-radio-group>
                                             </div>
                                             <div class="row m-0 w-100" *ngIf="fields.datatype != 'key_value'">
                                                 <mat-radio-group aria-label="Select an option" [formControlName]="fields.field_name" (change)="inputOnChangeFunc(tableField,fields)">
-                                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">{{getddnDisplayVal(staticValue)}}</mat-radio-button>
+                                                    <mat-radio-button color="primary" class="pr-1" *ngFor="let staticValue of staticData[fields.ddn_field]" [value]="staticValue">{{ staticValue.name ? staticValue.name : staticValue }}</mat-radio-button>
                                                 </mat-radio-group>
                                             </div>
                                         </div>
@@ -1543,7 +1567,8 @@
                                 </div>
                                 <button mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect matStepperPrevious *ngIf="j != 0">Back</button>
                                 <button mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect matStepperNext *ngIf="tableField.list_of_fields.length-1 != j">Next</button>
-                                <span *ngFor="let action_button of formFieldButtons; let i=index" >            <span [ngClass]="getButtonDivClass(action_button)" [id]="action_button._id" *ngIf="tableField.list_of_fields.length-1 == j">            
+                                <span *ngFor="let action_button of formFieldButtons; let i=index" >            
+                                    <span [ngClass]="getButtonDivClass(action_button)" [id]="action_button._id" *ngIf="tableField.list_of_fields.length-1 == j">            
                                         <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
                                     </span>
                                 </span>
@@ -1553,7 +1578,7 @@
                         <div *ngIf="tableField.type == 'gmap'">
                             <!-- <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput (keydown.enter)="$event.preventDefault()" [placeholder]="getTitlecase(tableField.placeholder)" [required]="tableField.is_mandatory" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControlName]="tableField.field_name">
+                                <input matInput (keydown.enter)="$event.preventDefault()" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControlName]="tableField.field_name">
                             </mat-form-field> -->
                             <div class="form-group">
                                 <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
@@ -1609,7 +1634,7 @@
                     <mat-label>{{ action_button.label | titlecase}}</mat-label>
                     <mat-select [compareWith]="compareObjects" [formControlName]="action_button.field_name" (selectionChange)="setValue('',action_button,false)" [required]="action_button.is_mandatory" disableOptionCentering panelClass="optiondropdown">
                         <mat-option *ngFor="let staticValue of staticData[action_button.ddn_field]" [value]="staticValue">
-                            {{getddnDisplayVal(staticValue)}}
+                            {{ staticValue.name ? staticValue.name : staticValue }}
                         </mat-option>
                     </mat-select>
                     <mat-error class="text-danger" *ngIf="templateFormControl[action_button.field_name].touched && templateFormControl[action_button.field_name].errors?.required">
@@ -1620,7 +1645,7 @@
                     <mat-label>{{ action_button.label | titlecase}}</mat-label>
                     <mat-select [formControlName]="action_button.field_name" (selectionChange)="setValue('',action_button,false)" [required]="action_button.is_mandatory" disableOptionCentering panelClass="optiondropdown">
                         <mat-option *ngFor="let staticValue of staticData[action_button.ddn_field]" [value]="staticValue">
-                            {{getddnDisplayVal(staticValue)}}
+                            {{ staticValue.name ? staticValue.name : staticValue }}
                         </mat-option>
                     </mat-select>
                     <mat-error class="text-danger" *ngIf="templateFormControl[action_button.field_name].touched && templateFormControl[action_button.field_name].errors?.required">
