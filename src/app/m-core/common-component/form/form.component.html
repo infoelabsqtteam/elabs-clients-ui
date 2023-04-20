@@ -857,7 +857,7 @@
                                                             <mat-checkbox color="primary" 
                                                                 [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                         </span>
-                                                        <span *ngIf="fieldName.type!='checkbox'"  (click)="showListOfFieldData(data, fieldName)" [innerHtml]="data[fieldName.field_name]"></span>
+                                                        <span *ngIf="fieldName.type!='checkbox'" [ngClass]="[fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap?'':'grid-coloumn-nowrap']" (click)="showListOfFieldData(data, fieldName)" [innerHtml]="data[fieldName.field_name]"></span>
                                                     </div>
                                                 </td>
                                             </tr>
