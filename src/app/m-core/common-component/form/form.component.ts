@@ -201,6 +201,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showIfFieldList:any=[];
   disableIfFieldList:any=[];
   mendetoryIfFieldList:any=[];
+  editorTypeFieldList:any=[];
   gridSelectionMendetoryList:any=[];
   canUpdateIfFieldList:any=[];
   pageLoading: boolean = true;
@@ -651,7 +652,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.handleDisabeIf();
     }
       
-    this.formControlChanges();
+    //this.formControlChanges();
     if(this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
@@ -781,8 +782,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         if(element.type == 'pdf_view'){
           const object = this.elements[this.selectedRowIndex];
-          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
-        } 
+          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object));
+          this.editorTypeFieldList.push(element);
+        }
+        if(element.type == 'info_html' || element.type == 'html_view') {
+          this.editorTypeFieldList.push(element);
+        }
         if(element.field_name && element.field_name != ''){             
           switch (element.type) {
             case "list_of_checkbox":
@@ -1228,67 +1233,72 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.closeModal();
   }
   customValidationFiels=[];
-  setStaticData(staticData){    
-    if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
-      this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
-      // const fieldName = {
-      //   "field" : "staticDataMessgae"
-      // }
-      // this.apiService.ResetStaticData(fieldName);
-    }
-    Object.keys(staticData).forEach(key => {
-      if(staticData[key]) { 
-        this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
+  setStaticData(staticData){   
+    if(Object.keys(staticData).length > 0) {
+      if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
+        this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
+        // const fieldName = {
+        //   "field" : "staticDataMessgae"
+        // }
+        // this.apiService.ResetStaticData(fieldName);
       }
-    })
-    this.tableFields.forEach(element => {
-      switch (element.type) {              
-        case 'pdf_view':
-          if(Array.isArray(this.staticData[element.ddn_field]) && this.staticData[element.ddn_field] != null){
-            const data = this.staticData[element.ddn_field][0];
-            if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
-              const arrayBuffer = data['bytes'];
-              this.pdfViewLink = arrayBuffer;
-              this.pdfViewListData = JSON.parse(JSON.stringify(this.staticData[element.ddn_field]))
-            }
-          }else{
-            this.pdfViewLink = '';
-          }             
-          break;
-        case 'info_html':
-        case 'html_view':
-          if(this.staticData[element.ddn_field] && this.staticData[element.ddn_field] != null){
-            this.templateForm.controls[element.field_name].setValue(this.staticData[element.ddn_field])
+      Object.keys(staticData).forEach(key => {
+        if(key && key != 'null' && key != 'FORM_GROUP' && key != 'CHILD_OBJECT' && key != 'COMPLETE_OBJECT' && key != 'FORM_GROUP_FIELDS')
+        if(staticData[key] && staticData[key].length > 0) { 
+          this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
+        }
+      })
+      if(this.editorTypeFieldList && this.editorTypeFieldList.length > 0){
+        this.editorTypeFieldList.forEach(element => {
+          switch (element.type) {              
+            case 'pdf_view':
+              if(Array.isArray(staticData[element.ddn_field]) && staticData[element.ddn_field] != null){
+                const data = staticData[element.ddn_field][0];
+                if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
+                  const arrayBuffer = data['bytes'];
+                  this.pdfViewLink = arrayBuffer;
+                  this.pdfViewListData = JSON.parse(JSON.stringify(staticData[element.ddn_field]))
+                }
+              }else{
+                this.pdfViewLink = '';
+              }             
+              break;
+            case 'info_html':
+            case 'html_view':
+              if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
+                this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field])
+              }
+              break;
+            default:              
+              break;
           }
-          break;
-        default:              
-          break;
+        }) 
+      } 
+      if(staticData["FORM_GROUP"] && staticData["FORM_GROUP"] != null){          
+        this.updateDataOnFormField(staticData["FORM_GROUP"]);      
       }
-    })  
-    if(this.staticData["FORM_GROUP"] && this.staticData["FORM_GROUP"] != null){          
-      this.updateDataOnFormField(this.staticData["FORM_GROUP"]);      
-    }
 
-    if(this.staticData["CHILD_OBJECT"] && this.staticData["CHILD_OBJECT"] != null){
-      this.updateDataOnFormField(this.staticData["CHILD_OBJECT"]); 
-    }
-
-    if(this.staticData["COMPLETE_OBJECT"] && this.staticData["COMPLETE_OBJECT"] != null){
-      if(this.curFormField && this.curFormField.resetFormAfterQtmp){
-        this.resetForm();
-        this.curFormField = {};
-        this.curParentFormField = {};
+      if(staticData["CHILD_OBJECT"] && staticData["CHILD_OBJECT"] != null){
+        this.updateDataOnFormField(staticData["CHILD_OBJECT"]); 
       }
-      this.updateDataOnFormField(this.staticData["COMPLETE_OBJECT"]);          
-      this.selectedRow = this.staticData["COMPLETE_OBJECT"];
-      this.complete_object_payload_mode = true;      
-    }
 
-    if(this.staticData["FORM_GROUP_FIELDS"] && this.staticData["FORM_GROUP_FIELDS"] != null){
-      this.updateDataOnFormField(this.staticData["FORM_GROUP_FIELDS"]);
-    }
-    if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
-      this.setCheckboxFileListValue();
+      if(staticData["COMPLETE_OBJECT"] && staticData["COMPLETE_OBJECT"] != null){
+        if(this.curFormField && this.curFormField.resetFormAfterQtmp){
+          this.resetForm();
+          this.curFormField = {};
+          this.curParentFormField = {};
+        }
+        this.updateDataOnFormField(staticData["COMPLETE_OBJECT"]);          
+        this.selectedRow = staticData["COMPLETE_OBJECT"];
+        this.complete_object_payload_mode = true;      
+      }
+
+      if(staticData["FORM_GROUP_FIELDS"] && staticData["FORM_GROUP_FIELDS"] != null){
+        this.updateDataOnFormField(staticData["FORM_GROUP_FIELDS"]);
+      }
+      if (this.checkBoxFieldListValue.length > 0 && Object.keys(staticData).length > 0) {
+        this.setCheckboxFileListValue();
+      }
     }
   }
   setCheckboxFileListValue() {
@@ -1555,9 +1565,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 }
               }
             }else if (key.field_name) {
-              this.focusField("",key);  
-              break;
-            }              
+              if(key.type == 'text'){
+                this.focusField("",key);                                
+                break;
+              }else{
+                this.checkFormFieldAutfocus = false;
+                break;
+              }
+            }            
           }
         }
       }
@@ -1754,7 +1769,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   
   setValue(parentfield,field, add,event?) {
 
-    let formValue = this.templateForm.getRawValue()   
+    let formValue = this.templateForm.getRawValue();
+    let formValueWithoutCustomData = this.getFormValue(false);
+    let formValueWithCustomData = this.getFormValue(true);
     this.curFormField = field;
     this.curParentFormField = parentfield; 
     switch (field.type) {
@@ -2065,7 +2082,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         const gridModalData = {
           "field": this.curTreeViewField,
           "selectedData":selectedData,
-          "object": this.getFormValue(true)
+          "object": formValueWithCustomData
         }
         this.modalService.open('grid-selection-modal', gridModalData);
         break;
@@ -2075,7 +2092,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
     if (field.onchange_api_params && field.onchange_call_back_field) {
         let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
+        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValueWithoutCustomData);
         this.changeDropdown(field, formValue,field.onchange_data_template);
     }
 
@@ -2144,14 +2161,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let gridSelectedData = [];
     if (!this.customEntryData[field.field_name]) this.customEntryData[field.field_name] = [];
     this.customEntryData[field.field_name] = []
-    if(data && data.length > 0){
+    if(data && data.length > 0 && field.add_new_enabled){
       data.forEach(grid => {
-        if(grid && grid.customEntry && field.add_new_enabled){
+        if(grid && grid.customEntry){
           this.customEntryData[field.field_name].push(grid);
         }else{
           gridSelectedData.push(grid);
         }
       });
+    }else {
+      gridSelectedData = data;
     }
     return gridSelectedData;
   }
