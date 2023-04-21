@@ -790,7 +790,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         this._location.go(this.currentBrowseUrl);
       }       
     }else{
-      this._location.go(this.currentBrowseUrl); 
+      let routUrl = this.currentBrowseUrl;
+      if(this.currentBrowseUrl != ''){
+        let url = this.currentBrowseUrl.split('?');
+        if(url && url.length > 0){
+          routUrl = url[0];
+        }
+      }
+      this._location.go(routUrl); 
       this.currentBrowseUrl = "";
     }
   }

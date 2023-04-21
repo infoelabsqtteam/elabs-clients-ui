@@ -3592,8 +3592,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   gridSelectionResponce(responce){ 
-    const fieldName = this.curTreeViewField.field_name;
-    let formValueWithCustomData = this.getFormValue(true);
+    const fieldName = this.curTreeViewField.field_name;    
     if (!this.custmizedFormValue[fieldName]) this.custmizedFormValue[fieldName] = [];
     this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(responce));
     if(this.customEntryData[fieldName] && this.customEntryData[fieldName].length > 0){
@@ -3602,8 +3601,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
       this.customEntryData[fieldName] = [];
     }
+    
     if(this.curTreeViewField && this.curTreeViewField.onchange_function && this.curTreeViewField.onchange_function_param){
       let function_name = this.curTreeViewField.onchange_function_param;
+      let formValueWithCustomData = this.getFormValue(true);
       switch(function_name){
         case "calculation_of_script_for_tds":
           const payload = this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField);   
@@ -3657,14 +3658,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
       }
     }
+    
     if(this.curTreeViewField && this.curTreeViewField.onchange_function_param != '' && this.curTreeViewField.onchange_function_param != null){
       if(this.curTreeViewField.onchange_function_param.indexOf('QTMP') >= 0){
-        const payloads = []
-        payloads.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],formValueWithCustomData));
+        const payloads = [];
+        payloads.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
         this.callStaticData(payloads);
       }
-    }
-    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',formValueWithCustomData);
+    }    
+    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',this.getFormValue(true));
     this.modifyCustmizedFormValue = modifyObject.modifyData;
     this.tableFields = modifyObject.fields;
     this.curTreeViewField = {};
