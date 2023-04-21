@@ -89,8 +89,8 @@ export class DataShareService {
   shareData(responce:any){
     this.sharedData.emit(responce);
   }
-  shareStaticData(staticData:any,data){
-    this.staticData.emit(data);
+  shareStaticData(staticData:any){
+    this.staticData.emit(staticData);
     this.setStaticData = staticData;
   }
   getStatiData(){
