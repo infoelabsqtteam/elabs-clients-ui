@@ -19,7 +19,7 @@ constructor(
         let modifyRow = JSON.parse(JSON.stringify(row));
         for (let j = 0; j < gridColumns.length; j++) {
           const column = gridColumns[j];  
-          if(!column.editable || editableGridColumns.length == 0){        
+          if(!column.editable){        
             modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
           }          
           modifyRow["tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);
@@ -235,37 +235,5 @@ constructor(
   //     return field.label;
   //   }
   // }
-  modifyTableFields(tablefields){
-    
-  }
-  gridDataModify(modifyData,data,fields,field_name,key,object){
-    let modifyObject = {
-      "modifyData" : modifyData,
-      "fields" : fields,
-      "field_index" : -1
-    };
-    if(fields && fields.length > 0){
-      for (let i = 0; i < fields.length; i++) {
-        const element = fields[i];
-        const type = element.type;
-        const fieldName = element.field_name;
-        if(type && type.startsWith(key) && field_name == fieldName){                    
-          if(element && fieldName && data && data[fieldName]){
-            const cData = data[fieldName];
-            if(Array.isArray(cData) && cData.length > 0){              
-              const gridColumns = element.gridColumns;
-              const modifyList = this.modifyGridData(cData,gridColumns,element,[]);
-              modifyData[fieldName] = modifyList;
-              element.gridColumns = this.modifyGridColumns(gridColumns,object);
-              modifyObject.field_index = i;
-            }
-          } 
-        }
-      }
-    }
-    modifyObject.modifyData = modifyData;
-    modifyObject.fields = fields;
-    return modifyObject;
-  }
 
 }

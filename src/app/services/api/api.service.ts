@@ -50,46 +50,40 @@ constructor(
     return this.http.post(api, payload)
   }
   setStaticData(data){
-    const staticData = this.dataShareService.getStatiData();
-    const currentData = {};    
+    const staticData = this.dataShareService.getStatiData();    
     if(data.length > 0){                
       data.forEach(element => {
         if(element.adkeys){
             if(element.adkeys.totalRows && element.adkeys.totalRows != ''){
                 staticData[element.field] = [];
-                currentData[element.field] = [];
                 for (let index = 0; index < element.adkeys.totalRows; index++) {
-                    staticData[element.field].push(element.data);
-                    currentData[element.field].push(element.data);                              
+                    staticData[element.field].push(element.data);                              
                 }
             }
             if(element.adkeys.index && element.adkeys.index != ''){
                 if(staticData[element.field] && staticData[element.field].length > 0){
                     const index = element.adkeys.index;
                     staticData[element.field][index] = element.data;
-                    currentData[element.field][index] = element.data;
                 }
             }
         }else{
-            staticData[element.field] = element.data;
-            currentData[element.field] = element.data;
+            staticData[element.field] = element.data
         }                    
       }); 
     }
     if(data['staticDataMessgae'] != null && data['staticDataMessgae'] != ''){
       staticData['staticDataMessgae'] = data['staticDataMessgae'];
-      currentData['staticDataMessgae'] = data['staticDataMessgae'];
     } 
-    this.dataShareService.shareStaticData(staticData,currentData);
+    this.dataShareService.shareStaticData(staticData);
 
   }
   ResetStaticData(keyName){
     let staticData = this.dataShareService.getStatiData();
     staticData[keyName.field] = null;
-    this.dataShareService.shareStaticData(staticData,{});
+    this.dataShareService.shareStaticData(staticData);
   }
   resetStaticAllData(){
-    this.dataShareService.shareStaticData({},{})
+    this.dataShareService.shareStaticData({})
   }
   getGridCountData(payloads){ 
     from(payloads)

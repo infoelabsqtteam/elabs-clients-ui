@@ -165,8 +165,8 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
 
   
 
-  // getTitlecase(value){
-  //   return this.commonFunctionService.getTitlecase(value)
-  // }
+  getTitlecase(value){
+    return this.commonFunctionService.getTitlecase(value)
+  }
 
 }
