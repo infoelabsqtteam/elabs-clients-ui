@@ -3601,9 +3601,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
       this.customEntryData[fieldName] = [];
     }
-    let formValueWithCustomData = this.getFormValue(true);
+    
     if(this.curTreeViewField && this.curTreeViewField.onchange_function && this.curTreeViewField.onchange_function_param){
       let function_name = this.curTreeViewField.onchange_function_param;
+      let formValueWithCustomData = this.getFormValue(true);
       switch(function_name){
         case "calculation_of_script_for_tds":
           const payload = this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField);   
@@ -3660,12 +3661,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
     if(this.curTreeViewField && this.curTreeViewField.onchange_function_param != '' && this.curTreeViewField.onchange_function_param != null){
       if(this.curTreeViewField.onchange_function_param.indexOf('QTMP') >= 0){
-        const payloads = []
-        payloads.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],formValueWithCustomData));
+        const payloads = [];
+        payloads.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
         this.callStaticData(payloads);
       }
     }    
-    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',formValueWithCustomData);
+    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',this.getFormValue(true));
     this.modifyCustmizedFormValue = modifyObject.modifyData;
     this.tableFields = modifyObject.fields;
     this.curTreeViewField = {};
