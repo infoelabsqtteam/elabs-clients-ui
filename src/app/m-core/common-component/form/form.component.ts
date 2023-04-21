@@ -1244,7 +1244,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       Object.keys(staticData).forEach(key => {
         if(key && key != 'null' && key != 'FORM_GROUP' && key != 'CHILD_OBJECT' && key != 'COMPLETE_OBJECT' && key != 'FORM_GROUP_FIELDS')
-        if(staticData[key] && staticData[key].length > 0) { 
+        if(staticData[key]) { 
           this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
         }
       })
