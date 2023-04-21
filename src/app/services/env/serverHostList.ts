@@ -36,6 +36,6 @@ export const serverHostList = [
   {"clientEndpoint": "app.e-labs.ai", "serverEndpoint": "https://serverelabs.e-labs.ai"},
   {"clientEndpoint": "sit-central.e-labs.ai", "serverEndpoint": "https://sitservercentrallims.e-labs.ai"},
   {"clientEndpoint": "central.e-labs.ai", "serverEndpoint": "https://prodservercentral.e-labs.ai"},
-  {"clientEndpoint": "lims.upmalab.com", "serverEndpoint": "https://prodserverupma.e-labs.ai"},
+  {"clientEndpoint": "upma-lims.e-labs.ai", "serverEndpoint": "https://prodserverupma.e-labs.ai"}
 ]
 
