@@ -923,7 +923,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                           break;
                       } 
                     }  
-                    data.field_class = this.commonFunctionService.getDivClass(data,element.list_of_fields.length);               
+                    data.field_class = this.commonFunctionService.getDivClass(data,(this.tableFields.length + element.list_of_fields.length));               
                   }
                 }
               }
