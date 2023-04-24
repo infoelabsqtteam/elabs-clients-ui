@@ -174,6 +174,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
   updateAddNew:boolean = false;
   hide = true;
+  showSidebar:boolean = false;
   isLinear:boolean=true;
   isStepper:boolean = false;
   showNotify: boolean = false;
@@ -291,6 +292,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   pageSize:any=100;
   showGridData:any={};
   serverReq:boolean = false;
+  actionButtonNameList:any=["save","update","updateandnext","send_email"]; 
 
   @HostListener('document:click') clickout() {
     this.term = {};
@@ -487,6 +489,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.dataSaveInProgress = true;
         this.isLinear=true;
         this.isStepper = false;
+        this.showSidebar = false;
         this.saveResponceData = {};
         this.listOfFieldUpdateMode=false;
         this.listOfFieldsUpdateIndex = -1;
@@ -626,7 +629,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.pageLoading = true;
     this.dataSaveInProgress = true; 
     this.isLinear=true;
-    this.isStepper = false;    
+    this.isStepper = false;  
+    this.showSidebar = false;  
     this.checkFormFieldAutfocus = true;
     this.filePreviewFields = [];    
     this.nextFormUpdateMode = false;    
@@ -787,6 +791,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         if(element.type == 'info_html' || element.type == 'html_view') {
           this.editorTypeFieldList.push(element);
+          this.filePreviewFields.push(element);
         }
         if(element.field_name && element.field_name != ''){             
           switch (element.type) {
@@ -917,7 +922,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                           this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
                           break;
                       } 
-                    }                 
+                    }  
+                    data.field_class = this.commonFunctionService.getDivClass(data,element.list_of_fields.length);               
                   }
                 }
               }
@@ -1019,9 +1025,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null) || (element.disable_on_add && element.disable_on_add != '' && element.disable_on_add != undefined && element.disable_on_add != null)){                  
           this.disableIfFieldList.push(element);
         }
-        if(element.type && element.type == 'info_html'){
-          this.filePreviewFields.push(element)
-        }
+        element.field_class = this.commonFunctionService.getDivClass(element,this.tableFields.length);
       }
       if(this.formFieldButtons && this.formFieldButtons.length > 0){
         this.formFieldButtons.forEach(element => {
@@ -1263,7 +1267,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 this.pdfViewLink = '';
               }             
               break;
-            case 'info_html':
+            case 'info_html':              
+              if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
+                this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field]);
+                if(this.filePreviewFields && this.filePreviewFields.length > 0){
+                  this.showSidebar = true;
+                }
+              }
+              break;
             case 'html_view':
               if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
                 this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field])
@@ -2565,14 +2576,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.apiService.clearTypeaheadData();
   }
 
-  getDivClass(field) {
-    const fieldsLangth = this.tableFields.length;
-    return this.commonFunctionService.getDivClass(field,fieldsLangth);
-  }
+  // getDivClass(field) {
+  //   const fieldsLangth = this.tableFields.length;
+  //   return this.commonFunctionService.getDivClass(field,fieldsLangth);
+  // }
   
-  getButtonDivClass(field){
-    return this.commonFunctionService.getButtonDivClass(field);
-  }
+  // getButtonDivClass(field){
+  //   return this.commonFunctionService.getButtonDivClass(field);
+  // }
 
   
   public addNewRecord:boolean = false;
@@ -3774,26 +3785,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }      
     }
   }
-  checkValidator(action_button){
-    const field_name = action_button.field_name.toLowerCase();
-    switch (field_name) {
-      case "save":
-      case "update":
-      case "updateandnext":
-      case "send_email":         
-        if(!this.templateForm.valid || this.serverReq){
-          return true;
-        }else{
-          return false;
-        }
-      default:
-        if(this.serverReq){
-          return true;
-        }else{
-          return false;
-        }
-    }      
-  }
+  // checkValidator(action_button){
+  //   const field_name = action_button.field_name.toLowerCase();
+  //   switch (field_name) {
+  //     case "save":
+  //     case "update":
+  //     case "updateandnext":
+  //     case "send_email":         
+  //       if(!this.templateForm.valid || this.serverReq){
+  //         return true;
+  //       }else{
+  //         return false;
+  //       }
+  //     default:
+  //       if(this.serverReq){
+  //         return true;
+  //       }else{
+  //         return false;
+  //       }
+  //   }      
+  // }
   donotResetField(){
     //let FormValue = this.templateForm.getRawValue();
     if(this.tableFields.length > 0){
@@ -4251,23 +4262,23 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.pdfViewLink = arrayBuffer;
     }
   }
-  checkFormType(){
-    if(this.filePreviewFields.length > 0){
-      let checkInfoHtml = 0;
-      this.filePreviewFields.forEach(element => {
-        if(this.staticData[element.ddn_field] && this.staticData[element.ddn_field] != '' && this.staticData[element.ddn_field] != null){
-          checkInfoHtml += 1;
-        }
-      });
-      if(this.filePreviewFields.length == checkInfoHtml){
-        return true;
-      }else{
-        return false;
-      }
-    }else{
-      return false;
-    }    
-  }
+  // checkFormType(){
+  //   if(this.filePreviewFields.length > 0){
+  //     let checkInfoHtml = 0;
+  //     this.filePreviewFields.forEach(element => {
+  //       if(this.staticData[element.ddn_field] && this.staticData[element.ddn_field] != '' && this.staticData[element.ddn_field] != null){
+  //         checkInfoHtml += 1;
+  //       }
+  //     });
+  //     if(this.filePreviewFields.length == checkInfoHtml){
+  //       return true;
+  //     }else{
+  //       return false;
+  //     }
+  //   }else{
+  //     return false;
+  //   }    
+  // }
   previous(){
     const previousIndex = this.selectedRowIndex - 1;
     if(previousIndex != -1){
@@ -4315,43 +4326,43 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.formIndex = i;
     this.changeForm();
   }
-  checkFormTab(form){
-    const key = form.key;
-    const value = form.value;
-    if(key == this.formName){
-      return false;
-    }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
-      return false;
-    }else if(value && value.details && value.details.form_tab){
-      return false;
-    }else{
-      return true;
-    }
-  }
-  checkFormTabShow(form){
-    const key = form.key;
-    const value = form.value;
-    if(key == this.formName){
-      return true;
-    }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
-      return true;
-    }else if(value && value.details && value.details.form_tab){
-      return true;
-    }else{
-      return false;
-    }
-  }
-  checkActiveTab(form){
-    const key = form.key;
-    const value = form.value;
-    if(key == this.formName){
-      return true;
-    }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
-      return true;
-    }else{
-      return false;
-    }
-  }
+  // checkFormTab(form){
+  //   const key = form.key;
+  //   const value = form.value;
+  //   if(key == this.formName){
+  //     return false;
+  //   }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
+  //     return false;
+  //   }else if(value && value.details && value.details.form_tab){
+  //     return false;
+  //   }else{
+  //     return true;
+  //   }
+  // }
+  // checkFormTabShow(form){
+  //   const key = form.key;
+  //   const value = form.value;
+  //   if(key == this.formName){
+  //     return true;
+  //   }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
+  //     return true;
+  //   }else if(value && value.details && value.details.form_tab){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
+  // }
+  // checkActiveTab(form){
+  //   const key = form.key;
+  //   const value = form.value;
+  //   if(key == this.formName){
+  //     return true;
+  //   }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
+  // }
   checkOnSuccessAction(){
     let actionValue = ''
     let index = -1;

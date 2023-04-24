@@ -3,7 +3,7 @@
     <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
         <div class="form-tab">
             <span *ngIf="multipleFormCollection.length == '0'">          
-                <h3 class="modal-title m-0 text-uppercase" [ngClass]="{'active': checkActiveTab(form),'d-none':checkFormTab(form),'d-block' : checkFormTabShow(form)}"  *ngFor="let form of forms| keyvalue;let i = index" (click)="changeNewForm(form.key,i)">{{form.value.label}}</h3>
+                <h3 class="modal-title m-0 text-uppercase" *ngFor="let form of forms| keyvalue;let i = index" (click)="changeNewForm(form.key,i)" [ngClass]="[form.key == formName || (form.key == 'default' && (formName == 'NEW' || formName == 'UPDATE' )) || (form.value && form.value.details && form.value.details.form_tab) ? 'd-block' : 'd-none',form.key == formName || (form.key == 'default' && (formName == 'NEW' || formName == 'UPDATE' )) ? 'active' : '']">{{form.value.label}}</h3>
             </span> 
             <span *ngIf="multipleFormCollection.length > '0'">          
                 <h4 class="modal-title m-0" [ngClass]="{'active': true}" >{{form.label}}</h4>
@@ -19,9 +19,9 @@
     </div>
     <div class="modal-body pb-2 pt-1 mt-0 px-4">
         <div class="row">
-            <div [ngClass]="checkFormType()?'col-lg-8':'col-lg-12'"> 
+            <div [ngClass]="showSidebar?'col-lg-8':'col-lg-12'"> 
                 <div class="row" *ngIf="handleDisabeIf()">
-                    <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="getDivClass(tableField)" [id]="tableField._id"  >
+                    <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="tableField.field_class" [id]="tableField._id"  >
                         <div *ngIf="tableField.type == 'text'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
@@ -364,7 +364,7 @@
                                 </div>
                             </div>
                             <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.datatype != 'list_of_object_with_popup'">
-                                <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
+                                <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="fields.field_class" [id]="fields._id">
                                     <div *ngIf="fields.type == 'text'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                           
@@ -731,7 +731,7 @@
                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <!-- <angular-editor [formControlName]="tableField.field_name" [config]="editorConfig"></angular-editor> -->
+                                    <angular-editor [formControlName]="tableField.field_name" [config]="editorConfig"></angular-editor>
                                 </div>
                             </div>
                         </div>
@@ -741,7 +741,7 @@
                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <!-- <angular-editor [formControlName]="tableField.field_name" [config]="minieditorConfig"></angular-editor> -->
+                                    <angular-editor [formControlName]="tableField.field_name" [config]="minieditorConfig"></angular-editor>
                                 </div>
                             </div>
                         </div>
@@ -760,7 +760,7 @@
                                 <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                     <mat-select [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" disableOptionCentering panelClass="optiondropdown">
-                                        <mat-option *ngFor="let data of treeViewData[tableField.field_name] treeViewData[tableField.field_name].length > 0 ? treeViewData[tableField.field_name] : []" [value]="data">
+                                        <mat-option *ngFor="let data of (treeViewData[tableField.field_name] && treeViewData[tableField.field_name].length > 0) ? treeViewData[tableField.field_name] : []" [value]="data">
                                             {{ data && data.name ? data.name : data }}
                                         </mat-option>
                                     </mat-select>
@@ -919,25 +919,25 @@
                             </div> -->
                             <div cdkDropListGroup class="row">
                                 <div class="col-lg-6">
-                                <div class="card-header border-0 font-italic px-2 py-1 mb-1">{{ tableField.label | titlecase }}</div> 
-                                <div
-                                    cdkDropList
-                                    [cdkDropListData]="custmizedFormValue[tableField.field_name]?custmizedFormValue[tableField.field_name] : []"
-                                    class="example-list row m-0 w-100"
-                                    (cdkDropListDropped)="drop($event)">                                    
-                                    <mat-card  class="example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]?custmizedFormValue[tableField.field_name] : []" cdkDrag> <span *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span> </mat-card>
-                                </div>
+                                    <div class="card-header border-0 font-italic px-2 py-1 mb-1">{{ tableField.label | titlecase }}</div> 
+                                    <div
+                                        cdkDropList
+                                        [cdkDropListData]="custmizedFormValue[tableField.field_name]?custmizedFormValue[tableField.field_name] : []"
+                                        class="example-list row m-0 w-100"
+                                        (cdkDropListDropped)="drop($event)">                                    
+                                        <mat-card  class="example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]?custmizedFormValue[tableField.field_name] : []" cdkDrag> <span *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span> </mat-card>
+                                    </div>
                                 </div>
                             
                                 <div class="col-lg-6">
-                                <div class="card-header border-0 font-italic px-2 py-1 mb-1">Select From Below (drag & drop to selection list)</div>                            
-                                <div
-                                    cdkDropList
-                                    [cdkDropListData]="staticData[tableField.ddn_field]"
-                                    class="example-list row m-0 w-100"
-                                    (cdkDropListDropped)="drop($event)">
-                                    <mat-card  class="example-box example-box-right" *ngFor="let item of staticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span></mat-card>                                    
-                                </div>
+                                    <div class="card-header border-0 font-italic px-2 py-1 mb-1">Select From Below (drag & drop to selection list)</div>                            
+                                    <div
+                                        cdkDropList
+                                        [cdkDropListData]="staticData[tableField.ddn_field]"
+                                        class="example-list row m-0 w-100"
+                                        (cdkDropListDropped)="drop($event)">
+                                        <mat-card  class="example-box example-box-right" *ngFor="let item of staticData[tableField.ddn_field]" cdkDrag><span  *ngFor="let field of tableField.gridColumns" [ngClass]="field.field_class" [innerHtml]="item[field.field_name]"></span></mat-card>                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1009,6 +1009,42 @@
                                     </table>
                                 </div> 
                             </div>                          
+                        </div>
+                        <div *ngIf="tableField.type == 'gmap'">
+                            <!-- <mat-form-field appearance="outline" class="example-full-width w-100">
+                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                                <input matInput (keydown.enter)="$event.preventDefault()" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControlName]="tableField.field_name">
+                            </mat-form-field> -->
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
+                              </div>
+                            <!-- <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
+                                <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                                  ></agm-marker>
+                            </agm-map> -->
+                        </div>
+                        <div *ngIf="tableField.type == 'step_progress_bar'">
+                            <div class="row">
+                                <div class="col-lg-12 px-0">
+                                    <div class="px-0 py-1 my-2 ml-3 mr-2 form-label">{{ tableField.label | titlecase}}</div>
+                                    <button [matTooltip]="'Refresh'" [matTooltipPosition]="'above'" mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshApiCall(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
+                                </div>
+                            </div>
+                            <div class="stepper-wrapper">
+                                <div class="stepper-item completed" *ngFor="let progress of staticData[tableField.ddn_field]" [ngClass]="{completed : progress.status == 'complete',active : progress.status == 'progress',cancel : progress.status == 'cancel',hold: progress.status == 'hold'}">
+                                    <div class="step-counter" [matTooltip]="progress.label +' '+progress.status"
+                                    [matTooltipClass]="'tooltip-'+progress.status" [matTooltipPosition]="'above'">
+                                        <span *ngIf="progress.status == 'pending'"></span>
+                                        <span class="material-icons" *ngIf="progress.status == 'complete'">done</span>
+                                        <span class="material-icons" *ngIf="progress.status == 'progress'">change_history</span>
+                                    </div>
+                                    <div class="step-name">
+                                        <p *ngIf="progress.label" class="m-0">{{progress.label}}</p>
+                                        <p *ngIf="progress.date" class="m-0">{{progress.date}}</p>
+                                        <p *ngIf="progress.info" class="m-0">{{progress.info}}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_text'">
                             <div class="col-md-2 labeltitle"><strong>{{ tableField.label | titlecase}} :</strong></div>
@@ -1266,7 +1302,7 @@
                             <mat-step *ngFor="let step of tableField.list_of_fields; let j = index" [stepControl]="templateForm.get(step.field_name)">
                                 <ng-template matStepLabel>{{step.label}}</ng-template>
                                 <div class="row" [formGroupName]="step.field_name" *ngIf="step.list_of_fields != null">
-                                    <div  *ngFor="let fields of step.list_of_fields; let i = index" [ngClass]="getDivClass(fields)" [id]="fields._id">
+                                    <div  *ngFor="let fields of step.list_of_fields; let i = index" [ngClass]="fields.field_class" [id]="fields._id">
                                         <div *ngIf="fields.type == 'text'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>                                           
@@ -1568,56 +1604,21 @@
                                 <button mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect matStepperPrevious *ngIf="j != 0">Back</button>
                                 <button mdbBtn type="button" size="sm" class="bg-cerulean text-white" mdbWavesEffect matStepperNext *ngIf="tableField.list_of_fields.length-1 != j">Next</button>
                                 <span *ngFor="let action_button of formFieldButtons; let i=index" >            
-                                    <span [ngClass]="getButtonDivClass(action_button)" [id]="action_button._id" *ngIf="tableField.list_of_fields.length-1 == j">            
-                                        <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
+                                    <span [ngClass]="action_button && action_button.field_class ? action_button.field_class : ''" [id]="action_button._id" *ngIf="tableField.list_of_fields.length-1 == j">            
+                                        <button mdbBtn type="button" [disabled]="(actionButtonNameList.includes(action_button.field_name?.toLowerCase()) && !templateForm.valid) || serverReq" size="sm" class="bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{action_button.label}}</button>
                                     </span>
                                 </span>
                                 <mat-spinner diameter="25" *ngIf="!dataSaveInProgress && tableField.list_of_fields.length-1 == j"></mat-spinner>
                             </mat-step>                            
                           </mat-vertical-stepper>
-                        <div *ngIf="tableField.type == 'gmap'">
-                            <!-- <mat-form-field appearance="outline" class="example-full-width w-100">
-                                <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput (keydown.enter)="$event.preventDefault()" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControlName]="tableField.field_name">
-                            </mat-form-field> -->
-                            <div class="form-group">
-                                <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
-                              </div>
-                            <!-- <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
-                                <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
-                                  ></agm-marker>
-                            </agm-map> -->
-                        </div>
-                        <div *ngIf="tableField.type == 'step_progress_bar'">
-                            <div class="row">
-                                <div class="col-lg-12 px-0">
-                                    <div class="px-0 py-1 my-2 ml-3 mr-2 form-label">{{ tableField.label | titlecase}}</div>
-                                    <button [matTooltip]="'Refresh'" [matTooltipPosition]="'above'" mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshApiCall(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
-                                </div>
-                            </div>
-                            <div class="stepper-wrapper">
-                                <div class="stepper-item completed" *ngFor="let progress of staticData[tableField.ddn_field]" [ngClass]="{completed : progress.status == 'complete',active : progress.status == 'progress',cancel : progress.status == 'cancel',hold: progress.status == 'hold'}">
-                                    <div class="step-counter" [matTooltip]="progress.label +' '+progress.status"
-                                    [matTooltipClass]="'tooltip-'+progress.status" [matTooltipPosition]="'above'">
-                                        <span *ngIf="progress.status == 'pending'"></span>
-                                        <span class="material-icons" *ngIf="progress.status == 'complete'">done</span>
-                                        <span class="material-icons" *ngIf="progress.status == 'progress'">change_history</span>
-                                    </div>
-                                    <div class="step-name">
-                                        <p *ngIf="progress.label" class="m-0">{{progress.label}}</p>
-                                        <p *ngIf="progress.date" class="m-0">{{progress.date}}</p>
-                                        <p *ngIf="progress.info" class="m-0">{{progress.info}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div [ngClass]="checkFormType()?'col-lg-4':'d-none'">
-                <div *ngFor="let tableField of tableFields; let i = index" [id]="tableField.field_name+'_'+tableField.type">
-                    <div *ngIf="tableField.type == 'info_html'">
-                        <angular-editor [formControlName]="tableField.field_name" [config]="htmlViewConfig"></angular-editor>                          
+            <div *ngIf="filePreviewFields && filePreviewFields.length > 0" [ngClass]="showSidebar?'col-lg-4':'d-none'">
+                <div *ngFor="let field of filePreviewFields; let i = index" [id]="field.field_name+'_'+field.type">
+                    <div *ngIf="field.type == 'info_html'">
+                        <angular-editor [formControlName]="field.field_name" [config]="htmlViewConfig"></angular-editor>                          
                     </div>                           
                 </div>
             </div>
@@ -1628,7 +1629,7 @@
     </div>        
     <!--Footer-->
     <div class="modal-footer py-0 row m-0 w-100" *ngIf="!isStepper">
-        <span *ngFor="let action_button of formFieldButtons; let i=index" [ngClass]="getButtonDivClass(action_button)" [id]="action_button._id">
+        <span *ngFor="let action_button of formFieldButtons; let i=index" [ngClass]="action_button && action_button.field_class ? action_button.field_class : ''" [id]="action_button._id">
             <div *ngIf="action_button.type == 'dropdown'" >
                 <mat-form-field appearance="outline" class="w-100" *ngIf="action_button.datatype == 'object'">
                     <mat-label>{{ action_button.label | titlecase}}</mat-label>
@@ -1653,7 +1654,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <button mdbBtn type="button" [disabled]="checkValidator(action_button)" size="sm" class="noshadow rounded bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{nextFormUpdateMode && action_button.onclick.api == 'add' ? 'Update':action_button.label}}</button>
+            <button mdbBtn type="button" [disabled]="(actionButtonNameList.includes(action_button.field_name?.toLowerCase()) && !templateForm.valid) || serverReq" size="sm" class="noshadow rounded bg-cerulean text-white" mdbWavesEffect (click)="take_action_on_click(action_button)" *ngIf="action_button.type == 'button' && dataSaveInProgress">{{nextFormUpdateMode && action_button.onclick.api == 'add' ? 'Update':action_button.label}}</button>
         </span>               
         <mat-spinner diameter="40" *ngIf="!dataSaveInProgress" class="custom-spinner"></mat-spinner>
         <!-- <button mdbBtn type="button" size="sm" (click)="closeModal()" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect [matTooltip]="'Cancel (ALT + C)'" [matTooltipPosition]="'above'" *ngIf="updateMode">Cancel</button> -->
