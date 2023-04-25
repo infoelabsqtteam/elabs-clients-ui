@@ -39,6 +39,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // Form submit
   chatSubmit: boolean;
   isShow:boolean = false;
+  isShowGrid:boolean = true;
 
   formData: FormGroup;
   mongodbChartShow:boolean = false;
@@ -86,9 +87,15 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     if(event == 1){
       this.isShow = true;
       this.mongodbChartShow = false;
-    }else{
+      this.isShowGrid = false;
+    }else if(event == 2){
       this.isShow = false;
       this.mongodbChartShow = true;
+      this.isShowGrid = false;
+    }else{
+      this.isShow = false;
+      this.mongodbChartShow = false;
+      this.isShowGrid = true;
     }
   }
 

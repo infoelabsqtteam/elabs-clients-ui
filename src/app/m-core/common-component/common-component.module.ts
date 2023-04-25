@@ -11,10 +11,12 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
 import { PipesModule } from '../../pipes/pipes.module';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
+import { GridComponent } from './grid/grid.component';
 
 const components = [
   FormComponent,
   ChartComponent,
+  GridComponent,
   MongodbChartComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
