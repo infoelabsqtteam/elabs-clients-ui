@@ -171,7 +171,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   @Input() bulkDataList:any;
   bulkupdates:boolean = false;
 
-
+  objectKeys = Object.keys;
   updateAddNew:boolean = false;
   hide = true;
   showSidebar:boolean = false;
@@ -205,6 +205,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   editorTypeFieldList:any=[];
   gridSelectionMendetoryList:any=[];
   canUpdateIfFieldList:any=[];
+  buttonIfList:any = [];
   pageLoading: boolean = true;
   formFieldButtons: any = [];
   staticData: any = {};
@@ -476,6 +477,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if (e instanceof NavigationEnd) {
         this.tableFields = [];
         this.showIfFieldList=[];
+        this.buttonIfList=[];
         this.disableIfFieldList=[];
         this.mendetoryIfFieldList = [];
         this.gridSelectionMendetoryList=[];
@@ -611,6 +613,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   resetFlagsForNewForm(){    
     //this.tableFields = [];
     this.showIfFieldList=[];
+    this.buttonIfList=[];
     this.disableIfFieldList=[];
     this.mendetoryIfFieldList = [];
     this.gridSelectionMendetoryList=[];
@@ -768,6 +771,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.formFieldButtons = this.form.tab_list_buttons; 
     } 
     this.showIfFieldList=[];
+    this.buttonIfList=[];
     this.disableIfFieldList=[];
     this.mendetoryIfFieldList = [];
     this.gridSelectionMendetoryList=[];
@@ -856,15 +860,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(element){
                 if (element.list_of_fields && element.list_of_fields.length > 0) {
                   for (let j = 0; j < element.list_of_fields.length; j++) {
-                    const data = element.list_of_fields[j];
+                    const data = element.list_of_fields[j];                   
                     if(data == null){
                       this.notifyFieldValueIsNull(element.name,j+1);
                       break;
                     }
+                    if(element.type == 'list_of_fields' && element.datatype != 'key_value'){
+                      data['notDisplay'] = false;
+                    }
                     let modifyData = JSON.parse(JSON.stringify(data));
-                    modifyData.parent = element.field_name;
+                    modifyData['parent'] = element.field_name;                    
                     //show if handling
                     if(data.show_if && data.show_if != ''){
+                      modifyData['parentIndex'] = index;
+                      modifyData['currentIndex'] = j;
                       this.showIfFieldList.push(modifyData);
                     }
                     //Mendetory If handling
@@ -996,6 +1005,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   element['mendetory_fields'] = colParField['mendetory_fields'];
                 }
                 this.showGridData[element.field_name] = true;
+              }
+              if(element && element.addNewButtonIf && element.addNewButtonIf != ''){
+                this.buttonIfList.push(element);
+                element['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
+                element['fieldIndex'] = index;
               }
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
@@ -1609,8 +1623,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.showIfFieldList.length > 0){
       this.showIfFieldList.forEach(element => {
         let id = '';
+        let parentFieldName = '';
+        let parentIndex = -1;
+        let fieldIndex = -1;
         if(element.parent && element.parent != undefined && element.parent != '' && element.parent != null ){
           id = element._id;
+          parentFieldName = element.parent;
+          parentIndex = element.parentIndex;
+          fieldIndex = element.currentIndex;
+          this.tableFields[parentIndex].list_of_fields[fieldIndex]['notDisplay'] = this.checkShowIfListOfFiedlds(parentFieldName,element);
         }else{
           id = element._id;
         }
@@ -1669,7 +1690,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     if(this.disableIfFieldList.length == 0 && this.showIfFieldList.length == 0){
       return true;
-    }    
+    }   
+    if(this.buttonIfList.length > 0){
+      this.buttonIfList.forEach(element => {
+        let fieldIndex = element['fieldIndex'];
+        this.tableFields[fieldIndex]['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
+      });
+    } 
     
   }
   removeClass = (element, name) => {    
@@ -2014,6 +2041,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 });
               }
               this.custmizedFormValue[field.field_name] =   updateCustmizedValue; 
+
+              // This code for add list of field object modify for user view
+
+              const modifyCustmizedFormValue = Object.assign([],this.modifyCustmizedFormValue[field.field_name]);
+              let updateObject = updateCustmizedValue[this.listOfFieldsUpdateIndex];
+              let modifyObject = this.gridCommonFunctionService.getModiyfListOfFieldsObject(field,updateObject,field.list_of_fields);
+              modifyCustmizedFormValue[this.listOfFieldsUpdateIndex] = modifyObject;
+              this.modifyCustmizedFormValue[field.field_name] = modifyCustmizedFormValue;
+
+              // This code for add list of field object modify for user view
+
               this.custmizedFormValue[keyName] = {};
               this.dataListForUpload[keyName] = {};
             this.refreshListofField(field,false);            
@@ -2060,6 +2098,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               
               custmizedFormValue.push(listOfFieldData);
               this.custmizedFormValue[field.field_name] = custmizedFormValue;
+
+              // This code for add list of field object modify for user view
+              const modifyCustmizedFormValue = Object.assign([],this.modifyCustmizedFormValue[field.field_name]);
+              let modifyObject = this.gridCommonFunctionService.getModiyfListOfFieldsObject(field,listOfFieldData,field.list_of_fields);
+              modifyCustmizedFormValue.push(modifyObject);
+              this.modifyCustmizedFormValue[field.field_name] = modifyCustmizedFormValue;
+              // This code for add list of field object modify for user view
+
               this.custmizedFormValue[keyName] = {}              
             }
             this.refreshListofField(field,true);
@@ -3401,57 +3447,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     return treeViewData;
   }
-  showListFieldValue(listOfField, item) {
-    switch (item.type) {
-      case "typeahead":
-        if(item.datatype == "list_of_object"){
-          if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
-            return '<i class="fa fa-eye cursor-pointer"></i>';
-          } else {
-            return '-';
-          }
-        }else if(item.datatype == "object"){
-          if (item.display_name && item.display_name != "") {
-            return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
-          } else {
-            return listOfField[item.field_name];
-          }
-        }
-        else if(item.datatype == "text"){
-          if (item.display_name && item.display_name != "") {
-            return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
-          } else {
-            return listOfField[item.field_name];
-          }
-        }
-      case "list_of_string":
-      case "list_of_checkbox":
-      case "grid_selection":
-      case "list_of_fields":
-        if (Array.isArray(listOfField[item.field_name]) && listOfField[item.field_name].length > 0 && listOfField[item.field_name] != null && listOfField[item.field_name] != undefined && listOfField[item.field_name] != '') {
-          return '<i class="fa fa-eye cursor-pointer"></i>';
-        } else {
-          return '-';
-        } 
-      case "checkbox":
-        let value:any = false;
-        if (item.display_name && item.display_name != "") {
-          value = this.commonFunctionService.getObjectValue(item.display_name, listOfField);
-        } else {
-          value = this.commonFunctionService.getValueForGrid(item,listOfField);
-        }
-        return value ? "Yes" : "No";     
-      default:
-        if (item.display_name && item.display_name != "") {
-          return this.commonFunctionService.getObjectValue(item.display_name, listOfField);
-        } else {
-          return this.commonFunctionService.getValueForGrid(item,listOfField);
-        }
-    }   
-
-  }
-  showListOfFieldData(listOfField,item){
+  
+  showListOfFieldData(field,index,item){
     let value={};
+    let parentObject = this.custmizedFormValue[field.field_name];
+    let listOfField = parentObject[index];
     value['data'] = listOfField[item.field_name];
     let editemode = false; 
     switch (item.type) {
@@ -3528,7 +3528,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     return check;
   }
-  editListOfFiedls(object,index,field){
+  editListOfFiedls(index,field){
+    let parentList = this.custmizedFormValue[field.field_name];
+    let object = parentList[index];
     this.listOfFieldUpdateMode = true;
     this.listOfFieldsUpdateIndex = index;
     if(this.tableFields && this.tableFields.length > 0){
@@ -3938,29 +3940,29 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-  getListOfFieldsGridColumn(field): Array<any>{
-    let columns = [];
-    if(field && field.list_of_fields && field.list_of_fields.length > 0){
-      for (let index = 0; index < field.list_of_fields.length; index++) {
-        const element = field.list_of_fields[index];
-        if(element == null){
-          this.notifyFieldValueIsNull(field.label,index+1);
-          break;
-        }
-      }
-      columns = JSON.parse(JSON.stringify(field.list_of_fields));
-    }else if(field && field.gridColumns && field.gridColumns.length > 0){
-      for (let index = 0; index < field.gridColumns.length; index++) {
-        const element = field.gridColumns[index];
-        if(element == null){
-          this.notifyFieldValueIsNull(field.label,index+1);
-          break;
-        }
-      }
-      columns = JSON.parse(JSON.stringify(field.gridColumns));
-    }
-    return columns;
-  }
+  // getListOfFieldsGridColumn(field): Array<any>{
+  //   let columns = [];
+  //   if(field && field.list_of_fields && field.list_of_fields.length > 0){
+  //     for (let index = 0; index < field.list_of_fields.length; index++) {
+  //       const element = field.list_of_fields[index];
+  //       if(element == null){
+  //         this.notifyFieldValueIsNull(field.label,index+1);
+  //         break;
+  //       }
+  //     }
+  //     columns = JSON.parse(JSON.stringify(field.list_of_fields));
+  //   }else if(field && field.gridColumns && field.gridColumns.length > 0){
+  //     for (let index = 0; index < field.gridColumns.length; index++) {
+  //       const element = field.gridColumns[index];
+  //       if(element == null){
+  //         this.notifyFieldValueIsNull(field.label,index+1);
+  //         break;
+  //       }
+  //     }
+  //     columns = JSON.parse(JSON.stringify(field.gridColumns));
+  //   }
+  //   return columns;
+  // }
   modifyUploadFiles(files){
     const fileList = [];
     if(files && files.length > 0){
@@ -4156,12 +4158,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const editemode = true;    
     this.viewModal('form_basic-modal', value, fields,editemode); 
   }
-  checkObjectSize(object){
-    if(object != undefined && object != null){
-      return (Object.keys(object).length > 0)
-    }
-    return false;
-  }
+  // checkObjectSize(object){
+  //   if(object != undefined && object != null){
+  //     return (Object.keys(object).length > 0)
+  //   }
+  //   return false;
+  // }
   getFormLavel(){
     if(this.form && this.form.label){
       return this.form.label;
@@ -4467,6 +4469,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(object != null && object != undefined){
             if(Array.isArray(object)){
               this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));
+              let modifyObject = this.gridCommonFunctionService.modifyListofFieldsData(element,this.custmizedFormValue[fieldName],element.list_of_fields);
+              this.modifyCustmizedFormValue[fieldName] = modifyObject['data'];
             }else if(typeof object == "object" && datatype == 'key_value'){
               this.custmizedFormValue[fieldName] = object;
             }else{
@@ -4804,15 +4808,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }  
     });
   }  
-  checkShowIfListOfFiedlds(parent,field,index){
+  checkShowIfListOfFiedlds(parent,field){
     let formValue = this.getFormValue(true);
-    let parentFieldName = parent.field_name;
-    let fieldValue = formValue[parentFieldName];    
+    //let parentFieldName = parent.field_name;
+    let fieldValue = formValue[parent];    
     if(fieldValue && fieldValue.length > 0 && field && field.show_if && field.show_if != null && field.show_if != ''){
       let check = 0;      
       for (let index = 0; index < fieldValue.length; index++) {
         const value = fieldValue[index];
-        formValue[parentFieldName] = value;
+        formValue[parent] = value;
         if(this.commonFunctionService.showIf(field,formValue)){
           check = 1;
           break;
@@ -5084,7 +5088,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(fieldName && fieldName != ""){
             const listData = data[fieldName];
             const editedData = listData[listOfFieldsUpdateIndex];
-            this.editListOfFiedls(editedData,listOfFieldsUpdateIndex,this.focusFieldParent);
+            this.editListOfFiedls(listOfFieldsUpdateIndex,this.focusFieldParent);
           }          
         }
       }
@@ -5419,18 +5423,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   updateListofFields(field,index){    
     this.storeFormDetails("",field,index); 
   }
-  checkRowDisabledIf(field,index){
-    const data = this.custmizedFormValue[field.field_name][index];
-    const condition = field.disableRowIf;
-    if(condition){
-      if(field.disableRowIfOnlySelection){
-        return true;
-      }else{
-        return !this.commonFunctionService.checkDisableRowIf(condition,data);
-      }      
-    }
-    return true;    
-  }
+  
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
       this.openNextForm(true);
@@ -5513,26 +5506,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.updateAddNew = false;
     }
   }
-  checkIfCondition(field,key,key2){
-    let check = false;
-    if(field[key] && field[key] != '' && field[key] != null){
-      let keyValue = field[key];
-      if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
-        check = true;
-      }
-    }
-    return check;
-  }
-  getValue(field,key,key2){
-    let value = '';
-    if(field[key] && field[key] != '' && field[key] != null){
-      let keyValue = field[key];
-      if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
-        value = keyValue[key2];
-      }
-    }
-    return value;
-  }
+  // checkIfCondition(field,key,key2){
+  //   let check = false;
+  //   if(field[key] && field[key] != '' && field[key] != null){
+  //     let keyValue = field[key];
+  //     if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
+  //       check = true;
+  //     }
+  //   }
+  //   return check;
+  // }
+  // getValue(field,key,key2){
+  //   let value = '';
+  //   if(field[key] && field[key] != '' && field[key] != null){
+  //     let keyValue = field[key];
+  //     if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
+  //       value = keyValue[key2];
+  //     }
+  //   }
+  //   return value;
+  // }
   showData(parent,field){
     if(parent != ''){
 
