@@ -1,0 +1,21 @@
+<table class="table-bordered table-striped table-hover">
+    <thead >
+        <tr>
+            <th *ngFor="let header of gridColumns" class="heading text-center">
+                {{header.label}}
+            </th>                                       
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of sqsNotificationsData; let i = index">
+            <td *ngFor="let header of gridColumns">
+                <span>{{row[header.field_name]}}</span>
+
+            </td>
+        </tr>
+       
+        <!-- <tr *ngIf="elements.length == 0">
+            <td [attr.colspan]="headElements.length + 1" class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+        </tr> -->
+    </tbody>
+</table>
