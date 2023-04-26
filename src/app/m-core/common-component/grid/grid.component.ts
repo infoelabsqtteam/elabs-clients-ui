@@ -37,12 +37,10 @@ export class GridComponent implements OnInit,OnChanges {
   }
 
   ngOnInit(): void {
-    console.log("iiinnnnnnnnn oninit");
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.isShowGrid == false){
-      console.log("iiinnnnnnnnn oninit zzzzzzzzzzzzzzzzzzz");
       this.getTemplate();
       this.getDataForGrid();
     }
@@ -78,6 +76,4 @@ export class GridComponent implements OnInit,OnChanges {
       }
     }
   }
-
-
 }

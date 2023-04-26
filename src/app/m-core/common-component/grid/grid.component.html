@@ -1,6 +1,6 @@
 <table class="table-bordered table-striped table-hover">
     <thead >
-        <tr>
+        <tr *ngIf="sqsNotificationsData != undefined && sqsNotificationsData.length > 0">
             <th *ngFor="let header of gridColumns" class="heading text-center">
                 {{header.label}}
             </th>                                       
@@ -14,8 +14,8 @@
             </td>
         </tr>
        
-        <!-- <tr *ngIf="elements.length == 0">
-            <td [attr.colspan]="headElements.length + 1" class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
-        </tr> -->
+        <tr *ngIf="sqsNotificationsData == undefined || sqsNotificationsData.length == 0">
+            <td class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+        </tr>
     </tbody>
 </table>
