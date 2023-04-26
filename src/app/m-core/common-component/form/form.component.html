@@ -20,7 +20,7 @@
     <div class="modal-body pb-2 pt-1 mt-0 px-4">
         <div class="row">
             <div [ngClass]="showSidebar?'col-lg-8':'col-lg-12'"> 
-                <div class="row" *ngIf="handleDisabeIf()">
+                <div class="row">
                     <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="tableField.field_class" [id]="tableField._id"  >
                         <div *ngIf="tableField.type == 'text'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -364,7 +364,7 @@
                                 </div>
                             </div>
                             <div class="row align-items-center" [formGroupName]="tableField.field_name" *ngIf="tableField.list_of_fields != null && tableField.datatype != 'list_of_object_with_popup'">
-                                <div  *ngFor="let fields of tableField.list_of_fields; let i = index" [ngClass]="fields.field_class" [id]="fields._id">
+                                <div  *ngFor="let fields of tableField.list_of_fields; let j = index" [ngClass]="fields.field_class" [id]="fields._id">
                                     <div *ngIf="fields.type == 'text'">
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                           
@@ -613,7 +613,7 @@
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'file'">
-                                        <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
+                                        <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal(tableField,fields,i,j)" mdbWavesEffect [disabled]="fields.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{fields.label}}</button> 
                                         <div *ngIf="dataListForUpload && dataListForUpload[tableField.field_name+'_'+tableField.type] && dataListForUpload[tableField.field_name+'_'+tableField.type][fields.field_name] && dataListForUpload[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
                                             <table mdbTable small="true" bordered="true">
                                                 <thead class="black white-text">
@@ -645,7 +645,7 @@
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>
                                                 <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name">
                                             </mat-form-field>
-                                            <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(tableField,fields)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList(tableField,fields)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
+                                            <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(tableField,fields,i,j)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fields['tooltipMsg']" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
                                                 ></button>
                                         </div>
                                     </div>
@@ -950,7 +950,7 @@
                             <button mdbBtn type="button" size="sm" class="btn-public rounded bg-cerulean text-white" (click)="partialDataSave(tableField.onclick, tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button>
                         </div>
                         <div *ngIf="tableField.type == 'file'">
-                            <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
+                            <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                             <!-- list of attachment files -->
                             <div *ngIf="dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
                                 <table mdbTable small="true" bordered="true">
@@ -982,7 +982,7 @@
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                <button mat-icon-button class="fileuploadbtn" (click)="uploadModal('',tableField)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList('',tableField)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
+                                <button mat-icon-button class="fileuploadbtn" (click)="uploadModal('',tableField,i,-1)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="tableField['tooltipMsg']" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
                                     ></button>
                             </div>
                         </div> 
@@ -1098,7 +1098,7 @@
                         <div class="row align-items-center labelwithfiled" *ngIf="tableField.type == 'label_with_file'">
                             <div class="col-md-2 labeltitle"><strong>{{tableField.label}} :</strong></div>
                             <div class="col-md-4 labelfiled">
-                                <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
+                                <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                                 <div *ngIf="dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
                                     <table mdbTable small="true" bordered="true">
                                         <thead class="black white-text">
@@ -1302,7 +1302,7 @@
                             <mat-step *ngFor="let step of tableField.list_of_fields; let j = index" [stepControl]="templateForm.get(step.field_name)">
                                 <ng-template matStepLabel>{{step.label}}</ng-template>
                                 <div class="row" [formGroupName]="step.field_name" *ngIf="step.list_of_fields != null">
-                                    <div  *ngFor="let fields of step.list_of_fields; let i = index" [ngClass]="fields.field_class" [id]="fields._id">
+                                    <div  *ngFor="let fields of step.list_of_fields; let k = index" [ngClass]="fields.field_class" [id]="fields._id">
                                         <div *ngIf="fields.type == 'text'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}</mat-label>                                           
@@ -1550,7 +1550,7 @@
                                             </div>
                                         </div>
                                         <div *ngIf="fields.type == 'file'">
-                                            <button class="btn bg-cerulean btn-rounded btn-sm waves-light" (click)="uploadModal('',fields)" mdbWavesEffect [disabled]="fields.is_disabled">{{fields.label}}</button> 
+                                            <button class="btn bg-cerulean btn-rounded btn-sm waves-light" (click)="uploadModal('',fields,i,k)" mdbWavesEffect [disabled]="fields.is_disabled">{{fields.label}}</button> 
                                             <!-- list of attachment files -->
                                             <div *ngIf="dataListForUpload[fields.field_name] && dataListForUpload[fields.field_name].length > 0">
                                                 <table mdbTable small="true" bordered="true">
@@ -1578,7 +1578,7 @@
                                                     <mat-label>{{ fields.label | titlecase}}</mat-label>
                                                     <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name">
                                                 </mat-form-field>
-                                                <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(step,fields)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fileUploadList(step,fields)" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
+                                                <button mat-icon-button class="fileuploadbtn" (click)="uploadModal(step,fields,i,k)"><img src="assets/img/svg-icon/uploadicon.svg" width="20px" [matTooltip]="fields['tooltipMsg']" [matTooltipPosition]="'above'" [matTooltipClass]="'fileNameTooltip'"
                                                     ></button>
                                             </div>
                                         </div>

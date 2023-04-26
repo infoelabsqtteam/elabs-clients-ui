@@ -385,6 +385,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })   
     this.requestResponceSubscription = this.dataShareService.requestResponce.subscribe(responce =>{      
       this.serverReq = responce;
+      this.checkFormFieldIfCondition();
     }) 
     this.deleteGridRowResponceSubscription = this.dataShareService.deleteGridRowResponceData.subscribe(responce =>{
       this.setGridRowDeleteResponce(responce);
@@ -653,10 +654,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if(this.elements.length > 0){
         this.editedRowData(this.elements[this.editedRowIndex]);
       }
-      this.handleDisabeIf();     
+      //this.handleDisabeIf();     
     }else{
       this.selectedRowIndex = -1;
-      this.handleDisabeIf();
+      //this.handleDisabeIf();
     }
       
     //this.formControlChanges();
@@ -1161,7 +1162,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         });            
       }
       if(this.tableFields.length > 0 && this.editedRowIndex == -1){
-        this.getStaticData(staticModal,formValueWithCustomData,fromValue);
+        this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
       }
     }    
     if (this.tableFields.length > 0 && this.pageLoading) {
@@ -1223,7 +1224,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       });
       this.pageLoading = false;
-    }
+    }    
   }
   setDefaultDate(element){
     let value:any = "";
@@ -1570,6 +1571,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   handleDisabeIf(){
+    this.getFocusFieldAndFocus();
+    this.checkFormFieldIfCondition(); 
+  }
+  getFocusFieldAndFocus(){
     if(this.checkFormFieldAutfocus && this.tableFields.length > 0){
       if(this.previousFormFocusField && this.previousFormFocusField._id){
         this.focusField("",this.previousFormFocusField)        
@@ -1602,6 +1607,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       }
     }
+  }
+  checkFormFieldIfCondition(){
     if(this.disableIfFieldList.length > 0){
       this.disableIfFieldList.forEach(element => {
         if(element.parent && element.parent != undefined && element.parent != '' && element.parent != null ){
@@ -1687,17 +1694,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       });
       return true;
-    }    
-    if(this.disableIfFieldList.length == 0 && this.showIfFieldList.length == 0){
-      return true;
-    }   
+    }  
     if(this.buttonIfList.length > 0){
       this.buttonIfList.forEach(element => {
         let fieldIndex = element['fieldIndex'];
         this.tableFields[fieldIndex]['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
       });
+    }   
+    if(this.disableIfFieldList.length == 0 && this.showIfFieldList.length == 0){
+      return true;
     } 
-    
   }
   removeClass = (element, name) => {    
     element.className = element.className.replace(name, "");
@@ -2202,17 +2208,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
       Object.keys(objectValue).forEach(key => {
         this.templateForm.get(parentfield.field_name).get(key).setValue(objectValue[key]);
-        //(<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[key].patchValue(objectValue[key]);
-      });
-        // this.updateDataOnFormField(objectValue);   
-        // this.getStaticDataWithDependentData();     
+      });    
       }      
     }  
  
     if (field.type == 'typeahead') {
       this.clearTypeaheadData();
     }
-
+    this.checkFormFieldIfCondition();
   } 
   getGridSelectedData(data,field){
     let gridSelectedData = [];
@@ -2582,7 +2585,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
       }
     }
-
+    this.checkFormFieldIfCondition();
   }  
   changeDropdown(field, object,data_template) {
     let params = field.onchange_api_params;
@@ -2621,17 +2624,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
-
-  // getDivClass(field) {
-  //   const fieldsLangth = this.tableFields.length;
-  //   return this.commonFunctionService.getDivClass(field,fieldsLangth);
-  // }
-  
-  // getButtonDivClass(field){
-  //   return this.commonFunctionService.getButtonDivClass(field);
-  // }
-
-  
   public addNewRecord:boolean = false;
   public lastTypeaheadTypeValue="";
   updateData(event, parentfield, field) {
@@ -2687,34 +2679,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       return option;
     }
   }
-
-  // onCheckboxChange(e, field, ddnField, index) {
-  //   const checkArray: FormArray = this.templateForm.get(field) as FormArray;
-  //   const data = this.staticData[ddnField];
-  //   const selectedData = data[index];
-
-  //   if (e.checked) {
-  //     checkArray.push(new FormControl(selectedData));
-  //   } else {
-  //     let i: number = 0;
-  //     checkArray.controls.forEach((item: FormControl) => {
-  //       if (item.value._id == selectedData._id) {
-  //         checkArray.removeAt(i);
-  //         return;
-  //       }
-  //       i++;
-  //     });
-  //   }
-  // }
-
-  // isEnable(parent,field, elementType) {
-  //   if(parent != ''){
-  //     return this.tempVal[parent + '_' + field + "_" + elementType];
-  //   }else{
-  //     return this.tempVal[field + "_" + elementType];
-  //   }
-    
-  // }
 
   openModal(id, index, parent,child, data, alertType) {
     this.deleteIndex = index;
@@ -3081,13 +3045,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             } 
             if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
               formValue['appId'] = this.commonFunctionService.getAppId();
-              //formValue['appId'] = this.commonFunctionService.getRefcode();
-            }            
-            // this.custmizedFormValue.forEach(element => {
-            //   this.templateForm.value[element.name] = element.value;
-            // });
-            
-            // formValue = this.commonFunctionService.sanitizeObject(this.tableFields,formValue);
+            }
             if (this.updateMode) {              
               if(this.formName == 'cancel'){
                 formValue['status'] = 'CANCELLED';
@@ -3116,7 +3074,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.getSavePayload = false;
       this.menuOrModuleCommounService.checkTokenStatusForPermission();
-      //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
   saveFormData(){
@@ -3234,7 +3191,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             const checkCLTFN = element.onchange_api_params.indexOf('CLTFN')
             if(checkFormGroup == -1 && checkCLTFN == -1){
 
-              const payload = this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params, element.onchange_call_back_field, element.onchange_api_params_criteria, this.selectedRow)
+              const payload = this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params, element.onchange_call_back_field, element.onchange_api_params_criteria, formValueWithCustomData)
               if(element.onchange_api_params.indexOf('QTMP') >= 0){
                 if(element && element.formValueAsObjectForQtmp){
                   payload["data"]=formValue;
@@ -3255,7 +3212,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         const checkFormGroup = data.onchange_call_back_field.indexOf("FORM_GROUP");
                         if(checkFormGroup == -1){
               
-                          const payload = this.commonFunctionService.getPaylodWithCriteria(data.onchange_api_params, data.onchange_call_back_field, data.onchange_api_params_criteria, this.selectedRow)
+                          const payload = this.commonFunctionService.getPaylodWithCriteria(data.onchange_api_params, data.onchange_call_back_field, data.onchange_api_params_criteria, formValueWithCustomData)
                           if(data.onchange_api_params.indexOf('QTMP') >= 0){
                             if(element && element.formValueAsObjectForQtmp){
                               payload["data"]=formValue;
@@ -3269,7 +3226,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       if(data.tree_view_object && data.tree_view_object.field_name != ""){
                         let editeTreeModifyData = JSON.parse(JSON.stringify(data.tree_view_object));
                         if (editeTreeModifyData.onchange_api_params && editeTreeModifyData.onchange_call_back_field) {
-                          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(editeTreeModifyData.onchange_api_params, editeTreeModifyData.onchange_call_back_field, editeTreeModifyData.onchange_api_params_criteria, this.selectedRow));
+                          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(editeTreeModifyData.onchange_api_params, editeTreeModifyData.onchange_call_back_field, editeTreeModifyData.onchange_api_params_criteria, formValueWithCustomData));
                         }
                       }
                     });
@@ -3281,12 +3238,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(element.tree_view_object && element.tree_view_object.field_name != ""){
             let editeTreeModifyData = JSON.parse(JSON.stringify(element.tree_view_object));
             if (editeTreeModifyData.onchange_api_params && editeTreeModifyData.onchange_call_back_field) {
-              staticModal.push(this.commonFunctionService.getPaylodWithCriteria(editeTreeModifyData.onchange_api_params, editeTreeModifyData.onchange_call_back_field, editeTreeModifyData.onchange_api_params_criteria, this.selectedRow));
+              staticModal.push(this.commonFunctionService.getPaylodWithCriteria(editeTreeModifyData.onchange_api_params, editeTreeModifyData.onchange_call_back_field, editeTreeModifyData.onchange_api_params_criteria, formValueWithCustomData));
             }
           }
         }
         if(element.type && element.type == 'pdf_view'){
-          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,this.selectedRow))
+          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,formValueWithCustomData))
         }
       });
     }
@@ -3330,6 +3287,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   callStaticData(payloads){
     if(payloads.length > 0){
       this.apiService.getStatiData(payloads);        
+    }else{      
+      this.checkFormFieldIfCondition();      
     }
   }
   checkObjecOrString(data){
@@ -3761,7 +3720,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.custmizedFormValue = {};
       this.modifyCustmizedFormValue = {};
     }
-    //this.resetForm();
     if(this.multipleFormCollection.length > 0){
       this.setPreviousFormTargetFieldData();
     }
@@ -3787,28 +3745,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }      
     }
   }
-  // checkValidator(action_button){
-  //   const field_name = action_button.field_name.toLowerCase();
-  //   switch (field_name) {
-  //     case "save":
-  //     case "update":
-  //     case "updateandnext":
-  //     case "send_email":         
-  //       if(!this.templateForm.valid || this.serverReq){
-  //         return true;
-  //       }else{
-  //         return false;
-  //       }
-  //     default:
-  //       if(this.serverReq){
-  //         return true;
-  //       }else{
-  //         return false;
-  //       }
-  //   }      
-  // }
   donotResetField(){
-    //let FormValue = this.templateForm.getRawValue();
     if(this.tableFields.length > 0){
       let FormValue = this.getFormValue(true);
       this.tableFields.forEach(tablefield => {
@@ -3846,8 +3783,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.close();
     }else{
       this.resetForm()
-      // const payloads = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,this.getFormValue(false));
-      // this.callStaticData(payloads);
     }
   }
   resetForm(){
@@ -3940,29 +3875,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-  // getListOfFieldsGridColumn(field): Array<any>{
-  //   let columns = [];
-  //   if(field && field.list_of_fields && field.list_of_fields.length > 0){
-  //     for (let index = 0; index < field.list_of_fields.length; index++) {
-  //       const element = field.list_of_fields[index];
-  //       if(element == null){
-  //         this.notifyFieldValueIsNull(field.label,index+1);
-  //         break;
-  //       }
-  //     }
-  //     columns = JSON.parse(JSON.stringify(field.list_of_fields));
-  //   }else if(field && field.gridColumns && field.gridColumns.length > 0){
-  //     for (let index = 0; index < field.gridColumns.length; index++) {
-  //       const element = field.gridColumns[index];
-  //       if(element == null){
-  //         this.notifyFieldValueIsNull(field.label,index+1);
-  //         break;
-  //       }
-  //     }
-  //     columns = JSON.parse(JSON.stringify(field.gridColumns));
-  //   }
-  //   return columns;
-  // }
   modifyUploadFiles(files){
     const fileList = [];
     if(files && files.length > 0){
@@ -3994,12 +3906,18 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       const parentKey = this.commonFunctionService.custmizedKey(parent);
       if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
         fileList = this.dataListForUpload[parentKey][field.field_name];
+        msg = this.getFileTooltipMsg(fileList);
       }
     }else{
       if(this.dataListForUpload[field.field_name]){        
         fileList = this.dataListForUpload[field.field_name];
+        msg = this.getFileTooltipMsg(fileList);
       }
     }
+    return msg;
+  }
+  getFileTooltipMsg(fileList){
+    let msg = "";
     if(fileList.length > 0){
       fileList.forEach(element => {
         if(msg != ''){
@@ -4011,8 +3929,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     return msg;
   }
-  uploadModal(parent,field) {
+  uploadModal(parent,field,parentIndex,curIndex) {
     if (field.field_name && field.field_name != "") {
+      field['parentIndex'] = parentIndex;
+      field['curIndex'] = curIndex;
       this.curFileUploadField = field;
       this.curFileUploadFieldparentfield = parent;
       let selectedFileList = [];
@@ -4030,31 +3950,60 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }  
   fileUploadResponce(response) {
-    if(this.curFileUploadFieldparentfield != ''){
-      const custmizedKey = this.commonFunctionService.custmizedKey(this.curFileUploadFieldparentfield);            
-      if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
-      if (!this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name]) this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name] = [];
-      this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name] = response;
-    }else{
-      if (!this.dataListForUpload[this.curFileUploadField.field_name]) this.dataListForUpload[this.curFileUploadField.field_name] = [];
-      this.dataListForUpload[this.curFileUploadField.field_name] = response;
-    }    
-    if(this.curFileUploadFieldparentfield != ''){
-      const custmizedKey = this.commonFunctionService.custmizedKey(this.curFileUploadFieldparentfield); 
-      if(this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name] && this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name].length > 0){
-        let fileName = this.modifyFileSetValue(this.dataListForUpload[custmizedKey][this.curFileUploadField.field_name]);        
-        this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(this.curFileUploadField.field_name).setValue(fileName);
-      }else{
-        this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(this.curFileUploadField.field_name).setValue('');
-      }
-    }else{    
-      if(this.dataListForUpload[this.curFileUploadField.field_name] && this.dataListForUpload[this.curFileUploadField.field_name].length > 0){
-        let fileName = this.modifyFileSetValue(this.dataListForUpload[this.curFileUploadField.field_name]);
-        this.templateForm.get(this.curFileUploadField.field_name).setValue(fileName);
-      }else{
-        this.templateForm.get(this.curFileUploadField.field_name).setValue('');
-      }
+    let curFieldName = '';
+    let parentIndex = -1;
+    let curIndex = -1;
+    if(this.curFileUploadField && this.curFileUploadField.field_name){
+      curFieldName = this.curFileUploadField.field_name;
+      parentIndex =  this.curFileUploadField['parentIndex'];
+      curIndex =  this.curFileUploadField['curIndex'];
     }
+    if(this.curFileUploadFieldparentfield != '' && curFieldName != ''){
+      const custmizedKey = this.commonFunctionService.custmizedKey(this.curFileUploadFieldparentfield); 
+
+      if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
+      if (!this.dataListForUpload[custmizedKey][curFieldName]) this.dataListForUpload[custmizedKey][curFieldName] = [];
+      this.dataListForUpload[custmizedKey][curFieldName] = response;
+
+      
+      if(this.dataListForUpload[custmizedKey][curFieldName] && this.dataListForUpload[custmizedKey][curFieldName].length > 0){
+        let fileList = this.dataListForUpload[custmizedKey][curFieldName];
+        let fileName = this.modifyFileSetValue(fileList); 
+
+        if(this.curFileUploadField.type == 'input_with_uploadfile'){
+          let tooltipMsg = this.getFileTooltipMsg(fileList);        
+          this.tableFields[parentIndex].list_of_fields[curIndex]['tooltipMsg'] = tooltipMsg;
+        }
+
+        this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(curFieldName).setValue(fileName);
+      }else{
+        this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(curFieldName).setValue('');
+        if(this.curFileUploadField.type == 'input_with_uploadfile'){
+          this.tableFields[parentIndex].list_of_fields[curIndex]['tooltipMsg'] = '';
+        }
+      }
+
+    }else{
+      if(curFieldName != ''){
+        if (!this.dataListForUpload[curFieldName]) this.dataListForUpload[curFieldName] = [];
+        this.dataListForUpload[curFieldName] = response;
+
+        if(this.dataListForUpload[curFieldName] && this.dataListForUpload[curFieldName].length > 0){
+          let fileList = this.dataListForUpload[curFieldName];
+          let fileName = this.modifyFileSetValue(fileList);
+          if(this.curFileUploadField.type == 'input_with_uploadfile'){
+            let tooltipMsg = this.getFileTooltipMsg(fileList);
+            this.tableFields[curIndex]['tooltipMsg'] = tooltipMsg;
+          }
+          this.templateForm.get(curFieldName).setValue(fileName);
+        }else{
+          this.templateForm.get(curFieldName).setValue('');
+          if(this.curFileUploadField.type == 'input_with_uploadfile'){
+            this.tableFields[curIndex]['tooltipMsg'] = '';
+          }
+        }
+      }
+    } 
   }
   removeAttachedDataFromList(parent,child,index){
     let fieldName = child.field_name;
@@ -4120,9 +4069,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if(element.selected){
         this.custmizedFormValue[field.field_name].push(element);
       }
-    });    
-    //this.staticData[ddn_field] = JSON.parse(JSON.stringify(staticData));
-    //console.log(this.selected3);
+    }); 
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -4143,10 +4090,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }      
     }    
   }
-  // custmizedFormData(field){
-  //   if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
-  //   return this.custmizedFormValue[field.field_name];
-  // }
   get templateFormControl() {
     return this.templateForm.controls;
   } 
@@ -4158,12 +4101,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const editemode = true;    
     this.viewModal('form_basic-modal', value, fields,editemode); 
   }
-  // checkObjectSize(object){
-  //   if(object != undefined && object != null){
-  //     return (Object.keys(object).length > 0)
-  //   }
-  //   return false;
-  // }
   getFormLavel(){
     if(this.form && this.form.label){
       return this.form.label;
@@ -4260,27 +4197,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   changePdfView(file){
     if(file.bytes && file.bytes != '' && file.bytes != null){
       const arrayBuffer = file.bytes;
-      // this.pdfViewLink = decodeURIComponent(escape(window.atob( arrayBuffer )));
       this.pdfViewLink = arrayBuffer;
     }
   }
-  // checkFormType(){
-  //   if(this.filePreviewFields.length > 0){
-  //     let checkInfoHtml = 0;
-  //     this.filePreviewFields.forEach(element => {
-  //       if(this.staticData[element.ddn_field] && this.staticData[element.ddn_field] != '' && this.staticData[element.ddn_field] != null){
-  //         checkInfoHtml += 1;
-  //       }
-  //     });
-  //     if(this.filePreviewFields.length == checkInfoHtml){
-  //       return true;
-  //     }else{
-  //       return false;
-  //     }
-  //   }else{
-  //     return false;
-  //   }    
-  // }
   previous(){
     const previousIndex = this.selectedRowIndex - 1;
     if(previousIndex != -1){
@@ -4327,44 +4246,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.formName = formName;
     this.formIndex = i;
     this.changeForm();
-  }
-  // checkFormTab(form){
-  //   const key = form.key;
-  //   const value = form.value;
-  //   if(key == this.formName){
-  //     return false;
-  //   }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
-  //     return false;
-  //   }else if(value && value.details && value.details.form_tab){
-  //     return false;
-  //   }else{
-  //     return true;
-  //   }
-  // }
-  // checkFormTabShow(form){
-  //   const key = form.key;
-  //   const value = form.value;
-  //   if(key == this.formName){
-  //     return true;
-  //   }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
-  //     return true;
-  //   }else if(value && value.details && value.details.form_tab){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
-  // checkActiveTab(form){
-  //   const key = form.key;
-  //   const value = form.value;
-  //   if(key == this.formName){
-  //     return true;
-  //   }else if(key == 'default' && (this.formName == "NEW" || this.formName == "UPDATE")){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
+  }  
   checkOnSuccessAction(){
     let actionValue = ''
     let index = -1;
@@ -4425,6 +4307,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
         });
       }
+      this.getFocusFieldAndFocus();
+      this.checkFormFieldIfCondition();
     }
   }
   updateFormValue(element,formValue){  
@@ -4462,6 +4346,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(object != null && object != undefined){
             this.dataListForUpload[fieldName] = JSON.parse(JSON.stringify(object));
             const value = this.modifyFileSetValue(object);
+            if(type == 'input_with_uploadfile'){
+              let tooltipMsg = this.getFileTooltipMsg(object);
+              element['tooltipMsg'] = tooltipMsg;
+            }
             this.templateForm.controls[fieldName].setValue(value);
           }
           break;
@@ -4475,7 +4363,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.custmizedFormValue[fieldName] = object;
             }else{
               if(list_of_fields && list_of_fields != null && list_of_fields.length > 0){
-                list_of_fields.forEach(data => {
+                list_of_fields.forEach((data,j) => {
                   switch (data.type) {
                     case "list_of_string":
                     case "grid_selection":
@@ -4508,6 +4396,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         }
                       }
                       break;
+                    case "input_with_uploadfile":
+                      if(object != null && object != undefined && object[data.field_name] != null && object[data.field_name] != undefined){
+                        let custmisedKey = this.commonFunctionService.custmizedKey(element);
+                        this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
+                        const value = this.modifyFileSetValue(object[data.field_name]);
+                        let tooltipMsg = this.getFileTooltipMsg(object[data.field_name]);
+                        element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
+                        this.templateForm.get(fieldName).get(data.field_name).setValue(value);
+                      }
+                      break;
                     default:
                       if(object && object[data.field_name] != null && object[data.field_name] != undefined){
                         const value = object[data.field_name];
@@ -4536,7 +4434,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
         case "group_of_fields":
           if(list_of_fields && list_of_fields.length > 0){
-            list_of_fields.forEach(data => {
+            list_of_fields.forEach((data,j) => {
               let ChildFieldData = object;
               let childFieldName = data.field_name;
               if(data && childFieldName && childFieldName != '' && ChildFieldData && ChildFieldData != null){
@@ -4610,6 +4508,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       }
                     }
                     break;
+                  case "input_with_uploadfile":
+                    if(object != null && object != undefined && object[data.field_name] != null && object[data.field_name] != undefined){
+                      let custmisedKey = this.commonFunctionService.custmizedKey(element);
+                      this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
+                      const value = this.modifyFileSetValue(object[data.field_name]);
+                      let tooltipMsg = this.getFileTooltipMsg(object[data.field_name]);
+                      element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
+                      this.templateForm.get(fieldName).get(data.field_name).setValue(value);
+                    }
+                    break;
                   default:
                     if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
                       const value = ChildFieldData[childFieldName];
@@ -4645,21 +4553,18 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){                                             
                         this.custmizedFormValue[childFieldName] = formValue[childFieldName]                    
                       }
-                      this.templateForm.get(step.field_name).get(childFieldName).setValue('')
-                      //(<FormGroup>this.templateForm.controls[step.field_name]).controls[childFieldName].patchValue('');
+                      this.templateForm.get(step.field_name).get(childFieldName).setValue('');
                       break;
                     case "typeahead":
                       if(data.datatype == "list_of_object" || data.datatype == 'chips'){
                         if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){                      
                           this.custmizedFormValue[childFieldName] = formValue[childFieldName]
-                          this.templateForm.get(step.field_name).get(childFieldName).setValue('')
-                          //(<FormGroup>this.templateForm.controls[step.field_name]).controls[childFieldName].patchValue('');
+                          this.templateForm.get(step.field_name).get(childFieldName).setValue('');
                         }
                       }else{
                         if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){
                           const value = formValue[childFieldName];
-                          this.templateForm.get(step.field_name).get(childFieldName).setValue(value)
-                          //(<FormGroup>this.templateForm.controls[step.field_name]).controls[childFieldName].patchValue(value);
+                          this.templateForm.get(step.field_name).get(childFieldName).setValue(value);
                         }
                       }
                       break;
@@ -4671,26 +4576,22 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         }else{
                           gvalue = 0;
                         }
-                        this.templateForm.get(step.field_name).get(childFieldName).setValue(gvalue)
-                        //(<FormGroup>this.templateForm.controls[step.field_name]).controls[childFieldName].patchValue(gvalue);
+                        this.templateForm.get(step.field_name).get(childFieldName).setValue(gvalue);
                       break;
                     case "list_of_checkbox":
-                      this.templateForm.get(step.field_name).get(childFieldName).patchValue([])
-                      //(<FormGroup>this.templateForm.controls[step.field_name]).controls[data.field_name].patchValue([]);
+                      this.templateForm.get(step.field_name).get(childFieldName).patchValue([]);
                       break;
                     default:
                       if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){
                         const value = formValue[childFieldName];
-                        this.templateForm.get(step.field_name).get(childFieldName).setValue(value)
-                        //(<FormGroup>this.templateForm.controls[step.field_name]).controls[childFieldName].patchValue(value);
+                        this.templateForm.get(step.field_name).get(childFieldName).setValue(value);
                       }
                       break;
                   }
                   if(data.tree_view_object && data.tree_view_object.field_name != ""){
                     let editeTreeModifyData = JSON.parse(JSON.stringify(data.tree_view_object));
                     const treeObject = this.selectedRow[editeTreeModifyData.field_name];
-                    this.templateForm.get(step.field_name).get(editeTreeModifyData.field_name).setValue(treeObject)
-                    //(<FormGroup>this.templateForm.controls[step.field_name]).controls[editeTreeModifyData.field_name].patchValue(treeObject);
+                    this.templateForm.get(step.field_name).get(editeTreeModifyData.field_name).setValue(treeObject);
                   } 
                 });
               }
@@ -4736,7 +4637,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               list_of_dates.forEach((data) => { 
                 let childFieldName = data.field_name;
                 this.templateForm.get(fieldName).get(childFieldName).setValue(object[childFieldName]);
-                //(<FormGroup>this.templateForm.controls[element.field_name]).controls[childFieldName].patchValue(object[childFieldName]);
               });
             } 
           }                                  
@@ -4810,7 +4710,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }  
   checkShowIfListOfFiedlds(parent,field){
     let formValue = this.getFormValue(true);
-    //let parentFieldName = parent.field_name;
     let fieldValue = formValue[parent];    
     if(fieldValue && fieldValue.length > 0 && field && field.show_if && field.show_if != null && field.show_if != ''){
       let check = 0;      
@@ -4851,7 +4750,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         'name':this.nextFormData.name
       }
       formData[field.form_field_name] = nextFormReference;
-      //targetFieldName = formData[field.field_name]
       updateMode = true;
     }
     if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
@@ -4875,15 +4773,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       
      
-        
-      // const listOfFields = field.list_of_fields;
-      // let element:any = {}
-      // if(listOfFields && listOfFields.length > 0){
-      //   element = listOfFields[0]
-      // }
-      // if(element && element.field_name){
-      //   targetFieldName[element.field_name] = "";
-      // }      
     } 
     if(this.coreFunctionService.isNotBlank(field.moveFieldsToNewForm)){
       if(field.moveFieldsToNewForm && field.moveFieldsToNewForm.length > 0){
@@ -4892,13 +4781,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           let key = sourceTarget[0];
           let valueField = sourceTarget[1];
           let formValue = {};
-          // if(field && field.form_value_index >= 0 && this.multipleFormCollection.length >= 1){
-          //   const storeFormData = this.multipleFormCollection[field.form_value_index];
-          //   const formData = storeFormData['form_value'];            
-          //   formValue = formData;            
-          // }else{
-          //   formValue = this.getFormValue(false)
-          // }
           let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
           formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
           let value = this.commonFunctionService.getObjectValue(valueField,formValue);
@@ -5032,7 +4914,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.form = formCollecition['form'];
     this.resetFlagsForNewForm();
     const data = formCollecition['data'];
-    //console.log(data);
 
     this.updateMode = formCollecition['updateMode'];
     if(this.updateMode || this.complete_object_payload_mode){
@@ -5063,8 +4944,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const parentfield = formCollecition['parent_field'];
     if(!this.previousFormFocusField.multi_select && this.previousFormFocusField.type != 'list_of_fields' && this.previousFormFocusField.type != 'hidden'){
       if(parentfield != ''){
-        this.templateForm.get(parentfield.field_name).get(this.previousFormFocusField.field_name).setValue(previousFormFocusFieldValue)
-        //(<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[this.previousFormFocusField.field_name].patchValue(previousFormFocusFieldValue);       
+        this.templateForm.get(parentfield.field_name).get(this.previousFormFocusField.field_name).setValue(previousFormFocusFieldValue);       
       }else{      
         this.templateForm.get(this.previousFormFocusField.field_name).setValue(previousFormFocusFieldValue);
       } 
@@ -5506,26 +5386,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.updateAddNew = false;
     }
   }
-  // checkIfCondition(field,key,key2){
-  //   let check = false;
-  //   if(field[key] && field[key] != '' && field[key] != null){
-  //     let keyValue = field[key];
-  //     if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
-  //       check = true;
-  //     }
-  //   }
-  //   return check;
-  // }
-  // getValue(field,key,key2){
-  //   let value = '';
-  //   if(field[key] && field[key] != '' && field[key] != null){
-  //     let keyValue = field[key];
-  //     if(keyValue[key2] && keyValue[key2] != '' && keyValue[key2] != null){
-  //       value = keyValue[key2];
-  //     }
-  //   }
-  //   return value;
-  // }
   showData(parent,field){
     if(parent != ''){
 
