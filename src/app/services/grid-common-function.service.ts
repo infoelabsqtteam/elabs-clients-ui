@@ -11,19 +11,19 @@ constructor(
   private CommonFunctionService:CommonFunctionService,
   private coreFunctionService:CoreFunctionService
 ) { }
-  modifyGridData(gridData,gridColumns,field,editableGridColumns){
+  modifyGridData(gridData,gridColumns,field,editableGridColumns,typegrapyCriteriaList){
     let modifiedData = [];
     if(gridColumns.length > 0){      
       for (let i = 0; i < gridData.length; i++) {
         const row = gridData[i];
         let modifyRow = JSON.parse(JSON.stringify(row));
+        modifyRow["disabled"] = this.checkRowIf(row,field);
         for (let j = 0; j < gridColumns.length; j++) {
           const column = gridColumns[j];  
           if(!column.editable || editableGridColumns.length == 0){        
             modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
           }          
-          modifyRow["tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);
-          modifyRow["disabled"] = this.checkRowIf(row,field);
+          modifyRow[column.field_name+"_tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);          
           if(column.editable){
             modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
           }
@@ -33,9 +33,12 @@ constructor(
         }else{
           modifyRow["column_edit"] = false;
         }  
-        if(editableGridColumns && editableGridColumns.length == 0){
+        if(editableGridColumns && editableGridColumns.length == 0 && field && Object.keys(field).length > 0){
           modifyRow['actionBtnDisplay'] = this.checkRowDisabledIf(field,row);
-        }      
+        } 
+        if(typegrapyCriteriaList && typegrapyCriteriaList.length > 0){
+          modifyRow['background-color'] = this.checkTypgraphCondition(typegrapyCriteriaList,row,'background-color');
+        }     
         modifiedData.push(modifyRow);
       }
     }
@@ -257,7 +260,7 @@ constructor(
             const cData = data[fieldName];
             if(Array.isArray(cData) && cData.length > 0){              
               const gridColumns = element.gridColumns;
-              const modifyList = this.modifyGridData(cData,gridColumns,element,[]);
+              const modifyList = this.modifyGridData(cData,gridColumns,element,[],[]);
               modifyData[fieldName] = modifyList;
               element.gridColumns = this.modifyGridColumns(gridColumns,object);
               modifyObject.field_index = i;
@@ -277,14 +280,14 @@ constructor(
     if(fields && fields.length > 0 && data && data.length > 0){
       for (let index = 0; index < data.length; index++) {
         const object = data[index];
-        const mObject = this.getModiyfListOfFieldsObject(parentField,object,fields);        
+        const mObject = this.getModifyListOfFieldsObject(parentField,object,fields);        
         modifyData.push(mObject);
       }   
       modifyListoffieldObject['data'] = modifyData;   
     }
     return modifyListoffieldObject;
   }
-  getModiyfListOfFieldsObject(parentField,object,fields){
+  getModifyListOfFieldsObject(parentField,object,fields){
     let mObject = {};
     if(fields && fields.length > 0){
       for (let index = 0; index < fields.length; index++) {
@@ -357,6 +360,48 @@ constructor(
       }
     }
     return true;    
+  }
+  checkTypgraphCondition(typegrapyCriteriaList,object,name){
+    let background = '';
+    if(typegrapyCriteriaList && typegrapyCriteriaList.length >= 1){
+      let criteriaMatched = false;
+      let matchedelement = {};
+      for (let index = 0; index < typegrapyCriteriaList.length; index++) {
+        const element = typegrapyCriteriaList[index];
+        let crList = element['crList'];
+        let childConditionsMatched = false;
+        for (let j = 0; j < crList.length; j++) {
+          const child = crList[j];
+          let modify = child.replaceAll(';', "#");
+          if(!this.CommonFunctionService.checkIfConditionForArrayListValue(modify,object)){
+            childConditionsMatched = false;
+            break;
+          }else{
+            childConditionsMatched = true;
+          }          
+        }
+        if(childConditionsMatched){
+          matchedelement = typegrapyCriteriaList[index]
+          criteriaMatched = true;
+          break;
+        }else{
+          criteriaMatched = false;
+        }
+      }
+      if(criteriaMatched){ 
+        let typograpy = matchedelement['typoGraphy']; 
+        let value = '';
+        switch (name) {
+          case 'background-color':
+            value = typograpy['background_color'];
+            break;        
+          default:
+            break;
+        }
+        background = value;
+      }      
+    }
+    return background;
   }
 
 }

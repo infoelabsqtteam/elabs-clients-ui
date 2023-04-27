@@ -733,7 +733,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.form = this.dinamic_form
         }else if(this.tab.forms != null && this.tab.forms != undefined ){            
           this.forms = this.tab.forms;
-          this.form = this.commonFunctionService.getForm(this.forms,this.formName)
+          this.form = this.commonFunctionService.getForm(this.forms,this.formName,this.tab.grid.action_buttons)
           if(this.formName == 'clone_object'){
             this.form['api_params'] = "QTMP:CLONE_OBJECT";
           }
@@ -2052,7 +2052,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
               const modifyCustmizedFormValue = Object.assign([],this.modifyCustmizedFormValue[field.field_name]);
               let updateObject = updateCustmizedValue[this.listOfFieldsUpdateIndex];
-              let modifyObject = this.gridCommonFunctionService.getModiyfListOfFieldsObject(field,updateObject,field.list_of_fields);
+              let modifyObject = this.gridCommonFunctionService.getModifyListOfFieldsObject(field,updateObject,field.list_of_fields);
               modifyCustmizedFormValue[this.listOfFieldsUpdateIndex] = modifyObject;
               this.modifyCustmizedFormValue[field.field_name] = modifyCustmizedFormValue;
 
@@ -2107,7 +2107,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
               // This code for add list of field object modify for user view
               const modifyCustmizedFormValue = Object.assign([],this.modifyCustmizedFormValue[field.field_name]);
-              let modifyObject = this.gridCommonFunctionService.getModiyfListOfFieldsObject(field,listOfFieldData,field.list_of_fields);
+              let modifyObject = this.gridCommonFunctionService.getModifyListOfFieldsObject(field,listOfFieldData,field.list_of_fields);
               modifyCustmizedFormValue.push(modifyObject);
               this.modifyCustmizedFormValue[field.field_name] = modifyCustmizedFormValue;
               // This code for add list of field object modify for user view
