@@ -17,6 +17,7 @@ import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
+import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -51,6 +52,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   tableGrids: any = [];
   template_name: any = '';
   elements: any = [];
+  modifyGridData:any = [];
   previous: any = [];
   headElements = [];
   actionButtons:any=[];
@@ -88,6 +90,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   public updateGridData = false;
   public selectedViewRowIndex = -1;
   tableFields:any=[];
+  forms:any={};
   formName:any='';
   gridButtons:any=[];
   downloadPdfCheck: any = '';
@@ -276,8 +279,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.selectedRowData= this.elements[this.rowSelectionIndex];
     }else if (this.rowSelectionIndex >= 0 && this.columnSelectionIndex > -1 && this.columnSelectionIndex <= (this.headElements.length -1)){
       const elId = this.headElements[this.columnSelectionIndex];
-      const el = this.elements[this.rowSelectionIndex];
-      this.clickOnGridElement(elId,el,this.rowSelectionIndex)
+      this.clickOnGridElement(elId,this.rowSelectionIndex)
     }
   }
 
@@ -297,7 +299,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private notificationService:NotificationService,
     private _location:Location,
     @Inject(DOCUMENT) private document: Document,
-    private menuOrModuleCommounService:MenuOrModuleCommonService
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private gridCommonFunctionServie:GridCommonFunctionService
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -443,6 +446,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.formName='';
     this.gridButtons=[];   
     this.elements=[];
+    this.modifyGridData = [];
     this.total = 0;
     this.headElements = [];
     this.details = {};
@@ -474,6 +478,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       if (gridData.data && gridData.data.length > 0) {
         this.elements = JSON.parse(JSON.stringify(gridData.data));
         this.total = gridData.data_size;
+        this.modifyGridData = this.gridCommonFunctionServie.modifyGridData(this.elements,this.headElements,{},[],this.typegrapyCriteriaList);
         if(this.bulkuploadList.length > 0){
           this.bulkuploadList = [];
         }
@@ -496,6 +501,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
       } else {
         this.elements = [];
+        this.modifyGridData = [];
         this.total = 0;
         this.rowId = "";
       }
@@ -546,7 +552,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       if(this.tab.grid && this.tab.grid != undefined){
         if(this.tab.grid.gridColumns && this.createFilterHeadElement){
-          this.headElements = this.commonFunctionService.updateFieldInList('show',this.tab.grid.gridColumns);          
+          this.headElements = this.gridCommonFunctionServie.modifyGridColumns(this.tab.grid.gridColumns,{});          
           this.createFilterHeadElement = false;
         }
         if(this.tab.grid.gridColumns == undefined && this.tab.grid.gridColumns == null){
@@ -567,7 +573,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         this.headElements = [];
       } 
       if(this.tab.forms && this.tab.forms != undefined && this.tab.forms != null){
-        let form = this.commonFunctionService.getForm(this.tab.forms,formName);        
+        this.forms = this.tab.forms;
+        let form = this.commonFunctionService.getForm(this.tab.forms,formName,this.gridButtons);        
         if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
           this.tableFields = form['tableFields'];
         }else{
@@ -846,7 +853,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.formName = formName;
     let form = null;
     if(formName != 'DINAMIC_FORM' && this.tab && this.tab.forms){
-      form = this.commonFunctionService.getForm(this.tab.forms,this.formName);
+      form = this.commonFunctionService.getForm(this.tab.forms,this.formName,this.gridButtons);
     }else if(formName == 'DINAMIC_FORM'){
       form = this.dinamic_form;
     }else{
@@ -954,13 +961,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getValueForGridTooltip(field, object) {
     return this.commonFunctionService.getValueForGridTooltip(field, object);
   }
-  getTooltipText(object,field){
-    if(field.field_class == 'sorttext'){
-      return this.getddnDisplayVal(object)
-    }    
-  }
-  clickOnGridElement(field, object, i) {
+ 
+  clickOnGridElement(field, i) {
     let value={};
+    let object = this.elements[i];
     value['data'] = this.commonFunctionService.getObjectValue(field.field_name, object)
     if(field.gridColumns && field.gridColumns.length > 0){
       value['gridColumns'] = field.gridColumns;
@@ -1022,7 +1026,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   
   
   getPage(page: number) {
-    this.apiService.resetGridData();
+    //this.apiService.resetGridData();
     this.pageNumber = page;
     let contact = {};
     let leadId = '';
@@ -1141,17 +1145,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   
   
-  
-
-  gateTabName(tab) {
-    if (tab.label && tab.label != '' && tab.label != null) {
-      return tab.label;
-    } else {
-      return tab.tab_name;
-    }
-  }
-
-  
   openTreeView(field) {
     let fieldName;
     if( field && field.field_list_tree_view_object && field.field_list_tree_view_object.field_list_name){
@@ -1193,9 +1186,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     return o1._id === o2._id;
   }
   
-  getddnDisplayVal(val) {
-    return this.commonFunctionService.getddnDisplayVal(val);    
-  }
+  
   getOptionText(option) {
     if (option && option.name) {
       return option.name;
@@ -1207,25 +1198,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   previewModalResponce(data){
     alert(data);
   }
-  checkClearBtn(field,type){
-    switch (type.toLowerCase()) {
-      case "daterange":
-        if(this.filterForm.value[field].start != '' && this.filterForm.value[field].start != null){
-          return true;
-        }else{
-          return false;
-        }   
-      default:
-        if(this.filterForm.value[field] != ''){
-          return true;
-        }else{
-          return false;
-        }
-    }  
-    
-  }
-
-  gridButtonAction(gridData,index,button){
+  
+  gridButtonAction(index,button){
+    let gridData = this.elements[index];
     if(button && button.onclick && button.onclick.action_name){
       switch (button.onclick.action_name.toUpperCase()) {
         case "PREVIEW":
@@ -1280,7 +1255,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.commonFunctionService.openModal('communication-modal',gridData);
           break;
         case 'DOWNLOAD_QR':
-          this.downloadQRCode = this.commonFunctionService.getQRCode(gridData,this.elements[index]);
+          this.downloadQRCode = this.commonFunctionService.getQRCode(gridData);
           this.checkForDownloadReport = true;
           break;
         case 'DELETE_ROW':
@@ -1297,7 +1272,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
                 "aduitTabIndex": this.selectTabIndex,
                 "tabname": this.tabs
               }
-              this.commonFunctionService.getAuditHistory(gridData,this.elements[index]);
+              this.commonFunctionService.getAuditHistory(gridData);
               this.modalService.open('audit-history',obj);
             }else {
               this.menuOrModuleCommounService.checkTokenStatusForPermission();
@@ -1312,7 +1287,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   checkFieldsAvailability(formName){
     if(this.tab && this.tab.forms){
-      let form = this.commonFunctionService.getForm(this.tab.forms,formName);        
+      let form = this.commonFunctionService.getForm(this.tab.forms,formName,this.gridButtons);        
       if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
         return true;
       }else{
@@ -1372,29 +1347,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   fileViewresponceData(event){
     console.log(event);
   }
-  getGridColumnWidth(column){
-    if(column.width && column.width != '0'){
-      return column.width+'px';
-    }else{
-      if(this.headElements.length > 8){
-        return '150px';
-      }else{
-        return '';
-      }      
-    }    
-  }
-
-  getDivClass(field) {
-    const fieldsLangth = this.headElements.length;
-    return this.commonFunctionService.getFixedDivClass(field,fieldsLangth);
-  }
 
   onBulkUpdate(){
     this.isBulkUpdate = true;
     this.addNewForm('NEW');
   }
 
-  onBulkUploadCheck(element, index, form:NgForm){
+  onBulkUploadCheck(index, form:NgForm){
+    let element = this.elements[index]
     if(form.value.check){
       this.bulkuploadList.push(element._id);
     }
@@ -1451,49 +1411,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
-  }
-  checkTypgraphCondition(object,name){
-    let background = '';
-    if(this.typegrapyCriteriaList && this.typegrapyCriteriaList.length >= 1){
-      let criteriaMatched = false;
-      let matchedelement = {};
-      for (let index = 0; index < this.typegrapyCriteriaList.length; index++) {
-        const element = this.typegrapyCriteriaList[index];
-        let crList = element['crList'];
-        let childConditionsMatched = false;
-        for (let j = 0; j < crList.length; j++) {
-          const child = crList[j];
-          let modify = child.replaceAll(';', "#");
-          if(!this.commonFunctionService.checkIfConditionForArrayListValue(modify,object)){
-            childConditionsMatched = false;
-            break;
-          }else{
-            childConditionsMatched = true;
-          }          
-        }
-        if(childConditionsMatched){
-          matchedelement = this.typegrapyCriteriaList[index]
-          criteriaMatched = true;
-          break;
-        }else{
-          criteriaMatched = false;
-        }
-      }
-      if(criteriaMatched){ 
-        let typograpy = matchedelement['typoGraphy']; 
-        let value = '';
-        switch (name) {
-          case 'background-color':
-            value = typograpy['background_color'];
-            break;        
-          default:
-            break;
-        }
-        background = value;
-      }      
-    }
-    return background;
-  }
+  }  
   clearFilter(fieldName,type){
     if(type.toLowerCase() == 'daterange'){
       (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
@@ -1503,5 +1421,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }    
     this.applyFilter();
   }
+
+  get filterFormValue() {
+    return this.filterForm.value;
+  } 
 
 }

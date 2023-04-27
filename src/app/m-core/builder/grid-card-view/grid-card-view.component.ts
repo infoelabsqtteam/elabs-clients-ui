@@ -173,7 +173,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
           this.action_buttons = [];
         }
         if(this.tab.forms && this.tab.forms != undefined && this.tab.forms != null){
-          let form = this.commonFunctionService.getForm(this.tab.forms,formName);        
+          let form = this.commonFunctionService.getForm(this.tab.forms,formName,this.action_buttons);        
           if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
             this.tableFields = form['tableFields'];
           }else{
@@ -278,7 +278,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     } 
     this.formName = formName;    
     if(this.tab && this.tab.forms){
-      let form = this.commonFunctionService.getForm(this.tab.forms,this.formName);        
+      let form = this.commonFunctionService.getForm(this.tab.forms,this.formName,this.action_buttons);        
       if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
         this.tableFields = form['tableFields'];
       }else{
@@ -431,7 +431,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
   checkFieldsAvailability(){
     if(this.tab && this.tab.forms){
       const formName = 'NEW';
-      let form = this.commonFunctionService.getForm(this.tab.forms,formName);        
+      let form = this.commonFunctionService.getForm(this.tab.forms,formName,this.action_buttons);        
       if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
         return true;
       }else{

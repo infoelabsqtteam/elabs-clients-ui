@@ -81,7 +81,7 @@ body.modal-open .modal-backdrop {display:none !important;}
   input {border:none; width:100%;}
 }
 
-.mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option, .mat-option {font-weight:400;height:2em !important;}
+.mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option, .mat-option {font-weight:400;height:auto !important;white-space:normal !important;line-height:22px !important;padding-top:10px !important;padding-bottom:10px !important;font-size: 14px!important;}
 
 
 .nobg .form-label {background:$no !important;font-size:$size14;}
