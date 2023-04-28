@@ -678,12 +678,12 @@
                                 </div>
                             </div>
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
-                                <div class="col-lg-12 table-responsive table without-filter mt-2" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
+                                <div class="col-lg-12 table-responsive table without-filter mt-2 maxheightdata" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
                                     <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
                                         <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                     </div>
 
-                                    <table class="table-bordered table-striped table-hover one-line-text maxheightdata" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                    <table class="table-bordered table-striped table-hover one-line-text" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr>
                                                 <th width="10%" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">Action</th>
