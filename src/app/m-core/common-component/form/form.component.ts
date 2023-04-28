@@ -777,12 +777,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.mendetoryIfFieldList = [];
     this.gridSelectionMendetoryList=[];
     this.customValidationFiels = [];
+    this.editorTypeFieldList = [];
     if (this.tableFields.length > 0 && this.createFormgroup) {
       this.createFormgroup = false;
       const forControl = {};
       this.checkBoxFieldListValue = []
       let staticModal=[];
-      // this.filePreviewFields=[];
+      this.filePreviewFields=[];
       for (let index = 0; index < this.tableFields.length; index++) {
         const element = this.tableFields[index];
         if(element == null){
@@ -1252,79 +1253,82 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.closeModal();
   }
   customValidationFiels=[];
-  setStaticData(staticData){   
-    if(Object.keys(staticData).length > 0) {
-      if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
-        this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
-        // const fieldName = {
-        //   "field" : "staticDataMessgae"
-        // }
-        // this.apiService.ResetStaticData(fieldName);
-      }
-      Object.keys(staticData).forEach(key => {
-        if(key && key != 'null' && key != 'FORM_GROUP' && key != 'CHILD_OBJECT' && key != 'COMPLETE_OBJECT' && key != 'FORM_GROUP_FIELDS')
-        if(staticData[key]) { 
-          this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
-        }
-      })
-      if(this.editorTypeFieldList && this.editorTypeFieldList.length > 0){
-        this.editorTypeFieldList.forEach(element => {
-          switch (element.type) {              
-            case 'pdf_view':
-              if(Array.isArray(staticData[element.ddn_field]) && staticData[element.ddn_field] != null){
-                const data = staticData[element.ddn_field][0];
-                if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
-                  const arrayBuffer = data['bytes'];
-                  this.pdfViewLink = arrayBuffer;
-                  this.pdfViewListData = JSON.parse(JSON.stringify(staticData[element.ddn_field]))
-                }
-              }else{
-                this.pdfViewLink = '';
-              }             
-              break;
-            case 'info_html':              
-              if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
-                this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field]);
-                if(this.filePreviewFields && this.filePreviewFields.length > 0){
-                  this.showSidebar = true;
-                }
-              }
-              break;
-            case 'html_view':
-              if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
-                this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field])
-              }
-              break;
-            default:              
-              break;
+  setStaticData(staticDatas){   
+    if(Object.keys(staticDatas).length > 0) {
+      Object.keys(staticDatas).forEach(key => {  
+        let staticData = {};
+        staticData[key] = staticDatas[key];   
+        if(staticData['staticDataMessgae'] != null && staticData['staticDataMessgae'] != ''){
+          this.notificationService.notify("bg-danger", staticData['staticDataMessgae']);
+          // const fieldName = {
+          //   "field" : "staticDataMessgae"
+          // }
+          // this.apiService.ResetStaticData(fieldName);
+        }        
+        if(key && key != 'null' && key != 'FORM_GROUP' && key != 'CHILD_OBJECT' && key != 'COMPLETE_OBJECT' && key != 'FORM_GROUP_FIELDS'){
+          if(staticData[key]) { 
+            this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
           }
-        }) 
-      } 
-      if(staticData["FORM_GROUP"] && staticData["FORM_GROUP"] != null){          
-        this.updateDataOnFormField(staticData["FORM_GROUP"]);      
-      }
-
-      if(staticData["CHILD_OBJECT"] && staticData["CHILD_OBJECT"] != null){
-        this.updateDataOnFormField(staticData["CHILD_OBJECT"]); 
-      }
-
-      if(staticData["COMPLETE_OBJECT"] && staticData["COMPLETE_OBJECT"] != null){
-        if(this.curFormField && this.curFormField.resetFormAfterQtmp){
-          this.resetForm();
-          this.curFormField = {};
-          this.curParentFormField = {};
+        }        
+        if(this.editorTypeFieldList && this.editorTypeFieldList.length > 0){
+          this.editorTypeFieldList.forEach(element => {
+            switch (element.type) {              
+              case 'pdf_view':
+                if(Array.isArray(staticData[element.ddn_field]) && staticData[element.ddn_field] != null){
+                  const data = staticData[element.ddn_field][0];
+                  if(data['bytes'] && data['bytes'] != '' && data['bytes'] != null){
+                    const arrayBuffer = data['bytes'];
+                    this.pdfViewLink = arrayBuffer;
+                    this.pdfViewListData = JSON.parse(JSON.stringify(staticData[element.ddn_field]))
+                  }
+                }else{
+                  this.pdfViewLink = '';
+                }             
+                break;
+              case 'info_html':              
+                if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
+                  this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field]);
+                  if(this.filePreviewFields && this.filePreviewFields.length > 0){
+                    this.showSidebar = true;
+                  }
+                }
+                break;
+              case 'html_view':
+                if(staticData[element.ddn_field] && staticData[element.ddn_field] != null){
+                  this.templateForm.controls[element.field_name].setValue(staticData[element.ddn_field])
+                }
+                break;
+              default:              
+                break;
+            }
+          }) 
+        } 
+        if(staticData["FORM_GROUP"] && staticData["FORM_GROUP"] != null){          
+          this.updateDataOnFormField(staticData["FORM_GROUP"]);      
         }
-        this.updateDataOnFormField(staticData["COMPLETE_OBJECT"]);          
-        this.selectedRow = staticData["COMPLETE_OBJECT"];
-        this.complete_object_payload_mode = true;      
-      }
 
-      if(staticData["FORM_GROUP_FIELDS"] && staticData["FORM_GROUP_FIELDS"] != null){
-        this.updateDataOnFormField(staticData["FORM_GROUP_FIELDS"]);
-      }
-      if (this.checkBoxFieldListValue.length > 0 && Object.keys(staticData).length > 0) {
-        this.setCheckboxFileListValue();
-      }
+        if(staticData["CHILD_OBJECT"] && staticData["CHILD_OBJECT"] != null){
+          this.updateDataOnFormField(staticData["CHILD_OBJECT"]); 
+        }
+
+        if(staticData["COMPLETE_OBJECT"] && staticData["COMPLETE_OBJECT"] != null){
+          if(this.curFormField && this.curFormField.resetFormAfterQtmp){
+            this.resetForm();
+            this.curFormField = {};
+            this.curParentFormField = {};
+          }
+          this.updateDataOnFormField(staticData["COMPLETE_OBJECT"]);          
+          this.selectedRow = staticData["COMPLETE_OBJECT"];
+          this.complete_object_payload_mode = true;      
+        }
+
+        if(staticData["FORM_GROUP_FIELDS"] && staticData["FORM_GROUP_FIELDS"] != null){
+          this.updateDataOnFormField(staticData["FORM_GROUP_FIELDS"]);
+        }
+        if (this.checkBoxFieldListValue.length > 0 && Object.keys(staticData).length > 0) {
+          this.setCheckboxFileListValue();
+        }
+      });
     }
   }
   setCheckboxFileListValue() {

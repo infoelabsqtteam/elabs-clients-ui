@@ -132,7 +132,7 @@
                                             </span>                                
 
                                         </td>
-                                        <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
+                                        <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
                                             <div *ngIf="editedRowIndex != i" class="grid-data" [style.width]="elId.width" [style.text-align]="elId.text_align">
                                                 <a href="javascript:void(0)" class="grid-coloumn-nowrap" href="javascript:void(0)" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                     </a>
