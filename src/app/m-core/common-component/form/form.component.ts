@@ -1613,6 +1613,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   checkFormFieldIfCondition(){
+    if(this.buttonIfList.length > 0){
+      this.buttonIfList.forEach(element => {
+        let fieldIndex = element['fieldIndex'];
+        this.tableFields[fieldIndex]['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
+      });
+    }
     if(this.disableIfFieldList.length > 0){
       this.disableIfFieldList.forEach(element => {
         if(element.parent && element.parent != undefined && element.parent != '' && element.parent != null ){
@@ -1698,13 +1704,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
       });
       return true;
-    }  
-    if(this.buttonIfList.length > 0){
-      this.buttonIfList.forEach(element => {
-        let fieldIndex = element['fieldIndex'];
-        this.tableFields[fieldIndex]['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
-      });
-    }   
+    }      
     if(this.disableIfFieldList.length == 0 && this.showIfFieldList.length == 0){
       return true;
     } 
@@ -2712,14 +2712,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent']) 
         let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild]))
         deleteCustmizedValue.splice(this.deleteIndex, 1);
+        if(this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild].splice(this.deleteIndex,1);
         this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild] = deleteCustmizedValue;
       }else{
 
         if(this.deletefieldName['child'].datatype == 'key_value'){
           delete this.custmizedFormValue[custmizedKeyChild][this.deleteIndex];
+          delete this.modifyCustmizedFormValue[custmizedKeyChild][this.deleteIndex];
         }else{
           let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyChild]))
           deleteCustmizedValue.splice(this.deleteIndex, 1);
+          if(this.modifyCustmizedFormValue[custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyChild].splice(this.deleteIndex,1);
           this.custmizedFormValue[custmizedKeyChild] = deleteCustmizedValue;
           const field = this.deletefieldName['child']
           if(field.onchange_api_params != null && field.onchange_api_params != ''){
@@ -5398,6 +5401,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
 
   }
-  
+  gridSelectionSearch(field){
+    if(this.pageNo[field.field_name]  != 1) this.pageNo[field.field_name] = 1;
+  }
 
 }
