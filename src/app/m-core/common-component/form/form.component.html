@@ -822,7 +822,7 @@
 
                             <div class="" *ngIf="modifyCustmizedFormValue[tableField.field_name] && showGridData[tableField.field_name]">
                                 <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
-                                    <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                    <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" (keyup)="gridSelectionSearch(tableField)" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                 </div>                                
                                 <div class="table-responsive table maxheightdata">
                                     <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
