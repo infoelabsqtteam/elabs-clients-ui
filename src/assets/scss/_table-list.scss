@@ -38,7 +38,7 @@
         .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
     }
 
-    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;
+    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:#555 !important;
         &:hover {background:rgba(0,0,0,0.1);box-shadow:none;}
     }
     .material-icons {font-size:inherit;}
