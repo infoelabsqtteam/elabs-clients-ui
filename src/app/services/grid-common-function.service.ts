@@ -266,6 +266,16 @@ constructor(
               modifyObject.field_index = i;
             }
           } 
+        }else if(type && type.startsWith('list_of_fields') && element.datatype == "list_of_object_with_popup" && field_name == fieldName){
+          if(element && fieldName && data && data[fieldName]){
+            const cData = data[fieldName];
+            if(Array.isArray(cData) && cData.length > 0){              
+              const gridColumns = element.list_of_fields;
+              const modifyList = this.modifyListofFieldsData({},cData,gridColumns)['data'];
+              modifyData[fieldName] = modifyList;
+              modifyObject.field_index = i;
+            }
+          }
         }
       }
     }
