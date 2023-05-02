@@ -899,7 +899,7 @@ export class CommonFunctionService {
 
 
   getValueForGrid(field, object) {
-    let value = '';
+    let value:any = '';
     if (field && field.field_name != undefined && field.field_name != null && field.field_name != '') {
       value = this.getObjectValue(field.field_name, object)
     }
@@ -910,8 +910,8 @@ export class CommonFunctionService {
       case 'time': return this.datePipe.transform(value, 'h:mm a');
       case "boolean": return value ? "Yes" : "No";
       case "currency": return this.CurrencyPipe.transform(value, 'INR');
-  	  case "dropdown": return this.getddnDisplayVal(value);
-      case "typeahead": return this.getddnDisplayVal(value);
+  	  case "dropdown": return value && value.name ? value.name : value;
+      case "typeahead": return value && value.name ? value.name : value;
       case "info":
         if (value && value != '') {
           return '<i class="fa fa-eye cursor-pointer"></i>';
@@ -2758,12 +2758,30 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
     this.modalService.open(id, alertData);
   }
 
-  getForm(forms, formName) {
+  getForm(forms, formName,gridButtons) {
     if (forms[formName] && forms[formName] != undefined && forms[formName] != null && forms[formName] != '') {
       return JSON.parse(JSON.stringify(forms[formName]));
     } else {
       if (forms['default'] && forms['default'] != undefined && forms['default'] != null) {
-        return JSON.parse(JSON.stringify(forms['default']));
+        if(formName == 'UPDATE'){
+          if(gridButtons && gridButtons.length > 0){
+            let check = false;
+            gridButtons.forEach(button => {
+              if(button && button.onclick && button.onclick.action_name && button.onclick.action_name.toUpperCase() == 'UPDATE'){
+                check = true;
+              }
+            });
+            if(check){
+              return JSON.parse(JSON.stringify(forms['default']));
+            }else{
+              return {};
+            }
+          }else {
+            return {};
+          }
+        }else{
+          return JSON.parse(JSON.stringify(forms['default']));
+        }
       } else {
         return {}
       }
@@ -2846,13 +2864,11 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
       this.apiService.GetFileData(payload);
     }
 
-    getQRCode(data, object){
-      console.log(data)
-      console.log()
+    getQRCode(data){
       this.apiService.GetQr(data);
     }
 
-    getAuditHistory(data,object){
+    getAuditHistory(data){
       this.apiService.getAuditHistory(data);
     }
 
