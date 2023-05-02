@@ -1013,10 +1013,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 this.showGridData[element.field_name] = true;
               }
               if(element && element.addNewButtonIf && element.addNewButtonIf != ''){
-                this.buttonIfList.push(element);
-                element['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
+                this.buttonIfList.push(element);                
                 element['fieldIndex'] = index;
               }
+              element['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
             default:
@@ -2716,7 +2716,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent']) 
         let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild]))
         deleteCustmizedValue.splice(this.deleteIndex, 1);
-        if(this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild].splice(this.deleteIndex,1);
+        if(this.modifyCustmizedFormValue[custmizedKeyParent] && this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild].splice(this.deleteIndex,1);
         this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild] = deleteCustmizedValue;
       }else{
 
@@ -3649,11 +3649,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.callStaticData(payloads);
       }
     }    
+    this.modifyCustmizedValue(fieldName);
+    this.curTreeViewField = {};
+    this.currentTreeViewFieldParent = {};
+  }
+  modifyCustmizedValue(fieldName){
     let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',this.getFormValue(true));
     this.modifyCustmizedFormValue = modifyObject.modifyData;
     this.tableFields = modifyObject.fields;
-    this.curTreeViewField = {};
-    this.currentTreeViewFieldParent = {};
   }
   isDisable(parent,chield){
     const  formValue = this.getFormValue(true);  
@@ -4094,10 +4097,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       const parentKey = this.commonFunctionService.custmizedKey(parent); 
       if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
         moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+        moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
       }       
     }else {
       if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
         moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+        moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
       }      
     }    
   }
@@ -5016,6 +5021,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const fieldName = nextFormData['current_field']['field_name'];
           if(Array.isArray(cdata)){
             this.custmizedFormValue[fieldName] = cdata;
+            this.modifyCustmizedValue(fieldName);
           }
           break;      
         default:
@@ -5095,6 +5101,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.custmizedFormValue = {};
               this.modifyCustmizedFormValue = {};
               this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
+              this.modifyCustmizedValue(fieldName);
               previousformData[fieldName] = this.custmizedFormValue[fieldName];
               this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
               this.close();
@@ -5103,6 +5110,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.custmizedFormValue = {};
               this.modifyCustmizedFormValue = {};
               this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(fieldData));
+              this.modifyCustmizedValue(fieldName);
               previousformData[fieldName] = this.custmizedFormValue[fieldName];
               this.multipleFormCollection[previousFormIndex]['data'] = previousformData; 
 
