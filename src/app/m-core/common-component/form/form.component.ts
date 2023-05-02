@@ -4097,10 +4097,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       const parentKey = this.commonFunctionService.custmizedKey(parent); 
       if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
         moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+        moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
       }       
     }else {
       if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
         moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+        moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
       }      
     }    
   }
