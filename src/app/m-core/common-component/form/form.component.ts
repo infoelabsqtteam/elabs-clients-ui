@@ -733,7 +733,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.form = this.dinamic_form
         }else if(this.tab.forms != null && this.tab.forms != undefined ){            
           this.forms = this.tab.forms;
-          this.form = this.commonFunctionService.getForm(this.forms,this.formName,this.tab.grid.action_buttons)
+          let gridActionButtons = [];
+          if(this.tab.grid && this.tab.grid.action_buttons){
+            gridActionButtons = this.tab.grid.action_buttons;
+          }
+          this.form = this.commonFunctionService.getForm(this.forms,this.formName,gridActionButtons)
           if(this.formName == 'clone_object'){
             this.form['api_params'] = "QTMP:CLONE_OBJECT";
           }
