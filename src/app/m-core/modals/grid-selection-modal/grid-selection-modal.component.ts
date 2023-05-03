@@ -166,7 +166,7 @@ export class GridSelectionModalComponent implements OnInit {
       if(this.setGridData && this.field.ddn_field && data[this.field.ddn_field] && data[this.field.ddn_field] != null){
         this.setStaticData(data);
         if(this.gridData.length > 0 && this.listOfGridFieldName.length > 0){
-          this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field,this.editableGridColumns);
+          this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);
           if(this.modifiedGridData && this.modifiedGridData.length < 50){
             this.editEnable = true;
           }
@@ -521,7 +521,7 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if (alert.field.onchange_api_params == "" || alert.field.onchange_api_params == null) {
       this.gridData = this.selecteData;
-      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns);      
+      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);      
       if(this.grid_row_selection && this.modifiedGridData && this.modifiedGridData.length < 50){
         this.editEnable = true;
       }
