@@ -220,6 +220,9 @@
         <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
     </mat-card-content>
 </section>
+<!-- <div *ngIf="true" class="card pt-2 my-2">
+    <app-form class="w-100" [tabIndex]="selectTabIndex" [isBulkUpdate]="isBulkUpdate" [bulkDataList]="bulkuploadList" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName' [selectContact]='selectContactAdd'></app-form> 
+</div> -->
 
 <app-modals id="basic-modal" (responceData)="responceData($event)"></app-modals>
 <app-tree-view-modal id="filter-tree-view-modal" (treeViewResponce)="treeViewResponce($event)"></app-tree-view-modal>
