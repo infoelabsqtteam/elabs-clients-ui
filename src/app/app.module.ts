@@ -41,7 +41,7 @@ import { AngularMaterialModule } from './m-core/angular-material-module/angular-
     TitleCasePipe, 
     DecimalPipe,
     Location , 
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    {provide: LocationStrategy, useClass: PathLocationStrategy}
   ],
   
 })
