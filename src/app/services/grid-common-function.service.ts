@@ -20,7 +20,7 @@ constructor(
         modifyRow["disabled"] = this.checkRowIf(row,field);
         for (let j = 0; j < gridColumns.length; j++) {
           const column = gridColumns[j];  
-          if(!column.editable){        
+          if(!column.editable || editableGridColumns.length == 0){        
             modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
           }          
           modifyRow[column.field_name+"_tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);          

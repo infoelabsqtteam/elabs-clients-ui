@@ -7,7 +7,7 @@
         }
         .form-label {background:var(--formLabelBg);font-family:$roboto;}
         .mat-form-field-label {color:#00000099;font-size:13px;text-transform:capitalize;}
-        .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;}
+        .mat-icon-button.plusicon {width:auto;height:auto;line-height:normal;margin-left: 5px;}
         .mat-error {margin-top:15px;}
         .filterbtn {background:var(--formLabelBg);min-width:auto;
           .mat-button-wrapper {display:flex;align-items:center;}

@@ -2787,9 +2787,9 @@ update_invoice_totatl(templateValue,gross_amount,discount_amount,discount_percen
       }
     }
   }
-  getTitlecase(value) {
-    return this.titlecasePipe.transform(value);
-  }
+  // getTitlecase(value) {
+  //   return this.titlecasePipe.transform(value);
+  // }
   previewModal(gridData, currentMenu, modalId) {
     const getpreviewHtml = {
       _id: gridData._id,

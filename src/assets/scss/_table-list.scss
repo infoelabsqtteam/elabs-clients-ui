@@ -6,6 +6,10 @@
 
 .mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
+.maxheightdata {max-height:405px;}
+.verticaltable {width:100%;
+    td {padding:6px 10px !important;}
+}
 .table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
     // .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
@@ -52,7 +56,7 @@
 .datalist.table {
     tbody {
         tr {
-            td {padding:5px;white-space:nowrap;}
+            td {padding:5px;}
         }
     }
 }
