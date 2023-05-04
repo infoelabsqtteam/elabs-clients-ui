@@ -378,6 +378,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   getCurrentBrowseUrl(){
     return this.document.location.hash.substring(1);
+    //return this.document.location.pathname;
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
