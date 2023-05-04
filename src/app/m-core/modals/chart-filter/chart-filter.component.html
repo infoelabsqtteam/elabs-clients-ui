@@ -37,14 +37,14 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                     <mat-select *ngIf="!field.multi_select" [compareWith]="compareObjects"
                       [formControlName]="field.field_name" disableOptionCentering panelClass="notmultidropdown chartdropdown">
                       <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue._id">
-                        {{getddnDisplayVal(staticValue)}}</mat-option>
+                        {{staticValue && staticValue.name ? staticValue.name : staticValue}}</mat-option>
                     </mat-select>
   
   
                     <mat-select *ngIf="field.multi_select" [compareWith]="compareObjects"
                       [formControlName]="field.field_name" disableOptionCentering panelClass="filteroption chartdropdown" multiple>
                       <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue._id">
-                        {{getddnDisplayVal(staticValue)}}
+                        {{ staticValue && staticValue.name ? staticValue.name : staticValue }}
                       </mat-option>
                     </mat-select>
   
@@ -58,7 +58,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                     <mat-label>{{ field.label | titlecase}}</mat-label>
                     <mat-select [formControlName]="field.field_name" disableOptionCentering panelClass="notmultidropdown  chartdropdown">
                       <mat-option *ngFor="let staticValue of staticData[field.ddn_field]" [value]="staticValue">
-                        {{getddnDisplayVal(staticValue)}}</mat-option>
+                        {{staticValue}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="w-100 m-0" *ngIf="field.datatype == 'key_value'">
@@ -67,7 +67,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                         *</span></mat-label>
                     <mat-select [formControlName]="field.field_name" disableOptionCentering panelClass="notmultidropdown chartdropdown">
                       <mat-option *ngFor="let staticValue of staticData[field.ddn_field] | keyvalue" [value]="staticValue.key">
-                        {{getddnDisplayVal(staticValue.value)}}</mat-option>
+                        {{staticValue.value && staticValue.value.name ? staticValue.value.name : staticValue.value }}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -84,7 +84,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
                         <input type="text" [placeholder]="field.label" [required]="field.is_mandatory && field.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="field.field_name"
                             [matAutocomplete]="first" (keyup)="updateData($event,field)" [id]="field._id+'_'+field.field_name">
                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" class="chartautocomplete" (optionSelected)="setValue('',field,false)" [displayWith]="getOptionText">
-                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option && option.name ? option.name : option"></mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
                 </div>
