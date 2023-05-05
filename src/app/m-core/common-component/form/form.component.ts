@@ -4865,10 +4865,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const sourceTarget = keyValue.split("#");
           let key = sourceTarget[0];
           let valueField = sourceTarget[1];
-          let formValue = {};
           let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
-          let value = this.commonFunctionService.getObjectValue(valueField,formValue);
+          let formValueWithMulticollection = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
+          let value = this.commonFunctionService.getObjectValue(valueField,formValueWithMulticollection);
           targetFieldName['form'][key] = value;
         });
       }
