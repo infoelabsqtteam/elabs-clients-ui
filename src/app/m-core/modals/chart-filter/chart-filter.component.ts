@@ -1,4 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone, HostListener, EventEmitter } from '@angular/core';
+import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -87,6 +88,7 @@ export class ChartFilterComponent implements OnInit {
     private dataShareService:DataShareService,
     private envService:EnvService,
     private storageService: StorageService,
+    private datePipe: DatePipe
   ) {
     this.accessToken = this.storageService.GetIdToken();
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
@@ -154,13 +156,13 @@ export class ChartFilterComponent implements OnInit {
     }
   }
 
-  getddnDisplayVal(val) {
-    return this.commonFunctionService.getddnDisplayVal(val);    
-  }
+  // getddnDisplayVal(val) {
+  //   return this.commonFunctionService.getddnDisplayVal(val);    
+  // }
 
-  getDivClass(field) {
-    return this.commonFunctionService.getDivClass(field,[]);
-  }
+  // getDivClass(field) {
+  //   return this.commonFunctionService.getDivClass(field,[]);
+  // }
   chartHover(e){}
   chartClicked(e){}
   compareObjects(o1: any, o2: any): boolean {
@@ -265,8 +267,57 @@ export class ChartFilterComponent implements OnInit {
   setFilterInMongodbChart(chart){
     let id = "filter_"+chart.chartId;
     let chartObject = this.createdChartList[id];
-    let filterData = this.getMongodbFilterObject(this.dashboardFilter.getRawValue());
+    let fields = chart.fields && chart.fields.length > 0 ? chart.fields : [];
+    let formValue = this.dashboardFilter.getRawValue();
+    let filterValue = this.getMongochartFilterValue(fields,formValue);
+    let filterData = this.getMongodbFilterObject(filterValue);
     chartObject.setFilter(filterData);
+  }
+  getMongochartFilterValue(fields,object){
+    let modifyObject = {};
+    let objectCopy = JSON.parse(JSON.stringify(object));
+    if(fields && fields.length > 0 && Object.keys(objectCopy).length > 0){
+      fields.forEach(field => {
+        let key = field.field_name;
+        if(object && object[key] && object[key] != ''){
+          let newDateObjec = {};
+          let date = new Date();
+          switch (field.type) {
+            case 'typeahead':            
+              if(objectCopy[key] && typeof objectCopy[key] == 'object'){
+                modifyObject[key+'._id'] = objectCopy[key]._id;
+              }            
+              break;
+            case 'date':
+              let formateDate = this.datePipe.transform(objectCopy[key], 'yyyy-MM-dd');
+              let selectedDate = new Date(formateDate);
+              selectedDate.setTime(selectedDate.getTime()+(24*3600000));
+              newDateObjec = {};
+              date = new Date(formateDate);
+              newDateObjec['$gt'] = date;
+              newDateObjec['$lte'] = selectedDate;
+              modifyObject[key] =  newDateObjec;
+              break;
+            case 'daterange':
+              if(object[key].start && object[key].end && object[key].start != '' && object[key].end != ''){
+                let startDate = this.datePipe.transform(object[key].start,'yyyy-MM-dd');
+                let endDate = this.datePipe.transform(object[key].end,'yyyy-MM-dd');
+                let modifyEndDate = new Date(endDate);
+                modifyEndDate.setTime(modifyEndDate.getTime()+(24*3600000));
+                newDateObjec = {};
+                newDateObjec['$gt'] = new Date(startDate);
+                newDateObjec['$lte'] = new Date(modifyEndDate);
+                modifyObject[key] =  newDateObjec;
+              }
+              break;
+            default:
+              modifyObject[key] = objectCopy[key];
+              break;
+          }
+        }
+      });
+    }
+    return modifyObject;
   }
   setFilterForm(dashlet){    
     if(this.checkGetDashletData && dashlet._id && dashlet._id != ''){
