@@ -255,7 +255,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   latitude: number = 0;
   longitude: number = 0;
   zoom: number = 10;
-  center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
+  center: google.maps.LatLngLiteral = {lat: 0, lng: 0};
 
   address: string;
   private geoCoder;
@@ -754,8 +754,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.templateForm.get(field?.field_name).setValue(this.address);
     }else if(this.templateForm?.get('address')){
       this.templateForm.get('address').setValue(this.address);
-    }else if(this.templateForm?.get('address_line1')){
-      this.templateForm.get('address_line1').setValue(this.address);
     }
   }
   setGridData(gridData){
@@ -3807,11 +3805,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.filePreviewFields = [];
     this.close();
   }  
-  close(){    
+  close(){
     this.staticData = {};
     this.typeAheadData = [];
     this.selectedRow = {};
     this.showGridData={};
+    this.latitude = 0;
+    this.longitude = 0;
+    this.address = "";
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
