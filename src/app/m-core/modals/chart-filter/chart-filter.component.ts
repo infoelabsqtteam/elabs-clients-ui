@@ -5,15 +5,13 @@ import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as XLSX from 'xlsx';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
-// import {default as _rollupMoment} from 'moment';
-// const moment = _rollupMoment || _moment;
+import { ChartService } from 'src/app/services/chart/chart.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -86,7 +84,7 @@ export class ChartFilterComponent implements OnInit {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private envService:EnvService,
+    private chartService:ChartService,
     private storageService: StorageService,
     private datePipe: DatePipe
   ) {
@@ -279,35 +277,41 @@ export class ChartFilterComponent implements OnInit {
     if(fields && fields.length > 0 && Object.keys(objectCopy).length > 0){
       fields.forEach(field => {
         let key = field.field_name;
-        let newDateObjec = {};
-        let date = new Date();
-        switch (field.type) {
-          case 'typeahead':            
-            if(objectCopy[key] && typeof objectCopy[key] == 'object'){
-              modifyObject[key+'._id'] = objectCopy[key]._id;
-            }            
-            break;
-          case 'date':
-            let formateDate = this.datePipe.transform(objectCopy[key], 'yyyy-MM-dd');
-            let selectedDate = new Date(formateDate);
-            selectedDate.setTime(selectedDate.getTime()+(24*3600000));
-            newDateObjec = {};
-            date = new Date(formateDate);
-            newDateObjec['$gt'] = date;
-            newDateObjec['$lte'] = selectedDate;
-            modifyObject[key] =  newDateObjec;
-            break;
-          case 'daterange':
-            let startDate = this.datePipe.transform(object[key].start,'yyyy-MM-dd');
-            let endDate = this.datePipe.transform(object[key].end,'yyyy-MM-dd');
-            newDateObjec = {};
-            newDateObjec['$gt'] = new Date(startDate);
-            newDateObjec['$lte'] = new Date(endDate);
-            modifyObject[key] =  newDateObjec;
-            break;
-          default:
-            modifyObject[key] = objectCopy[key];
-            break;
+        if(object && object[key] && object[key] != ''){
+          let newDateObjec = {};
+          let date = new Date();
+          switch (field.type) {
+            case 'typeahead':            
+              if(objectCopy[key] && typeof objectCopy[key] == 'object'){
+                modifyObject[key+'._id'] = objectCopy[key]._id;
+              }            
+              break;
+            case 'date':
+              let formateDate = this.datePipe.transform(objectCopy[key], 'yyyy-MM-dd');
+              let selectedDate = new Date(formateDate);
+              selectedDate.setTime(selectedDate.getTime()+(24*3600000));
+              newDateObjec = {};
+              date = new Date(formateDate);
+              newDateObjec['$gt'] = date;
+              newDateObjec['$lte'] = selectedDate;
+              modifyObject[key] =  newDateObjec;
+              break;
+            case 'daterange':
+              if(object[key].start && object[key].end && object[key].start != '' && object[key].end != ''){
+                let startDate = this.datePipe.transform(object[key].start,'yyyy-MM-dd');
+                let endDate = this.datePipe.transform(object[key].end,'yyyy-MM-dd');
+                let modifyEndDate = new Date(endDate);
+                modifyEndDate.setTime(modifyEndDate.getTime()+(24*3600000));
+                newDateObjec = {};
+                newDateObjec['$gt'] = new Date(startDate);
+                newDateObjec['$lte'] = new Date(modifyEndDate);
+                modifyObject[key] =  newDateObjec;
+              }
+              break;
+            default:
+              modifyObject[key] = objectCopy[key];
+              break;
+          }
         }
       });
     }
@@ -484,6 +488,11 @@ export class ChartFilterComponent implements OnInit {
     }
 
   }
+  download(object){
+    let chartId = "filter_"+object.chartId;
+    let chart = this.createdChartList[chartId];    
+    this.chartService.getDownloadData(chart,object);
+  } 
 
 
 }
