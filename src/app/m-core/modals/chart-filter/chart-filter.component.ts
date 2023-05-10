@@ -279,35 +279,41 @@ export class ChartFilterComponent implements OnInit {
     if(fields && fields.length > 0 && Object.keys(objectCopy).length > 0){
       fields.forEach(field => {
         let key = field.field_name;
-        let newDateObjec = {};
-        let date = new Date();
-        switch (field.type) {
-          case 'typeahead':            
-            if(objectCopy[key] && typeof objectCopy[key] == 'object'){
-              modifyObject[key+'._id'] = objectCopy[key]._id;
-            }            
-            break;
-          case 'date':
-            let formateDate = this.datePipe.transform(objectCopy[key], 'yyyy-MM-dd');
-            let selectedDate = new Date(formateDate);
-            selectedDate.setTime(selectedDate.getTime()+(24*3600000));
-            newDateObjec = {};
-            date = new Date(formateDate);
-            newDateObjec['$gt'] = date;
-            newDateObjec['$lte'] = selectedDate;
-            modifyObject[key] =  newDateObjec;
-            break;
-          case 'daterange':
-            let startDate = this.datePipe.transform(object[key].start,'yyyy-MM-dd');
-            let endDate = this.datePipe.transform(object[key].end,'yyyy-MM-dd');
-            newDateObjec = {};
-            newDateObjec['$gt'] = new Date(startDate);
-            newDateObjec['$lte'] = new Date(endDate);
-            modifyObject[key] =  newDateObjec;
-            break;
-          default:
-            modifyObject[key] = objectCopy[key];
-            break;
+        if(object && object[key] && object[key] != ''){
+          let newDateObjec = {};
+          let date = new Date();
+          switch (field.type) {
+            case 'typeahead':            
+              if(objectCopy[key] && typeof objectCopy[key] == 'object'){
+                modifyObject[key+'._id'] = objectCopy[key]._id;
+              }            
+              break;
+            case 'date':
+              let formateDate = this.datePipe.transform(objectCopy[key], 'yyyy-MM-dd');
+              let selectedDate = new Date(formateDate);
+              selectedDate.setTime(selectedDate.getTime()+(24*3600000));
+              newDateObjec = {};
+              date = new Date(formateDate);
+              newDateObjec['$gt'] = date;
+              newDateObjec['$lte'] = selectedDate;
+              modifyObject[key] =  newDateObjec;
+              break;
+            case 'daterange':
+              if(object[key].start && object[key].end && object[key].start != '' && object[key].end != ''){
+                let startDate = this.datePipe.transform(object[key].start,'yyyy-MM-dd');
+                let endDate = this.datePipe.transform(object[key].end,'yyyy-MM-dd');
+                let modifyEndDate = new Date(endDate);
+                modifyEndDate.setTime(modifyEndDate.getTime()+(24*3600000));
+                newDateObjec = {};
+                newDateObjec['$gt'] = new Date(startDate);
+                newDateObjec['$lte'] = new Date(modifyEndDate);
+                modifyObject[key] =  newDateObjec;
+              }
+              break;
+            default:
+              modifyObject[key] = objectCopy[key];
+              break;
+          }
         }
       });
     }

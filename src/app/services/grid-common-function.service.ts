@@ -16,33 +16,37 @@ constructor(
     if(gridColumns.length > 0){      
       for (let i = 0; i < gridData.length; i++) {
         const row = gridData[i];
-        let modifyRow = JSON.parse(JSON.stringify(row));
-        modifyRow["disabled"] = this.checkRowIf(row,field);
-        for (let j = 0; j < gridColumns.length; j++) {
-          const column = gridColumns[j];  
-          if(!column.editable || editableGridColumns.length == 0){        
-            modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
-          }          
-          modifyRow[column.field_name+"_tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);          
-          if(column.editable){
-            modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
-          }
-        }
-        if(editableGridColumns && (editableGridColumns.length == 1 || (field && !field.grid_row_selection) || row.selected)){
-          modifyRow["column_edit"] = true;
-        }else{
-          modifyRow["column_edit"] = false;
-        }  
-        if(editableGridColumns && editableGridColumns.length == 0 && field && Object.keys(field).length > 0){
-          modifyRow['actionBtnDisplay'] = this.checkRowDisabledIf(field,row);
-        } 
-        if(typegrapyCriteriaList && typegrapyCriteriaList.length > 0){
-          modifyRow['background-color'] = this.checkTypgraphCondition(typegrapyCriteriaList,row,'background-color');
-        }     
+        let modifyRow = this.rowModify(row,field,gridColumns,editableGridColumns,typegrapyCriteriaList);     
         modifiedData.push(modifyRow);
       }
     }
     return modifiedData;
+  }
+  rowModify(row,field,gridColumns,editableGridColumns,typegrapyCriteriaList){
+    let modifyRow = JSON.parse(JSON.stringify(row));
+    modifyRow["disabled"] = this.checkRowIf(row,field);
+    for (let j = 0; j < gridColumns.length; j++) {
+      const column = gridColumns[j];  
+      if(!column.editable || editableGridColumns.length == 0){        
+        modifyRow[column.field_name] = this.CommonFunctionService.getValueForGrid(column,row);
+      }          
+      modifyRow[column.field_name+"_tooltip"] = this.CommonFunctionService.getValueForGridTooltip(column,row);          
+      if(column.editable){
+        modifyRow[column.field_name+"_disabled"] = this.isDisable(column,row);            
+      }
+    }
+    if(editableGridColumns && (editableGridColumns.length == 1 || (field && !field.grid_row_selection) || row.selected)){
+      modifyRow["column_edit"] = true;
+    }else{
+      modifyRow["column_edit"] = false;
+    }  
+    if(editableGridColumns && editableGridColumns.length == 0 && field && Object.keys(field).length > 0){
+      modifyRow['actionBtnDisplay'] = this.checkRowDisabledIf(field,row);
+    } 
+    if(typegrapyCriteriaList && typegrapyCriteriaList.length > 0){
+      modifyRow['background-color'] = this.checkTypgraphCondition(typegrapyCriteriaList,row,'background-color');
+    }
+    return modifyRow;
   }
   checkDisableInRow(editedColumns,row){
     for (let index = 0; index < editedColumns.length; index++) {
