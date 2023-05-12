@@ -368,7 +368,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.grid_view_mode="inlineFormView";
       }
       else{
-        if(this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
+        if(this.tabs[this.selectTabIndex] && this.tabs[this.selectTabIndex].grid && this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
           this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
         }
         else if(this.tabs[this.selectTabIndex].chart_list != null && this.tabs[this.selectTabIndex].chart_list != undefined && this.tabs[this.selectTabIndex].chart_list != ''){
