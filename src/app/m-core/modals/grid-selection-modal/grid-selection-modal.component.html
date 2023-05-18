@@ -76,7 +76,7 @@
                                             <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></textarea>
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'number'">
-                                            <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                            <input  type="number" style="min-width: 50px;" step="any" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
