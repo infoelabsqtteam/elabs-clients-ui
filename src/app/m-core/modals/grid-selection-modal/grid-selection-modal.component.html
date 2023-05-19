@@ -56,11 +56,11 @@
                             <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                               <div>
                                 <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
-                                    <span class="grid-coloumn-nowrap" [matTooltip]="data['tooltip']" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)"></span>
+                                    <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)"></span>
                                 </div>
                                 <div *ngIf="fieldName.editable" style="position: relative;">
                                     <div *ngIf="!data['column_edit']">
-                                        <span class="grid-coloumn-nowrap" [matTooltip]="data['tooltip']" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="getValueForGrid(fieldName,data)" (click)="showGriddData(i,fieldName)"></span>
+                                        <span [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="getValueForGrid(fieldName,data)" (click)="showGriddData(i,fieldName)"></span>
                                     </div>
                                     <div *ngIf="data['column_edit']">
                                         <div *ngIf="fieldName.type == 'boolean'">
@@ -70,13 +70,13 @@
                                             <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></mat-checkbox>
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'text'">
-                                            <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
+                                            <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'textarea'">
                                             <textarea class="form-control form-control-sm d-inline mr-2" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></textarea>
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'number'">
-                                            <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                            <input  type="number" style="min-width: 50px;" step="any" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -194,7 +194,7 @@
                         <td *ngFor="let data of modifiedGridData|filter:filterData; let i = index"  class="grid-filter" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
                             <div>
                                 <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
-                                    <span class="grid-coloumn-nowrap" [matTooltip]="data['tooltip']" [matTooltipPosition]="'above'" [ngClass]="fieldName.field_class != ''?fieldName.field_class:''"  [innerHtml]="data[fieldName.field_name]" ></span>
+                                    <span [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" ></span>
                                 </div>
                                 <div *ngIf="fieldName.editable">
                                     <div *ngIf="fieldName.type == 'boolean'">
@@ -204,10 +204,10 @@
                                         <mat-checkbox  color="primary"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" (change)="checkDisableIf(data)"></mat-checkbox>
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'text'">
-                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
+                                        <input  type="text" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" >
                                     </div>
                                     <div *ngIf="fieldName.type.toLowerCase() == 'number'">
-                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(data,fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                        <input  type="number" style="min-width: 50px;" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                     </div>
                                 </div>
                             </div>

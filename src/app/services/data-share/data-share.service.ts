@@ -71,6 +71,7 @@ export class DataShareService {
   requestResponce:Subject<boolean> = new Subject<boolean>();
   mongoDbChartList:Subject<any> = new Subject<any>();
   MongoDbChartList:any = [];
+  pdfFileName:Subject<string> = new Subject<string>();
 
   constructor() { }
 
@@ -89,8 +90,8 @@ export class DataShareService {
   shareData(responce:any){
     this.sharedData.emit(responce);
   }
-  shareStaticData(staticData:any){
-    this.staticData.emit(staticData);
+  shareStaticData(staticData:any,data){
+    this.staticData.emit(data);
     this.setStaticData = staticData;
   }
   getStatiData(){
@@ -299,5 +300,8 @@ export class DataShareService {
   }
   resetHeaderMenu(responce){
     this.headerMenu.next(responce);
+  }
+  sharePdfFileName(fileName){
+    this.pdfFileName.next(fileName);
   }
 }

@@ -196,7 +196,7 @@ scrollToBottom(): void {
           this.action_buttons = [];
         }
         if(this.tab.forms && this.tab.forms != undefined && this.tab.forms != null){
-          let form = this.commonFunctionService.getForm(this.tab.forms,formName);        
+          let form = this.commonFunctionService.getForm(this.tab.forms,formName,this.action_buttons);        
           if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
             this.tableFields = form['tableFields'];
           }else{

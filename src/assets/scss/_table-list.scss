@@ -6,6 +6,10 @@
 
 .mat-card:not([class*=mat-elevation-z]) {box-shadow:0 0 10px #ccc !important;}
 .tableFixHead {overflow:$auto;height:$calc3;}
+.maxheightdata {max-height:405px;}
+.verticaltable {width:100%;
+    td {padding:6px 10px !important;}
+}
 .table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
     // .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
@@ -34,7 +38,7 @@
         .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
     }
 
-    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;
+    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:#555 !important;
         &:hover {background:rgba(0,0,0,0.1);box-shadow:none;}
     }
     .material-icons {font-size:inherit;}
@@ -52,7 +56,7 @@
 .datalist.table {
     tbody {
         tr {
-            td {padding:5px;white-space:nowrap;}
+            td {padding:5px;}
         }
     }
 }

@@ -162,11 +162,21 @@ export class GridSelectionModalComponent implements OnInit {
       } else {
         this.responseData = [];
       }
-      this.copyStaticData = data;
+      if(data && Object.keys(data).length > 0){
+        Object.keys(data).forEach(key => {     
+          if(key && key != '' && data[key]){
+            if(this.field && this.field.ddn_field && data[this.field.ddn_field] && this.field.ddn_field == key){
+              //this.copyStaticData[key] = JSON.parse(JSON.stringify(data[key]));
+            }else{
+              this.copyStaticData[key] = JSON.parse(JSON.stringify(data[key]));
+            }
+          }
+        })
+      }
       if(this.setGridData && this.field.ddn_field && data[this.field.ddn_field] && data[this.field.ddn_field] != null){
         this.setStaticData(data);
         if(this.gridData.length > 0 && this.listOfGridFieldName.length > 0){
-          this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field,this.editableGridColumns);
+          this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);
           if(this.modifiedGridData && this.modifiedGridData.length < 50){
             this.editEnable = true;
           }
@@ -521,7 +531,7 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if (alert.field.onchange_api_params == "" || alert.field.onchange_api_params == null) {
       this.gridData = this.selecteData;
-      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns);      
+      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);      
       if(this.grid_row_selection && this.modifiedGridData && this.modifiedGridData.length < 50){
         this.editEnable = true;
       }
@@ -733,11 +743,15 @@ export class GridSelectionModalComponent implements OnInit {
     //console.log(this.selected3);
   }
 
-  calculateNetAmount(data, fieldName, index) {
+  calculateNetAmount(fieldName, index) {
+    let data = this.modifiedGridData[index];
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
       this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
-    }
+    }    
     this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
+    // let row = JSON.parse(JSON.stringify(data));
+    // let modifyrow = this.gridCommonFunctionService.rowModify(row,this.field,this.listOfGridFieldName,this.editableGridColumns,[]);
+    // this.modifiedGridData[index] = modifyrow;
   } 
   checkDisableIf(data){
     this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
@@ -802,6 +816,8 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected || !this.grid_row_selection){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
+            data[column.field_name] = responce[column.field_name];
+            this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
             if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
               data[column.field_name] = responce[column.field_name];
               switch (column.type.toLowerCase()) {
