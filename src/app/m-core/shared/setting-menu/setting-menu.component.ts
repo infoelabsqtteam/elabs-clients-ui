@@ -781,7 +781,15 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.toggle = !this.toggle;
     }
 
-
+downloadpdf(){
+    let key="ASC01/docuents/User Manual.pdf";
+    let bucket="e-labs-nonprod-documents";
+    let payLoad={
+        bucketName: bucket,
+        key:key
+    }
+    this.apiService.getDownloadManual(payLoad);
+}
 
 
 

@@ -624,4 +624,16 @@ constructor(
     this.dataShareService.shareUserNotification([])
   }
 
+  getDownloadManual(payload){
+    let api = this.envService.getApi('DOWNLOAD_MANUAL');
+    this.http.post(api,payload).subscribe(
+      (respData) => {
+          // this.dataShareService.shareUserNotification(respData)
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
+
 }

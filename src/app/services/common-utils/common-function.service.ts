@@ -900,8 +900,17 @@ export class CommonFunctionService {
 
   getValueForGrid(field, object) {
     let value:any = '';
-    if (field && field.field_name != undefined && field.field_name != null && field.field_name != '') {
-      value = this.getObjectValue(field.field_name, object)
+    let fieldName: any= '';
+    if (field) {
+      if(this.coreFunctionService.isNotBlank(field.display_name)){
+        fieldName= field.display_name;
+      }
+      else if(this.coreFunctionService.isNotBlank(field.field_name)){
+        fieldName= field.field_name;
+      }
+    }
+    if(fieldName !=''){
+      value= this.getObjectValue(fieldName, object)
     }
     if (!field.type) field.type = "Text";
     switch (field.type.toLowerCase()) {
