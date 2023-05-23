@@ -782,7 +782,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
 
 downloadpdf(){
-    let key="ASC01/docuents/User Manual.pdf";
+    let key="ASC01/documents/User Manual.pdf";
     let bucket="e-labs-nonprod-documents";
     let payLoad={
         bucketName: bucket,

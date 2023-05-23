@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { map, tap, switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { from, of, Observable } from 'rxjs';//fromPromise
 import { DataShareService } from '../data-share/data-share.service';
@@ -628,13 +628,27 @@ constructor(
     let api = this.envService.getApi('DOWNLOAD_MANUAL');
     this.http.post(api,payload).subscribe(
       (respData) => {
-        console.log(respData);
+        const removeSpace=this.removeSpacesFromUrl(respData);
+        console.log(removeSpace);
           // this.dataShareService.shareUserNotification(respData)
         },
       (error) => {
           console.log(error);
         }
     ) 
+  }
+
+  removeSpacesFromUrl(respData) {
+    // Check if the response is an instance of HttpErrorResponse
+    if (respData instanceof HttpErrorResponse) {
+      const errorResponse = respData as HttpErrorResponse;
+      if (errorResponse.error && errorResponse.error.text) {
+        const urlWithSpaces = errorResponse.error.text;
+        const urlWithoutSpaces = urlWithSpaces.trim(); 
+        return urlWithoutSpaces;
+      }
+    }
+    return respData;
   }
 
 }
