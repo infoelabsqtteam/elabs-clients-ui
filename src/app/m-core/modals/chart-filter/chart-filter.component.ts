@@ -5,15 +5,13 @@ import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
 import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { EnvService } from 'src/app/services/env/env.service';
 import { ModelService } from 'src/app/services/model/model.service';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as XLSX from 'xlsx';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
-// import {default as _rollupMoment} from 'moment';
-// const moment = _rollupMoment || _moment;
+import { ChartService } from 'src/app/services/chart/chart.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -86,7 +84,7 @@ export class ChartFilterComponent implements OnInit {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private envService:EnvService,
+    private chartService:ChartService,
     private storageService: StorageService,
     private datePipe: DatePipe
   ) {
@@ -490,6 +488,11 @@ export class ChartFilterComponent implements OnInit {
     }
 
   }
+  download(object){
+    let chartId = "filter_"+object.chartId;
+    let chart = this.createdChartList[chartId];    
+    this.chartService.getDownloadData(chart,object);
+  } 
 
 
 }
