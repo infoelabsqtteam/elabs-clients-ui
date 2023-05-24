@@ -627,10 +627,10 @@ constructor(
   getDownloadManual(payload){
     let api = this.envService.getApi('DOWNLOAD_MANUAL');
     this.http.post(api,payload).subscribe(
-      (respData) => {
-        const removeSpace=this.removeSpacesFromUrl(respData);
-        console.log(removeSpace);
-          // this.dataShareService.shareUserNotification(respData)
+      (respData:any) => {
+        const url= respData.fileUrl;
+        this.openPdf(url);
+      //  this.downloadFileThroughUrl(url);
         },
       (error) => {
           console.log(error);
@@ -638,17 +638,22 @@ constructor(
     ) 
   }
 
-  removeSpacesFromUrl(respData) {
-    // Check if the response is an instance of HttpErrorResponse
-    if (respData instanceof HttpErrorResponse) {
-      const errorResponse = respData as HttpErrorResponse;
-      if (errorResponse.error && errorResponse.error.text) {
-        const urlWithSpaces = errorResponse.error.text;
-        const urlWithoutSpaces = urlWithSpaces.trim(); 
-        return urlWithoutSpaces;
-      }
-    }
-    return respData;
+  // downloadFileThroughUrl(url) {
+  //  let fileName= "usermanual.pdf";
+  //  let link = document.createElement('a');
+  //  link.setAttribute('type', 'hidden');
+  // //  const file = new Blob([url], { type: "application/pdf" });
+  // //  const FileUrl = window.URL.createObjectURL(url);
+  //  link.href = url;
+  //  link.target= '_blank';
+  //  link.download = fileName;
+  //  document.body.appendChild(link);
+  //  link.click();
+  //  link.remove();
+  // }
+
+  openPdf(url){
+    this.modalService.open('pdf_model', {url});
   }
 
 }
