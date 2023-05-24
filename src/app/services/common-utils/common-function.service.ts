@@ -927,6 +927,7 @@ export class CommonFunctionService {
         } else {
           return '-';
         }
+
       case "html" :
         if (value && value != '') {
           return '<span class="material-icons cursor-pointer">preview</span>';
