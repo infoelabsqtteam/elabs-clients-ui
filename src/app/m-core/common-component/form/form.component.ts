@@ -3171,6 +3171,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.checkForDownloadReport = true;
     this.apiService.GetFileData(downloadReportFromData);
   }
+  downloadPdfFileFromFormdata(){
+    const downloadPdfFileFromFormData = this.getSavePayloadData();
+    this.saveCallSubscribe();
+    if(downloadPdfFileFromFormData != null){
+      downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
+      let fileName = this.commonFunctionService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
+      this.dataShareService.sharePdfFileName(fileName);      
+    }
+  }
   publicDownloadReport(){
     this.checkForDownloadReport = true;
     let publicDownloadReportFromData = {};
@@ -4149,6 +4158,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case "download_report":
           this.downloadReport();
           break;
+        case "download_pdf":
+          this.downloadPdfFileFromFormdata();
+          break;
         case "public_download_report":
           this.publicDownloadReport();
           break;
@@ -4798,10 +4810,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const sourceTarget = keyValue.split("#");
           let key = sourceTarget[0];
           let valueField = sourceTarget[1];
-          let formValue = {};
           let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
-          let value = this.commonFunctionService.getObjectValue(valueField,formValue);
+          let formValueWithMulticollection = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
+          let value = this.commonFunctionService.getObjectValue(valueField,formValueWithMulticollection);
           targetFieldName['form'][key] = value;
         });
       }
