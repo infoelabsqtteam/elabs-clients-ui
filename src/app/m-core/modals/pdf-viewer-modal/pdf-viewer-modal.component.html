@@ -12,10 +12,13 @@
       <!--Body-->
       <div class="modal-body py-1">       
         <!-- <ngx-extended-pdf-viewer [src]="'assets/example.pdf'"  height="80vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer> -->
-        <!-- <iframe src='{{ pdfUrl }}' width="770px" height="490px"></iframe> -->
-        <!-- <embed src="{{ pdfUrl }}" width="770px" height="490px"/> -->
+
+
+         <!-- <iframe src='{{ pdfUrl }}' width="770px" height="490px"></iframe> -->
+        <embed src="https://e-labs-nonprod-documents.s3.ap-south-1.amazonaws.com/ASC01/documents/User%20Manual.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230524T104510Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIAUIGGVCG3AZ7KUAFS%2F20230524%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3cb78dd60cacee85b5396aed1849b826b38d76b7b840f160bc70a2bf2cb68d25" width="770px" height="490px"/> 
         <!-- <embed [src]=' pdfUrl ' width="770px" height="490px"/> -->
-        <embed [src]=" pdfUrl "   width="770px" height="490px"/>
+        <!-- <embed [src]=" pdfUrl " type="image/jpg"  width="770px" height="490px"/> -->
+        <!-- <ngx-extended-pdf-viewer [src]="pdfUrl"  height="58vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer> -->
       </div>      
     </div>
   </div>
