@@ -15,8 +15,9 @@ export class PdfViewerModalComponent implements OnInit {
   @Input() id: string;
   @Output() pdfViewModalResponce = new EventEmitter();
   @ViewChild('pdfViewModal') public pdfViewModal: ModalDirective;
-  // pdfUrl: any= "https://e-labs-nonprod-documents.s3.ap-south-1.amazonaws.com/ASC01/documents/User%20Manual.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230524T104510Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIAUIGGVCG3AZ7KUAFS%2F20230524%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3cb78dd60cacee85b5396aed1849b826b38d76b7b840f160bc70a2bf2cb68d25";
-
+  @ViewChild('embedPDF') embedPDF: ElementRef<HTMLEmbedElement>;
+  pdfUrl: any="";
+ 
   constructor(
     private modalService: ModelService, 
     private el: ElementRef, 
@@ -37,24 +38,20 @@ export class PdfViewerModalComponent implements OnInit {
     this.modalService.add(this);
   }
   ngAfterViewInit() {
-    //console.log(this.myDiv.nativeElement.innerHTML);
+    this.createPdf();
   }
 
   showModal(alert) {
-    // if(alert && alert.url)
-    //  this.pdfUrl= alert.url;
-   
+    if(alert && alert.url) this.pdfUrl= alert.url;
+    this.createPdf();
     this.pdfViewModal.show();
 
+  }
+  createPdf(){
+    this.embedPDF.nativeElement.src= this.pdfUrl;
   }
   closeModal() {
     this.pdfViewModal.hide();
   }
-
-  // getPDFUrl(url) {
-  //  this.pdfUrl = this.apiServices.openPdf(url);
-  //  console.log(this.pdfUrl)
-  // }
-
 
 }
