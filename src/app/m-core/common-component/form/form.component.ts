@@ -295,9 +295,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"]; 
 
-  @HostListener('document:click') clickout() {
-    this.term = {};
-  }
+  // @HostListener('document:click') clickout() {
+  //   this.term = {};
+  // }
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -639,6 +639,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.filePreviewFields = [];    
     this.nextFormUpdateMode = false;    
     this.focusFieldParent={};
+    this.term={};
   }
   resetFlagForOnchage(){
     this.listOfFieldUpdateMode=false; 
@@ -2223,6 +2224,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.type == 'typeahead') {
       this.clearTypeaheadData();
     }
+    this.term = {};
     this.checkFormFieldIfCondition();
   } 
   getGridSelectedData(data,field){
@@ -3168,6 +3170,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.checkForDownloadReport = true;
     this.apiService.GetFileData(downloadReportFromData);
+  }
+  downloadPdfFileFromFormdata(){
+    const downloadPdfFileFromFormData = this.getSavePayloadData();
+    this.saveCallSubscribe();
+    if(downloadPdfFileFromFormData != null){
+      downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
+      let fileName = this.commonFunctionService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
+      this.dataShareService.sharePdfFileName(fileName);      
+    }
   }
   publicDownloadReport(){
     this.checkForDownloadReport = true;
@@ -4147,6 +4158,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case "download_report":
           this.downloadReport();
           break;
+        case "download_pdf":
+          this.downloadPdfFileFromFormdata();
+          break;
         case "public_download_report":
           this.publicDownloadReport();
           break;
@@ -4796,10 +4810,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const sourceTarget = keyValue.split("#");
           let key = sourceTarget[0];
           let valueField = sourceTarget[1];
-          let formValue = {};
           let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
-          let value = this.commonFunctionService.getObjectValue(valueField,formValue);
+          let formValueWithMulticollection = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
+          let value = this.commonFunctionService.getObjectValue(valueField,formValueWithMulticollection);
           targetFieldName['form'][key] = value;
         });
       }
@@ -5319,8 +5332,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   addListOfFields(field){
     this.storeFormDetails("",field);
   }
-  updateListofFields(field,index){    
-    this.storeFormDetails("",field,index); 
+  updateListofFields(field,object,index){
+    let searchValue = this.term[field.field_name];
+    let correctIndex = index;
+    let data = this.custmizedFormValue[field.field_name];    
+    if(searchValue != '' || data && data.length > this.pageSize){
+      if(searchValue == undefined || searchValue == ''){
+        searchValue = this.pageNo;
+      }
+      correctIndex = this.gridCommonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
+    } 
+    this.storeFormDetails("",field,correctIndex); 
   }
   
   nextForm(){

@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ModelService } from 'src/app/services/model/model.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
+import { ApiService } from '../../../services/api/api.service';
 
 @Component({
   selector: 'app-pdf-viewer-modal',
@@ -11,15 +11,17 @@ import { CommonFunctionService } from '../../../services/common-utils/common-fun
 })
 export class PdfViewerModalComponent implements OnInit {
 
-
   @Input() id: string;
   @Output() pdfViewModalResponce = new EventEmitter();
   @ViewChild('pdfViewModal') public pdfViewModal: ModalDirective;
-
+  @ViewChild('embedPDF') embedPDF: ElementRef<HTMLEmbedElement>;
+  pdfUrl: any="";
+ 
   constructor(
     private modalService: ModelService, 
-    private el: ElementRef, 
-    private commonFunctionService: CommonFunctionService) { }
+    ) {
+      
+    }
 
   ngOnInit(): void {
 
@@ -32,12 +34,17 @@ export class PdfViewerModalComponent implements OnInit {
     this.modalService.add(this);
   }
   ngAfterViewInit() {
-    //console.log(this.myDiv.nativeElement.innerHTML);
+    this.createPdf();
   }
 
   showModal(alert) {
+    if(alert && alert.url) this.pdfUrl= alert.url;
+    this.createPdf();
     this.pdfViewModal.show();
 
+  }
+  createPdf(){
+    this.embedPDF.nativeElement.src= this.pdfUrl;
   }
   closeModal() {
     this.pdfViewModal.hide();

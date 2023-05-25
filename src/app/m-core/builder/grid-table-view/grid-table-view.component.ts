@@ -328,6 +328,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.pdfFileSubscription = this.dataShareService.downloadPdfData.subscribe(data =>{
       this.setDownloadPdfData(data);
     })
+    this.dataShareService.pdfFileName.subscribe(fileName =>{
+      if(fileName != ''){
+        this.downloadPdfCheck = fileName;
+        let downloadPdfResponce = {
+          'success' : 'success',
+          'success_msg' : 'Downlaod Pdf File Successfully!!!'
+        }
+        this.dataShareService.setSaveResponce(downloadPdfResponce);
+      }
+    })
     this.previewHtmlSubscription = this.dataShareService.previewHtml.subscribe(data =>{
       this.setPreviewHtml(data);
     })
@@ -377,7 +387,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.getUrlParameter();    
   }
   getCurrentBrowseUrl(){
-    // return this.document.location.hash.substring(1);
+    //return this.document.location.hash.substring(1);
     return this.document.location.pathname;
   }
   saveCallSubscribe(){
