@@ -72,6 +72,7 @@ export class DataShareService {
   mongoDbChartList:Subject<any> = new Subject<any>();
   MongoDbChartList:any = [];
   pdfFileName:Subject<string> = new Subject<string>();
+  S3Url:Subject<string> = new Subject<string>();
 
   constructor() { }
 
@@ -303,5 +304,9 @@ export class DataShareService {
   }
   sharePdfFileName(fileName){
     this.pdfFileName.next(fileName);
+  }
+
+  sharePublicUrlFromS3(url){
+    this.S3Url.next(url);
   }
 }

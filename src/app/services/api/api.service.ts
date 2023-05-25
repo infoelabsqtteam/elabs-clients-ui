@@ -624,4 +624,17 @@ constructor(
     this.dataShareService.shareUserNotification([])
   }
 
+  getDownloadManual(payload){
+    let api = this.envService.getApi('DOWNLOAD_MANUAL');
+    this.http.post(api,payload).subscribe(
+      (respData:any) => {
+        const url= respData.fileUrl;
+        this.dataShareService.sharePublicUrlFromS3(url);
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
+  }
+
 }
