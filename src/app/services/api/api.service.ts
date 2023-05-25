@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { map, tap, switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { from, of, Observable } from 'rxjs';//fromPromise
 import { DataShareService } from '../data-share/data-share.service';

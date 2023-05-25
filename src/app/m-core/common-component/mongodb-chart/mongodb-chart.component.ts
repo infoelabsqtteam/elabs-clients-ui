@@ -21,7 +21,7 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   accessToken:string="";
   @Input() showMongoChart:boolean;
   pageNumber:any=1;
-  itemNumOfGrid: any = 26;
+  itemNumOfGrid: any = 25;
   gridDataSubscription:Subscription;
   darkTheme:any={};
 
