@@ -629,31 +629,12 @@ constructor(
     this.http.post(api,payload).subscribe(
       (respData:any) => {
         const url= respData.fileUrl;
-        this.openPdf(url);
-      //  this.downloadFileThroughUrl(url);
+        this.dataShareService.sharePublicUrlFromS3(url);
         },
       (error) => {
           console.log(error);
         }
     ) 
-  }
-
-  // downloadFileThroughUrl(url) {
-  //  let fileName= "usermanual.pdf";
-  //  let link = document.createElement('a');
-  //  link.setAttribute('type', 'hidden');
-  // //  const file = new Blob([url], { type: "application/pdf" });
-  // //  const FileUrl = window.URL.createObjectURL(url);
-  //  link.href = url;
-  //  link.target= '_blank';
-  //  link.download = fileName;
-  //  document.body.appendChild(link);
-  //  link.click();
-  //  link.remove();
-  // }
-
-  openPdf(url){
-    this.modalService.open('pdf_model', {url});
   }
 
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ModelService } from 'src/app/services/model/model.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
@@ -20,9 +19,6 @@ export class PdfViewerModalComponent implements OnInit {
  
   constructor(
     private modalService: ModelService, 
-    private el: ElementRef, 
-    private commonFunctionService: CommonFunctionService,
-    private apiServices: ApiService
     ) {
       
     }

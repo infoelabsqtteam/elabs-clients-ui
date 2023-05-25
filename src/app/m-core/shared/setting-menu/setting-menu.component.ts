@@ -16,6 +16,7 @@ import { MenuOrModuleCommonService } from "src/app/services/menu-or-module-commo
 
 
 
+
 @Component({
   selector: 'app-setting-menu',
   templateUrl: './setting-menu.component.html',
@@ -114,7 +115,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         private notificationService: NotificationService,
         public envService: EnvService,
         private commonfunctionService:CommonFunctionService,
-        private menuOrModuleCommounService:MenuOrModuleCommonService
+        private menuOrModuleCommounService:MenuOrModuleCommonService,
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -168,6 +169,10 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.dataShareService.chartModelShowHide.subscribe(data => {
             this.isShow = data;
         });
+
+        this.dataShareService.S3Url.subscribe(url=>{
+            this.openPdf(url);
+        })
 
         this.ourSolutionDropDown = [
             { name: 'Food Products', value: 'food-product' },
@@ -781,16 +786,26 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.toggle = !this.toggle;
     }
 
-downloadpdf(){
-    let key="ASC01/documents/User Manual.pdf";
-    let bucket="e-labs-nonprod-documents";
-    let payLoad={
-        bucketName: bucket,
-        key:key
+    downloadpdf(){
+        let keys: any= this.storageService.getApplicationValueByKey('keys');
+        let key='';
+        let bucket= '';
+        if  (keys.user_manual) key= keys.user_manual; 
+        if  (keys.bucket) bucket= keys.bucket; 
+        if  (key != '' && bucket != ''){
+            let payLoad={
+                bucketName: bucket,
+                key:key
+            }
+            this.apiService.getDownloadManual(payLoad);
+        }
+        else{
+            this.notificationService.notify("bg-danger", " BucketName Or Key Not Exists !!!");
+        } 
     }
-    this.apiService.getDownloadManual(payLoad);
-}
 
-
+    openPdf(url){
+        this.modelService.open('pdf_model', {url});
+    }
 
 }
