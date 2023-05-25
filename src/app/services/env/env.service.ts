@@ -142,43 +142,29 @@ export class EnvService {
     let giolocation = applicationSettingObj['google_map'];
     this.setGoogleLocation(giolocation);   
   }
+
+  themeSettingList = [
+    {'propertyName':'--headerbg','key':'header_bg_color'},
+    {'propertyName':'--navtxtcolor','key':'header_txt_color'},
+    {'propertyName':'--navtxthovercolor','key':'header_txt_hover_color'},
+    {'propertyName':'--headericon','key':'header_icon_color'},
+    {'propertyName':'--headericonhover','key':'header_icon_hover_color'},
+    {'propertyName':'--buttonColor','key':'btn_color'},
+    {'propertyName':'--buttonHoverColor','key':'btn_hover_color'},
+    {'propertyName':'--footerbg','key':'footer_bg'},
+    {'propertyName':'--themecolor','key':'theme_color'},
+    {'propertyName':'--activebg','key':'active_bg_color'},
+    {'propertyName':'--popupHeaderBg','key':'popup_header_bg'},
+    {'propertyName':'--formLabelBg','key':'form_label_bg'}
+  ]
   setThemeSetting(settingObj) {
-      if(settingObj.header_bg_color != "" ) {
-        document.documentElement.style.setProperty('--headerbg', settingObj.header_bg_color);
+    this.themeSettingList.forEach(Object => {
+      let propertyName = Object.propertyName;
+      let key = Object.key;
+      if(settingObj[key] && settingObj[key] != "" ) {
+        document.documentElement.style.setProperty(propertyName, settingObj[key]);
       }
-      if (settingObj.header_txt_color != "") {
-        document.documentElement.style.setProperty('--navtxtcolor', settingObj.header_txt_color);
-      }
-      if (settingObj.header_txt_hover_color != "") {
-        document.documentElement.style.setProperty('--navtxthovercolor', settingObj.header_txt_hover_color);
-      }
-      if (settingObj.header_icon_color != "") {
-        document.documentElement.style.setProperty('--headericon', settingObj.header_icon_color);
-      }
-      if (settingObj.header_icon_hover_color != "") {
-        document.documentElement.style.setProperty('--headericonhover', settingObj.header_icon_hover_color);
-      }
-      if (settingObj.btn_color != "") {
-        document.documentElement.style.setProperty('--buttonColor', settingObj.btn_color);
-      }
-      if (settingObj.btn_hover_color != "") {
-        document.documentElement.style.setProperty('--buttonHoverColor', settingObj.btn_hover_color);
-      }
-      if (settingObj.footer_bg != "") {
-        document.documentElement.style.setProperty('--footerbg', settingObj.footer_bg);
-      }
-      if (settingObj.theme_color != "") {
-        document.documentElement.style.setProperty('--themecolor', settingObj.theme_color);
-      }
-      if (settingObj.active_bg_color != "") {
-        document.documentElement.style.setProperty('--activebg', settingObj.active_bg_color);
-      }
-      if (settingObj.popup_header_bg != "") {
-        document.documentElement.style.setProperty('--popupHeaderBg', settingObj.popup_header_bg);
-      }
-      if (settingObj.form_label_bg != "") {
-        document.documentElement.style.setProperty('--formLabelBg', settingObj.form_label_bg);
-      }
+    });
   }
   checkRedirectionUrl(){
     let redirectURL = '';
