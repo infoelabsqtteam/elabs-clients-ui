@@ -21,7 +21,6 @@ import { CustomvalidationService } from 'src/app/services/customvalidation/custo
 import { Subscription } from 'rxjs';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
-import { HttpClient } from '@angular/common/http';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 
 declare var tinymce: any;
@@ -325,10 +324,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionService:GridCommonFunctionService,
     private ngZone: NgZone,
-    private httpClient: HttpClient
 ) {
-
-    this.mapsApiLoaded();
 
     this.tinymceConfig = {
       height: 500,
