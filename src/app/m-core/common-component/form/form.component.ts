@@ -299,7 +299,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   pageSize:any=100;
   showGridData:any={};
   serverReq:boolean = false;
-  actionButtonNameList:any=["save","update","updateandnext","send_email"]; 
+  actionButtonNameList:any=["save","update","updateandnext","send_email"];
+  getLocation:boolean = false;
 
   @HostListener('document:click') clickout() {
     this.term = {};
@@ -826,7 +827,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.bulkupdates = false;
       }
       this.formDetails.emit(this.form);
-    }   
+    }
+    if(this.form && this.form.getLocation){
+      this.getLocation = this.form.getLocation;
+    }else{
+      this.getLocation = false;
+    }
     if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
       this.getTableField = false;
@@ -3081,6 +3087,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         valueOfForm['key1'] = this.routers.snapshot.params["key2"];
         valueOfForm['key2'] = this.routers.snapshot.params["key3"];      
         
+      }
+    }
+    if(this.getLocation){
+      if(this.center !=null && this.center.lat !=null){
+        valueOfForm['locationDetail'] = {
+          'latitude' : this.center.lat,
+          'longitude' : this.center.lng
+        }
       }
     }   
     return valueOfForm;
