@@ -11,7 +11,9 @@
       </div>
       <!--Body-->
       <div class="modal-body py-1">       
-        <ngx-extended-pdf-viewer [src]="'assets/example.pdf'"  height="80vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer>
+        <!-- <ngx-extended-pdf-viewer [src]="'assets/example.pdf'"  height="80vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer> -->
+
+        <embed #embedPDF width="100%" height="490px"/> 
       </div>      
     </div>
   </div>

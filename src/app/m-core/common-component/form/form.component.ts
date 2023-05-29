@@ -302,9 +302,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   getLocation:boolean = false;
 
-  @HostListener('document:click') clickout() {
-    this.term = {};
-  }
+  // @HostListener('document:click') clickout() {
+  //   this.term = {};
+  // }
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -649,6 +649,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.filePreviewFields = [];    
     this.nextFormUpdateMode = false;    
     this.focusFieldParent={};
+    this.term={};
   }
   resetFlagForOnchage(){
     this.listOfFieldUpdateMode=false; 
@@ -2290,6 +2291,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.type == 'typeahead') {
       this.clearTypeaheadData();
     }
+    this.term = {};
     this.checkFormFieldIfCondition();
   } 
   getGridSelectedData(data,field){
@@ -5414,8 +5416,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   addListOfFields(field){
     this.storeFormDetails("",field);
   }
-  updateListofFields(field,index){    
-    this.storeFormDetails("",field,index); 
+  updateListofFields(field,object,index){
+    let searchValue = this.term[field.field_name];
+    let correctIndex = index;
+    let data = this.custmizedFormValue[field.field_name];    
+    if(searchValue != '' || data && data.length > this.pageSize){
+      if(searchValue == undefined || searchValue == ''){
+        searchValue = this.pageNo;
+      }
+      correctIndex = this.gridCommonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
+    } 
+    this.storeFormDetails("",field,correctIndex); 
   }
   
   nextForm(){

@@ -59,5 +59,6 @@ export enum EndPoint {
     GET_FOLDER_BY_KEY = "vdrn/getS3FolderDataByKey",
     GIT_VERSION = "git/version",
     DOC_PERMISSION = 'vdrn/svper',
-    AUDIT_HISTORY = "getAuditHistory/ID"
+    AUDIT_HISTORY = "getAuditHistory/ID",
+    DOWNLOAD_MANUAL= "s3/getSignedS3Url"
 }
