@@ -18,10 +18,11 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+// import { HttpClient } from '@angular/common/http';
 
 declare var tinymce: any;
 
@@ -300,6 +301,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   getLocation:boolean = false;
+  mapsAPILoaded: Observable<boolean>;
 
   // @HostListener('document:click') clickout() {
   //   this.term = {};
@@ -606,6 +608,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.changeForm();    
   }
   ngAfterViewInit() {
+    // this.mapsApiLoaded();
     this.gmapSearchPlaces();    
   }
   changeForm(){
@@ -686,21 +689,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
-  async mapsApiLoaded(){
-    // let apiKey:any = Common.GOOGLE_API_KEY;    
-    // this.mapsAPILoaded = this.httpClient.jsonp('https://maps.googleapis.com/maps/api/js?key='+ apiKey +'&libraries=places', 'callback')
-    //     .pipe(
-    //       map(() => true),
-    //       catchError(() => of(false)),
-    //     );
-  }
+  // async mapsApiLoaded(){
+  //   // let apiKey:any = this.storageService.getApplicationValueByKey('google_map_apikey');
+  //   let apiKey:any = Common.GOOGLE_API_KEY;
+  //   this.mapsAPILoaded = this.httpClient.jsonp('https://maps.googleapis.com/maps/api/js?key='+ apiKey +'&libraries=places', 'callback')
+  //       .pipe(
+  //         map(() => true),
+  //         catchError(() => of(false)),
+  //       );
+  // }
   async gmapSearchPlaces(inputData?:any,field?:any){
     if(inputData?.target?.value){
       if(this.searchElementRef != undefined){
         this.searchElementRef.nativeElement.value  = inputData?.target?.value;
       }
     }
-    // if(Common.GOOGLE_MAP_IN_FORM == "true"){
+    let loadGoogleMap:boolean = false;
+    if(typeof Common.GOOGLE_MAP_IN_FORM == "string"){
+      if(Common.GOOGLE_MAP_IN_FORM == "true"){
+        loadGoogleMap = true;
+      }
+    }else{
+      if(Common.GOOGLE_MAP_IN_FORM){
+        loadGoogleMap = true;
+      }
+    }
+    if(loadGoogleMap){
       // if(this.mapsAPILoaded){
         this.geoCoder = new google.maps.Geocoder;
         if(this.longitude == 0 && this.latitude == 0){
@@ -736,7 +750,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           });
         }
       // }
-    // }
+    }
   }
   async mapClick(event: google.maps.MapMouseEvent,field?:any) {
     this.zoom = 17;

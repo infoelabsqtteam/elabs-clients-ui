@@ -11,6 +11,7 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
 import { PipesModule } from '../../pipes/pipes.module';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 const components = [
   FormComponent,
@@ -33,7 +34,8 @@ const maskConfig: Partial<IConfig> = {
     NgxMaskModule.forRoot(maskConfig),
     ModelModule,
     AllPackageModule,
-    PipesModule
+    PipesModule,
+    GoogleMapsModule
   ],
   exports:components,
   declarations: components
