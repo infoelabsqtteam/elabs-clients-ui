@@ -133,14 +133,13 @@ export class EnvService {
   }
 
 
-  setGoogleLocation(giolocation){
-    (Common as any).GOOGLE_MAP_IN_FORM = giolocation;
+  setGoogleLocation(geolocation){
+    (Common as any).GOOGLE_MAP_IN_FORM = geolocation;
   }
 
   setApplicationSetting(){
-    let applicationSettingObj = this.storageService.getApplicationSetting();
-    let giolocation = applicationSettingObj['google_map'];
-    this.setGoogleLocation(giolocation);   
+    let geolocation = this.storageService.getApplicationValueByKey('google_map');
+    this.setGoogleLocation(geolocation);
   }
 
   themeSettingList = [
