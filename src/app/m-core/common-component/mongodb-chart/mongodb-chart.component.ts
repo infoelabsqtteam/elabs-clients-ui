@@ -34,6 +34,17 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     private modelService:ModelService,
     private chartService:ChartService
   ) {
+    this.accessToken = this.storageService.GetIdToken();      
+    this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
+      this.total = data.data_size; 
+      const chartData = data.data;
+      if(chartData && chartData.length > 0){
+        this.chartIdList = chartData;
+        setTimeout(() => {
+          this.populateMongodbChart();
+        }, 100);
+      }
+    })
        this.getPage(1); 
    }
 
@@ -125,22 +136,14 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
 
   getPage(page: number,criteria?:any) {
     let Criteria:any = [];
+    // let cr= "collectionFieldName;eq;fieldValue;STATIC";
+    // Criteria.push(cr);
     if(criteria && criteria.length > 0){
       Criteria = criteria;
     }
     this.pageNumber = page;
     this.getMongoChartList([]);
-    this.accessToken = this.storageService.GetIdToken();      
-    this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
-      this.total = data.data_size; 
-      const chartData = data.data;
-      if(chartData && chartData.length > 0){
-        this.chartIdList = chartData;
-        setTimeout(() => {
-          this.populateMongodbChart();
-        }, 100);
-      }
-    })  
+     
 
   }
 
