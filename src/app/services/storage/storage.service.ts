@@ -528,7 +528,7 @@ export class StorageService {
   getApplicationValueByKey(key){
     let value = "";
     let applicationSetting = this.getApplicationSetting();
-    if(applicationSetting && applicationSetting[key]){
+    if(applicationSetting && applicationSetting[key] != undefined && applicationSetting[key] != null && applicationSetting[key] != ""){
       value = applicationSetting[key];
     }    
     return value;
