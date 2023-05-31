@@ -21,9 +21,10 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   accessToken:string="";
   @Input() showMongoChart:boolean;
   pageNumber:any=1;
-  itemNumOfGrid: any = 25;
+  itemNumOfGrid: any = 6;
   gridDataSubscription:Subscription;
   darkTheme:any={};
+  total;
 
   constructor(
     private dataShareService:DataShareService,
@@ -33,17 +34,7 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     private modelService:ModelService,
     private chartService:ChartService
   ) {
-      this.getMongoChartList([]);
-      this.accessToken = this.storageService.GetIdToken();      
-      this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
-        const chartData = data.data;
-        if(chartData && chartData.length > 0){
-          this.chartIdList = chartData;
-          setTimeout(() => {
-            this.populateMongodbChart();
-          }, 100);
-        }
-      })      
+       this.getPage(1); 
    }
 
   getMongoChartList(Criteria){
@@ -70,7 +61,6 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
       setTimeout(() => {
         this.populateMongodbChart();
       }, 100);
-      
     }
   }
   populateMongodbChart(){
@@ -131,6 +121,27 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     }else{
       chart.setTheme("light");
     }
+  }
+
+  getPage(page: number,criteria?:any) {
+    let Criteria:any = [];
+    if(criteria && criteria.length > 0){
+      Criteria = criteria;
+    }
+    this.pageNumber = page;
+    this.getMongoChartList([]);
+    this.accessToken = this.storageService.GetIdToken();      
+    this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
+      this.total = data.data_size; 
+      const chartData = data.data;
+      if(chartData && chartData.length > 0){
+        this.chartIdList = chartData;
+        setTimeout(() => {
+          this.populateMongodbChart();
+        }, 100);
+      }
+    })  
+
   }
 
 }
