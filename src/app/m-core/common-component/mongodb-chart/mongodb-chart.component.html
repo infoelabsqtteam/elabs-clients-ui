@@ -1,5 +1,18 @@
+ <div class="px-3 chartfilter">
+  <div class="row">
+     <div class="col-lg-2">
+      <mat-form-field appearance="legacy" class="w-100 mb-0">
+        <mat-label class="filterlabel d-flex align-items-center justify-content-between"><span>No. Of Charts </span></mat-label>
+        <mat-select [(ngModel)]="itemNumOfGrid" (selectionChange)="selectNoOfItem()" disableOptionCentering panelClass="filtermenu">
+          <mat-option *ngFor="let numverOfItem of noOfItems" [value]="numverOfItem"><small>{{numverOfItem}}</small></mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>  
+  </div>
+</div>  
+
 <div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
-  <div class="col-lg-4 p-2" *ngFor="let chart of chartIdList;let i = index">
+  <div class="col-lg-4 p-2" *ngFor="let chart of chartIdList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
     <div class="card monogdbChart">
       <div class="card-header py-1 pr-2">
         <div class="d-flex align-items-center justify-content-between" *ngIf="chart.name">
@@ -17,5 +30,11 @@
   </div>
 </div>
 <div *ngIf="chartIdList.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
+
+<section>
+  <mat-card-content class="m-0 pt-4 text-center">
+    <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
+  </mat-card-content>
+</section>
 
 
