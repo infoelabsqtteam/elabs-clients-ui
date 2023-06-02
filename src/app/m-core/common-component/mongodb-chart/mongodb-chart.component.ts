@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { ApiService } from '../../../services/api/api.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { ModelService } from 'src/app/services/model/model.service';
-import { chatData } from '../../admin-dashboard/data';
 import { ChartService } from 'src/app/services/chart/chart.service';
 
 @Component({
@@ -18,19 +17,13 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
 
   chartIdList:any = [];
   createdChartList:any=[];
-  filterValue:any = [];
   accessToken:string="";
-  filterdata = '';
-  filteredChartsData:any = [];
-  elements:any=[];
   @Input() showMongoChart:boolean;
   pageNumber:any=1;
   itemNumOfGrid: any = 6;
   gridDataSubscription:Subscription;
   darkTheme:any={};
   total;
-  totalchartlist:any;
-  checkGetDashletData:boolean=true;
   noOfItems:any = [
     6,9,12,15,18,21,24
   ]
@@ -148,37 +141,6 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     this.getPage(1);
   }
 
-  clickFilter:boolean = false;
-  filterchart() {  
-   // this.filterValue.push(this.total);  
-    if(this.filterValue && this.filterValue.length > 0 && this.filterValue.length <= this.itemNumOfGrid) {
-      this.clickFilter = true;
-      let value = "";
-      this.filterValue.forEach((element,i) => {
-        if((this.filterValue.length - 1) == i){
-          value = value + element;
-        }else{
-          value = value + element + ":";
-        }
-      });
-      let cr = "_id;in;"+value+";STATIC";
-      this.getPage(1,[cr]);
-    }    
-  }
-
-  checkFilter(){
-    if(this.filterValue && this.filterValue.length == 0){
-      this.getPage(1)
-    }
-  }
-
-   resetFilter(){
-    this.filterValue = [];
-    if(this.clickFilter){
-      this.clickFilter = false;
-      this.checkFilter();
-    }
-  }
 
   getPage(page: number,criteria?:any) {
     let Criteria:any = [];
