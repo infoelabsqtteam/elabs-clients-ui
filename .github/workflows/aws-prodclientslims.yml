@@ -62,3 +62,6 @@ jobs:
       
     - name: Clean up cache for Document Library
       run: aws cloudfront create-invalidation --distribution-id E204E1025HF47L --paths '/*'
+      
+    - name: Clean up cache for IIRT LIMS
+      run: aws cloudfront create-invalidation --distribution-id EFJ8A5QIUJKHQ --paths '/*'
