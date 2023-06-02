@@ -45,7 +45,6 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   ) {
     this.accessToken = this.storageService.GetIdToken();      
     this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
-    this.setGridData(data);
     this.total = data.data_size; 
       const chartData = data.data;
       if(chartData && chartData.length > 0){
@@ -142,54 +141,6 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
       chart.setTheme("dark");
     }else{
       chart.setTheme("light");
-    }
-  }
-
-  setGridData(gridData){
-    if (gridData.data && gridData.data.length > 0) {
-      this.elements = JSON.parse(JSON.stringify(gridData.data));
-      this.total = gridData.data_size;
-      this.totalchartlist = gridData.data_size;
-      this.filteredChartsData = JSON.parse(JSON.stringify(this.elements));
-      if(this.checkGetDashletData && this.elements.length > 0){
-         this.checkGetDashletData = false;
-        if(this.elements.length > 0){
-          this.getDashletData(this.elements);
-        }            
-       }          
-    } else {
-      this.elements = [];
-    }
-  }
-
-  getDashletData(elements){
-    if(elements && elements.length > 0){
-      let payloads = [];
-      //let value = this.dashboardFilter.getRawValue();
-      elements.forEach(element => {
-        const fields = element.fields;        
-        //const filterData = this.getSingleCardFilterValue(element,value);
-        let crList = [];
-        // if(fields && fields.length > 0){
-        //   crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
-        // }        
-        let object = {}
-        // if(filterData){
-        //   object = filterData;
-        // }
-        const data = {
-          "data": object,
-          "crList":crList
-        }
-        const payload={
-          "_id" : element._id,
-          "data" : data
-        }
-        payloads.push(payload);
-      });
-      if(payloads && payloads.length > 0 && payloads.length == elements.length){
-        this.apiService.GetDashletData(payloads);
-      }      
     }
   }
 
