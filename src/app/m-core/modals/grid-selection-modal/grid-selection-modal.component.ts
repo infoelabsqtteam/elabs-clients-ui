@@ -51,6 +51,7 @@ export class GridSelectionModalComponent implements OnInit {
   checkSelectedData:boolean = false;
   onlySelectedData:boolean = false;
   editEnable:boolean=false;
+  selectedDataLength:number=0;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -423,7 +424,7 @@ export class GridSelectionModalComponent implements OnInit {
             }
           }
           if(this.selecteData && this.selecteData.length > 0){
-            this.updateSelectedDataInGridData(this.selecteData); 
+            this.updateSelectedDataInGridData(this.selecteData);            
           }        
           this.setGridData = false;
         }
@@ -658,6 +659,19 @@ export class GridSelectionModalComponent implements OnInit {
     }
     this.checkSelectedDataLength();
   }
+  getSelectedDataLength(){
+    this.selectedDataLength = 0;
+    if(this.modifiedGridData.length > 0){
+      let count = 0;
+      for (let i = 0; i < this.modifiedGridData.length; i++) {
+        const data = this.modifiedGridData[i];        
+        if(data.selected){
+          count++;
+        }
+      }
+      this.selectedDataLength = count;
+    }
+  }
   checkSelectedDataLength(){
     if(this.modifiedGridData.length > 0){
       let count = 0;
@@ -685,6 +699,7 @@ export class GridSelectionModalComponent implements OnInit {
         
       }
     }
+    this.getSelectedDataLength();
   }
   checkDisableRowIf(index){
     const data = this.gridData[index];
@@ -726,6 +741,7 @@ export class GridSelectionModalComponent implements OnInit {
           }
         });
       }
+      this.selectedDataLength = this.modifiedGridData.length;
     } else {
       if (this.gridData.length > 0) {
         this.gridData.forEach((row,i) => {
@@ -738,9 +754,10 @@ export class GridSelectionModalComponent implements OnInit {
           }
         });
       }
+      this.selectedDataLength = 0;
     }
     this.checkSelectedDataLength();
-    //console.log(this.selected3);
+    
   }
 
   calculateNetAmount(fieldName, index) {

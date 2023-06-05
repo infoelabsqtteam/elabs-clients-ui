@@ -4,7 +4,7 @@
     <div class="modal-content" >
       <!--Header-->
       <div class="modal-header">
-        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}<span *ngIf="modifiedGridData && modifiedGridData.length > 0">({{modifiedGridData.length}})</span></h3>
+        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}<span *ngIf="modifiedGridData && modifiedGridData.length > 0">(<span *ngIf="grid_row_selection && selectedDataLength > 0">{{ selectedDataLength }}/</span>{{modifiedGridData.length}})</span></h3>
         <div *ngIf="field.isFilter" class="mr-auto ml-3 w-75">
             <div class="w-25 float-left">
                 <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
