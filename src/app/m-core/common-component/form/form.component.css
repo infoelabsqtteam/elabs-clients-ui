@@ -1,0 +1,6 @@
+#form_resize.resizable {
+    border: 1px solid #ccc;
+    resize: both;
+    overflow: auto;
+    cursor: se-resize;
+  }
