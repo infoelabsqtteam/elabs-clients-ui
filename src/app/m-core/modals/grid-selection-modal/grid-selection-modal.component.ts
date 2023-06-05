@@ -52,6 +52,7 @@ export class GridSelectionModalComponent implements OnInit {
   onlySelectedData:boolean = false;
   editEnable:boolean=false;
   selectedDataLength:number=0;
+  buttonlabel:any;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -512,7 +513,9 @@ export class GridSelectionModalComponent implements OnInit {
       this.parentObject = alert.object;
     }
     if(this.field && this.field.grid_selection_button_label != null && this.field.grid_selection_button_label != ''){
-      this.field.label = this.field.grid_selection_button_label;
+      this.buttonlabel = this.field.grid_selection_button_label;
+    }else {
+      this.buttonlabel = this.field.label
     }
     if (this.field && this.field.grid_row_selection) {
       this.grid_row_selection = true;
