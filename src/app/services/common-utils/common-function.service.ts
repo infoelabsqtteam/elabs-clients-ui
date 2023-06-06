@@ -343,28 +343,31 @@ export class CommonFunctionService {
 
 
   isDisable(tableField, updateMode, formValue) {
-    if (tableField.is_disabled) {
-      return true;
-    } else {
-      if (tableField.disable_if && tableField.disable_if != '') {
-        return this.checkIfCondition(tableField.disable_if, formValue)
-      }
-     
-      if (updateMode) {
-        if (tableField.disable_on_update != undefined && tableField.disable_on_update) {
-          return this.checkAddUpdateIf(tableField,'can_update_if');
-        } else {
-          return false;
-        }
+    if (tableField != undefined) {
+      if (tableField.is_disabled) {
+        return true;
       } else {
-        if (tableField.disable_on_add != undefined && tableField.disable_on_add) {
-          return this.checkAddUpdateIf(tableField,'can_add_if');
-        }else{
-          return false;
+        if (tableField.disable_if && tableField.disable_if != '') {
+          return this.checkIfCondition(tableField.disable_if, formValue)
+        }
+
+        if (updateMode) {
+          if (tableField.disable_on_update != undefined && tableField.disable_on_update) {
+            return this.checkAddUpdateIf(tableField, 'can_update_if');
+          } else {
+            return false;
+          }
+        } else {
+          if (tableField.disable_on_add != undefined && tableField.disable_on_add) {
+            return this.checkAddUpdateIf(tableField, 'can_add_if');
+          } else {
+            return false;
+          }
         }
       }
     }
   }
+  
   is_check_role(id) {
     const userInfo = this.storageService.GetUserInfo();
     let check = 0;
