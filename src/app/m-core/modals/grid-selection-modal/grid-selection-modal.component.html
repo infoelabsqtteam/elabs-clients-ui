@@ -4,7 +4,7 @@
     <div class="modal-content" >
       <!--Header-->
       <div class="modal-header">
-        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}<span *ngIf="modifiedGridData && modifiedGridData.length > 0">({{modifiedGridData.length}})</span></h3>
+        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}<span *ngIf="modifiedGridData && modifiedGridData.length > 0">(<span *ngIf="grid_row_selection && selectedDataLength > 0">{{ selectedDataLength }}/</span>{{modifiedGridData.length}})</span></h3>
         <div *ngIf="field.isFilter" class="mr-auto ml-3 w-75">
             <div class="w-25 float-left">
                 <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
@@ -224,7 +224,7 @@
             <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="editEnable" (change)="enableSelectedEdit($event)" [matTooltip]="'Edite Selected Items'">Edit Selected</mat-checkbox>
         </span>
         <button type="button" *ngIf="checkSelectedData && onlySelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>
-        <button type="button" [disabled]="false" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ field.label }}</button>
+        <button type="button" [disabled]="false" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ buttonlabel }}</button>
         <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
       </div>
     </div>

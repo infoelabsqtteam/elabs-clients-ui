@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -120,6 +121,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   staticDataSubscription;
   tempDataSubscription;
   saveResponceSubscription:Subscription;
+  printFileSubscription:Subscription;
   gridFilterDataSubscription;
   dinamicFormSubscription;
   fileDataSubscription;
@@ -300,7 +302,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private _location:Location,
     @Inject(DOCUMENT) private document: Document,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
-    private gridCommonFunctionServie:GridCommonFunctionService
+    private gridCommonFunctionServie:GridCommonFunctionService,
+    private sanitizer: DomSanitizer
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -327,6 +330,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     })
     this.pdfFileSubscription = this.dataShareService.downloadPdfData.subscribe(data =>{
       this.setDownloadPdfData(data);
+    })
+    this.printFileSubscription = this.dataShareService.printData.subscribe(data =>{
+      let template = data.data;
+      const blob = new Blob([template], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      let htmlContent = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.commonFunctionService.print(htmlContent);
     })
     this.dataShareService.pdfFileName.subscribe(fileName =>{
       if(fileName != ''){
@@ -1233,17 +1243,17 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           }
           this.downloadPdfCheck = this.commonFunctionService.downloadPdf(gridData,currentMenu);         
           break;
-          case 'GETFILE':
-            let currentsMenu = '';
+        case 'GETFILE':
+          let currentsMenu = '';
           if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
             currentsMenu = this.currentMenu.name
           }
           this.downloadPdfCheck = this.commonFunctionService.getPdf(gridData,currentsMenu);         
           break;
-          case 'TDS':
-            let currentMenuForTds = '';
-            this.flagForTdsForm = true;
-            this.currentRowIndex = index;
+        case 'TDS':
+          let currentMenuForTds = '';
+          this.flagForTdsForm = true;
+          this.currentRowIndex = index;
           if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
             currentMenuForTds = this.currentMenu.name
           }
@@ -1277,18 +1287,33 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
-          case 'AUDIT_HISTORY':
-            if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
-              let obj = {
-                "aduitTabIndex": this.selectTabIndex,
-                "tabname": this.tabs
-              }
-              this.commonFunctionService.getAuditHistory(gridData);
-              this.modalService.open('audit-history',obj);
-            }else {
-              this.menuOrModuleCommounService.checkTokenStatusForPermission();
-              //this.notificationService.notify("bg-danger", "Permission denied !!!");
+        case 'AUDIT_HISTORY':
+          if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
+            let obj = {
+              "aduitTabIndex": this.selectTabIndex,
+              "tabname": this.tabs
             }
+            this.commonFunctionService.getAuditHistory(gridData);
+            this.modalService.open('audit-history',obj);
+          }else {
+            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            //this.notificationService.notify("bg-danger", "Permission denied !!!");
+          }
+          break;
+        case 'PRINT':
+          let templateType = '';
+          if(button.onclick.templateType && button.onclick.templateType != ''){
+            templateType = button.onclick.templateType;
+            gridData['print_template'] = templateType;
+            const payload = {
+              curTemp: this.currentMenu.name,
+              data: gridData,
+              _id :gridData._id
+            }
+            this.apiService.PrintTemplate(payload);
+          }else{
+            this.notificationService.notify('bg-danger','Template Type is null!!!');
+          }
           break;
         default:
           this.editedRowData(index,button.onclick.action_name)
