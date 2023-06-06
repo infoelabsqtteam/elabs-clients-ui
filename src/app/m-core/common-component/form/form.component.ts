@@ -2224,8 +2224,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         //----------------------this is for confirm modal to add or remove (form component confirm modal) when grid selection field is open.
         this.dataShareService.setIsGridSelectionOpenOrNot(false);
         // -------------------------------
-        this.curTreeViewField = JSON.parse(JSON.stringify(field));
-        this.currentTreeViewFieldParent = JSON.parse(JSON.stringify(parentfield));
+        this.curTreeViewField = field;
+        this.currentTreeViewFieldParent = parentfield;
         if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
         let selectedData = this.getGridSelectedData(this.custmizedFormValue[field.field_name],field);
         const gridModalData = {
@@ -5536,12 +5536,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     
-    const element = event.target as HTMLElement;
-    let divId = '';
-    divId = element.id;
-    if(divId != 'form_resize'){
-      return ;
-    }
+    const element = document.getElementById('form_resize');
+    if(!element) return;
     const initialWidth = element.offsetWidth;
     const initialHeight = element.offsetHeight;
     const initialX = event.clientX;
@@ -5550,10 +5546,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const mouseMoveHandler = (e: MouseEvent) => {
       const width = initialWidth + (e.clientX - initialX);
       const height = initialHeight + (e.clientY - initialY);
-      if(width + initialX < screen.width){
-        element.style.width = `${width}px`;
-        element.style.height = `${height}px`;
-      }
+      element.style.width = `${width}px`;
+      element.style.height = `${height}px`;
     };
     
     const mouseUpHandler = () => {

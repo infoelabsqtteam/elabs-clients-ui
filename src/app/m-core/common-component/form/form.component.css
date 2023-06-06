@@ -1,6 +1,12 @@
 #form_resize.resizable {
-    border: 1px solid #ccc;
-    resize: both;
-    overflow: auto;
-    cursor: se-resize;
+    position: relative;
   }
+
+  .corner-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    background-color: #ccc;
+  }
+  .corner-handle img {width:18px;}
