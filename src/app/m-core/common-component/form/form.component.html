@@ -1,4 +1,4 @@
-<div class="modal-content" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
+<div class="resizable modal-content" id="form_resize" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
     <!--Header-->
     <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
         <div class="form-tab">
@@ -1671,6 +1671,9 @@
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formDeleteBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Delete</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="formResetBtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'">Reset</button>
         <button mdbBtn type="button" size="sm" class="noshadow bg-cerulean text-white rounded" mdbWavesEffect *ngIf="enableNextButton" (click)="nextForm()" [matTooltip]="'Next Form'" [matTooltipPosition]="'above'">Next</button>        
+    </div>
+    <div class="corner-handle" (mousedown)="onMouseDown($event)">
+        <img src="assets/images/icons/resize_icon.jpeg">
     </div>
 </div>
 <app-confirm-modal *ngIf="isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>

@@ -5533,4 +5533,30 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.pageNo[field.field_name]  != 1) this.pageNo[field.field_name] = 1;
   }
 
+  onMouseDown(event: MouseEvent): void {
+    event.preventDefault();
+    
+    const element = document.getElementById('form_resize');
+    if(!element) return;
+    const initialWidth = element.offsetWidth;
+    const initialHeight = element.offsetHeight;
+    const initialX = event.clientX;
+    const initialY = event.clientY;
+    
+    const mouseMoveHandler = (e: MouseEvent) => {
+      const width = initialWidth + (e.clientX - initialX);
+      const height = initialHeight + (e.clientY - initialY);
+      element.style.width = `${width}px`;
+      element.style.height = `${height}px`;
+    };
+    
+    const mouseUpHandler = () => {
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+  }
+
 }
