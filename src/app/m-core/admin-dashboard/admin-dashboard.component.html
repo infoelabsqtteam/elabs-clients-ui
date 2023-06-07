@@ -11,7 +11,13 @@
         <div class="mat-tab-label-content px-3 py-2" >Dashboard</div>
       </ng-template>
       <app-chart [isShow]="isShow"></app-chart>  
-    </mat-tab>    
+    </mat-tab>  
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="mat-tab-label-content px-3 py-2" >Dashboards</div>
+      </ng-template>
+       <app-dashboard-chart [isShow]="isShow"></app-dashboard-chart>   
+    </mat-tab>   
   </mat-tab-group>  
   <!-- <div class="row">
     <div class="col-xl-8">

@@ -12,11 +12,13 @@ import { ChartComponent } from './chart/chart.component';
 import { PipesModule } from '../../pipes/pipes.module';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 
 const components = [
   FormComponent,
   ChartComponent,
-  MongodbChartComponent
+  MongodbChartComponent,
+  DashboardChartComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
