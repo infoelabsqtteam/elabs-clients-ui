@@ -2224,8 +2224,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         //----------------------this is for confirm modal to add or remove (form component confirm modal) when grid selection field is open.
         this.dataShareService.setIsGridSelectionOpenOrNot(false);
         // -------------------------------
-        this.curTreeViewField = field;
-        this.currentTreeViewFieldParent = parentfield;
+        this.curTreeViewField = JSON.parse(JSON.stringify(field));
+        this.currentTreeViewFieldParent = JSON.parse(JSON.stringify(parentfield));
         if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
         let selectedData = this.getGridSelectedData(this.custmizedFormValue[field.field_name],field);
         const gridModalData = {
