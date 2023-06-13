@@ -1,4 +1,4 @@
-import { Component, OnInit,AfterViewInit,Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit,AfterViewInit,Input, SimpleChanges, OnDestroy } from '@angular/core';
 import { DataShareService } from '../../../services/data-share/data-share.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 import { StorageService } from '../../../services/storage/storage.service';
@@ -13,7 +13,7 @@ import { ChartService } from 'src/app/services/chart/chart.service';
   templateUrl: './dashboard-chart.component.html',
   styleUrls: ['./dashboard-chart.component.css']
 })
-export class DashboardChartComponent implements OnInit,AfterViewInit {
+export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
 
   chartIdList:any = [];
   dashboardChartIdList:any = [];
@@ -39,16 +39,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
     private chartService:ChartService
   ) {
     this.accessToken = this.storageService.GetIdToken();      
-    this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
-    this.total = data.data_size; 
-      const chartData = data.data;
-      if(chartData && chartData.length > 0){
-        this.chartIdList = chartData;
-        setTimeout(() => {
-          this.populateDashboardChart();
-        }, 100);
-      }
-    })
+    
       //  this.getPage(1); 
    }
 
@@ -69,16 +60,36 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
      //this.populateDashboardChart();
      
   }
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    if(this.gridDataSubscription){
+      this.gridDataSubscription.unsubscribe();
+    }
+  }
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     if(this.showDashboardMongoChart){
+      this.subscribe();
       this.getPage(1);
       setTimeout(() => {
         this.populateDashboardChart();
       }, 100);
     }
     
+  }
+  subscribe(){
+    this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
+      this.total = data.data_size; 
+      const chartData = data.data;
+      if(chartData && chartData.length > 0){
+        this.chartIdList = chartData;
+        setTimeout(() => {
+          this.populateDashboardChart();
+        }, 100);
+      }
+    })
   }
   populateDashboardChart(){
     if(this.accessToken != "" && this.accessToken != null){      
@@ -141,24 +152,6 @@ getChartListFromDashboardId(){
     dashboardId: data.id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
   }).getAllCharts();
    console.log(cretedChart);
-
-  // if(cretedChart &&  cretedChart.length > 0){
-  //   cretedChart.forEach(charts => {
-  //     this.dashboardChartIdList.push(charts);
-  //   }); 
-  //   console.log(this.dashboardChartIdList);
-  // }
-
-
-  // const createdCharts = await cretedChart;
-  // createdCharts.forEach((chart: any) => {
-  //   this.dashboardChartIdList.push(chart);
-  // });
-  // console.log(this.dashboardChartIdList);
- 
-  // if(cretedChart && cretedChart.length > 0){ 
-
-  // }
 }
 
   filterModel(data:any,filter:any){
