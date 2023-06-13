@@ -449,6 +449,24 @@ constructor(
         }
     )
   }
+  PrintTemplate(payload){
+    let api = this.envService.getApi('GET_FILE');
+    this.http.post<HttpResponse<any>>(api + '/' + payload._id, payload.data, { responseType: 'arraybuffer' as 'json', observe: 'response' as 'body' }).subscribe(
+      (respData) => {
+          var contentDisposition = respData.headers.get('Content-Disposition');
+          var filename = "";
+          let matches = /filename="(.*?)"/g.exec(contentDisposition);
+          if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+              filename = filename.substring(filename.indexOf("=") + 1, filename.length)
+          }
+          this.dataShareService.setPrintTemplate({ data: respData.body, filename: filename });
+        },
+      (error) => {
+          console.log(error);
+        }
+    )
+  }
   ResetFileData(){
     this.dataShareService.setFileData('');
   }
@@ -622,6 +640,19 @@ constructor(
   }
   resetUserNotification(){
     this.dataShareService.shareUserNotification([])
+  }
+
+  getDownloadManual(payload){
+    let api = this.envService.getApi('DOWNLOAD_MANUAL');
+    this.http.post(api,payload).subscribe(
+      (respData:any) => {
+        const url= respData.fileUrl;
+        this.dataShareService.sharePublicUrlFromS3(url);
+        },
+      (error) => {
+          console.log(error);
+        }
+    ) 
   }
 
 }
