@@ -1,11 +1,11 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Angular CI with Node - Prod
+name: Angular CI with Node - awsuatclient
 
 on:
   push:
-    branches: [ hardgoodprod ]
+    branches: [ awsprodclientpms ]
 
 jobs:
   build:
@@ -19,34 +19,34 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.REGION }}
+        aws-access-key-id: ${{ secrets.ELABS_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ELABS_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.ELABS_REGION }}
         
     - name: Set up Node
       uses: actions/setup-node@v2
       with:
-        node-version: '${{ secrets.NODE_VERSION }}'
+        node-version: '14'
     
     - name: Installing source NPM dependencies...
       run: npm install
       
     - name: Installing Angular
-      run: npm install -g @angular/cli
-    
+      run: npm install -g @angular/cli@13.0.0
     
     - name: Set Node Options
       run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
     
     - name: Building
-      run: ng build --configuration=${{ secrets.ENVIRONMENT_PRODUCTION }}
+      run: ng build --configuration=develop
+     
 
-  # Deploy HardGoodLabs Sit
-    - name: Clean up existing deployment - HardGoodLabs hardgoodslabs.e-labs.ai
-      run: aws s3 rm s3://yourhg.e-labs.ai --recursive
+  # Deploy Qualitek Labs
+    - name: Clean up existing deployment
+      run: aws s3 rm s3://prodclientspms.e-labs.ai --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://yourhg.e-labs.ai
-
-    - name: Clean up cache
-      run: aws cloudfront create-invalidation --distribution-id E2JPRR8Q5U69KC --paths '/*'
+      run: aws s3 sync dist s3://prodclientspms.e-labs.ai
+      
+    - name: Clean up cache Client
+      run: aws cloudfront create-invalidation --distribution-id E3ER8DXGFMHTZS --paths '/*'
