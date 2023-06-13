@@ -14,6 +14,7 @@ import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 
+
 const components = [
   FormComponent,
   ChartComponent,

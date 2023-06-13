@@ -1,8 +1,38 @@
 
-
-<div>
-  <div id="b2f745ea-8d03-4337-996e-e53e986058d0"></div>
+<div class="px-3 chartfilter">
+<div class="row">
+  <div class="col-sm-4 d-flex">
+    <mat-form-field appearance="legacy" class="w-100 mr-2 mb-0">
+      <mat-label class="filterlabel d-flex align-items-center justify-content-between"><span>Dashboard List</span></mat-label>
+      <mat-select>
+        <div class="p-1"><input class="form-control-sm w-100 border"></div>
+        <mat-option><small></small></mat-option></mat-select>
+    </mat-form-field>
+  </div>
 </div>
+</div>
+  <div id="b2f745ea-8d03-4337-996e-e53e986058d0"></div>
+  <!-- <div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
+    <div class="col-lg-4 p-2" *ngFor="let chart of chartIdList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
+      <div class="card monogdbChart">
+        <div class="card-header py-1 pr-2">
+          <div class="d-flex align-items-center justify-content-between" *ngIf="chart.name">
+            <h4 class="m-0 charttitle">{{chart.name}}</h4>
+            <mat-slide-toggle [(ngModel)]="darkTheme[i]" (change)="changeTheme(chart,darkTheme[i])"></mat-slide-toggle>
+            <button mat-icon-button class="chartboardbtn" (click)="download(chart)"><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
+            <button mat-icon-button class="chartboardbtn" (click)="filterModel(chart,false)"><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
+            <button mat-icon-button class="chartboardbtn" *ngIf="chart && chart.fields && chart.fields.length > 0" (click)="filterModel(chart,true)"><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button>
+          </div>
+        </div>
+        <div class="chartbody p-1">
+          <div [id]="chart.chartId"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="chartIdList.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div> -->
+  
+
 
 
 

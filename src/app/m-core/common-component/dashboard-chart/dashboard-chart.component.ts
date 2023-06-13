@@ -16,9 +16,10 @@ import { ChartService } from 'src/app/services/chart/chart.service';
 export class DashboardChartComponent implements OnInit,AfterViewInit {
 
   chartIdList:any = [];
+  dashboardChartIdList:any = [];
   createdChartList:any=[];
   accessToken:string="";
-  @Input() showMongoChart:boolean;
+  @Input() showDashboardMongoChart:boolean;
   pageNumber:any=1;
   itemNumOfGrid: any = 6;
   gridDataSubscription:Subscription;
@@ -27,6 +28,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
   noOfItems:any = [
     6,9,12,15,18,21,24
   ]
+  charts: any;
 
   constructor(
     private dataShareService:DataShareService,
@@ -47,7 +49,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
         }, 100);
       }
     })
-       this.getPage(1); 
+      //  this.getPage(1); 
    }
 
   getMongoChartList(Criteria){
@@ -70,12 +72,13 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if(this.showMongoChart){
+    if(this.showDashboardMongoChart){
+      this.getPage(1);
       setTimeout(() => {
         this.populateDashboardChart();
       }, 100);
     }
-    this.getPage(1);
+    
   }
   populateDashboardChart(){
     if(this.accessToken != "" && this.accessToken != null){      
@@ -105,6 +108,9 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
               //this.createdChartList[id] = cretedChart;
               cretedChart
               .render(idRef)
+              .then(async ()=>
+              console.log(await cretedChart.getAllCharts())
+              )
               .catch(() =>
               console.log('Chart failed to initialise')
               // window.alert('Chart failed to initialise')
@@ -115,6 +121,45 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
       }
     }
   }
+
+
+getChartListFromDashboardId(){
+  const data = {
+    id: "b2f745ea-8d03-4337-996e-e53e986058d0",
+    url: "https://charts.mongodb.com/charts-nonproduction-cgurq",
+  };
+
+  const sdk = new ChartsEmbedSDK({
+    baseUrl: data.url, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+    getUserToken: () => this.accessToken
+  });
+
+  const id = data.id;
+  const idRef = document.getElementById(id);
+
+  const cretedChart = sdk.createDashboard({
+    dashboardId: data.id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
+  }).getAllCharts();
+   console.log(cretedChart);
+
+  // if(cretedChart &&  cretedChart.length > 0){
+  //   cretedChart.forEach(charts => {
+  //     this.dashboardChartIdList.push(charts);
+  //   }); 
+  //   console.log(this.dashboardChartIdList);
+  // }
+
+
+  // const createdCharts = await cretedChart;
+  // createdCharts.forEach((chart: any) => {
+  //   this.dashboardChartIdList.push(chart);
+  // });
+  // console.log(this.dashboardChartIdList);
+ 
+  // if(cretedChart && cretedChart.length > 0){ 
+
+  // }
+}
 
   filterModel(data:any,filter:any){
     let object = {
@@ -146,8 +191,8 @@ export class DashboardChartComponent implements OnInit,AfterViewInit {
 
   getPage(page: number,criteria?:any) {
     let Criteria:any = [];
-    let cr= "status;eq;Active;STATIC";
-    Criteria.push(cr);
+    let cr=["status;eq;Active;STATIC","package_name;eq;mongodb_dashboard;STATIC"];
+    Criteria= cr;
     if(criteria && criteria.length > 0){
       criteria.forEach(data => {
         Criteria.push(data);

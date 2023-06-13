@@ -1,5 +1,5 @@
 <div class="tablist container-fluid position-relative">
-  <mat-tab-group  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
+  <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
     <mat-tab>
       <ng-template mat-tab-label>
         <div class="mat-tab-label-content px-3 py-2" >Chart</div>
@@ -16,7 +16,7 @@
       <ng-template mat-tab-label>
         <div class="mat-tab-label-content px-3 py-2" >Dashboards</div>
       </ng-template>
-       <app-dashboard-chart [isShow]="isShow"></app-dashboard-chart>   
+       <app-dashboard-chart [showDashboardMongoChart]="dashboardMongodbChartShow"></app-dashboard-chart>   
     </mat-tab>   
   </mat-tab-group>  
   <!-- <div class="row">
