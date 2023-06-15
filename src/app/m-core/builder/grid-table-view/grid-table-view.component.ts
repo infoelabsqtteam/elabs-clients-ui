@@ -325,10 +325,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     })
     this.printFileSubscription = this.dataShareService.printData.subscribe(data =>{
       let template = data.data;
-      const blob = new Blob([template], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      let htmlContent = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      this.commonFunctionService.print(htmlContent);
+      const blob = new Blob([template], { type: 'application/pdf' });
+      const blobUrl = window.URL.createObjectURL(blob);
+      const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = blobUrl;
+        document.body.appendChild(iframe);
+        iframe.contentWindow.print();
+        this.modalService.close('download-progress-modal');
     })
     this.dataShareService.pdfFileName.subscribe(fileName =>{
       if(fileName != ''){
@@ -1303,6 +1307,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               _id :gridData._id
             }
             this.apiService.PrintTemplate(payload);
+            this.modalService.open('download-progress-modal', {});
           }else{
             this.notificationService.notify('bg-danger','Template Type is null!!!');
           }
