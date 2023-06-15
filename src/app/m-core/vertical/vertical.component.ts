@@ -1,10 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationEnd } from '@angular/router';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import { Subscription } from 'rxjs';
-import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
+import { DataShareService, StorageService, MenuOrModuleCommonService } from '@core/service-lib';
+
 
 @Component({
   selector: 'app-vertical',
@@ -16,7 +15,7 @@ export class VerticalComponent implements OnInit {
   dashbordPage:boolean=false;
   navigationSubscription;
   applicationSettingSubscription:Subscription;
-  logoPath = ''
+  logoPath;any = ''
 
 
   mobileQuery: MediaQueryList;
@@ -34,6 +33,7 @@ export class VerticalComponent implements OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
     
+
     this.pageload();
     this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
       if(setting == 'setting'){

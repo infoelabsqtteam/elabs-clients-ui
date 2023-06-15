@@ -1,13 +1,9 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { ApiService } from 'src/app/services/api/api.service';
 import { Router } from '@angular/router';
-import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
+import { CommonFunctionService, DataShareService, StorageService, ApiService, MenuOrModuleCommonService } from '@core/service-lib';
 
 @Component({
   selector: 'app-notification-list',

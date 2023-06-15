@@ -2,22 +2,14 @@ import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject } from '@angular/core';
 import { DatePipe, Location,DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
-import { StorageService} from '../../../services/storage/storage.service';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { PermissionService } from '../../../services/permission/permission.service';
-import { ApiService } from '../../../services/api/api.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
 import { KeyCode} from '../../../shared/enums/keycodes.enum';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ModelService } from 'src/app/services/model/model.service';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
-import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
-import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService } from '@core/service-lib';
 import { DomSanitizer } from '@angular/platform-browser';
 
 export const MY_DATE_FORMATS = {

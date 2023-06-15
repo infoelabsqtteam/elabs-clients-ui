@@ -1,15 +1,8 @@
 import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { StorageService } from '../../../services/storage/storage.service';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { ContextMenuComponent } from 'ngx-contextmenu';
-import { DocApiService } from '../../../services/api/doc-api/doc-api.service';
-import { DocDataShareService } from '../../../services/data-share/doc-data-share/doc-data-share.service';
-import { ModelService } from '../../../services/model/model.service';
-import { EnvService } from '../../../services/env/env.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
+import {CommonFunctionService, ApiService, NotificationService, EnvService, ModelService, DocDataShareService, DocApiService, StorageService} from '@core/service-lib';
 import * as S3 from 'aws-sdk/clients/s3';
 import { config } from '../config.modal';
 

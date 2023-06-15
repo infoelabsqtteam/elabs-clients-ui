@@ -1,14 +1,8 @@
 import { Component, OnInit, Input, OnDestroy, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
-import { StorageService } from '../../services/storage/storage.service';
-import { PermissionService } from '../../services/permission/permission.service';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { solution } from './menu';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
-import { ModelService } from "src/app/services/model/model.service";
-import { EnvService } from "src/app/services/env/env.service";
+import { StorageService, PermissionService, CommonFunctionService, DataShareService, AuthService, ModelService, EnvService } from '@core/service-lib';
 
 @Component({
   selector: 'app-header-landing-page',

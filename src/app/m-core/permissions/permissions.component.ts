@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { CommonApiService } from 'src/app/services/api/common-api/common-api.service';
+import { DataShareService, CommonApiService } from '@core/service-lib';
 
 @Component({
   selector: 'app-permissions',

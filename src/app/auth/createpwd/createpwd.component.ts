@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StorageService } from '../../services/storage/storage.service';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { EnvService } from 'src/app/services/env/env.service';
 import { Location } from '@angular/common';
+import { StorageService, AuthService, NotificationService, EnvService} from '@core/service-lib';
+
+
 @Component({
   selector: 'app-createpwd',
   templateUrl: './createpwd.component.html',

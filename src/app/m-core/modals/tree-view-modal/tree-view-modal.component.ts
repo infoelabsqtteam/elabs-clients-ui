@@ -2,8 +2,8 @@ import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, El
 import { ModalDirective } from 'angular-bootstrap-md';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { DataShareService, ModelService } from '@core/service-lib';
+
 
 interface FoodNode {
   code:string;

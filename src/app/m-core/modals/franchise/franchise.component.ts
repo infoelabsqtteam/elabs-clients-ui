@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { StorageService} from '../../../services/storage/storage.service';
-import { ApiService } from '../../../services/api/api.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, StorageService, ApiService, ModelService } from '@core/service-lib';
+
 
 @Component({
   selector: 'app-franchise',

@@ -3,10 +3,7 @@ import { Observable, } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, switchMap, take, finalize } from 'rxjs/operators';
-import { StorageService } from './../services/storage/storage.service';
-import { LoaderService } from '../services/loader/loader.service';
-import { EnvService } from '../services/env/env.service';
-import { AuthService } from '../services/api/auth/auth.service';
+import { StorageService, LoaderService, EnvService, AuthService } from '@core/service-lib';
 import { StorageTokenStatus } from './enums/storage-token-status.enum';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

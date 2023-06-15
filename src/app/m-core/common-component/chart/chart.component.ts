@@ -1,11 +1,8 @@
 import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone, HostListener } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { ModelService } from "src/app/services/model/model.service";
+import { ModelService, DataShareService, CommonFunctionService, ApiService} from '@core/service-lib';
 import * as _moment from 'moment';
 
 export const MY_DATE_FORMATS = {

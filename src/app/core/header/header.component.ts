@@ -1,15 +1,11 @@
 import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
-import { StorageService } from '../../services/storage/storage.service';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { ModelService } from "src/app/services/model/model.service";
-import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
-import { EnvService } from "src/app/services/env/env.service";
-import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 import { Subscription } from "rxjs";
-import { MenuOrModuleCommonService } from "src/app/services/menu-or-module-common/menu-or-module-common.service";
 import { FormControl } from "@angular/forms";
+
+import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService} from '@core/service-lib';
+
 
 
 @Component({

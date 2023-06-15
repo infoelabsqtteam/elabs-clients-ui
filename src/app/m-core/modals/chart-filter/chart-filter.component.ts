@@ -2,16 +2,12 @@ import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, 
 import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as XLSX from 'xlsx';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
-import { ChartService } from 'src/app/services/chart/chart.service';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService, ChartService } from '@core/service-lib';
+
 
 export const MY_DATE_FORMATS = {
   parse: {

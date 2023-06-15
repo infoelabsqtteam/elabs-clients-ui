@@ -2,9 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { EnvService } from 'src/app/services/env/env.service';
+import { AuthService, ModelService, EnvService} from '@core/service-lib';
 
 
 @Component({

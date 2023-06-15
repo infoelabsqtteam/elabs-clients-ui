@@ -1,11 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { StorageService } from '../../services/storage/storage.service';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
-
-
+import { StorageService, CommonFunctionService, DataShareService, AuthService, MenuOrModuleCommonService} from '@core/service-lib';
 
 @Component({
   selector: 'app-home',

@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { PermissionService } from 'src/app/services/permission/permission.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { StorageService} from '../../../services/storage/storage.service';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { ModelService } from "src/app/services/model/model.service";
+import { ApiService, CommonFunctionService, DataShareService, PermissionService, NotificationService, StorageService, ModelService } from '@core/service-lib';
 
 
 export const MY_DATE_FORMATS = {

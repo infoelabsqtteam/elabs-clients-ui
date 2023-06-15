@@ -1,10 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ApiService } from 'src/app/services/api/api.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
+import { CommonFunctionService, DataShareService, ApiService, ModelService, NotificationService } from '@core/service-lib';
+
 
 @Component({
   selector: 'html-view-modal',

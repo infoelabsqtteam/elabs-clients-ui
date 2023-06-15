@@ -2,7 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 
 import {FormGroup, FormControl} from '@angular/forms';
-import { ModelService } from 'src/app/services/model/model.service';
+import { ModelService } from '@core/service-lib';
+
 
 
 @Component({

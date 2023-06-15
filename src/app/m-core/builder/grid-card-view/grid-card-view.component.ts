@@ -1,12 +1,6 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input } from '@angular/core';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { StorageService} from '../../../services/storage/storage.service';
-import { PermissionService } from '../../../services/permission/permission.service';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { ApiService } from '../../../services/api/api.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/service-lib';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 export const MY_DATE_FORMATS = {

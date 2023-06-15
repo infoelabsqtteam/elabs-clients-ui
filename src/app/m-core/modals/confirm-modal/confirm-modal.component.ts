@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService } from 'src/app/services/model/model.service';
+import { ModelService } from '@core/service-lib';
+
 
 @Component({
   selector: 'app-confirm-modal',

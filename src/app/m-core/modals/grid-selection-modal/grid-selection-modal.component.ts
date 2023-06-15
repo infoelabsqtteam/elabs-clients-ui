@@ -1,17 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { ApiService } from '../../../services/api/api.service';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
+import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService } from '@core/service-lib';
+
 
 
 @Component({

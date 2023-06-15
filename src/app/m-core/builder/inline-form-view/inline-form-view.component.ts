@@ -1,13 +1,8 @@
 import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges } from '@angular/core';
-import { StorageService} from '../../../services/storage/storage.service';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { PermissionService } from '../../../services/permission/permission.service';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { ApiService } from '../../../services/api/api.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, ModelService} from '@core/service-lib';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 export const MY_DATE_FORMATS = {

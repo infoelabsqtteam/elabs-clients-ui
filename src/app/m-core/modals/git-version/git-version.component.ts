@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService } from 'src/app/services/model/model.service';
-import { ApiService } from '../../../services/api/api.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
+import { CommonFunctionService, ModelService, ApiService, DataShareService } from '@core/service-lib';
+
 
 @Component({
   selector: 'app-git-version',

@@ -1,9 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { StorageService} from '../../../services/storage/storage.service';
-import { PermissionService } from '../../../services/permission/permission.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, StorageService, PermissionService, DataShareService, ModelService} from '@core/service-lib';
 
 @Component({
   selector: 'app-chart-view',

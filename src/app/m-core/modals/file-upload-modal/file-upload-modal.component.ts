@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { StorageService } from '../../../services/storage/storage.service';
+import { CommonFunctionService, ModelService, NotificationService, StorageService} from '@core/service-lib';
+
 
 @Component({
   selector: 'app-file-upload-modal',

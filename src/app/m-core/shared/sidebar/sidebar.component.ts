@@ -1,15 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEmitter , Input } from '@angular/core';
-
 import { Router, NavigationEnd } from '@angular/router';
-import { StorageService } from '../../../services/storage/storage.service';
-import { PermissionService } from '../../../services/permission/permission.service';
 import { MENU } from './menu';
-import { ApiService } from '../../../services/api/api.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
 import { Subscription } from 'rxjs';
-import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
+import { StorageService, PermissionService, ApiService, NotificationService, CommonFunctionService, DataShareService, MenuOrModuleCommonService } from '@core/service-lib';
 
 @Component({
   selector: 'app-sidebar',

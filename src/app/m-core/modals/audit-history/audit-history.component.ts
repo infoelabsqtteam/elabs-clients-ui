@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormGroupDirective, FormControlDirective, FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { DataShareService, ModelService } from '@core/service-lib';
+
 
 @Component({
   selector: 'app-audit-history',

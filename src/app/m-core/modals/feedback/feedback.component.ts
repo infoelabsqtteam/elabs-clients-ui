@@ -1,11 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService } from '@core/service-lib';
+
 
 
 @Component({
