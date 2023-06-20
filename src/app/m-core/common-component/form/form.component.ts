@@ -18,9 +18,11 @@ import { EnvService } from 'src/app/services/env/env.service';
 import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { CustomvalidationService } from 'src/app/services/customvalidation/customvalidation.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
+import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+// import { HttpClient } from '@angular/common/http';
 
 declare var tinymce: any;
 
@@ -166,6 +168,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
   @ViewChild('stepper') stepper;
   @ViewChild('search') public searchElementRef: ElementRef;
+  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  @ViewChild(GoogleMap) public map!: GoogleMap;
   @ViewChild('templateFormRef') templateFormRef: ElementRef;
   @Input() isBulkUpdate:boolean;
   @Input() bulkDataList:any;
@@ -250,7 +254,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
   latitude: number = 0;
   longitude: number = 0;
-  zoom: number = 0;
+  zoom: number = 10;
+  center: google.maps.LatLngLiteral = {lat: 0, lng: 0};
+
   address: string;
   private geoCoder;
   checkFormFieldAutfocus:boolean=false;
@@ -293,7 +299,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   pageSize:any=100;
   showGridData:any={};
   serverReq:boolean = false;
-  actionButtonNameList:any=["save","update","updateandnext","send_email"]; 
+  actionButtonNameList:any=["save","update","updateandnext","send_email"];
+  getLocation:boolean = false;
+  mapsAPILoaded: Observable<boolean>;
 
   // @HostListener('document:click') clickout() {
   //   this.term = {};
@@ -316,7 +324,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private coreFunctionService:CoreFunctionService,
     private customValidationService:CustomvalidationService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
-    private gridCommonFunctionService:GridCommonFunctionService
+    private gridCommonFunctionService:GridCommonFunctionService,
+    private ngZone: NgZone,
 ) {
 
     this.tinymceConfig = {
@@ -599,8 +608,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.changeForm();    
   }
   ngAfterViewInit() {
-    
-    
+    // this.mapsApiLoaded();
+    this.gmapSearchPlaces();    
   }
   changeForm(){
     this.resetFlagForOnchage();
@@ -665,36 +674,99 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
-    if(Common.GOOGLE_MAP_IN_FORM == "true"){
-      // this.mapsAPILoader.load().then(() => {      
-      //   this.geoCoder = new google.maps.Geocoder;
-      //   if(this.longitude == 0 && this.latitude == 0){
-      //     this.setCurrentLocation();
-      //   }    
-      //   if(this.searchElementRef != undefined){
-      //     let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-      //     autocomplete.addListener("place_changed", () => {
-      //       this.ngZone.run(() => {
-      //         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-      
-      //         if (place.geometry === undefined || place.geometry === null) {
-      //           return;
-      //         }
-      //         this.searchElementRef.nativeElement.value = place.name;
-      //         if(this.templateForm.get('address')){
-      //           this.templateForm.get('address').setValue(place.formatted_address);
-      //         }
-      //         this.latitude = place.geometry.location.lat();
-      //         this.longitude = place.geometry.location.lng();
-      //         this.zoom = 12;
-      //         this.getAddress(this.latitude, this.longitude);
-      //       });
-      //     });
-      //   }
-      // });
+
+    this.getGooglepMapCurrentPosition();
+
+  }
+  async getGooglepMapCurrentPosition(){
+    if(navigator?.geolocation){
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        this.zoom = 10;
+      });
     }
+  }
+  // async mapsApiLoaded(){
+  //   // let apiKey:any = this.storageService.getApplicationValueByKey('google_map_apikey');
+  //   let apiKey:any = Common.GOOGLE_API_KEY;
+  //   this.mapsAPILoaded = this.httpClient.jsonp('https://maps.googleapis.com/maps/api/js?key='+ apiKey +'&libraries=places', 'callback')
+  //       .pipe(
+  //         map(() => true),
+  //         catchError(() => of(false)),
+  //       );
+  // }
+  async gmapSearchPlaces(inputData?:any,field?:any){
+    if(inputData?.target?.value){
+      if(this.searchElementRef != undefined){
+        this.searchElementRef.nativeElement.value  = inputData?.target?.value;
+      }
+    }
+    let loadGoogleMap:boolean = false;
+    if(typeof Common.GOOGLE_MAP_IN_FORM == "string"){
+      if(Common.GOOGLE_MAP_IN_FORM == "true"){
+        loadGoogleMap = true;
+      }
+    }else{
+      if(Common.GOOGLE_MAP_IN_FORM){
+        loadGoogleMap = true;
+      }
+    }
+    if(loadGoogleMap){
+      // if(this.mapsAPILoaded){
+        this.geoCoder = new google.maps.Geocoder;
+        if(this.longitude == 0 && this.latitude == 0){
+          await this.setCurrentLocation();
+        }
+        this.center = {
+          "lat": this.latitude,
+          "lng": this.longitude
+        }
 
-
+        if(this.searchElementRef != undefined){
+          let autocomplete = new google.maps.places.Autocomplete(
+            this.searchElementRef.nativeElement
+          );
+          autocomplete.addListener('place_changed', () => {
+            this.ngZone.run(() => {
+              let place: google.maps.places.PlaceResult = autocomplete?.getPlace();
+              if (place.geometry === undefined || place.geometry === null) {
+                return;
+              }
+              this.searchElementRef.nativeElement.value = place.name;
+              this.address = place.formatted_address;
+              this.latitude = place.geometry.location.lat();
+              this.longitude = place.geometry.location.lng();
+              this.center = {
+                "lat": this.latitude,
+                "lng": this.longitude
+              }
+              this.zoom = 17;
+              this.setAddressOnForm(field);
+              // this.getAddress(this.latitude, this.longitude);
+            });
+          });
+        }
+      // }
+    }
+  }
+  async mapClick(event: google.maps.MapMouseEvent,field?:any) {
+    this.zoom = 17;
+    this.center = (event.latLng.toJSON());
+    await this.getAddress(this.center.lat, this.center.lng);
+    this.setAddressOnForm(field);
+  }
+  openInfoWindow(marker: MapMarker) {
+    this.infoWindow.open(marker);
+  }
+  setAddressOnForm(field:any){
+    if(this.templateForm?.get(field?.field_name)){
+      this.templateForm.get(field?.field_name).setValue(this.address);
+    }else if(this.templateForm?.get('address')){
+      this.templateForm.get('address').setValue(this.address);
+    }
   }
   setGridData(gridData){
     if (gridData) {
@@ -766,7 +838,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.bulkupdates = false;
       }
       this.formDetails.emit(this.form);
-    }   
+    }
+    if(this.form && this.form.getLocation){
+      this.getLocation = this.form.getLocation;
+    }else{
+      this.getLocation = false;
+    }
     if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
       this.getTableField = false;
@@ -2147,8 +2224,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         //----------------------this is for confirm modal to add or remove (form component confirm modal) when grid selection field is open.
         this.dataShareService.setIsGridSelectionOpenOrNot(false);
         // -------------------------------
-        this.curTreeViewField = field;
-        this.currentTreeViewFieldParent = parentfield;
+        this.curTreeViewField = JSON.parse(JSON.stringify(field));
+        this.currentTreeViewFieldParent = JSON.parse(JSON.stringify(parentfield));
         if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
         let selectedData = this.getGridSelectedData(this.custmizedFormValue[field.field_name],field);
         const gridModalData = {
@@ -2806,6 +2883,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             });
             break;
           case 'gmap':
+          case "gmapview":
             selectedRow['latitude'] = this.latitude;
             selectedRow['longitude'] = this.longitude;
             selectedRow['address'] = this.address;
@@ -2857,6 +2935,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             });
             break;
           case 'gmap':
+          case "gmapview":
             modifyFormValue['latitude'] = this.latitude;
             modifyFormValue['longitude'] = this.longitude;
             modifyFormValue['address'] = this.address;
@@ -3020,6 +3099,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         valueOfForm['key1'] = this.routers.snapshot.params["key2"];
         valueOfForm['key2'] = this.routers.snapshot.params["key3"];      
         
+      }
+    }
+    if(this.getLocation){
+      if(this.center !=null && this.center.lat !=null){
+        valueOfForm['locationDetail'] = {
+          'latitude' : this.center.lat,
+          'longitude' : this.center.lng
+        }
       }
     }   
     return valueOfForm;
@@ -3753,11 +3840,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.filePreviewFields = [];
     this.close();
   }  
-  close(){    
+  close(){
     this.staticData = {};
     this.typeAheadData = [];
     this.selectedRow = {};
     this.showGridData={};
+    this.latitude = 0;
+    this.longitude = 0;
+    this.address = "";
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
@@ -4640,7 +4730,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }
           }
         break;            
-        case "gmap":
+        case "gmap":        
+        case "gmapview":
           if(object != null && object != undefined){
             if(formValue['longitude']){
               this.longitude = formValue['longitude'];
@@ -4724,20 +4815,23 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }  
-  getAddress(latitude, longitude) {
-    this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
-      if (status === 'OK') {
-        if (results[0]) {
-          this.zoom = 12;
-          this.address = results[0].formatted_address;
+  async getAddress(latitude, longitude)  {
+    await new Promise((resolve, reject) => { 
+      this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            resolve (this.address = results[0].formatted_address);
+          } else {
+            console.log("Geocoder status error: ", status);
+            reject()
+            window.alert('No results found');
+          }
         } else {
-          window.alert('No results found');
-        }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      }  
-    });
-  }  
+          window.alert('Geocoder failed due to: ' + status);
+        }  
+      });
+    })
+  } 
   checkShowIfListOfFiedlds(parent,field){
     let formValue = this.getFormValue(true);
     let fieldValue = formValue[parent];    
@@ -5437,6 +5531,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   gridSelectionSearch(field){
     if(this.pageNo[field.field_name]  != 1) this.pageNo[field.field_name] = 1;
+  }
+
+  onMouseDown(event: MouseEvent): void {
+    event.preventDefault();
+    
+    const element = document.getElementById('form_resize');
+    if(!element) return;
+    const initialWidth = element.offsetWidth;
+    const initialHeight = element.offsetHeight;
+    const initialX = event.clientX;
+    const initialY = event.clientY;
+    
+    const mouseMoveHandler = (e: MouseEvent) => {
+      const width = initialWidth + (e.clientX - initialX);
+      const height = initialHeight + (e.clientY - initialY);
+      element.style.width = `${width}px`;
+      element.style.height = `${height}px`;
+    };
+    
+    const mouseUpHandler = () => {
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
   }
 
 }

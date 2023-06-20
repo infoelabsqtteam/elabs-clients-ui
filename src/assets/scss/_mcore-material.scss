@@ -117,5 +117,10 @@ body {font-family:$roboto;font-size:13px;}
     .custom-spinner{left:50%;top:50%}
 }
 
+#form_resize.resizable {position: relative;
+    .corner-handle {position: absolute;bottom: 0;right: 0;cursor: se-resize;background-color: #ccc;}
+    .corner-handle img {width:18px;}
+}
 
+  
 
