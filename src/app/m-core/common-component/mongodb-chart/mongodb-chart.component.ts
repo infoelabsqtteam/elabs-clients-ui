@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { ApiService } from '../../../services/api/api.service';
 import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { ModelService } from 'src/app/services/model/model.service';
-import { chatData } from '../../admin-dashboard/data';
 import { ChartService } from 'src/app/services/chart/chart.service';
 
 @Component({
@@ -21,9 +20,13 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   accessToken:string="";
   @Input() showMongoChart:boolean;
   pageNumber:any=1;
-  itemNumOfGrid: any = 25;
+  itemNumOfGrid: any = 6;
   gridDataSubscription:Subscription;
   darkTheme:any={};
+  total;
+  noOfItems:any = [
+    6,9,12,15,18,21,24
+  ]
 
   constructor(
     private dataShareService:DataShareService,
@@ -33,17 +36,18 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     private modelService:ModelService,
     private chartService:ChartService
   ) {
-      this.getMongoChartList([]);
-      this.accessToken = this.storageService.GetIdToken();      
-      this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
-        const chartData = data.data;
-        if(chartData && chartData.length > 0){
-          this.chartIdList = chartData;
-          setTimeout(() => {
-            this.populateMongodbChart();
-          }, 100);
-        }
-      })      
+    this.accessToken = this.storageService.GetIdToken();      
+    this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
+    this.total = data.data_size; 
+      const chartData = data.data;
+      if(chartData && chartData.length > 0){
+        this.chartIdList = chartData;
+        setTimeout(() => {
+          this.populateMongodbChart();
+        }, 100);
+      }
+    })
+       this.getPage(1); 
    }
 
   getMongoChartList(Criteria){
@@ -70,8 +74,8 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
       setTimeout(() => {
         this.populateMongodbChart();
       }, 100);
-      
     }
+    this.getPage(1);
   }
   populateMongodbChart(){
     if(this.accessToken != "" && this.accessToken != null){      
@@ -131,6 +135,24 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     }else{
       chart.setTheme("light");
     }
+  }
+
+  selectNoOfItem(){
+    this.getPage(1);
+  }
+
+
+  getPage(page: number,criteria?:any) {
+    let Criteria:any = [];
+    let cr= "status;eq;Active;STATIC";
+    Criteria.push(cr);
+    if(criteria && criteria.length > 0){
+      criteria.forEach(data => {
+        Criteria.push(data);
+      });     
+    }
+    this.pageNumber = page;
+    this.getMongoChartList(Criteria);
   }
 
 }

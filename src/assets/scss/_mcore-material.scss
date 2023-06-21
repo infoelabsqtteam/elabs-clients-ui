@@ -129,5 +129,7 @@ body {font-family:$roboto;font-size:13px;}
 .rightclickmenu {width:150px;
     span {font-size:13px;}
 }
-
-
+#form_resize.resizable {position: relative;
+    .corner-handle {position: absolute;bottom: 0;right: 0;cursor: se-resize;background-color: #ccc;}
+    .corner-handle img {width:18px;}
+}
