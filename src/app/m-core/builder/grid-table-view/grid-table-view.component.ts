@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
 import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
 import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -1436,5 +1437,19 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   get filterFormValue() {
     return this.filterForm.value;
   } 
+
+ // Grid Right Click Method
+  menuTopLeftPosition =  {x: '0', y: '0'} 
+  @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger; 
+  onRightClick(event: MouseEvent, index) { 
+      event.preventDefault(); 
+      this.menuTopLeftPosition.x = event.clientX + 'px'; 
+      this.menuTopLeftPosition.y = event.clientY + 'px';  
+      this.matMenuTrigger.menuData = {item: index}
+      this.matMenuTrigger.openMenu(); 
+  }
+
+
+
 
 }

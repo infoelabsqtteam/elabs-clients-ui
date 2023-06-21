@@ -117,5 +117,17 @@ body {font-family:$roboto;font-size:13px;}
     .custom-spinner{left:50%;top:50%}
 }
 
+.filterbtn {position:relative;
+    .filtericon {width:30px;height:36px;}
+    .mat-icon {font-size:18px;}
+    .example-list-section {position:absolute;right:0;top:100%;width:150px;background:#fff;z-index:9;box-shadow:0 0 5px #ccc;display:none;transition:all 1s;}
+    .mat-checkbox-layout {font-size:13px;}
+    &:hover, &:focus {
+        .example-list-section {display:block;transition:all 1s;} 
+    }
+}
+.rightclickmenu {width:150px;
+    span {font-size:13px;}
+}
 
 
