@@ -17,7 +17,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
 
   chartIdList:any = [];
   dashboardChartIdList:any = [];
-  createdChartList:any=[];
+  createdDashbordList:any=[];
   accessToken:string="";
   @Input() showDashboardMongoChart:boolean;
   pageNumber:any=1;
@@ -93,9 +93,9 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
   }
   populateDashboardChart(){
     if(this.accessToken != "" && this.accessToken != null){      
-      let height = '350px';
+      let height = '800px';
       if(this.chartIdList && this.chartIdList.length > 0){        
-        this.createdChartList = [];
+        this.createdDashbordList = [];
         for (let i = 0; i < this.chartIdList.length; i++) {
          // const url = this.chartIdList[i].chartUrl;
          let url = 'https://charts.mongodb.com/charts-nonproduction-cgurq';
@@ -114,14 +114,16 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
          //   if(idRef){
               let cretedChart = sdk.createDashboard({
                 dashboardId: id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-                height: height
+                height: height,
+                background:'black',
+                showAttribution:false,
+                showTitleAndDesc:true                
               });
-              //this.createdChartList[id] = cretedChart;
+              this.createdDashbordList[id] = cretedChart;
+              let test = cretedChart.getImage({encoding:'base64'});
+              console.log(test);
               cretedChart
               .render(idRef)
-              .then(async ()=>
-              console.log(await cretedChart.getAllCharts())
-              )
               .catch(() =>
               console.log('Chart failed to initialise')
               // window.alert('Chart failed to initialise')
@@ -162,14 +164,25 @@ getChartListFromDashboardId(){
     }
     this.modelService.open('chart-filter',object);
   }
-  download(object){
-    let chartId = object.chartId;
-    let chart = this.createdChartList[chartId];    
-    this.chartService.getDownloadData(chart,object);
+  download(){
+    let chartId = 'b2f745ea-8d03-4337-996e-e53e986058d0';
+    let chart = this.createdDashbordList[chartId];
+    // if(allCharts && allCharts.length > 0){
+    //   allCharts.forEach(chart => {
+    //     chart.getData().then(data => {
+    //       console.log(data);
+    //     })
+    //   });
+    //}
+    // chart.getImage({ encoding: 'base64'}).then((chartdata: string) => { 
+    //   console.log(chartdata);   
+      
+    // }); 
+    //this.chartService.getDownloadData(chart,object);
   }  
   changeTheme(object,value){
     let chartId = object.chartId;
-    let chart = this.createdChartList[chartId];
+    let chart = this.createdDashbordList[chartId];
     if(value){
       chart.setTheme("dark");
     }else{
