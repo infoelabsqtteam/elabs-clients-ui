@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataShareService, AuthService, ModelService} from '@core/service-lib';
+import { DataShareService, AuthService, ModelService} from '@core/web-core';
 
 
 @Component({

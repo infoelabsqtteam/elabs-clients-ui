@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
-import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService } from '@core/service-lib';
+import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService } from '@core/web-core';
 
 @Component({
   selector: 'app-root',

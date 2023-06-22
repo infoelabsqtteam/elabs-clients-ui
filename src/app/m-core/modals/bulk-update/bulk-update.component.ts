@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { ApiService, CommonFunctionService, DataShareService, ModelService, GridCommonFunctionService, NotificationService } from '@core/service-lib';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, GridCommonFunctionService, NotificationService } from '@core/web-core';
 
 
 

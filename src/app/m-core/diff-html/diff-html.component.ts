@@ -2,7 +2,7 @@ import { Component, OnInit,OnDestroy } from '@angular/core';
 import * as Diff2Html from 'diff2html';
 import * as Diff from 'diff';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective } from '@angular/forms';
-import { CommonFunctionService, ApiService, DataShareService} from '@core/service-lib';
+import { CommonFunctionService, ApiService, DataShareService} from '@core/web-core';
 
 @Component({
   selector: 'app-diff-html',

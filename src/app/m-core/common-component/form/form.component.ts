@@ -9,7 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
-import {GridCommonFunctionService, MenuOrModuleCommonService, CustomvalidationService, CoreFunctionService, EnvService, NotificationService, ModelService, DataShareService, ApiService, PermissionService, CommonFunctionService, StorageService  } from '@core/service-lib';
+import {GridCommonFunctionService, MenuOrModuleCommonService, CustomvalidationService, CoreFunctionService, EnvService, NotificationService, ModelService, DataShareService, ApiService, PermissionService, CommonFunctionService, StorageService, LimsCalculationsService  } from '@core/web-core';
 
 declare var tinymce: any;
 
@@ -257,23 +257,23 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
   public style:string  = 'width: 100px, height: 100px, backgroundColor: cornflowerblue';
 
-  staticDataSubscriber:Subscription;
-  gridDataSubscription:Subscription;
-  tempDataSubscription:Subscription;
-  saveResponceSubscription:Subscription;
-  deleteGridRowResponceSubscription:Subscription;
-  gridFilterDataSubscription:Subscription;
-  typeaheadDataSubscription:Subscription;
-  dinamicFormSubscription:Subscription;
-  nestedFormSubscription:Subscription;
-  navigationSubscription:Subscription;
-  fileDataSubscription:Subscription;
-  fileDownloadUrlSubscription:Subscription;
-  gridSelectionOpenOrNotSubscription:Subscription;
-  dinamicFieldApiSubscription:Subscription;
-  validationConditionSubscription:Subscription;
-  nextFormSubscription:Subscription;
-  requestResponceSubscription:Subscription;
+  staticDataSubscriber:any;
+  gridDataSubscription:any;
+  tempDataSubscription:any;
+  saveResponceSubscription:any;
+  deleteGridRowResponceSubscription:any;
+  gridFilterDataSubscription:any;
+  typeaheadDataSubscription:any;
+  dinamicFormSubscription:any;
+  nestedFormSubscription:any;
+  navigationSubscription:any;
+  fileDataSubscription:any;
+  fileDownloadUrlSubscription:any;
+  gridSelectionOpenOrNotSubscription:any;
+  dinamicFieldApiSubscription:any;
+  validationConditionSubscription:any;
+  nextFormSubscription:any;
+  requestResponceSubscription:any;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
@@ -306,6 +306,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private customValidationService:CustomvalidationService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionService:GridCommonFunctionService,
+    private limsCalculationsService:LimsCalculationsService
 ) {
 
     this.tinymceConfig = {
@@ -2161,7 +2162,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.onchange_function && field.onchange_function_param && field.onchange_function_param != "") {
       switch (field.onchange_function_param) {        
           case 'autopopulateFields':
-            this.commonFunctionService.autopopulateFields(this.templateForm);
+            this.limsCalculationsService.autopopulateFields(this.templateForm);
             break;
         default:
           this.inputOnChangeFunc('',field);
@@ -2287,35 +2288,35 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let list_of_populated_fields = [];
       switch (field.onchange_function_param) {        
         case 'calculate_quote_amount':          
-          calFormValue = this.commonFunctionService.calculate_quotation(tamplateFormValue,"standard", field);
+          calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
           break;
         case 'calculate_automotive_quotation':          
-          calFormValue = this.commonFunctionService.calculate_quotation(tamplateFormValue,"automotive" ,field);
+          calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
         case 'calculate_po_row_item':          
-          calFormValue = this.commonFunctionService.calculate_po_row_item(tamplateFormValue1,"automotive" ,field);
+          calFormValue = this.limsCalculationsService.calculate_po_row_item(tamplateFormValue1,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
         case 'calculate_manual_row_item':          
-          calFormValue = this.commonFunctionService.calculate_manual_row_item(tamplateFormValue1,"automotive" ,field);
+          calFormValue = this.limsCalculationsService.calculate_manual_row_item(tamplateFormValue1,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;
         case 'update_invoice_total_on_custom_field':          
-          calFormValue = this.commonFunctionService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
+          calFormValue = this.limsCalculationsService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;      
         case 'calculate_lims_invoice':          
-          calFormValue = this.commonFunctionService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
+          calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;      
         case 'calculate_lims_invoice_with_po_items':
-          let val = this.commonFunctionService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
+          let val = this.limsCalculationsService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
           this.updateDataOnFormField(val);
           break; 
         case 'calculate_lims_invoice_with_manual_items':
-          let val1 = this.commonFunctionService.calculate_lims_invoice_with_manual_items(tamplateFormValue,"",field);
+          let val1 = this.limsCalculationsService.calculate_lims_invoice_with_manual_items(tamplateFormValue,"",field);
           this.updateDataOnFormField(val1);
           break;         
         case 'getDateInStringFunction':
@@ -2323,15 +2324,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(calFormValue); 
           break;
         case 'getTaWithCalculation':
-          calFormValue = this.commonFunctionService.getTaWithCalculation(tamplateFormValue1);
+          calFormValue = this.limsCalculationsService.getTaWithCalculation(tamplateFormValue1);
           this.updateDataOnFormField(calFormValue); 
-          calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue());
+          calFormValue = this.limsCalculationsService.calculateTotalFair(this.templateForm.getRawValue());
           this.updateDataOnFormField(calFormValue); 
           break;
         case 'funModeTravelChange':
           calFormValue = this.commonFunctionService.funModeTravelChange(tamplateFormValue1);
           this.updateDataOnFormField(calFormValue);
-          calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue());
+          calFormValue = this.limsCalculationsService.calculateTotalFair(this.templateForm.getRawValue());
           this.updateDataOnFormField(calFormValue);
           break;
 
@@ -2344,7 +2345,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       //       this.updateDataOnFormField(calFormValue);
       //       break;
         case 'samplingAmountAddition':          
-            calFormValue = this.commonFunctionService.samplingAmountAddition(tamplateFormValue);
+            calFormValue = this.limsCalculationsService.samplingAmountAddition(tamplateFormValue);
             this.updateDataOnFormField(calFormValue);          
             break;       
         case 'populate_fields':
@@ -2375,7 +2376,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(calFormValue); 
           break;
         case 'calculation_travel_claim_sheet':
-          calFormValue = this.commonFunctionService.calculateTotalFair(this.templateForm.getRawValue());
+          calFormValue = this.limsCalculationsService.calculateTotalFair(this.templateForm.getRawValue());
           this.updateDataOnFormField(calFormValue); 
           break;     
         case 'populate_fields_for_direct_order':
@@ -2522,17 +2523,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           // this.commonFunctionService.supplied_as_customer(this.templateForm);
           break;
         case 'buggetForcastCalc':
-          this.commonFunctionService.buggetForcastCalc(this.templateForm);
+          this.limsCalculationsService.buggetForcastCalc(this.templateForm);
           break;
         case 'calculate_next_calibration_due_date':
-          this.commonFunctionService.calculate_next_calibration_due_date(this.templateForm);
+          this.limsCalculationsService.calculate_next_calibration_due_date(this.templateForm);
           break;
         case 'get_percent':
-          calFormValue = this.commonFunctionService.getPercent(this.templateForm.getRawValue(),parent, field);
+          calFormValue = this.limsCalculationsService.getPercent(this.templateForm.getRawValue(),parent, field);
           this.updateDataOnFormField(calFormValue);
           break;
         case 'CALCULATE_TOTAL_AMOUNT':
-            calFormValue = this.commonFunctionService.calculateTotalAmount(tamplateFormValue)
+            calFormValue = this.limsCalculationsService.calculateTotalAmount(tamplateFormValue)
             this.updateDataOnFormField(calFormValue);
             break;   
         case 'checkSampleQuantity':          
@@ -2577,7 +2578,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }          
           break;  
         case "calculate_balance_amount_engagement_letter":
-          calFormValue = this.commonFunctionService.calculateBalanceAmountEngLetter(tamplateFormValue,multiFormValue);
+          calFormValue = this.limsCalculationsService.calculateBalanceAmountEngLetter(tamplateFormValue,multiFormValue);
           this.updateDataOnFormField(calFormValue); 
         break;
 
@@ -2599,7 +2600,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       const payloads = []      
       if( params.indexOf("CLTFN") >= 0){
-        const calculatedCost =  this.commonFunctionService.calculateAdditionalCost(this.getFormValue(true));
+        const calculatedCost =  this.limsCalculationsService.calculateAdditionalCost(this.getFormValue(true));
         this.updateDataOnFormField(calculatedCost);
       }
       else{
@@ -2723,7 +2724,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const field = this.deletefieldName['child']
           if(field.onchange_api_params != null && field.onchange_api_params != ''){
             if( field.onchange_api_params.indexOf("CLTFN") >= 0){
-              const calculatedCost = this.commonFunctionService.calculateAdditionalCost(this.getFormValue(true));
+              const calculatedCost = this.limsCalculationsService.calculateAdditionalCost(this.getFormValue(true));
               this.updateDataOnFormField(calculatedCost);
             }
             if (field.onchange_call_back_field != '') {
@@ -3597,32 +3598,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case "calculateQquoteAmount":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
             element["qty"] = formValueWithCustomData["qty"];
-            this.commonFunctionService.calculateNetAmount(element, {field_name: "qty"},"legacyQuotationParameterCalculation");
+            this.limsCalculationsService.calculateNetAmount(element, {field_name: "qty"},"legacyQuotationParameterCalculation");
           });
           this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField)); 
           break;
         case "calculateAutomotiveLimsQuotation":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
             // element["qty"] = formValueWithCustomData["qty"];
-            this.commonFunctionService.calculateNetAmount(element, {field_name: "qty"},"calculateQuotationParameterAmountForAutomotiveLims");
+            this.limsCalculationsService.calculateNetAmount(element, {field_name: "qty"},"calculateQuotationParameterAmountForAutomotiveLims");
           });
           // this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField)); 
-          this.updateDataOnFormField(this.commonFunctionService.calculate_quotation(formValueWithCustomData,"automotive" ,{field_name:"parameter_array"}));
+          this.updateDataOnFormField(this.limsCalculationsService.calculate_quotation(formValueWithCustomData,"automotive" ,{field_name:"parameter_array"}));
           break;
         case "calculateLimsQuotation":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
             element["qty"] = formValueWithCustomData["qty"];
-            this.commonFunctionService.calculateNetAmount(element, {field_name: "qty"}, "calculateQuotationParameterAmountForLims");
+            this.limsCalculationsService.calculateNetAmount(element, {field_name: "qty"}, "calculateQuotationParameterAmountForLims");
           });
           // this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField)); 
-          this.updateDataOnFormField(this.commonFunctionService.calculate_quotation(formValueWithCustomData,"standard" ,{field_name:"parameter_array"}));
+          this.updateDataOnFormField(this.limsCalculationsService.calculate_quotation(formValueWithCustomData,"standard" ,{field_name:"parameter_array"}));
           break;    
         case 'quote_amount_via_sample_no':
-          let val = this.commonFunctionService.quote_amount_via_sample_no(formValueWithCustomData,this.custmizedFormValue['quotation_param_methods']);
+          let val = this.limsCalculationsService.quote_amount_via_sample_no(formValueWithCustomData,this.custmizedFormValue['quotation_param_methods']);
           this.updateDataOnFormField(val);
           break;
         case 'calculation_invoice_totalAmount':
-          let value = this.commonFunctionService.calculateInvoiceTotalAmount(formValueWithCustomData,this.custmizedFormValue['invoiceInfos']);
+          let value = this.limsCalculationsService.calculateInvoiceTotalAmount(formValueWithCustomData,this.custmizedFormValue['invoiceInfos']);
           this.updateDataOnFormField(value);
           break;
         case 'calculate_lims_invoice':
@@ -3630,7 +3631,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(this.curTreeViewField.calculate_on_field != null && this.curTreeViewField.calculate_on_field != ''){
             calculate_on_field = this.curTreeViewField.calculate_on_field
           }
-          let val1 = this.commonFunctionService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
+          let val1 = this.limsCalculationsService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
           this.updateDataOnFormField(val1);
           break;
         default:
@@ -4252,7 +4253,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(element.onchange_function && element.onchange_function_param != ''){
             switch (element.onchange_function_param) {
               case 'buggetForcastCalc':
-                this.commonFunctionService.buggetForcastCalc(this.templateForm);
+                this.limsCalculationsService.buggetForcastCalc(this.templateForm);
                 break;            
               default:
                 break;

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {DataShareService } from '@core/service-lib';
+import {DataShareService } from '@core/web-core';
 
 
 @Component({

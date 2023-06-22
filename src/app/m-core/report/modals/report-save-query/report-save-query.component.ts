@@ -2,7 +2,7 @@ import { Component, OnInit,OnDestroy, Input, Output,ViewChild,EventEmitter, Host
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Subscription } from 'rxjs';
-import { ModelService, ApiService, CommonFunctionService, DataShareService, NotificationService } from '@core/service-lib';
+import { ModelService, ApiService, CommonFunctionService, DataShareService, NotificationService } from '@core/web-core';
 
 @Component({
   selector: 'app-report-save-query',

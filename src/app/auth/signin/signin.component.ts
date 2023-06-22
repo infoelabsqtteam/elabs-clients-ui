@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgForm,FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService, EnvService, StorageService, DataShareService } from '@core/service-lib';
+import { AuthService, EnvService, StorageService, DataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-signin',

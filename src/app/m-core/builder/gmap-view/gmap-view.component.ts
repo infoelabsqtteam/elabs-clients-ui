@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
-import { CommonFunctionService, StorageService, ApiService, DataShareService} from '@core/service-lib';
+import { CommonFunctionService, StorageService, ApiService, DataShareService} from '@core/web-core';
 
 @Component({
   selector: 'app-gmap-view',

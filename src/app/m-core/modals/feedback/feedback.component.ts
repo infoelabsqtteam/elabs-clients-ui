@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService } from '@core/service-lib';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService } from '@core/web-core';
 
 
 

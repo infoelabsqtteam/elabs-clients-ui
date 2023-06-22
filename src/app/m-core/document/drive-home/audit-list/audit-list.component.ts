@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {StorageService, DocDataShareService } from '@core/service-lib';
+import {StorageService, DocDataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-audit-list',

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { ContextMenuComponent } from 'ngx-contextmenu';
-import {CommonFunctionService, ApiService, NotificationService, EnvService, ModelService, DocDataShareService, DocApiService, StorageService} from '@core/service-lib';
+import {CommonFunctionService, ApiService, NotificationService, EnvService, ModelService, DocDataShareService, DocApiService, StorageService} from '@core/web-core';
 import * as S3 from 'aws-sdk/clients/s3';
 import { config } from '../config.modal';
 

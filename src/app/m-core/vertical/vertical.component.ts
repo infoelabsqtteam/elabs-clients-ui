@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { DataShareService, StorageService, MenuOrModuleCommonService } from '@core/service-lib';
+import { DataShareService, StorageService, MenuOrModuleCommonService } from '@core/web-core';
 
 
 @Component({

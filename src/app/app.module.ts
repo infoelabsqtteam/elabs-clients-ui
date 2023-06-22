@@ -12,7 +12,7 @@ import { AppLandingModule } from './app-landing/app-landing.module';
 import { AppComponent } from './app.component';
 import { ModelModule } from './m-core/modals/model.module';
 import { AngularMaterialModule } from './m-core/angular-material-module/angular-material.module';
-import { MyLibModule } from '@core/service-lib';
+import { MyLibModule } from '@core/web-core';
 import { environment } from '../environments/environment'
 
 

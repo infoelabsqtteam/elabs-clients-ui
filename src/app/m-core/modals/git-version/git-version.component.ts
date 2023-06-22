@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, ModelService, ApiService, DataShareService } from '@core/service-lib';
+import { CommonFunctionService, ModelService, ApiService, DataShareService } from '@core/web-core';
 
 
 @Component({

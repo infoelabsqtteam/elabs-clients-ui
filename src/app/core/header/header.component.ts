@@ -4,7 +4,7 @@ import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.en
 import { Subscription } from "rxjs";
 import { FormControl } from "@angular/forms";
 
-import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService} from '@core/service-lib';
+import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService} from '@core/web-core';
 
 
 

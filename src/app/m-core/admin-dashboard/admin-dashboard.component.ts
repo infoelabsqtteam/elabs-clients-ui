@@ -2,7 +2,7 @@ import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@an
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-import { CommonFunctionService, DataShareService, StorageService} from '@core/service-lib';
+import { CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
 
 @Component({
   selector: 'app-admin-dashboard',

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Router } from '@angular/router';
-import { ModelService } from '@core/service-lib';
+import { ModelService } from '@core/web-core';
 
 
 @Component({

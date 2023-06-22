@@ -1,7 +1,7 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {MatAccordion} from '@angular/material/expansion';
-import { CommonFunctionService, ApiService, DataShareService, ModelService } from '@core/service-lib';
+import { CommonFunctionService, ApiService, DataShareService, ModelService } from '@core/web-core';
 
 
 @Component({

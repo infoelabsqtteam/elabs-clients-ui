@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEm
 import { Router, NavigationEnd } from '@angular/router';
 import { MENU } from './menu';
 import { Subscription } from 'rxjs';
-import { StorageService, PermissionService, ApiService, NotificationService, CommonFunctionService, DataShareService, MenuOrModuleCommonService } from '@core/service-lib';
+import { StorageService, PermissionService, ApiService, NotificationService, CommonFunctionService, DataShareService, MenuOrModuleCommonService } from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar',

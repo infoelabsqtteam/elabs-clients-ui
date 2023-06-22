@@ -17,7 +17,7 @@ import { PageNotFoundComponent } from '../core/error/page-not-found.component';
 import { ReportFormComponent } from './report/report-form/report-form.component';
 import { NotificationSettingComponent } from './shared/notification-setting/notification-setting.component';
 import { NotificationListComponent } from './shared/notification-list/notification-list.component';
-import { AuthGuard } from '@core/service-lib';
+import { AuthGuard } from '@core/web-core';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
