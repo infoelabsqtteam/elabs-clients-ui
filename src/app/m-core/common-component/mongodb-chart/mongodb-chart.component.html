@@ -12,9 +12,9 @@
   </div>
 </div>  
 
-<div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
-  <div class="col-lg-4 p-2" *ngFor="let chart of chartIdList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
-    <div class="card monogdbChart">
+<div class="d-flex flex-wrap m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
+  <ng-container *ngFor="let chart of chartIdList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
+    <div class="card monogdbChart monogdbChartResize m-2" id="chart_resize">
       <div class="card-header py-1 pr-2">
         <div class="d-flex align-items-center justify-content-between" *ngIf="chart.name">
           <h4 class="m-0 charttitle">{{chart.name}}</h4>
@@ -28,7 +28,7 @@
         <div [id]="chart.chartId"></div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
 <div *ngIf="chartIdList.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
 
