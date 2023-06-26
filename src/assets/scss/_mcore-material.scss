@@ -133,3 +133,12 @@ body {font-family:$roboto;font-size:13px;}
     .corner-handle {position: absolute;bottom: 0;right: 0;cursor: se-resize;background-color: #ccc;}
     .corner-handle img {width:18px;}
 }
+
+#chart_resize.monogdbChartResize{
+    min-width:31%;
+    min-height: 20rem;
+    resize: both;
+    overflow: auto;
+}
+  
+
