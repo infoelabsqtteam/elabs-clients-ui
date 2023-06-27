@@ -1,5 +1,5 @@
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit,Input,OnChanges, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject } from '@angular/core';
+import { Component, OnInit,Input,OnChanges, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject, ViewChild } from '@angular/core';
 import { DatePipe, Location,DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
 import { KeyCode} from '../../../shared/enums/keycodes.enum';
@@ -7,7 +7,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService } from '@core/service-lib';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService } from '@core/web-core';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { V } from '@angular/cdk/keycodes';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -37,7 +37,7 @@ export const MY_DATE_FORMATS = {
 })
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
-  
+  @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
 
   filterForm: FormGroup;
   tabs: any = [];
@@ -1462,7 +1462,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
  // Grid Right Click Method
   menuTopLeftPosition =  {x: '0', y: '0'} 
-  @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger; 
   onRightClick(event: MouseEvent, index) { 
       event.preventDefault(); 
       this.menuTopLeftPosition.x = event.clientX + 'px'; 

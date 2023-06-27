@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 import { DocApiService, DocDataShareService, NotificationService, StorageService, ModelService} from '@core/web-core';
 import * as S3 from 'aws-sdk/clients/s3';
-import { Bucket } from 'aws-sdk/clients/s3';
 import { config } from '../../config.modal';
 
 
