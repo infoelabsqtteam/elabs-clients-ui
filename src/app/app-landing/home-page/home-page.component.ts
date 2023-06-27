@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild, ElementRef,Renderer2 } from '@angu
 import { Router } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { solution } from '../../core/header-landing-page/menu';
-import { ModelService, DataShareService, StorageService} from '@core/service-lib';
+import { ModelService, DataShareService, StorageService} from '@core/web-core';
 
 @Component({
   selector: 'app-home-page',

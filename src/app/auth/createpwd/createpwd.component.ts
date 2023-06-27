@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { StorageService, AuthService, NotificationService, EnvService} from '@core/service-lib';
+import { StorageService, AuthService, NotificationService, EnvService} from '@core/web-core';
 
 
 @Component({

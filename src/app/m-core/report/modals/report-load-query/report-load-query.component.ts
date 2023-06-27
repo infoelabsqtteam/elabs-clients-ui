@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService, CommonFunctionService, DataShareService, ApiService } from '@core/service-lib';
+import { ModelService, CommonFunctionService, DataShareService, ApiService } from '@core/web-core';
 
 @Component({
   selector: 'app-report-load-query',

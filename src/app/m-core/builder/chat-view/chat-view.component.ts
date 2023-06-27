@@ -1,7 +1,7 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
-import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService} from '@core/service-lib';
+import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService} from '@core/web-core';
 
 @Component({
   selector: 'app-chat-view',

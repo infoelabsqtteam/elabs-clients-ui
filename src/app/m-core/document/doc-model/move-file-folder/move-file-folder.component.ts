@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService, DocDataShareService} from '@core/service-lib';
+import { ModelService, DocDataShareService} from '@core/web-core';
 
 @Component({
   selector: 'app-move-file-folder',

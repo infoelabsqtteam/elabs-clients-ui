@@ -4,7 +4,7 @@ import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.en
 import { Common } from "src/app/shared/enums/common.enum";
 import { Subscription } from "rxjs";
 
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, CommonFunctionService, MenuOrModuleCommonService } from '@core/service-lib';
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, CommonFunctionService, MenuOrModuleCommonService } from '@core/web-core';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService } from '@core/service-lib';
+import { ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-new-folder-creation',

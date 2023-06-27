@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EnvService, StorageService } from '@core/service-lib';
+import { EnvService, StorageService } from '@core/web-core';
 
 
 @Component({

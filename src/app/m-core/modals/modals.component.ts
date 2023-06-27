@@ -2,7 +2,7 @@ import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, El
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/service-lib';
+import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/web-core';
 
 
 @Component({

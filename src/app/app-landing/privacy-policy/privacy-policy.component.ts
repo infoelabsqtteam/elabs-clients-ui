@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService,CommonFunctionService,DataShareService, EnvService } from '@core/service-lib';
+import { ApiService,CommonFunctionService,DataShareService, EnvService } from '@core/web-core';
 
 @Component({
   selector: 'app-privacy-policy',

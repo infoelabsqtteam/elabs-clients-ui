@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, StorageService, EnvService} from '@core/service-lib';
+import { AuthService, DataShareService, StorageService, EnvService} from '@core/web-core';
 
 @Component({
   selector: 'app-forgotpwd',

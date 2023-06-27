@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { ApiService, CommonFunctionService, DataShareService, PermissionService, NotificationService, StorageService, ModelService } from '@core/service-lib';
+import { ApiService, CommonFunctionService, DataShareService, PermissionService, NotificationService, StorageService, ModelService } from '@core/web-core';
 
 
 export const MY_DATE_FORMATS = {

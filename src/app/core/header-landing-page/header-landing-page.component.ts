@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostListener } from "@angular/core
 import { Router } from '@angular/router';
 import { solution } from './menu';
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
-import { StorageService, PermissionService, CommonFunctionService, DataShareService, AuthService, ModelService, EnvService } from '@core/service-lib';
+import { StorageService, PermissionService, CommonFunctionService, DataShareService, AuthService, ModelService, EnvService } from '@core/web-core';
 
 @Component({
   selector: 'app-header-landing-page',

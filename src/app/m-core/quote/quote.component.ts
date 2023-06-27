@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree'
-import { NotificationService, CommonApiService, DataShareService } from '@core/service-lib';
+import { NotificationService, CommonApiService, DataShareService } from '@core/web-core';
 
 
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataShareService, EnvService, StorageService, MenuOrModuleCommonService } from '@core/service-lib';
+import { DataShareService, EnvService, StorageService, MenuOrModuleCommonService } from '@core/web-core';
 
 @Component({
   selector: 'app-horizontal',

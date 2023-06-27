@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService } from '@core/service-lib';
+import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService } from '@core/web-core';
 
 
 
@@ -145,7 +145,8 @@ export class GridSelectionModalComponent implements OnInit {
     private notificationService: NotificationService,
     private coreFunctionService: CoreFunctionService,
     private apiservice: ApiService,
-    private gridCommonFunctionService:GridCommonFunctionService
+    private gridCommonFunctionService:GridCommonFunctionService,
+    private limsCalculationsService: LimsCalculationsService
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -415,7 +416,7 @@ export class GridSelectionModalComponent implements OnInit {
           if (this.field.onchange_function && this.field.onchange_function_param != "") {
             switch (this.field.onchange_function_param) {
               case "calculateQquoteAmount":
-                this.gridData = this.CommonFunctionService.calculateAutoEffRate(this.gridData);
+                this.gridData = this.limsCalculationsService.calculateAutoEffRate(this.gridData);
                 break;
             }
           }
@@ -761,7 +762,7 @@ export class GridSelectionModalComponent implements OnInit {
   calculateNetAmount(fieldName, index) {
     let data = this.modifiedGridData[index];
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
-      this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
+      this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
     this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
     // let row = JSON.parse(JSON.stringify(data));
@@ -839,7 +840,7 @@ export class GridSelectionModalComponent implements OnInit {
                 case 'text':
                 case 'number':
                   if(column["grid_cell_function"] && column["grid_cell_function"] != ''){
-                    this.CommonFunctionService.calculateNetAmount(data, column, column["grid_cell_function"]);
+                    this.limsCalculationsService.calculateNetAmount(data, column, column["grid_cell_function"]);
                   }
                   break;            
                 default:

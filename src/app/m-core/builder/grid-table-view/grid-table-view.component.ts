@@ -8,6 +8,9 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
 import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService } from '@core/service-lib';
+import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
+import { V } from '@angular/cdk/keycodes';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
 
 export const MY_DATE_FORMATS = {
@@ -1456,5 +1459,19 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   get filterFormValue() {
     return this.filterForm.value;
   } 
+
+ // Grid Right Click Method
+  menuTopLeftPosition =  {x: '0', y: '0'} 
+  @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger; 
+  onRightClick(event: MouseEvent, index) { 
+      event.preventDefault(); 
+      this.menuTopLeftPosition.x = event.clientX + 'px'; 
+      this.menuTopLeftPosition.y = event.clientY + 'px';  
+      this.matMenuTrigger.menuData = {item: index}
+      this.matMenuTrigger.openMenu(); 
+  }
+
+
+
 
 }

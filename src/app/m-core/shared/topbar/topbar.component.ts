@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, Output, EventEmitter , Input,OnChanges,SimpleChanges, HostListener} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
-import { StorageService, PermissionService, DataShareService, ApiService, AuthService, NotificationService, EnvService, ModelService } from '@core/service-lib';
+import { StorageService, PermissionService, DataShareService, ApiService, AuthService, NotificationService, EnvService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-topbar',

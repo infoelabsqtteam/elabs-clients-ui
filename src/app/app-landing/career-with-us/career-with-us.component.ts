@@ -1,7 +1,7 @@
 import { Component, HostListener, Input, OnInit ,OnDestroy} from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModelService, PublicApiService, CommonFunctionService, StorageService, ApiService, DataShareService } from '@core/service-lib';
+import { ModelService, PublicApiService, CommonFunctionService, StorageService, ApiService, DataShareService } from '@core/web-core';
 
 
 @Component({

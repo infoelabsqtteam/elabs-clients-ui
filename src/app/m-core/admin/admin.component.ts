@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { StorageService } from '@core/service-lib';
+import { StorageService } from '@core/web-core';
 
 @Component({
   selector: 'app-admin',

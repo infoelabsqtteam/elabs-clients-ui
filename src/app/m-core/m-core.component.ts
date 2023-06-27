@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LAYOUT_VERTICAL, LAYOUT_HORIZONTAL } from './m-core.model';
-import { StorageService, DataShareService, EnvService } from '@core/service-lib';
+import { StorageService, DataShareService, EnvService } from '@core/web-core';
 
 @Component({
   selector: 'app-mcore',

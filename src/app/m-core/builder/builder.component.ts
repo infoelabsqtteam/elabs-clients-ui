@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService} from '@core/service-lib';
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService} from '@core/web-core';
 
 
 @Component({

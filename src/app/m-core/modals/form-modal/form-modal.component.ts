@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, ModelService } from '@core/service-lib';
+import { CommonFunctionService, ModelService } from '@core/web-core';
 
 
 

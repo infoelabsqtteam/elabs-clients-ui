@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '@core/service-lib';
+import { StorageService } from '@core/web-core';
 
 @Component({
   selector: 'app-notification-setting',

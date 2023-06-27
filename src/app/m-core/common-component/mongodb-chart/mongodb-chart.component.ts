@@ -1,7 +1,7 @@
 import { Component, OnInit,AfterViewInit,Input, SimpleChanges } from '@angular/core';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 import { Subscription } from 'rxjs';
-import { ChartService, ModelService, CommonFunctionService, ApiService, StorageService, DataShareService} from '@core/service-lib';
+import { ChartService, ModelService, CommonFunctionService, ApiService, StorageService, DataShareService} from '@core/web-core';
 
 @Component({
   selector: 'app-mongodb-chart',
