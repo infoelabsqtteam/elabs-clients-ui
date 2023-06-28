@@ -17,6 +17,12 @@ RUN	unzip awscliv2.zip && ./aws/install
 #RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY 
 #RUN aws configure set aws_secret_access_key $AWS_SECRET_KEY 
 #RUN aws configure set default.region $AWS_REGION
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_DEFAULT_REGION
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
 
 #Get Token
 ARG CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
