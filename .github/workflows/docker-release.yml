@@ -42,8 +42,7 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v2
       with:
-        node-version: '14.20.0'
-        npm-version: '6.14.17'
+        node-version: '12'
     
     - name: Installing NPM and Angular
       run: | 
