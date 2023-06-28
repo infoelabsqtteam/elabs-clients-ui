@@ -11,9 +11,12 @@ COPY ./ /usr/local/app/
 
 RUN	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN	unzip awscliv2.zip && ./aws/install
-RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY \
-&& aws configure set aws_secret_access_key_id $AWS_SECRET_KEY \
-&& aws configure set default.region $AWS_REGION
+RUN echo $AWS_ACCESS_KEY
+RUN echo $AWS_SECRET_KEY
+RUN echo $AWS_REGION
+RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY 
+RUN aws configure set aws_secret_access_key $AWS_SECRET_KEY 
+RUN aws configure set default.region $AWS_REGION
 
 #Get Token
 ARG CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
