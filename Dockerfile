@@ -20,12 +20,15 @@ RUN	unzip awscliv2.zip && ./aws/install
 ARG AWS_ACCESS_KEY_ID
 ARG AWS_SECRET_ACCESS_KEY
 ARG AWS_DEFAULT_REGION
-ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+#ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+#ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+#ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+ENV AWS_ACCESS_KEY_ID=AKIAUIGGVCG3BULYDNHI
+ENV AWS_SECRET_ACCESS_KEY=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
+ENV AWS_DEFAULT_REGION=ap-south-1
 
 #Get Token
-ARG CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
+ENV CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
 
 
 # Install all the dependencies
