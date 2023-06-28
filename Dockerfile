@@ -9,8 +9,9 @@ WORKDIR /usr/local/app
 # Add the source code to app
 COPY ./ /usr/local/app/
 
-RUN	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-RUN	unzip awscliv2.zip && ./aws/install
+RUN ls -lrt
+#RUN	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#RUN	unzip awscliv2.zip && ./aws/install
 #RUN echo $AWS_ACCESS_KEY
 #RUN echo $AWS_SECRET_KEY
 #RUN echo $AWS_REGION
@@ -20,22 +21,19 @@ RUN	unzip awscliv2.zip && ./aws/install
 #ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 #ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 #ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-ENV AWS_ACCESS_KEY_ID=AKIAUIGGVCG3BULYDNHI
-ENV AWS_SECRET_ACCESS_KEY=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
-ENV AWS_DEFAULT_REGION=ap-south-1
-RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID 
-RUN aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY 
-RUN aws configure set default.region $AWS_DEFAULT_REGION
-RUN aws --version
+#RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID 
+#RUN aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY 
+#RUN aws configure set default.region $AWS_DEFAULT_REGION
+#RUN aws --version
 #RUN echo `aws --version`
 
 
 # Install all the dependencies
-RUN CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1` && npm install
-RUN npm install -g @angular/cli@13.3.11
+#RUN CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1` && npm install
+#RUN npm install -g @angular/cli@13.3.11
 
 # Generate the build of the application
-RUN CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1` && ng build --configuration=production
+#RUN CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1` && ng build --configuration=production
 
 # Stage 2: Serve app with nginx server
 
