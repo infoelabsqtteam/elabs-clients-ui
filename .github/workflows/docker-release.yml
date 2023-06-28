@@ -56,10 +56,10 @@ jobs:
         npm install -g @angular/cli@13.0.0
     
     - name: Set Node Options
-      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }} --unhandled-rejections=warn" >> $GITHUB_ENV
     
     - name: Building
-      run: ng build --configuration=develop --unhandled-rejections=warn
+      run: ng build --configuration=develop
     
     - name: Build, tag, and push image to Amazon ECR
       env:
