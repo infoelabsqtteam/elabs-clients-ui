@@ -8,7 +8,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Common } from 'src/app/shared/enums/common.enum';
-import { Subscription } from 'rxjs';
+import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { Observable, Subscription } from 'rxjs';
 import {GridCommonFunctionService, MenuOrModuleCommonService, CustomvalidationService, CoreFunctionService, EnvService, NotificationService, ModelService, DataShareService, ApiService, PermissionService, CommonFunctionService, StorageService, LimsCalculationsService  } from '@core/web-core';
 
 declare var tinymce: any;
@@ -155,6 +156,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
   @ViewChild('stepper') stepper;
   @ViewChild('search') public searchElementRef: ElementRef;
+  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  @ViewChild(GoogleMap) public map!: GoogleMap;
   @ViewChild('templateFormRef') templateFormRef: ElementRef;
   @Input() isBulkUpdate:boolean;
   @Input() bulkDataList:any;
@@ -282,7 +285,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   pageSize:any=100;
   showGridData:any={};
   serverReq:boolean = false;
-  actionButtonNameList:any=["save","update","updateandnext","send_email"]; 
+  actionButtonNameList:any=["save","update","updateandnext","send_email"];
+  getLocation:boolean = false;
+  mapsAPILoaded: Observable<boolean>; 
 
   // @HostListener('document:click') clickout() {
   //   this.term = {};
@@ -306,6 +311,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private customValidationService:CustomvalidationService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionService:GridCommonFunctionService,
+    private ngZone: NgZone,
     private limsCalculationsService:LimsCalculationsService
 ) {
 
