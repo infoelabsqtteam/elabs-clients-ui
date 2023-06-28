@@ -45,5 +45,5 @@ jobs:
         ECR_REPOSITORY: elabs-client
       #  IMAGE_TAG: $VERSION-$GITHUB_RUN_NUMBER-$Availability -> not working
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION-$GITHUB_RUN_NUMBER-$Availability .
+        docker build --build-arg AWS_ACCESS_KEY=${{ secrets.ELABS_AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_KEY=${{ secrets.ELABS_AWS_SECRET_ACCESS_KEY }} --build-arg AWS_REGION=${{ secrets.ELABS_REGION }}  -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION-$GITHUB_RUN_NUMBER-$Availability .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION-$GITHUB_RUN_NUMBER-$Availability
