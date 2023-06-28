@@ -17,10 +17,8 @@ RUN aws codeartifact login --tool npm --repository ui-core --domain ui-libs --do
 RUN npm install
 RUN npm install -g @angular/cli@13.3.11
 
-
 # Generate the build of the application
 RUN ng build --configuration=production
-
 
 # Stage 2: Serve app with nginx server
 
