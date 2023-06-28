@@ -9,14 +9,16 @@ WORKDIR /usr/local/app
 # Add the source code to app
 COPY ./ /usr/local/app/
 
+#Get Token
+RUN export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
+RUN aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1
+
 # Install all the dependencies
 RUN npm install
 RUN npm install -g @angular/cli@13.3.11
 
-
 # Generate the build of the application
 RUN ng build --configuration=production
-
 
 # Stage 2: Serve app with nginx server
 
