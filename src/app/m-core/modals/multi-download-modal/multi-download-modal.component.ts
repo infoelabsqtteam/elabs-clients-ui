@@ -1,10 +1,7 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service'
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { ApiService } from 'src/app/services/api/api.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, DataShareService, ApiService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-multi-download-modal',

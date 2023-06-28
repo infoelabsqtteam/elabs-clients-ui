@@ -1,12 +1,8 @@
 import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-//import { latLng, tileLayer } from 'leaflet';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-//import { MapsAPILoader } from '@agm/core';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
 
 @Component({
   selector: 'app-admin-dashboard',

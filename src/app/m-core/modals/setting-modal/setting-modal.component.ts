@@ -1,12 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { EnvService } from 'src/app/services/env/env.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { ApiService, CommonFunctionService, CoreFunctionService, DataShareService, EnvService, ModelService, StorageService } from '@core/web-core';
+
 
 @Component({
   selector: 'app-setting-modal',
