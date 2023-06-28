@@ -42,7 +42,7 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
     
     - name: Installing NPM and Angular
       run: | 
@@ -58,7 +58,7 @@ jobs:
       run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }} --unhandled-rejections=warn" >> $GITHUB_ENV
     
     - name: Building
-      run: ng build --configuration=develop
+      run: ng build --configuration=production
     
     - name: Build, tag, and push image to Amazon ECR
       env:
