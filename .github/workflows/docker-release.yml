@@ -38,7 +38,28 @@ jobs:
       
     - name: Get Availability
       run: echo "Availability=UI-GA" >> $GITHUB_ENV
-      
+    
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Installing NPM and Angular
+      run: | 
+        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
+        aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 292474393014 --region ap-south-1
+        echo $CODEARTIFACT_AUTH_TOKEN
+        node -v
+        npm -v
+        npm install
+        npm install -g @angular/cli@13.0.0
+    
+    - name: Set Node Options
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }} --unhandled-rejections=warn" >> $GITHUB_ENV
+    
+    - name: Building
+      run: ng build --configuration=production
+    
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
