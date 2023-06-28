@@ -31,11 +31,11 @@ RUN aws --version
 
 
 # Install all the dependencies
-RUN aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1 && npm install
+RUN CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1` && npm install
 RUN npm install -g @angular/cli@13.3.11
 
 # Generate the build of the application
-RUN aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1 && ng build --configuration=production
+RUN CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-core --domain ui-libs --domain-owner 292474393014 --region ap-south-1` && ng build --configuration=production
 
 # Stage 2: Serve app with nginx server
 
