@@ -12,9 +12,8 @@ import { AppLandingModule } from './app-landing/app-landing.module';
 import { AppComponent } from './app.component';
 import { ModelModule } from './m-core/modals/model.module';
 import { AngularMaterialModule } from './m-core/angular-material-module/angular-material.module';
-
-
-
+import { MyLibModule } from '@core/web-core';
+import { environment } from '../environments/environment'
 
 
 @NgModule({
@@ -33,7 +32,8 @@ import { AngularMaterialModule } from './m-core/angular-material-module/angular-
     CoreModule,
     McoreModule,        
     ModelModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    MyLibModule.forRoot(environment),
   ],
   providers: [
     DatePipe,
@@ -43,6 +43,5 @@ import { AngularMaterialModule } from './m-core/angular-material-module/angular-
     Location , 
     {provide: LocationStrategy, useClass: PathLocationStrategy}
   ],
-  
 })
 export class AppModule { }

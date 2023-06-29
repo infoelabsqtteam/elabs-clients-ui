@@ -1,17 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { CoreFunctionService } from 'src/app/services/common-utils/core-function/core-function.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { ApiService } from '../../../services/api/api.service';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
+import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService } from '@core/web-core';
+
 
 
 @Component({
@@ -150,7 +145,8 @@ export class GridSelectionModalComponent implements OnInit {
     private notificationService: NotificationService,
     private coreFunctionService: CoreFunctionService,
     private apiservice: ApiService,
-    private gridCommonFunctionService:GridCommonFunctionService
+    private gridCommonFunctionService:GridCommonFunctionService,
+    private limsCalculationsService: LimsCalculationsService
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -420,7 +416,7 @@ export class GridSelectionModalComponent implements OnInit {
           if (this.field.onchange_function && this.field.onchange_function_param != "") {
             switch (this.field.onchange_function_param) {
               case "calculateQquoteAmount":
-                this.gridData = this.CommonFunctionService.calculateAutoEffRate(this.gridData);
+                this.gridData = this.limsCalculationsService.calculateAutoEffRate(this.gridData);
                 break;
             }
           }
@@ -766,7 +762,7 @@ export class GridSelectionModalComponent implements OnInit {
   calculateNetAmount(fieldName, index) {
     let data = this.modifiedGridData[index];
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
-      this.CommonFunctionService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
+      this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
     this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
     // let row = JSON.parse(JSON.stringify(data));
@@ -844,7 +840,7 @@ export class GridSelectionModalComponent implements OnInit {
                 case 'text':
                 case 'number':
                   if(column["grid_cell_function"] && column["grid_cell_function"] != ''){
-                    this.CommonFunctionService.calculateNetAmount(data, column, column["grid_cell_function"]);
+                    this.limsCalculationsService.calculateNetAmount(data, column, column["grid_cell_function"]);
                   }
                   break;            
                 default:

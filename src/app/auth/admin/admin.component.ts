@@ -2,9 +2,7 @@ import { Component,Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { EnvService } from 'src/app/services/env/env.service';
-
+import { AuthService, EnvService} from '@core/web-core';
 
 
 @Component({
