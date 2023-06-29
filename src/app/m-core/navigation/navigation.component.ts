@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonApiService } from 'src/app/services/api/common-api/common-api.service';
-import { DataShareService } from '../../services/data-share/data-share.service';
+import { CommonApiService, DataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-navigation',

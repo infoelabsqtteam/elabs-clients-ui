@@ -2,9 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { AuthService, DataShareService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-signup-modal',

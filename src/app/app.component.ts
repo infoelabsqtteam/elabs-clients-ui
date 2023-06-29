@@ -1,15 +1,8 @@
 import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
-import { StorageService } from './services/storage/storage.service';
-import { DataShareService } from './services/data-share/data-share.service';
-import { ModelService } from './services/model/model.service';
-import { CommonFunctionService } from './services/common-utils/common-function.service';
-import { LoaderService } from './services/loader/loader.service';
-import { EnvService } from './services/env/env.service';
-import { AuthService } from './services/api/auth/auth.service';
 import { Subscription } from 'rxjs';
-
+import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService } from '@core/web-core';
 
 @Component({
   selector: 'app-root',
