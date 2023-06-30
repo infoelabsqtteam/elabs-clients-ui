@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { EnvService } from 'src/app/services/env/env.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
-
+import {DataShareService, EnvService, StorageService } from '@core/web-core';
 
 @Component({
   selector: 'app-footer',

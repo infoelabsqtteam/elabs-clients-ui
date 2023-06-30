@@ -2,7 +2,7 @@ import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { GoogleMap, MapInfoWindow, MapMarker } from "@angular/google-maps";
 import { Router } from '@angular/router';
-import { PublicApiService } from 'src/app/services/api/public-api/public-api.service';
+import { PublicApiService } from '@core/web-core';
 
 @Component({
   selector: 'app-contact-us',

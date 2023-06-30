@@ -1,20 +1,11 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
-import { StorageService} from '../../services/storage/storage.service';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import { PermissionService } from '../../services/permission/permission.service';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { ApiService } from '../../services/api/api.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { EnvService } from 'src/app/services/env/env.service';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { MenuOrModuleCommonService } from 'src/app/services/menu-or-module-common/menu-or-module-common.service';
-import { threadId } from 'worker_threads';
 import { Location } from '@angular/common';
 
-
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService} from '@core/web-core';
 
 
 @Component({

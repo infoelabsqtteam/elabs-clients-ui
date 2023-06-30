@@ -2,9 +2,8 @@ import { Component,Input ,OnInit } from '@angular/core';
 import { Form, FormGroup, NgForm,FormBuilder,FormControl, Validators } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { Router,ActivatedRoute   } from '@angular/router';
-import { StorageService} from '../../services/storage/storage.service';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { EnvService } from 'src/app/services/env/env.service';
+import { StorageService, AuthService, EnvService} from '@core/web-core';
+
 
 @Component({
   selector: 'app-resetpwd',

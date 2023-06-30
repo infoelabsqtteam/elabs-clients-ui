@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
-
-
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, ModelService } from '@core/web-core';
+
 
 @Component({
   selector: 'app-shortcutinfo',
