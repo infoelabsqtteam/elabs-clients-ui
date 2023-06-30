@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, EmailValidator } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { EnvService } from 'src/app/services/env/env.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
-import { CustomvalidationService } from '../../services/customvalidation/customvalidation.service';
+import { AuthService, DataShareService, EnvService, StorageService, CustomvalidationService} from '@core/web-core';
 
 @Component({
   selector: 'app-signup',

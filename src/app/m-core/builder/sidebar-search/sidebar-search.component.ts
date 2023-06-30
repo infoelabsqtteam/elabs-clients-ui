@@ -1,8 +1,6 @@
 import { Component, OnInit,Output, EventEmitter,OnDestroy } from '@angular/core';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
 import { Router, NavigationEnd } from '@angular/router';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { ApiService } from '../../../services/api/api.service';
+import { CommonFunctionService, DataShareService, ApiService} from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar-search',

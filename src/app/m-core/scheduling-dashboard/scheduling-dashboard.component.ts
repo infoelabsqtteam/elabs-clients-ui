@@ -1,13 +1,7 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import { chardData,tableData,progressReportData,reportData } from './chartJson';
 import { countDownTimerConfigModel, countDownTimerTexts, CountdownTimerService } from 'ngx-timer';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import { StorageService} from '../../services/storage/storage.service';
-import { PermissionService } from '../../services/permission/permission.service';
-import { ApiService } from '../../services/api/api.service';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/web-core';
 
 
 @Component({

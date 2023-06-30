@@ -1,20 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
-import { StorageService } from 'src/app/services/storage/storage.service';
-import { PermissionService } from 'src/app/services/permission/permission.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ApiService } from 'src/app/services/api/api.service';
-import { ModelService } from "src/app/services/model/model.service";
-import { AuthService } from "src/app/services/api/auth/auth.service";
 import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
-import { NotificationService } from "src/app/services/notify/notification.service";
-import { EnvService } from "src/app/services/env/env.service";
 import { Common } from "src/app/shared/enums/common.enum";
-import { CommonFunctionService } from "src/app/services/common-utils/common-function.service";
 import { Subscription } from "rxjs";
-import { MenuOrModuleCommonService } from "src/app/services/menu-or-module-common/menu-or-module-common.service";
 
-
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, CommonFunctionService, MenuOrModuleCommonService } from '@core/web-core';
 
 
 @Component({

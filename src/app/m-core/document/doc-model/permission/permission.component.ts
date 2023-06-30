@@ -1,12 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormGroupDirective, FormControlDirective, FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
-import { DocApiService } from 'src/app/services/api/doc-api/doc-api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ModelService } from '../../../../services/model/model.service';
+import { ApiService, DocApiService, CommonFunctionService, DataShareService, NotificationService, ModelService} from '@core/web-core';
 
 @Component({
   selector: 'app-permission',

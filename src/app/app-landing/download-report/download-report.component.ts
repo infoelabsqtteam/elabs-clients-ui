@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import { StorageService} from '../../services/storage/storage.service';
-import { ApiService } from '../../services/api/api.service';
+import { CommonFunctionService, StorageService, ApiService } from '@core/web-core';
 
 @Component({
   selector: 'app-download-report',

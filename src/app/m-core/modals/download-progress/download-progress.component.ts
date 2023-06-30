@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { DocDataShareService } from 'src/app/services/data-share/doc-data-share/doc-data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { DocDataShareService, ModelService, NotificationService, StorageService } from '@core/web-core';
+
 
 @Component({
   selector: 'app-download-progress',

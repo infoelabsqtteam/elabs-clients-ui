@@ -1,13 +1,7 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { StorageService} from '../../../services/storage/storage.service';
-import { PermissionService } from '../../../services/permission/permission.service';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
-import { ApiService } from '../../../services/api/api.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService} from '@core/web-core';
 
 @Component({
   selector: 'app-chat-view',

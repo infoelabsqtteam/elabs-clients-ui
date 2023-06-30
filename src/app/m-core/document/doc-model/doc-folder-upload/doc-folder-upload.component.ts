@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService } from '../../../../services/model/model.service';
+import { ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-doc-folder-upload',
