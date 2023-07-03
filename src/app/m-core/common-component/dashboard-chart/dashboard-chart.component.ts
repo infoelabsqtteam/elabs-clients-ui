@@ -1,12 +1,7 @@
 import { Component, OnInit,AfterViewInit,Input, SimpleChanges, OnDestroy } from '@angular/core';
-import { DataShareService } from '../../../services/data-share/data-share.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
-import { StorageService } from '../../../services/storage/storage.service';
 import { Subscription } from 'rxjs';
-import { ApiService } from '../../../services/api/api.service';
-import { CommonFunctionService } from '../../../services/common-utils/common-function.service';
-import { ModelService } from 'src/app/services/model/model.service';
-import { ChartService } from 'src/app/services/chart/chart.service';
+import { StorageService, CommonFunctionService, ApiService, ChartService, ModelService, DataShareService} from '@core/web-core';
 
 @Component({
   selector: 'app-dashboard-chart',
