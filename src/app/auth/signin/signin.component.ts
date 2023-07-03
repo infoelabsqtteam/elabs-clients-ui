@@ -1,14 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm,FormGroup, FormControl, Validators } from '@angular/forms';
-import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { EnvService } from 'src/app/services/env/env.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import { Subscription } from 'rxjs';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-
-
+import { AuthService, EnvService, StorageService, DataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-signin',

@@ -2,16 +2,12 @@ import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, 
 import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as XLSX from 'xlsx';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
-import { ChartService } from 'src/app/services/chart/chart.service';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService, ChartService } from '@core/web-core';
+
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -61,7 +57,6 @@ export class ChartFilterComponent implements OnInit {
 
   checkGetDashletData:boolean=true;
   staticData: any = {};
-  copyStaticData:any={};
   typeAheadData:any=[];
   showFilter:boolean=false;
   createdChartList:any=[];
@@ -367,14 +362,17 @@ export class ChartFilterComponent implements OnInit {
       }
     } 
   }
-  setStaticData(staticData){
-    if (staticData) {
-      this.staticData = staticData;
-      Object.keys(this.staticData).forEach(key => {  
-        if(this.staticData[key]){      
-          this.copyStaticData[key] = JSON.parse(JSON.stringify(this.staticData[key]));
-        }
-      }) 
+  setStaticData(staticDatas){
+    if(Object.keys(staticDatas).length > 0) {
+      Object.keys(staticDatas).forEach(key => {  
+        let staticData = {};
+        staticData[key] = staticDatas[key];  
+        if(key && key != 'null' && key != 'FORM_GROUP' && key != 'CHILD_OBJECT' && key != 'COMPLETE_OBJECT' && key != 'FORM_GROUP_FIELDS'){
+          if(staticData[key]) { 
+            this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
+          }
+        } 
+      });
     }
   }
 

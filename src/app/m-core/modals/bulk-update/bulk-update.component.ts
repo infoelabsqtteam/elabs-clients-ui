@@ -1,12 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { ModelService } from 'src/app/services/model/model.service';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { GridCommonFunctionService } from 'src/app/services/grid-common-function.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, GridCommonFunctionService, NotificationService } from '@core/web-core';
+
+
+
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
