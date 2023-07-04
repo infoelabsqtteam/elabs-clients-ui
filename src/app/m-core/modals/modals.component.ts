@@ -2,12 +2,8 @@ import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, El
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService } from '../../services/common-utils/common-function.service';
-import { ApiService } from '../../services/api/api.service';
-import { DataShareService } from '../../services/data-share/data-share.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { ModelService } from 'src/app/services/model/model.service';
-//import { CursorError } from '@angular/compiler/src/ml_parser/lexer'; comment By Praveen singh / Akash Tyagi
+import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/web-core';
+
 
 @Component({
   selector: 'app-modals',

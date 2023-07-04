@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EnvService } from "src/app/services/env/env.service";
-import { StorageService } from 'src/app/services/storage/storage.service';
-
+import { EnvService, StorageService } from '@core/web-core';
+ 
 @Component({
   selector: 'app-page-not-found',
   template: `

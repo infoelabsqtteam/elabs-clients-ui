@@ -1,3 +1,29 @@
+<div style="visibility:hidden;position:fixed;" [style.left]="menuTopLeftPosition.x" [style.top]="menuTopLeftPosition.y" [matMenuTriggerFor]="rightMenu"></div> 
+ <mat-menu #rightMenu="matMenu" class="rightclickmenu"> 
+  <ng-template matMenuContent let-item="item">
+    <button mat-button class="w-100 text-left" color="primary" *ngIf="elements.length > 0" (click)="exportExcel()"><span class="material-icons mr-2">file_download</span> Download Excel</button>
+    <button mat-button class="w-100 text-left" color="primary" *ngIf="forms['default']" (click)="addNewForm('NEW')"><span class="material-icons mr-2">add</span> Add Form</button>
+    <ul class="m-0">
+        <li *ngIf="editedRowIndex != item">
+            <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
+                <form #myform="ngForm">
+                    <input type="checkbox" [attr.id]="'checkbox' + item" ngModel name="check" (change)="onBulkUploadCheck(item, myform)">
+                </form>
+            </span>
+            <ng-container *ngFor="let btn of gridButtons">
+                <button mat-button class="w-100 text-left grid-button" *ngIf="!(btn && btn.grid_header_button)" (click)="gridButtonAction(item,btn)" [disabled]="btn.is_disabled">
+                    <span class="material-icons mr-2" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span> {{btn.label}}
+                </button>
+            </ng-container>
+        </li>
+        <li *ngIf="editedRowIndex == item">
+            <button mat-button class="w-100 text-left grid-button" color="primary" (click)="saveGridData()"><span class="material-icons mr-2">save</span>Save</button>
+            <button mat-button class="w-100 text-left grid-button" color="accent" (click)="CancilGridEdite()"><span class="material-icons mr-2">cancel</span>Cancel</button>
+        </li>
+    </ul>
+  </ng-template> 
+</mat-menu> 
+
 <section>
     <div class="downloadbtn">
         <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
@@ -108,7 +134,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of modifyGridData | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}">
+                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of modifyGridData | paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}" (contextmenu)="onRightClick($event, i)">
                                         <td [style.background-color]="el['background-color']">
                                             <span *ngIf="editedRowIndex != i" class="text-nowrap">
                                                 <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
@@ -223,6 +249,9 @@
 <!-- <div *ngIf="true" class="card pt-2 my-2">
     <app-form class="w-100" [tabIndex]="selectTabIndex" [isBulkUpdate]="isBulkUpdate" [bulkDataList]="bulkuploadList" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName' [selectContact]='selectContactAdd'></app-form> 
 </div> -->
+
+
+
 
 <app-modals id="basic-modal" (responceData)="responceData($event)"></app-modals>
 <app-tree-view-modal id="filter-tree-view-modal" (treeViewResponce)="treeViewResponce($event)"></app-tree-view-modal>

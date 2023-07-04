@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService } from 'src/app/services/model/model.service';
+import { ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-add-order-modal',
