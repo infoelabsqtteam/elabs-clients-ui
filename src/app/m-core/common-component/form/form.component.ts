@@ -662,7 +662,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
       
     //this.formControlChanges();
-    if(this.form.tableFields && this.form.tableFields.length > 0){
+    if(this.form && this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
 
@@ -816,7 +816,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setForm(){
-    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
+    if(this.form && this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
       if(this.currentMenu == undefined){
         this.currentMenu = {};
       }
@@ -835,13 +835,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.getLocation = false;
     }
-    if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
+    if(this.form && this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
       this.getTableField = false;
     }else{
       this.tableFields = [];
     }  
-    if(this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
+    if(this.form && this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
       this.formFieldButtons = this.form.tab_list_buttons; 
     } 
     this.showIfFieldList=[];
@@ -1327,7 +1327,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   customValidationFiels=[];
   setStaticData(staticDatas){   
-    if(Object.keys(staticDatas).length > 0) {
+    if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
         let staticData = {};
         staticData[key] = staticDatas[key];   
@@ -1450,8 +1450,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   setGridRowDeleteResponce(responce){
-    this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
-    this.dataSaveInProgress = true;
+    if(responce && responce['success']){
+      this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
+      this.dataSaveInProgress = true;
+    }
   }
 
   setSaveResponce(saveFromDataRsponce){
@@ -1546,7 +1548,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];
@@ -2225,6 +2227,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           "object": formValueWithCustomData
         }
         this.modalService.open('grid-selection-modal', gridModalData);
+        break;
+      case 'tree_view':
+        this.curTreeViewField = JSON.parse(JSON.stringify(field));     
+        const treeViewData = {
+          "field": this.curTreeViewField,
+          "selectedData":{},
+          "object": formValueWithCustomData
+        }
+        this.modalService.open('tree-view', treeViewData);
         break;
       default:
         break;
