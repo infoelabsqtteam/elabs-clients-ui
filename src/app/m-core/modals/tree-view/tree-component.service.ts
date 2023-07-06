@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import { CommonFunctionService } from '@core/web-core';
-import {TodoItemNode, newTreeData,keys} from './interface';
+import {TodoItemNode} from './interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,23 +16,12 @@ export class TreeComponentService {
   constructor(
     private commonfunctionService:CommonFunctionService
   ) {
-    this.initialize();
   }
-
-  initialize() {
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    //     file node as children.
-    const data = this.buildFileTree(newTreeData, 0);
-
-    // Notify the change.
-    this.dataChange.next(data);
-  }
-
   /**
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
    */
-  buildFileTree(obj: {[key: string]: any}, level: number): TodoItemNode[] {
+  buildFileTree(obj: {[key: string]: any}, level: number,keys:any): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
       const value = obj[key];
       const pId:any = value['reference']['_id'];
@@ -56,7 +45,7 @@ export class TreeComponentService {
           Object.keys(next).forEach(childKey => {
             next[childKey].parentId = pId;
           });
-          node.children = this.buildFileTree(next, level + 1);
+          node.children = this.buildFileTree(next, level + 1,keys);
         } else {
           node.item = key;
         }
@@ -67,7 +56,7 @@ export class TreeComponentService {
   }
 
   //this function for get selected node tree
-  getSelectedNodeWithParent(allNodes,selectedNodes){
+  getSelectedNodeWithParent(allNodes,selectedNodes,keys:any){
     let selectedNodesWithParent = [];    
     if(allNodes && allNodes.length > 0 && selectedNodes && selectedNodes.length > 0){
       selectedNodes.forEach(selectNode => {
@@ -118,7 +107,78 @@ export class TreeComponentService {
     }
     return selectedNodesWithParent;
   }
+  modifySelectedDataWithParentId(selectedData){
+    let modifyList=selectedData.sort((a,b) => (a.parentId.toLowerCase() < b.parentId.toLowerCase())? -1 : (a.parentId.toLowerCase() > b.parentId.toLowerCase()) ? 1 : 0);
+    return  modifyList;
+  }
   //this function for get selected node tree
+
+  //This function for convet list to tree map
+  applyRelationships = (data) => {
+    let levelStack = [], lastNode = null;
+    return data.map((curr, index) => {
+      const node = { ...curr, id: index + 1 };
+      if (levelStack.length === 0) {
+        levelStack.push({ level: node.level, parent: 0 });
+      } else {
+        const last = levelStack[levelStack.length - 1];
+        if (node.level > last.level) {
+          levelStack.push({ level: node.level, parent: lastNode.id });
+        } else if (node.level < last.level) {
+          const
+            levelDiff = last.level - node.level - 1,
+            lastIndex = levelStack.length - 1;
+          levelStack.splice(lastIndex - levelDiff, lastIndex);
+        }
+      }
+      node.parentId = levelStack[levelStack.length - 1].parent;
+      lastNode = node;
+      return node;
+    });
+  };
+  
+  listToTree = (arr = []) => {
+     let indexMap = new Map();
+     arr.forEach((node, index) => {
+        indexMap.set(node.id, index)
+        node.children = [];
+     });
+     return arr.reduce((res, node, index, all) => {
+        if (node.parentId === 0) return [...res, node];
+        all[indexMap.get(node.parentId)].children.push(node);
+        return res;
+     }, []);
+  };
+  
+  treeToObject = (tree = [], result:any = {}) => {
+    tree.forEach(child => { 
+        let modifyObj = {};
+        modifyObj['reference'] = child.reference;
+        if(child.allSelected){
+          modifyObj['allSelected'] = child.allSelected
+        }
+        if(child.level == 0){
+          result[child.item] = modifyObj;
+        }else if(child.expandable){     
+          if(!result[child.type]) result[child.type] = {}
+          result[child.type][child.item] = modifyObj;
+        }else{
+          if(!result[child.type]) result[child.type] = {}
+          result[child.type][child.item] = modifyObj;
+        } 
+        if(child.children && child.children.length > 0){      
+          this.treeToObject(child.children, child.level == 0 ? result[child.item] : result[child.type][child.item]);
+        }      
+    });
+    return result;
+  };
+  buildTreeObject(arr = []) {
+    let relationShip = this.applyRelationships(arr);
+    let list = this.listToTree(relationShip);
+    let tree = this.treeToObject(list);
+    return tree;
+  }
+  //This function for convet list to tree map
 
   /** Add an item to to-do list */
   insertItem(parent: TodoItemNode, name: string) {

@@ -1,11 +1,11 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import { CommonFunctionService, ModelService } from '@core/web-core';
+import { DataShareService, ModelService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {Component,OnInit,Input, Output,ViewChild,EventEmitter,AfterViewInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import { TreeComponentService } from './tree-component.service';
-import {TodoItemNode , TodoItemFlatNode, useCases,keys} from './interface';
+import {TodoItemNode , TodoItemFlatNode} from './interface';
 
 @Component({
   selector: 'app-tree-view',
@@ -30,6 +30,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
 
   dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
+  keys:any=[];
 
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
@@ -39,16 +40,15 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @ViewChild('treeView') public treeView: ModalDirective; 
 
   fieldName:any='';
-  data;
   ddnfieldName:any;
   staticData:any={};
   staticDataSubscriber;
   
 
   constructor(
-    private _database: TreeComponentService,
+    private treeComponentService: TreeComponentService,
     private modalService:ModelService,
-    private commonfunctionService:CommonFunctionService
+    private dataShareService:DataShareService
     ) { 
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
@@ -58,10 +58,9 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     );
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-    _database.dataChange.subscribe(data => {
-      this.dataSource.data = data;
-    });
+    this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
+      this.setStaticData(data);
+    })
     
     
   }
@@ -86,6 +85,35 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
       // }
     // }
   }
+  setStaticData(staticDatas){
+    if(staticDatas && Object.keys(staticDatas).length > 0 && staticDatas[this.ddnfieldName]) {
+      Object.keys(staticDatas).forEach(key => {  
+        let staticData = {};
+        staticData[key] = staticDatas[key]; 
+        if(key && key != 'null' && key != 'FORM_GROUP' && key != 'CHILD_OBJECT' && key != 'COMPLETE_OBJECT' && key != 'FORM_GROUP_FIELDS'){
+          if(staticData[key]) { 
+            this.staticData[key] = JSON.parse(JSON.stringify(staticData[key]));
+          }          
+        } 
+      })
+      if(this.staticData && Object.keys(this.staticData).length > 0){
+        this.renderTreeData();
+      }
+    }
+  }
+  renderTreeData(){
+    if(this.ddnfieldName && this.ddnfieldName != ''){
+      if(this.staticData[this.ddnfieldName]){
+        let treeData = this.staticData[this.ddnfieldName];
+        let treeKeys = this.staticData['keys'];
+        if(treeKeys && treeKeys.length > 0){
+          this.keys = treeKeys;
+        }
+        let buildTreeData = this.treeComponentService.buildFileTree(treeData,0,this.keys);
+        this.dataSource.data = buildTreeData;      
+      }          
+    } 
+  }
   getLevel = (node: TodoItemFlatNode) => node.level;
 
   isExpandable = (node: TodoItemFlatNode) => node.expandable;
@@ -109,11 +137,11 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     flatNode.reference = node.reference;
     flatNode._id = node._id;
     flatNode.parentId = node.parentId;
-    if(level != 0 && keys[level-1]){      
-      flatNode.type = keys[level-1];
+    if(level != 0 && this.keys[level-1]){      
+      flatNode.type = this.keys[level-1];
       if(!flatNode.expandable){
-        let keyLength = keys.length;
-        flatNode.type = keys[keyLength-1];
+        let keyLength = this.keys.length;
+        flatNode.type = this.keys[keyLength-1];
       }
     }
     this.flatNodeMap.set(flatNode, node);
@@ -206,32 +234,26 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   /** Select the category so we can insert the new item. */
   // addNewItem(node: TodoItemFlatNode) {
   //   const parentNode = this.flatNodeMap.get(node);
-  //   this._database.insertItem(parentNode!, '');
+  //   this.treeComponentService.insertItem(parentNode!, '');
   //   this.treeControl.expand(node);
   // }
 
   /** Save the node to database */
   // saveNode(node: TodoItemFlatNode, itemValue: string) {
   //   const nestedNode = this.flatNodeMap.get(node);
-  //   this._database.updateItem(nestedNode!, itemValue);
+  //   this.treeComponentService.updateItem(nestedNode!, itemValue);
   // }
 
   showModal(alert){    
-    this.data=this.staticData[alert.data];
-    this.fieldName = alert.fieldName;
-    this.ddnfieldName = alert.ddnFieldName;
-    if(this.ddnfieldName && this.ddnfieldName != ''){
-      if(this.staticData[this.ddnfieldName]){
-        
-      }          
-    }
+    //this.data=this.staticData[alert.data];
+    let field = alert.field
+    this.fieldName = field.label;
+    this.ddnfieldName = field.ddn_field;    
     this.treeView.show();
-    //console.log(alert.data);
     if(this.treeControl){
       this.treeControl.collapseAll();
       this.checklistSelection.clear();
     }
-    this.main();
     
   } 
 
@@ -242,88 +264,13 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   }
 
   selectGridData(){
-    let treeControlData = this.treeControl.expansionModel.selected;
-    //console.log(treeControlData);
-    let data = this.dataSource.data;
-    //console.log(data);
-    let selectedData = this.modifySelectedDataWithParentId(this.checklistSelection.selected);
+    //let treeControlData = this.treeControl.expansionModel.selected;
+    //let data = this.dataSource.data;
+    let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
     let allNodes = this.treeControl.dataNodes;
-    console.log(selectedData)
-    console.log(allNodes);
-    console.log(this._database.getSelectedNodeWithParent(allNodes,selectedData));
+    let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
+    let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
+    console.log(rearrangedSelectedNode);
+    console.log(mapObjecThroughList);
   }
-  modifySelectedDataWithParentId(selectedData){
-    let modifyList=selectedData.sort((a,b) => (a.parentId.toLowerCase() < b.parentId.toLowerCase())? -1 : (a.parentId.toLowerCase() > b.parentId.toLowerCase()) ? 1 : 0);
-    return  modifyList;
-  }
-  
-  convertJsonArryToMapObject(){
-    let result = {};    
-  }
-  applyRelationships = (data) => {
-    let levelStack = [], lastNode = null;
-    return data.map((curr, index) => {
-      const node = { ...curr, id: index + 1 };
-      if (levelStack.length === 0) {
-        levelStack.push({ level: node.level, parent: 0 });
-      } else {
-        const last = levelStack[levelStack.length - 1];
-        if (node.level > last.level) {
-          levelStack.push({ level: node.level, parent: lastNode.id });
-        } else if (node.level < last.level) {
-          const
-            levelDiff = last.level - node.level - 1,
-            lastIndex = levelStack.length - 1;
-          levelStack.splice(lastIndex - levelDiff, lastIndex);
-        }
-      }
-      node.parentId = levelStack[levelStack.length - 1].parent;
-      lastNode = node;
-      return node;
-    });
-  };
-  
-  listToTree = (arr = []) => {
-     let indexMap = new Map();
-     arr.forEach((node, index) => {
-        indexMap.set(node.id, index)
-        node.children = [];
-     });
-     return arr.reduce((res, node, index, all) => {
-        if (node.parentId === 0) return [...res, node];
-        all[indexMap.get(node.parentId)].children.push(node);
-        return res;
-     }, []);
-  };
-  
-  treeToObject = (tree = [], result:any = {}) => {
-    tree.forEach(child => {
-      if (!child.expandable) {
-        result.push(child.item);
-      } else {
-        const childrenAllEmpty = child.children
-          .every(({ children }) => children.length === 0);
-        result[child.item] = childrenAllEmpty ? [] : {};
-        this.treeToObject(child.children, result[child.item]);
-      }
-    });
-    return result;
-  };
-  buildTreeObject(arr = []) {
-    let relationShip = this.applyRelationships(arr);
-    let list = this.listToTree(relationShip);
-    let tree = this.treeToObject(list);
-    return tree;
-    //this.treeToObject(this.listToTree(this.applyRelationships(arr)));
-  }
-  main = () => {
-    useCases.forEach(({ data, expected }) => {
-      const actual = this.buildTreeObject(data);
-      console.log(JSON.stringify(actual) === JSON.stringify(expected));
-      console.log(actual);
-    });
-  };
-
-  //https://stackblitz.com/edit/nested-multi-select-tree-demo-nymntq?file=app%2Ftree-nested-overview-example.html,app%2Ftree-nested-overview-example.ts    this url for get selected data form tree
-
 }
