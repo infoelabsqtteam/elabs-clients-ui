@@ -2233,7 +2233,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.curTreeViewField = JSON.parse(JSON.stringify(field));   
         const treeViewData = {
           "field": this.curTreeViewField,
-          "selectedData":this.custmizedFormValue[field.field_name] ? this.custmizedFormValue[field.field_name]:defaultselectedData,
+          "selectedData":formValue[field.field_name] ? formValue[field.field_name]:defaultselectedData,
           "object": formValueWithCustomData
         }
         this.modalService.open('tree-view', treeViewData);
