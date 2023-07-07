@@ -12,6 +12,7 @@ import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 // import { HttpClient } from '@angular/common/http';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService} from '@core/web-core';
+import {defaultselectedData} from '../../modals/tree-view/interface';
 
 
 declare var tinymce: any;
@@ -2229,10 +2230,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.modalService.open('grid-selection-modal', gridModalData);
         break;
       case 'tree_view':
-        this.curTreeViewField = JSON.parse(JSON.stringify(field));     
+        this.curTreeViewField = JSON.parse(JSON.stringify(field));   
         const treeViewData = {
           "field": this.curTreeViewField,
-          "selectedData":{},
+          "selectedData":this.custmizedFormValue[field.field_name] ? this.custmizedFormValue[field.field_name]:defaultselectedData,
           "object": formValueWithCustomData
         }
         this.modalService.open('tree-view', treeViewData);
@@ -3758,6 +3759,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.modifyCustmizedFormValue = modifyObject.modifyData;
     this.tableFields = modifyObject.fields;
   }
+  treeViewComponentResponce(responce){
+    if(responce && Object.keys(responce).length > 0){
+      const fieldName = this.curTreeViewField.field_name;
+      this.templateForm.controls[fieldName].setValue(responce);
+    }
+  }
   isDisable(parent,chield){
     const  formValue = this.getFormValue(true);  
     let tobedesabled;
@@ -4660,6 +4667,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
             }
             this.templateForm.controls[fieldName].setValue(treeDropdownValue)
+          }
+          break;
+        case "tree_view":
+          if(formValue[fieldName] != null && formValue[fieldName] != undefined){
+            let treeValue = object == null ? null : object;
+            this.templateForm.controls[fieldName].setValue(treeValue);
           }
           break;
         case "stepper":

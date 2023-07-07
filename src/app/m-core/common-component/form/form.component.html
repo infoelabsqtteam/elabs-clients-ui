@@ -1686,7 +1686,7 @@
 </div>
 <app-confirm-modal *ngIf="isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
 <app-tree-view-modal id="tree-view-modal" (treeViewResponce)="treeViewResponce($event)"></app-tree-view-modal>
-<app-tree-view id="tree-view"></app-tree-view>
+<app-tree-view id="tree-view" (treeViewComponentResponce)="treeViewComponentResponce($event)"></app-tree-view>
 <app-grid-selection-modal id="grid-selection-modal" (gridSelectionResponce)="gridSelectionResponce($event)"></app-grid-selection-modal>
 <app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
 <app-file-upload-modal id="file-upload-modal" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>

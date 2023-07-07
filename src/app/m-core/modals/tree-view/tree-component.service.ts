@@ -22,16 +22,22 @@ export class TreeComponentService {
    * The return value is the list of `TodoItemNode`.
    */
   buildFileTree(obj: {[key: string]: any}, level: number,keys:any): TodoItemNode[] {
-    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
+    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key,i) => {
       const value = obj[key];
       const pId:any = value['reference']['_id'];
       const node = new TodoItemNode();
       node.item = key;
       node.reference = value['reference'];
       node._id = pId;
-      if(value['parentId']){
-        node.parentId = value['parentId'];
+      if(value['pId']){
+        node.pId = value['pId'];
       }
+      if(level == 0){
+        let index = i+1;
+        node.pIndex = ''+index;
+      }else{
+        node.pIndex = value.pIndex;
+      }     
       
 
       if (value != null) {
@@ -42,8 +48,9 @@ export class TreeComponentService {
           next = value[nextKey];
         }        
         if (next && typeof next === 'object') {
-          Object.keys(next).forEach(childKey => {
-            next[childKey].parentId = pId;
+          Object.keys(next).forEach((childKey,i) => {
+            next[childKey].pIndex = node.pIndex+'.'+(i+1);
+            next[childKey].pId = pId;
           });
           node.children = this.buildFileTree(next, level + 1,keys);
         } else {
@@ -65,6 +72,7 @@ export class TreeComponentService {
         }else{
           selectNode.allSelected = false;
         }
+        selectNode.select = true;
         let groupList = [];
         let check = this.commonfunctionService.checkDataAlreadyAddedInListOrNot('_id',selectNode._id,groupList);
         if(!check){
@@ -77,8 +85,8 @@ export class TreeComponentService {
   }
 
   findChildToParentNode(allNodes,selectNode,groupList,selectedNodesWithParent){
-    if(selectNode && selectNode.parentId){
-      let parentIndex = this.commonfunctionService.getIndexInArrayById(allNodes,selectNode.parentId,'reference._id');
+    if(selectNode && selectNode.pId){
+      let parentIndex = this.commonfunctionService.getIndexInArrayById(allNodes,selectNode.pId,'reference._id');
       if(parentIndex != -1){
         let parentNode = allNodes[parentIndex];
         let check = this.commonfunctionService.checkDataAlreadyAddedInListOrNot('_id',parentNode._id,groupList);
@@ -107,13 +115,31 @@ export class TreeComponentService {
     }
     return selectedNodesWithParent;
   }
-  modifySelectedDataWithParentId(selectedData){
-    let modifyList=selectedData.sort((a,b) => (a.parentId.toLowerCase() < b.parentId.toLowerCase())? -1 : (a.parentId.toLowerCase() > b.parentId.toLowerCase()) ? 1 : 0);
+  modifySelectedDataWithParentId(selectedData){   
+    let modifyList=selectedData.sort((a,b) => a.pIndex.localeCompare(b.pIndex, undefined, { numeric:true }));
+    //arr.sort( (a, b) => a.localeCompare(b, undefined, { numeric:true }) );
     return  modifyList;
   }
+  
   //this function for get selected node tree
 
   //This function for convet list to tree map
+  convertTreeToList(list,result:any) {
+    if(list && list.length > 0){
+      list.forEach(child => {
+        let childrenList = [];
+        if(child && child.children && child.children != null){
+          childrenList = JSON.parse(JSON.stringify(child.children));
+        }
+        delete child.children;
+        result.push(child);
+        if(childrenList && childrenList.length > 0){
+          this.convertTreeToList(childrenList,result);
+        }
+      });
+    }
+    return result;
+  }
   applyRelationships = (data) => {
     let levelStack = [], lastNode = null;
     return data.map((curr, index) => {
@@ -155,7 +181,10 @@ export class TreeComponentService {
         let modifyObj = {};
         modifyObj['reference'] = child.reference;
         if(child.allSelected){
-          modifyObj['allSelected'] = child.allSelected
+          modifyObj['reference']['allSelected'] = child.allSelected;
+        }
+        if(child.select){
+          modifyObj['reference']['select'] = child.select;
         }
         if(child.level == 0){
           result[child.item] = modifyObj;

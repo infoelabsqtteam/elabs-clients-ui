@@ -1,6 +1,6 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import { DataShareService, ModelService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {Component,OnInit,Input, Output,ViewChild,EventEmitter,AfterViewInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
@@ -36,19 +36,21 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
   @Input() id: string;
-  @Output() treeViewResponce = new EventEmitter();
+  @Output() treeViewComponentResponce = new EventEmitter();
   @ViewChild('treeView') public treeView: ModalDirective; 
 
   fieldName:any='';
   ddnfieldName:any;
   staticData:any={};
   staticDataSubscriber;
+  data:any;
   
 
   constructor(
     private treeComponentService: TreeComponentService,
     private modalService:ModelService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private commonfunctionService:CommonFunctionService
     ) { 
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
@@ -110,9 +112,52 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
           this.keys = treeKeys;
         }
         let buildTreeData = this.treeComponentService.buildFileTree(treeData,0,this.keys);
-        this.dataSource.data = buildTreeData;      
+        this.dataSource.data = buildTreeData;     
+        if(this.data){
+          let selected = this.treeComponentService.buildFileTree(this.data,0,this.keys);
+          let selectedNodeList = this.treeComponentService.convertTreeToList(JSON.parse(JSON.stringify(selected)),[])
+          console.log(selected);
+          console.log(selectedNodeList);
+          setTimeout(() => {
+            this.updateSelectedNodeTree(selectedNodeList);
+          }, 1000);
+          
+        } 
       }          
     } 
+  }
+  updateSelectedNodeTree(selectedNodes){
+    let allNodes = this.treeControl.dataNodes;
+    if(selectedNodes && selectedNodes.length > 0 && allNodes && allNodes.length > 0){ 
+      let idList = this.getIdListFromObjectList(selectedNodes);
+      let selectNodeList = allNodes.filter(res => idList.includes(res._id));
+      selectedNodes.forEach(node => {
+        let id = node._id;
+        let index = this.commonfunctionService.getIndexInArrayById(this.treeControl.dataNodes,id,'_id');
+        let treeNode = this.treeControl.dataNodes[index];
+        if(node && node.reference && node.reference.select){   
+          let lastKey = this.keys[(this.keys.length - 1)];
+          if(treeNode && treeNode.type == lastKey){
+            this.checklistSelection.select(treeNode)
+            //this.todoLeafItemSelectionToggle(treeNode);
+          }else{
+            this.todoItemSelectionToggle(treeNode);
+          }         
+          this.treeControl.expand(treeNode);
+        }else{
+          this.treeControl.expand(treeNode);
+        }
+      });
+    }    
+  }
+  getIdListFromObjectList(list){
+    let idList = [];
+    if(list && list.length > 0){
+      list.forEach(element => {
+        idList.push(element._id);
+      });
+    }
+    return idList;
   }
   getLevel = (node: TodoItemFlatNode) => node.level;
 
@@ -136,7 +181,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     flatNode.expandable = !!node.children?.length;
     flatNode.reference = node.reference;
     flatNode._id = node._id;
-    flatNode.parentId = node.parentId;
+    flatNode.pId = node.pId;
+    flatNode.pIndex = node.pIndex;
     if(level != 0 && this.keys[level-1]){      
       flatNode.type = this.keys[level-1];
       if(!flatNode.expandable){
@@ -151,6 +197,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TodoItemFlatNode): boolean {
+    if(this.treeControl && this.treeControl.dataNodes){
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected =
       descendants.length > 0 &&
@@ -158,13 +205,18 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         return this.checklistSelection.isSelected(child);
       });
     return descAllSelected;
+    }
+    return false;
   }
 
   /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
+    if(this.treeControl && this.treeControl.dataNodes){
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => this.checklistSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
+    }
+    return false;
   }
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
@@ -245,7 +297,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   // }
 
   showModal(alert){    
-    //this.data=this.staticData[alert.data];
+    this.data=alert.selectedData;
     let field = alert.field
     this.fieldName = field.label;
     this.ddnfieldName = field.ddn_field;    
@@ -266,11 +318,12 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   selectGridData(){
     //let treeControlData = this.treeControl.expansionModel.selected;
     //let data = this.dataSource.data;
+    console.log(this.checklistSelection.selected);
     let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
+    console.log(selectedData);
     let allNodes = this.treeControl.dataNodes;
     let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
     let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
-    console.log(rearrangedSelectedNode);
-    console.log(mapObjecThroughList);
+    this.treeViewComponentResponce.next(mapObjecThroughList);
   }
 }
