@@ -1,14 +1,7 @@
 import { Component, OnInit, Inject, Output, EventEmitter , Input,OnChanges,SimpleChanges, HostListener} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
-import { StorageService } from '../../../services/storage/storage.service';
-import { PermissionService } from '../../../services/permission/permission.service';
-import { DataShareService } from '../../../services/data-share/data-share.service';
-import { ApiService } from '../../../services/api/api.service';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { NotificationService } from 'src/app/services/notify/notification.service';
-import { EnvService } from 'src/app/services/env/env.service';
-import { ModelService } from 'src/app/services/model/model.service';
+import { StorageService, PermissionService, DataShareService, ApiService, AuthService, NotificationService, EnvService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-topbar',
@@ -27,8 +20,8 @@ export class TopbarComponent implements OnInit, OnChanges {
   AllModuleList:any=[];
   isShow:boolean = true;
 
-  logoPath = '';
-  teamName = '';
+  logoPath:any = '';
+  teamName:any = '';
   public userInfo: any;
   public userName: any;
   public userEmail: any;

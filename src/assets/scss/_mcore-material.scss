@@ -116,7 +116,9 @@ body {font-family:$roboto;font-size:13px;}
     position: absolute;top: 0;bottom: 0;width: 100%;left: 0;right: 0;background: rgb(255 255 255 / 20%);z-index: 4;
     .custom-spinner{left:50%;top:50%}
 }
-
+.rightclickmenu {width:150px;
+    span {font-size:13px;}
+}
 #form_resize.resizable {position: relative;
     .corner-handle {position: absolute;bottom: 0;right: 0;cursor: se-resize;background-color: #ccc;}
     .corner-handle img {width:18px;}
