@@ -10,13 +10,14 @@ import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Common } from 'src/app/shared/enums/common.enum';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-// import { HttpClient } from '@angular/common/http';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService} from '@core/web-core';
-import {defaultselectedData} from '../../modals/tree-view/interface';
+import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {TodoItemNode , TodoItemFlatNode,treeKeys} from '../../modals/tree-view/interface';
+import { TreeComponentService } from '../../modals/tree-view/tree-component.service';
 
 
 declare var tinymce: any;
-
 
 @Component({
   selector: 'app-form',
@@ -294,6 +295,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   getLocation:boolean = false;
   mapsAPILoaded: Observable<boolean>;
 
+  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+  nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
+  treeControl:any={};
+  treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
+  dataSource:any={};  
+
   // @HostListener('document:click') clickout() {
   //   this.term = {};
   // }
@@ -317,8 +324,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionService:GridCommonFunctionService,
     private ngZone: NgZone,
-    private limsCalculationsService:LimsCalculationsService
+    private limsCalculationsService:LimsCalculationsService,
+    private treeComponentService: TreeComponentService
 ) {
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren,
+    );
+    //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+    //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     this.tinymceConfig = {
       height: 500,
@@ -507,8 +523,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.maxDate = new Date(currentYear + 1, 11, 31); 
 
   }
-
-
 
   @HostListener('window:keyup.alt.u') onCrtlU() {
     this.saveFormData()
@@ -1089,8 +1103,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               element['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
-            default:
+            case "tree_view" :
+              this.treeControl[element.field_name] = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+              this.dataSource[element.field_name] = new MatTreeFlatDataSource(this.treeControl[element.field_name], this.treeFlattener);
               this.commonFunctionService.createFormControl(forControl, element, '', "text")
+              break;
+            default:
+              this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
           }
           if(element.tree_view_object && element.tree_view_object.field_name != ""){
@@ -2233,7 +2252,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.curTreeViewField = JSON.parse(JSON.stringify(field));   
         const treeViewData = {
           "field": this.curTreeViewField,
-          "selectedData":formValue[field.field_name] ? formValue[field.field_name]:defaultselectedData,
+          "selectedData":formValue[field.field_name] ? formValue[field.field_name]:{},
           "object": formValueWithCustomData
         }
         this.modalService.open('tree-view', treeViewData);
@@ -3760,9 +3779,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.tableFields = modifyObject.fields;
   }
   treeViewComponentResponce(responce){
-    if(responce && Object.keys(responce).length > 0){
+    if(responce && Object.keys(responce).length > 0 && this.curTreeViewField && this.curTreeViewField.field_name){
       const fieldName = this.curTreeViewField.field_name;
       this.templateForm.controls[fieldName].setValue(responce);
+      const treeData = this.treeComponentService.buildFileTree(responce,0,treeKeys);
+      this.dataSource[fieldName].data = treeData;
     }
   }
   isDisable(parent,chield){
@@ -5573,5 +5594,28 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
   }
+
+  getLevel = (node: TodoItemFlatNode) => node.level;
+
+  isExpandable = (node: TodoItemFlatNode) => node.expandable;
+
+  getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
+
+  hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
+
+ // hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+
+  /**
+   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
+   */
+  transformer = (node: TodoItemNode, level: number) => {
+    const existingNode = this.nestedNodeMap.get(node);
+    const flatNode =
+      existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
+    flatNode.item = node.item;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children?.length;
+    return flatNode;
+  };
 
 }

@@ -762,6 +762,26 @@
                                     <button class="plusicon" mat-icon-button *ngIf="!tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
                                 </div>
                             </div>
+                            <div class="test" *ngIf=" dataSource[tableField.field_name] && treeControl[tableField.field_name]">
+                                <mat-tree [dataSource]="dataSource[tableField.field_name]" [treeControl]="treeControl[tableField.field_name]">
+                                    <!-- This is the tree node template for leaf nodes -->
+                                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                                      <!-- use a disabled button to provide padding for tree leaf -->
+                                      <button mat-icon-button disabled></button>
+                                      {{node.item}}
+                                    </mat-tree-node>
+                                    <!-- This is the tree node template for expandable nodes -->
+                                    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                                      <button mat-icon-button matTreeNodeToggle
+                                              [attr.aria-label]="'Toggle ' + node.name">
+                                        <mat-icon class="mat-icon-rtl-mirror">
+                                          {{treeControl[tableField.field_name].isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                        </mat-icon>
+                                      </button>
+                                      {{node.item}}
+                                    </mat-tree-node>
+                                </mat-tree>
+                            </div>
                         </div>
                         <div *ngIf="tableField.type == 'tree_view_selection'">
                             <div class="position-relative">

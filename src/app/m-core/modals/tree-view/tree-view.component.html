@@ -39,7 +39,17 @@
             <span class="favibtn cursor-pointer all-sign" *ngIf="descendantsAllSelected(node)" [ngClass]="{'active': descendantsAllSelected(node)}" [matTooltip]="'All Selected'" [matTooltipPosition]="'above'"><mat-icon class="mat-icon-rtl-mirror">grade</mat-icon></span>
             <!-- <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button> -->
           </mat-tree-node>
-        </mat-tree>        
+        </mat-tree>   
+        
+        <!-- <div class="input-group-prepend" (click)="startRecording()" *ngIf="!isUserSpeaking">
+          <span class="input-group-text">record</span>
+        </div>
+        <button class="active-mic me-1" *ngIf="isUserSpeaking" (click)="stopRecording()">
+          <div class="plus-ring">stop</div>
+        </button>
+        <div [formGroup] = "searchForm">
+        <input type="text" class="form-control" placeholder="Start Typeing or click the mic and speak" formControlName="searchText">
+        </div> -->
       </div>
       <!--Footer-->
       <div class="modal-footer">

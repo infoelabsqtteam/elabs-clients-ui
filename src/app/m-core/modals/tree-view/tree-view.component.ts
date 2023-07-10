@@ -6,6 +6,9 @@ import {Component,OnInit,Input, Output,ViewChild,EventEmitter,AfterViewInit} fro
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import { TreeComponentService } from './tree-component.service';
 import {TodoItemNode , TodoItemFlatNode} from './interface';
+import { VoiceRecognitionService } from '../../voice-recognition.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tree-view',
@@ -26,11 +29,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //newItemName = '';
 
   treeControl: FlatTreeControl<TodoItemFlatNode>;
-
   treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
-
-  dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
-  keys:any=[];
+  dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;  
 
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
@@ -42,15 +42,22 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   fieldName:any='';
   ddnfieldName:any;
   staticData:any={};
-  staticDataSubscriber;
+  keys:any=[];
+  staticDataSubscriber:Subscription;
   data:any;
+
+  // Keep active api calls subscription.
+  // public searchForm: FormGroup;
+  // public isUserSpeaking: boolean = false;
   
 
   constructor(
     private treeComponentService: TreeComponentService,
     private modalService:ModelService,
     private dataShareService:DataShareService,
-    private commonfunctionService:CommonFunctionService
+    private commonfunctionService:CommonFunctionService,
+    private voiceRecognition: VoiceRecognitionService,
+   // private fb: FormBuilder,
     ) { 
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
@@ -63,6 +70,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
+    // Initialize form group.
+    // this.searchForm = this.fb.group({
+    //   searchText: ['', Validators.required],
+    // });
     
     
   }
@@ -75,6 +86,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     }
     this.modalService.remove(this.id);
     this.modalService.add(this);
+   // this.initVoiceInput();
   }
   ngAfterViewInit() {
     // for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
@@ -86,6 +98,13 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
       //   this.treeControl.expand(this.treeControl.dataNodes[i])
       // }
     // }
+  }
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    if(this.staticDataSubscriber){
+      this.staticDataSubscriber.unsubscribe();
+    }
   }
   setStaticData(staticDatas){
     if(staticDatas && Object.keys(staticDatas).length > 0 && staticDatas[this.ddnfieldName]) {
@@ -113,14 +132,12 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         }
         let buildTreeData = this.treeComponentService.buildFileTree(treeData,0,this.keys);
         this.dataSource.data = buildTreeData;     
-        if(this.data){
+        if(this.data && typeof this.data == 'object' && Object.keys(this.data).length > 0){
           let selected = this.treeComponentService.buildFileTree(this.data,0,this.keys);
           let selectedNodeList = this.treeComponentService.convertTreeToList(JSON.parse(JSON.stringify(selected)),[])
-          console.log(selected);
-          console.log(selectedNodeList);
-          setTimeout(() => {
-            this.updateSelectedNodeTree(selectedNodeList);
-          }, 1000);
+          //console.log(selected);
+          //console.log(selectedNodeList);
+          this.updateSelectedNodeTree(selectedNodeList);
           
         } 
       }          
@@ -129,13 +146,13 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   updateSelectedNodeTree(selectedNodes){
     let allNodes = this.treeControl.dataNodes;
     if(selectedNodes && selectedNodes.length > 0 && allNodes && allNodes.length > 0){ 
-      let idList = this.getIdListFromObjectList(selectedNodes);
-      let selectNodeList = allNodes.filter(res => idList.includes(res._id));
+      //let idList = this.getIdListFromObjectList(selectedNodes);
+      //let selectNodeList = allNodes.filter(res => idList.includes(res._id));
       selectedNodes.forEach(node => {
         let id = node._id;
         let index = this.commonfunctionService.getIndexInArrayById(this.treeControl.dataNodes,id,'_id');
         let treeNode = this.treeControl.dataNodes[index];
-        if(node && node.reference && node.reference.select){   
+        if(node && node.reference && node.reference.selected){   
           let lastKey = this.keys[(this.keys.length - 1)];
           if(treeNode && treeNode.type == lastKey){
             this.checklistSelection.select(treeNode)
@@ -150,15 +167,15 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
       });
     }    
   }
-  getIdListFromObjectList(list){
-    let idList = [];
-    if(list && list.length > 0){
-      list.forEach(element => {
-        idList.push(element._id);
-      });
-    }
-    return idList;
-  }
+  // getIdListFromObjectList(list){
+  //   let idList = [];
+  //   if(list && list.length > 0){
+  //     list.forEach(element => {
+  //       idList.push(element._id);
+  //     });
+  //   }
+  //   return idList;
+  // }
   getLevel = (node: TodoItemFlatNode) => node.level;
 
   isExpandable = (node: TodoItemFlatNode) => node.expandable;
@@ -309,21 +326,67 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     
   } 
 
-  closeModal(){
-    this.fieldName='';
-    this.ddnfieldName = '';
-    this.treeView.hide();
+  closeModal(){    
+    this.treeViewComponentResponce.next({});
+    this.close();
   }
 
   selectGridData(){
     //let treeControlData = this.treeControl.expansionModel.selected;
     //let data = this.dataSource.data;
-    console.log(this.checklistSelection.selected);
+    //console.log(this.checklistSelection.selected);
     let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
-    console.log(selectedData);
+    //console.log(selectedData);
     let allNodes = this.treeControl.dataNodes;
     let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
+    //console.log(rearrangedSelectedNode);
     let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
+    //console.log(mapObjecThroughList);
     this.treeViewComponentResponce.next(mapObjecThroughList);
+    this.close();
   }
+  close(){
+    this.fieldName='';
+    this.ddnfieldName = '';    
+    this.data = {};
+    this.keys = [];
+    this.staticData = {};
+    this.treeView.hide();
+  }
+
+  /**
+   * @description Function to stop recording.
+   */
+  //  stopRecording() {
+  //   this.voiceRecognition.stop();
+  //   this.isUserSpeaking = false;
+  // }
+
+  /**
+   * @description Function for initializing voice input so user can chat with machine.
+   */
+  // initVoiceInput() {
+  //   // Subscription for initializing and this will call when user stopped speaking.
+  //   this.voiceRecognition.init().subscribe(() => {
+  //     // User has stopped recording
+  //     // Do whatever when mic finished listening
+  //     console.log('this is init subscribe');
+  //   });
+
+  //   // Subscription to detect user input from voice to text.
+  //   this.voiceRecognition.speechInput().subscribe((input) => {
+  //     // Set voice text output to
+  //     console.log(input);
+  //     this.searchForm.controls.searchText.setValue(input);
+  //   });
+  // }
+
+  /**
+   * @description Function to enable voice input.
+   */
+  // startRecording() {
+  //   this.isUserSpeaking = true;
+  //   this.voiceRecognition.start();
+  //   this.searchForm.controls.searchText.reset();
+  // }
 }

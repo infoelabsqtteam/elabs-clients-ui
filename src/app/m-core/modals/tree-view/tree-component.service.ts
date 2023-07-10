@@ -67,7 +67,7 @@ export class TreeComponentService {
     let selectedNodesWithParent = [];    
     if(allNodes && allNodes.length > 0 && selectedNodes && selectedNodes.length > 0){
       selectedNodes.forEach(selectNode => {
-        if(keys.includes(selectNode.type) && selectNode.expandable){
+        if((keys.includes(selectNode.type) || selectNode.level == 0)&& selectNode.expandable){
           selectNode.allSelected = true;
         }else{
           selectNode.allSelected = false;
@@ -184,7 +184,7 @@ export class TreeComponentService {
           modifyObj['reference']['allSelected'] = child.allSelected;
         }
         if(child.select){
-          modifyObj['reference']['select'] = child.select;
+          modifyObj['reference']['selected'] = child.select;
         }
         if(child.level == 0){
           result[child.item] = modifyObj;
