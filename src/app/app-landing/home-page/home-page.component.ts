@@ -1,11 +1,8 @@
 import { Component, Input, OnInit, ViewChild, ElementRef,Renderer2 } from '@angular/core';
-import { StorageService } from '../../services/storage/storage.service';
 import { Router } from '@angular/router';
-
 import { OwlOptions } from 'ngx-owl-carousel-o';
-import { DataShareService } from '../../services/data-share/data-share.service';
 import { solution } from '../../core/header-landing-page/menu';
-import { ModelService } from 'src/app/services/model/model.service';
+import { ModelService, DataShareService, StorageService} from '@core/web-core';
 
 @Component({
   selector: 'app-home-page',

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/services/api/auth/auth.service';
-import { EnvService } from 'src/app/services/env/env.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { AuthService, EnvService, StorageService } from '@core/web-core';
+
 
 @Component({
   selector: 'app-otp-varification',
