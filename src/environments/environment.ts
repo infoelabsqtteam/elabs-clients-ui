@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   baseUrl: 'https://omoknow.com/rest/',
-    serverhost: "https://sitserverascgroup.e-labs.ai",
+    serverhost: "http://localhost:8104",
     // serverhost: "https://testinventlandserver.e-labs.ai/rest/",
     // serverhost:"http:localhost:8104/rest/",
   appId: "ELABS",

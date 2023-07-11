@@ -798,4 +798,12 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.modelService.open('pdf_model', {url});
     }
 
+    raiseTicket() {
+        this.router.navigate(['browse/TKM/support_task_master/support_task_master']);
+    }
+
+    viewTicket() {
+        this.router.navigate(['browse/TKM/support_task_master/support_task_master']);
+    }
+
 }
