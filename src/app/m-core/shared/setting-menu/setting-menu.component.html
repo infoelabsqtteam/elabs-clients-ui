@@ -21,6 +21,10 @@
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="gitInfo()"><mat-icon>info</mat-icon><div mat-subheader>Version: {{gitVersion}}</div></mat-list-item>
             <mat-divider></mat-divider>
+            <mat-list-item matRipple (click)="raiseTicket()"><mat-icon>support</mat-icon><div mat-subheader>Raise a Ticket</div></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item matRipple (click)="viewTicket()"><mat-icon>view_list</mat-icon><div mat-subheader>View Ticket Status</div></mat-list-item>
+            <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="feedback()"><mat-icon>forum</mat-icon><div mat-subheader>Feedback</div></mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item matRipple routerLink="/createpwd"><mat-icon>lock_clock</mat-icon><div mat-subheader>Change Password</div></mat-list-item>
