@@ -23,4 +23,3 @@
     _id:string;
     action:any;
   }
-  export const treeKeys:Array<String> = ["menus", "submenus", "templateTabs"];

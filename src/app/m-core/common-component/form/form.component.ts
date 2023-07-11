@@ -13,7 +13,7 @@ import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService} from '@core/web-core';
 import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
-import {TodoItemNode , TodoItemFlatNode,treeKeys} from '../../modals/tree-view/interface';
+import {TodoItemNode , TodoItemFlatNode} from '../../modals/tree-view/interface';
 import { TreeComponentService } from '../../modals/tree-view/tree-component.service';
 
 
@@ -296,10 +296,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   mapsAPILoaded: Observable<boolean>;
 
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
-  nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
-  treeControl:any={};
-  treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
-  dataSource:any={};  
+  // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
+  // treeControl:any={};
+  // treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
+  // dataSource:any={};  
 
   // @HostListener('document:click') clickout() {
   //   this.term = {};
@@ -327,12 +327,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private limsCalculationsService:LimsCalculationsService,
     private treeComponentService: TreeComponentService
 ) {
-    this.treeFlattener = new MatTreeFlattener(
-      this.transformer,
-      this.getLevel,
-      this.isExpandable,
-      this.getChildren,
-    );
+    // this.treeFlattener = new MatTreeFlattener(
+    //   this.transformer,
+    //   this.getLevel,
+    //   this.isExpandable,
+    //   this.getChildren,
+    // );
     //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -1104,8 +1104,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
             case "tree_view" :
-              this.treeControl[element.field_name] = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
-              this.dataSource[element.field_name] = new MatTreeFlatDataSource(this.treeControl[element.field_name], this.treeFlattener);
+              // this.treeControl[element.field_name] = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+              // this.dataSource[element.field_name] = new MatTreeFlatDataSource(this.treeControl[element.field_name], this.treeFlattener);
               this.commonFunctionService.createFormControl(forControl, element, '', "text")
               break;
             default:
@@ -3780,11 +3780,32 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   treeViewComponentResponce(responce){
     if(responce && Object.keys(responce).length > 0 && this.curTreeViewField && this.curTreeViewField.field_name){
-      const fieldName = this.curTreeViewField.field_name;
+      const fieldName = this.curTreeViewField.field_name;      
       this.templateForm.controls[fieldName].setValue(responce);
-      const treeData = this.treeComponentService.buildFileTree(responce,0,treeKeys);
-      this.dataSource[fieldName].data = treeData;
+      this.updateTreeViewData(responce,this.curTreeViewField);
     }
+  }
+  updateTreeViewData(responce,field){
+    const fieldName = field.field_name;
+    let keys = [];
+    let fields = [];
+    if(field && field.treeViewKeys){
+      keys = field.treeViewKeys;
+    }
+    if(field && field.fields && field.fields.length > 0){
+      fields = field.fields;
+    }
+    const treeData = this.treeComponentService.buildFileTree(responce,0,keys);
+    //console.log(treeData);
+    let selectedNodeList = this.treeComponentService.convertTreeToList(JSON.parse(JSON.stringify(treeData)),[]);
+    let childList = [];
+    if(fields && fields.length > 0){
+      childList = this.treeComponentService.convertParentNodeToChildNodeList(selectedNodeList,fields);
+    }
+    //console.log(selectedNodeList);
+    //console.log(childList);
+    //this.dataSource[fieldName].data = treeData;
+    this.treeViewData[fieldName] = childList;
   }
   isDisable(parent,chield){
     const  formValue = this.getFormValue(true);  
@@ -3878,6 +3899,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.latitude = 0;
     this.longitude = 0;
     this.address = "";
+    this.treeViewData={};
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
@@ -4694,6 +4716,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(formValue[fieldName] != null && formValue[fieldName] != undefined){
             let treeValue = object == null ? null : object;
             this.templateForm.controls[fieldName].setValue(treeValue);
+            if(treeValue){
+              this.updateTreeViewData(treeValue,JSON.parse(JSON.stringify(element)));
+            }            
           }
           break;
         case "stepper":
@@ -5595,27 +5620,27 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     document.addEventListener('mouseup', mouseUpHandler);
   }
 
-  getLevel = (node: TodoItemFlatNode) => node.level;
+  // getLevel = (node: TodoItemFlatNode) => node.level;
 
-  isExpandable = (node: TodoItemFlatNode) => node.expandable;
+  // isExpandable = (node: TodoItemFlatNode) => node.expandable;
 
-  getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
+  // getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
 
-  hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
+  // hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
  // hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
-  transformer = (node: TodoItemNode, level: number) => {
-    const existingNode = this.nestedNodeMap.get(node);
-    const flatNode =
-      existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
-    flatNode.item = node.item;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children?.length;
-    return flatNode;
-  };
+  // transformer = (node: TodoItemNode, level: number) => {
+  //   const existingNode = this.nestedNodeMap.get(node);
+  //   const flatNode =
+  //     existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
+  //   flatNode.item = node.item;
+  //   flatNode.level = level;
+  //   flatNode.expandable = !!node.children?.length;
+  //   return flatNode;
+  // };
 
 }

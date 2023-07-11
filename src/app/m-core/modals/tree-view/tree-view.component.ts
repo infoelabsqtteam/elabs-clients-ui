@@ -126,10 +126,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     if(this.ddnfieldName && this.ddnfieldName != ''){
       if(this.staticData[this.ddnfieldName]){
         let treeData = this.staticData[this.ddnfieldName];
-        let treeKeys = this.staticData['keys'];
-        if(treeKeys && treeKeys.length > 0){
-          this.keys = treeKeys;
-        }
+        // let treeKeys = this.staticData['keys'];
+        // if(treeKeys && treeKeys.length > 0){
+        //   this.keys = treeKeys;
+        // }
         let buildTreeData = this.treeComponentService.buildFileTree(treeData,0,this.keys);
         this.dataSource.data = buildTreeData;     
         if(this.data && typeof this.data == 'object' && Object.keys(this.data).length > 0){
@@ -317,7 +317,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.data=alert.selectedData;
     let field = alert.field
     this.fieldName = field.label;
-    this.ddnfieldName = field.ddn_field;    
+    this.ddnfieldName = field.ddn_field;  
+    if(field && field.treeViewKeys){
+      this.keys = field.treeViewKeys;
+    }      
     this.treeView.show();
     if(this.treeControl){
       this.treeControl.collapseAll();

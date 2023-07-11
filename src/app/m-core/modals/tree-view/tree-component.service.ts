@@ -62,6 +62,124 @@ export class TreeComponentService {
     }, []);
   }
 
+  convertParentNodeToChildNodeList(list,fields){
+    let parentGroup = [];
+    let childList = [];
+    let previousIndex = -1;
+    let resultList = [];
+    for (let i = 0; i < list.length; i++) {
+      const node = list[i];      
+      const pIndex = node.pIndex;
+      if(pIndex && pIndex != ''){
+        const indexlist = pIndex.split('.');
+        if(indexlist && indexlist.length == 3){
+          if(previousIndex != -1){
+            if(previousIndex == indexlist.length){
+              if(parentGroup.length == 3){
+                parentGroup.splice((parentGroup.length-1),1);
+              }
+              childList.push(node);
+            }else{
+              if(parentGroup.length > 0 && childList.length > 0){            
+                this.addChildParentList(parentGroup,childList,fields,resultList);
+                childList = [];
+                parentGroup.splice((parentGroup.length-1),1);
+                parentGroup.push(node);  
+                previousIndex = indexlist.length;          
+              }
+            }
+          }else{
+            parentGroup.push(node);
+            childList.push(node);
+          }
+          previousIndex = indexlist.length;          
+        }else if(indexlist && indexlist.length == 4){
+          if(previousIndex == 3){
+            childList = [];
+            childList.push(node);
+          }else{
+            childList.push(node);
+          }          
+          previousIndex = indexlist.length;
+        }else if(indexlist && indexlist.length == 2){
+          if(parentGroup.length > 0 && childList.length > 0){            
+            this.addChildParentList(parentGroup,childList,fields,resultList);
+            childList = [];
+            const firstParent = [];
+            firstParent.push(parentGroup[0]);
+            parentGroup = [];
+            parentGroup.push(firstParent[0]);
+            parentGroup.push(node);            
+          }else{
+            parentGroup.push(node);
+          }
+          previousIndex = -1;
+        }else{
+          if(childList.length > 0){
+            this.addChildParentList(parentGroup,childList,fields,resultList);
+            childList = [];
+          }
+          parentGroup = [];
+          parentGroup.push(node);
+          previousIndex = -1;
+        }
+        if(list.length == i+1){
+          if(parentGroup.length > 0 && childList.length > 0){
+            this.addChildParentList(parentGroup,childList,fields,resultList);
+            childList = [];
+            parentGroup = [];
+          }
+        }
+      }     
+      
+    }
+    return resultList;
+  } 
+  addChildParentList(parentList,ChildList,fields,result){
+    ChildList.forEach(child => {
+      let obj = {};
+      if(parentList.length == 2){
+        fields.forEach((field,i) => {
+          if(i == 2){
+            obj[field.field_name] = null;
+          }else if(i == 3){
+            obj[field.field_name] = child.reference;
+          }else{
+            obj[field.field_name] = parentList[i].reference;
+          }          
+        });
+      }else if(parentList.length == 3){
+        fields.forEach((field,i) => {          
+          if(i == 3){
+            obj[field.field_name] = child.reference;
+          }else{
+            obj[field.field_name] = parentList[i].reference;
+          }                
+        });
+      }
+      result.push(obj);
+    });
+    // if(list && fields && list.length == fields.length){
+    //   checkSubMenu = false;
+    // }
+    // let object = {};
+    // for (let i = 0; i < list.length; i++) {
+    //   const element = list[i];
+    //   let field = fields[i];
+    //   let fieldName = field.field_name;                           
+    //   if(i == 2){
+    //     if(list && list.length == 3){
+
+    //     }
+    //   }else{
+    //     object[fieldName] = element.reference;
+    //   }
+    //   if(list && list.length == (i+1)){
+    //     result.push(object);
+    //   }      
+    // }
+  }
+
   //this function for get selected node tree
   getSelectedNodeWithParent(allNodes,selectedNodes,keys:any){
     let selectedNodesWithParent = [];    
