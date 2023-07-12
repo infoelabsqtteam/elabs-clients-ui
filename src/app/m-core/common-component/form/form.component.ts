@@ -3782,7 +3782,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(responce && Object.keys(responce).length > 0 && this.curTreeViewField && this.curTreeViewField.field_name){
       const fieldName = this.curTreeViewField.field_name;      
       this.templateForm.controls[fieldName].setValue(responce);
-      this.updateTreeViewData(responce,this.curTreeViewField);
+      let treeResponceData = JSON.parse(JSON.stringify(responce));
+      this.updateTreeViewData(treeResponceData,this.curTreeViewField);
     }
   }
   updateTreeViewData(responce,field){

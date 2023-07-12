@@ -226,6 +226,13 @@ export class TreeComponentService {
     if(sortedData && sortedData.length > 0){
       sortedData.forEach(data => {
         let check = this.commonfunctionService.checkDataAlreadyAddedInListOrNot('_id',data._id,selectedNodesWithParent);
+        if(check){
+          let existDataIndex = this.commonfunctionService.getIndexInArrayById(selectedNodesWithParent,data._id);
+          let object = selectedNodesWithParent[existDataIndex];
+          if(object.pIndex != data.pIndex){
+            check = false;
+          }
+        }
         if(!check){
           selectedNodesWithParent.push(data);
         } 
