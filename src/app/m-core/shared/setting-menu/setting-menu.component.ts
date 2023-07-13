@@ -802,8 +802,4 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.router.navigate(['browse/TKM/support_task_master/support_task_master']);
     }
 
-    viewTicket() {
-        this.router.navigate(['browse/TKM/support_task_master/support_task_master']);
-    }
-
 }
