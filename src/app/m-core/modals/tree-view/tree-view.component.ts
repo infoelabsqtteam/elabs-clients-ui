@@ -152,7 +152,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         let id = node._id;
         let index = this.commonfunctionService.getIndexInArrayById(this.treeControl.dataNodes,id,'_id');
         let treeNode = this.treeControl.dataNodes[index];
-        if(node && node.reference && node.reference.selected){   
+        if(node && node.reference && node.reference.select){   
           let lastKey = this.keys[(this.keys.length - 1)];
           if(treeNode && treeNode.type == lastKey){
             this.checklistSelection.select(treeNode)
@@ -337,12 +337,12 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   selectGridData(){
     //let treeControlData = this.treeControl.expansionModel.selected;
     //let data = this.dataSource.data;
-    //console.log(this.checklistSelection.selected);
+    console.log(this.checklistSelection.selected);
     let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
-    //console.log(selectedData);
+    console.log(selectedData);
     let allNodes = this.treeControl.dataNodes;
     let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
-    //console.log(rearrangedSelectedNode);
+    console.log(rearrangedSelectedNode);
     let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
     //console.log(mapObjecThroughList);
     this.treeViewComponentResponce.next(mapObjecThroughList);

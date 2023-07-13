@@ -309,7 +309,7 @@ export class TreeComponentService {
           modifyObj['reference']['allSelected'] = child.allSelected;
         }
         if(child.select){
-          modifyObj['reference']['selected'] = child.select;
+          modifyObj['reference']['select'] = child.select;
         }
         if(child.level == 0){
           result[child.item] = modifyObj;
