@@ -32,6 +32,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     loginUserIcon: boolean = false;
     getmenu: boolean = true;
     isShow: boolean = true;
+    private profileMenuItemList: any = [];
 
 
     public userInfo: any;
@@ -192,6 +193,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             { name: 'Our Locations', value: 'our-locations' },
         ]
 
+        this.profileMenuItemList = this.storageService.getApplicationValueByKey("profileMenuItemList");
     }
 
 
@@ -798,8 +800,11 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.modelService.open('pdf_model', {url});
     }
 
-    raiseTicket() {
-        this.router.navigate(['browse/TKM/support_task_master/support_task_master']);
+    profileMenu(menu) {
+        if (menu && menu.value && menu.value != ''){
+            const value = menu.value;
+            this.router.navigate([value]);
+        }
     }
 
 }
