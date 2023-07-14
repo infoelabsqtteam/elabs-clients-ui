@@ -21,6 +21,15 @@
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="gitInfo()"><mat-icon>info</mat-icon><div mat-subheader>Version: {{gitVersion}}</div></mat-list-item>
             <mat-divider></mat-divider>
+            <span *ngIf="profileMenuItemList && profileMenuItemList.length > 0">
+              <span *ngFor="let menu of profileMenuItemList; let i = index">
+                <mat-list-item matRipple (click)="profileMenu(menu)">
+                  <mat-icon>support</mat-icon>
+                  <div mat-subheader>{{menu.label}}</div>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+              </span>
+            </span>
             <mat-list-item matRipple (click)="feedback()"><mat-icon>forum</mat-icon><div mat-subheader>Feedback</div></mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item matRipple routerLink="/createpwd"><mat-icon>lock_clock</mat-icon><div mat-subheader>Change Password</div></mat-list-item>
