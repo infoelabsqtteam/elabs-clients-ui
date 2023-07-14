@@ -32,7 +32,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     loginUserIcon: boolean = false;
     getmenu: boolean = true;
     isShow: boolean = true;
-    private profileMenuItemList: any = [];
+    public profileMenuItemList: any = [];
 
 
     public userInfo: any;
