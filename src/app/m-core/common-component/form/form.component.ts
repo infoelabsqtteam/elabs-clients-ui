@@ -1105,9 +1105,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               // this.treeControl[element.field_name] = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
               // this.dataSource[element.field_name] = new MatTreeFlatDataSource(this.treeControl[element.field_name], this.treeFlattener);
               this.commonFunctionService.createFormControl(forControl, element, '', "text")
-              break;
             default:
-              this.commonFunctionService.createFormControl(forControl, element, '', "text");
+              if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
+                const value = element.defaultValue;
+                this.commonFunctionService.createFormControl(forControl, element, value, "text");
+              }else{
+                this.commonFunctionService.createFormControl(forControl, element, '', "text");
+              }
               break;
           }
           if(element.tree_view_object && element.tree_view_object.field_name != ""){
