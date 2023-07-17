@@ -2,12 +2,10 @@ import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject, ViewChild } from '@angular/core';
 import { DatePipe, Location,DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
-import { KeyCode} from '../../../shared/enums/keycodes.enum';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService } from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common } from '@core/web-core';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { V } from '@angular/cdk/keycodes';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -843,7 +841,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       this.selectedRowIndex = id;    
     } else {
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
@@ -1127,7 +1125,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
       this.apiService.GetExportExclLink(getExportData);
     }else{
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
@@ -1280,7 +1278,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
             this.editedRowData(index,button.onclick.action_name)
           }else{
-            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            this.permissionService.checkTokenStatusForPermission();
             //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
@@ -1293,7 +1291,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             this.commonFunctionService.getAuditHistory(gridData);
             this.modalService.open('audit-history',obj);
           }else {
-            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            this.permissionService.checkTokenStatusForPermission();
             //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;

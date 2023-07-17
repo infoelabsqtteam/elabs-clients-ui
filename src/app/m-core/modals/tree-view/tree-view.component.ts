@@ -1,12 +1,10 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import { CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, ModelService,TreeComponentService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {Component,OnInit,Input, Output,ViewChild,EventEmitter,AfterViewInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import { TreeComponentService } from './tree-component.service';
 import {TodoItemNode , TodoItemFlatNode} from './interface';
-import { VoiceRecognitionService } from '../../voice-recognition.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -52,11 +50,11 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   
 
   constructor(
-    private treeComponentService: TreeComponentService,
     private modalService:ModelService,
     private dataShareService:DataShareService,
     private commonfunctionService:CommonFunctionService,
-    private voiceRecognition: VoiceRecognitionService,
+    private treeComponentService:TreeComponentService
+
    // private fb: FormBuilder,
     ) { 
     this.treeFlattener = new MatTreeFlattener(
