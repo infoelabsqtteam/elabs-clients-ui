@@ -466,6 +466,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.total = 0;
     this.headElements = [];
     this.details = {};
+    this.forms={};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if(this.selectTabIndex != -1){
@@ -481,8 +482,15 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
-      this.getTabData(this.selectTabIndex,this.formName);
-      this.temView = true;
+      let tab = this.tabs[this.selectTabIndex];
+      if(tab && tab.tab_name && this.permissionService.checkPermission(tab.tab_name,'view')){
+        this.getTabData(this.selectTabIndex,this.formName);
+        this.temView = true;
+      }else{
+        this.temView = false;
+        this.tableFields=[];
+        this.actionButtons =[];
+      }      
     } else {
       this.temView = false;
       this.tableFields=[];

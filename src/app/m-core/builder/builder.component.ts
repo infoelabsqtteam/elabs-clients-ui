@@ -344,18 +344,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }else{
         if(this.selectTabIndex != i){
           this.apiService.resetGridData();
-        }       
-        this.selectTabIndex = i;  
-        this.getViewMode(); 
+        }  
+        
       }       
     } else {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
+    this.selectTabIndex = i;  
+    this.getViewMode(); 
   } 
-  checkPermission(tab){
-    return !this.permissionService.checkPermission(tab.tab_name, 'view')
-  }
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
         this.grid_view_mode="inlineFormView";

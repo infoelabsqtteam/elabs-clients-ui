@@ -4720,7 +4720,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             let treeValue = object == null ? null : object;
             this.templateForm.controls[fieldName].setValue(treeValue);
             if(treeValue){
-              this.updateTreeViewData(treeValue,JSON.parse(JSON.stringify(element)));
+              this.updateTreeViewData(JSON.parse(JSON.stringify(treeValue)),JSON.parse(JSON.stringify(element)));
             }            
           }
           break;
