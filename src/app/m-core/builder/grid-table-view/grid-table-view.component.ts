@@ -835,6 +835,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }   
         if(this.checkFieldsAvailability('UPDATE')){
           this.addNewForm(formName);
+          this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[id]);
         }else{
           return;
         }        
