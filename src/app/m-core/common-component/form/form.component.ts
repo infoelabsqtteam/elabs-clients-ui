@@ -675,6 +675,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.getGooglepMapCurrentPosition();
 
   }
+  
   updateRunningData(data:any){
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
@@ -685,6 +686,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }else{
       this.selectedRowIndex = -1;
+      if(this.editedRowIndex == -1) {
+        if(data && data._id == undefined) {
+          setTimeout(() => {
+            this.updateDataOnFormField(data);
+          }, 100);
+        }
+      }
     }
   }
   async getGooglepMapCurrentPosition(){
