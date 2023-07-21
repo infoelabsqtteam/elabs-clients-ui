@@ -675,6 +675,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.getGooglepMapCurrentPosition();
 
   }
+  
   updateRunningData(data:any){
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
