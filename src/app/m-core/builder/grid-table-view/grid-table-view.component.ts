@@ -12,6 +12,7 @@ import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { V } from '@angular/cdk/keycodes';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -296,7 +297,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     @Inject(DOCUMENT) private document: Document,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionServie:GridCommonFunctionService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private clipboard: Clipboard
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -848,6 +850,30 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
+
+
+  cloneData() {
+    if(this.rowSelectionIndex != -1) {
+      let selectedObject = JSON.parse(JSON.stringify(this.elements[this.rowSelectionIndex]));
+      let copyObject = {};
+      if(this.tableFields && this.tableFields.length > 0) {
+        this.tableFields.forEach(field => {
+          let fieldName = "";
+          if(field && field.field_name && field.field_name != ""){
+            fieldName = field.field_name;
+          }
+          if(fieldName != "" && selectedObject[fieldName] != undefined) {
+            copyObject[fieldName] = JSON.parse(JSON.stringify(selectedObject[fieldName]));
+          }
+        });
+      }
+      this.addNewForm('NEW');
+      this.dataShareService.shareGridRunningData({"data" : copyObject});
+      
+    }
+  }
+
+  
   addAndUpdateResponce(element) {
     this.selectedRowIndex = -1;
     if(this.pageNumber == undefined || this.pageNumber == -1 || this.pageNumber == 0){
