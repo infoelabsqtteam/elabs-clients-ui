@@ -12,7 +12,6 @@ import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { V } from '@angular/cdk/keycodes';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Clipboard } from '@angular/cdk/clipboard';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -297,8 +296,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     @Inject(DOCUMENT) private document: Document,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionServie:GridCommonFunctionService,
-    private sanitizer: DomSanitizer,
-    private clipboard: Clipboard
+    private sanitizer: DomSanitizer
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
