@@ -36,8 +36,8 @@
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
         </span>        
-        <button mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button>
-        <mat-menu #notify="matMenu" xPosition="before" class="filterdrowdownmenu">
+        <button *ngIf="headElements.length > 0" mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button>
+        <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
             <span class="example-list-section">
                 <ul class="ml-2 mt-2 mb-2">
                   <li *ngFor="let head of headElements; let i = index" >
@@ -211,8 +211,11 @@
                                             </div>
                                         </td>                                        
                                     </tr>
-                                    <tr *ngIf="elements.length == 0">
-                                        <td [attr.colspan]="headElements.length + 1" class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+                                    <tr *ngIf="elements.length == 0 && headElements.length != 0">
+                                        <td [attr.colspan]="headElements.length + 1"  class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+                                    </tr>
+                                    <tr *ngIf="elements.length == 0 && headElements.length == 0">
+                                        <td [attr.colspan]="headElements.length + 1"  class="text-center"><div class="py-3 font-weight-bold">Permission denied !!!</div></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -244,7 +247,7 @@
     </div>
 </section>
 
-<section>
+<section *ngIf="elements.length > 0">
     <mat-card-content class="m-0 pt-4 text-center">
         <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
     </mat-card-content>

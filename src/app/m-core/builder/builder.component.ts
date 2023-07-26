@@ -179,16 +179,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
       // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
     }
     if(routers.snapshot.params["moduleId"]){
-      let AllModuleList = this.storageService.GetModifyModules();
-      if(AllModuleList == undefined || AllModuleList == undefined || AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
-        AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules());
-        this.storageService.SetModifyModules(AllModuleList);
-      }
+      let AllModuleList = this.storageService.GetModules();
+      // if(AllModuleList == undefined || AllModuleList == undefined || AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
+      //   AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules());
+      //   this.storageService.SetModifyModules(AllModuleList);
+      // }
       if(AllModuleList != undefined && Array.isArray(AllModuleList)){
         const moduleName = routers.snapshot.params["moduleId"];
         const moduleIndex = this.commonFunctionService.getIndexInArrayById(AllModuleList,moduleName,'name');
         if(routers.snapshot.params["menuId"]){
-            if(moduleIndex != -1 && AllModuleList[moduleIndex].display){
+            if(moduleIndex != -1 && AllModuleList[moduleIndex]){
               const module = AllModuleList[moduleIndex];
               let menuList = [];
               if(module && module.menu_list && module.menu_list.length > 0){
@@ -263,11 +263,13 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
   }
   setGridCountData(counts){
-    Object.keys(counts).forEach(key => { 
-      if(counts[key]){
-        this.gridCountByTab[key] = JSON.parse(JSON.stringify(counts[key]));
-      }     
-    })
+    if(counts && Object.keys(counts).length > 0){
+      Object.keys(counts).forEach(key => { 
+        if(counts[key]){
+          this.gridCountByTab[key] = JSON.parse(JSON.stringify(counts[key]));
+        }     
+      })
+    }
   }
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
@@ -342,18 +344,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }else{
         if(this.selectTabIndex != i){
           this.apiService.resetGridData();
-        }       
-        this.selectTabIndex = i;  
-        this.getViewMode(); 
+        }  
+        
       }       
     } else {
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
+    this.selectTabIndex = i;  
+    this.getViewMode(); 
   } 
-  checkPermission(tab){
-    return !this.permissionService.checkPermission(tab.tab_name, 'view')
-  }
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
         this.grid_view_mode="inlineFormView";

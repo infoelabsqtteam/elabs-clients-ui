@@ -19,9 +19,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private menuOrModuleCommounService:MenuOrModuleCommonService
   ) {
     
-    let moduleList = this.storageService.GetModules();
-    this.AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(moduleList);
-    this.storageService.SetModifyModules(this.AllModuleList);
+    //let moduleList = this.storageService.GetModules();
+    this.AllModuleList = this.storageService.GetModules();
+    //this.storageService.SetModifyModules(this.AllModuleList);
     if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
       if(this.AllModuleList.length == 1){
         this.GoToSelectedModule(this.AllModuleList[0],"");

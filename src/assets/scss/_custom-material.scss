@@ -106,6 +106,32 @@ body.modal-open .modal-backdrop {display:none !important;}
 .mat-progress-spinner circle, .mat-spinner circle{   
     stroke: $buttoncolor!important;
 }
+.tree-view{
+    .mat-tree-node{
+        min-height: 40px!important;
+        .mat-icon-button{
+            width: 25px;
+            height: 25px;
+            flex-shrink: 0;
+            line-height: 25px;
+        }
+        .mat-checkbox .mat-checkbox-layout{
+            line-height: inherit !important;
+            margin-bottom: 0px!important;
+            padding-top: 2px!important;
+          }
+        .all-sign{
+            line-height: 0.1;
+            .mat-icon{
+                font-size: 15px;
+                line-height: 25px;
+            }
+        }
+        .active{
+            color: #0082d5;
+        }
+    }
+}
 
 
 

@@ -2,12 +2,10 @@ import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject, ViewChild } from '@angular/core';
 import { DatePipe, Location,DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
-import { KeyCode} from '../../../shared/enums/keycodes.enum';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { Common } from 'src/app/shared/enums/common.enum';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService } from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common } from '@core/web-core';
 import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
 import { V } from '@angular/cdk/keycodes';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -468,6 +466,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.total = 0;
     this.headElements = [];
     this.details = {};
+    this.forms={};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if(this.selectTabIndex != -1){
@@ -483,8 +482,15 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
-      this.getTabData(this.selectTabIndex,this.formName);
-      this.temView = true;
+      let tab = this.tabs[this.selectTabIndex];
+      if(tab && tab.tab_name && this.permissionService.checkPermission(tab.tab_name,'view')){
+        this.getTabData(this.selectTabIndex,this.formName);
+        this.temView = true;
+      }else{
+        this.temView = false;
+        this.tableFields=[];
+        this.actionButtons =[];
+      }      
     } else {
       this.temView = false;
       this.tableFields=[];
@@ -547,7 +553,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
   setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];
@@ -845,7 +851,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }  
       this.selectedRowIndex = id;    
     } else {
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
@@ -1153,7 +1159,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
       this.apiService.GetExportExclLink(getExportData);
     }else{
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
@@ -1306,7 +1312,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
             this.editedRowData(index,button.onclick.action_name)
           }else{
-            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            this.permissionService.checkTokenStatusForPermission();
             //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
@@ -1319,7 +1325,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             this.commonFunctionService.getAuditHistory(gridData);
             this.modalService.open('audit-history',obj);
           }else {
-            this.menuOrModuleCommounService.checkTokenStatusForPermission();
+            this.permissionService.checkTokenStatusForPermission();
             //this.notificationService.notify("bg-danger", "Permission denied !!!");
           }
           break;
