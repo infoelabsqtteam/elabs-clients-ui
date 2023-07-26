@@ -6,7 +6,7 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "paths": {
-      "@angular/*": [ "./node_modules/@angular/*"]
+      "@angular/": [ "./node_modules/@angular/"]
     },
     "sourceMap": true,
     "declaration": false,
