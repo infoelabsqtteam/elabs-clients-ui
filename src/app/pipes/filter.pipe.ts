@@ -5,10 +5,10 @@ import { Pipe, PipeTransform, Injectable } from "@angular/core";
   pure: false
 })
 @Injectable()
-export class Ng2SearchPipe implements PipeTransform {
+export class FilterPipe implements PipeTransform {
   transform(items: any, term: string, excludes: any = []): any {
     if (!term || !items) return items;
-    return Ng2SearchPipe.filter(items, term, excludes);
+    return FilterPipe.filter(items, term, excludes);
   }
 
   static filter(
