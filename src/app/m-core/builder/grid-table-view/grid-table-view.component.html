@@ -146,8 +146,8 @@
                                                     </form>
                                                 </span>
                                                 <span *ngFor="let btn of gridButtons">
-                                                    <a *ngIf="!(btn && btn.grid_header_button)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(i,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
-                                                        <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
+                                                    <a *ngIf="!(btn && btn.grid_header_button)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(i,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn && btn.label ? btn.label:''" [matTooltipDisabled]="btn && btn.is_disabled ? btn.is_disabled : ''" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
+                                                        <span class="material-icons" [ngClass]="btn && btn.field_name == 'cancel' || btn && btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
                                                     </a>
                                                 </span>
                                             </span>
