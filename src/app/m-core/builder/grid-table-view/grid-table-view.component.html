@@ -28,6 +28,9 @@
     <div class="downloadbtn">
         <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
         <button *ngIf="forms['default']" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
+        <ng-container *ngIf="forms['default'] && tab && tab.grid && tab.grid.copyRequired">
+            <button mdbBtn type="button" size="sm" (click)="cloneData()" mdbWavesEffect class="m-0 px-2 mr-2 py-1 grid-button float-right" [matTooltip]="'Copy Selected Row'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">content_copy</span> Copy</button>
+        </ng-container>
         <span *ngFor="let btn of gridButtons">
             <a *ngIf="(btn && btn.grid_header_button) || (bulkuploadList && bulkuploadList.length > 0)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>

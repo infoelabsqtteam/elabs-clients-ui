@@ -281,6 +281,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   validationConditionSubscription:Subscription;
   nextFormSubscription:Subscription;
   requestResponceSubscription:Subscription;
+  gridRealTimeDataSubscription:Subscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
@@ -411,6 +412,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
         this.isGridSelectionOpen= data;
+    })
+    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
+      if(data && data.data){
+        this.updateRunningData(data.data);
+      }
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
@@ -650,16 +656,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
 
   ngOnInit(): void {  
-    if (this.editedRowIndex >= 0) {
-      this.selectedRowIndex = this.editedRowIndex;
-      if(this.elements.length > 0){
-        this.editedRowData(this.elements[this.editedRowIndex]);
-      }
-      //this.handleDisabeIf();     
-    }else{
-      this.selectedRowIndex = -1;
-      //this.handleDisabeIf();
-    }
+    // if (this.editedRowIndex >= 0) {
+    //   this.selectedRowIndex = this.editedRowIndex;
+    //   if(this.elements.length > 0){
+    //     this.editedRowData(this.elements[this.editedRowIndex]);
+    //   }
+    //   //this.handleDisabeIf();     
+    // }else{
+    //   this.selectedRowIndex = -1;
+    //   //this.handleDisabeIf();
+    // }
       
     //this.formControlChanges();
     if(this.form.tableFields && this.form.tableFields.length > 0){
@@ -668,6 +674,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
     this.getGooglepMapCurrentPosition();
 
+  }
+  
+  updateRunningData(data:any){
+    if (this.editedRowIndex >= 0) {
+      this.selectedRowIndex = this.editedRowIndex;
+      if(this.elements.length > 0){
+        if(this.elements[this.editedRowIndex]._id == data[0]._id){
+          this.editedRowData(data[0]);
+        }
+      }
+    }else{
+      this.selectedRowIndex = -1;
+      if(this.editedRowIndex == -1) {
+        if(data && data._id == undefined) {
+          setTimeout(() => {
+            this.updateDataOnFormField(data);
+          }, 100);
+        }
+      }
+    }
   }
   async getGooglepMapCurrentPosition(){
     if(navigator?.geolocation){
@@ -1089,7 +1115,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
             default:
-              this.commonFunctionService.createFormControl(forControl, element, '', "text")
+              if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
+                const value = element.defaultValue;
+                this.commonFunctionService.createFormControl(forControl, element, value, "text");
+              }else{
+                this.commonFunctionService.createFormControl(forControl, element, '', "text");
+              }
               break;
           }
           if(element.tree_view_object && element.tree_view_object.field_name != ""){

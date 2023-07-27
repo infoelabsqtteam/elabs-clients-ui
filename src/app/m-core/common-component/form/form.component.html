@@ -18,7 +18,7 @@
         <a class="h5 m-0 closebtb" (click)="closeModal()" [matTooltip]="'Close (ALT + C)'" [matTooltipPosition]="'above'"><span>×</span></a>
     </div>
     <div class="modal-body pb-2 pt-1 mt-0 px-4">
-        <div class="row">
+        <div class="row m-0">
             <div [ngClass]="showSidebar?'col-lg-8':'col-lg-12'"> 
                 <div class="row">
                     <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="tableField.field_class" [id]="tableField._id"  >
@@ -235,7 +235,7 @@
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'typeahead'">
-                            <div class="w-100 position-relative" *ngIf="tableField.datatype != 'chips'">
+                            <div class="w-100 position-relative dropdowndata" *ngIf="tableField.datatype != 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
                                     <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                     <input type="text" [placeholder]="tableField.label | titlecase" [required]="tableField.is_mandatory && tableField.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="tableField.field_name"
@@ -254,12 +254,20 @@
                                         {{ tableField.label | titlecase}} is <strong>invalidData</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
+                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name]"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
                                     <mdb-icon fas icon="plus"></mdb-icon>
                                 </button>
-                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !tempVal[tableField.field_name+'_add_button']"  (click)="updateAddNewField('',tableField)" >
+                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !tempVal[tableField.field_name+'_add_button']"  (click)="updateAddNewField('',tableField)" >
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
+                                <div *ngIf="tableField.datatype == 'list_of_object'">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
+                                            <p class="m-0">{{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="w-100 position-relative" *ngIf="tableField.datatype == 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
@@ -283,15 +291,6 @@
                                     </mat-error>
                                 </mat-form-field>                                
                             </div>
-
-                            <div *ngIf="tableField.datatype == 'list_of_object'">
-                                <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
-                                        <p class="m-0">{{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                         <div *ngIf="tableField.type == 'list_of_checkbox'">
                             <div class="row m-0 w-100">
@@ -327,7 +326,7 @@
                                 </mat-chip-list >
                             </mat-form-field>
 
-                            <div class="w-100 position-relative d-flex" *ngIf="tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
+                            <div class="dropdowndata w-100 position-relative d-flex" *ngIf="tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                     <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>                                    
                                     <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [formControlName]="tableField.field_name" (keyup)="setValue('',tableField,false)" class="pr-4" *ngIf="tableField.datatype != 'mask'" [id]="tableField._id+'_'+tableField.field_name"/> 
@@ -335,20 +334,17 @@
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>                                   
-                                </mat-form-field> 
-                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
-                            </div> 
-
-
-
-                            <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
-                                <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
-                                        <p>{{item}} <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                </mat-form-field>
+                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name]"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
+                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
+                                            <p>{{item}} <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
                             <div class="form-label d-flex justify-content-between">
@@ -491,10 +487,10 @@
                                                     <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-autocomplete>
                                             </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                 <mdb-icon fas icon="plus"></mdb-icon>
                                             </button>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button modelplusbtn"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
                                                 <mdb-icon fas icon="edit"></mdb-icon>
                                             </button>
                                         </div>
@@ -558,22 +554,24 @@
                                                 </mat-chip-list>
                                             </mat-form-field>   
                                         </div>
-                                        <div class="w-100 position-relative" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
+
+                                        
+                                        <div class="w-100 position-relative dropdowndata" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
                                             </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
-                                        </div>
-
-                                        <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
-                                            <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
-                                                    <p class="m-0 small">{{item}} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                            <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div>
+                                            
+                                            <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                            <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
+                                                <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
+                                                        <p class="m-0 small">{{item}} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div *ngIf="fields.type == 'html'">
                                         <div class="row">
@@ -673,8 +671,8 @@
                                     </div>
                                 </div>
                                 <div [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3'" *ngIf="tableField.type == 'list_of_fields'">
-                                    <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="setValue('',tableField,false)"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
-                                    <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
+                                    <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn firstlistofbtn" mdbWavesEffect (click)="setValue('',tableField,false)"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
+                                    <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
                                 </div>
                             </div>
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
@@ -1401,7 +1399,7 @@
                                                         <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                     </mat-autocomplete>
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
+                                                <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                     <mdb-icon fas icon="plus"></mdb-icon>
                                                 </button>
                                             </div>
@@ -1471,7 +1469,7 @@
                                                     <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                     <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(step,fields,false)">
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" class="icon-button  text-white list-of-string-button"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="tempVal[step.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="tempVal[step.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                                             </div>
                                             <!-- <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <div *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
