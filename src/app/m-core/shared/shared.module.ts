@@ -34,11 +34,11 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
     RouterModule,
     CoreModule,
     MDBBootstrapModule.forRoot(),
-    Ng2SearchPipeModule,
+   // Ng2SearchPipeModule,
     AngularMaterialModule,
     AllPackageModule
   ],
-  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,Ng2SearchPipeModule,NgbDropdownModule,SettingMenuComponent],
+  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule,SettingMenuComponent],
   providers: []
 })
 export class SharedModule { }

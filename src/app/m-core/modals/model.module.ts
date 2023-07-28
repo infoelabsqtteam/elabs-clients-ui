@@ -5,6 +5,7 @@ import { AngularMaterialModule } from '../angular-material-module/angular-materi
 import { DirectiveModuleModule } from '../directive-module/directive-module.module';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
+
 import { ModalsComponent } from './modals.component'
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 import { TreeViewModalComponent } from './tree-view-modal/tree-view-modal.component';

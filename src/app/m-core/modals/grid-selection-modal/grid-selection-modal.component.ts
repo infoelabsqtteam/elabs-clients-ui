@@ -6,6 +6,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
 import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService } from '@core/web-core';
+import { FilterPipe } from '../../../pipes/filter.pipe';
 
 
 
@@ -18,6 +19,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   gridData: any = [];
   modifiedGridData:any = [];
+  filteredData:any = [];
   viewData:any=[];
   pageNo:any=1;
   pageSize:any=25;
@@ -146,7 +148,8 @@ export class GridSelectionModalComponent implements OnInit {
     private coreFunctionService: CoreFunctionService,
     private apiservice: ApiService,
     private gridCommonFunctionService:GridCommonFunctionService,
-    private limsCalculationsService: LimsCalculationsService
+    private limsCalculationsService: LimsCalculationsService,
+    private filterPipe:FilterPipe
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -730,15 +733,21 @@ export class GridSelectionModalComponent implements OnInit {
   toggleAll(event: MatCheckboxChange) {
     if (event.checked) {
       if (this.gridData.length > 0) {
-        this.gridData.forEach((row,i) => {
-          if(!this.checkDisableRowIf(i)){
-            row.selected = true;
-            this.modifiedGridData[i].selected = true;
-            if(this.editEnable && this.editableGridColumns && this.editableGridColumns.length > 1){
-              this.modifiedGridData[i].column_edit = true;
+        if(this.filteredData && this.filteredData.length > 0){
+          this.filteredData.forEach((data,i) => {
+            this.toggle(data,event,i);
+          });
+        }else{          
+          this.gridData.forEach((row,i) => {
+            if(!this.checkDisableRowIf(i)){
+              row.selected = true;
+              this.modifiedGridData[i].selected = true;
+              if(this.editEnable && this.editableGridColumns && this.editableGridColumns.length > 1){
+                this.modifiedGridData[i].column_edit = true;
+              }
             }
-          }
-        });
+          });
+        }
       }
       this.selectedDataLength = this.modifiedGridData.length;
     } else {
@@ -877,6 +886,14 @@ export class GridSelectionModalComponent implements OnInit {
       default:
         break;
     }
+  }
+  searchfilterData(){
+    if(this.filterData != '' && this.filterData.length > 0){
+      this.filteredData = this.filterPipe.transform(this.modifiedGridData,this.filterData);
+    }else{
+      this.filteredData = [];
+    }
+    
   }
   
 }
