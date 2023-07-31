@@ -274,7 +274,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTempData=true;
       this.storageService.setChildWindowUrl('/');    
       this.storageService.setRedirectUrl('/');  
-      this.tabs = tempData[0].templateTabs; 
+      if(tempData[0].templateTabs){
+        this.tabs = tempData[0].templateTabs;
+      }       
       if(this.tabs == undefined || this.tabs == null){
         //this.notificationService.notify('bg-danger','Template Tabs are not availabel !!!')
         this.tabs = [];

@@ -101,7 +101,9 @@ export class ChatViewComponent implements OnInit,OnDestroy, AfterViewChecked {
 } 
 setTempData(tempData){
   if (tempData && tempData.length > 0) {
-    this.tabs = tempData[0].templateTabs;
+    if(tempData[0].templateTabs){
+      this.tabs = tempData[0].templateTabs;
+    }
     this.getTabData(this.selectTabIndex,this.formName);
   }
 }
