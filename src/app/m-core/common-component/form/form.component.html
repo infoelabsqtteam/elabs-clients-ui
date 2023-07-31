@@ -670,7 +670,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3'" *ngIf="tableField.type == 'list_of_fields'">
+                                <div [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3 addrefreshiconbtn'" *ngIf="tableField.type == 'list_of_fields'">
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn firstlistofbtn" mdbWavesEffect (click)="setValue('',tableField,false)"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
                                 </div>
