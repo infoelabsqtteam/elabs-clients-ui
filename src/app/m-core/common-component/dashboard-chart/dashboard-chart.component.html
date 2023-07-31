@@ -12,9 +12,9 @@
 </div>
 </div>
   <div id="b2f745ea-8d03-4337-996e-e53e986058d0"></div>
-  <button mat-icon-button class="chartboardbtn" (click)="download()"><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
+  <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
   <!-- <div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
-    <div class="col-lg-4 p-2" *ngFor="let chart of chartIdList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
+    <div class="col-lg-4 p-2" *ngFor="let chart of chartIdList;let i = index">
       <div class="card monogdbChart">
         <div class="card-header py-1 pr-2">
           <div class="d-flex align-items-center justify-content-between" *ngIf="chart.name">
