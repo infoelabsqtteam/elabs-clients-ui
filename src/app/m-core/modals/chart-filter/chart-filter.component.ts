@@ -363,7 +363,7 @@ export class ChartFilterComponent implements OnInit {
     } 
   }
   setStaticData(staticDatas){
-    if(Object.keys(staticDatas).length > 0) {
+    if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
         let staticData = {};
         staticData[key] = staticDatas[key];  
@@ -377,7 +377,7 @@ export class ChartFilterComponent implements OnInit {
   }
 
   setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];

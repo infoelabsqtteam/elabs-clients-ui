@@ -281,6 +281,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   validationConditionSubscription:Subscription;
   nextFormSubscription:Subscription;
   requestResponceSubscription:Subscription;
+  gridRealTimeDataSubscription:Subscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
@@ -411,6 +412,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     })
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
         this.isGridSelectionOpen= data;
+    })
+    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
+      if(data && data.data){
+        this.updateRunningData(data.data);
+      }
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
@@ -650,24 +656,44 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
 
   ngOnInit(): void {  
-    if (this.editedRowIndex >= 0) {
-      this.selectedRowIndex = this.editedRowIndex;
-      if(this.elements.length > 0){
-        this.editedRowData(this.elements[this.editedRowIndex]);
-      }
-      //this.handleDisabeIf();     
-    }else{
-      this.selectedRowIndex = -1;
-      //this.handleDisabeIf();
-    }
+    // if (this.editedRowIndex >= 0) {
+    //   this.selectedRowIndex = this.editedRowIndex;
+    //   if(this.elements.length > 0){
+    //     this.editedRowData(this.elements[this.editedRowIndex]);
+    //   }
+    //   //this.handleDisabeIf();     
+    // }else{
+    //   this.selectedRowIndex = -1;
+    //   //this.handleDisabeIf();
+    // }
       
     //this.formControlChanges();
-    if(this.form.tableFields && this.form.tableFields.length > 0){
+    if(this.form && this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
 
     this.getGooglepMapCurrentPosition();
 
+  }
+  
+  updateRunningData(data:any){
+    if (this.editedRowIndex >= 0) {
+      this.selectedRowIndex = this.editedRowIndex;
+      if(this.elements.length > 0){
+        if(this.elements[this.editedRowIndex]._id == data[0]._id){
+          this.editedRowData(data[0]);
+        }
+      }
+    }else{
+      this.selectedRowIndex = -1;
+      if(this.editedRowIndex == -1) {
+        if(data && data._id == undefined) {
+          setTimeout(() => {
+            this.updateDataOnFormField(data);
+          }, 100);
+        }
+      }
+    }
   }
   async getGooglepMapCurrentPosition(){
     if(navigator?.geolocation){
@@ -818,7 +844,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setForm(){
-    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
+    if(this.form && this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
       if(this.currentMenu == undefined){
         this.currentMenu = {};
       }
@@ -837,13 +863,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.getLocation = false;
     }
-    if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
+    if(this.form && this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
       this.getTableField = false;
     }else{
       this.tableFields = [];
     }  
-    if(this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
+    if(this.form && this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
       this.formFieldButtons = this.form.tab_list_buttons; 
     } 
     this.showIfFieldList=[];
@@ -1091,7 +1117,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
             default:
-              this.commonFunctionService.createFormControl(forControl, element, '', "text")
+              if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
+                const value = element.defaultValue;
+                this.commonFunctionService.createFormControl(forControl, element, value, "text");
+              }else{
+                this.commonFunctionService.createFormControl(forControl, element, '', "text");
+              }
               break;
           }
           if(element.tree_view_object && element.tree_view_object.field_name != ""){
@@ -1329,7 +1360,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   customValidationFiels=[];
   setStaticData(staticDatas){   
-    if(Object.keys(staticDatas).length > 0) {
+    if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
         let staticData = {};
         staticData[key] = staticDatas[key];   
@@ -1452,8 +1483,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   setGridRowDeleteResponce(responce){
-    this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
-    this.dataSaveInProgress = true;
+    if(responce && responce['success']){
+      this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
+      this.dataSaveInProgress = true;
+    }
   }
 
   setSaveResponce(saveFromDataRsponce){
@@ -1548,7 +1581,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];

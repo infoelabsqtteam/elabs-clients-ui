@@ -9,7 +9,6 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
-import { PipesModule } from '../../pipes/pipes.module';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
@@ -37,7 +36,6 @@ const maskConfig: Partial<IConfig> = {
     NgxMaskModule.forRoot(maskConfig),
     ModelModule,
     AllPackageModule,
-    PipesModule,
     GoogleMapsModule
   ],
   exports:components,
