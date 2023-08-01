@@ -11,8 +11,10 @@ import { StorageService, CommonFunctionService, ApiService, ChartService, ModelS
 export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
 
   chartIdList:any = [];
+  createdChartList:any=[];
   dashboardIdList:any = [];
   dashbord:any={};
+  dashbordId:string='';
   accessToken:string="";
   @Input() showDashboardMongoChart:boolean;
   pageNumber:any=1;
@@ -32,7 +34,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
     this.accessToken = this.storageService.GetIdToken();     
     this.dashbordSubscription = this.dataShareService.mongoDashbordList.subscribe(data =>{
       this.dashboardIdList = data.data;
-      this.populateDashbord(this.dashboardIdList);
+      this.populateDashbord(this.dashboardIdList,0);
       console.log(data.data);
     }) 
     
@@ -49,9 +51,16 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
       }
       return getFilterData;      
   }
-  populateDashbord(list){
+  updateDashbord(){
+    if(this.dashbordId && this.dashbordId != ''){
+      let dIndex = this.commonFunctionService.getIndexInArrayById(this.dashboardIdList,this.dashbordId);
+      this.populateDashbord(this.dashboardIdList,dIndex);
+    }
+  }
+  populateDashbord(list,index){
     if(list && list.length > 0){
-      this.dashbord = list[0];
+      this.dashbord = list[index];
+      this.dashbordId = this.dashbord._id;
       if(this.dashbord && this.dashbord.chartList && this.dashbord.chartList.length > 0){
         let chartList = this.dashbord.chartList;
         let chartIdList = [];
@@ -102,13 +111,62 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
       if(chartData && chartData.length > 0){
         this.chartIdList = chartData;
         setTimeout(() => {
-          
+          this.populateMongodbChart();
         }, 100);
       }
     })
   }
+  populateMongodbChart(){
+    if(this.accessToken != "" && this.accessToken != null){      
+      let height = '350px';
+      if(this.chartIdList && this.chartIdList.length > 0){        
+        this.createdChartList = [];
+        for (let i = 0; i < this.chartIdList.length; i++) {
+          const url = this.chartIdList[i].chartUrl;
+          if(url && url != ''){
+            const sdk = new ChartsEmbedSDK({
+              baseUrl: url, // Optional: ~REPLACE~ with the Base URL from your Embed Chart dialog
+              getUserToken: () => this.accessToken
+            });
+            let chart = this.chartIdList[i];
+            const id = chart.chartId;
+            const idRef = document.getElementById(id);
+            if(chart && chart.height && chart.height != ""){
+              height = chart.height;
+            }
+            if(idRef){
+              let cretedChart = sdk.createChart({
+                chartId: id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
+                height: height
+              });
+              this.createdChartList[id] = cretedChart;
+              cretedChart
+              .render(idRef)
+              .catch(() =>
+              console.log('Chart failed to initialise')
+              // window.alert('Chart failed to initialise')
+              );
+            }
+          }
+        }        
+      }
+    }
+  }
 
-
+  download(object){
+    let chartId = object.chartId;
+    let chart = this.createdChartList[chartId];    
+    this.chartService.getDownloadData(chart,object);
+  }  
+  changeTheme(object,value){
+    let chartId = object.chartId;
+    let chart = this.createdChartList[chartId];
+    if(value){
+      chart.setTheme("dark");
+    }else{
+      chart.setTheme("light");
+    }
+  }
 
   filterModel(data:any,filter:any){
     let object = {
@@ -147,6 +205,14 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
     }
     this.pageNumber = page;
     this.apiService.getMongoDashbord(this.getMongoChartList(Criteria));
+  }
+  filterData(responce){
+    console.log(responce);
+    if(this.createdChartList && this.createdChartList.length > 0 && responce && typeof responce == 'object' && Object.keys(responce).length > 0){
+      this.createdChartList.forEach(chart => {
+        chart.setFilter(responce);
+      });
+    }
   }
 
 }

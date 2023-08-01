@@ -59,7 +59,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private dataShareService:DataShareService,
     private storageService:StorageService
   ) {
-      
+    this.mongodbChartShow = true;
       
     }
 
