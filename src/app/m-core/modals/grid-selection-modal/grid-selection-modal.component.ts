@@ -589,6 +589,7 @@ export class GridSelectionModalComponent implements OnInit {
     }else{
       this.gridSelectionResponce.emit(this.selectedData);
       this.closeModal();
+      this.filteredData = [];
     }    
   }
   
