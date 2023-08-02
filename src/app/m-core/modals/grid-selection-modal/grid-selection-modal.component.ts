@@ -736,6 +736,8 @@ export class GridSelectionModalComponent implements OnInit {
         check = check + 1;
       }
     });
+    result.check = check;
+    result.data = data;
     return result;
   }
   toggleAll(event: MatCheckboxChange) {
