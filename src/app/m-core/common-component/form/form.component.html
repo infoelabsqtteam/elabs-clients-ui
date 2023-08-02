@@ -791,7 +791,7 @@
                             </div>
 
                             <div class="row" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
-                                <div class="col-lg-12 table-responsive py-2 maxheightdata" >
+                                <div class="col-lg-12 table-responsive py-2" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
                                     <table mdbTable class="z-depth-1 verticaltable">
                                         <tbody>
                                         <tr *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
@@ -824,7 +824,7 @@
                                 <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
                                     <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" (keyup)="gridSelectionSearch(tableField)" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                 </div>                                
-                                <div class="table-responsive table maxheightdata">
+                                <div class="table-responsive table" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
                                     <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 
