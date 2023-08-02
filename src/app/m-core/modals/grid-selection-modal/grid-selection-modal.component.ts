@@ -6,7 +6,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
 import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService } from '@core/web-core';
-
+import { FilterPipe } from '../../../pipes/filter.pipe';
 
 
 @Component({
@@ -18,6 +18,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   gridData: any = [];
   modifiedGridData:any = [];
+  filteredData:any = [];
   viewData:any=[];
   pageNo:any=1;
   pageSize:any=25;
@@ -146,7 +147,8 @@ export class GridSelectionModalComponent implements OnInit {
     private coreFunctionService: CoreFunctionService,
     private apiservice: ApiService,
     private gridCommonFunctionService:GridCommonFunctionService,
-    private limsCalculationsService: LimsCalculationsService
+    private limsCalculationsService: LimsCalculationsService,
+    private filterPipe:FilterPipe
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -586,6 +588,7 @@ export class GridSelectionModalComponent implements OnInit {
     }else{
       this.gridSelectionResponce.emit(this.selectedData);
       this.closeModal();
+      this.filteredData = [];
     }    
   }
   
@@ -706,52 +709,74 @@ export class GridSelectionModalComponent implements OnInit {
     
   }
   isIndeterminate() {
-    let check = 0;
-    if (this.gridData.length > 0) {
-      this.gridData.forEach(row => {
-        if (row.selected) {
-          check = check + 1;
-        }
-      });
-    }
+    let result = this.checkSelected();
+    let check = result.check;
     return (check > 0 && !this.isChecked());
   };
   isChecked() {
-    let check = 0;
-    if (this.gridData.length > 0) {
-      this.gridData.forEach(row => {
-        if (row.selected) {
-          check = check + 1;
-        }
-      });
-    }
-    return this.gridData.length === check;
+    let result = this.checkSelected();
+    let check = result.check;
+    let data = result.data;
+    return data.length === check;
   };
+  checkSelected(){
+    let check = 0;
+    let data = [];
+    let result = {
+      'check':check,
+      'data': data
+    }    
+    if(this.filterData != '' && this.filteredData.length > 0){
+      data = this.filteredData;
+    }else if(this.gridData.length > 0) {
+      data = this.gridData;      
+    }
+    data.forEach(row => {
+      if (row.selected) {
+        check = check + 1;
+      }
+    });
+    result.check = check;
+    result.data = data;
+    return result;
+  }
   toggleAll(event: MatCheckboxChange) {
     if (event.checked) {
       if (this.gridData.length > 0) {
-        this.gridData.forEach((row,i) => {
-          if(!this.checkDisableRowIf(i)){
-            row.selected = true;
-            this.modifiedGridData[i].selected = true;
-            if(this.editEnable && this.editableGridColumns && this.editableGridColumns.length > 1){
-              this.modifiedGridData[i].column_edit = true;
+        if(this.filterData && this.filterData != '' && this.filteredData && this.filteredData.length > 0){
+          this.filteredData.forEach((data,i) => {
+            this.toggle(data,event,i);
+          });
+        }else{          
+          this.gridData.forEach((row,i) => {
+            if(!this.checkDisableRowIf(i)){
+              row.selected = true;
+              this.modifiedGridData[i].selected = true;
+              if(this.editEnable && this.editableGridColumns && this.editableGridColumns.length > 1){
+                this.modifiedGridData[i].column_edit = true;
+              }
             }
-          }
-        });
+          });
+        }
       }
       this.selectedDataLength = this.modifiedGridData.length;
     } else {
       if (this.gridData.length > 0) {
-        this.gridData.forEach((row,i) => {
-          if(!this.checkDisableRowIf(i)){
-            row.selected = false;
-            this.modifiedGridData[i].selected = false;
-            if(this.editableGridColumns && this.editableGridColumns.length > 1){
-              this.modifiedGridData[i].column_edit = false;
-            }            
-          }
-        });
+        if(this.filterData && this.filterData != '' && this.filteredData && this.filteredData.length > 0){
+          this.filteredData.forEach((data,i) => {
+            this.toggle(data,event,i);
+          });
+        }else{
+          this.gridData.forEach((row,i) => {
+            if(!this.checkDisableRowIf(i)){
+              row.selected = false;
+              this.modifiedGridData[i].selected = false;
+              if(this.editableGridColumns && this.editableGridColumns.length > 1){
+                this.modifiedGridData[i].column_edit = false;
+              }            
+            }
+          });
+        }
       }
       this.selectedDataLength = 0;
     }
@@ -877,6 +902,14 @@ export class GridSelectionModalComponent implements OnInit {
       default:
         break;
     }
+  }
+  searchfilterData(){
+    if(this.filterData != '' && this.filterData.length > 0){
+      this.filteredData = this.filterPipe.transform(this.modifiedGridData,this.filterData);
+    }else{
+      this.filteredData = [];
+    }
+    
   }
   
 }

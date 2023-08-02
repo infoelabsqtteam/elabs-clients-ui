@@ -4,10 +4,15 @@
     <div class="modal-content" >
       <!--Header-->
       <div class="modal-header">
-        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}<span *ngIf="modifiedGridData && modifiedGridData.length > 0">(<span *ngIf="grid_row_selection && selectedDataLength > 0">{{ selectedDataLength }}/</span>{{modifiedGridData.length}})</span></h3>
+        <h3 class="modal-title m-0 text-uppercase">{{ field.label}}
+            <span *ngIf="modifiedGridData && modifiedGridData.length > 0">
+                (<span *ngIf="grid_row_selection && selectedDataLength > 0" matTooltip="All Selected List">{{ selectedDataLength }}/</span>
+                <span *ngIf="filteredData && filteredData.length > 0" matTooltip="All Filtered List">{{ filteredData.length }}/</span>
+                <span matTooltip="All Data List">{{modifiedGridData.length}})</span>
+            </span></h3>
         <div *ngIf="field.isFilter" class="mr-auto ml-3 w-75">
             <div class="w-25 float-left">
-                <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel"/>
+                <input type="text" size="35" class="form-control form-control-sm" [(ngModel)]="filterData" [placeholder]="field.filterLabel" (keyup)="searchfilterData()"/>
             </div>
             <div class="w-25 float-left" *ngIf="onlySelectedData && grid_row_selection">
                 <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="onlySelected" (change)="onlySelectedRecord($event)" [matTooltip]="'Only Selected'">Show Only Selected</mat-checkbox>
