@@ -918,7 +918,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(element.etc_fields && element.etc_fields != null){
                   if(element.etc_fields.minDate){
                     if(element.etc_fields.minDate == '-1'){
-                      this.minDate = new Date(currentYear - 100, 0, 1);
+                      this.minDate = new Date(currentYear - 25, 0, 1);
                     }else{
                       this.minDate.setDate(new Date().getDate() - Number(element.etc_fields.minDate));
                     }
@@ -928,15 +928,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(element.etc_fields && element.etc_fields != null){
                   if(element.etc_fields.maxDate){
                     if(element.etc_fields.maxDate == '-1'){
-                      this.maxDate = new Date(currentYear + 1, 11, 31);
+                      this.maxDate = new Date(currentYear + 25, 11, 31);
                     }else{
                       this.maxDate.setDate(new Date().getDate() + Number(element.etc_fields.maxDate));
                     }
                   }
                 }
               }else{
-                this.minDate = new Date(currentYear - 100, 0, 1);
-                this.maxDate = new Date(currentYear + 1, 11, 31);
+                this.minDate = new Date(currentYear - 25, 0, 1);
+                this.maxDate = new Date(currentYear + 25, 11, 31);
               }                  
               element['minDate'] = this.minDate
               element['maxDate'] = this.maxDate;
