@@ -567,7 +567,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     } 
   }
   getTabData(index,formName) {
-    this.tab = this.tabs[index]
+    this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
       if(this.tab.tab_name && this.tab.tab_name != null && this.tab.tab_name != undefined && this.tab.tab_name != ''){
         const menu = {"name":this.tab.tab_name};
@@ -1417,9 +1417,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   onBulkUpdate(){
     this.isBulkUpdate = true;
     this.addNewForm('NEW');
-  }
-  checkPermission(){
-    return !this.permissionService.checkPermission(this.tab.tab_name, 'add')
   }
   onBulkUploadCheck(index, form:NgForm){
     let element = this.elements[index]
