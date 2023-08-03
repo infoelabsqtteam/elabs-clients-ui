@@ -354,6 +354,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.selectTabIndex = i;  
     this.getViewMode(); 
   } 
+  checkPermission(tab){
+    return !this.permissionService.checkPermission(tab.tab_name, 'view')
+  }
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
         this.grid_view_mode="inlineFormView";

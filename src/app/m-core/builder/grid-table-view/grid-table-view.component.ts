@@ -1418,7 +1418,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.isBulkUpdate = true;
     this.addNewForm('NEW');
   }
-
+  checkPermission(){
+    return !this.permissionService.checkPermission(this.tab.tab_name, 'add')
+  }
   onBulkUploadCheck(index, form:NgForm){
     let element = this.elements[index]
     if(form.value.check){

@@ -6,7 +6,7 @@
 
         <div class="tablist position-relative">
           <mat-tab-group animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
-            <mat-tab *ngFor="let tab of tabs; let i = index" [ngClass]="{'mat-tab-label-active': selectTabIndex == i}">
+            <mat-tab *ngFor="let tab of tabs; let i = index" [ngClass]="{'d-none': checkPermission(tab),'mat-tab-label-active': selectTabIndex == i}">
               <ng-template mat-tab-label>
                 <div class="mat-tab-label-content pl-3 pr-1 py-2" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
                 <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
