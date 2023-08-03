@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { TreeViewComponent } from './tree-view.component';
+import { PermissionTreeViewComponent } from './permission-tree-view.component';
 
-describe('TreeViewComponent', () => {
-  let component: TreeViewComponent;
-  let fixture: ComponentFixture<TreeViewComponent>;
+describe('PermissionTreeViewComponent', () => {
+  let component: PermissionTreeViewComponent;
+  let fixture: ComponentFixture<PermissionTreeViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TreeViewComponent ]
+      declarations: [ PermissionTreeViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TreeViewComponent);
+    fixture = TestBed.createComponent(PermissionTreeViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,11 +9,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-tree-view',
-  templateUrl: './tree-view.component.html',
-  styleUrls: ['./tree-view.component.css']
+  selector: 'app-permission-tree-view',
+  templateUrl: './permission-tree-view.component.html',
+  styleUrls: ['./permission-tree-view.component.css']
 })
-export class TreeViewComponent implements OnInit, AfterViewInit {
+export class PermissionTreeViewComponent implements OnInit {
+
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<TodoItemFlatNode, TodoItemNode>();
 
@@ -35,7 +36,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   @Input() id: string;
   @Output() treeViewComponentResponce = new EventEmitter();
-  @ViewChild('treeView') public treeView: ModalDirective; 
+  @ViewChild('permissionTreeView') public treeView: ModalDirective; 
 
   fieldName:any='';
   ddnfieldName:any;
@@ -390,4 +391,5 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //   this.voiceRecognition.start();
   //   this.searchForm.controls.searchText.reset();
   // }
+
 }

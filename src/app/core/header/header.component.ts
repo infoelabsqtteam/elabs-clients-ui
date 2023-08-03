@@ -274,6 +274,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }    
     getMenuByModuleIndex(moduleIndex:any){
         if (moduleIndex != -1) {
+            this.AllModuleList = this.storageService.GetModules();
             let module = this.AllModuleList[moduleIndex];         
             if (module.menu_list != undefined && module.menu_list != null) {
                 this.menuData = module.menu_list;

@@ -12,7 +12,7 @@ import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common} from '@core/web-core';
 import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
-import {TodoItemNode , TodoItemFlatNode} from '../../modals/tree-view/interface';
+import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
 
 
 declare var tinymce: any;
