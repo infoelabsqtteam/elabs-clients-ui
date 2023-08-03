@@ -710,31 +710,41 @@ export class GridSelectionModalComponent implements OnInit {
     
   }
   isIndeterminate() {
-    let check = 0;
-    if (this.gridData.length > 0) {
-      this.gridData.forEach(row => {
-        if (row.selected) {
-          check = check + 1;
-        }
-      });
-    }
+    let result = this.checkSelected();
+    let check = result.check;
     return (check > 0 && !this.isChecked());
   };
   isChecked() {
-    let check = 0;
-    if (this.gridData.length > 0) {
-      this.gridData.forEach(row => {
-        if (row.selected) {
-          check = check + 1;
-        }
-      });
-    }
-    return this.gridData.length === check;
+    let result = this.checkSelected();
+    let check = result.check;
+    let data = result.data;
+    return data.length === check;
   };
+  checkSelected(){
+    let check = 0;
+    let data = [];
+    let result = {
+      'check':check,
+      'data': data
+    }    
+    if(this.filterData != '' && this.filteredData.length > 0){
+      data = this.filteredData;
+    }else if(this.gridData.length > 0) {
+      data = this.gridData;      
+    }
+    data.forEach(row => {
+      if (row.selected) {
+        check = check + 1;
+      }
+    });
+    result.check = check;
+    result.data = data;
+    return result;
+  }
   toggleAll(event: MatCheckboxChange) {
     if (event.checked) {
       if (this.gridData.length > 0) {
-        if(this.filteredData && this.filteredData.length > 0){
+        if(this.filterData && this.filterData != '' && this.filteredData && this.filteredData.length > 0){
           this.filteredData.forEach((data,i) => {
             this.toggle(data,event,i);
           });
@@ -753,15 +763,21 @@ export class GridSelectionModalComponent implements OnInit {
       this.selectedDataLength = this.modifiedGridData.length;
     } else {
       if (this.gridData.length > 0) {
-        this.gridData.forEach((row,i) => {
-          if(!this.checkDisableRowIf(i)){
-            row.selected = false;
-            this.modifiedGridData[i].selected = false;
-            if(this.editableGridColumns && this.editableGridColumns.length > 1){
-              this.modifiedGridData[i].column_edit = false;
-            }            
-          }
-        });
+        if(this.filterData && this.filterData != '' && this.filteredData && this.filteredData.length > 0){
+          this.filteredData.forEach((data,i) => {
+            this.toggle(data,event,i);
+          });
+        }else{
+          this.gridData.forEach((row,i) => {
+            if(!this.checkDisableRowIf(i)){
+              row.selected = false;
+              this.modifiedGridData[i].selected = false;
+              if(this.editableGridColumns && this.editableGridColumns.length > 1){
+                this.modifiedGridData[i].column_edit = false;
+              }            
+            }
+          });
+        }
       }
       this.selectedDataLength = 0;
     }
