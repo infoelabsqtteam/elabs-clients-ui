@@ -414,9 +414,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.isGridSelectionOpen= data;
     })
     this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
-      if(data && data.data){
-        this.updateRunningData(data.data);
-      }
+      this.updateRunningData(data.data);
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
@@ -680,8 +678,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
       if(this.elements.length > 0){
-        if(this.elements[this.editedRowIndex]._id == data[0]._id){
-          this.editedRowData(data[0]);
+        if(data && data.data){
+          if(this.elements[this.editedRowIndex]._id == data.data[0]._id){
+            this.editedRowData(data.data[0]);
+          }
+        }else{
+          this.editedRowData(this.elements[this.editedRowIndex]);
         }
       }
     }else{
