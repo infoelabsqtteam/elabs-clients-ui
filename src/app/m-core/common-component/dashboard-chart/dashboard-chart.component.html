@@ -10,32 +10,41 @@
         <mat-option *ngFor="let dashboard of dashboardIdList" [value]="dashboard._id"><small>{{dashboard.name}}</small></mat-option>
       </mat-select>
     </mat-form-field>
-    <button *ngIf="dashbord && dashbord.fields && dashbord.fields.length > 0"  mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button>
-    <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu">
-      <app-filter *ngIf="dashbord && dashbord.fields && dashbord.fields.length > 0" [dashbord]="dashbord" (filterData)="filterData($event)"></app-filter>
-    </mat-menu> 
+    <button mat-icon-button (click)="sidefilter.toggle()" *ngIf="dashbord && dashbord.fields && dashbord.fields.length > 0"><mat-icon>filter_alt</mat-icon></button>
   </div>
 </div>
-</div>  
-<div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
-  <div class="p-2" *ngFor="let chart of chartIdList;let i = index" [ngClass]="chart && chart.class_name ? chart.class_name:'col-lg-4'">
-    <div class="card monogdbChart">
-      <div class="card-header py-1 pr-2">
-        <div class="d-flex align-items-center justify-content-between" *ngIf="chart.name">
-          <h4 class="m-0 charttitle">{{chart.name}}</h4>
-          <mat-slide-toggle [(ngModel)]="darkTheme[i]" (change)="changeTheme(chart,darkTheme[i])"></mat-slide-toggle>
-          <button mat-icon-button class="chartboardbtn" (click)="download(chart)"><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
-          <button mat-icon-button class="chartboardbtn" (click)="filterModel(chart,false)"><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
-          <button mat-icon-button class="chartboardbtn" *ngIf="chart && chart.fields && chart.fields.length > 0" (click)="filterModel(chart,true)"><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button>
+</div> 
+
+
+
+
+<mat-drawer-container [hasBackdrop]="false">
+  <mat-drawer #sidefilter mode="over" position="end"><app-filter *ngIf="dashbord && dashbord.fields && dashbord.fields.length > 0" [dashbord]="dashbord" (filterData)="filterData($event)"></app-filter></mat-drawer>
+  <mat-drawer-content>
+    <div class="row m-0 w-100 py-2" *ngIf="chartIdList && chartIdList.length > 0">
+      <div class="p-2" *ngFor="let chart of chartIdList;let i = index" [ngClass]="chart && chart.class_name ? chart.class_name:'col-lg-4'">
+        <div class="card monogdbChart">
+          <div class="card-header py-1 pr-2">
+            <div class="d-flex align-items-center justify-content-between" *ngIf="chart.name">
+              <h4 class="m-0 charttitle">{{chart.name}}</h4>
+              <mat-slide-toggle [(ngModel)]="darkTheme[i]" (change)="changeTheme(chart,darkTheme[i])"></mat-slide-toggle>
+              <button mat-icon-button class="chartboardbtn" (click)="download(chart)"><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
+              <button mat-icon-button class="chartboardbtn" (click)="filterModel(chart,false)"><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
+              <button mat-icon-button class="chartboardbtn" *ngIf="chart && chart.fields && chart.fields.length > 0" (click)="filterModel(chart,true)"><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button>
+            </div>
+          </div>
+          <div class="chartbody p-1"><div [id]="chart.chartId"></div></div>
         </div>
       </div>
-      <div class="chartbody p-1">
-        <div [id]="chart.chartId"></div>
-      </div>
     </div>
-  </div>
-</div>
-<div *ngIf="chartIdList.length == 0"><p class="text-center"><span>Chart not available in this Dashboard</span></p></div>
+    <div *ngIf="chartIdList.length == 0"><p class="text-center"><span>Chart not available in this Dashboard</span></p></div>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
+
+
+
   
 
 

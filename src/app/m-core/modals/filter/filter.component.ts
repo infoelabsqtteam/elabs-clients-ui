@@ -241,4 +241,9 @@ export class FilterComponent implements OnInit,OnDestroy {
     return object;
   }
 
+
+  clearFilter() {
+    
+  }
+
 }
