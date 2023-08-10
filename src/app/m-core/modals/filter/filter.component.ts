@@ -182,6 +182,7 @@ export class FilterComponent implements OnInit,OnDestroy {
     let filterValue = this.getMongochartFilterValue(fields,formValue);
     let filterData = this.getMongodbFilterObject(filterValue);
     this.filterData.emit(filterData);
+    this.filterGroup.reset();
   }
   getMongochartFilterValue(fields,object){
     let modifyObject = {};
@@ -243,7 +244,7 @@ export class FilterComponent implements OnInit,OnDestroy {
 
 
   clearFilter() {
-    
+    this.filterGroup.reset();
   }
 
 }

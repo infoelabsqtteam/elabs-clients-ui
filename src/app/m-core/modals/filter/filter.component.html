@@ -1,6 +1,6 @@
 <div class="py-5 px-3 filterchart modal-dialog" *ngIf="dashbord && dashbord.fields && dashbord.fields.length > 0" [formGroup]="filterGroup">
   <div class="row align-items-center mx-0">
-    <div class="mb-3" [ngClass]="field.field_class ? field.field_class : 'col-sm-3' " *ngFor="let field of dashbord.fields; let i = index" [id]="field._id">
+    <div class="mb-3" [ngClass]="field.field_class ? field.field_class : 'col-sm-3' " *ngFor="let field of dashbord.fields; let i = index" [id]="field.type+'_'+field.field_name">
       <div *ngIf="field.type == 'date'">
         <mat-form-field appearance="outline" class="w-100 m-0">
           <mat-label>{{ field.label | titlecase}}</mat-label>

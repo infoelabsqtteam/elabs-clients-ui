@@ -1,7 +1,8 @@
-import { Component, OnInit,AfterViewInit,Input, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit,AfterViewInit,Input, SimpleChanges, OnDestroy, ViewChild } from '@angular/core';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 import { Subscription } from 'rxjs';
 import { StorageService, CommonFunctionService, ApiService, ChartService, ModelService, DataShareService} from '@core/web-core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-dashboard-chart',
@@ -11,7 +12,7 @@ import { StorageService, CommonFunctionService, ApiService, ChartService, ModelS
 export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
 
   chartIdList:any = [];
-  createdChartList:any=[];
+  createdChartList:any={};
   dashboardIdList:any = [];
   dashbord:any={};
   dashbordId:string='';
@@ -22,6 +23,8 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
   gridDataSubscription:Subscription;
   dashbordSubscription:Subscription;
   darkTheme:any={};
+
+  @ViewChild('sidefilter') sidefilter: MatSidenav;
 
   constructor(
     private dataShareService:DataShareService,
@@ -120,7 +123,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
     if(this.accessToken != "" && this.accessToken != null){      
       let height = '350px';
       if(this.chartIdList && this.chartIdList.length > 0){        
-        this.createdChartList = [];
+        this.createdChartList = {};
         for (let i = 0; i < this.chartIdList.length; i++) {
           const url = this.chartIdList[i].chartUrl;
           if(url && url != ''){
@@ -208,11 +211,14 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
   }
   filterData(responce){
     console.log(responce);
-    if(this.createdChartList && this.createdChartList.length > 0 && responce && typeof responce == 'object' && Object.keys(responce).length > 0){
-      this.createdChartList.forEach(chart => {
+    if(this.createdChartList && Object.keys(this.createdChartList).length > 0){
+      if(responce && typeof responce == 'object' && Object.keys(responce).length > 0){
+        Object.keys(this.createdChartList).forEach(key => {
+        let chart = this.createdChartList[key];
         chart.setFilter(responce);
       });
     }
+    }
+    this.sidefilter.close();
   }
-
 }
