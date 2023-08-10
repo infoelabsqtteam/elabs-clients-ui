@@ -13,7 +13,6 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgxDiff2htmlModule } from 'ngx-diff2html';
 import { PipesModule } from '../../pipes/pipes.module';
 
-
 const packages = [
   CommonModule,
   NgxMaterialTimepickerModule,

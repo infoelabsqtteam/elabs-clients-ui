@@ -9,7 +9,6 @@ import { CommonFunctionService, DataShareService, NotificationService, CoreFunct
 import { FilterPipe } from '../../../pipes/filter.pipe';
 
 
-
 @Component({
   selector: 'app-grid-selection-modal',
   templateUrl: './grid-selection-modal.component.html',

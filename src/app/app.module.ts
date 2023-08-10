@@ -4,9 +4,7 @@ import { DatePipe,CurrencyPipe,TitleCasePipe,DecimalPipe,HashLocationStrategy, L
 import { HttpClientModule,HttpClientXsrfModule,HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-
 import { FilterPipe } from './pipes/filter.pipe';
-
 import { AuthModule } from './auth/auth.module';
 import { McoreModule } from './m-core/m-core.module';
 import { CoreModule } from './core/core.module';
