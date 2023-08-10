@@ -66,13 +66,18 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
       this.dashbordId = this.dashbord._id;
       if(this.dashbord && this.dashbord.chartList && this.dashbord.chartList.length > 0){
         let chartList = this.dashbord.chartList;
-        let chartIdList = [];
+        let ids = "";
         chartList.forEach(chart => {
-          chartIdList.push(chart._id);
+          let id = chart._id;
+          if(ids == ""){
+            ids = id; 
+          }else{
+            ids = ids + ":" + id;
+          }
         });
-        if(chartIdList && chartIdList.length > 0){
+        if(ids != ""){
           let criteriaList = [];
-          let cr = "_id;in;"+chartIdList+";STATIC";
+          let cr = "_id;in;"+ids+";STATIC";
           criteriaList.push(cr);
           this.getPage(1,criteriaList);
         }
@@ -212,12 +217,12 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
   filterData(responce){
     console.log(responce);
     if(this.createdChartList && Object.keys(this.createdChartList).length > 0){
-      if(responce && typeof responce == 'object' && Object.keys(responce).length > 0){
+      if(responce && typeof responce == 'object'){
         Object.keys(this.createdChartList).forEach(key => {
-        let chart = this.createdChartList[key];
-        chart.setFilter(responce);
-      });
-    }
+          let chart = this.createdChartList[key];
+          chart.setFilter(responce);
+        });
+      }
     }
     this.sidefilter.close();
   }

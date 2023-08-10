@@ -142,7 +142,8 @@ export class FilterComponent implements OnInit,OnDestroy {
         }
       }
       if (forControl) {
-        this.filterGroup = this.formBuilder.group(forControl);              
+        this.filterGroup = this.formBuilder.group(forControl);    
+        this.filterGroup.reset();          
       }
     } 
   }
@@ -176,13 +177,17 @@ export class FilterComponent implements OnInit,OnDestroy {
 
   }
 
-  filter(){
+  getFilterData(){
     let fields = this.dashbord.fields && this.dashbord.fields.length > 0 ? this.dashbord.fields : [];
     let formValue = this.filterGroup.getRawValue();
     let filterValue = this.getMongochartFilterValue(fields,formValue);
     let filterData = this.getMongodbFilterObject(filterValue);
+    return filterData;
+  }
+  filter(){
+    let filterData = this.getFilterData();
     this.filterData.emit(filterData);
-    this.filterGroup.reset();
+    //this.filterGroup.reset();
   }
   getMongochartFilterValue(fields,object){
     let modifyObject = {};
@@ -245,6 +250,8 @@ export class FilterComponent implements OnInit,OnDestroy {
 
   clearFilter() {
     this.filterGroup.reset();
+    let filterData = this.getFilterData();
+    this.filterData.emit(filterData);
   }
 
 }
