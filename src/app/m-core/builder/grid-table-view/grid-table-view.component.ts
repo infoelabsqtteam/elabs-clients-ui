@@ -547,7 +547,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
   setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];
@@ -835,11 +835,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }   
         if(this.checkFieldsAvailability('UPDATE')){
           this.addNewForm(formName);
+          this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[id]);
         }else{
           return;
         }        
       }else{
         this.addNewForm(formName);
+        this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[id]);
       }  
       this.selectedRowIndex = id;    
     } else {
@@ -847,6 +849,30 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
+
+
+  cloneData() {
+    if(this.rowSelectionIndex != -1) {
+      let selectedObject = JSON.parse(JSON.stringify(this.elements[this.rowSelectionIndex]));
+      let copyObject = {};
+      if(this.tableFields && this.tableFields.length > 0) {
+        this.tableFields.forEach(field => {
+          let fieldName = "";
+          if(field && field.field_name && field.field_name != ""){
+            fieldName = field.field_name;
+          }
+          if(fieldName != "" && selectedObject[fieldName] != undefined) {
+            copyObject[fieldName] = JSON.parse(JSON.stringify(selectedObject[fieldName]));
+          }
+        });
+      }
+      this.addNewForm('NEW');
+      this.dataShareService.shareGridRunningData({"data" : copyObject});
+      
+    }
+  }
+
+  
   addAndUpdateResponce(element) {
     this.selectedRowIndex = -1;
     if(this.pageNumber == undefined || this.pageNumber == -1 || this.pageNumber == 0){
