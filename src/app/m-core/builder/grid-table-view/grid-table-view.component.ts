@@ -558,6 +558,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.dinamic_form = form.DINAMIC_FORM;
       this.flagForTdsForm = false;
       this.addNewForm('DINAMIC_FORM');
+      this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[this.selectedRowIndex]);
     } 
   }
   getTabData(index,formName) {
