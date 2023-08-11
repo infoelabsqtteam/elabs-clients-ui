@@ -281,6 +281,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   validationConditionSubscription:Subscription;
   nextFormSubscription:Subscription;
   requestResponceSubscription:Subscription;
+  gridRealTimeDataSubscription:Subscription;
   isGridSelectionOpen: boolean = true;
   deleteGridRowData: boolean = false;
   filterdata = '';
@@ -412,6 +413,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
         this.isGridSelectionOpen= data;
     })
+    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
+      this.updateRunningData(data.data);
+    })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
         this.enableNextButton = true;
@@ -503,7 +507,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     });
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
-    this.maxDate = new Date(currentYear + 1, 11, 31); 
+    this.maxDate = new Date(currentYear + 25, 11, 31); 
 
   }
 
@@ -650,24 +654,48 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
 
   ngOnInit(): void {  
-    if (this.editedRowIndex >= 0) {
-      this.selectedRowIndex = this.editedRowIndex;
-      if(this.elements.length > 0){
-        this.editedRowData(this.elements[this.editedRowIndex]);
-      }
-      //this.handleDisabeIf();     
-    }else{
-      this.selectedRowIndex = -1;
-      //this.handleDisabeIf();
-    }
+    // if (this.editedRowIndex >= 0) {
+    //   this.selectedRowIndex = this.editedRowIndex;
+    //   if(this.elements.length > 0){
+    //     this.editedRowData(this.elements[this.editedRowIndex]);
+    //   }
+    //   //this.handleDisabeIf();     
+    // }else{
+    //   this.selectedRowIndex = -1;
+    //   //this.handleDisabeIf();
+    // }
       
     //this.formControlChanges();
-    if(this.form.tableFields && this.form.tableFields.length > 0){
+    if(this.form && this.form.tableFields && this.form.tableFields.length > 0){
       this.funCallOnFormLoad(this.form.tableFields)
     }
 
     this.getGooglepMapCurrentPosition();
 
+  }
+  
+  updateRunningData(data:any){
+    if (this.editedRowIndex >= 0) {
+      this.selectedRowIndex = this.editedRowIndex;
+      if(this.elements.length > 0){
+        if(data && data.data){
+          if(this.elements[this.editedRowIndex]._id == data.data[0]._id){
+            this.editedRowData(data.data[0]);
+          }
+        }else{
+          this.editedRowData(this.elements[this.editedRowIndex]);
+        }
+      }
+    }else{
+      this.selectedRowIndex = -1;
+      if(this.editedRowIndex == -1) {
+        if(data && data._id == undefined) {
+          setTimeout(() => {
+            this.updateDataOnFormField(data);
+          }, 100);
+        }
+      }
+    }
   }
   async getGooglepMapCurrentPosition(){
     if(navigator?.geolocation){
@@ -816,7 +844,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setForm(){
-    if(this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
+    if(this.form && this.form.details && this.form.details.collection_name && this.form.details.collection_name != '' && (this.currentMenu != undefined || this.envService.getRequestType() == 'PUBLIC')){
       if(this.currentMenu == undefined){
         this.currentMenu = {};
       }
@@ -835,13 +863,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.getLocation = false;
     }
-    if(this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
+    if(this.form && this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
       this.getTableField = false;
     }else{
       this.tableFields = [];
     }  
-    if(this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
+    if(this.form && this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
       this.formFieldButtons = this.form.tab_list_buttons; 
     } 
     this.showIfFieldList=[];
@@ -902,7 +930,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(element.etc_fields && element.etc_fields != null){
                   if(element.etc_fields.maxDate){
                     if(element.etc_fields.maxDate == '-1'){
-                      this.maxDate = new Date(currentYear + 1, 11, 31);
+                      this.maxDate = new Date(currentYear + 25, 11, 31);
                     }else{
                       this.maxDate.setDate(new Date().getDate() + Number(element.etc_fields.maxDate));
                     }
@@ -910,7 +938,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 }
               }else{
                 this.minDate = new Date(currentYear - 100, 0, 1);
-                this.maxDate = new Date(currentYear + 1, 11, 31);
+                this.maxDate = new Date(currentYear + 25, 11, 31);
               }                  
               element['minDate'] = this.minDate
               element['maxDate'] = this.maxDate;
@@ -988,7 +1016,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                             if(data.etc_fields && data.etc_fields != null){
                               if(data.etc_fields.maxDate){
                                 if(data.etc_fields.maxDate == '-1'){
-                                  this.maxDate = new Date(currentYear + 1, 11, 31);
+                                  this.maxDate = new Date(currentYear + 25, 11, 31);
                                 }else{
                                   this.maxDate.setDate(new Date().getDate() + Number(data.etc_fields.maxDate));
                                 }
@@ -996,7 +1024,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                             }
                           }else{
                             this.minDate = new Date(currentYear - 100, 0, 1);
-                            this.maxDate = new Date(currentYear + 1, 11, 31);
+                            this.maxDate = new Date(currentYear + 25, 11, 31);
                           }                  
                           data['minDate'] = this.minDate
                           data['maxDate'] = this.maxDate;
@@ -1332,7 +1360,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   customValidationFiels=[];
   setStaticData(staticDatas){   
-    if(Object.keys(staticDatas).length > 0) {
+    if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
         let staticData = {};
         staticData[key] = staticDatas[key];   
@@ -1455,8 +1483,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
   setGridRowDeleteResponce(responce){
-    this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
-    this.dataSaveInProgress = true;
+    if(responce && responce['success']){
+      this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
+      this.dataSaveInProgress = true;
+    }
   }
 
   setSaveResponce(saveFromDataRsponce){
@@ -1551,7 +1581,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setTypeaheadData(typeAheadData){
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];
