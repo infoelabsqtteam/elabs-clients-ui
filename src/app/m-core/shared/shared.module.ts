@@ -34,6 +34,7 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
     RouterModule,
     CoreModule,
     MDBBootstrapModule.forRoot(),
+   // Ng2SearchPipeModule,
     AngularMaterialModule,
     AllPackageModule
   ],

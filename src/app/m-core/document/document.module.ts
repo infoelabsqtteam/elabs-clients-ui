@@ -19,6 +19,7 @@ import { AllPackageModule } from '../all-package/all-package.module';
     CommonModule,
     // DocumentRoutingModule,
     NgxDocViewerModule,
+    // Ng2SearchPipeModule,
     FormsModule,
     ContextMenuModule.forRoot(),
     MDBBootstrapModule.forRoot(),

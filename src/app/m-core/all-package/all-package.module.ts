@@ -18,6 +18,7 @@ const packages = [
   NgxMaterialTimepickerModule,
   AngularEditorModule,
   NgxExtendedPdfViewerModule,
+  PipesModule,
   GoogleChartsModule,
   GoogleMapsModule,
   NgxPaginationModule,
@@ -25,8 +26,7 @@ const packages = [
   MomentDateModule,
   EditorModule,
   CarouselModule,
-  NgxDiff2htmlModule,
-  PipesModule
+  NgxDiff2htmlModule
 ]
 
 @NgModule({
