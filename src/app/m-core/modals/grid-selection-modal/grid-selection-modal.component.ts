@@ -234,7 +234,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   setTypeaheadData(typeAheadData) {
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];
