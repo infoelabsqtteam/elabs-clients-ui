@@ -1,10 +1,8 @@
 import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
-import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
-import { Common } from "src/app/shared/enums/common.enum";
 import { Subscription } from "rxjs";
 
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, CommonFunctionService, MenuOrModuleCommonService } from '@core/web-core';
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, CommonFunctionService, MenuOrModuleCommonService,StorageTokenStatus,Common } from '@core/web-core';
 
 
 @Component({

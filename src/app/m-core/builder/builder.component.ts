@@ -179,16 +179,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
       // this.verticalComponent.changeModul(this.commonFunctionService.moduleIndex(moduleId));
     }
     if(routers.snapshot.params["moduleId"]){
-      let AllModuleList = this.storageService.GetModifyModules();
-      if(AllModuleList == undefined || AllModuleList == undefined || AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
-        AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules());
-        this.storageService.SetModifyModules(AllModuleList);
-      }
+      let AllModuleList = this.storageService.GetModules();
+      // if(AllModuleList == undefined || AllModuleList == undefined || AllModuleList.length == 0 && this.storageService.GetModules().length > 0){
+      //   AllModuleList = this.menuOrModuleCommounService.modifyModuleListWithPermission(this.storageService.GetModules());
+      //   this.storageService.SetModifyModules(AllModuleList);
+      // }
       if(AllModuleList != undefined && Array.isArray(AllModuleList)){
         const moduleName = routers.snapshot.params["moduleId"];
         const moduleIndex = this.commonFunctionService.getIndexInArrayById(AllModuleList,moduleName,'name');
         if(routers.snapshot.params["menuId"]){
-            if(moduleIndex != -1 && AllModuleList[moduleIndex].display){
+            if(moduleIndex != -1 && AllModuleList[moduleIndex]){
               const module = AllModuleList[moduleIndex];
               let menuList = [];
               if(module && module.menu_list && module.menu_list.length > 0){
@@ -271,12 +271,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
       })
     }
   }
+  
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
       this.getTempData=true;
       this.storageService.setChildWindowUrl('/');    
-      this.storageService.setRedirectUrl('/');  
-      this.tabs = tempData[0].templateTabs; 
+      this.storageService.setRedirectUrl('/'); 
+      if(tempData[0] && tempData[0].templateTabs && tempData[0].templateTabs.length > 0){
+        this.tabs = this.menuOrModuleCommounService.viewPermissionInTabs(tempData[0].templateTabs);
+      } 
+      //this.tabs = tempData[0].templateTabs; 
       if(this.tabs == undefined || this.tabs == null){
         //this.notificationService.notify('bg-danger','Template Tabs are not availabel !!!')
         this.tabs = [];
@@ -344,18 +348,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }else{
         if(this.selectTabIndex != i){
           this.apiService.resetGridData();
-        }       
-        this.selectTabIndex = i;  
-        this.getViewMode(); 
+        }  
+        
       }       
     } else {
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
+    this.selectTabIndex = i;  
+    this.getViewMode(); 
   } 
-  checkPermission(tab){
-    return !this.permissionService.checkPermission(tab.tab_name, 'view')
-  }
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
         this.grid_view_mode="inlineFormView";
@@ -390,13 +392,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     else{
       this.selectContact = '';
     }
-  }   
-
-
-
-
-
-  
+  } 
   addFebMenu(menu,parent){
     this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
     this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
@@ -408,50 +404,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.commonFunctionService.updateUserPreference(menu,field,parent);
     this.saveCallSubscribe();
   }
-  checkFebMenuAddOrNot(tab,parent){
-    let tabId = tab._id;
-    if(parent != ''){
-      tabId = parent._id;
-    }
-    let userFebTab = this.commonFunctionService.getUserPreferenceByFieldName('favoriteTabs');
-    if(userFebTab && userFebTab != null && userFebTab.length > 0){
-      let match = -1;
-      for (let index = 0; index < userFebTab.length; index++) {
-        const element = userFebTab[index];
-        if(element._id == tabId ){
-          match = index;
-          break;
-        }     
-      }
-      if(match > -1){
-        if(parent != ''){
-          const submenu = userFebTab[match]['tab'];
-          let subMatchIndex = -1;
-          if(submenu && submenu.length > 0){
-            for (let j = 0; j < submenu.length; j++) {
-              const subMenu = submenu[j];
-              if(subMenu._id == tab._id){
-                subMatchIndex = j;
-                break;
-              }
-              
-            }
-          }
-          if(subMatchIndex > -1){
-            return true
-          }else{
-            return false;
-          }
-        }else{
-          return true;
-        }      
-      }else{
-        return false;
-      }
-    }else{
-      return false;
-    }
-  }
+  
   
  }
 
