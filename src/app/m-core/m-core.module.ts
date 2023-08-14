@@ -37,7 +37,6 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 
 import { VerticalComponent } from './vertical/vertical.component';
 import { HorizontalComponent } from './horizontal/horizontal.component';
-import { PipesModule } from '../pipes/pipes.module';
 import { AngularCommonModule } from './angular-common/angular-common.module';
 import { ReportModule } from './report/report.module';
 
@@ -89,7 +88,6 @@ const maskConfig: Partial<IConfig> = {
         CommonComponentModule,
         FormModelModule,
         AllPackageModule,
-        PipesModule,
         AngularCommonModule,
         ReportModule
     ]

@@ -7,7 +7,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CoreModule } from '../../core/core.module';
 import { MDBBootstrapModule  } from 'angular-bootstrap-md';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
 import { AllPackageModule } from '../all-package/all-package.module';
 
 
@@ -34,11 +34,11 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
     RouterModule,
     CoreModule,
     MDBBootstrapModule.forRoot(),
-    Ng2SearchPipeModule,
+   // Ng2SearchPipeModule,
     AngularMaterialModule,
     AllPackageModule
   ],
-  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,Ng2SearchPipeModule,NgbDropdownModule,SettingMenuComponent],
+  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule,SettingMenuComponent],
   providers: []
 })
 export class SharedModule { }

@@ -6,7 +6,6 @@ import { DocumentComponent } from './document.component';
 import { DriveHomeComponent } from './drive-home/drive-home.component';
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AuditListComponent } from './drive-home/audit-list/audit-list.component';
 import { DocModelModule } from './doc-model/doc-model.module';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
@@ -20,7 +19,7 @@ import { AllPackageModule } from '../all-package/all-package.module';
     CommonModule,
     // DocumentRoutingModule,
     NgxDocViewerModule,
-    Ng2SearchPipeModule,
+    // Ng2SearchPipeModule,
     FormsModule,
     ContextMenuModule.forRoot(),
     MDBBootstrapModule.forRoot(),
