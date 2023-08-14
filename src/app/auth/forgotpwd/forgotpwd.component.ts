@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, StorageService, EnvService} from '@core/web-core';
+import { AuthService, DataShareService, StorageService, EnvService, AuthDataShareService, NotificationService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forgotpwd',
@@ -15,11 +16,11 @@ export class ForgotPwdComponent implements OnInit {
   username: string;
   resetPwd: boolean = true;
   appName: string;
-  appNameSubscription;
+  appNameSubscription:Subscription;
   title = "";
   template:string = "temp1";
   logoPath = '';
-  forGotSubscription:any;
+  forGotSubscription:Subscription;
 
   constructor(
     private router: Router,
@@ -27,14 +28,20 @@ export class ForgotPwdComponent implements OnInit {
     private authService:AuthService,
     private dataShareService:DataShareService,
     private envService:EnvService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private authDataShareService: AuthDataShareService,
+    private notificationService: NotificationService
     ) { 
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
       })
-      this.forGotSubscription = this.dataShareService.forgot.subscribe(data =>{
-        if(data == "reset"){
+      this.forGotSubscription = this.authDataShareService.forgot.subscribe(data =>{
+        if(data.msg != '') {
+          this.notificationService.notify(data.class, data.msg);
+        }
+        if(data.status == 'success') {
           this.resetPwd = false;
+          this.authService.redirectToSignPage();
         }
       })
       this.pageloded();

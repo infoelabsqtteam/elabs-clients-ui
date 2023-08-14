@@ -2,7 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, ModelService } from '@core/web-core';
+import { AuthDataShareService, AuthService, DataShareService, ModelService, NotificationService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-signup-modal',
@@ -18,8 +19,8 @@ export class SignupModalComponent implements OnInit {
   @Input() id: string;
   @Output() signupResponce = new EventEmitter();
   @ViewChild('signupModal') public signupModal: ModalDirective; 
-  appNameSubscription;
-
+  appNameSubscription:Subscription;
+  signUpInfoSubscribe:Subscription;
   
   constructor(
     private modalService: ModelService, 
@@ -27,10 +28,18 @@ export class SignupModalComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService:AuthService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private authDataShareService: AuthDataShareService,
+    private notificationService: NotificationService
     ) {
       this.appNameSubscription = this.dataShareService.appName.subscribe( data =>{
         this.setAppName(data);
+      })
+      this.signUpInfoSubscribe = this.authDataShareService.signUpResponse.subscribe(res =>{
+        this.notificationService.notify(res.class, res.msg);
+        if(res.status == 'success') {
+          this.authService.redirectToSignPage();
+        }
       })
      }
 
@@ -57,7 +66,7 @@ export class SignupModalComponent implements OnInit {
     const name = this.signUpForm.value.name;
     const mobile = "+91" + this.signUpForm.value.mobile;
     const payload = { appName: this.appName, data: { username: email, email: email, password: password, name: name, phone_number: mobile } }
-    this.authService.TrySignup(payload);
+    this.authService.Signup(payload);
     this.router.navigate(['/signin']);
   }
 

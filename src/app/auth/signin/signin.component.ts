@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgForm,FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService, EnvService, StorageService, DataShareService } from '@core/web-core';
+import { AuthService, EnvService, StorageService, DataShareService, AuthDataShareService, NotificationService } from '@core/web-core';
 
 @Component({
   selector: 'app-signin',
@@ -19,17 +19,28 @@ export class SigninComponent implements OnInit {
   logoPath = '';
   title = "";
   applicationSettingSubscription:Subscription;
+  loginInfoSubscribe:Subscription;
   constructor(
     private router: Router,
     private authService:AuthService,
     private envService:EnvService,
     private storageService:StorageService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private authDataShareService: AuthDataShareService,
+    private notificationService: NotificationService
     ) {
       this.pageloded();
       this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
         if(setting == 'setting'){
           this.pageloded();
+        }
+      })
+      this.loginInfoSubscribe = this.authDataShareService.signinResponse.subscribe(res =>{
+        if(res.msg != '') {
+          this.notificationService.notify(res.class, res.msg);
+        }
+        if(res.status == 'success') {
+          this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
         }
       })
   }

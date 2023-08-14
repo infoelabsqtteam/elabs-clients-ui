@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { StorageService, AuthService, NotificationService, EnvService} from '@core/web-core';
+import { StorageService, AuthService, NotificationService, EnvService, AuthDataShareService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -22,16 +23,26 @@ export class CreatepwdComponent implements OnInit
   template:string = "temp1";
   logoPath = '';
   title = ""; 
-
+  changePasswordSubscribe: Subscription;
   constructor(
     private router: Router,
     private storageService:StorageService,
     private authService:AuthService,
     private notificationService:NotificationService,
     private envService:EnvService,
-    private location: Location
+    private location: Location,
+    private authDataShareService: AuthDataShareService,
   ) {
     this.pageloded();
+    this.changePasswordSubscribe = this.authDataShareService.createPwd.subscribe(res =>{
+      this.notificationService.notify(res.class, res.msg);
+      if(res.msg != '') {
+        this.notificationService.notify(res.class, res.msg);
+      }
+      if(res.status == 'success') {
+        this.authService.redirectToSignPage();
+      }
+    })
   }
   ngOnInit(): void {
    
