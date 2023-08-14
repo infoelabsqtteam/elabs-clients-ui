@@ -35,7 +35,6 @@ export class CreatepwdComponent implements OnInit
   ) {
     this.pageloded();
     this.changePasswordSubscribe = this.authDataShareService.createPwd.subscribe(res =>{
-      this.notificationService.notify(res.class, res.msg);
       if(res.msg != '') {
         this.notificationService.notify(res.class, res.msg);
       }
