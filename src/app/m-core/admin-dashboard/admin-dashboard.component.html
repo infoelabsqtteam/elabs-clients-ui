@@ -1,5 +1,5 @@
-<div class="tablist container-fluid position-relative">
-  <mat-tab-group  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
+<div class="container-fluid position-relative">
+  <mat-tab-group *ngIf="chartPermission"  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
     <mat-tab>
       <ng-template mat-tab-label>
         <div class="mat-tab-label-content px-3 py-2" >Chart</div>
@@ -13,6 +13,15 @@
       <app-chart [isShow]="isShow"></app-chart>  
     </mat-tab>    
   </mat-tab-group>  
+
+
+  <section class="maindashboard" *ngIf="!chartPermission">
+    <div class="dashboardcard d-flex align-items-center justify-content-between">
+      <h1>Welcome to {{welcometitle | titlecase}}</h1>
+      <img src="assets/img/welcomeimg.png" class="300px">
+    </div>
+
+  </section>
   <!-- <div class="row">
     <div class="col-xl-8">
       <div class="row">

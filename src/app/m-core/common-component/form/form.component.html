@@ -670,7 +670,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3'" *ngIf="tableField.type == 'list_of_fields'">
+                                <div class="addrefreshiconbtn" [ngClass]="tableField.etc_fields && tableField.etc_fields.btn_class?tableField.etc_fields.btn_class:'col-lg-3'" *ngIf="tableField.type == 'list_of_fields'">
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn firstlistofbtn" mdbWavesEffect (click)="setValue('',tableField,false)"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
                                     <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="refreshListofField(tableField,false)"><i class="material-icons md-48">autorenew</i></button>
                                 </div>
@@ -834,17 +834,14 @@
                           
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
-
                                 <div class="grid-selection-buttons">
-
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">keyboard_arrow_down</span></button>
 
                                     <button *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" class="plusicon" mat-icon-button (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
                                 </div>
                             </div>
-
                             <div class="row" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
-                                <div class="col-lg-12 table-responsive py-2 maxheightdata" >
+                                <div class="col-lg-12 table-responsive py-2" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
                                     <table mdbTable class="z-depth-1 verticaltable">
                                         <tbody>
                                         <tr *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
@@ -875,9 +872,11 @@
 
                             <div class="" *ngIf="modifyCustmizedFormValue[tableField.field_name] && showGridData[tableField.field_name]">
                                 <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
-                                    <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" (keyup)="gridSelectionSearch(tableField)" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                    <div class="col-lg-3 my-2">
+                                        <input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" (keyup)="gridSelectionSearch(tableField)" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/>
+                                    </div>
                                 </div>                                
-                                <div class="table-responsive table maxheightdata">
+                                <div class="table-responsive table" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
                                     <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 

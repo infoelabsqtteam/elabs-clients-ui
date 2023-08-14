@@ -11,32 +11,33 @@ import { CommonFunctionService, DataShareService, StorageService} from '@core/we
 })
 export class AdminDashboardComponent implements OnInit,OnDestroy {
 
-  term: any;
-  chatData: Chat[];
-  transactions: Transaction[];
-  statData: Stat[];
-  
-  
+  // term: any;
+  // chatData: Chat[];
+  // transactions: Transaction[];
+  // statData: Stat[];
+   userInfo:any = {};
+   chartPermission:boolean = false;
+   welcometitle:any;
 
   // bread crumb items
-  breadCrumbItems: Array<{}>;
-  revenueChart: ChartType;
-  salesAnalytics: ChartType;
-  sparklineEarning: ChartType;
-  sparklineMonthly: ChartType;
-  latitude: number;
-  longitude: number;
-  zoom: number;
-  address: string;
-  private geoCoder;
+  // breadCrumbItems: Array<{}>;
+  // revenueChart: ChartType;
+  // salesAnalytics: ChartType;
+  // sparklineEarning: ChartType;
+  // sparklineMonthly: ChartType;
+  // latitude: number;
+  // longitude: number;
+  // zoom: number;
+  // address: string;
+  // private geoCoder;
   
-  @ViewChild('search') public searchElementRef: ElementRef;
+  // @ViewChild('search') public searchElementRef: ElementRef;
 
   // Form submit
-  chatSubmit: boolean;
+  // chatSubmit: boolean;
   isShow:boolean = false;
 
-  formData: FormGroup;
+  // formData: FormGroup;
   mongodbChartShow:boolean = false;
   
 
@@ -58,7 +59,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private dataShareService:DataShareService,
     private storageService:StorageService
   ) {
-      
+      this.welcometitle = this.storageService.getPageTitle();
       
     }
 
@@ -68,12 +69,17 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.dataShareService.setChartModelShowHide(false);
-    this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
-    this.formData = this.formBuilder.group({
-      message: ['', [Validators.required]],
-    });
-    this._fetchData();
-    
+    // this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
+    // this.formData = this.formBuilder.group({
+    //   message: ['', [Validators.required]],
+    // });
+    // this._fetchData();
+    this.userInfo = this.storageService.GetUserInfo();
+    if(this.userInfo && this.userInfo.chart) {
+      this.chartPermission = true;
+    }else {
+      this.chartPermission = false;
+    }
     
       
     
@@ -89,73 +95,73 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   }
 
   
-  private setCurrentLocation() {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
-        this.zoom = 8;
-        this.getAddress(this.latitude, this.longitude);
-      });
-    }
-  }
+  // private setCurrentLocation() {
+  //   if ('geolocation' in navigator) {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       this.latitude = position.coords.latitude;
+  //       this.longitude = position.coords.longitude;
+  //       this.zoom = 8;
+  //       this.getAddress(this.latitude, this.longitude);
+  //     });
+  //   }
+  // }
   
-  getAddress(latitude, longitude) {
-    this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
-      if (status === 'OK') {
-        if (results[0]) {
-          this.zoom = 12;
-          this.address = results[0].formatted_address;
-        } else {
-          window.alert('No results found');
-        }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      }
+  // getAddress(latitude, longitude) {
+  //   this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
+  //     if (status === 'OK') {
+  //       if (results[0]) {
+  //         this.zoom = 12;
+  //         this.address = results[0].formatted_address;
+  //       } else {
+  //         window.alert('No results found');
+  //       }
+  //     } else {
+  //       window.alert('Geocoder failed due to: ' + status);
+  //     }
   
-    });
-  }
+  //   });
+  // }
 
-  private _fetchData() {
-    this.revenueChart = revenueChart;
-    this.salesAnalytics = salesAnalytics;
-    this.sparklineEarning = sparklineEarning;
-    this.sparklineMonthly = sparklineMonthly;
-    this.chatData = chatData;
-    this.transactions = transactions;
-    this.statData = statData;
-  }
+  // private _fetchData() {
+  //   this.revenueChart = revenueChart;
+  //   this.salesAnalytics = salesAnalytics;
+  //   this.sparklineEarning = sparklineEarning;
+  //   this.sparklineMonthly = sparklineMonthly;
+  //   this.chatData = chatData;
+  //   this.transactions = transactions;
+  //   this.statData = statData;
+  // }
 
   /**
    * Returns form
    */
-  get form() {
-    return this.formData.controls;
-  }
+  // get form() {
+  //   return this.formData.controls;
+  // }
 
   /**
    * Save the message in chat
    */
-  messageSave() {
-    const message = this.formData.get('message').value;
-    const currentDate = new Date();
-    if (this.formData.valid && message) {
-      // Message Push in Chat
-      this.chatData.push({
-        align: 'right',
-        name: 'Ricky Clark',
-        message,
-        time: currentDate.getHours() + ':' + currentDate.getMinutes()
-      });
+  // messageSave() {
+  //   const message = this.formData.get('message').value;
+  //   const currentDate = new Date();
+  //   if (this.formData.valid && message) {
+  //     // Message Push in Chat
+  //     this.chatData.push({
+  //       align: 'right',
+  //       name: 'Ricky Clark',
+  //       message,
+  //       time: currentDate.getHours() + ':' + currentDate.getMinutes()
+  //     });
 
-      // Set Form Data Reset
-      this.formData = this.formBuilder.group({
-        message: null
-      });
-    }
+  //     // Set Form Data Reset
+  //     this.formData = this.formBuilder.group({
+  //       message: null
+  //     });
+  //   }
 
-    this.chatSubmit = true;
-  }
+  //   this.chatSubmit = true;
+  // }
 
   
 
