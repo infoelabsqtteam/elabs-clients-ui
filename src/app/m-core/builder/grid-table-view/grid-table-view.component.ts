@@ -1337,6 +1337,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               _id :gridData._id
             }
             this.apiService.PrintTemplate(payload);
+            this.modalService.open('download-progress-modal', {});
           }else{
             this.notificationService.notify('bg-danger','Template Type is null!!!');
           }
