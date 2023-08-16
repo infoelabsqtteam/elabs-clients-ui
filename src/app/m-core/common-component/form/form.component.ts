@@ -804,7 +804,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0 && this.getTableField) {
-      this.tab = tempData[0].templateTabs[this.tabIndex];
+      if(tempData[0].templateTabs){
+        this.tab = tempData[0].templateTabs[this.tabIndex];
+      }      
       if (this.tab && this.tab.tab_name != "" && this.tab.tab_name != null && this.tab.tab_name != undefined) {
         if(this.currentMenu && this.currentMenu.name && this.currentMenu.name != undefined && this.currentMenu.name != null){
           const menu = {"name":this.tab.tab_name};

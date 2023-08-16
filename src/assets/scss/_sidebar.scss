@@ -38,6 +38,10 @@
     .budget {background:#e86e6e;margin:0 5px;font-size:11px;display:inline-block;text-align:center;line-height:20px;padding:0 10px;border-radius:5px;color:#fff;}
 }
 
+.filterchart {width:300px;
+  .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {background:var(--themecolor) !important;}
+}
+
 
 .mat-drawer-backdrop {z-index:4 !important;}
 .mat-drawer{z-index:5 !important;}
