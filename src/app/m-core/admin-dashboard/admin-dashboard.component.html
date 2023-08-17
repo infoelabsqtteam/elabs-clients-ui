@@ -1,17 +1,23 @@
-<div class="tablist container-fluid position-relative">
-  <mat-tab-group  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
+<div class="container-fluid position-relative">
+  <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
     <mat-tab>
       <ng-template mat-tab-label>
         <div class="mat-tab-label-content px-3 py-2" >Chart</div>
       </ng-template>
-      <app-mongodb-chart [showMongoChart]="mongodbChartShow"></app-mongodb-chart> 
+      <app-mongodb-chart *ngIf="mongodbChartShow"  [showMongoChart]="mongodbChartShow"></app-mongodb-chart> 
     </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="mat-tab-label-content px-3 py-2" >Old Chart</div>
+      </ng-template>
+      <app-chart *ngIf="isShow" [isShow]="isShow"></app-chart>  
+    </mat-tab>  
     <mat-tab>
       <ng-template mat-tab-label>
         <div class="mat-tab-label-content px-3 py-2" >Dashboard</div>
       </ng-template>
-      <app-chart [isShow]="isShow"></app-chart>  
-    </mat-tab>    
+       <app-dashboard-chart *ngIf="dashboardMongodbChartShow" [showDashboardMongoChart]="dashboardMongodbChartShow"></app-dashboard-chart>   
+    </mat-tab>   
   </mat-tab-group>  
   <!-- <div class="row">
     <div class="col-xl-8">
