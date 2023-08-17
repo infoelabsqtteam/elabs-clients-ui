@@ -38,6 +38,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
 
   formData: FormGroup;
   mongodbChartShow:boolean = false;
+  dashboardMongodbChartShow:boolean = false;
   
 
 
@@ -58,7 +59,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private dataShareService:DataShareService,
     private storageService:StorageService
   ) {
-      
+    this.mongodbChartShow = true;
       
     }
 
@@ -73,17 +74,27 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
       message: ['', [Validators.required]],
     });
     this._fetchData();
-    
-    
-      
-    
   }
+  
   getTabIndex(event){
-    if(event == 1){
-      this.isShow = true;
-      this.mongodbChartShow = false;
-    }else{
+    if(event == 0){
       this.isShow = false;
+      this.mongodbChartShow = true;
+      this.dashboardMongodbChartShow = false;
+    }
+    else if (event == 1){
+      this.mongodbChartShow = false;
+      this.isShow = true;
+      this.dashboardMongodbChartShow = false;
+    }
+    else if (event == 2){
+      this.dashboardMongodbChartShow = true;
+      this.isShow = false;
+      this.mongodbChartShow = false;
+    }
+    else{
+      this.isShow = false;
+      this.dashboardMongodbChartShow = false;
       this.mongodbChartShow = true;
     }
   }

@@ -84,14 +84,16 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       if(this.getAllStaticData){
-        let tabs = tempData[0].data.templateTabs;
-        let tableFields = tabs[this.selectTabIndex].tableFields;
-        this.headElements = tabs[this.selectTabIndex].tableGrids[0].gridColumns;
-        const staticModalGroup = this.commonFunctionService.commanApiPayload(this.headElements,tableFields,[]);      
-        if (staticModalGroup.length > 0) {
-          this.apiService.getStatiData(staticModalGroup)
+        if(tempData[0].data.templateTabs){
+          let tabs = tempData[0].data.templateTabs;
+          let tableFields = tabs[this.selectTabIndex].tableFields;
+          this.headElements = tabs[this.selectTabIndex].tableGrids[0].gridColumns;
+          const staticModalGroup = this.commonFunctionService.commanApiPayload(this.headElements,tableFields,[]);      
+          if (staticModalGroup.length > 0) {
+            this.apiService.getStatiData(staticModalGroup)
+          }
+          this.getAllStaticData = false; 
         }
-        this.getAllStaticData = false; 
       }       
     }
   }
