@@ -36,6 +36,7 @@ import { DownloadProgressComponent } from './download-progress/download-progress
 import { AuditHistoryComponent } from './audit-history/audit-history.component';
 import { HtmlViewModalComponent } from './html-view-modal/html-view-modal.component';
 import { BulkUpdateComponent } from './bulk-update/bulk-update.component';
+import { FilterComponent } from './filter/filter.component';
 
 
 const models = [
@@ -66,7 +67,8 @@ const models = [
   DownloadProgressComponent,
   AuditHistoryComponent,
   HtmlViewModalComponent,
-  BulkUpdateComponent
+  BulkUpdateComponent,
+  FilterComponent
 ]
 
 @NgModule({
