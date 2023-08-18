@@ -20,6 +20,7 @@ export class SigninComponent implements OnInit {
   title = "";
   applicationSettingSubscription:Subscription;
   loginInfoSubscribe:Subscription;
+  sessionSubscribe:Subscription
   constructor(
     private router: Router,
     private authService:AuthService,
@@ -43,6 +44,11 @@ export class SigninComponent implements OnInit {
           this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
         }
       })
+      this.sessionSubscribe = this.authDataShareService.sessionexpired.subscribe(res =>{ 
+        if(res && res.msg && res.status == 'success'){
+          this.notificationService.notify(res.class, res.msg);
+        }
+      });
   }
 
 
