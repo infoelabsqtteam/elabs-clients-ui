@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
-import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService } from '@core/web-core';
+import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
-    
+    private authDataShareService: AuthDataShareService
 
   ) {
     
@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
         })
     }
    
-    this.settingModelRestSubscription = this.dataShareService.settingData.subscribe(data =>{
+    this.settingModelRestSubscription = this.authDataShareService.settingData.subscribe(data =>{
       if(data == "logged_in"){
         this.showHideSetting = false;
       }else if (data == "logged_out"){

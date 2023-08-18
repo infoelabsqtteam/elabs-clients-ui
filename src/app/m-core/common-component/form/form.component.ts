@@ -3205,7 +3205,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(hasPermission){ 
       let gridSelectionValidation:any = this.checkGridSelectionMendetory();     
       if(this.templateForm.valid && gridSelectionValidation.status){
-        if(this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue)){
+        let validationsresponse = this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue);
+        if(validationsresponse && validationsresponse.status){
           if (this.dataSaveInProgress) {
             this.showNotify = true;
             this.dataSaveInProgress = false;            
@@ -3232,6 +3233,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
         }else{
           this.getSavePayload = false;
+          this.notificationService.notify('bg-danger', validationsresponse.msg)
         }
       }else{
         this.getSavePayload = false;
