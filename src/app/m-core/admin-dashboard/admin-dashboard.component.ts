@@ -61,6 +61,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     private storageService:StorageService
   ) {
       this.welcometitle = this.storageService.getPageTitle();
+      this.mongodbChartShow = true;
       
     }
 
