@@ -197,6 +197,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   disableIfFieldList:any=[];
   mendetoryIfFieldList:any=[];
   editorTypeFieldList:any=[];
+  calculationFieldList:any=[];
   gridSelectionMendetoryList:any=[];
   canUpdateIfFieldList:any=[];
   buttonIfList:any = [];
@@ -495,6 +496,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
       // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
+        this.calculationFieldList=[];
         this.tableFields = [];
         this.showIfFieldList=[];
         this.buttonIfList=[];
@@ -630,6 +632,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   resetFlagsForNewForm(){    
     //this.tableFields = [];
+    this.calculationFieldList=[];
     this.showIfFieldList=[];
     this.buttonIfList=[];
     this.disableIfFieldList=[];
@@ -817,7 +820,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0 && this.getTableField) {
-      this.tab = tempData[0].templateTabs[this.tabIndex];
+      if(tempData[0].templateTabs){
+        this.tab = tempData[0].templateTabs[this.tabIndex];
+      }      
       if (this.tab && this.tab.tab_name != "" && this.tab.tab_name != null && this.tab.tab_name != undefined) {
         if(this.currentMenu && this.currentMenu.name && this.currentMenu.name != undefined && this.currentMenu.name != null){
           const menu = {"name":this.tab.tab_name};
@@ -885,6 +890,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.form && this.form.tab_list_buttons && this.form.tab_list_buttons != undefined && this.form.tab_list_buttons.length > 0){
       this.formFieldButtons = this.form.tab_list_buttons; 
     } 
+    this.calculationFieldList=[];
     this.showIfFieldList=[];
     this.buttonIfList=[];
     this.disableIfFieldList=[];
@@ -999,11 +1005,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                     //disable if handling
                     if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null) || (data.disable_on_add && data.disable_on_add != '' && data.disable_on_add != undefined && data.disable_on_add != null)){                          
                       this.disableIfFieldList.push(modifyData);
-                    }                      
+                    }                     
                     if(element.type == 'list_of_fields'){
                       modifyData.is_mandatory=false;
                     }
                     if(data.field_name && data.field_name != '' && element.datatype != "list_of_object_with_popup"){
+                      // Calculation onChange handling
+                      if (element.onchange_function && element.onchange_function_param && element.onchange_function_param != ""){
+                        this.calculationFieldList.push(element);
+                      }
                       switch (data.type) {
                         case "list_of_checkbox":
                           this.commonFunctionService.createFormControl(list_of_fields, modifyData, [], "list")
@@ -1047,7 +1057,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                           this.commonFunctionService.createFormControl(list_of_fields, modifyData, '', "text")
                           break;
                       } 
-                    }  
+                    }
                     data.field_class = this.commonFunctionService.getDivClass(data,(this.tableFields.length + element.list_of_fields.length));               
                   }
                 }
@@ -1082,6 +1092,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       //disable if handling
                       if((data.disable_if && data.disable_if != '') || (data.disable_on_update && data.disable_on_update != '' && data.disable_on_update != undefined && data.disable_on_update != null) || (data.disable_on_add && data.disable_on_add != '' && data.disable_on_add != undefined && data.disable_on_add != null)){                          
                         this.disableIfFieldList.push(modifyData);
+                      } 
+                      // Calculation onChange handling
+                      if (element.onchange_function && element.onchange_function_param && element.onchange_function_param != ""){
+                        this.calculationFieldList.push(element);
                       }                     
                       
                       this.commonFunctionService.createFormControl(stepper_of_fields, modifyData, '', "text")
@@ -1163,6 +1177,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         //disable if handling
         if((element.disable_if && element.disable_if != '') || (element.disable_on_update && element.disable_on_update != '' && element.disable_on_update != undefined && element.disable_on_update != null) || (element.disable_on_add && element.disable_on_add != '' && element.disable_on_add != undefined && element.disable_on_add != null)){                  
           this.disableIfFieldList.push(element);
+        }
+        // Calculation onChange handling
+        if (element.onchange_function && element.onchange_function_param && element.onchange_function_param != ""){
+          this.calculationFieldList.push(element);
         }
         element.field_class = this.commonFunctionService.getDivClass(element,this.tableFields.length);
       }
@@ -3740,7 +3758,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let formValueWithCustomData = this.getFormValue(true);
       switch(function_name){
         case "calculation_of_script_for_tds":
-          const payload = this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField);   
+          const payload = this.limsCalculationsService[function_name](formValueWithCustomData, this.curTreeViewField);     
           this.apiService.getStatiData(payload);
           break;
         case "calculateQquoteAmount":
@@ -3748,7 +3766,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             element["qty"] = formValueWithCustomData["qty"];
             this.limsCalculationsService.calculateNetAmount(element, {field_name: "qty"},"legacyQuotationParameterCalculation");
           });
-          this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField)); 
+           this.updateDataOnFormField(this.limsCalculationsService[function_name](formValueWithCustomData, this.curTreeViewField));  
           break;
         case "calculateAutomotiveLimsQuotation":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
@@ -3783,8 +3801,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(val1);
           break;
         default:
-          if(this.commonFunctionService[this.curTreeViewField.onchange_function_param]){      
-            this.templateForm = this.commonFunctionService[this.curTreeViewField.onchange_function_param](this.templateForm, this.curTreeViewField);
+           if(this.commonFunctionService[function_name]){      
+            this.templateForm = this.commonFunctionService[function_name](this.templateForm, this.curTreeViewField);
+            const calTemplateValue= this.templateForm.getRawValue()
+            this.updateDataOnFormField(calTemplateValue);
+          }else if(this.limsCalculationsService[function_name]){      
+            this.templateForm = this.limsCalculationsService[function_name](this.templateForm, this.curTreeViewField);
             const calTemplateValue= this.templateForm.getRawValue()
             this.updateDataOnFormField(calTemplateValue);
           }
@@ -5137,6 +5159,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.setForm();
     this.updateDataOnFormField(data);
     this.getStaticDataWithDependentData();
+    if(this.calculationFieldList && this.calculationFieldList.length > 0){
+      this.callCalculation();
+    }
     this.currentMenu['name'] = formCollecition['collection_name'];
     this.previousFormFocusField = formCollecition['current_field'];
     this.focusFieldParent = formCollecition['parent_field']; 
@@ -5650,6 +5675,21 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
   }
+  callCalculation(){
+    if(this.calculationFieldList && this.calculationFieldList.length > 0){
+      for (var i = 0;i<this.calculationFieldList.length ;++i){
+        let element = this.calculationFieldList[i];
+        switch (element.onchange_function_param) {        
+            case 'autopopulateFields':
+              this.limsCalculationsService.autopopulateFields(this.templateForm);
+              break;
+          default:
+            this.inputOnChangeFunc('',element);
+        }
+      }
+    }
+  }
+
 
   // getLevel = (node: TodoItemFlatNode) => node.level;
 
