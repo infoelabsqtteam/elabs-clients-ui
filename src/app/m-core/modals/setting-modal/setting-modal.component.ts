@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService, CommonFunctionService, CoreFunctionService, DataShareService, EnvService, ModelService, StorageService } from '@core/web-core';
+import { ApiService, CommonFunctionService, CoreFunctionService, DataShareService, EnvService, ModelService, StorageService, AuthDataShareService } from '@core/web-core';
 
 
 @Component({
@@ -26,12 +26,13 @@ export class SettingModalComponent implements OnInit {
     private dataShareService:DataShareService,
     private apiService:ApiService,
     private storageService:StorageService,
-    private coreFunctionService:CoreFunctionService
+    private coreFunctionService:CoreFunctionService,
+    private authDataShareService: AuthDataShareService
   ) { 
 
     //this.getHostData();
 
-    this.settingModelRestSubscription = this.dataShareService.settingData.subscribe(data =>{
+    this.settingModelRestSubscription = this.authDataShareService.settingData.subscribe(data =>{
       if(data == "logged_out"){
         this.hostName = '';
         this.storageService.setHostNameDinamically('');
@@ -99,10 +100,10 @@ export class SettingModalComponent implements OnInit {
   setHostData(data:any){
     if(this.coreFunctionService.isNotBlank(data)){
       this.hostData = data;
-      this.dataShareService.restSettingModule('hide');
+      this.authDataShareService.restSettingModule('hide');
     }else{
       this.hostData = [];
-      this.dataShareService.restSettingModule('logged_in');
+      this.authDataShareService.restSettingModule('logged_in');
     }
     
   }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, EnvService, StorageService } from '@core/web-core';
+import { AuthDataShareService, AuthService, EnvService, NotificationService, StorageService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -17,14 +18,25 @@ export class OtpVarificationComponent implements OnInit {
   title = "";
   template:string = "temp1";
 
-  logoPath = ''
+  logoPath = '';
+  otpVerifySubscriptioin: Subscription;
 
   constructor( 
     private routers: ActivatedRoute,
     private authService:AuthService,
     private envService:EnvService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private authDataShareService: AuthDataShareService,
+    private notificationService: NotificationService
     ) { 
+      this.otpVerifySubscriptioin = this.authDataShareService.otpResponse.subscribe(res =>{
+        if(res.msg != '') {
+          this.notificationService.notify(res.class, res.msg);
+        }
+        if(res.status == 'success') {
+          this.authService.redirectToSignPage();
+        }
+      })
       this.pageloded();
     }
 
