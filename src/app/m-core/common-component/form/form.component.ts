@@ -3780,6 +3780,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           let val1 = this.limsCalculationsService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
           this.updateDataOnFormField(val1);
           break;
+        case 'calculate_quotation_with_subsequent':          
+          let calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(formValueWithCustomData,"standard", {field_name: "qty"});
+          this.updateDataOnFormField(calFormValue);
+          break;
         default:
            if(this.commonFunctionService[function_name]){      
             this.templateForm = this.commonFunctionService[function_name](this.templateForm, this.curTreeViewField);
