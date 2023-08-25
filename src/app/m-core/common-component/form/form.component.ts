@@ -2447,6 +2447,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
           break;
+        case 'calculate_quotation_with_subsequent':          
+          calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(tamplateFormValue,"standard", field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         case 'calculate_automotive_quotation':          
           calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
@@ -3801,6 +3805,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
           let val1 = this.limsCalculationsService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
           this.updateDataOnFormField(val1);
+          break;
+        case 'calculate_quotation_with_subsequent':          
+          let calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(formValueWithCustomData,"standard", {field_name: "qty"});
+          this.updateDataOnFormField(calFormValue);
           break;
         default:
            if(this.commonFunctionService[function_name]){      
