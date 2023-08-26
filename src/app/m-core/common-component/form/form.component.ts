@@ -7,15 +7,15 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
-import { Common } from 'src/app/shared/enums/common.enum';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-// import { HttpClient } from '@angular/common/http';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common} from '@core/web-core';
+import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
 
 
 declare var tinymce: any;
-
 
 @Component({
   selector: 'app-form',
@@ -295,6 +295,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   getLocation:boolean = false;
   mapsAPILoaded: Observable<boolean>;
 
+  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+  // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
+  // treeControl:any={};
+  // treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
+  // dataSource:any={};  
+
   // @HostListener('document:click') clickout() {
   //   this.term = {};
   // }
@@ -318,8 +324,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionService:GridCommonFunctionService,
     private ngZone: NgZone,
-    private limsCalculationsService:LimsCalculationsService
+    private limsCalculationsService:LimsCalculationsService,
+    private treeComponentService: TreeComponentService
 ) {
+    // this.treeFlattener = new MatTreeFlattener(
+    //   this.transformer,
+    //   this.getLevel,
+    //   this.isExpandable,
+    //   this.getChildren,
+    // );
+    //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+    //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     this.tinymceConfig = {
       height: 500,
@@ -512,8 +527,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.maxDate = new Date(currentYear + 25, 11, 31); 
 
   }
-
-
 
   @HostListener('window:keyup.alt.u') onCrtlU() {
     this.saveFormData()
@@ -1130,6 +1143,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               element['showButton'] = this.checkGridSelectionButtonCondition(element,'add');
               this.commonFunctionService.createFormControl(forControl, element, '', "text");
               break;
+            case "tree_view" :
+              // this.treeControl[element.field_name] = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+              // this.dataSource[element.field_name] = new MatTreeFlatDataSource(this.treeControl[element.field_name], this.treeFlattener);
+              this.commonFunctionService.createFormControl(forControl, element, '', "text")
             default:
               if(element.defaultValue && element.defaultValue != null && element.defaultValue != ''){
                 const value = element.defaultValue;
@@ -2279,6 +2296,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         this.modalService.open('grid-selection-modal', gridModalData);
         break;
+      case 'tree_view':
+        this.curTreeViewField = JSON.parse(JSON.stringify(field));   
+        const treeViewData = {
+          "field": this.curTreeViewField,
+          "selectedData":formValue[field.field_name] ? formValue[field.field_name]:{},
+          "object": formValueWithCustomData
+        }
+        this.modalService.open('tree-view', treeViewData);
+        break;
       default:
         break;
     }
@@ -3223,7 +3249,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }else{
       this.getSavePayload = false;
-      this.menuOrModuleCommounService.checkTokenStatusForPermission();
+      this.permissionService.checkTokenStatusForPermission();
     }
   }
   saveFormData(){
@@ -3814,6 +3840,36 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.modifyCustmizedFormValue = modifyObject.modifyData;
     this.tableFields = modifyObject.fields;
   }
+  treeViewComponentResponce(responce){
+    if(responce && Object.keys(responce).length > 0 && this.curTreeViewField && this.curTreeViewField.field_name){
+      const fieldName = this.curTreeViewField.field_name;      
+      this.templateForm.controls[fieldName].setValue(responce);
+      let treeResponceData = JSON.parse(JSON.stringify(responce));
+      this.updateTreeViewData(treeResponceData,this.curTreeViewField);
+    }
+  }
+  updateTreeViewData(responce,field){
+    const fieldName = field.field_name;
+    let keys = [];
+    let fields = [];
+    if(field && field.treeViewKeys){
+      keys = field.treeViewKeys;
+    }
+    if(field && field.fields && field.fields.length > 0){
+      fields = field.fields;
+    }
+    const treeData = this.treeComponentService.buildFileTree(responce,0,keys);
+    //console.log(treeData);
+    let selectedNodeList = this.treeComponentService.convertTreeToList(JSON.parse(JSON.stringify(treeData)),[]);
+    let childList = [];
+    if(fields && fields.length > 0){
+      childList = this.treeComponentService.convertParentNodeToChildNodeList(selectedNodeList,fields);
+    }
+    //console.log(selectedNodeList);
+    //console.log(childList);
+    //this.dataSource[fieldName].data = treeData;
+    this.treeViewData[fieldName] = childList;
+  }
   isDisable(parent,chield){
     const  formValue = this.getFormValue(true);  
     let tobedesabled;
@@ -3906,6 +3962,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.latitude = 0;
     this.longitude = 0;
     this.address = "";
+    this.treeViewData={};
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
@@ -4716,6 +4773,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
             }
             this.templateForm.controls[fieldName].setValue(treeDropdownValue)
+          }
+          break;
+        case "tree_view":
+          if(formValue[fieldName] != null && formValue[fieldName] != undefined){
+            let treeValue = object == null ? null : object;
+            this.templateForm.controls[fieldName].setValue(treeValue);
+            if(treeValue){
+              this.updateTreeViewData(JSON.parse(JSON.stringify(treeValue)),JSON.parse(JSON.stringify(element)));
+            }            
           }
           break;
         case "stepper":
@@ -5634,5 +5700,28 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
 
+
+  // getLevel = (node: TodoItemFlatNode) => node.level;
+
+  // isExpandable = (node: TodoItemFlatNode) => node.expandable;
+
+  // getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
+
+  // hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
+
+ // hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+
+  /**
+   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
+   */
+  // transformer = (node: TodoItemNode, level: number) => {
+  //   const existingNode = this.nestedNodeMap.get(node);
+  //   const flatNode =
+  //     existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
+  //   flatNode.item = node.item;
+  //   flatNode.level = level;
+  //   flatNode.expandable = !!node.children?.length;
+  //   return flatNode;
+  // };
 
 }
