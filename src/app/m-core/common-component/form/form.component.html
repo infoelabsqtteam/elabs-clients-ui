@@ -753,6 +753,61 @@
                                 </div>
                             </div>
                         </div>
+                        <div *ngIf="tableField.type == 'tree_view'">
+                            <div class="form-label d-flex justify-content-between">
+                                <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
+                                <div class="grid-selection-buttons" >                                   
+                                    <button class="plusicon" mat-icon-button *ngIf="!tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
+                                </div>
+                            </div>
+                            <!-- <div class="test" *ngIf=" dataSource[tableField.field_name] && treeControl[tableField.field_name]">
+                                <mat-tree [dataSource]="dataSource[tableField.field_name]" [treeControl]="treeControl[tableField.field_name]">
+                                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                                      <button mat-icon-button disabled></button>
+                                      {{node.item}}
+                                    </mat-tree-node>
+                                    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                                      <button mat-icon-button matTreeNodeToggle
+                                              [attr.aria-label]="'Toggle ' + node.name">
+                                        <mat-icon class="mat-icon-rtl-mirror">
+                                          {{treeControl[tableField.field_name].isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                        </mat-icon>
+                                      </button>
+                                      {{node.item}}
+                                    </mat-tree-node>
+                                </mat-tree>
+                            </div> -->
+                            <div class="" *ngIf="treeViewData[tableField.field_name]">
+                                <div class="row px-2">
+                                    <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                </div>                                
+                                <div class="table-responsive table maxheightdata">
+                                    <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
+                                        <thead>
+                                            <tr> 
+                                                <!-- <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                                -->
+                                                <th *ngFor="let fieldName of tableField.fields" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody cdkDropList >
+                                            <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" >
+                                                
+                                                <td *ngFor="let fieldName of tableField.fields" >
+                                                    <div [style.width]="fieldName.width">
+                                                        <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name] && data[fieldName.field_name].name?data[fieldName.field_name].name:data[fieldName.field_name]"></span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>                                    
+                                </div>
+                                <!-- <section *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
+                                    <mat-card-content class="m-0 pt-0 text-center">
+                                        <pagination-controls (pageChange)="pageNo[tableField.field_name] = $event" [id]="tableField.field_name + '_' + tableField.type"></pagination-controls>
+                                    </mat-card-content>
+                                </section> -->
+                            </div>
+                        </div>
                         <div *ngIf="tableField.type == 'tree_view_selection'">
                             <div class="position-relative">
                                 <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
@@ -1675,6 +1730,7 @@
 </div>
 <app-confirm-modal *ngIf="isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce($event)"></app-confirm-modal>
 <app-tree-view-modal id="tree-view-modal" (treeViewResponce)="treeViewResponce($event)"></app-tree-view-modal>
+<app-permission-tree-view id="tree-view" (treeViewComponentResponce)="treeViewComponentResponce($event)"></app-permission-tree-view>
 <app-grid-selection-modal id="grid-selection-modal" (gridSelectionResponce)="gridSelectionResponce($event)"></app-grid-selection-modal>
 <app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
 <app-file-upload-modal id="file-upload-modal" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>

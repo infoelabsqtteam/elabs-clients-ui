@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
-import { StorageTokenStatus } from "src/app/shared/enums/storage-token-status.enum";
 import { Subscription } from "rxjs";
 import { FormControl } from "@angular/forms";
 
-import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService} from '@core/web-core';
+import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService,StorageTokenStatus} from '@core/web-core';
 
 
 
@@ -109,8 +108,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             if(indexs.moduleIndex != undefined && indexs.moduleIndex != -1){
                 this.moduleIndex = indexs.moduleIndex;
                 let module = this.AllModuleList[this.moduleIndex]; 
-                let menuList = module.menu_list;
-                this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
+                this.menuData = module.menu_list;
+                //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
             }               
             const menuIndex = indexs.menuIndex;
             if(menuIndex != -1){
@@ -275,10 +274,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }    
     getMenuByModuleIndex(moduleIndex:any){
         if (moduleIndex != -1) {
+            this.AllModuleList = this.storageService.GetModules();
             let module = this.AllModuleList[moduleIndex];         
             if (module.menu_list != undefined && module.menu_list != null) {
-                let menuList = module.menu_list;
-                this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
+                this.menuData = module.menu_list;
+                //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
                 let menu = {}
                 let menuWithIndex = this.menuOrModuleCommounService.getDefaultMenu(this.menuData);                              
                 if(this.moduleIndex != moduleIndex){                    

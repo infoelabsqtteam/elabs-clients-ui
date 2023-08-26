@@ -64,6 +64,6 @@ export class FooterComponent implements OnInit {
   }
   pageloded(){
     this.template = this.storageService.getTemplateName();
-    this.title = this.envService.getHostKeyValue('title');
+    this.title = this.storageService.getPageTitle();
   }
 }
