@@ -66,11 +66,11 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     if(this.showMongoChart){
+      this.getPage(1);
       setTimeout(() => {
         this.populateMongodbChart();
       }, 100);
     }
-    this.getPage(1);
   }
   populateMongodbChart(){
     if(this.accessToken != "" && this.accessToken != null){      
@@ -117,10 +117,13 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     }
     this.modelService.open('chart-filter',object);
   }
-  download(object){
+  async download(object){
     let chartId = object.chartId;
     let chart = this.createdChartList[chartId];    
-    this.chartService.getDownloadData(chart,object);
+    let chartdatalist:any =  await this.chartService.getDownloadData(chart,object);
+    if(chartdatalist && chartdatalist.url) {
+      this.chartService.downlodBlobData(chartdatalist.url, chartdatalist.name);
+    }
   }  
   changeTheme(object,value){
     let chartId = object.chartId;
@@ -139,8 +142,8 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
 
   getPage(page: number,criteria?:any) {
     let Criteria:any = [];
-    let cr= "status;eq;Active;STATIC";
-    Criteria.push(cr);
+    let cr=["status;eq;Active;STATIC","package_name;eq;mongodb_chart;STATIC"]
+    Criteria= cr;
     if(criteria && criteria.length > 0){
       criteria.forEach(data => {
         Criteria.push(data);

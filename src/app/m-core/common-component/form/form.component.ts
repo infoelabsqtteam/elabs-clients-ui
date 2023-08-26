@@ -807,7 +807,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0 && this.getTableField) {
-      this.tab = tempData[0].templateTabs[this.tabIndex];
+      if(tempData[0].templateTabs){
+        this.tab = tempData[0].templateTabs[this.tabIndex];
+      }      
       if (this.tab && this.tab.tab_name != "" && this.tab.tab_name != null && this.tab.tab_name != undefined) {
         if(this.currentMenu && this.currentMenu.name && this.currentMenu.name != undefined && this.currentMenu.name != null){
           const menu = {"name":this.tab.tab_name};
@@ -3177,7 +3179,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(hasPermission){ 
       let gridSelectionValidation:any = this.checkGridSelectionMendetory();     
       if(this.templateForm.valid && gridSelectionValidation.status){
-        if(this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue)){
+        let validationsresponse = this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue);
+        if(validationsresponse && validationsresponse.status){
           if (this.dataSaveInProgress) {
             this.showNotify = true;
             this.dataSaveInProgress = false;            
@@ -3204,6 +3207,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
         }else{
           this.getSavePayload = false;
+          this.notificationService.notify('bg-danger', validationsresponse.msg)
         }
       }else{
         this.getSavePayload = false;
@@ -3730,7 +3734,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let formValueWithCustomData = this.getFormValue(true);
       switch(function_name){
         case "calculation_of_script_for_tds":
-          const payload = this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField);   
+          const payload = this.limsCalculationsService[function_name](formValueWithCustomData, this.curTreeViewField);     
           this.apiService.getStatiData(payload);
           break;
         case "calculateQquoteAmount":
@@ -3738,7 +3742,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             element["qty"] = formValueWithCustomData["qty"];
             this.limsCalculationsService.calculateNetAmount(element, {field_name: "qty"},"legacyQuotationParameterCalculation");
           });
-          this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField)); 
+           this.updateDataOnFormField(this.limsCalculationsService[function_name](formValueWithCustomData, this.curTreeViewField));  
           break;
         case "calculateAutomotiveLimsQuotation":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
@@ -3773,8 +3777,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(val1);
           break;
         default:
-          if(this.commonFunctionService[this.curTreeViewField.onchange_function_param]){      
-            this.templateForm = this.commonFunctionService[this.curTreeViewField.onchange_function_param](this.templateForm, this.curTreeViewField);
+           if(this.commonFunctionService[function_name]){      
+            this.templateForm = this.commonFunctionService[function_name](this.templateForm, this.curTreeViewField);
+            const calTemplateValue= this.templateForm.getRawValue()
+            this.updateDataOnFormField(calTemplateValue);
+          }else if(this.limsCalculationsService[function_name]){      
+            this.templateForm = this.limsCalculationsService[function_name](this.templateForm, this.curTreeViewField);
             const calTemplateValue= this.templateForm.getRawValue()
             this.updateDataOnFormField(calTemplateValue);
           }

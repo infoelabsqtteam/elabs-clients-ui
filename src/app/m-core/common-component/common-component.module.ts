@@ -11,11 +11,14 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { ChartComponent } from './chart/chart.component';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
+
 
 const components = [
   FormComponent,
   ChartComponent,
-  MongodbChartComponent
+  MongodbChartComponent,
+  DashboardChartComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
