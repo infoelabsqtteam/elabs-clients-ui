@@ -867,6 +867,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.currentMenu = {};
       }
       this.currentMenu['name'] = this.form.details.collection_name;
+      if(this.tab && this.tab.tab_name && this.tab.tab_name != ''){
+        this.currentMenu['tab_name'] = this.tab.tab_name;
+      }      
     }
     if(this.form){
       if(this.form.details && this.form.details.bulk_update){
@@ -3190,10 +3193,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.submitted = true;
     let hasPermission;
     if(this.currentMenu && this.currentMenu.name){
-      hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'add')
+      hasPermission = this.permissionService.checkPermissionWithParent(this.currentMenu,'add')
     }
     if(this.updateMode){
-      hasPermission = this.permissionService.checkPermission(this.currentMenu.name.toLowerCase( ),'edit')
+      hasPermission = this.permissionService.checkPermissionWithParent(this.currentMenu,'edit')
     }
     if(this.envService.getRequestType() == 'PUBLIC'){
       hasPermission = true;
