@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, EmailValidator } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, EnvService, StorageService, CustomvalidationService} from '@core/web-core';
+import { AuthService, DataShareService, EnvService, StorageService, CustomvalidationService, AuthDataShareService, NotificationService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +13,8 @@ export class SignupComponent implements OnInit {
   hide = true;
   signUpForm: FormGroup;
   appName: string;
-  appNameSubscription;
+  appNameSubscription:Subscription;
+  signUpInfoSubscribe:Subscription;
   title = "";
   template:string = "temp1";
   showpasswrd = false;
@@ -26,10 +28,20 @@ export class SignupComponent implements OnInit {
     private dataShareService:DataShareService,
     private envService:EnvService,
     private customValidationService: CustomvalidationService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private authDataShareService: AuthDataShareService,
+    private notificationService: NotificationService
     ) {
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
+      })
+      this.signUpInfoSubscribe = this.authDataShareService.signUpResponse.subscribe(res =>{
+        if(res.msg != '') {
+          this.notificationService.notify(res.class, res.msg);
+        }
+        if(res.status == 'success') {
+          this.authService.redirectToSignPage();
+        }
       })
       this.pageloded();
      }

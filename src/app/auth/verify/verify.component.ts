@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute} from '@angular/router';
-import { AuthService } from '@core/web-core';
+import { AuthDataShareService, AuthService, NotificationService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -13,10 +14,22 @@ export class VerifyComponent implements OnInit {
   username: string;
   verifyForm: FormGroup;
   emailVarify:boolean = true;
+  verifySubscriptioin: Subscription;
   constructor(
     private routers: ActivatedRoute,
-    private authServie:AuthService
-  ) { }
+    private authServie:AuthService,
+    private authDataShareService: AuthDataShareService,
+    private notificationService: NotificationService
+  ) {
+    this.verifySubscriptioin = this.authDataShareService.otpResponse.subscribe(res =>{
+      if(res.msg != '') {
+        this.notificationService.notify(res.class, res.msg);
+      }
+      if(res.status == 'success') {
+        this.authServie.redirectToSignPage();
+      }
+    })
+  }
 
   ngOnInit() {
     //console.log(this.route.snapshot.queryParamMap.get("username"));

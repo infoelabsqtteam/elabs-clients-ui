@@ -45,7 +45,7 @@ body.modal-open .modal-backdrop {display:none !important;}
 .modal.fade{background:rgba($black,0.5)}
 
 .modal-dialog-full-width {max-width: 98%!important;}
-.modal-dialog {border-radius:10px;
+.modal-dialog {border-radius:10px;pointer-events:all;
     .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
     .card-header .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;}
     .mat-form-field-label {color:#7f7f7f;font-size:11px;transform:translateY(6px);}

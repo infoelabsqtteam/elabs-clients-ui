@@ -486,10 +486,13 @@ export class ChartFilterComponent implements OnInit {
     }
 
   }
-  download(object){
+  async download(object){
     let chartId = "filter_"+object.chartId;
     let chart = this.createdChartList[chartId];    
-    this.chartService.getDownloadData(chart,object);
+    let chartdatalist:any =  await this.chartService.getDownloadData(chart,object);
+    if(chartdatalist && chartdatalist.url) {
+      this.chartService.downlodBlobData(chartdatalist.url, chartdatalist.name);
+    }
   } 
 
 
