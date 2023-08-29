@@ -884,8 +884,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.getLocation = false;
     }
-    if(this.tab.forms && this.tab.forms.default.headerFields && this.tab.forms.default.headerFields != undefined && this.tab.forms.default.headerFields != null){
-      this.headerFiledsData = this.tab.forms.default.headerFields;
+    if(this.form && this.form.headerFields){
+      this.headerFiledsData = this.form.headerFields;
     }
     if(this.form && this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
