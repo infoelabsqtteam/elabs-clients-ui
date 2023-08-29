@@ -294,7 +294,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   getLocation:boolean = false;
   mapsAPILoaded: Observable<boolean>;
-  headerFiledsData = [''];
+  headerFiledsData = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
   // treeControl:any={};
@@ -885,11 +885,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.getLocation = false;
     }
     if(this.tab.forms && this.tab.forms.default.headerFields && this.tab.forms.default.headerFields != undefined && this.tab.forms.default.headerFields != null){
-      let headerformsdataitem = this.tab.forms.default.headerFields;
-      for (let index = 0; index < headerformsdataitem.length; index++) {
-        this.headerFiledsData.push(headerformsdataitem[index])
-      }
-      console.log(this.headerFiledsData)
+      this.headerFiledsData = this.tab.forms.default.headerFields;
     }
     if(this.form && this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
