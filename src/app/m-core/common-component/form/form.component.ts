@@ -10,9 +10,9 @@ import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common} from '@core/web-core';
-import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
-import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
-import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
+// import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
+// import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+// import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
 
 
 declare var tinymce: any;
@@ -294,7 +294,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   getLocation:boolean = false;
   mapsAPILoaded: Observable<boolean>;
-
+  headerFiledsData = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
   // treeControl:any={};
@@ -883,6 +883,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.getLocation = this.form.getLocation;
     }else{
       this.getLocation = false;
+    }
+    if(this.form && this.form.headerFields){
+      this.headerFiledsData = this.form.headerFields;
     }
     if(this.form && this.form['tableFields'] && this.form['tableFields'] != undefined && this.form['tableFields'] != null){
       this.tableFields = JSON.parse(JSON.stringify(this.form['tableFields']));
@@ -1602,8 +1605,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.apiService.ResetSaveResponce()
       }
       else{
-        this.notificationService.notify("bg-danger", "No data return");
-        this.dataSaveInProgress = true;
+        if(this.showNotify){
+          this.showNotify = false;
+          this.notificationService.notify("bg-danger", "No data return");
+          this.dataSaveInProgress = true;
+        }
       }
     }
     // this.unsubscribe(this.saveResponceSubscription);
@@ -3486,21 +3492,21 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       return data;
     }
   }  
-  updateRowData() {
-    let formValue = this.templateForm.getRawValue();
-    Object.keys(this.custmizedFormValue).forEach(key => {
-      this.elements[this.selectedRowIndex][key] = this.custmizedFormValue[key];
-    })
-    this.tableFields.forEach(element => {
-      this.elements[this.selectedRowIndex][element.field_name] = formValue[element.field_name]
-    });
-    const updateFromData = {
-      curTemp: this.currentMenu.name,
-      data: this.elements[this.selectedRowIndex]
-    }
-    this.apiService.SaveFormData(updateFromData);
-    this.saveCallSubscribe();
-  }
+  // updateRowData() {
+  //   let formValue = this.templateForm.getRawValue();
+  //   Object.keys(this.custmizedFormValue).forEach(key => {
+  //     this.elements[this.selectedRowIndex][key] = this.custmizedFormValue[key];
+  //   })
+  //   this.tableFields.forEach(element => {
+  //     this.elements[this.selectedRowIndex][element.field_name] = formValue[element.field_name]
+  //   });
+  //   const updateFromData = {
+  //     curTemp: this.currentMenu.name,
+  //     data: this.elements[this.selectedRowIndex]
+  //   }
+  //   this.apiService.SaveFormData(updateFromData);
+  //   this.saveCallSubscribe();
+  // }
   candelForm() {    
     if(this.updateMode && this.custmizedFormValue && Object.keys(this.custmizedFormValue).length > 0){      
       Object.keys(this.custmizedFormValue).forEach(key => {

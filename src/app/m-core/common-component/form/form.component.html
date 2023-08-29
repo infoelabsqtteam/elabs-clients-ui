@@ -1,10 +1,19 @@
 <div class="resizable modal-content" id="form_resize" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
     <!--Header-->
     <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
-        <div class="form-tab">
+        <div class="form-tab d-flex">
             <span *ngIf="multipleFormCollection.length == '0'">          
                 <h3 class="modal-title m-0 text-uppercase" *ngFor="let form of forms| keyvalue;let i = index" (click)="changeNewForm(form.key,i)" [ngClass]="[form.key == formName || (form.key == 'default' && (formName == 'NEW' || formName == 'UPDATE' )) || (form.value && form.value.details && form.value.details.form_tab) ? 'd-block' : 'd-none',form.key == formName || (form.key == 'default' && (formName == 'NEW' || formName == 'UPDATE' )) ? 'active' : '']">{{form.value.label}}</h3>
             </span> 
+            <ng-container *ngIf="headerFiledsData.length> 0">
+                <span class="mx-1"><h3 class="modal-title m-0">:</h3></span>
+                <span class="mr-2 d-flex align-items-center headerlabeltxt" *ngFor="let data of headerFiledsData; let last = last;">
+                    <ng-container *ngIf="selectedRow[data]">
+                        <h3 class="modal-title m-0 text-uppercase">{{selectedRow[data]}}</h3>
+                        <span *ngIf="!last">,</span>
+                    </ng-container>
+                </span>
+            </ng-container>
             <span *ngIf="multipleFormCollection.length > '0'">          
                 <h4 class="modal-title m-0" [ngClass]="{'active': true}" >{{form.label}}</h4>
             </span>  
