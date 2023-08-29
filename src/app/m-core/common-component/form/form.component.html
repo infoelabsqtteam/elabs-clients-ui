@@ -7,7 +7,7 @@
             </span> 
             <ng-container *ngIf="headerFiledsData.length> 0">
                 <span class="mx-1"><h3 class="modal-title m-0">:</h3></span>
-                <span class="mr-2 d-flex align-items-center headerlabeltxt" *ngFor="let data of headerFiledsData; let i = index; let last = last;">
+                <span class="mr-2 d-flex align-items-center headerlabeltxt" *ngFor="let data of headerFiledsData; let last = last;">
                     <ng-container *ngIf="selectedRow[data]">
                         <h3 class="modal-title m-0 text-uppercase">{{selectedRow[data]}}</h3>
                         <span *ngIf="!last">,</span>
