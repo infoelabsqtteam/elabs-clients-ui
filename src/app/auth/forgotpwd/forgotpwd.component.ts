@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, StorageService, EnvService, AuthDataShareService, NotificationService} from '@core/web-core';
+import { AuthService, DataShareService, StorageService, EnvService, AuthDataShareService, NotificationService, CustomvalidationService} from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -30,7 +30,8 @@ export class ForgotPwdComponent implements OnInit {
     private envService:EnvService,
     private storageService:StorageService,
     private authDataShareService: AuthDataShareService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private customvalidationService:CustomvalidationService
     ) { 
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
@@ -69,7 +70,7 @@ export class ForgotPwdComponent implements OnInit {
     });
     this.vForm = new FormGroup({
       'verifyCode': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required]),
+      'password': new FormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
     });
   }
 

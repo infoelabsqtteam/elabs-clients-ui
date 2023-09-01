@@ -21,6 +21,8 @@
                 <div class="form-group mb-3">
                     <label class="font-15">PASSWORD</label>
                     <input type="password" class="form-control"  placeholder="" formControlName="password">
+                    <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
+                        {{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                   </div>
                 <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onVerifyPwd()">Save New Password</button>
               </form>
@@ -66,6 +68,8 @@
                                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                         </button>
+                                        <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
+                                            {{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                     </mat-form-field>
                                     <div class="row justify-content-center"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
                                 </form>
@@ -120,6 +124,8 @@
                                       <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                       </button>
+                                      <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
+                                        {{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                   </mat-form-field>
                                   <div class="row justify-content-center"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
                               </form>

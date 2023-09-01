@@ -88,7 +88,7 @@ export class SignupComponent implements OnInit {
     this.signUpForm = new FormGroup({
       'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
       'mobile': new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
+      'password': new FormControl('', [Validators.required, this.customValidationService.patternValidator()]),
       'confirmPassword': new FormControl("", Validators.required),
       'name': new FormControl('', Validators.required),
     },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }

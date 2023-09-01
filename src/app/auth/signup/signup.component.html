@@ -18,6 +18,8 @@
                             <label class="font-15">Password</label>
                             <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" placeholder="" formControlName="password" required>
                             <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                            <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                         </div>
                         <div class="form-group mb-4 password repassword">
                             <label class="font-15">Confirm Password</label>
@@ -61,6 +63,8 @@
                                     <mat-label>Password</mat-label>
                                     <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
                                     <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                    <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                        {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
@@ -108,6 +112,8 @@
                                     <mat-label>Password</mat-label>
                                     <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
                                     <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                    <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                        {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
