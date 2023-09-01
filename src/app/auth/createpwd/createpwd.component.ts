@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { StorageService, AuthService, NotificationService, EnvService, AuthDataShareService} from '@core/web-core';
+import { StorageService, AuthService, NotificationService, EnvService, AuthDataShareService, CustomvalidationService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 
@@ -14,7 +14,9 @@ import { Subscription } from 'rxjs';
 
 export class CreatepwdComponent implements OnInit 
 {
-  form:FormGroup;
+  
+  hide = true;
+  resetPsswordForm: FormGroup;
  
   appName: string;
   newpwd: any;
@@ -32,6 +34,7 @@ export class CreatepwdComponent implements OnInit
     private envService:EnvService,
     private location: Location,
     private authDataShareService: AuthDataShareService,
+    private customValidationService:CustomvalidationService
   ) {
     this.pageloded();
     this.changePasswordSubscribe = this.authDataShareService.createPwd.subscribe(res =>{
@@ -44,58 +47,26 @@ export class CreatepwdComponent implements OnInit
     })
   }
   ngOnInit(): void {
-   
+   this.initForm();
+  }
+  initForm() {
+    this.resetPsswordForm = new FormGroup({
+      'oldpwd': new FormControl('', [Validators.required]),
+      'password': new FormControl('', [Validators.required, this.customValidationService.patternValidator()]),
+      'confirmPassword': new FormControl("", Validators.required),
+    },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }
+    );
   }
 
-  // onChangePwd(form: NgForm) {
-  //   console.log(1);
-  //   const email = form.value.email;
-  //   const oldpwd = form.value.oldpwd;
-  //   const newpwd = form.value.newpwd;
-  //   //const confirmpwd=form.value.confirmpwd;
-  //     if(oldpwd==newpwd)
-  //       {
-  //         this.store.dispatch(new AuthActions.ChangePassword({ username: email, password: oldpwd,appName: appConstant.appName,newpassword:newpwd }))
-  //         console.log(2);
-  //       }
-  //       else
-  //       {
-  //         console.warn("Old Password does not match New Password");
-  //       }
-  // }
-
-
-  //R & D by Gaurav
   
-  // oldpwd="";
-  // newpwd="";
-  // confirmpwd="";
-  
-  onChangePwd(form:NgForm)
-  {
-     const oldpwd = form.value.oldpwd;
-     const newpwd = form.value.newpwd;
-     const confirmpwd=form.value.confpwd;
-
-    // console.warn(val1);
-    // this.oldpwd=val1;
-
-    // console.warn(val2);
-    // this.newpwd=val2;
-
-    // console.warn(val3);
-    // this.confirmpwd=val3;
-    if(newpwd==confirmpwd)
-    {  
-      this.authService.changePassword({currentPassword: oldpwd,newPassword:newpwd,confirmNewPassword:confirmpwd });
-      // this.store.dispatch(new AuthActions.ChangePassword({password: oldpwd,new_password:newpwd,accessToken: this.storageService.GetAccessToken() }))
-    }
-    else
-    {
-       console.log('New password and confirm password does not match');
-        this.notificationService.notify("bg-danger", "New password and confirm password does not match");
-       //alert("New password and confirm password does not match");
-    }
+  onChangePwd(){
+    let value = this.resetPsswordForm.getRawValue();
+     const oldpwd = value.oldpwd;
+     const newpwd = value.password;
+     const confirmpwd=value.confirmPassword;     
+      this.authService.changePassword({currentPassword: oldpwd,newPassword:newpwd,confirmNewPassword:confirmpwd })
+      
+   
   }
 
   onBack() {
