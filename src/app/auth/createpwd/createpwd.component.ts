@@ -74,7 +74,7 @@ export class CreatepwdComponent implements OnInit
   }
 
     pageloded(){
-      this.logoPath = this.storageService.getLogoPath() + "logo.png";
+      this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
       this.template = this.storageService.getTemplateName();
       this.title = this.envService.getHostKeyValue('title');
     }

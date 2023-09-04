@@ -106,7 +106,7 @@ export class SignupComponent implements OnInit {
   pageloded(){
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
-    this.title = this.envService.getHostKeyValue('title');
+    this.title = this.storageService.getPageTitle();
   }
   showpassword() {
     this.showpasswrd = !this.showpasswrd;

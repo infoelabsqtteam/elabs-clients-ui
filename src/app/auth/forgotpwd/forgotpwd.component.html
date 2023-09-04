@@ -41,10 +41,10 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5">
                     <mat-card style="text-align: center;opacity: 90%;">
-                        <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white"><img [src]="logoPath" alt="E-Labs logo"></mat-card-title>
+                        <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="qualiteklab logo"></mat-card-title>
                         <mat-divider></mat-divider>
                         <mat-card-content>
-                            <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2 font-weight-bold">Reset Password</h4></div>
+                            <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-3">Reset Password</h4></div>
                             <div *ngIf="resetPwd">
                                 <form class="example-form" [formGroup]="fForm" (ngSubmit)="onResetPwd()">
                                     <mat-form-field appearance="outline" class="w-100">
