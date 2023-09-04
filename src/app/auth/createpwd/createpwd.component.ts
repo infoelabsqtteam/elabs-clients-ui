@@ -42,6 +42,7 @@ export class CreatepwdComponent implements OnInit
         this.notificationService.notify(res.class, res.msg);
       }
       if(res.status == 'success') {
+        this.storageService.removeKeyFromStorage('ID_TOKEN');
         this.authService.redirectToSignPage();
       }
     })
