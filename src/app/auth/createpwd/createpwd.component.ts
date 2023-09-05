@@ -17,7 +17,8 @@ export class CreatepwdComponent implements OnInit
   
   hide = true;
   resetPsswordForm: FormGroup;
- 
+  checkShowPassword = false;
+  checkOldPassword = false;
   appName: string;
   newpwd: any;
   confirmpwd: any;
@@ -77,6 +78,12 @@ export class CreatepwdComponent implements OnInit
       this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
       this.template = this.storageService.getTemplateName();
       this.title = this.envService.getHostKeyValue('title');
+    }
+    showPassword() {
+      this.checkShowPassword = !this.checkShowPassword;
+    }
+    showOldPassword() {
+      this.checkOldPassword = !this.checkOldPassword;
     }
 
   }

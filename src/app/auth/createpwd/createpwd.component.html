@@ -44,20 +44,24 @@
         <div class="row justify-content-center">
             <div class="col-lg-5">
                 <mat-card style="text-align: center;opacity: 90%;">
-                    <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="ITC logo"></mat-card-title>
+                    <mat-card-title class="py-3 bg-white"><img style="width:40%;" [src]="logoPath" alt="ITC logo"></mat-card-title>
                     <mat-divider></mat-divider>
                     <mat-card-content>
-                        <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2">Change Password</h4></div>
+                        <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-3">Change Password</h4></div>
                         <form class="example-form" [formGroup]="resetPsswordForm">
 
-                            <mat-form-field appearance="outline" class="w-100 mb-3">
+                            <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                 <mat-label>Old Password</mat-label>
-                                <input matInput placeholder="Enter old password" type="password" formControlName="oldpwd">
+                                <input matInput placeholder="Enter old password"[type]="checkOldPassword ? 'text' : 'password'" formControlName="oldpwd">
+                                <button mat-icon-button  tabindex="-1">
+                                    <mat-icon (click)="showOldPassword()">{{checkOldPassword? 'visibility_off': 'visibility'}}</mat-icon>
+                                </button>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="w-100 mb-3">
+                            <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                 <mat-label>New Password</mat-label>
-                                <input matInput placeholder="Enter new password" type="password" formControlName="password">
+                                <input matInput placeholder="Enter new password" [type]="checkShowPassword ? 'text' : 'password'" formControlName="password">
+                                <button mat-icon-button  tabindex="-1"><mat-icon (click)="showPassword()">{{checkShowPassword? 'visibility_off': 'visibility'}}</mat-icon></button>
                             </mat-form-field>
                             <span class="text-danger" *ngIf="resetPsswordForm.controls['password'].touched && resetPsswordForm.controls['password'].dirty && resetPsswordForm.controls['password'].errors?.invalidPassword">{{ resetPsswordForm.controls['password'].errors.invalidPassword | titlecase}}</span>
 
@@ -89,20 +93,24 @@
         <div class="row justify-content-center">
             <div class="col-lg-5">
                 <mat-card style="text-align: center;opacity: 90%;">
-                    <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="qualiteklab logo"></mat-card-title>
+                    <mat-card-title class="py-3 bg-white"><img style="width:40%;" [src]="logoPath" alt="qualiteklab logo"></mat-card-title>
                     <mat-divider></mat-divider>
                     <mat-card-content>
-                        <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2">Change Password</h4></div>
+                        <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-3">Change Password</h4></div>
                         <form class="example-form" [formGroup]="resetPsswordForm">
 
-                            <mat-form-field appearance="outline" class="w-100 mb-3">
+                            <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                 <mat-label>Old Password</mat-label>
-                                <input matInput placeholder="Enter old password" type="password" formControlName="oldpwd">
+                                <input matInput placeholder="Enter old password"[type]="checkOldPassword ? 'text' : 'password'" formControlName="oldpwd">
+                                <button mat-icon-button  tabindex="-1">
+                                    <mat-icon (click)="showOldPassword()">{{checkOldPassword? 'visibility_off': 'visibility'}}</mat-icon>
+                                </button>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="w-100 mb-3">
+                            <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                 <mat-label>New Password</mat-label>
-                                <input matInput placeholder="Enter new password" type="password" formControlName="password">
+                                <input matInput placeholder="Enter new password" [type]="checkShowPassword ? 'text' : 'password'" formControlName="password">
+                                <button mat-icon-button  tabindex="-1"><mat-icon (click)="showPassword()">{{checkShowPassword? 'visibility_off': 'visibility'}}</mat-icon></button>
                             </mat-form-field>
 
                             <span class="text-danger" *ngIf="resetPsswordForm.controls['password'].touched && resetPsswordForm.controls['password'].dirty && resetPsswordForm.controls['password'].errors?.invalidPassword">{{ resetPsswordForm.controls['password'].errors.invalidPassword | titlecase}}</span>

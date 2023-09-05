@@ -6,6 +6,17 @@
     .heading-color{color: #525252!important;}
     h1, .h1 {font-size: 2.5rem!important;line-height: 1.2;}
 }
+.mobileno {position:relative;
+  .countrycode {position:absolute;left:25px;background:#fff;bottom:8px;font-weight:500;font-size:14px;}
+  input {padding-left:35px !important;}
+}
+.phoneno {
+  .countrycode {position:absolute;left:0px;background:#fff;bottom:13px;font-weight:500;font-size:14px;display:none;}
+  input.mat-input-element {padding-left:35px;}
+}
+.phoneno.mat-form-field-should-float {
+  .countrycode {display:block;}
+}
 
 
 @media only screen and (max-width: 991px) {

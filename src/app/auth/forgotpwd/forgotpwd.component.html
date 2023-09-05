@@ -5,22 +5,25 @@
         <div class="col-lg-4 offset-lg-2">
           <div class="card mx-auto p-4 rounded mt-lg-0">
             <div class="text-center"><p class="text-muted mb-2 font-13 text-uppercase">Welcome To {{title}}</p></div>
-            <form *ngIf="resetPwd" class="registration-form"[formGroup]="fForm">
+            <form *ngIf="!resetPwd" class="registration-form"[formGroup]="fForm">
               <div class="form-group mb-4">
                 <label class="font-15">User Id</label>
                 <input type="text" class="form-control" placeholder="" formControlName="userId">
               </div>
               <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onResetPwd()">Reset Password</button>
             </form>
-            <form *ngIf="!resetPwd" class="registration-form" [formGroup]="vForm">
+            <form *ngIf="resetPwd" class="registration-form" [formGroup]="vForm">
                 <div class="form-group mb-4">
                   <label class="font-15">VERIFICATION CODE</label>
                   <input type="text" class="form-control"  placeholder=""  formControlName="verifyCode">
-                  <mat-hint><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
+                  <mat-hint><a class="text-muted mt-2" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
                 </div>
-                <div class="form-group mb-3">
+                <div class="form-group password mb-3">
                     <label class="font-15">PASSWORD</label>
-                    <input type="password" class="form-control"  placeholder="" formControlName="password">
+                    <input [type]="hide ? 'password' : 'text'" class="form-control"  placeholder="" formControlName="password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                    </button>
                     <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
                         {{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                   </div>
@@ -41,7 +44,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5">
                     <mat-card style="text-align: center;opacity: 90%;">
-                        <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="qualiteklab logo"></mat-card-title>
+                        <mat-card-title class="py-3 bg-white"><img style="width:40%" [src]="logoPath" alt="qualiteklab logo"></mat-card-title>
                         <mat-divider></mat-divider>
                         <mat-card-content>
                             <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-3">Reset Password</h4></div>
@@ -59,19 +62,18 @@
                                     <mat-form-field appearance="outline" class="w-100">
                                         <mat-label>VERIFICATION CODE</mat-label>
                                         <input matInput placeholder="Verification Code" formControlName="verifyCode">
-                                        <mat-hint><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
                                     </mat-form-field>
+                                    <mat-hint class="d-block text-left"><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
 
-                                    <mat-form-field appearance="outline" class="w-100">
+                                    <mat-form-field appearance="outline" class="w-100 mt-3">
                                         <mat-label>PASSWORD</mat-label>
                                         <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
                                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                            <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                                         </button>
-                                        <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
-                                            {{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                     </mat-form-field>
-                                    <div class="row justify-content-center"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
+                                    <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >{{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
+                                    <div class="row justify-content-center mt-3"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
                                 </form>
                             </div>
                         </mat-card-content>
@@ -97,7 +99,7 @@
           <div class="row justify-content-center">
               <div class="col-lg-5">
                   <mat-card style="text-align: center;opacity: 90%;">
-                      <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white"><img style="width: 60%;" class="mat-card-image m-0" [src]="logoPath" alt="ITC logo"></mat-card-title>
+                      <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white"><img style="width:40%;" class="mx-auto" [src]="logoPath" alt="ITC logo"></mat-card-title>
                       <mat-divider></mat-divider>
                       <mat-card-content>
                           <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2 font-weight-bold">Reset Password</h4></div>
@@ -107,7 +109,7 @@
                                       <mat-label>User Id</mat-label>
                                       <input matInput placeholder="E-Mail" formControlName="userId">
                                   </mat-form-field>
-                                  <div class="row justify-content-center "><button mat-raised-button color="primary" type="submit">Reset Password</button></div>
+                                  <div class="row justify-content-center mt-3"><button mat-raised-button color="primary" type="submit">Reset Password</button></div>
                               </form>
                           </div>
 
@@ -116,18 +118,18 @@
                                   <mat-form-field appearance="outline" class="w-100">
                                       <mat-label>VERIFICATION CODE</mat-label>
                                       <input matInput placeholder="Verification Code" formControlName="verifyCode">
-                                      <mat-hint><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
                                   </mat-form-field>
-                                  <mat-form-field appearance="outline" class="w-100">
-                                      <mat-label>PASSWORD</mat-label>
-                                      <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
-                                      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                                          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                      </button>
-                                      <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
+                                  <mat-hint class="d-block text-left"><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint>
+                                  <mat-form-field appearance="outline" class="w-100 mt-3">
+                                    <mat-label>PASSWORD</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                        <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                  <mat-error class="text-danger" *ngIf="fForm.controls['password'].touched && fForm.controls['password'].dirty && fForm.controls['password'].errors?.invalidPassword" >
                                         {{ fForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
-                                  </mat-form-field>
-                                  <div class="row justify-content-center"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
+                                  <div class="row justify-content-center mt-3"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
                               </form>
                           </div>
                       </mat-card-content>
