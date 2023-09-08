@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, StorageService, EnvService, AuthDataShareService, NotificationService, CustomvalidationService} from '@core/web-core';
+import { AuthService, DataShareService, StorageService, AuthDataShareService, NotificationService, CustomvalidationService} from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,13 +20,11 @@ export class ForgotPwdComponent implements OnInit {
   template:string = "temp1";
   logoPath = '';
   forGotSubscription:Subscription;
+  resetPassSubscription:Subscription;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private authService:AuthService,
     private dataShareService:DataShareService,
-    private envService:EnvService,
     private storageService:StorageService,
     private authDataShareService: AuthDataShareService,
     private notificationService: NotificationService,
@@ -42,6 +39,13 @@ export class ForgotPwdComponent implements OnInit {
         }
         if(data.status == 'success') {
           this.resetPwd = false;
+        }
+      })
+      this.resetPassSubscription = this.authDataShareService.resetPass.subscribe(data =>{
+        if(data.msg != '') {
+          this.notificationService.notify(data.class, data.msg);
+        }
+        if(data.status == 'success') {
           this.authService.redirectToSignPage();
         }
       })
