@@ -75,8 +75,8 @@
                                         <mat-label>Password</mat-label>
                                         <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
                                         <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                                        <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
-                                            {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
+                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                            {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                     </mat-form-field> 
                                 </div>
                                 <div class="col-md-6">
@@ -134,8 +134,8 @@
                                         <mat-label>Password</mat-label>
                                         <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
                                         <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                                        <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
-                                            {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
+                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                            {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-6">
