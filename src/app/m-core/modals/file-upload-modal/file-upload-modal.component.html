@@ -23,6 +23,15 @@
                                     <a href="javascript:void(0);" class="text-muted font-weight-bold" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</a>
                                     <!-- <p class="mb-0">{{ formatBytes(file?.size,2) }}</p> -->
                                     <!-- <app-progress [progress]="file?.progress" *ngIf="uploadFile"></app-progress> -->
+                                    <section class="example-section">
+                                        <mat-progress-bar *ngIf="fileForS3 && currentFileIndex == i"
+                                            class="example-margin"
+                                            [color]="progressBarColor"
+                                            [mode]="progressMode"
+                                            [value]="uploadProgressValue"
+                                            [bufferValue]="bufferValue">
+                                        </mat-progress-bar>
+                                    </section>
                                 </div>
                                 <div class="col-auto">
                                     <!-- Button -->
@@ -37,7 +46,8 @@
             </div>
             <div class="form-group text-right px-2">
                 <button class="btn btn-light btn-sm mr-1" (click)="cancel()">Cancel</button>
-                <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator(0)">Add</button>
+                <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator(0)" *ngIf="!fileForS3">Add</button>
+                <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulatorForS3()" *ngIf="fileForS3 && uploadStart">Upload</button>
             </div>
         </div>
     </div>

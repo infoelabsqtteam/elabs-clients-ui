@@ -2863,7 +2863,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
   alertResponce(responce) {
     if (responce) {
-      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
+      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file_for_s3')){
         this.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex)
       }else{
         this.deleteitem()
@@ -3139,7 +3139,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
             });          
           }else{
-            modifyFormValue[key] = this.modifyUploadFiles(this.dataListForUpload[key]);
+            let uploadFileType = this.tableFields.filter(field=> field.type == 'file_for_s3')
+                if(uploadFileType.length >0){
+                  modifyFormValue[key] = this.dataListForUpload[key];
+                }else{
+                  modifyFormValue[key] = this.modifyUploadFiles(this.dataListForUpload[key]);
+                }
           }       
           
         }
@@ -4172,6 +4177,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.field_name && field.field_name != "") {
       field['parentIndex'] = parentIndex;
       field['curIndex'] = curIndex;
+      field['tableFields'] = this.tableFields;
+      const formValue = this.templateForm.getRawValue();
+      if(formValue.defaultBucket != undefined && formValue.defaultS3Key != undefined){
+        field['defaultBucket'] = formValue.defaultBucket;
+        field['defaultS3Key'] = formValue.defaultS3Key;
+      }
       this.curFileUploadField = field;
       this.curFileUploadFieldparentfield = parent;
       let selectedFileList = [];
@@ -4246,7 +4257,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   removeAttachedDataFromList(parent,child,index){
     let fieldName = child.field_name;
-    if(parent != ''){
+    if(parent != '' && parent != undefined){
       let custmisedKey = this.commonFunctionService.custmizedKey(parent);
       this.dataListForUpload[custmisedKey][fieldName].splice(index,1);
 
@@ -4587,6 +4598,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
         case "file":
         case "input_with_uploadfile":
+        case "file_for_s3":
           if(object != null && object != undefined){
             this.dataListForUpload[fieldName] = JSON.parse(JSON.stringify(object));
             const value = this.modifyFileSetValue(object);
