@@ -1034,6 +1034,30 @@
                                 </table>
                             </div>                           
                         </div> 
+                        <div *ngIf="tableField.type == 'file_for_s3'">
+                            <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
+                            <!-- list of attachment files -->
+                            <div *ngIf="dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
+                                <table mdbTable small="true" bordered="true">
+                                    <thead class="black white-text">
+                                        <tr>
+                                            <th class="black" *ngFor="let head of ['Name', 'Type', 'Action']" scope="col">{{head}} </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr mdbTableCol *ngFor="let file of dataListForUpload[tableField.field_name]; let i = index">
+                                            <td scope="row" *ngIf="(file.rollName && file.rollName != null) || (file.fileName && file.fileName != null)">{{file.fileName || file.rollName}}</td>
+                                            <td *ngIf="(file.fileExtn && file.fileExtn != null) || (file.fileExt && file.fileExt != null)">{{file.fileExtn || file.fileExt}}</td>
+                                            <td>
+                                                <mdb-icon far icon="times-circle" class="cursor-pointer" (click)="openModal('confirm-modal',i,'',tableField,file,'delete')"></mdb-icon>
+                                                <!-- <mdb-icon *ngIf="file.rollName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(file)"></mdb-icon> -->
+                                                <mdb-icon *ngIf="file.fileName" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFileWithBytes(file)"></mdb-icon>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                           
+                        </div> 
                         <div *ngIf="tableField.type == 'input_with_uploadfile'">
                             <div class="w-100 position-relative">
                                 <mat-form-field appearance="outline" class="example-full-width w-100">
