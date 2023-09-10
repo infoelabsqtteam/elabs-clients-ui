@@ -28,6 +28,9 @@ export class FileUploadModalComponent implements OnInit {
   s3bucket:any=''
   s3Key:any=''
   fileForS3:boolean = false;
+  progressBarColor = 'primary';
+  progressMode='determinate';
+  bufferValue = 100;
   uploadStart:boolean=true;
   uploadDataForS3: any = [];
 
