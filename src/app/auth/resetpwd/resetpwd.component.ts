@@ -2,7 +2,7 @@ import { Component,Input ,OnInit } from '@angular/core';
 import { Form, FormGroup, NgForm,FormBuilder,FormControl, Validators } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { Router,ActivatedRoute   } from '@angular/router';
-import { StorageService, AuthService, EnvService} from '@core/web-core';
+import { StorageService, AuthService, EnvService, CustomvalidationService } from '@core/web-core';
 
 
 @Component({
@@ -22,7 +22,8 @@ export class ResetpwdComponent implements OnInit {
     private storageService: StorageService,
     private formBuilder: FormBuilder,
     private authService:AuthService,
-    private envService:EnvService 
+    private envService:EnvService,
+    private customvalidationService:CustomvalidationService 
   ) {
     
   }
@@ -40,7 +41,7 @@ export class ResetpwdComponent implements OnInit {
   initForm(){
     this.resetForm =this.formBuilder.group(
       {
-        'password' : new FormControl('',Validators.required)
+        'password' : new FormControl('',[Validators.required,this.customvalidationService.patternValidator()])
       }
     )
   }
