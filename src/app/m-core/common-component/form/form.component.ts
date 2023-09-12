@@ -9,7 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService} from '@core/web-core';
 // import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 // import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 // import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
@@ -325,7 +325,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private gridCommonFunctionService:GridCommonFunctionService,
     private ngZone: NgZone,
     private limsCalculationsService:LimsCalculationsService,
-    private treeComponentService: TreeComponentService
+    private treeComponentService: TreeComponentService,
+    private fileHandlerService: FileHandlerService
 ) {
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
@@ -2181,7 +2182,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
               if(this.dataListForUpload[keyName]){
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                  
-                  updateCustmizedValue[this.listOfFieldsUpdateIndex][childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);;
+                  updateCustmizedValue[this.listOfFieldsUpdateIndex][childkey] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
                 })
               }
               if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
@@ -2236,7 +2237,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
               if(this.dataListForUpload[keyName]){
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                 
-                  listOfFieldData[childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
+                  listOfFieldData[childkey] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
                 })
               }
               if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
@@ -3122,24 +3123,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.tableFields.forEach(element => {            
               if(element.field_name == key){                
                 Object.keys(this.dataListForUpload[key]).forEach(child =>{
-                  selectedRow[key][child] = this.modifyUploadFiles(this.dataListForUpload[key][child]);
+                  selectedRow[key][child] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key][child]);
                 })
               }
             });          
           }else{
-              selectedRow[key] = this.modifyUploadFiles(this.dataListForUpload[key]);
+              selectedRow[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
           }
         } else {
           if(this.dataListForUpload[key] && this.dataListForUpload[key] != null && !Array.isArray(this.dataListForUpload[key]) && typeof this.dataListForUpload[key] === "object"){
             this.tableFields.forEach(element => {
               if(element.field_name == key){                
                 Object.keys(this.dataListForUpload[key]).forEach(child =>{
-                  modifyFormValue[key][child] = this.modifyUploadFiles(this.dataListForUpload[key][child]);
+                  modifyFormValue[key][child] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key][child]);
                 })
               }
             });          
           }else{
-            modifyFormValue[key] = this.modifyUploadFiles(this.dataListForUpload[key]);
+            modifyFormValue[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
           }       
           
         }
@@ -4114,19 +4115,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-  modifyUploadFiles(files){
-    const fileList = [];
-    if(files && files.length > 0){
-      files.forEach(element => {
-        if(element._id){
-          fileList.push(element)
-        }else{
-          fileList.push({uploadData:[element]})
-        }
-      });
-    }                  
-    return fileList;
-  }
+
   modifyFileSetValue(files){
     let fileName = '';
     let fileLength = files.length;

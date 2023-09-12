@@ -52,6 +52,8 @@
                       <div class="mb-3">
                          <label for="password" class="form-label">Enter New Password</label>
                          <input type="password" class="form-control" id="password" formControlName="password" aria-describedby="password">
+                         <mat-error class="text-danger" *ngIf="vForm.controls['password'].touched && vForm.controls['password'].dirty && vForm.controls['password'].errors?.invalidPassword" >
+                           {{ vForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                        </div>
                        <!-- <div class="mb-4">
                          <label for="confirm_password" class="form-label">Confirm Password</label>

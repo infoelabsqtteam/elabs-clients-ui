@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, FileHandlerService } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
 
 
@@ -148,7 +148,8 @@ export class GridSelectionModalComponent implements OnInit {
     private apiservice: ApiService,
     private gridCommonFunctionService:GridCommonFunctionService,
     private limsCalculationsService: LimsCalculationsService,
-    private filterPipe:FilterPipe
+    private filterPipe:FilterPipe,
+    private fileHandlerService: FileHandlerService
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -911,6 +912,43 @@ export class GridSelectionModalComponent implements OnInit {
     }
     
   }
+
+  uploadedDataitem;
+  fileuploadedindex;
+  uploadField;
+  downloadClick;
+  uploadModal(fieldName,index,data) {
+    this.uploadField = fieldName;
+    let selectedData = [];
+    if(data && data[this.uploadField.field_name] && this.CommonFunctionService.isArray(data[this.uploadField.field_name]) && data[this.uploadField.field_name].length > 0) {
+      selectedData = data[this.uploadField.field_name];
+    }
+    this.fileuploadedindex = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
+    this.CommonFunctionService.openFileUpload(fieldName, 'grid-selection-file-upload', data, selectedData)
+  }
+
+    downloadFile(file){
+      this.downloadClick = file.rollName;
+      this.CommonFunctionService.downloadFile(file);
+    }
+    downloadFileWithBytes(filedata){
+      let link = document.createElement('a');
+      link.setAttribute('type', 'hidden');
+      const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(file);
+      link.href = url;
+      link.download = this.downloadClick;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();   
+    }
+
+    fileUploadResponce(response) {
+      if(response && response.length > 0) {
+        this.uploadedDataitem = response;
+        this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
+      }
+    }
   
 }
 

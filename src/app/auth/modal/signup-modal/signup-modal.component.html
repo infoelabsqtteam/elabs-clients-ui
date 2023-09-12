@@ -19,6 +19,8 @@
                   <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" formControlName="password">
+                    <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                      {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                   </div>
                   <div class="mb-4">
                     <label for="mobile" class="form-label">Mobile</label>
