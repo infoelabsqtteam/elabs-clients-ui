@@ -27,6 +27,7 @@ export class CreatepwdComponent implements OnInit
   logoPath = '';
   title = ""; 
   changePasswordSubscribe: Subscription;
+  resetStorAgeList :any =['ID_TOKEN','EXPIRY_IN','ID_TOKEN_EXPIRY_TIME'];
   constructor(
     private router: Router,
     private storageService:StorageService,
@@ -43,7 +44,11 @@ export class CreatepwdComponent implements OnInit
         this.notificationService.notify(res.class, res.msg);
       }
       if(res.status == 'success') {
-        this.storageService.removeKeyFromStorage('ID_TOKEN');
+        if(this.resetStorAgeList && this.resetStorAgeList.length > 0){
+          this.resetStorAgeList.forEach(key => {
+            this.storageService.removeKeyFromStorage(key);
+          });
+        }        
         this.authService.redirectToSignPage();
       }
     })

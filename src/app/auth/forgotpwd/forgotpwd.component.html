@@ -10,7 +10,7 @@
                 <label class="font-15">User Id</label>
                 <input type="text" class="form-control" placeholder="" formControlName="userId">
               </div>
-              <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onResetPwd()">Reset Password</button>
+              <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!fForm.valid" (click)="onResetPwd()">Reset Password</button>
             </form>
             <form *ngIf="resetPwd" class="registration-form" [formGroup]="vForm">
                 <div class="form-group mb-3">
@@ -24,7 +24,7 @@
                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide"><mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon></button>
                     <small class="text-left d-block text-danger" style="font-size:9px;bottom:-16px;" *ngIf="vForm.controls['password'].touched && vForm.controls['password'].dirty && vForm.controls['password'].errors?.invalidPassword" >{{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                   </div>
-                <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onVerifyPwd()">Save New Password</button>
+                <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!vForm.valid" (click)="onVerifyPwd()">Save New Password</button>
               </form>
             <div class="row mt-2 text-muted"><div class="col-lg-12"><h4 [routerLink]="['/signin']">Already have account? <a><b> Log In</b></a></h4></div></div>
           </div>
@@ -51,7 +51,7 @@
                                         <mat-label>User Id</mat-label>
                                         <input matInput placeholder="E-Mail"  formControlName="userId">
                                     </mat-form-field>
-                                    <div class="row justify-content-center "><button mat-raised-button color="primary" type="submit">Reset Password</button></div>
+                                    <div class="row justify-content-center "><button mat-raised-button color="primary" [disabled]="!fForm.valid" type="submit">Reset Password</button></div>
                                 </form>
                             </div>
                             <div *ngIf="!resetPwd">
@@ -74,7 +74,7 @@
                                         <small class="text-left d-block text-danger" style="font-size:9px;bottom:-16px;" *ngIf="vForm.controls['password'].touched && vForm.controls['password'].dirty && vForm.controls['password'].errors?.invalidPassword" >
                                             {{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                     </div>
-                                    <div class="col-md-12 my-3"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
+                                    <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!vForm.valid" type="submit">Save New Password</button></div>
                                 </form>
                             </div>
                         </mat-card-content>
@@ -110,7 +110,7 @@
                                       <mat-label>User Id</mat-label>
                                       <input matInput placeholder="E-Mail" formControlName="userId">
                                   </mat-form-field>
-                                  <div class="row justify-content-center mt-3"><button mat-raised-button color="primary" type="submit">Reset Password</button></div>
+                                  <div class="row justify-content-center mt-3"><button mat-raised-button color="primary" [disabled]="!fForm.valid" type="submit">Reset Password</button></div>
                               </form>
                           </div>
 
@@ -136,7 +136,7 @@
                                     <small class="text-left d-block text-danger" style="font-size:9px;bottom:-16px;" *ngIf="vForm.controls['password'].touched && vForm.controls['password'].dirty && vForm.controls['password'].errors?.invalidPassword" >
                                         {{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                   </div>
-                                  <div class="col-md-12 my-3"><button mat-raised-button color="primary" type="submit">Save New Password</button></div>
+                                  <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!vForm.valid"  type="submit">Save New Password</button></div>
                               </form>
                           </div>
                       </mat-card-content>
