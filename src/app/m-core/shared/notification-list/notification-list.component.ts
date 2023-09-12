@@ -1,9 +1,8 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Common } from 'src/app/shared/enums/common.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
-import { CommonFunctionService, DataShareService, StorageService, ApiService, MenuOrModuleCommonService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, StorageService, ApiService, MenuOrModuleCommonService,Common } from '@core/web-core';
 
 @Component({
   selector: 'app-notification-list',

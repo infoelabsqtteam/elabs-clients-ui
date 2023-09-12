@@ -27,7 +27,7 @@
 <section>
     <div class="downloadbtn">
         <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
-        <button *ngIf="forms['default']" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
+        <button *ngIf="forms['default'] && tab.addForm" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
         <ng-container *ngIf="forms['default'] && tab && tab.grid && tab.grid.copyRequired">
             <button mdbBtn type="button" size="sm" (click)="cloneData()" mdbWavesEffect class="m-0 px-2 mr-2 py-1 grid-button float-right" [matTooltip]="'Copy Selected Row'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">content_copy</span> Copy</button>
         </ng-container>
@@ -36,8 +36,8 @@
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
         </span>        
-        <button mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button>
-        <mat-menu #notify="matMenu" xPosition="before" class="filterdrowdownmenu">
+        <button *ngIf="headElements.length > 0" mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button>
+        <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
             <span class="example-list-section">
                 <ul class="ml-2 mt-2 mb-2">
                   <li *ngFor="let head of headElements; let i = index" >
@@ -211,8 +211,11 @@
                                             </div>
                                         </td>                                        
                                     </tr>
-                                    <tr *ngIf="elements.length == 0">
-                                        <td [attr.colspan]="headElements.length + 1" class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+                                    <tr *ngIf="elements.length == 0 && headElements.length != 0">
+                                        <td [attr.colspan]="headElements.length + 1"  class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
+                                    </tr>
+                                    <tr *ngIf="elements.length == 0 && headElements.length == 0">
+                                        <td [attr.colspan]="headElements.length + 1"  class="text-center"><div class="py-3 font-weight-bold">Permission denied !!!</div></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -244,7 +247,7 @@
     </div>
 </section>
 
-<section>
+<section *ngIf="elements.length > 0">
     <mat-card-content class="m-0 pt-4 text-center">
         <pagination-controls (pageChange)="getPage($event)" id="server5"></pagination-controls>
     </mat-card-content>

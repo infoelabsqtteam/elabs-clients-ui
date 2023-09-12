@@ -3,13 +3,13 @@
   <perfect-scrollbar>
     <div class="metismenu list-unstyled mb-5" #sideMenu>
       <mat-accordion>
-        <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index" [ngClass]="{'d-none': !item.display}" [expanded]="i == moduleIndex">
+        <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index" [ngClass]="{}" [expanded]="i == moduleIndex">
           <mat-expansion-panel-header *ngIf="hasMenu(item)" class="is-parent d-flex align-items-center" [ngClass]="{'activetxt':i == moduleIndex}" (click)="GoToSelectedModule(item,$event)">
             <mat-panel-title><img src="assets/img/svg-icon/{{item.imgPath}}.svg" width="20"><span class="ml-2 menutitle">{{ item.title }}</span></mat-panel-title>
           </mat-expansion-panel-header>
 
           <div *ngIf="hasMenu(item)" class="menulist">
-            <div class="menuitems" *ngFor="let subitem of item.menu_list;let j = index" [ngClass]="{'d-none': !subitem.display}">
+            <div class="menuitems" *ngFor="let subitem of item.menu_list;let j = index" [ngClass]="{}">
               <div class="position-relative" *ngIf="!hasSubMenu(subitem)" [ngClass]="{'sidebaractive':j == menuIndex}">
                 <a [attr.data-parent]="subitem.parentId" (click)="getmenuTemplateData(item,subitem,j,$event)">{{ subitem.label }}</a>
                 <span class="favibtn" style="right: 20px;"  (click)="openInNewTab(item,subitem)"><mat-icon>open_in_new</mat-icon></span>
@@ -18,9 +18,9 @@
               
               <mat-accordion *ngIf="hasSubMenu(subitem)">
                 <mat-expansion-panel [expanded]="j == menuIndex">
-                  <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" [ngClass]="{'d-none': !subitem.display,'sidebaractive':j == menuIndex}">{{ subitem.label }}</mat-expansion-panel-header>
+                  <mat-expansion-panel-header class="submenutitle" *ngIf="hasSubMenu(subitem)" [attr.data-parent]="subitem.parentId" [ngClass]="{'sidebaractive':j == menuIndex}">{{ subitem.label }}</mat-expansion-panel-header>
                   
-                  <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu;let k = index" [ngClass]="{'d-none': !subSubitem.display,'sidebarsubmenuactive':k == subMenuIndex}" >
+                  <div class="position-relative" matExpansionPanelContent *ngFor="let subSubitem of subitem.submenu;let k = index" [ngClass]="{'sidebarsubmenuactive':k == subMenuIndex}" >
                     
                     <small class="dropdownmenulist pl-4" [attr.data-parent]="subSubitem.parentId" (click)="getSubmenuTemplateData(item,subSubitem,k,j,$event)">{{ subSubitem.label }}</small>
 
