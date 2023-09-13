@@ -497,8 +497,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.actionButtons =[];
     } 
   }
+  totalgridData;
   setGridData(gridData){
     if (gridData) {
+      this.totalgridData = gridData;
       if (gridData.data && gridData.data.length > 0) {
         this.elements = JSON.parse(JSON.stringify(gridData.data));
         this.total = gridData.data_size;
@@ -533,6 +535,31 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.rowId = "";
     }
   }
+
+
+
+  pageSizes =[25, 50, 75];
+  PageSizeChange(event: any): void {
+    this.itemNumOfGrid = event.target.value;
+    const getSortData = {
+      data: {
+        crList: [],
+        refCode: this.userInfo.refCode,
+        key2: this.storageService.getAppId(),
+        log: this.storageService.getUserLog(),
+        value: this.currentMenu.name,
+        pageNo: this.pageNumber - 1,
+        pageSize: this.itemNumOfGrid
+      },
+    }
+    this.apiService.getGridData(getSortData)
+  }
+
+
+  
+
+
+
   setStaticData(staticData){
     if (staticData) {
       this.staticData = staticData;
@@ -1113,7 +1140,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         crList.push(element);
       });
       pagePayload.data.crList = crList;
-    }    
+    }  
+    pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';

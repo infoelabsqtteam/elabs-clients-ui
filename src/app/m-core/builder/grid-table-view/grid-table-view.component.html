@@ -25,7 +25,13 @@
 </mat-menu> 
 
 <section>
-    <div class="downloadbtn">
+    <div class="downloadbtn d-flex align-items-center">
+        <div>
+            <small>Items Per Page:</small>
+            <select (change)="PageSizeChange($event)">
+                <option *ngFor="let size of pageSizes" [ngValue]="size">{{ size }}</option>
+              </select>
+        </div>
         <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
         <button *ngIf="forms['default'] && tab.addForm" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
         <ng-container *ngIf="forms['default'] && tab && tab.grid && tab.grid.copyRequired">
