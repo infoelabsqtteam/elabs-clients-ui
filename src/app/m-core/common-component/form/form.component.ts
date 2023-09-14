@@ -2924,7 +2924,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.alertData = {};
   }
   
-  getFormValue(check){    
+  getFormValue(check){
     let formValue = this.templateForm.getRawValue();
     let selectedRow = { ...this.selectedRow };     
     let modifyFormValue = {};   
@@ -2968,9 +2968,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case 'gmap':
           case "gmapview":
-            selectedRow['latitude'] = this.latitude;
-            selectedRow['longitude'] = this.longitude;
-            selectedRow['address'] = this.address;
+            if(element && element.datatype == "object"){
+              let locationData = {};
+              locationData['latitude'] = this.latitude;
+              locationData['longitude'] = this.longitude;
+              locationData['address'] = this.address;
+              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
+              locationData['time'] = this.datePipe.transform(new Date(),'shortTime');
+              selectedRow[element.field_name] = locationData;
+            }else{
+              selectedRow['latitude'] = this.latitude;
+              selectedRow['longitude'] = this.longitude;
+              selectedRow[element.field_name] = this.address;
+            }
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
@@ -3020,9 +3030,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case 'gmap':
           case "gmapview":
-            modifyFormValue['latitude'] = this.latitude;
-            modifyFormValue['longitude'] = this.longitude;
-            modifyFormValue['address'] = this.address;
+            if(element && element.datatype == "object"){
+              let locationData = {};
+              locationData['latitude'] = this.latitude;
+              locationData['longitude'] = this.longitude;
+              locationData['address'] = this.address;
+              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
+              locationData['time'] = this.datePipe.transform(new Date(),'shortTime')
+              modifyFormValue[element.field_name] = locationData;
+            }else{
+              modifyFormValue['latitude'] = this.latitude;
+              modifyFormValue['longitude'] = this.longitude;
+              modifyFormValue[element.field_name] = this.address;
+            }
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
