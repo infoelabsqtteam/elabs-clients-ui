@@ -497,10 +497,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.actionButtons =[];
     } 
   }
-  totalgridData;
   setGridData(gridData){
     if (gridData) {
-      this.totalgridData = gridData;
       if (gridData.data && gridData.data.length > 0) {
         this.elements = JSON.parse(JSON.stringify(gridData.data));
         this.total = gridData.data_size;
@@ -1083,7 +1081,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.itemNumOfGrid = event.target.value;
     this.applyFilter();
   }
-  
+
   getPage(page: number) {
     //this.apiService.resetGridData();
     this.pageNumber = page;
