@@ -536,30 +536,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
 
-
-
-  pageSizes =[25, 50, 75];
-  PageSizeChange(event: any): void {
-    this.itemNumOfGrid = event.target.value;
-    const getSortData = {
-      data: {
-        crList: [],
-        refCode: this.userInfo.refCode,
-        key2: this.storageService.getAppId(),
-        log: this.storageService.getUserLog(),
-        value: this.currentMenu.name,
-        pageNo: this.pageNumber - 1,
-        pageSize: this.itemNumOfGrid
-      },
-    }
-    this.apiService.getGridData(getSortData)
-  }
-
-
-  
-
-
-
   setStaticData(staticData){
     if (staticData) {
       this.staticData = staticData;
@@ -1101,7 +1077,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
 
   }
-  
+
+  pageSizes =[25, 50, 75, 100, 150];
+  PageSizeChange(event: any): void {
+    this.itemNumOfGrid = event.target.value;
+    this.applyFilter();
+  }
   
   getPage(page: number) {
     //this.apiService.resetGridData();
@@ -1218,9 +1199,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     this.pageNumber = 1;
-    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    let pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
-    // this.getDataForGrid();
   }
   
   
