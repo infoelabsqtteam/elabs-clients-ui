@@ -2476,7 +2476,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'update_invoice_total_on_custom_field':          
           calFormValue = this.limsCalculationsService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
-          break;      
+          break; 
+        case 'credit_note_invoice_calculation':          
+          calFormValue = this.limsCalculationsService.credit_note_invoice_calculation(tamplateFormValue,"standard" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;     
         case 'calculate_lims_invoice':          
           calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
