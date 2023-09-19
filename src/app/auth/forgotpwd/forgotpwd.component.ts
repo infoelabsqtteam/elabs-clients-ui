@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, DataShareService, StorageService, EnvService, AuthDataShareService, NotificationService} from '@core/web-core';
+import { AuthService, DataShareService, StorageService, AuthDataShareService, NotificationService, CustomvalidationService} from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,16 +20,15 @@ export class ForgotPwdComponent implements OnInit {
   template:string = "temp1";
   logoPath = '';
   forGotSubscription:Subscription;
+  resetPassSubscription:Subscription;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private authService:AuthService,
     private dataShareService:DataShareService,
-    private envService:EnvService,
     private storageService:StorageService,
     private authDataShareService: AuthDataShareService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private customvalidationService:CustomvalidationService
     ) { 
       this.appNameSubscription = this.dataShareService.appName.subscribe(data =>{
         this.setAppName(data);
@@ -41,6 +39,13 @@ export class ForgotPwdComponent implements OnInit {
         }
         if(data.status == 'success') {
           this.resetPwd = false;
+        }
+      })
+      this.resetPassSubscription = this.authDataShareService.resetPass.subscribe(data =>{
+        if(data.msg != '') {
+          this.notificationService.notify(data.class, data.msg);
+        }
+        if(data.status == 'success') {
           this.authService.redirectToSignPage();
         }
       })
@@ -69,7 +74,7 @@ export class ForgotPwdComponent implements OnInit {
     });
     this.vForm = new FormGroup({
       'verifyCode': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required]),
+      'password': new FormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
     });
   }
 
@@ -86,6 +91,6 @@ export class ForgotPwdComponent implements OnInit {
   pageloded(){
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
-    this.title = this.envService.getHostKeyValue('title');
+    this.title = this.storageService.getPageTitle();
   }
 }
