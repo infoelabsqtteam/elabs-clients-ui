@@ -3652,8 +3652,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       case "file":
         if (value['data'] && value['data'] != '') {
-          let fileData = this.fileHandlerService.modifyUploadFiles(value['data']);
-          this.viewModal('fileview-grid-modal', {'data':fileData}, item, editemode);
+          let fileData = {};
+          fileData['data'] = this.fileHandlerService.modifyUploadFiles(value['data']);
+          this.viewModal('fileview-grid-modal', fileData, item, editemode);
         };
         break;      
       default:
