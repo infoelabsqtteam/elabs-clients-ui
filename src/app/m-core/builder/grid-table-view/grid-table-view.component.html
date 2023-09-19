@@ -248,8 +248,14 @@
 </section>
 
 <section *ngIf="elements.length > 0">
-    <mat-card-content class="m-0 pt-4 text-center">
+    <mat-card-content class="m-0 pt-4 text-center position-relative">
         <pagination-controls (pageChange)="getPage($event)" id="server5"></pagination-controls>
+        <div class="paginationnumber">
+            <small>Items Per Page:</small>
+            <select class="paginationsize ml-2" (change)="PageSizeChange($event)">
+                <option *ngFor="let size of pageSizes" [ngValue]="size">{{ size }}</option>
+            </select>
+        </div>
     </mat-card-content>
 </section>
 <!-- <div *ngIf="true" class="card pt-2 my-2">

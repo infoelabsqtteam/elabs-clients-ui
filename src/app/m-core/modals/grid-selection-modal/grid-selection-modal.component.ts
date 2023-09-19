@@ -7,6 +7,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
 import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, FileHandlerService } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -65,6 +66,7 @@ export class GridSelectionModalComponent implements OnInit {
   parentObj: any;
   fieldNameForDeletion: any;
   isGridSelectionOpen: boolean = true;
+  fileDownloadUrlSubscription:Subscription;
   minieditorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -156,6 +158,9 @@ export class GridSelectionModalComponent implements OnInit {
     })
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data => {
       this.setTypeaheadData(data);
+    })
+    this.fileDownloadUrlSubscription = this.dataShareService.fileDownloadUrl.subscribe(data =>{
+      this.setFileDownloadUrl(data);
     })
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data => {
       if (this.coreFunctionService.isNotBlank(this.field) && this.coreFunctionService.isNotBlank(this.field.ddn_field) && data[this.field.ddn_field]) {
@@ -913,10 +918,10 @@ export class GridSelectionModalComponent implements OnInit {
     
   }
 
-  uploadedDataitem;
   fileuploadedindex;
   uploadField;
   downloadClick;
+  dataSaveInProgress
   uploadModal(fieldName,index,data) {
     this.uploadField = fieldName;
     let selectedData = [];
@@ -931,21 +936,23 @@ export class GridSelectionModalComponent implements OnInit {
       this.downloadClick = file.rollName;
       this.CommonFunctionService.downloadFile(file);
     }
-    downloadFileWithBytes(filedata){
-      let link = document.createElement('a');
-      link.setAttribute('type', 'hidden');
-      const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(file);
-      link.href = url;
-      link.download = this.downloadClick;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();   
+    setFileDownloadUrl(fileDownloadUrl){
+      if (fileDownloadUrl != '' && fileDownloadUrl != null && this.downloadClick != '') {
+        let link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.href = fileDownloadUrl;
+        link.download = this.downloadClick;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        this.downloadClick = '';
+        this.dataSaveInProgress = true;
+        this.apiservice.ResetDownloadUrl();
+      }
     }
 
     fileUploadResponce(response) {
       if(response && response.length > 0) {
-        this.uploadedDataitem = response;
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
       }
     }

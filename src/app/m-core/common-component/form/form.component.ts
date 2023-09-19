@@ -2476,7 +2476,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'update_invoice_total_on_custom_field':          
           calFormValue = this.limsCalculationsService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
-          break;      
+          break; 
+        case 'credit_note_invoice_calculation':          
+          calFormValue = this.limsCalculationsService.credit_note_invoice_calculation(tamplateFormValue,"standard" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;     
         case 'calculate_lims_invoice':          
           calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
@@ -2924,7 +2928,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.alertData = {};
   }
   
-  getFormValue(check){    
+  getFormValue(check){
     let formValue = this.templateForm.getRawValue();
     let selectedRow = { ...this.selectedRow };     
     let modifyFormValue = {};   
@@ -2968,9 +2972,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case 'gmap':
           case "gmapview":
-            selectedRow['latitude'] = this.latitude;
-            selectedRow['longitude'] = this.longitude;
-            selectedRow['address'] = this.address;
+            if(element && element.datatype == "object"){
+              let locationData = {};
+              locationData['latitude'] = this.latitude;
+              locationData['longitude'] = this.longitude;
+              locationData['address'] = this.address;
+              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
+              locationData['time'] = this.datePipe.transform(new Date(),'shortTime');
+              selectedRow[element.field_name] = locationData;
+            }else{
+              selectedRow['latitude'] = this.latitude;
+              selectedRow['longitude'] = this.longitude;
+              selectedRow[element.field_name] = this.address;
+            }
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
@@ -3020,9 +3034,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case 'gmap':
           case "gmapview":
-            modifyFormValue['latitude'] = this.latitude;
-            modifyFormValue['longitude'] = this.longitude;
-            modifyFormValue['address'] = this.address;
+            if(element && element.datatype == "object"){
+              let locationData = {};
+              locationData['latitude'] = this.latitude;
+              locationData['longitude'] = this.longitude;
+              locationData['address'] = this.address;
+              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
+              locationData['time'] = this.datePipe.transform(new Date(),'shortTime')
+              modifyFormValue[element.field_name] = locationData;
+            }else{
+              modifyFormValue['latitude'] = this.latitude;
+              modifyFormValue['longitude'] = this.longitude;
+              modifyFormValue[element.field_name] = this.address;
+            }
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
@@ -3628,7 +3652,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       case "file":
         if (value['data'] && value['data'] != '') {
-          this.viewModal('fileview-grid-modal', value, item, editemode);
+          let fileData = {};
+          fileData['data'] = this.fileHandlerService.modifyUploadFiles(value['data']);
+          this.viewModal('fileview-grid-modal', fileData, item, editemode);
         };
         break;      
       default:
@@ -5223,6 +5249,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     this.multipleFormCollection.splice(lastIndex,1);    
   }
+  checkAddNewButtonOnGridSelection(buttons){
+    let check = false;
+    if(buttons && buttons.length >0){
+        for (let i = 0; i < buttons.length; i++) {
+          const btn = buttons[i];
+          if(btn && btn.onclick && btn.onclick.api && btn.onclick.api == "save"){
+            check = true;
+            break;
+          }
+        }
+    } 
+    return check;
+  }
+
   loadNextForm(form: any){    
     this.form = form;
     this.resetFlagsForNewForm();
@@ -5252,8 +5292,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           const fieldName = nextFormData['current_field']['field_name'];
           if(Array.isArray(cdata)){
-            this.custmizedFormValue[fieldName] = cdata;
-            this.modifyCustmizedValue(fieldName);
+            if(this.form && this.form.buttons){
+              if(!this.checkAddNewButtonOnGridSelection(this.form.buttons)){
+                this.custmizedFormValue[fieldName] = cdata;
+                this.modifyCustmizedValue(fieldName);
+              }
+            }
           }
           break;      
         default:
