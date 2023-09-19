@@ -26,6 +26,8 @@
                                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                     </button>
+                                    <mat-error class="text-danger" *ngIf="resetForm.controls['password'].touched && resetForm.controls['password'].dirty && resetForm.controls['password'].errors?.invalidPassword" >
+                                        {{ resetForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                 </mat-form-field>
                                 <div class="row justify-content-center ">
                                     <button mat-raised-button color="primary" type="submit">Submit New Password</button>

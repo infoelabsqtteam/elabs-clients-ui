@@ -73,7 +73,7 @@ export class SignupComponent implements OnInit {
     const name = this.signUpForm.value.name;
     const mobile = this.signUpForm.value.mobile;
     const hostName = this.envService.getHostName('origin');
-    const domain = hostName + "/#/verify";
+    const domain = hostName + "/verify";
     let userId = "";
     if(this.storageService.getVerifyType() == "mobile"){
       userId = mobile;
@@ -88,7 +88,7 @@ export class SignupComponent implements OnInit {
     this.signUpForm = new FormGroup({
       'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
       'mobile': new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
+      'password': new FormControl('', [Validators.required, this.customValidationService.patternValidator()]),
       'confirmPassword': new FormControl("", Validators.required),
       'name': new FormControl('', Validators.required),
     },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }
@@ -106,7 +106,7 @@ export class SignupComponent implements OnInit {
   pageloded(){
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
-    this.title = this.envService.getHostKeyValue('title');
+    this.title = this.storageService.getPageTitle();
   }
   showpassword() {
     this.showpasswrd = !this.showpasswrd;

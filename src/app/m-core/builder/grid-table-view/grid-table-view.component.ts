@@ -1074,8 +1074,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
 
   }
-  
-  
+
+  pageSizes =[25, 50, 75, 100, 150];
+  PageSizeChange(event: any): void {
+    this.itemNumOfGrid = event.target.value;
+    this.applyFilter();
+  }
+
   getPage(page: number) {
     //this.apiService.resetGridData();
     this.pageNumber = page;
@@ -1113,7 +1118,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         crList.push(element);
       });
       pagePayload.data.crList = crList;
-    }    
+    }  
+    pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';
@@ -1190,9 +1196,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     this.pageNumber = 1;
-    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    let pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
-    // this.getDataForGrid();
   }
   
   
