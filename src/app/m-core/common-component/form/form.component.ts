@@ -3652,7 +3652,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       case "file":
         if (value['data'] && value['data'] != '') {
-          this.viewModal('fileview-grid-modal', value, item, editemode);
+          let fileData = {};
+          fileData['data'] = this.fileHandlerService.modifyUploadFiles(value['data']);
+          this.viewModal('fileview-grid-modal', fileData, item, editemode);
         };
         break;      
       default:
@@ -5247,6 +5249,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     this.multipleFormCollection.splice(lastIndex,1);    
   }
+  checkAddNewButtonOnGridSelection(buttons){
+    let check = false;
+    if(buttons && buttons.length >0){
+        for (let i = 0; i < buttons.length; i++) {
+          const btn = buttons[i];
+          if(btn && btn.onclick && btn.onclick.api && btn.onclick.api == "save"){
+            check = true;
+            break;
+          }
+        }
+    } 
+    return check;
+  }
+
   loadNextForm(form: any){    
     this.form = form;
     this.resetFlagsForNewForm();
@@ -5276,8 +5292,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           const fieldName = nextFormData['current_field']['field_name'];
           if(Array.isArray(cdata)){
-            this.custmizedFormValue[fieldName] = cdata;
-            this.modifyCustmizedValue(fieldName);
+            if(this.form && this.form.buttons){
+              if(!this.checkAddNewButtonOnGridSelection(this.form.buttons)){
+                this.custmizedFormValue[fieldName] = cdata;
+                this.modifyCustmizedValue(fieldName);
+              }
+            }
           }
           break;      
         default:
