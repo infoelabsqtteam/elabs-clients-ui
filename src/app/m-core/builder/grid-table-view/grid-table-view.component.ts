@@ -1075,7 +1075,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   }
 
-  pageSizes =[25, 50, 75, 100, 150];
+  pageSizes =[25, 50, 75, 100, 200];
   PageSizeChange(event: any): void {
     this.itemNumOfGrid = event.target.value;
     this.applyFilter();

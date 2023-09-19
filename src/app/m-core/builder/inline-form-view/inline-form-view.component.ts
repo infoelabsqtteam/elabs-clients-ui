@@ -209,7 +209,7 @@ export class InlineFormViewComponent implements OnInit {
     this.apiService.getGridData(getFilterData)
   }
   isGridFieldExist(fieldName){
-    if(this.tab.grid && this.tab.grid[fieldName] && this.tab.grid[fieldName] != undefined && this.tab.grid[fieldName] != null && this.tab.grid[fieldName] != ''){
+    if(this.tab && this.tab.grid && this.tab.grid[fieldName] && this.tab.grid[fieldName] != undefined && this.tab.grid[fieldName] != null && this.tab.grid[fieldName] != ''){
      return true;
     }
     return false;
