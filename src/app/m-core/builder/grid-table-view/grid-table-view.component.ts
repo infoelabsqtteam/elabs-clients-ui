@@ -570,6 +570,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getTabData(index,formName) {
     this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
+      this.itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
       if(this.tab.tab_name && this.tab.tab_name != null && this.tab.tab_name != undefined && this.tab.tab_name != ''){
         const menu = {"name":this.tab.tab_name};
         this.storageService.SetActiveMenu(menu);
