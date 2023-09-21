@@ -43,11 +43,11 @@
                 <td scope="row" class="p-1">{{ i + 1 }}</td>                
                 <td class="p-1">
                   <div>
-                      <span>{{item['rollName']}}</span>                     
+                      <span>{{item['rollName'] ? item['rollName'] : item['fileName']}}</span>                     
                   </div>
                 </td>
                 <td>
-                    <mdb-icon fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(item)"></mdb-icon>
+                    <mdb-icon *ngIf="item._id" fas icon="download" class="pl-3 cursor-pointer" (click)="downloadFile(item)"></mdb-icon>
                 </td>
               </tr>
             </tbody>
