@@ -1165,6 +1165,23 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
 
+  exportCSV() {
+    let fiteredList=[];
+    this.headElements.forEach(element => {
+      if(element && element.display){
+        fiteredList.push(element)
+      }
+    });
+    console.log(fiteredList);
+    this.modalService.open('download-progress-modal', {});
+    const getExportData = {
+      data: {
+        gridData: fiteredList,
+      },
+    }
+    this.apiService.GetExportExclLink(getExportData);
+  }
+
   onSort(columnObject) {
     const columnName = this.orderBy + columnObject.field_name;
     const value = this.filterForm.getRawValue();
