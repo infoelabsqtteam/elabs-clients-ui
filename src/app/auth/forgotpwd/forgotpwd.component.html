@@ -15,12 +15,12 @@
             <form *ngIf="resetPwd" class="registration-form" [formGroup]="vForm">
                 <div class="form-group mb-3">
                   <label class="font-15">VERIFICATION CODE</label>
-                  <input type="text" class="form-control" placeholder="" formControlName="verifyCode">
+                  <input  type="number" autocomplete="off" class="form-control" placeholder="" formControlName="verifyCode">
                 </div>
                 <div class="form-group mb-3"><mat-hint><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint></div>
                 <div class="form-group password mb-3">
                     <label class="font-15">PASSWORD</label>
-                    <input [type]="hide ? 'password' : 'text'" class="form-control"  placeholder="" formControlName="password">
+                    <input [type]="hide ? 'password' : 'text'" class="form-control"  placeholder="" formControlName="password" autocomplete="off">
                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide"><mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon></button>
                     <small class="text-left d-block text-danger" style="font-size:9px;bottom:-16px;" *ngIf="vForm.controls['password'].touched && vForm.controls['password'].dirty && vForm.controls['password'].errors?.invalidPassword" >{{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                   </div>
@@ -59,14 +59,14 @@
                                     <div class="col-md-12">
                                         <mat-form-field appearance="outline" class="w-100">
                                             <mat-label>VERIFICATION CODE</mat-label>
-                                            <input matInput placeholder="Verification Code" formControlName="verifyCode">
+                                            <input matInput type="number" autocomplete="off" placeholder="Verification Code" formControlName="verifyCode">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-md-12"><mat-hint class="d-block text-left"><a class="text-muted" (click)="resendCode()">Resend Verification Code?</a></mat-hint></div>
                                     <div class="col-md-12">
                                         <mat-form-field appearance="outline" class="w-100 mt-3 mb-0">
                                             <mat-label>PASSWORD</mat-label>
-                                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
+                                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password" autocomplete="off">
                                             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                                 <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                                             </button>
@@ -119,7 +119,7 @@
                                 <div class="col-md-12">
                                     <mat-form-field appearance="outline" class="w-100">
                                         <mat-label>VERIFICATION CODE</mat-label>
-                                        <input matInput placeholder="Verification Code" formControlName="verifyCode">
+                                        <input matInput type="number" autocomplete="off" placeholder="Verification Code" formControlName="verifyCode" >
                                     </mat-form-field>
                                   </div>
                                   <div class="col-md-12">
@@ -128,7 +128,7 @@
                                   <div class="col-md-12">
                                     <mat-form-field appearance="outline" class="w-100 mt-3 mb-0">
                                         <mat-label>PASSWORD</mat-label>
-                                        <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password">
+                                        <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password" autocomplete="off">
                                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                             <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                                         </button>
