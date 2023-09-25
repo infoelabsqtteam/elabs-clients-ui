@@ -18,6 +18,10 @@
                         <div class="col-md-12 form-group mb-4">
                             <label class="font-15">Email address</label>
                             <input type="email" class="form-control" placeholder="" formControlName="email" required>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
+                                <label class="form-check-label" for="check2">Option 2</label>
+                            </div>
                         </div>
                         <div class="col-md-6 form-group mb-4 password pr-0">
                             <label class="font-15">Password</label>
@@ -69,6 +73,10 @@
                                         <mat-label>Email address</mat-label>
                                         <input matInput placeholder="Enter your Email" formControlName="email">
                                     </mat-form-field>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
+                                        <label class="form-check-label" for="check2">Option 2</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <mat-form-field appearance="outline" class="w-100 mb-3 password">
@@ -128,6 +136,12 @@
                                         <mat-label>Email address</mat-label>
                                         <input matInput placeholder="Enter your Email" formControlName="email">
                                     </mat-form-field>
+                                    <div *ngIf=" adminEmail == ''"  class="form-check" style="text-align: left;
+                                    margin-bottom: 10px;
+                                    padding-top: 0px;">
+                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="checkAdmin">
+                                        <label class="form-check-label" style="font-size: 10px;" for="check2">User Varify by Admin.</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <mat-form-field appearance="outline" class="w-100 mb-3 password">
