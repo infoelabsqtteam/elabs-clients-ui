@@ -1169,6 +1169,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.modalService.open('download-progress-modal', {}); 
     let tempNme = this.currentMenu.name;
     if(this.permissionService.checkPermission(tempNme,'export')){  
+      let fiteredList=[];
+    this.headElements.forEach(element => {
+      if(element && element.display){
+        delete element.display;
+        fiteredList.push(element)
+      }
+    });
       let gridName = '';
       let grid_api_params_criteria = [];
       if(this.commonFunctionService.isGridFieldExist(this.tab,"api_params_criteria")){
@@ -1197,7 +1204,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         data: {
           refCode: this.userInfo.refCode,
           log: this.storageService.getUserLog(),
-          kvp: data
+          kvp: data,
+          gridData: fiteredList,
         },
         responce: { responseType: "arraybuffer" },
         path: tempNme
