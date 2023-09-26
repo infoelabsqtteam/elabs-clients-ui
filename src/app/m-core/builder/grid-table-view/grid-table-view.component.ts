@@ -133,7 +133,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-
+ isExportDownload:boolean = true;
 
 
   @HostListener('window:keyup', ['$event'])
