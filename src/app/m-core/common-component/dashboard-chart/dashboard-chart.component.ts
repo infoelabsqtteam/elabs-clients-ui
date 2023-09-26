@@ -63,6 +63,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
   populateDashbord(list,index){
     if(list && list.length > 0){
       this.dashbord = list[index];
+      this.dashbord['classes'] = 'py-5 px-3  modal-dialog filterchart';
       this.dashbordId = this.dashbord._id;
       if(this.dashbord && this.dashbord.chartList && this.dashbord.chartList.length > 0){
         let chartList = this.dashbord.chartList;
