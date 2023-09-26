@@ -371,7 +371,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }else{ 
       this.notificationService.notify("bg-danger", " Data issue");
     }
-    this.modalService.close('download-progress-modal'); 
 
   }
 
@@ -1185,13 +1184,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
   exportCSV() {
-    this.modalService.open('download-progress-modal', {}); 
     let tempNme = this.currentMenu.name;
     if(this.permissionService.checkPermission(tempNme,'export')){  
       let fiteredList=[];
     this.headElements.forEach(element => {
       if(element && element.display){
-        delete element.display;
+        // delete element.display;
         fiteredList.push(element)
       }
     });
