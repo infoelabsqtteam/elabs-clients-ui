@@ -37,8 +37,8 @@
                         </div>
 
                         <div class="col-md-12 mb-3"> 
-                            <div *ngIf="adminEmail == ''"  class="form-check text-left">
-                                <input type="checkbox" class="form-check-input" id="check2" formControlName="checkAdmin">
+                            <div *ngIf="adminEmail != ''"  class="form-check text-left">
+                                <input type="checkbox" class="form-check-input" id="check2" formControlName="admin">
                                 <label class="form-check-label" style="font-size: 10px;" for="check2">Notify Admin.</label>
                             </div>
                         </div>
@@ -98,8 +98,8 @@
                                     </mat-form-field>  
                                 </div>
                                 <div class="col-md-12"> 
-                                    <div *ngIf="adminEmail == ''"  class="form-check text-left">
-                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="checkAdmin">
+                                    <div *ngIf="adminEmail != ''"  class="form-check text-left">
+                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="admin">
                                         <label class="form-check-label" style="font-size: 10px;" for="check2">Notify Admin.</label>
                                     </div>
                                 </div>
@@ -164,8 +164,8 @@
                                 </div>
 
                                 <div class="col-md-12"> 
-                                    <div *ngIf="adminEmail == ''"  class="form-check text-left">
-                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="checkAdmin">
+                                    <div *ngIf="adminEmail != ''"  class="form-check text-left">
+                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="admin">
                                         <label class="form-check-label" style="font-size: 10px;" for="check2">Notify Admin.</label>
                                     </div>
                                 </div>

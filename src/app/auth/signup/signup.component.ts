@@ -90,7 +90,7 @@ export class SignupComponent implements OnInit {
       'password': new FormControl('', [Validators.required, this.customValidationService.patternValidator()]),
       'confirmPassword': new FormControl("", Validators.required),
       'name': new FormControl('', Validators.required),
-      'checkAdmin': new FormControl(false),
+      'admin': new FormControl(false),
     },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }
     );
   }

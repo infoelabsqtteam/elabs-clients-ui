@@ -65,8 +65,8 @@ export class ForgotPwdComponent implements OnInit {
 
   onResetPwd() {
     this.username = this.fForm.value.userId;
-    let checkAdmin = this.fForm.value.checkAdmin;
-    let payload = {userId:this.username,checkAdmin:checkAdmin};
+    let admin = this.fForm.value.admin;
+    let payload = {userId:this.username,admin:admin};
     this.authService.TryForgotPassword(payload);
   }
 
@@ -74,7 +74,7 @@ export class ForgotPwdComponent implements OnInit {
     this.username = "";
     this.fForm = new FormGroup({
       'userId': new FormControl('', [Validators.required]),
-      "checkAdmin":new FormControl(false)
+      "admin":new FormControl(false)
     });
     this.vForm = new FormGroup({
       'verifyCode': new FormControl('', [Validators.required]),
