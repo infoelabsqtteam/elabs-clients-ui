@@ -120,6 +120,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   pdfFileSubscription;
   previewHtmlSubscription;
   typeaheadDataSubscription;
+  exportCVSLinkSubscribe;
 
   filterdata = '';
   fixedcolwidth = 150;
@@ -133,7 +134,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
- isExportDownload:boolean = true;
+  heavyDownload:boolean = false;
 
 
   @HostListener('window:keyup', ['$event'])
@@ -356,9 +357,24 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       if (e instanceof NavigationEnd) {
         this.initialiseInvites();
       }
-    });   
+    });  
+    
+    this.exportCVSLinkSubscribe = this.dataShareService.exportCVSLink.subscribe(data =>{
+      this.handleExportCsv(data);
+      })
 
   }
+
+  handleExportCsv(data){
+    if(data != null && data != undefined ){
+      this.notificationService.notify("bg-success", " File is under processing");
+    }else{ 
+      this.notificationService.notify("bg-danger", " Data issue");
+    }
+    this.modalService.close('download-progress-modal'); 
+
+  }
+
   getUrlParameter(){
     let routers = this.routers;
     if(routers.snapshot.params["formName"]){
@@ -588,6 +604,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
         if(this.tab.grid.details && this.tab.grid.details != null){
           this.details = this.tab.grid.details;
+        }
+        if(this.tab.grid.heavyDownload && this.tab.grid.heavyDownload != null){
+          this.heavyDownload = true;
         }
         if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
           this.typegrapyCriteriaList = this.tab.grid.colorCriteria;

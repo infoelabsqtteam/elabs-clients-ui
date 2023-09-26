@@ -48,9 +48,9 @@
         
     <button mat-icon-button *ngIf="forms['default'] && tab.addForm" (click)="addNewForm('NEW')" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'"><mat-icon>library_add</mat-icon></button>
 
-    <button mat-icon-button [matTooltip]="'Export Excel (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="!isExportDownload" (click)="exportExcel()"><mat-icon>download</mat-icon></button>
+    <button mat-icon-button [matTooltip]="'Export Excel (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="!heavyDownload" (click)="exportExcel()"><mat-icon>download</mat-icon></button>
 
-    <button mat-icon-button [matMenuTriggerFor]="beforeMenu" [matTooltip]="'Export CSV (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="isExportDownload"><mat-icon>download</mat-icon></button>
+    <button mat-icon-button [matMenuTriggerFor]="beforeMenu" [matTooltip]="'Export CSV (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="heavyDownload"><mat-icon>download</mat-icon></button>
     <mat-menu #beforeMenu="matMenu" xPosition="before" class="filterdrowdownmenu">
         <button mat-menu-item (click)="exportCSV()"><mat-icon>download</mat-icon>Download CSV</button>
         <button mat-menu-item *ngIf="elements.length > 0" (click)="exportExcel()"><mat-icon>download</mat-icon>Download Excel</button>
