@@ -5,10 +5,14 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
       <div class="modal-header justify-content-center mb-0"
         *ngIf="dashboardItem && dashboardItem.name">
         <h4 class="modal-title m-0 active d-block" style="font-size:20px;">{{dashboardItem.name}}</h4>
+        <button mat-icon-button color="primary" style="opacity:0.7;" class="mx-2" (click)="reset(dashboardItem)"><mat-icon>refresh</mat-icon></button>
+        <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'google_chart'" (click)="exportexcel()"><mat-icon>download</mat-icon></button>
+        <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'mongodb_chart'" (click)="download(dashboardItem)"><mat-icon>download</mat-icon></button>
+        <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'chart_js'" (click)="canvasimg()" style="position:relative;top:8px;"><a href="{{ chartjsimg }}" download><mat-icon>download</mat-icon></a></button>
         <a class="h5 m-0 closebtb" (click)="close(dashboardItem)">×</a>
       </div>
       <div class="modal-body p-0">
-        <div class="chartfilter px-3 pt-2 mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
+        <!-- <div class="chartfilter px-3 pt-2 mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
           <div class="row align-items-center mx-0">
             <div class="col-sm-3 pl-0" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
               <div *ngIf="field.type == 'date'">
@@ -91,14 +95,11 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
               </div>
             </div>
             <div class="col-sm-2 px-0">
-                <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" class="mx-2" (click)="reset(dashboardItem)"><mat-icon>refresh</mat-icon></button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'google_chart'" (click)="exportexcel()"><mat-icon>download</mat-icon></button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'mongodb_chart'" (click)="download(dashboardItem)"><mat-icon>download</mat-icon></button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'chart_js'" (click)="canvasimg()" style="position:relative;top:8px;"><a href="{{ chartjsimg }}" download><mat-icon>download</mat-icon></a></button>
+                <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>                
             </div>
           </div>
-        </div> 
+        </div> -->
+        <app-filter *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [dashbord]="dashbord" (filterData)="filterData($event)"></app-filter> 
 
         <div class="px-3">
           <ng-container>

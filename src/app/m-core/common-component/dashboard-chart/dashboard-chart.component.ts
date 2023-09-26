@@ -217,10 +217,10 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
   filterData(responce){
     console.log(responce);
     if(this.createdChartList && Object.keys(this.createdChartList).length > 0){
-      if(responce && typeof responce == 'object'){
+      if(responce && responce.data && typeof responce.data == 'object'){
         Object.keys(this.createdChartList).forEach(key => {
           let chart = this.createdChartList[key];
-          chart.setFilter(responce);
+          chart.setFilter(responce.data);
         });
       }
     }
