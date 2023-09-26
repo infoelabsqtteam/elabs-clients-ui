@@ -120,6 +120,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   pdfFileSubscription;
   previewHtmlSubscription;
   typeaheadDataSubscription;
+  exportCVSLinkSubscribe;
 
   filterdata = '';
   fixedcolwidth = 150;
@@ -133,7 +134,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-
+  heavyDownload:boolean = false;
 
 
   @HostListener('window:keyup', ['$event'])
@@ -356,9 +357,23 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       if (e instanceof NavigationEnd) {
         this.initialiseInvites();
       }
-    });   
+    });  
+    
+    this.exportCVSLinkSubscribe = this.dataShareService.exportCVSLink.subscribe(data =>{
+      this.handleExportCsv(data);
+      })
 
   }
+
+  handleExportCsv(data){
+    if(data != null && data != undefined ){
+      this.notificationService.notify("bg-success", " File is under processing");
+    }else{ 
+      this.notificationService.notify("bg-danger", " Data issue");
+    }
+
+  }
+
   getUrlParameter(){
     let routers = this.routers;
     if(routers.snapshot.params["formName"]){
@@ -588,6 +603,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
         if(this.tab.grid.details && this.tab.grid.details != null){
           this.details = this.tab.grid.details;
+        }
+        if(this.tab.grid.heavyDownload && this.tab.grid.heavyDownload != null){
+          this.heavyDownload = true;
         }
         if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
           this.typegrapyCriteriaList = this.tab.grid.colorCriteria;
@@ -1159,6 +1177,60 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
       this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
       this.apiService.GetExportExclLink(getExportData);
+    }else{
+      this.permissionService.checkTokenStatusForPermission();
+      //this.notificationService.notify("bg-danger", "Permission denied !!!");
+    }
+  }
+
+  exportCSV() {
+    let tempNme = this.currentMenu.name;
+    if(this.permissionService.checkPermission(tempNme,'export')){  
+      let fiteredList=[];
+    this.headElements.forEach(element => {
+      if(element && element.display){
+        // delete element.display;
+        fiteredList.push(element)
+      }
+    });
+      let gridName = '';
+      let grid_api_params_criteria = [];
+      if(this.commonFunctionService.isGridFieldExist(this.tab,"api_params_criteria")){
+        grid_api_params_criteria = this.tab.grid.api_params_criteria;
+      }
+      const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+      if(this.tab && this.tab.grid){
+        if(this.tab.grid.export_template && this.tab.grid.export_template != null){
+          gridName = this.tab.grid.export_template;
+        }else{
+          gridName = this.tab.grid._id;
+        }
+      }
+      delete data.log;
+      delete data.key;
+      data['key'] = this.userInfo.refCode;
+      data['key3']=gridName;
+      const value = this.filterForm.getRawValue();
+      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
+      if(filtewCrlist.length > 0){
+        filtewCrlist.forEach(element => {
+          data.crList.push(element);
+        });
+      }
+      const getExportData = {
+        data: {
+          refCode: this.userInfo.refCode,
+          log: this.storageService.getUserLog(),
+          kvp: data,
+          gridData: fiteredList,
+        },
+        responce: { responseType: "arraybuffer" },
+        path: tempNme
+      }
+      var fileName = tempNme;
+      fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
+      this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
+      this.apiService.GetExportCVSLink(getExportData);
     }else{
       this.permissionService.checkTokenStatusForPermission();
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
