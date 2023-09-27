@@ -360,8 +360,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     });  
     
     this.exportCVSLinkSubscribe = this.dataShareService.exportCVSLink.subscribe(data =>{
-      this.handleExportCsv(data);
-      })
+      this.handleExportCsv(data);
+    })
 
   }
 
