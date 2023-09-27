@@ -3170,7 +3170,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 }else{
                   modifyFormValue[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
                 }
-            modifyFormValue[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
           }       
           
         }
