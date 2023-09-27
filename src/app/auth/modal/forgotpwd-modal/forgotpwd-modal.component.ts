@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataShareService, AuthService, ModelService} from '@core/web-core';
+import { DataShareService, AuthService, ModelService, CustomvalidationService} from '@core/web-core';
 
 
 @Component({
@@ -33,7 +33,8 @@ export class ForgotpwdModalComponent implements OnInit {
       private router: Router,
       private route: ActivatedRoute, 
       private dataShareService:DataShareService,
-      private authService:AuthService
+      private authService:AuthService,
+      private customvalidationService:CustomvalidationService
     ) {
       this.authNameSubscription = this.dataShareService.appName.subscribe(appName =>{
         this.setAppName(appName);
@@ -77,7 +78,7 @@ export class ForgotpwdModalComponent implements OnInit {
     });
     this.vForm = new FormGroup({
       'verifyCode': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
+      'password': new FormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
     });
   }
 

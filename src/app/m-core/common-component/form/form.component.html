@@ -263,7 +263,7 @@
                                         {{ tableField.label | titlecase}} is <strong>invalidData</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name]"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
+                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
                                     <mdb-icon fas icon="plus"></mdb-icon>
                                 </button>
@@ -344,7 +344,7 @@
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>                                   
                                 </mat-form-field>
-                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name]"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
+                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
                                 <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">

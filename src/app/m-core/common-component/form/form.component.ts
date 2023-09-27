@@ -9,7 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService} from '@core/web-core';
 // import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 // import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 // import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
@@ -325,7 +325,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private gridCommonFunctionService:GridCommonFunctionService,
     private ngZone: NgZone,
     private limsCalculationsService:LimsCalculationsService,
-    private treeComponentService: TreeComponentService
+    private treeComponentService: TreeComponentService,
+    private fileHandlerService: FileHandlerService
 ) {
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
@@ -2181,7 +2182,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
               if(this.dataListForUpload[keyName]){
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                  
-                  updateCustmizedValue[this.listOfFieldsUpdateIndex][childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);;
+                  updateCustmizedValue[this.listOfFieldsUpdateIndex][childkey] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
                 })
               }
               if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
@@ -2236,7 +2237,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               }
               if(this.dataListForUpload[keyName]){
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                 
-                  listOfFieldData[childkey] = this.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
+                  listOfFieldData[childkey] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
                 })
               }
               if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
@@ -2475,7 +2476,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'update_invoice_total_on_custom_field':          
           calFormValue = this.limsCalculationsService.update_invoice_total_on_custom_field(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
-          break;      
+          break; 
+        case 'credit_note_invoice_calculation':          
+          calFormValue = this.limsCalculationsService.credit_note_invoice_calculation(tamplateFormValue,"standard" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break;     
         case 'calculate_lims_invoice':          
           calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
@@ -2923,7 +2928,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.alertData = {};
   }
   
-  getFormValue(check){    
+  getFormValue(check){
     let formValue = this.templateForm.getRawValue();
     let selectedRow = { ...this.selectedRow };     
     let modifyFormValue = {};   
@@ -2967,9 +2972,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case 'gmap':
           case "gmapview":
-            selectedRow['latitude'] = this.latitude;
-            selectedRow['longitude'] = this.longitude;
-            selectedRow['address'] = this.address;
+            if(element && element.datatype == "object"){
+              let locationData = {};
+              locationData['latitude'] = this.latitude;
+              locationData['longitude'] = this.longitude;
+              locationData['address'] = this.address;
+              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
+              locationData['time'] = this.datePipe.transform(new Date(),'shortTime');
+              selectedRow[element.field_name] = locationData;
+            }else{
+              selectedRow['latitude'] = this.latitude;
+              selectedRow['longitude'] = this.longitude;
+              selectedRow[element.field_name] = this.address;
+            }
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
@@ -3019,9 +3034,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             break;
           case 'gmap':
           case "gmapview":
-            modifyFormValue['latitude'] = this.latitude;
-            modifyFormValue['longitude'] = this.longitude;
-            modifyFormValue['address'] = this.address;
+            if(element && element.datatype == "object"){
+              let locationData = {};
+              locationData['latitude'] = this.latitude;
+              locationData['longitude'] = this.longitude;
+              locationData['address'] = this.address;
+              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
+              locationData['time'] = this.datePipe.transform(new Date(),'shortTime')
+              modifyFormValue[element.field_name] = locationData;
+            }else{
+              modifyFormValue['latitude'] = this.latitude;
+              modifyFormValue['longitude'] = this.longitude;
+              modifyFormValue[element.field_name] = this.address;
+            }
             break;
           case 'date':
             if(element && element.date_format && element.date_format != ''){
@@ -3122,19 +3147,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.tableFields.forEach(element => {            
               if(element.field_name == key){                
                 Object.keys(this.dataListForUpload[key]).forEach(child =>{
-                  selectedRow[key][child] = this.modifyUploadFiles(this.dataListForUpload[key][child]);
+                  selectedRow[key][child] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key][child]);
                 })
               }
             });          
           }else{
-              selectedRow[key] = this.modifyUploadFiles(this.dataListForUpload[key]);
+              selectedRow[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
           }
         } else {
           if(this.dataListForUpload[key] && this.dataListForUpload[key] != null && !Array.isArray(this.dataListForUpload[key]) && typeof this.dataListForUpload[key] === "object"){
             this.tableFields.forEach(element => {
               if(element.field_name == key){                
                 Object.keys(this.dataListForUpload[key]).forEach(child =>{
-                  modifyFormValue[key][child] = this.modifyUploadFiles(this.dataListForUpload[key][child]);
+                  modifyFormValue[key][child] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key][child]);
                 })
               }
             });          
@@ -3143,8 +3168,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(uploadFileType.length >0){
                   modifyFormValue[key] = this.dataListForUpload[key];
                 }else{
-                  modifyFormValue[key] = this.modifyUploadFiles(this.dataListForUpload[key]);
+                  modifyFormValue[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
                 }
+            modifyFormValue[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
           }       
           
         }
@@ -3632,7 +3658,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         break;
       case "file":
         if (value['data'] && value['data'] != '') {
-          this.viewModal('fileview-grid-modal', value, item, editemode);
+          let fileData = {};
+          fileData['data'] = this.fileHandlerService.modifyUploadFiles(value['data']);
+          this.viewModal('fileview-grid-modal', fileData, item, editemode);
         };
         break;      
       default:
@@ -4119,19 +4147,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-  modifyUploadFiles(files){
-    const fileList = [];
-    if(files && files.length > 0){
-      files.forEach(element => {
-        if(element._id){
-          fileList.push(element)
-        }else{
-          fileList.push({uploadData:[element]})
-        }
-      });
-    }                  
-    return fileList;
-  }
+
   modifyFileSetValue(files){
     let fileName = '';
     let fileLength = files.length;
@@ -5246,6 +5262,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     this.multipleFormCollection.splice(lastIndex,1);    
   }
+  checkAddNewButtonOnGridSelection(buttons){
+    let check = false;
+    if(buttons && buttons.length >0){
+        for (let i = 0; i < buttons.length; i++) {
+          const btn = buttons[i];
+          if(btn && btn.onclick && btn.onclick.api && btn.onclick.api == "save"){
+            check = true;
+            break;
+          }
+        }
+    } 
+    return check;
+  }
+
   loadNextForm(form: any){    
     this.form = form;
     this.resetFlagsForNewForm();
@@ -5275,8 +5305,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           const fieldName = nextFormData['current_field']['field_name'];
           if(Array.isArray(cdata)){
-            this.custmizedFormValue[fieldName] = cdata;
-            this.modifyCustmizedValue(fieldName);
+            if(this.form && this.form.buttons){
+              if(!this.checkAddNewButtonOnGridSelection(this.form.buttons)){
+                this.custmizedFormValue[fieldName] = cdata;
+                this.modifyCustmizedValue(fieldName);
+              }
+            }
           }
           break;      
         default:
