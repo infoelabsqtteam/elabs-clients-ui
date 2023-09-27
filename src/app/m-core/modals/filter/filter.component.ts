@@ -275,7 +275,10 @@ export class FilterComponent implements OnInit,OnDestroy {
   clearFilter() {
     this.filterGroup.reset();
     let filterData = this.getFilterData();
-    this.filterData.emit(filterData);
+    let object={};
+    object['item'] = this.dashbord;
+    object['data'] = filterData;
+    this.filterData.emit(object);
   }
   onChange(field, object,data_template) {    
     const payloads = []      

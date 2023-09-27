@@ -247,10 +247,12 @@ export class ChartFilterComponent implements OnInit {
   filterData(responce){
     let item = responce.item;
     let data = responce.data;
-    this.dashletFilter(item,data);
+    if(item && data){
+      this.dashletFilter(item,data);
+    }    
   }
   dashletFilter(item,data){
-    if(item.package_name == "mongodb_chart"){
+    if(item && item.package_name && item.package_name == "mongodb_chart"){
       this.setFilterInMongodbChart(item,data);
     }else{
       this.getDashletData([item],data);
