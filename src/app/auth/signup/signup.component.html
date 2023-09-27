@@ -5,29 +5,33 @@
             <div class="col-lg-4 offset-lg-2">
                 <div class="card mx-auto p-4 rounded mt-lg-0">
                     <div class="text-center"><p class="text-muted mb-2 font-13 text-uppercase">Welcome To {{title}}</p></div>
-                    <form class="registration-form" [formGroup]="signUpForm">
-                        <div class="form-group mb-4">
+                    <form class="registration-form row" [formGroup]="signUpForm">
+                        <div class="col-md-6 form-group mb-4 pr-0">
                             <label class="font-15">Full Name</label>
-                            <input type="text" class="form-control" id="email" placeholder="" formControlName="name" required>
+                            <input type="text" class="form-control" placeholder="" formControlName="name" required>
                         </div>
-                        <div class="form-group mb-4">
+                        <div class="col-md-6 form-group mb-4 mobileno">
+                            <label class="font-15">Mobile</label>
+                            <span class="countrycode">+ 91</span>
+                            <input type="tel" class="form-control" placeholder="" maxlength="10" formControlName="mobile" required>
+                        </div>
+                        <div class="col-md-12 form-group mb-4">
                             <label class="font-15">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="" formControlName="email" required>
+                            <input type="email" class="form-control" placeholder="" formControlName="email" required>
                         </div>
-                        <div class="form-group mb-4 password">
+                        <div class="col-md-6 form-group mb-4 password pr-0">
                             <label class="font-15">Password</label>
                             <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" placeholder="" formControlName="password" required>
                             <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                            <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                         </div>
-                        <div class="form-group mb-4 password repassword">
+                        <div class="col-md-6 form-group mb-4 password repassword">
                             <label class="font-15">Confirm Password</label>
                             <input type="password" class="form-control" placeholder="" formControlName="confirmPassword" required>
                             <small class="text-danger" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                         </div>
-                        <div class="form-group mb-4">
-                            <label class="font-15">Mobile</label>
-                            <input type="tel" class="form-control" id="email" placeholder="" formControlName="mobile" required>
-                        </div>
+                       
                         <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!signUpForm.valid" (click)="onSignUp()">Sign Up</button>
                     </form>
                     <div class="row mt-2 text-muted"><div class="col-lg-12"><h4 [routerLink]="['/signin']">Already have account? <a><b> Log In</b></a></h4></div></div>
@@ -42,37 +46,47 @@
         <div class="row justify-content-center">
             <div class="col-lg-5">
                 <mat-card style="text-align: center;opacity: 90%;">
-                    <mat-card-title class="mat-card-title mat-card-image mb-0 py-3 bg-white"><img [src]="logoPath"alt=""></mat-card-title>
+                    <mat-card-title class="py-3 bg-white"><img style="width:40%" [src]="logoPath" alt="ITC logo"></mat-card-title>
                         <mat-divider></mat-divider>
                         <mat-card-content>
-                            <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-2">Sign Up</h4></div>
-                            <form class="example-form" [formGroup]="signUpForm">
-                                <mat-form-field appearance="outline" class="w-100 mb-3">
-                                    <mat-label>Full Name</mat-label>
-                                    <input matInput placeholder="Enter your name" formControlName="name">
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-3">
-                                    <mat-label>Email address</mat-label>
-                                    <input matInput placeholder="Enter your Email" formControlName="email">
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-3 password">
-                                    <mat-label>Password</mat-label>
-                                    <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
-                                    <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
-                                    <mat-label>Confirm Password</mat-label>
-                                    <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
-                                    <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" class="w-100 mb-3">
-                                    <mat-label>Mobile</mat-label>
-                                    <input matInput placeholder="Enter your mobile no." formControlName="mobile">
-                                </mat-form-field>
-                                <div class="row justify-content-center"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
+                            <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center mt-3">Sign Up</h4></div>
+                            <form class="row" [formGroup]="signUpForm">
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                                        <mat-label>Full Name</mat-label>
+                                        <input matInput placeholder="Enter your name" formControlName="name">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 mb-3 phoneno">
+                                        <mat-label>Mobile</mat-label>
+                                        <span class="countrycode">+ 91</span>
+                                        <input matInput maxlength="10" placeholder="Enter your mobile no." formControlName="mobile">
+                                    </mat-form-field> 
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                                        <mat-label>Email address</mat-label>
+                                        <input matInput placeholder="Enter your Email" formControlName="email">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 mb-3 password">
+                                        <mat-label>Password</mat-label>
+                                        <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
+                                        <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                            {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
+                                    </mat-form-field> 
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
+                                        <mat-label>Confirm Password</mat-label>
+                                        <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
+                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                    </mat-form-field>  
+                                </div>
+                                <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
                             </form>
                         </mat-card-content>
                 </mat-card>
@@ -90,38 +104,49 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5">
                     <mat-card style="text-align: center;opacity: 90%;">
-                        <mat-card-title class="py-3 bg-white"><img style="width: 60%;" [src]="logoPath" alt="ITC logo"></mat-card-title>                        <mat-divider></mat-divider>
+                        <mat-card-title class="py-3 bg-white"><img style="width:40%" [src]="logoPath" alt="ITC logo"></mat-card-title>
+                        <mat-divider></mat-divider>
                         <mat-card-content>
                             <div class="text-center w-75 m-auto"><h4 class="text-dark-50 text-center pt-2">Sign Up</h4></div>
-                            <form class="example-form" [formGroup]="signUpForm">
-                                <mat-form-field appearance="outline" class="w-100 mb-3">
-                                    <mat-label>Full Name</mat-label>
-                                    <input matInput placeholder="Enter your name" formControlName="name">
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-3">
-                                    <mat-label>Email address</mat-label>
-                                    <input matInput placeholder="Enter your Email" formControlName="email">
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-3 password">
-                                    <mat-label>Password</mat-label>
-                                    <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
-                                    <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
-                                    <mat-label>Confirm Password</mat-label>
-                                    <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
-                                    <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-100 mb-3">
-                                    <mat-label>Mobile</mat-label>
-                                    <input matInput placeholder="Enter your mobile no." formControlName="mobile">
-                                </mat-form-field>
-
-                                <div class="row justify-content-center"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
+                            <form class="row" [formGroup]="signUpForm">
+                                <div class="col-md-6"> 
+                                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                                        <mat-label>Full Name</mat-label>
+                                        <input matInput placeholder="Enter your name" formControlName="name">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 mb-3 phoneno">
+                                        <mat-label>Mobile</mat-label>
+                                        <span class="countrycode">+ 91</span>
+                                        <input matInput maxlength="10" placeholder="Enter your mobile no." formControlName="mobile">
+                                    </mat-form-field>
+                                </div>
+                                
+                                <div class="col-md-12"> 
+                                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                                        <mat-label>Email address</mat-label>
+                                        <input matInput placeholder="Enter your Email" formControlName="email">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 mb-3 password">
+                                        <mat-label>Password</mat-label>
+                                        <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
+                                        <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                            {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100 password repassword">
+                                        <mat-label>Confirm Password</mat-label>
+                                        <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
+                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                    </mat-form-field>
+                                </div>
+                                
+                                <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
                             </form>
                         </mat-card-content>
                     </mat-card>

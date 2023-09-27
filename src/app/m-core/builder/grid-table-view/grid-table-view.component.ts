@@ -585,6 +585,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getTabData(index,formName) {
     this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
+      this.itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
       if(this.tab.tab_name && this.tab.tab_name != null && this.tab.tab_name != undefined && this.tab.tab_name != ''){
         const menu = {"name":this.tab.tab_name};
         this.storageService.SetActiveMenu(menu);
@@ -1092,8 +1093,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
 
   }
-  
-  
+
+  pageSizes =[25, 50, 75, 100, 200];
+  PageSizeChange(event: any): void {
+    this.itemNumOfGrid = event.target.value;
+    this.applyFilter();
+  }
+
   getPage(page: number) {
     //this.apiService.resetGridData();
     this.pageNumber = page;
@@ -1131,7 +1137,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         crList.push(element);
       });
       pagePayload.data.crList = crList;
-    }    
+    }  
+    pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
   public downloadClick = '';
@@ -1262,9 +1269,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     this.pageNumber = 1;
-    const pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    let pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
-    // this.getDataForGrid();
   }
   
   
