@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators,FormBuilder, EmailValidator } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, DataShareService, EnvService, StorageService, CustomvalidationService, AuthDataShareService, NotificationService} from '@core/web-core';
-import { placements } from '@popperjs/core';
 import { Subscription } from 'rxjs';
 
 @Component({
