@@ -17,6 +17,7 @@ export class FilterComponent implements OnInit,OnDestroy {
   checkGetDashletData:boolean=true;
   staticData: any = {};
   typeAheadData:any=[];
+  term:any={};
 
   staticDataSubscription;
   typeaheadDataSubscription;
@@ -177,7 +178,7 @@ export class FilterComponent implements OnInit,OnDestroy {
   }
 
   setValue(parentfield,field, add,event?) {   
- 
+    this.term = {};
     if (field.type == 'typeahead') {
       this.clearTypeaheadData();
     }
