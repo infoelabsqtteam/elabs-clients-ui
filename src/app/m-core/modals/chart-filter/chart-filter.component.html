@@ -2,13 +2,20 @@
 aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header justify-content-center mb-0"
+      <div class="modal-header justify-content-between align-items-center pl-3 pr-5 mb-0"
         *ngIf="dashboardItem && dashboardItem.name">
-        <h4 class="modal-title m-0 active d-block" style="font-size:20px;">{{dashboardItem.name}}</h4>
-        <a class="h5 m-0 closebtb" (click)="close(dashboardItem)">×</a>
+        <h4 class="modal-title m-0 active d-block" style="font-size:20px;"><strong>{{dashboardItem.name}}</strong></h4>
+        <div>
+          <button mat-icon-button style="opacity:0.7;" class="mx-2" (click)="reset(dashboardItem)"><mat-icon>refresh</mat-icon></button>
+          <button mat-icon-button style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'google_chart'" (click)="exportexcel()"><mat-icon>download</mat-icon></button>
+          <button mat-icon-button style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'mongodb_chart'" (click)="download(dashboardItem)"><mat-icon>download</mat-icon></button>
+          <button mat-icon-button style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'chart_js'" (click)="canvasimg()" style="position:relative;top:8px;"><a href="{{ chartjsimg }}" download><mat-icon>download</mat-icon></a></button>
+          <button mat-icon-button style="opacity:0.7;" (click)="drawer.toggle()"><mat-icon>filter_alt</mat-icon></button>
+          <a class="h5 m-0 closebtb" (click)="close(dashboardItem)">×</a>
+        </div>
       </div>
-      <div class="modal-body p-0">
-        <div class="chartfilter px-3 pt-2 mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
+      <div class="modal-body p-0 m-0">
+        <!-- <div class="chartfilter px-3 pt-2 mb-3" *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [formGroup]="dashboardFilter" > 
           <div class="row align-items-center mx-0">
             <div class="col-sm-3 pl-0" *ngFor="let field of dashboardItem.fields; let i = index" [id]="field._id">
               <div *ngIf="field.type == 'date'">
@@ -91,37 +98,50 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
               </div>
             </div>
             <div class="col-sm-2 px-0">
-                <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" class="mx-2" (click)="reset(dashboardItem)"><mat-icon>refresh</mat-icon></button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'google_chart'" (click)="exportexcel()"><mat-icon>download</mat-icon></button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'mongodb_chart'" (click)="download(dashboardItem)"><mat-icon>download</mat-icon></button>
-                <button mat-icon-button color="primary" style="opacity:0.7;" *ngIf="dashboardItem.package_name == 'chart_js'" (click)="canvasimg()" style="position:relative;top:8px;"><a href="{{ chartjsimg }}" download><mat-icon>download</mat-icon></a></button>
+                <button mat-flat-button class="filterbtn" (click)="dashletFilter(dashboardItem)">Filter</button>                
             </div>
           </div>
-        </div> 
+        </div> -->
 
-        <div class="px-3">
-          <ng-container>
-            <canvas id="chartjs" class="canvaschart w-100" mdbChart *ngIf="dashboardItem.package_name == 'chart_js'"
-              [chartType]="chartType[dashboardItem.call_back_field]"
-              [datasets]="chartDatasets[dashboardItem.call_back_field]"
-              [labels]="chartLabels[dashboardItem.call_back_field]"
-              [colors]="chartColors[dashboardItem.call_back_field]"
-              [options]="chartOptions[dashboardItem.call_back_field]"
-              [legend]="chartLegend[dashboardItem.call_back_field]" (chartHover)="chartHover($event)"
-              (chartClick)="chartClicked($event)">
-            </canvas>
-            <google-chart id="excel-table" class="googlechart w-100" *ngIf="dashboardItem.package_name == 'google_chart' && chartTitle[dashboardItem.call_back_field]"
-              [title]="chartTitle[dashboardItem.call_back_field]" [type]="chartType[dashboardItem.call_back_field]"
-              [data]="chartDatasets[dashboardItem.call_back_field]"
-              [columns]="chartLabels[dashboardItem.call_back_field]"
-              [options]="chartOptions[dashboardItem.call_back_field]">
-            </google-chart>
-            <div *ngIf="dashboardItem.package_name == 'mongodb_chart'">
-              <div [id]="'filter_'+dashboardItem.chartId"></div>
-            </div>
-          </ng-container>
-        </div>
+
+
+<mat-drawer-container style="height:auto;">
+  <mat-drawer #drawer mode="side" opened position="end" class="sidechartfilter">
+    <app-filter *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [dashbord]="dashbord" (filterData)="filterData($event)"></app-filter> 
+  </mat-drawer>
+  <canvas id="chartjs" class="canvaschart w-100" mdbChart *ngIf="dashboardItem.package_name == 'chart_js'"
+          [chartType]="chartType[dashboardItem.call_back_field]"
+          [datasets]="chartDatasets[dashboardItem.call_back_field]"
+          [labels]="chartLabels[dashboardItem.call_back_field]"
+          [colors]="chartColors[dashboardItem.call_back_field]"
+          [options]="chartOptions[dashboardItem.call_back_field]"
+          [legend]="chartLegend[dashboardItem.call_back_field]" (chartHover)="chartHover($event)"
+          (chartClick)="chartClicked($event)">
+        </canvas>
+        <google-chart id="excel-table" class="googlechart w-100" *ngIf="dashboardItem.package_name == 'google_chart' && chartTitle[dashboardItem.call_back_field]"
+          [title]="chartTitle[dashboardItem.call_back_field]" [type]="chartType[dashboardItem.call_back_field]"
+          [data]="chartDatasets[dashboardItem.call_back_field]"
+          [columns]="chartLabels[dashboardItem.call_back_field]"
+          [options]="chartOptions[dashboardItem.call_back_field]">
+        </google-chart>
+        <div *ngIf="dashboardItem.package_name == 'mongodb_chart'"><div [id]="'filter_'+dashboardItem.chartId"></div></div>
+</mat-drawer-container>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 
       </div>
     </div>

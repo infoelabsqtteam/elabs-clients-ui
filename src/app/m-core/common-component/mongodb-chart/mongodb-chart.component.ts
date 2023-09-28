@@ -93,7 +93,8 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
             if(idRef){
               let cretedChart = sdk.createChart({
                 chartId: id, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-                height: height
+                height: height,
+                showAttribution:false
               });
               this.createdChartList[id] = cretedChart;
               cretedChart
