@@ -345,6 +345,7 @@ export class ChartFilterComponent implements OnInit {
     // if(this.dashboardFilter){
     //   this.dashboardFilter.reset();
     // }    
+    this.dashbord = {};
     if(this.showFilter){      
       if(this.dashboardItem.package_name == "mongodb_chart"){
         this.setFilterInMongodbChart(item,{});
