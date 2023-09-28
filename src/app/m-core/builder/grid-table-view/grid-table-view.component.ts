@@ -123,6 +123,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   filterdata = '';
   recordId:any="";
+  fixedcolwidth = 150;
   rowId:any="";
   updateNotification:boolean=true;
   currentBrowseUrl:string="";

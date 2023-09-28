@@ -63,7 +63,7 @@
                                 <thead >
                                     <tr>
                                         <th *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th *ngFor="let head of headElements; let i = index" (click)="onSort(headElements[i])" [ngClass]="{'d-none': !head.display}"><div class="heading" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
+                                        <th [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" (click)="onSort(headElements[i])" [ngClass]="{'d-none': !head.display}"><div class="heading" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
                                             <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
                                         </th>                                        
                                     </tr>
@@ -74,7 +74,7 @@
                                                 <button mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
                                             </div>
                                         </td>
-                                        <td *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                        <td [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div *ngIf="head.type == 'tree_view_selection'" class="position-relative">
                                                 <select class="form-control form-control-sm cursor-pointer" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
                                                     <option *ngFor="let data of treeViewData[head.field_name]" [value]="data">{{data && data.name ? data.name : data}}</option>
@@ -161,7 +161,7 @@
                                             </span>                                
 
                                         </td>
-                                        <td *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
+                                        <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
                                             <div *ngIf="editedRowIndex != i" class="grid-data" [style.width]="elId.width" [style.text-align]="elId.text_align">
                                                 <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                     </a>
