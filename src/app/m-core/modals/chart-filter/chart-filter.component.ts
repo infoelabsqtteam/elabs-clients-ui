@@ -338,14 +338,14 @@ export class ChartFilterComponent implements OnInit {
   close(item){
     this.checkGetDashletData = false;
     this.reset(item);
+    this.dashbord = {};
     this.chartFilterModal.hide();
   }
 
   reset(item){
     // if(this.dashboardFilter){
     //   this.dashboardFilter.reset();
-    // }    
-    this.dashbord = {};
+    // }
     if(this.showFilter){      
       if(this.dashboardItem.package_name == "mongodb_chart"){
         this.setFilterInMongodbChart(item,{});
