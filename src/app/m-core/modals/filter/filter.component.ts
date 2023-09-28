@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { ApiService, CommonFunctionService, DataShareService } from '@core/web-core';
+import { ApiService, ChartService, CommonFunctionService, DataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-filter',
@@ -20,6 +20,7 @@ export class FilterComponent implements OnInit,OnDestroy {
 
   staticDataSubscription;
   typeaheadDataSubscription;
+  resetFilterSubscription;
   
 
   minDate: Date;
@@ -30,13 +31,19 @@ export class FilterComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private chartService:ChartService
   ) { 
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
       this.setTypeaheadData(data);
+    })
+    this.resetFilterSubscription = this.chartService.filterRest.subscribe(val =>{
+      if(val){
+        this.filterGroup.reset();
+      }
     })
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);

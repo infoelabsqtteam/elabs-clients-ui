@@ -338,7 +338,6 @@ export class ChartFilterComponent implements OnInit {
   close(item){
     this.checkGetDashletData = false;
     this.reset(item);
-    this.dashbord = {};
     this.chartFilterModal.hide();
   }
 
@@ -346,6 +345,7 @@ export class ChartFilterComponent implements OnInit {
     // if(this.dashboardFilter){
     //   this.dashboardFilter.reset();
     // }
+    this.chartService.resetChartFilter();
     if(this.showFilter){      
       if(this.dashboardItem.package_name == "mongodb_chart"){
         this.setFilterInMongodbChart(item,{});
