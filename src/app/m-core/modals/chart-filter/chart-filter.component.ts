@@ -321,7 +321,8 @@ export class ChartFilterComponent implements OnInit {
         if(idRef){
           let cretedChart = sdk.createChart({
             chartId: chart.chartId, // Optional: ~REPLACE~ with the Chart ID from your Embed Chart dialog
-            height: height
+            height: height,
+            showAttribution:false
           });
           this.createdChartList[id] = cretedChart;
           cretedChart
