@@ -122,7 +122,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   typeaheadDataSubscription;
 
   filterdata = '';
-  fixedcolwidth = 150;
   recordId:any="";
   rowId:any="";
   updateNotification:boolean=true;

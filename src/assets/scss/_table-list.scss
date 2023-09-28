@@ -37,7 +37,7 @@
             &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
+        .grid-coloumn-nowrap {color:#555;}
     }
 
     .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:#555 !important;
