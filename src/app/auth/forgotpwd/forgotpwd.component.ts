@@ -19,6 +19,7 @@ export class ForgotPwdComponent implements OnInit {
   title = "";
   template:string = "temp1";
   logoPath = '';
+  adminEmail='';
   forGotSubscription:Subscription;
   resetPassSubscription:Subscription;
 
@@ -64,13 +65,16 @@ export class ForgotPwdComponent implements OnInit {
 
   onResetPwd() {
     this.username = this.fForm.value.userId;
-    this.authService.TryForgotPassword(this.username);
+    let admin = this.fForm.value.admin;
+    let payload = {userId:this.username,admin:admin};
+    this.authService.TryForgotPassword(payload);
   }
 
   initForm() {
     this.username = "";
     this.fForm = new FormGroup({
       'userId': new FormControl('', [Validators.required]),
+      "admin":new FormControl(false)
     });
     this.vForm = new FormGroup({
       'verifyCode': new FormControl('', [Validators.required]),
@@ -92,5 +96,6 @@ export class ForgotPwdComponent implements OnInit {
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
     this.title = this.storageService.getPageTitle();
+    this.adminEmail = this.storageService.getAdminEmail();
   }
 }
