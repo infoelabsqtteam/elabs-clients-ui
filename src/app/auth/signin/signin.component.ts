@@ -38,12 +38,8 @@ export class SigninComponent implements OnInit {
       })
       this.loginInfoSubscribe = this.authDataShareService.signinResponse.subscribe(res =>{
         if(res && res.message && res.message == 'reset'){
-          // this.notificationService.notify('bg-info', 'Password expired !!!');
-          // this.router.navigate(['createpwd']);
-          if(res.msg != '') {
-            this.notificationService.notify(res.class, res.msg);
-          }
-          this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
+          this.notificationService.notify('bg-info', 'Password expired !!!');
+          this.router.navigate(['createpwd']);
         }else if(res && res.message && res.message == 'notify'){
 
         }else{        
