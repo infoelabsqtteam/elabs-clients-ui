@@ -176,8 +176,8 @@
                                                 <button mat-button color="primary" [matMenuTriggerFor]="beforeMenu">{{data[fieldName.field_name].length}} Items <mat-icon class="fileuploadicon">arrow_drop_down</mat-icon></button>
                                                 <mat-menu #beforeMenu="matMenu" xPosition="before">
                                                     <button mat-menu-item *ngFor="let file of data[fieldName.field_name]; let i = index" class="d-flex justify-content-between">
-                                                        <small>{{file.fileName}}</small>
-                                                        <span *ngIf="file.fileName" (click)="downloadFile(file)"><mat-icon class="m-0">download</mat-icon></span>
+                                                        <small>{{file.rollName ? file.rollName: file.fileName }}</small>
+                                                        <span *ngIf="file._id" (click)="downloadFile(file)"><mat-icon class="m-0">download</mat-icon></span>
                                                     </button>
                                                 </mat-menu>
                                             </ng-container> 
