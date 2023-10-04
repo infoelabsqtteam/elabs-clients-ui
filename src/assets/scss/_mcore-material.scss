@@ -124,11 +124,6 @@ body {font-family:$roboto;font-size:13px;}
     .corner-handle img {width:18px;}
 }
 
-#chart_resize.monogdbChartResize{
-    min-width:31%;
-    min-height: 20rem;
-    resize: both;
-    overflow: auto;
-}
-  
+#chart_resize.monogdbChartResize{min-width:31%;min-height:20rem;resize:both;overflow:auto;}
+.sidechartfilter {width:400px;background:#fbfbfb;} 
 

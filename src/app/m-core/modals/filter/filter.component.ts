@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { ApiService, CommonFunctionService, DataShareService } from '@core/web-core';
+import { ApiService, ChartService, CommonFunctionService, DataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-filter',
@@ -17,9 +16,11 @@ export class FilterComponent implements OnInit,OnDestroy {
   checkGetDashletData:boolean=true;
   staticData: any = {};
   typeAheadData:any=[];
+  term:any={};
 
   staticDataSubscription;
   typeaheadDataSubscription;
+  resetFilterSubscription;
   
 
   minDate: Date;
@@ -30,13 +31,18 @@ export class FilterComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private datePipe: DatePipe
+    private chartService:ChartService
   ) { 
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
     })
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
       this.setTypeaheadData(data);
+    })
+    this.resetFilterSubscription = this.chartService.filterRest.subscribe(val =>{
+      if(val){
+        this.filterGroup.reset();
+      }
     })
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 100, 0, 1);
@@ -102,10 +108,6 @@ export class FilterComponent implements OnInit,OnDestroy {
       let forControl = {};
       let formField = [];      
       if(dashlet.fields && dashlet.fields.length > 0){
-        // const groupField = {
-        //   "field_name":dashlet.name
-        // }
-        //const list_of_fields = {};
         dashlet.fields.forEach(field => {                    
           formField.push(field);
           switch(field.type){ 
@@ -133,7 +135,6 @@ export class FilterComponent implements OnInit,OnDestroy {
               break;
           }   
         });
-        //this.commonFunctionService.createFormControl(forControl, groupField, list_of_fields, "group")
       } 
       if(formField.length > 0){
         let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
@@ -169,89 +170,36 @@ export class FilterComponent implements OnInit,OnDestroy {
     }
   }
 
-  setValue(parentfield,field, add,event?) {    
- 
+  setValue(parentfield,field, add,event?) {   
+    this.term = {};
     if (field.type == 'typeahead') {
       this.clearTypeaheadData();
     }
-
-  }
-
-  getFilterData(){
-    let fields = this.dashbord.fields && this.dashbord.fields.length > 0 ? this.dashbord.fields : [];
-    let formValue = this.filterGroup.getRawValue();
-    let filterValue = this.getMongochartFilterValue(fields,formValue);
-    let filterData = this.getMongodbFilterObject(filterValue);
-    return filterData;
-  }
+    if (field.onchange_api_params && field.onchange_call_back_field) {
+      let formValue = this.filterGroup.getRawValue();
+      this.onChange(field, formValue,field.onchange_data_template);
+    }
+  }  
   filter(){
-    let filterData = this.getFilterData();
-    this.filterData.emit(filterData);
+    let filterData = this.chartService.getFilterData(this.dashbord,this.filterGroup.getRawValue());
+    let object={};
+    object['item'] = this.dashbord;
+    object['data'] = filterData;
+    this.filterData.emit(object);
     //this.filterGroup.reset();
   }
-  getMongochartFilterValue(fields,object){
-    let modifyObject = {};
-    let objectCopy = JSON.parse(JSON.stringify(object));
-    if(fields && fields.length > 0 && Object.keys(objectCopy).length > 0){
-      fields.forEach(field => {
-        let key = field.field_name;
-        if(object && object[key] && object[key] != ''){
-          let newDateObjec = {};
-          let date = new Date();
-          switch (field.type) {
-            case 'typeahead':            
-              if(objectCopy[key] && typeof objectCopy[key] == 'object'){
-                modifyObject[key+'._id'] = objectCopy[key]._id;
-              }            
-              break;
-            case 'date':
-              let formateDate = this.datePipe.transform(objectCopy[key], 'yyyy-MM-dd');
-              let selectedDate = new Date(formateDate);
-              selectedDate.setTime(selectedDate.getTime()+(24*3600000));
-              newDateObjec = {};
-              date = new Date(formateDate);
-              newDateObjec['$gt'] = date;
-              newDateObjec['$lte'] = selectedDate;
-              modifyObject[key] =  newDateObjec;
-              break;
-            case 'daterange':
-              if(object[key].start && object[key].end && object[key].start != '' && object[key].end != ''){
-                let startDate = this.datePipe.transform(object[key].start,'yyyy-MM-dd');
-                let endDate = this.datePipe.transform(object[key].end,'yyyy-MM-dd');
-                let modifyEndDate = new Date(endDate);
-                modifyEndDate.setTime(modifyEndDate.getTime()+(24*3600000));
-                newDateObjec = {};
-                newDateObjec['$gt'] = new Date(startDate);
-                newDateObjec['$lte'] = new Date(modifyEndDate);
-                modifyObject[key] =  newDateObjec;
-              }
-              break;
-            default:
-              modifyObject[key] = objectCopy[key];
-              break;
-          }
-        }
-      });
-    }
-    return modifyObject;
-  }
-  getMongodbFilterObject(data){
-    let object = {};
-    if(Object.keys(data).length > 0){
-      Object.keys(data).forEach(key => {
-        if(data[key] && data[key] != ''){
-          object[key] = data[key];
-        }
-      });
-    }
-    return object;
-  }
-
-
+  
   clearFilter() {
     this.filterGroup.reset();
-    let filterData = this.getFilterData();
-    this.filterData.emit(filterData);
+    let object={};
+    object['item'] = this.dashbord;
+    object['data'] = {};
+    this.filterData.emit(object);
+  }
+  onChange(field, object,data_template) {    
+    const payloads = []      
+    payloads.push(this.commonFunctionService.getPaylodWithCriteria(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, object,data_template));
+    this.apiService.getStatiData(payloads);   
   }
 
 }
