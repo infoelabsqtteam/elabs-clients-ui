@@ -202,8 +202,8 @@ export class PermissionComponent implements OnInit {
       let primary_key_field_name = 'user._id';
       let primary_key_field_value = value['user']['_id'];
       let list = this.listOfPermission;
-      let alreadyAdded = this.checkDataAlreadyAddedInListOrNot(primary_key_field_name, primary_key_field_value, list);
-      if (alreadyAdded) {
+      let alreadyAdded = this.commonFunctionService.checkDataAlreadyAddedInListOrNot({"field_name":primary_key_field_name}, primary_key_field_value, list);
+      if (alreadyAdded.status) {
         this.notificationService.notify('bg-danger', 'Entered value for user is already added. !!!');
         return;
       }
@@ -226,40 +226,6 @@ export class PermissionComponent implements OnInit {
       data: this.selectedRow
     }
     this.apiService.SaveFormData(saveFromData);
-  }
-  checkDataAlreadyAddedInListOrNot(primary_key, incomingData, alreadyDataAddedlist) {
-    if (alreadyDataAddedlist == undefined) {
-      alreadyDataAddedlist = [];
-    }
-    let alreadyExist = "false";
-    if (typeof incomingData == 'object') {
-      alreadyDataAddedlist.forEach(element => {
-        if (element._id == incomingData._id) {
-          alreadyExist = "true";
-        }
-      });
-    }
-    else if (typeof incomingData == 'string') {
-      alreadyDataAddedlist.forEach(element => {
-        if (typeof element == 'string') {
-          if (element == incomingData) {
-            alreadyExist = "true";
-          }
-        } else {
-          if (this.commonFunctionService.getObjectValue(primary_key, element) == incomingData) {
-            alreadyExist = "true";
-          }
-        }
-
-      });
-    } else {
-      alreadyExist = "false";
-    }
-    if (alreadyExist == "true") {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   getValueForGrid(field, object) {

@@ -271,7 +271,8 @@ export class BulkUpdateComponent implements OnInit {
   setData(selectedData, field, chipsInput){
     if(field.type != "typeahead"){
       if (this.data[field.field_name] == null) this.data[field.field_name] = [];
-      if(this.gridCommonFunctionService.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.data[field.field_name])){
+      let duplicacy = this.CommonFunctionService.checkDataAlreadyAddedInListOrNot(field,selectedData,this.data[field.field_name]);
+      if(duplicacy && duplicacy.status){
         this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
       }else{
         this.data[field.field_name].push(selectedData);

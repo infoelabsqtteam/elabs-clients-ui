@@ -315,7 +315,8 @@ export class GridSelectionModalComponent implements OnInit {
   }
   checkDataInListOrAdd(field,index,selectedData,chipsInput){
     if (this.modifiedGridData[index][field.field_name] == null) this.modifiedGridData[index][field.field_name] = [];
-    if(this.gridCommonFunctionService.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.modifiedGridData[index][field.field_name])){
+    let duplicacy = this.CommonFunctionService.checkDataAlreadyAddedInListOrNot(field,selectedData,this.modifiedGridData[index][field.field_name]);
+    if(duplicacy && duplicacy.status){
       this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
     }else{
       this.modifiedGridData[index][field.field_name].push(selectedData);

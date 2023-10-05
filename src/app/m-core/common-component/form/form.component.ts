@@ -87,6 +87,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   mendetoryIfFieldList:any=[];
   editorTypeFieldList:any=[];
   calculationFieldList:any=[];
+  customValidationFiels:any=[];
   gridSelectionMendetoryList:any=[];
   canUpdateIfFieldList:any=[];
   buttonIfList:any = [];
@@ -719,45 +720,18 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0 && this.getTableField) {
-      if(tempData[0].templateTabs){
-        this.tab = tempData[0].templateTabs[this.tabIndex];
-      }      
-      if (this.tab && this.tab.tab_name != "" && this.tab.tab_name != null && this.tab.tab_name != undefined) {
-        if(this.currentMenu && this.currentMenu.name && this.currentMenu.name != undefined && this.currentMenu.name != null){
-          const menu = {"name":this.tab.tab_name};
-          this.storageService.SetActiveMenu(menu);
-          this.currentMenu.name = this.tab.tab_name;
-        }          
-      }
-      if(this.tab  && this.tab.grid != null && this.tab.grid != undefined ){
-        if(this.tab.grid.grid_view != null && this.tab.grid.grid_view != undefined && this.tab.grid.grid_view != ''){
-          this.grid_view_mode=this.tab.grid.grid_view; 
-        }else{
-          this.grid_view_mode='tableView';
-        }
-      }
-      
-      if(this.tab && this.formName != ''){
-        if(this.formName == 'DINAMIC_FORM'){
-          this.form = this.dinamic_form
-        }else if(this.tab.forms != null && this.tab.forms != undefined ){            
-          this.forms = this.tab.forms;
-          let gridActionButtons = [];
-          if(this.tab.grid && this.tab.grid.action_buttons){
-            gridActionButtons = this.tab.grid.action_buttons;
-          }
-          this.form = this.commonFunctionService.getForm(this.forms,this.formName,gridActionButtons)
-          if(this.formName == 'clone_object'){
-            this.form['api_params'] = "QTMP:CLONE_OBJECT";
-          }
-          this.setForm();         
-        }else{
-          this.form = {};
-        }    
+      let templateData = this.formCreation.getTempData(tempData,this.tabIndex,this.currentMenu,this.formName,this.dinamic_form);
+      this.tab = templateData['tab'];
+      this.currentMenu = templateData['currentMenu'];
+      this.grid_view_mode = templateData['grid_view_mode'];
+      this.form = templateData['form'];
+      this.forms = templateData['forms'];
+      if(this.form && Object.keys(this.forms).length > 0 && this.formName != ''){
+        this.setForm();
       }else{
         this.tableFields = [];
         this.formFieldButtons = [];
-      }    
+      }  
     }
   }
   setForm(){
@@ -833,7 +807,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.tableFields = [];
     this.closeModal();
   }
-  customValidationFiels=[];
+  
   setStaticData(staticDatas){   
     if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
@@ -1130,71 +1104,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }    
   }
-  focusField(parent,key){
-    const  id = key._id + "_" + key.field_name;
-    let field:any = {};
-    if(parent == ''){
-      if(this.focusFieldParent && this.focusFieldParent.field_name && this.focusFieldParent.field_name != ''){
-        parent = this.focusFieldParent;
-      }
-    }
-    if(parent != ""){
-      field = this.templateForm.get(parent.field_name).get(key.field_name);
-    }else{
-      field = this.templateForm.get(key.field_name);
-    }
-    if(field && field.touched){
-      this.checkFormFieldAutfocus = false;
-      if(this.previousFormFocusField && this.previousFormFocusField._id){
-        this.previousFormFocusField = {};
-        this.focusFieldParent={};
-      }
-    }else if(field == undefined){
-      this.previousFormFocusField = {};
-      this.focusFieldParent={};
-    }
-    const invalidControl = document.getElementById(id);
-    if(invalidControl != null){
-      invalidControl.focus();
-      this.checkFormFieldAutfocus = false;
-      if(this.previousFormFocusField && this.previousFormFocusField.type == 'list_of_fields' && this.previousFormFocusField.datatype == 'list_of_object_with_popup'){
-        this.previousFormFocusField = {};
-      }
-    }
-  }
   handleDisabeIf(){
     this.getFocusFieldAndFocus();
     this.checkFormFieldIfCondition(); 
   }
   getFocusFieldAndFocus(){
     if(this.checkFormFieldAutfocus && this.tableFields.length > 0){
-      if(this.previousFormFocusField && this.previousFormFocusField._id){
-        this.focusField("",this.previousFormFocusField)        
-      }else{
-        if(this.previousFormFocusField == undefined || this.previousFormFocusField._id == undefined){
-          for (const key of this.tableFields) {
-            if(key.type == "stepper"){
-              if(key.list_of_fields && key.list_of_fields != null && key.list_of_fields.length > 0){
-                for (const step of key.list_of_fields) {
-                  if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
-                    for (const field of step.list_of_fields) {
-                      if (field.field_name) {
-                        this.focusField(step,field);  
-                        break;
-                      }
-                    }
-                  }                
-                }
-              }
-            }else if (key.field_name) {
-              if(key.type == 'text'){
-                this.focusField("",key);                                
-                break;
-              }else{
-                this.checkFormFieldAutfocus = false;
-                break;
-              }
-            }            
+      let focusRelatedFields = this.formCreation.getFocusField(this.previousFormFocusField,this.tableFields,this.templateForm,this.focusFieldParent,this.checkFormFieldAutfocus);
+      this.checkFormFieldAutfocus = focusRelatedFields['checkFormFieldAutfocus'];
+      this.previousFormFocusField = focusRelatedFields['previousFormFocusField'];
+      this.focusFieldParent = focusRelatedFields['focusFieldParent'];
+      let id = focusRelatedFields['id'];
+      if(id != ''){
+        const invalidControl = document.getElementById(id);
+        if(invalidControl != null){
+          invalidControl.focus();
+          this.checkFormFieldAutfocus = false;
+          if(this.previousFormFocusField && this.previousFormFocusField.type == 'list_of_fields' && this.previousFormFocusField.datatype == 'list_of_object_with_popup'){
+            this.previousFormFocusField = {};
           }
         }
       }
@@ -1241,7 +1168,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           id = element._id;
         }
         let elementDetails = document.getElementById(id);
-        if(!this.formCreation.showIf(element,this.selectedRow,this.templateForm.getRawValue())){          
+        if(!this.commonFunctionService.checkShowIf(element,this.selectedRow,this.templateForm.getRawValue())){          
           if(elementDetails && elementDetails != null){
             const classes = Array.from(elementDetails.classList)
             if(!classes.includes('d-none')){
@@ -1300,109 +1227,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   removeClass = (element, name) => {    
     element.className = element.className.replace(name, "");
   }
-  modifiedGridColumns(gridColumns){
-    if(gridColumns.length > 0){     
-      gridColumns.forEach(field => {
-        if(this.coreFunctionService.isNotBlank(field.show_if)){
-          if(!this.formCreation.showIf(field,this.selectedRow,this.templateForm.getRawValue())){
-            field['display'] = false;
-          }else{
-            field['display'] = true;
-          }                
-        }else{
-          field['display'] = true;
-        }
-      });
-    }
-    return gridColumns;
-  }
-
-  checkDataAlreadyAddedInListOrNot(field,incomingData,alreadyDataAddedlist,i?){
-    if(field && field.type == "date"){
-      incomingData = ""+incomingData;
-    }
-    let checkStatus = {
-      status : false,
-      msg : ""
-    };
-    if(field && field.allowDuplicacy){
-      checkStatus.status = false;
-      return checkStatus;
-    }else{
-      let primary_key = field.field_name
-      let criteria = primary_key+"#eq#"+incomingData;
-      let primaryCriteriaList=[];
-      primaryCriteriaList.push(criteria);
-      if(field && field.primaryKeyCriteria && Array.isArray(field.primaryKeyCriteria) && field.primaryKeyCriteria.length > 0){
-        field.primaryKeyCriteria.forEach(criteria => {          
-          const crList = criteria.split("#");
-          const cr = crList[0]+"#"+crList[1]+"#"+incomingData;
-          primaryCriteriaList.push(cr);
-        });
-      }
-      if(alreadyDataAddedlist == undefined){
-        alreadyDataAddedlist = [];
-      }
-      let alreadyExist = false;
-      if(typeof incomingData == 'object'){
-        alreadyDataAddedlist.forEach(element => {
-          if(element._id == incomingData._id){
-            alreadyExist =  true;
-          }
-        });
-      }
-      else if(typeof incomingData == 'string'){
-        for (let index = 0; index < alreadyDataAddedlist.length; index++) {
-          const element = alreadyDataAddedlist[index];
-          if(i == undefined || i == -1){
-            if(typeof element == 'string'){
-              if(element == incomingData){
-                alreadyExist =  true;
-              }
-            }else{
-              if(primaryCriteriaList && primaryCriteriaList.length > 0){
-                for (let index = 0; index < primaryCriteriaList.length; index++) {
-                  const cri = primaryCriteriaList[index];
-                  alreadyExist = this.commonFunctionService.checkIfCondition(cri,element,field.type);
-                  if(alreadyExist){
-                    const crList = cri.split("#");
-                    switch (crList[1]) {
-                      case "lte":
-                        checkStatus.msg = "Entered value for "+field.label+" is gretter then to "+crList[0]+". !!!";
-                        break;
-                      case "gte":
-                        checkStatus.msg = "Entered value for "+field.label+" is less then to "+crList[0]+". !!!";
-                        break;                  
-                      default:
-                        checkStatus.msg = "Entered value for "+field.label+" is already added. !!!";
-                        break;
-                    }
-                    break;
-                  }                
-                }
-              }
-            }
-            if(alreadyExist){
-              break;
-            } 
-          }else{
-            break;
-          }       
-        };
-      }else{
-        alreadyExist =  false;
-      }
-      if(alreadyExist){
-        checkStatus.status = true;
-        return checkStatus;
-      }else{
-        checkStatus.status = false;
-        return checkStatus;
-      }
-    }
-    
-  }
-  
   setValue(parentfield,field, add,event?) {
 
     let formValue = this.templateForm.getRawValue();
@@ -1416,7 +1240,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(parentfield != ''){
             const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
             const value = formValue[parentfield.field_name][field.field_name]
-            const checkDublic = this.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
+            const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
             if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
@@ -1437,7 +1261,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             
           }else{
             const value = formValue[field.field_name];
-            const checkDublic = this.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
+            const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
             if(this.custmizedFormValue[field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
@@ -1476,7 +1300,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             if(parentfield != ''){
               const value = formValue[parentfield.field_name][field.field_name]
               const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);
-              const checkDublic = this.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
+              const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
               if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && checkDublic.status){
                 this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
               }else{
@@ -1495,7 +1319,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               
             }else{
               const value = formValue[field.field_name];
-              const checkDublic = this.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
+              const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
                 if(this.custmizedFormValue[field.field_name] && checkDublic.status){
                   this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
                 }else{
@@ -1733,7 +1557,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.curTreeViewField = JSON.parse(JSON.stringify(field));
         this.currentTreeViewFieldParent = JSON.parse(JSON.stringify(parentfield));
         if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
-        let selectedData = this.getGridSelectedData(this.custmizedFormValue[field.field_name],field);
+        let gridSelectedData = this.gridCommonFunctionService.getGridSelectedData(this.custmizedFormValue[field.field_name],field);
+        let selectedData = gridSelectedData.gridSelectedData;
+        this.customEntryData = gridSelectedData.customEntryData;
         const gridModalData = {
           "field": this.curTreeViewField,
           "selectedData":selectedData,
@@ -1819,36 +1645,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.term = {};
     this.checkFormFieldIfCondition();
   } 
-  getGridSelectedData(data,field){
-    let gridSelectedData = [];
-    if (!this.customEntryData[field.field_name]) this.customEntryData[field.field_name] = [];
-    this.customEntryData[field.field_name] = []
-    if(data && data.length > 0 && field.add_new_enabled){
-      data.forEach(grid => {
-        if(grid && grid.customEntry){
-          this.customEntryData[field.field_name].push(grid);
-        }else{
-          gridSelectedData.push(grid);
-        }
-      });
-    }else {
-      gridSelectedData = data;
-    }
-    return gridSelectedData;
-  }
-  checkFieldShowOrHide(field){    
-    for (let index = 0; index < this.showIfFieldList.length; index++) {
-      const element = this.showIfFieldList[index];
-      if(element.field_name == field.field_name){
-        if(element.show){
-          return true;
-        }else{
-          return false;
-        }
-      }
-      
-    }
-  } 
+   
   refreshListofField(field,updatemode){    
     if(field.do_not_refresh_on_add && updatemode){
       this.tableFields.forEach(tablefield => {
@@ -2213,24 +2010,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        payloads.push(this.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template))); 
+        payloads.push(this.commonFunctionService.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template),this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true))); 
         this.callStaticData(payloads);
       }
    }
   }
-  checkQtmpApi(params,field,payload){
-    if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
-      let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-      if(field && field.formValueAsObjectForQtmp){            
-        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(false));
-        payload["data"]=formValue;
-      }else{
-        let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,this.getFormValue(true));
-        payload["data"]=formValue;
-      }
-    }
-    return payload;
-  }
+  
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
@@ -2676,7 +2461,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deleteGridRowData = false;
        
     if(hasPermission){ 
-      let gridSelectionValidation:any = this.checkGridSelectionMendetory();     
+      let gridSelectionValidation:any = this.gridCommonFunctionService.checkGridSelectionMendetory(this.gridSelectionMendetoryList,this.selectedRow,this.templateForm.getRawValue(),this.custmizedFormValue);     
       if(this.templateForm.valid && gridSelectionValidation.status){
         let validationsresponse = this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue);
         if(validationsresponse && validationsresponse.status){
@@ -2741,47 +2526,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.notificationService.notify('bg-danger',checkValidatiaon.msg);
     }     
-  }  
-  checkGridSelectionMendetory(){
-    let validation = {
-      'status' : true,
-      'msg' : ''
-    }
-    if(this.gridSelectionMendetoryList && this.gridSelectionMendetoryList.length > 0){
-      let check = 0;
-      this.gridSelectionMendetoryList.forEach(field => {        
-        let data:any = [];
-        if(this.custmizedFormValue[field.field_name]){
-          data = this.custmizedFormValue[field.field_name];
-        }
-        if(field.mendetory_fields && field.mendetory_fields.length > 0){
-          field.mendetory_fields = this.modifiedGridColumns(field.mendetory_fields)
-          if(data && data.length > 0){
-            field.mendetory_fields.forEach(mField => {
-              const fieldName = mField.field_name;
-              if(mField.display){
-                data.forEach(row => {
-                  if(row && row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null){
-                    if(validation.msg == ''){
-                      validation.msg = mField.label + ' of ' + field.label+' is required.';
-                    }
-                    check = 1;
-                  }
-                });
-              }
-            });
-          }
-        }     
-      });
-      if(check != 0){
-        validation.status = false;
-        return validation;
-      }else{
-        return validation
-      }
-    }else{
-      return validation;
-    }
   }
   deleteGridData(){
     let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,this.getFormValue(true));
@@ -3940,7 +3684,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let criteria = field.onClickApiParamsCriteria
       const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
       let payloads = [];
-      payloads.push(this.checkQtmpApi(api_params,field,payload));
+      payloads.push(this.commonFunctionService.checkQtmpApi(api_params,field,payload,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true)));
       this.callStaticData(payloads);
     }
   }  
@@ -4849,7 +4593,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         let mendatory = false;
         if(element.is_mandatory){
           if(element && element.show_if && element.show_if != ''){
-            if(this.checkFieldShowOrHide(element)){
+            if(this.formCreation.checkFieldShowOrHide(element,this.showIfFieldList)){
               mendatory = true;
             }else{
               mendatory = false;
@@ -4955,7 +4699,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             msg : ""
           };
           if(list && list.length > 0){
-            alreadyAdded = this.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list,i);
+            alreadyAdded = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list,i);
           }
           if(alreadyAdded && alreadyAdded.status){
             checkDublic.status = true;
