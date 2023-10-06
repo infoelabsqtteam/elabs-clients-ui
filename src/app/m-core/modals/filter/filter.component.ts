@@ -181,7 +181,12 @@ export class FilterComponent implements OnInit,OnDestroy {
     }
   }  
   filter(){
-    let filterData = this.chartService.getFilterData(this.dashbord,this.filterGroup.getRawValue());
+    let filterData = {};
+    if(this.dashbord && this.dashbord.package_name && (this.dashbord.package_name == "mongodb_chart" || this.dashbord.package_name == "mongodb_dashboard")){
+      filterData = this.chartService.getFilterData(this.dashbord,this.filterGroup.getRawValue());
+    }else{
+      filterData = this.filterGroup.getRawValue();
+    }    
     let object={};
     object['item'] = this.dashbord;
     object['data'] = filterData;
