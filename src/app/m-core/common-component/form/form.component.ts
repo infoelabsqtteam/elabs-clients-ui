@@ -2459,6 +2459,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
           break;
+         case 'calculate_quote_amount_for_lims':          
+          calFormValue = this.limsCalculationsService.calculate_quotation_for_lims(tamplateFormValue,"standard", field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         case 'calculate_quotation_with_subsequent':          
           calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
