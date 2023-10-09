@@ -1,4 +1,12 @@
-.chartbody {max-height:200px;min-height:200px !important;overflow:hidden;
+.popupchartfilter {overflow-y:scroll;height:100%;padding-bottom:30px;
+
+}
+
+.google-visualization-table > div:first-child {height:500px !important;}
+.chartbody {max-height:350px;min-height:350px !important;overflow:hidden;
+  // .google-chart {height: 310px !important}
+  .google-visualization-table > div:first-child {height: 315px !important;}
+  // .google-visualization-table-table {height:300px !important;}
   .google-visualization-table-table td {font-size:10px;white-space:nowrap;}
 }
 .monogdbChart .chartbody{max-height:inherit;}
@@ -14,6 +22,7 @@ a.google-visualization-table-page-number.gradient {padding:0 3px;border-radius:1
     h3 {font-size:$size20;color:#242424;font-family:$roboto;}
     .closebtb {top:$size5;}
   }
+  .modal-body {overflow:hidden;}
   .mat-icon-button {
     a {color:inherit;}
   }
