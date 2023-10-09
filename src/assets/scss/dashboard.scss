@@ -1,3 +1,7 @@
+.popupchartfilter {overflow-y:scroll;height:100%;padding-bottom:30px;
+
+}
+
 .google-visualization-table > div:first-child {height:500px !important;}
 .chartbody {max-height:350px;min-height:350px !important;overflow:hidden;
   // .google-chart {height: 310px !important}
@@ -18,6 +22,7 @@ a.google-visualization-table-page-number.gradient {padding:0 3px;border-radius:1
     h3 {font-size:$size20;color:#242424;font-family:$roboto;}
     .closebtb {top:$size5;}
   }
+  .modal-body {overflow:hidden;}
   .mat-icon-button {
     a {color:inherit;}
   }
