@@ -1,4 +1,8 @@
-.chartbody {max-height:200px;min-height:200px !important;overflow:hidden;
+.google-visualization-table > div:first-child {height:500px !important;}
+.chartbody {max-height:350px;min-height:350px !important;overflow:hidden;
+  // .google-chart {height: 310px !important}
+  .google-visualization-table > div:first-child {height: 315px !important;}
+  // .google-visualization-table-table {height:300px !important;}
   .google-visualization-table-table td {font-size:10px;white-space:nowrap;}
 }
 .monogdbChart .chartbody{max-height:inherit;}
