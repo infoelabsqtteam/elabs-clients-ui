@@ -595,6 +595,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div *ngIf="fields.type == 'mini-html'">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="grid-selection-title">{{ fields.label | titlecase}}</div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <angular-editor [formControlName]="fields.field_name" [config]="minieditorConfig"></angular-editor>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div *ngIf="fields.type == 'html_editor'">
                                         <div class="row">
                                             <div class="col-lg-12">
