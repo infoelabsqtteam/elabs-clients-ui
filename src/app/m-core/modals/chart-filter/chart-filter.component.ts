@@ -203,7 +203,7 @@ export class ChartFilterComponent implements OnInit {
       if(object.filter){
         this.showFilter = true;
         this.dashbord = this.dashboardItem;
-        this.dashbord['classes'] = 'chartfilter px-3 pt-2 mb-3';
+        this.dashbord['classes'] = 'chartfilter popupchartfilter px-3 pt-2 mb-3';
        // this.setFilterForm(this.dashboardItem);
       }else{
         this.showFilter = false;
