@@ -2490,6 +2490,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'calculate_lims_invoice':          
           calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
+          break; 
+        case 'calculate_lims_invoice_extra_amount':          
+          calFormValue = this.limsCalculationsService.calculate_lims_invoice_extra_amount(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
           break;      
         case 'calculate_lims_invoice_with_po_items':
           let val = this.limsCalculationsService.calculate_lims_invoice_with_po_items(tamplateFormValue,"","");
@@ -3847,6 +3851,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
           let val1 = this.limsCalculationsService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
           this.updateDataOnFormField(val1);
+          break;
+        case 'calculate_lims_invoice_extra_amount':
+          let val2 = this.limsCalculationsService.calculate_lims_invoice_extra_amount(formValueWithCustomData,'',calculate_on_field);
+          this.updateDataOnFormField(val2);
           break;
         case 'calculate_quotation_with_subsequent':          
           let calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(formValueWithCustomData,"standard", {field_name: "qty"});
