@@ -390,6 +390,9 @@
                                         <mat-form-field appearance="outline" class="example-full-width w-100">
                                             <mat-label>{{ fields.label | titlecase}}</mat-label>
                                             <input matInput type="email" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name">
+                                            <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name]['controls'][fields.field_name].touched && templateFormControl[tableField.field_name]['controls'][fields.field_name].errors?.email" autocomplete="off">
+                                                Email must be a valid email address
+                                            </mat-error>
                                         </mat-form-field>                            
                                     </div>
                                     <div *ngIf="fields.type == 'gst_number'">

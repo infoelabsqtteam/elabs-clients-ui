@@ -1614,7 +1614,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
     // this.unsubscribe(this.saveResponceSubscription);
-    this.saveResponceSubscription.unsubscribe();
+    if(this.saveResponceSubscription){
+      this.saveResponceSubscription.unsubscribe();
+    }
   }
   setGridFilterData(gridFilterData){
     if (gridFilterData) {
