@@ -489,6 +489,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.setTempData(tempData);
       this.ngOnInit();
     }
+    this.heavyDownload = false;
     
   }
 
@@ -607,6 +608,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
         if(this.tab.grid.heavyDownload && this.tab.grid.heavyDownload != null){
           this.heavyDownload = true;
+        }else{
+          this.heavyDownload = false;
         }
         if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
           this.typegrapyCriteriaList = this.tab.grid.colorCriteria;
