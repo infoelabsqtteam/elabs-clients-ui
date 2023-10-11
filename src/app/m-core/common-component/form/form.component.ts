@@ -3853,7 +3853,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(val1);
           break;
         case 'calculate_lims_invoice_extra_amount':
-          let val2 = this.limsCalculationsService.calculate_lims_invoice_extra_amount(formValueWithCustomData,'',calculate_on_field);
+          let val2 = this.limsCalculationsService.calculate_lims_invoice_extra_amount(formValueWithCustomData,'','');
           this.updateDataOnFormField(val2);
           break;
         case 'calculate_quotation_with_subsequent':          
