@@ -9,7 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService} from '@core/web-core';
 // import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 // import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 // import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
@@ -225,7 +225,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private limsCalculationsService:LimsCalculationsService,
     private treeComponentService: TreeComponentService,
     private fileHandlerService: FileHandlerService,
-    private formCreation:FormCreationService
+    private formCreation:FormCreationService,
+    private formValueService:FormValueService,
+    private apiCallService:ApiCallService,
+    private formControlService:FormControlService
 ) {
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
@@ -912,7 +915,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             let selected = false;
             if (arrayData != undefined && arrayData != null) {
               for (let index = 0; index < arrayData.length; index++) {
-                if (this.checkObjecOrString(data) == this.checkObjecOrString(arrayData[index])) {
+                if (this.commonFunctionService.checkObjecOrString(data) == this.commonFunctionService.checkObjecOrString(arrayData[index])) {
                   selected = true;
                   break;
                 }
@@ -2151,369 +2154,39 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
-  
   getFormValue(check){
     let formValue = this.templateForm.getRawValue();
-    let selectedRow = { ...this.selectedRow };     
-    let modifyFormValue = {};   
-    let valueOfForm = {};
-    if (this.updateMode || this.complete_object_payload_mode){      
-      this.tableFields.forEach(element => {
-        switch (element.type) {
-          case 'stepper':
-            element.list_of_fields.forEach(step => {
-              if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
-                step.list_of_fields.forEach(data => {
-                  selectedRow[data.field_name] = formValue[step.field_name][data.field_name]
-                  if(data.tree_view_object && data.tree_view_object.field_name != ""){                  
-                    const treeViewField = data.tree_view_object.field_name;
-                    selectedRow[treeViewField] = formValue[step.field_name][treeViewField]
-                  }
-                });
-              }
-            });
-            break;
-          case 'group_of_fields':
-            element.list_of_fields.forEach(data => {
-              switch (data.type) {
-                case 'date':
-                  if(data && data.date_format && data.date_format != ''){
-                    if(typeof formValue[element.field_name][data.field_name] != 'string'){
-                      selectedRow[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],'dd/MM/yyyy');
-                    }else{
-                      selectedRow[element.field_name] = formValue[element.field_name];
-                    }
-                  }else{
-                    selectedRow[element.field_name] = formValue[element.field_name];
-                  }            
-                  break;
-              
-                default:
-                  selectedRow[element.field_name] = formValue[element.field_name];
-                  break;
-              }
-            });
-            break;
-          case 'gmap':
-          case "gmapview":
-            if(element && element.datatype == "object"){
-              let locationData = {};
-              locationData['latitude'] = this.latitude;
-              locationData['longitude'] = this.longitude;
-              locationData['address'] = this.address;
-              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
-              locationData['time'] = this.datePipe.transform(new Date(),'shortTime');
-              selectedRow[element.field_name] = locationData;
-            }else{
-              selectedRow['latitude'] = this.latitude;
-              selectedRow['longitude'] = this.longitude;
-              selectedRow[element.field_name] = this.address;
-            }
-            break;
-          case 'date':
-            if(element && element.date_format && element.date_format != ''){
-              selectedRow[element.field_name] = this.datePipe.transform(selectedRow[element.field_name],'dd/MM/yyyy');
-            } else {
-              selectedRow[element.field_name] = formValue[element.field_name];
-            }            
-            break;
-          default:
-            selectedRow[element.field_name] = formValue[element.field_name];
-            break;
-        }
-      });
-    }else{
-      this.tableFields.forEach(element => {
-        switch (element.type) {
-          case 'stepper':
-            element.list_of_fields.forEach(step => {
-              if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
-                step.list_of_fields.forEach(data => {
-                  modifyFormValue[data.field_name] = formValue[step.field_name][data.field_name]
-                  if(data.tree_view_object && data.tree_view_object.field_name != ""){                  
-                    const treeViewField = data.tree_view_object.field_name;
-                    modifyFormValue[treeViewField] = formValue[step.field_name][treeViewField]
-                  }
-                });
-              }
-            });
-            break;
-          case 'group_of_fields':
-            modifyFormValue[element.field_name] = formValue[element.field_name];
-            element.list_of_fields.forEach(data => {
-              switch (data.type) {
-                case 'date':
-                  if(data && data.date_format && data.date_format != ''){
-                    modifyFormValue[element.field_name][data.field_name] = this.datePipe.transform(formValue[element.field_name][data.field_name],'dd/MM/yyyy');
-                  }  else {
-                    modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name];
-                  }         
-                  break;
-              
-                default:
-                  modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name];
-                  break;
-              }
-            });
-            break;
-          case 'gmap':
-          case "gmapview":
-            if(element && element.datatype == "object"){
-              let locationData = {};
-              locationData['latitude'] = this.latitude;
-              locationData['longitude'] = this.longitude;
-              locationData['address'] = this.address;
-              locationData['date'] = JSON.parse(JSON.stringify(new Date()));
-              locationData['time'] = this.datePipe.transform(new Date(),'shortTime')
-              modifyFormValue[element.field_name] = locationData;
-            }else{
-              modifyFormValue['latitude'] = this.latitude;
-              modifyFormValue['longitude'] = this.longitude;
-              modifyFormValue[element.field_name] = this.address;
-            }
-            break;
-          case 'date':
-            if(element && element.date_format && element.date_format != ''){
-              modifyFormValue[element.field_name] = this.datePipe.transform(formValue[element.field_name],'dd/MM/yyyy');
-            } else {
-              modifyFormValue[element.field_name] = formValue[element.field_name];
-            }           
-            break;
-          default:
-            modifyFormValue[element.field_name] = formValue[element.field_name];
-            //modifyFormValue = formValue;
-            break;
-        }
-      });
+    let routersParams = {};
+    if(this.routers.snapshot.params["key1"]){
+      routersParams = this.routers.snapshot.params;
     }
-    if(check){
-      Object.keys(this.custmizedFormValue).forEach(key => {
-        if (this.updateMode || this.complete_object_payload_mode) {
-          if(this.custmizedFormValue[key] && this.custmizedFormValue[key] != null && !Array.isArray(this.custmizedFormValue[key]) && typeof this.custmizedFormValue[key] === "object"){
-            this.tableFields.forEach(element => {            
-              if(element.field_name == key){
-                if(element.datatype && element.datatype != null && element.datatype == 'key_value'){
-                  selectedRow[key] = this.custmizedFormValue[key];
-                }else{
-                  Object.keys(this.custmizedFormValue[key]).forEach(child =>{
-                    selectedRow[key][child] = this.custmizedFormValue[key][child];
-                  })
-                }
-              }
-            });          
-          }else{
-              selectedRow[key] = this.custmizedFormValue[key];
-          }
-        } else {
-          if(this.custmizedFormValue[key] && this.custmizedFormValue[key] != null && !Array.isArray(this.custmizedFormValue[key]) && typeof this.custmizedFormValue[key] === "object"){
-            this.tableFields.forEach(element => {
-              if(element.field_name == key){
-                if(element.datatype && element.datatype != null && element.datatype == 'key_value'){
-                  modifyFormValue[key] = this.custmizedFormValue[key];
-                }else{
-                  Object.keys(this.custmizedFormValue[key]).forEach(child =>{
-                    modifyFormValue[key][child] = this.custmizedFormValue[key][child];
-                  })
-                }
-              }
-            });          
-          }else{
-            modifyFormValue[key] = this.custmizedFormValue[key];
-          }       
-          
-        }
-      })
-      if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
-        this.checkBoxFieldListValue.forEach(element => {
-          if (this.staticData[element.ddn_field]) {
-            const listOfCheckboxData = [];
-            let data = [];
-            if(this.updateMode || this.complete_object_payload_mode){
-              if(element.parent){
-                data = selectedRow[element.parent][element.field_name];
-              }else{
-                data = selectedRow[element.field_name];
-              }
-            }else{
-              if(element.parent){
-                data = modifyFormValue[element.parent][element.field_name];
-              }else{
-                data = modifyFormValue[element.field_name];
-              }
-            }
-            let currentData = this.staticData[element.ddn_field];
-            if(data && data.length > 0){
-              data.forEach((data, i) => {
-                if (data) {
-                  listOfCheckboxData.push(currentData[i]);
-                }
-              });
-            }
-            if (this.updateMode || this.complete_object_payload_mode) {
-              if(element.parent){
-                selectedRow[element.parent][element.field_name] = listOfCheckboxData;
-              }else{
-                selectedRow[element.field_name] = listOfCheckboxData;
-              }
-            } else {
-              if(element.parent){
-                modifyFormValue[element.parent][element.field_name] = listOfCheckboxData;
-              }else{
-                modifyFormValue[element.field_name] = listOfCheckboxData
-              }
-            }
-          }
-        });
-      }
-      Object.keys(this.dataListForUpload).forEach(key => {
-        if (this.updateMode || this.complete_object_payload_mode) {
-          if(this.dataListForUpload[key] && this.dataListForUpload[key] != null && !Array.isArray(this.dataListForUpload[key]) && typeof this.dataListForUpload[key] === "object"){
-            this.tableFields.forEach(element => {            
-              if(element.field_name == key){                
-                Object.keys(this.dataListForUpload[key]).forEach(child =>{
-                  selectedRow[key][child] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key][child]);
-                })
-              }
-            });          
-          }else{
-              selectedRow[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
-          }
-        } else {
-          if(this.dataListForUpload[key] && this.dataListForUpload[key] != null && !Array.isArray(this.dataListForUpload[key]) && typeof this.dataListForUpload[key] === "object"){
-            this.tableFields.forEach(element => {
-              if(element.field_name == key){                
-                Object.keys(this.dataListForUpload[key]).forEach(child =>{
-                  modifyFormValue[key][child] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key][child]);
-                })
-              }
-            });          
-          }else{
-            modifyFormValue[key] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[key]);
-          }       
-          
-        }
-      })
-    } 
-    if(this.selectContact != '' && this.selectContact != undefined){
-      let selectContactObject = {}
-      let account={};
-      let contact={};
-      this.tabFilterData.forEach(element => {
-        if(element._id == this.selectContact){
-          selectContactObject = element;
-        }
-      });
-      if(selectContactObject['_id']){
-        contact = {
-          "_id":selectContactObject['_id'],
-          "name":selectContactObject['name'],
-          "code":selectContactObject['serialId']
-        }
-        if(selectContactObject['lead']){
-          account = selectContactObject['lead'];
-        }
-      }
-      if(this.updateMode || this.complete_object_payload_mode){
-        selectedRow['account'] = account;
-        selectedRow['contact'] = contact;
-      }else{
-        modifyFormValue['account'] = account;
-        modifyFormValue['contact'] = contact;
-      }
-    }
-       
-    valueOfForm = this.updateMode || this.complete_object_payload_mode ? selectedRow : modifyFormValue;
-    if(this.routers.snapshot.params["key1"] && !this.complete_object_payload_mode){
-      const index = JSON.stringify(this.routers.snapshot.params["key1"]);
-      if(index != ''){
-        valueOfForm['obj'] = this.routers.snapshot.params["action"];
-        valueOfForm['key'] = this.routers.snapshot.params["key1"];
-        valueOfForm['key1'] = this.routers.snapshot.params["key2"];
-        valueOfForm['key2'] = this.routers.snapshot.params["key3"];      
-        
-      }
-    }
-    if(this.getLocation){
-      if(this.center !=null && this.center.lat !=null){
-        valueOfForm['locationDetail'] = {
-          'latitude' : this.center.lat,
-          'longitude' : this.center.lng
-        }
-      }
-    }   
-    return valueOfForm;
+    return this.formValueService.getFormValue(check,formValue,this.selectedRow,this.updateMode,this.complete_object_payload_mode,this.tableFields,this.latitude,this.longitude,this.address,this.custmizedFormValue,this.checkBoxFieldListValue,this.staticData,this.dataListForUpload,this.selectContact,this.tabFilterData,routersParams,this.getLocation,this.center); 
   }
-  getSavePayloadData() {
-    this.getSavePayload = false;
-    //this.submitted = true;
-    let hasPermission;
-    if(this.currentMenu && this.currentMenu.name){
-      hasPermission = this.permissionService.checkPermissionWithParent(this.currentMenu,'add')
-    }
-    if(this.updateMode){
-      hasPermission = this.permissionService.checkPermissionWithParent(this.currentMenu,'edit')
-    }
-    if(this.envService.getRequestType() == 'PUBLIC'){
-      hasPermission = true;
-    }
-    let formValue;
-    if(this.deleteGridRowData){
-      formValue = this.templateForm.getRawValue();
+  getSavePayloadData(dataWithCustValue?) {
+    let formValue = this.templateForm.getRawValue();
+    let formValueWithCustomData = dataWithCustValue;
+    if(dataWithCustValue == undefined){
+      formValueWithCustomData = this.getFormValue(true);
+    }    
+    let formDataResponce = this.formValueService.getSavePayloadData(this.currentMenu,this.updateMode,this.deleteGridRowData,this.tableFields,formValue,formValueWithCustomData,this.gridSelectionMendetoryList,this.selectedRow,this.custmizedFormValue,this.dataSaveInProgress,this.showNotify,this.formName,this.templateForm.valid);    
+    this.getSavePayload = formDataResponce.getSavePayload;
+    this.deleteGridRowData = formDataResponce.deleteGridRowData;
+    this.showNotify = formDataResponce.showNotify;
+    this.dataSaveInProgress = formDataResponce.dataSaveInProgress; 
+    if(this.dataSaveInProgress){
+      return formDataResponce.data;
     }else{
-      formValue = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(true),false);
-    }
-    this.deleteGridRowData = false;
-       
-    if(hasPermission){ 
-      let gridSelectionValidation:any = this.gridCommonFunctionService.checkGridSelectionMendetory(this.gridSelectionMendetoryList,this.selectedRow,this.templateForm.getRawValue(),this.custmizedFormValue);     
-      if(this.templateForm.valid && gridSelectionValidation.status){
-        let validationsresponse = this.commonFunctionService.checkCustmizedValuValidation(this.tableFields,formValue);
-        if(validationsresponse && validationsresponse.status){
-          if (this.dataSaveInProgress) {
-            this.showNotify = true;
-            this.dataSaveInProgress = false;            
-            formValue['log'] = this.storageService.getUserLog();
-            if(!formValue['refCode'] || formValue['refCode'] == '' || formValue['refCode'] == null){
-              formValue['refCode'] = this.commonFunctionService.getRefcode();
-            } 
-            if(!formValue['appId'] || formValue['appId'] == '' || formValue['appId'] == null){
-              formValue['appId'] = this.commonFunctionService.getAppId();
-            }
-            if (this.updateMode) {              
-              if(this.formName == 'cancel'){
-                formValue['status'] = 'CANCELLED';
-              }                                          
-            }              
-
-            const saveFromData = {
-              curTemp: this.currentMenu.name,
-              data: formValue
-            }
-            this.getSavePayload = true;
-            return saveFromData;
-            
-          }
-        }else{
-          this.getSavePayload = false;
-          this.notificationService.notify('bg-danger', validationsresponse.msg)
-        }
-      }else{
-        this.getSavePayload = false;
-        if(gridSelectionValidation.msg && gridSelectionValidation.msg != ''){
-          this.notificationService.notify("bg-info", gridSelectionValidation.msg);
-        }else{
-          this.notificationService.notify("bg-danger", "Some fields are mendatory");
-        }        
+      let message = formDataResponce.message;
+      if(message && message.msg && message.msg != ""){
+        this.notificationService.notify(message.class, message.msg)
       }
-    }else{
-      this.getSavePayload = false;
-      this.permissionService.checkTokenStatusForPermission();
     }
   }
   saveFormData(){
-    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,this.getFormValue(true));
+    let dataWithCustValue = this.getFormValue(true);
+    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
     if(typeof checkValidatiaon != 'object'){
-      const saveFromData = this.getSavePayloadData();
+      const saveFromData = this.getSavePayloadData(dataWithCustValue);
       if(this.bulkupdates){
         saveFromData.data['data'] = this.bulkDataList;
         saveFromData.data['bulk_update'] = true;
@@ -2532,10 +2205,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }     
   }
   deleteGridData(){
-    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,this.getFormValue(true));
+    let dataWithCustValue = this.getFormValue(true);
+    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
     if(typeof checkValidatiaon != 'object'){
       this.deleteGridRowData = true;
-      const saveFromData = this.getSavePayloadData();
+      const saveFromData = this.getSavePayloadData(dataWithCustValue);
       if(this.getSavePayload){
           this.apiService.deleteGridRow(saveFromData);
       }
@@ -2582,108 +2256,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   getStaticDataWithDependentData(){
-    const staticModal = []
     let formValueWithCustomData = this.getFormValue(true)
     let formValue = this.getFormValue(false)
-    if(this.tableFields && this.tableFields.length > 0){
-      this.tableFields.forEach(element => {
-        if(element.field_name && element.field_name != ''){
-          if (element.onchange_api_params && element.onchange_call_back_field && !element.do_not_auto_trigger_on_edit) {
-            const checkFormGroup = element.onchange_call_back_field.indexOf("FORM_GROUP");
-            const checkCLTFN = element.onchange_api_params.indexOf('CLTFN')
-            if(checkFormGroup == -1 && checkCLTFN == -1){
-
-              const payload = this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params, element.onchange_call_back_field, element.onchange_api_params_criteria, formValueWithCustomData)
-              if(element.onchange_api_params.indexOf('QTMP') >= 0){
-                if(element && element.formValueAsObjectForQtmp){
-                  payload["data"]=formValue;
-                }else{
-                  payload["data"]=formValueWithCustomData;
-                }
-              } 
-              staticModal.push(payload);
-            }
-          }
-          switch (element.type) {
-            case "stepper":
-              if (element.list_of_fields.length > 0) {
-                element.list_of_fields.forEach((step) => {                
-                  if (step.list_of_fields.length > 0) {
-                    step.list_of_fields.forEach((data) => {
-                      if (data.onchange_api_params && data.onchange_call_back_field && !data.do_not_auto_trigger_on_edit) {
-                        const checkFormGroup = data.onchange_call_back_field.indexOf("FORM_GROUP");
-                        if(checkFormGroup == -1){
-              
-                          const payload = this.commonFunctionService.getPaylodWithCriteria(data.onchange_api_params, data.onchange_call_back_field, data.onchange_api_params_criteria, formValueWithCustomData)
-                          if(data.onchange_api_params.indexOf('QTMP') >= 0){
-                            if(element && element.formValueAsObjectForQtmp){
-                              payload["data"]=formValue;
-                            }else{
-                              payload["data"]=formValueWithCustomData;
-                            }
-                          } 
-                          staticModal.push(payload);
-                        }
-                      }
-                      if(data.tree_view_object && data.tree_view_object.field_name != ""){
-                        let editeTreeModifyData = JSON.parse(JSON.stringify(data.tree_view_object));
-                        if (editeTreeModifyData.onchange_api_params && editeTreeModifyData.onchange_call_back_field) {
-                          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(editeTreeModifyData.onchange_api_params, editeTreeModifyData.onchange_call_back_field, editeTreeModifyData.onchange_api_params_criteria, formValueWithCustomData));
-                        }
-                      }
-                    });
-                  }
-                });
-              }
-              break;
-          }
-          if(element.tree_view_object && element.tree_view_object.field_name != ""){
-            let editeTreeModifyData = JSON.parse(JSON.stringify(element.tree_view_object));
-            if (editeTreeModifyData.onchange_api_params && editeTreeModifyData.onchange_call_back_field) {
-              staticModal.push(this.commonFunctionService.getPaylodWithCriteria(editeTreeModifyData.onchange_api_params, editeTreeModifyData.onchange_call_back_field, editeTreeModifyData.onchange_api_params_criteria, formValueWithCustomData));
-            }
-          }
-        }
-        if(element.type && element.type == 'pdf_view'){
-          staticModal.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,formValueWithCustomData))
-        }
-      });
-    }
+    const staticModal = this.apiCallService.getOnchangePayload(this.tableFields,formValue,formValueWithCustomData);
     this.getStaticData(staticModal,formValueWithCustomData,formValue);    
   }
   getStaticData(staticModal,object,formDataObject){
-    let formValue = object;
-    if(this.multipleFormCollection && this.multipleFormCollection.length > 0){
-      let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-      formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
-    }
-    let staticModalG = this.commonFunctionService.commanApiPayload([],this.tableFields,this.formFieldButtons,formValue);
-    if(staticModalG && staticModalG.length > 0){
-      staticModalG.forEach(element => {
-        staticModal.push(element);
-      });
-    }
-    if(this.tab && this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined){      
-      let criteria = [];
-      if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
-        criteria=this.tab.api_params_criteria
-      }
-      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
-      
-    }
-    if(this.form && this.form.api_params && this.form.api_params != null && this.form.api_params != "" && this.form.api_params != undefined){         
-      if(this.form.api_params == 'QTMP:EMAIL_WITH_TEMP:QUOTATION_LETTER'){
-        object = this.saveResponceData;
-      }          
-      let criteria = [];
-      if(this.form.api_params_criteria && this.form.api_params_criteria != null){
-        criteria=this.form.api_params_criteria
-      }
-      if(this.editedRowIndex > -1){
-        formDataObject = formValue;
-      }
-      staticModal.push(this.commonFunctionService.getPaylodWithCriteria(this.form.api_params,this.form.call_back_field,criteria,formDataObject))      
-    }
+    staticModal = this.apiCallService.getStaticDataPayload(staticModal,object,formDataObject,this.multipleFormCollection,this.tableFields,this.formFieldButtons,this.tab,this.form,this.saveResponceData,this.editedRowIndex);
     this.callStaticData(staticModal);
   }
   callStaticData(payloads){
@@ -2695,28 +2274,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }, 100);           
     }
   }
-  checkObjecOrString(data){
-    if(data._id){
-      return data._id;
-    }else{
-      return data;
-    }
-  }  
-  // updateRowData() {
-  //   let formValue = this.templateForm.getRawValue();
-  //   Object.keys(this.custmizedFormValue).forEach(key => {
-  //     this.elements[this.selectedRowIndex][key] = this.custmizedFormValue[key];
-  //   })
-  //   this.tableFields.forEach(element => {
-  //     this.elements[this.selectedRowIndex][element.field_name] = formValue[element.field_name]
-  //   });
-  //   const updateFromData = {
-  //     curTemp: this.currentMenu.name,
-  //     data: this.elements[this.selectedRowIndex]
-  //   }
-  //   this.apiService.SaveFormData(updateFromData);
-  //   this.saveCallSubscribe();
-  // }
   candelForm() {    
     if(this.updateMode && this.custmizedFormValue && Object.keys(this.custmizedFormValue).length > 0){      
       Object.keys(this.custmizedFormValue).forEach(key => {
@@ -2865,80 +2422,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.clickFieldName = {};
   }
   editListOfFiedls(index,field){
-    let parentList = this.custmizedFormValue[field.field_name];
-    let object = parentList[index];
-    this.listOfFieldUpdateMode = true;
-    this.listOfFieldsUpdateIndex = index;
-    if(this.tableFields && this.tableFields.length > 0){
-      this.tableFields.forEach(element => {
-        switch (element.type) {        
-          case "list_of_fields":
-            if(element.field_name == field.field_name){
-              this.templateForm.get(element.field_name).reset(); 
-              if (element.list_of_fields.length > 0) {
-                element.list_of_fields.forEach((data) => {
-                  switch (data.type) {                
-                    case "list_of_string":
-                      const custmisedKey = this.commonFunctionService.custmizedKey(element);
-                      if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
-                      this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];
-                      break;
-                    case "typeahead":
-                      if (data.datatype == 'list_of_object') {
-                        const custmisedKey = this.commonFunctionService.custmizedKey(element);
-                        if (!this.custmizedFormValue[custmisedKey]) this.custmizedFormValue[custmisedKey] = {};
-                        this.custmizedFormValue[custmisedKey][data.field_name] = object[data.field_name];    
-                      } else {
-                        this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
-                      }
-                      break;
-                    case "list_of_checkbox":
-                      let checkboxListValue = [];
-                      if(this.staticData && this.staticData[data.ddn_field] && this.staticData[data.ddn_field].length > 0){
-                        this.staticData[data.ddn_field].forEach((value, i) => {                      
-                          let arrayData = object[data.field_name];                        
-                          let selected = false;
-                          if (arrayData != undefined && arrayData != null) {
-                            for (let index = 0; index < arrayData.length; index++) {
-                              if (this.checkObjecOrString(value) == this.checkObjecOrString(arrayData[index])) {
-                                selected = true;
-                                break;
-                              }
-                            }
-                          }
-                          if (selected) {
-                            checkboxListValue.push(true);
-                          } else {
-                            checkboxListValue.push(false);
-                          }               
-                        });
-                      }
-                      this.templateForm.get(element.field_name).get(data.field_name).setValue(checkboxListValue);
-                      break; 
-                    case "file":
-                    case "input_with_uploadfile":
-                      if(object[data.field_name] != null && object[data.field_name] != undefined){
-                        let custmizedKey = this.commonFunctionService.custmizedKey(element);
-                        if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
-                        if (!this.dataListForUpload[custmizedKey][data.field_name]) this.dataListForUpload[custmizedKey][data.field_name] = [];
-                        this.dataListForUpload[custmizedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                        const value = this.modifyFileSetValue(object[data.field_name]);
-                        this.templateForm.get(element.field_name).get(data.field_name).setValue(value);
-                      }
-                      break;               
-                    default:
-                      this.templateForm.get(element.field_name).get(data.field_name).setValue(object[data.field_name]);
-                      break;
-                  }              
-                })
-              }
-            }
-            break;
-          default:          
-            break;
-        }
-      });
-    }
+    let responce = this.formControlService.editeListFieldData(this.templateForm,this.custmizedFormValue,this.tableFields,field,index,this.listOfFieldsUpdateIndex,this.staticData,this.dataListForUpload);
+    this.listOfFieldUpdateMode = responce['listOfFieldUpdateMode'];
+    this.listOfFieldsUpdateIndex = responce['listOfFieldsUpdateIndex'];
+    this.custmizedFormValue = responce['custmizedFormValue'];
+    this.dataListForUpload = responce['dataListForUpload'];
+    this.templateForm = responce['templateForm'];
   }
   gridSelectionResponce(responce){ 
     const fieldName = this.curTreeViewField.field_name;    
@@ -3297,18 +2786,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-
-  modifyFileSetValue(files){
-    let fileName = '';
-    let fileLength = files.length;
-    let file = files[0];
-    if(fileLength == 1 && (file.fileName || file.rollName)){
-      fileName = file.fileName || file.rollName;
-    }else if(fileLength > 1){
-      fileName = fileLength + " Files";
-    }
-    return fileName;
-  }
   fileUploadList(parent,field){
     let fileList = [];
     let msg = "";
@@ -3378,7 +2855,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       
       if(this.dataListForUpload[custmizedKey][curFieldName] && this.dataListForUpload[custmizedKey][curFieldName].length > 0){
         let fileList = this.dataListForUpload[custmizedKey][curFieldName];
-        let fileName = this.modifyFileSetValue(fileList); 
+        let fileName = this.fileHandlerService.modifyFileSetValue(fileList); 
 
         if(this.curFileUploadField.type == 'input_with_uploadfile'){
           let tooltipMsg = this.getFileTooltipMsg(fileList);        
@@ -3400,7 +2877,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
         if(this.dataListForUpload[curFieldName] && this.dataListForUpload[curFieldName].length > 0){
           let fileList = this.dataListForUpload[curFieldName];
-          let fileName = this.modifyFileSetValue(fileList);
+          let fileName = this.fileHandlerService.modifyFileSetValue(fileList);
           if(this.curFileUploadField.type == 'input_with_uploadfile'){
             let tooltipMsg = this.getFileTooltipMsg(fileList);
             this.tableFields[curIndex]['tooltipMsg'] = tooltipMsg;
@@ -3760,7 +3237,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case "input_with_uploadfile":
           if(object != null && object != undefined){
             this.dataListForUpload[fieldName] = JSON.parse(JSON.stringify(object));
-            const value = this.modifyFileSetValue(object);
+            const value = this.fileHandlerService.modifyFileSetValue(object);
             if(type == 'input_with_uploadfile'){
               let tooltipMsg = this.getFileTooltipMsg(object);
               element['tooltipMsg'] = tooltipMsg;
@@ -3815,7 +3292,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       if(object != null && object != undefined && object[data.field_name] != null && object[data.field_name] != undefined){
                         let custmisedKey = this.commonFunctionService.custmizedKey(element);
                         this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                        const value = this.modifyFileSetValue(object[data.field_name]);
+                        const value = this.fileHandlerService.modifyFileSetValue(object[data.field_name]);
                         let tooltipMsg = this.getFileTooltipMsg(object[data.field_name]);
                         element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
                         this.templateForm.get(fieldName).get(data.field_name).setValue(value);
@@ -3927,7 +3404,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                     if(object != null && object != undefined && object[data.field_name] != null && object[data.field_name] != undefined){
                       let custmisedKey = this.commonFunctionService.custmizedKey(element);
                       this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                      const value = this.modifyFileSetValue(object[data.field_name]);
+                      const value = this.fileHandlerService.modifyFileSetValue(object[data.field_name]);
                       let tooltipMsg = this.getFileTooltipMsg(object[data.field_name]);
                       element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
                       this.templateForm.get(fieldName).get(data.field_name).setValue(value);
