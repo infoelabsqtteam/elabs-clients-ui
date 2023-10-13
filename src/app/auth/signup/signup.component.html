@@ -13,23 +13,34 @@
                         <div class="col-md-6 form-group mb-4 mobileno">
                             <label class="font-15">Mobile</label>
                             <span class="countrycode">+ 91</span>
-                            <input type="tel" class="form-control" placeholder="" maxlength="10" formControlName="mobile" required>
+                            <input type="tel" class="form-control" placeholder="" maxlength="10" formControlName="mobileNumber" required>
                         </div>
                         <div class="col-md-12 form-group mb-4">
                             <label class="font-15">Email address</label>
                             <input type="email" class="form-control" placeholder="" formControlName="email" required>
                         </div>
-                        <div class="col-md-6 form-group mb-4 password pr-0">
-                            <label class="font-15">Password</label>
-                            <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" placeholder="" formControlName="password" required>
-                            <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                            <mat-error class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
-                                {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
+                        <div class="col-md-6 form-group mb-4 pr-0">
+                            <div class="password">
+                                <label class="font-15">Password</label>
+                                <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" placeholder="" formControlName="password" required>
+                                <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                            </div>
+                            <small class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                         </div>
-                        <div class="col-md-6 form-group mb-4 password repassword">
-                            <label class="font-15">Confirm Password</label>
-                            <input type="password" class="form-control" placeholder="" formControlName="confirmPassword" required>
+                        <div class="col-md-6 form-group mb-4">
+                            <div class="password repassword">
+                                <label class="font-15">Confirm Password</label>
+                                <input type="password" class="form-control" placeholder="" formControlName="confirmPassword" required>
+                            </div>
                             <small class="text-danger" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                        </div>
+
+                        <div class="col-md-12 mb-3"> 
+                            <div *ngIf="adminEmail && adminEmail != ''"  class="form-check text-left">
+                                <input type="checkbox" class="form-check-input" id="check2" formControlName="admin">
+                                <label class="form-check-label" style="font-size: 10px;" for="check2">Notify Admin.</label>
+                            </div>
                         </div>
                        
                         <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!signUpForm.valid" (click)="onSignUp()">Sign Up</button>
@@ -61,7 +72,7 @@
                                     <mat-form-field appearance="outline" class="w-100 mb-3 phoneno">
                                         <mat-label>Mobile</mat-label>
                                         <span class="countrycode">+ 91</span>
-                                        <input matInput maxlength="10" placeholder="Enter your mobile no." formControlName="mobile">
+                                        <input matInput maxlength="10" placeholder="Enter your mobile no." formControlName="mobileNumber">
                                     </mat-form-field> 
                                 </div>
                                 <div class="col-md-12">
@@ -85,6 +96,12 @@
                                         <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
                                         <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                                     </mat-form-field>  
+                                </div>
+                                <div class="col-md-12"> 
+                                    <div *ngIf="adminEmail && adminEmail != ''"  class="form-check text-left">
+                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="admin">
+                                        <label class="form-check-label" style="font-size: 10px;" for="check2">Notify Admin.</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
                             </form>
@@ -119,7 +136,7 @@
                                     <mat-form-field appearance="outline" class="w-100 mb-3 phoneno">
                                         <mat-label>Mobile</mat-label>
                                         <span class="countrycode">+ 91</span>
-                                        <input matInput maxlength="10" placeholder="Enter your mobile no." formControlName="mobile">
+                                        <input matInput maxlength="10" placeholder="Enter your mobile no." formControlName="mobileNumber">
                                     </mat-form-field>
                                 </div>
                                 
@@ -145,7 +162,14 @@
                                         <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                                     </mat-form-field>
                                 </div>
-                                
+
+                                <div class="col-md-12"> 
+                                    <div *ngIf="adminEmail && adminEmail != ''"  class="form-check text-left">
+                                        <input type="checkbox" class="form-check-input" id="check2" formControlName="admin">
+                                        <label class="form-check-label" style="font-size: 10px;" for="check2">Notify Admin.</label>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!signUpForm.valid" (click)="onSignUp()"> Sign Up</button></div>
                             </form>
                         </mat-card-content>
