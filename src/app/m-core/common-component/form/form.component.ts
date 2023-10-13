@@ -9,7 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService} from '@core/web-core';
 // import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 // import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 // import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
@@ -225,10 +225,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private limsCalculationsService:LimsCalculationsService,
     private treeComponentService: TreeComponentService,
     private fileHandlerService: FileHandlerService,
-    private formCreation:FormCreationService,
+    private formCreationService:FormCreationService,
     private formValueService:FormValueService,
     private apiCallService:ApiCallService,
-    private formControlService:FormControlService
+    private formControlService:FormControlService,
+    private checkIfService:CheckIfService,
+    private gridSelectionService:GridSelectionService,
+    private apiCallResponceService:ApiCallResponceService
 ) {
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
@@ -723,7 +726,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0 && this.getTableField) {
-      let templateData = this.formCreation.getTempData(tempData,this.tabIndex,this.currentMenu,this.formName,this.dinamic_form);
+      let templateData = this.formCreationService.getTempData(tempData,this.tabIndex,this.currentMenu,this.formName,this.dinamic_form);
       this.tab = templateData['tab'];
       this.currentMenu = templateData['currentMenu'];
       this.grid_view_mode = templateData['grid_view_mode'];
@@ -741,7 +744,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.form){
       this.formDetails.emit(this.form);
     }
-    let getFields = this.formCreation.checkFormDetails(this.form,this.tab);
+    let getFields = this.formCreationService.checkFormDetails(this.form,this.tab);
     this.currentMenu = getFields['currentMenu'];
     this.bulkupdates = getFields['bulkupdates'];
     this.getLocation = getFields['getLocation'];
@@ -752,7 +755,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
     if (this.tableFields.length > 0 && this.createFormgroup) {
       this.createFormgroup = false;
-      let formControl = this.formCreation.setNewForm(this.tableFields,this.formFieldButtons,this.form,this.elements,this.selectedRowIndex);
+      let formControl = this.formCreationService.setNewForm(this.tableFields,this.formFieldButtons,this.form,this.elements,this.selectedRowIndex);
       let blankField = formControl['blankField'];
       if(blankField && (blankField.fieldName != '' || blankField.index != -1)){
         this.notifyFieldValueIsNull(blankField.fieldName,blankField.index);
@@ -793,14 +796,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
       let formValueWithCustomData = this.getFormValue(true);
       let fromValue = this.getFormValue(false);
-      staticModal = this.formCreation.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
+      staticModal = this.formCreationService.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
       if(this.tableFields.length > 0 && this.editedRowIndex == -1){
         this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
       }
     }    
     if (this.tableFields.length > 0 && this.pageLoading) {
       this.pageLoading = false;
-      let buttonsCondition = this.formCreation.checkFieldButtonCondition(this.tableFields);
+      let buttonsCondition = this.formCreationService.checkFieldButtonCondition(this.tableFields);
       this.tempVal = buttonsCondition['tempVal'];      
     }    
   }
@@ -1113,7 +1116,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   getFocusFieldAndFocus(){
     if(this.checkFormFieldAutfocus && this.tableFields.length > 0){
-      let focusRelatedFields = this.formCreation.getFocusField(this.previousFormFocusField,this.tableFields,this.templateForm,this.focusFieldParent,this.checkFormFieldAutfocus);
+      let focusRelatedFields = this.formCreationService.getFocusField(this.previousFormFocusField,this.tableFields,this.templateForm,this.focusFieldParent,this.checkFormFieldAutfocus);
       this.checkFormFieldAutfocus = focusRelatedFields['checkFormFieldAutfocus'];
       this.previousFormFocusField = focusRelatedFields['previousFormFocusField'];
       this.focusFieldParent = focusRelatedFields['focusFieldParent'];
@@ -1134,7 +1137,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.buttonIfList.length > 0){
       this.buttonIfList.forEach(element => {
         let fieldIndex = element['fieldIndex'];
-        this.tableFields[fieldIndex]['showButton'] = this.formCreation.checkGridSelectionButtonCondition(element,'add',this.selectedRow,this.templateForm.getRawValue());
+        this.tableFields[fieldIndex]['showButton'] = this.formCreationService.checkGridSelectionButtonCondition(element,'add',this.selectedRow,this.templateForm.getRawValue());
       });
     }
     if(this.disableIfFieldList.length > 0){
@@ -2096,7 +2099,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   alertResponce(responce) {
     if (responce) {
       if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
-        this.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex)
+        this.dataListForUpload = this.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex);
       }else{
         this.deleteitem()
       }      
@@ -2553,59 +2556,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   isDisable(parent,chield){
     const  formValue = this.getFormValue(true);  
-    let tobedesabled;
-    if(parent == ''){
-      tobedesabled = this.commonFunctionService.isDisable(chield,this.updateMode,formValue)
-      if(tobedesabled){
-        if(!this.templateForm.get(chield.field_name).disabled){
-          this.templateForm.get(chield.field_name).disable()
-        }        
-      }else{
-        if(this.templateForm.get(chield.field_name).disabled){
-          this.templateForm.get(chield.field_name).enable()
-        }        
-      }
-    }else{
-      tobedesabled = this.commonFunctionService.isDisable(chield,this.updateMode,formValue)
-      if(tobedesabled){
-        this.templateForm.get(parent).get(chield.field_name).disable()
-      }else{
-        this.templateForm.get(parent).get(chield.field_name).enable()
-      }
-    }       
-    return tobedesabled;
+    let responce = this.checkIfService.checkIsDisable(parent,chield,this.updateMode,formValue,this.templateForm);
+    this.templateForm = responce.templateForm;
+    return responce.tobedesabled;
   }  
   isMendetory(parent,chield){
-    const  formValue = this.getFormValue(true);   
-    let tobedesabled;
-    if(parent == ''){
-      tobedesabled = this.commonFunctionService.isMendetory(chield,formValue)
-      if(tobedesabled){
-        if(this.templateFormControl[chield.field_name].status == 'VALID'){
-          this.templateForm.get(chield.field_name).setValidators([Validators.required]);
-          this.templateForm.get(chield.field_name).updateValueAndValidity();
-        }       
-      }else{
-        if(this.templateFormControl[chield.field_name].status == 'INVALID'){
-          this.templateForm.get(chield.field_name).clearValidators();
-          this.templateForm.get(chield.field_name).updateValueAndValidity();
-        }        
-      }
-    }else{
-      tobedesabled = this.commonFunctionService.isMendetory(chield,formValue)
-      if(tobedesabled){
-        if(this.templateFormControl[parent][chield.field_name].status == 'VALID'){
-          this.templateForm.get(parent).get(chield.field_name).setValidators([Validators.required]);
-          this.templateForm.get(parent).get(chield.field_name).updateValueAndValidity();
-        } 
-      }else{
-        if(this.templateFormControl[parent][chield.field_name].status == 'INVALID'){
-          this.templateForm.get(parent).get(chield.field_name).clearValidators();
-          this.templateForm.get(parent).get(chield.field_name).updateValueAndValidity();
-        } 
-      }
-    }       
-    return tobedesabled;
+    const  formValue = this.getFormValue(true);
+    let responce = this.checkIfService.checkIsMendetory(parent,chield,formValue,this.templateForm);
+    this.templateForm = responce.templateForm;
+    return responce.tobedesabled;   
   }
   showModal(object){
     this.custmizedFormValue = {}    
@@ -2659,31 +2618,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   donotResetField(){
     if(this.tableFields.length > 0){
       let FormValue = this.getFormValue(true);
-      this.tableFields.forEach(tablefield => {
-        if(tablefield.do_not_refresh_on_add && tablefield.type != "list_of_fields" && tablefield.type != "group_of_fields" && tablefield.type != "stepper"){
-          this.donotResetFieldLists[tablefield.field_name] = FormValue[tablefield.field_name];
-        }else if(tablefield.type == "group_of_fields"){
-          if(tablefield.list_of_fields && tablefield.list_of_fields.length > 0){
-            tablefield.list_of_fields.forEach(field => {
-              if(field.do_not_refresh_on_add){
-                this.donotResetFieldLists[tablefield.field_name][field.field_name] = FormValue[tablefield.field_name][field.field_name];
-              }
-            });
-          }
-        }else if(tablefield.type == "stepper"){
-          if(tablefield.list_of_fields && tablefield.list_of_fields.length > 0){
-            tablefield.list_of_fields.forEach(step => {
-              if(step.list_of_fields && step.list_of_fields.length > 0){
-                step.list_of_fields.forEach(field => {
-                  if(field.do_not_refresh_on_add){
-                    this.donotResetFieldLists[step.field_name][field.field_name] = FormValue[step.field_name][field.field_name];
-                  }
-                });
-              }
-            });
-          }
-        }
-      });
+      this.donotResetFieldLists = this.formCreationService.getDonotResetFields(this.tableFields,this.donotResetFieldLists,FormValue);
     }
   }
   checkBeforeResetForm(){
@@ -2786,36 +2721,23 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-  fileUploadList(parent,field){
-    let fileList = [];
-    let msg = "";
-    if(parent != ''){
-      const parentKey = this.commonFunctionService.custmizedKey(parent);
-      if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
-        fileList = this.dataListForUpload[parentKey][field.field_name];
-        msg = this.getFileTooltipMsg(fileList);
-      }
-    }else{
-      if(this.dataListForUpload[field.field_name]){        
-        fileList = this.dataListForUpload[field.field_name];
-        msg = this.getFileTooltipMsg(fileList);
-      }
-    }
-    return msg;
-  }
-  getFileTooltipMsg(fileList){
-    let msg = "";
-    if(fileList.length > 0){
-      fileList.forEach(element => {
-        if(msg != ''){
-          msg = msg + '\n' + element.fileName;
-        }else{
-          msg = element.fileName;
-        }
-      });
-    }
-    return msg;
-  }
+  // fileUploadList(parent,field){
+  //   let fileList = [];
+  //   let msg = "";
+  //   if(parent != ''){
+  //     const parentKey = this.commonFunctionService.custmizedKey(parent);
+  //     if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
+  //       fileList = this.dataListForUpload[parentKey][field.field_name];
+  //       msg = this.getFileTooltipMsg(fileList);
+  //     }
+  //   }else{
+  //     if(this.dataListForUpload[field.field_name]){        
+  //       fileList = this.dataListForUpload[field.field_name];
+  //       msg = this.getFileTooltipMsg(fileList);
+  //     }
+  //   }
+  //   return msg;
+  // }  
   uploadModal(parent,field,parentIndex,curIndex) {
     if (field.field_name && field.field_name != "") {
       field['parentIndex'] = parentIndex;
@@ -2837,126 +2759,66 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }  
   fileUploadResponce(response) {
-    let curFieldName = '';
-    let parentIndex = -1;
-    let curIndex = -1;
-    if(this.curFileUploadField && this.curFileUploadField.field_name){
-      curFieldName = this.curFileUploadField.field_name;
-      parentIndex =  this.curFileUploadField['parentIndex'];
-      curIndex =  this.curFileUploadField['curIndex'];
-    }
-    if(this.curFileUploadFieldparentfield != '' && curFieldName != ''){
-      const custmizedKey = this.commonFunctionService.custmizedKey(this.curFileUploadFieldparentfield); 
-
-      if (!this.dataListForUpload[custmizedKey]) this.dataListForUpload[custmizedKey] = {};
-      if (!this.dataListForUpload[custmizedKey][curFieldName]) this.dataListForUpload[custmizedKey][curFieldName] = [];
-      this.dataListForUpload[custmizedKey][curFieldName] = response;
-
-      
-      if(this.dataListForUpload[custmizedKey][curFieldName] && this.dataListForUpload[custmizedKey][curFieldName].length > 0){
-        let fileList = this.dataListForUpload[custmizedKey][curFieldName];
-        let fileName = this.fileHandlerService.modifyFileSetValue(fileList); 
-
-        if(this.curFileUploadField.type == 'input_with_uploadfile'){
-          let tooltipMsg = this.getFileTooltipMsg(fileList);        
-          this.tableFields[parentIndex].list_of_fields[curIndex]['tooltipMsg'] = tooltipMsg;
-        }
-
-        this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(curFieldName).setValue(fileName);
-      }else{
-        this.templateForm.get(this.curFileUploadFieldparentfield.field_name).get(curFieldName).setValue('');
-        if(this.curFileUploadField.type == 'input_with_uploadfile'){
-          this.tableFields[parentIndex].list_of_fields[curIndex]['tooltipMsg'] = '';
-        }
-      }
-
-    }else{
-      if(curFieldName != ''){
-        if (!this.dataListForUpload[curFieldName]) this.dataListForUpload[curFieldName] = [];
-        this.dataListForUpload[curFieldName] = response;
-
-        if(this.dataListForUpload[curFieldName] && this.dataListForUpload[curFieldName].length > 0){
-          let fileList = this.dataListForUpload[curFieldName];
-          let fileName = this.fileHandlerService.modifyFileSetValue(fileList);
-          if(this.curFileUploadField.type == 'input_with_uploadfile'){
-            let tooltipMsg = this.getFileTooltipMsg(fileList);
-            this.tableFields[curIndex]['tooltipMsg'] = tooltipMsg;
-          }
-          this.templateForm.get(curFieldName).setValue(fileName);
-        }else{
-          this.templateForm.get(curFieldName).setValue('');
-          if(this.curFileUploadField.type == 'input_with_uploadfile'){
-            this.tableFields[curIndex]['tooltipMsg'] = '';
-          }
-        }
-      }
-    } 
+    let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
+    this.dataListForUpload = uploadFileResponce.dataListForUpload;
+    this.templateForm = uploadFileResponce.templateForm;
+    this.tableFields = this.tableFields; 
   }
   removeAttachedDataFromList(parent,child,index){
-    let fieldName = child.field_name;
-    if(parent != ''){
-      let custmisedKey = this.commonFunctionService.custmizedKey(parent);
-      this.dataListForUpload[custmisedKey][fieldName].splice(index,1);
-
-    }else{
-      this.dataListForUpload[fieldName].splice(index,1)
-    }    
+    this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(parent,child,index,this.dataListForUpload);
   }
   toggle(index,event: MatCheckboxChange,field) {
-    if (event.checked) {
-      this.staticData[field.ddn_field][index].selected=true;
-    } else {
-      this.staticData[field.ddn_field][index].selected=false;
-    }
-    this.custmizedFormValue[field.field_name] = [];
-    this.staticData[field.ddn_field].forEach(element => {      
-      if(element.selected){
-        this.custmizedFormValue[field.field_name].push(element);
-      }
-    });
+    let responce = this.gridSelectionService.toggle(index,event.checked,field,this.staticData,this.custmizedFormValue);
+    this.staticData = responce.staticData;
+    this.custmizedFormValue = responce.custmizedFormValue;
   }
   isIndeterminate(ddn_field) {
-    let check = 0;
-    if(this.staticData[ddn_field].length > 0){
-      this.staticData[ddn_field].forEach(row => {
-        if(row.selected){
-          check = check + 1;
-        }
-      });
-    }
-    return (check > 0 && !this.isChecked(ddn_field));
+    return this.gridSelectionService.isIndeterminate(ddn_field,this.staticData);
+    // let check = 0;
+    // if(this.staticData[ddn_field].length > 0){
+    //   this.staticData[ddn_field].forEach(row => {
+    //     if(row.selected){
+    //       check = check + 1;
+    //     }
+    //   });
+    // }
+    // return (check > 0 && !this.isChecked(ddn_field));
   };
   isChecked(ddn_field) {
-    let check = 0;
-    if(this.staticData[ddn_field].length > 0){
-      this.staticData[ddn_field].forEach(row => {
-        if(row.selected){
-          check = check + 1;
-        }
-      });
-    }
-    return this.staticData[ddn_field].length === check;
+    return this.gridSelectionService.isChecked(ddn_field,this.staticData);
+    // let check = 0;
+    // if(this.staticData[ddn_field].length > 0){
+    //   this.staticData[ddn_field].forEach(row => {
+    //     if(row.selected){
+    //       check = check + 1;
+    //     }
+    //   });
+    // }
+    // return this.staticData[ddn_field].length === check;
   };
-  toggleAll(event: MatCheckboxChange,field) {    
-    if ( event.checked ) {
-      if(this.staticData[field.ddn_field].length > 0){
-        this.staticData[field.ddn_field].forEach(row => {
-          row.selected=true;
-        });
-      }
-    }else{
-      if(this.staticData[field.ddn_field].length > 0){
-        this.staticData[field.ddn_field].forEach(row => {
-          row.selected=false;
-        });
-      }
-    }
-    this.custmizedFormValue[field.field_name] = [];
-    this.staticData[field.ddn_field].forEach(element => {      
-      if(element.selected){
-        this.custmizedFormValue[field.field_name].push(element);
-      }
-    }); 
+  toggleAll(event: MatCheckboxChange,field) {   
+    let responce = this.gridSelectionService.toggleAll(event.checked,field,this.staticData,this.custmizedFormValue);
+    this.staticData = responce.staticData;
+    this.custmizedFormValue = responce.custmizedFormValue; 
+    // if ( event.checked ) {
+    //   if(this.staticData[field.ddn_field].length > 0){
+    //     this.staticData[field.ddn_field].forEach(row => {
+    //       row.selected=true;
+    //     });
+    //   }
+    // }else{
+    //   if(this.staticData[field.ddn_field].length > 0){
+    //     this.staticData[field.ddn_field].forEach(row => {
+    //       row.selected=false;
+    //     });
+    //   }
+    // }
+    // this.custmizedFormValue[field.field_name] = [];
+    // this.staticData[field.ddn_field].forEach(element => {      
+    //   if(element.selected){
+    //     this.custmizedFormValue[field.field_name].push(element);
+    //   }
+    // }); 
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -2990,13 +2852,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const editemode = true;    
     this.viewModal('form_basic-modal', value, fields,editemode); 
   }
-  getFormLavel(){
-    if(this.form && this.form.label){
-      return this.form.label;
-    }else{
-      return 'Add Form';
-    }
-  }
+  // getFormLavel(){
+  //   if(this.form && this.form.label){
+  //     return this.form.label;
+  //   }else{
+  //     return 'Add Form';
+  //   }
+  // }
   take_action_on_click(action_button){
     let api='';
     this.currentActionButton=action_button;
@@ -3110,13 +2972,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.notificationService.notify('bg-danger','Next Index are not available.')
     }
   }
-  onchangeHtmlView(){
-    if(this.staticData['onchangeHtmlView'] && this.staticData['onchangeHtmlView'] != null && this.staticData['onchangeHtmlView'] != ''){
-      return true;
-    }else{
-      return false;
-    }
-  }
+  // onchangeHtmlView(){
+  //   if(this.staticData['onchangeHtmlView'] && this.staticData['onchangeHtmlView'] != null && this.staticData['onchangeHtmlView'] != ''){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
+  // }
   funCallOnFormLoad(fields){
     fields.forEach(ele => {
       if(ele && ele.type == "group_of_fields"){
@@ -3140,33 +3002,39 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.changeForm();
   }  
   checkOnSuccessAction(){
-    let actionValue = ''
-    let index = -1;
-    if(this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.action_name && this.currentActionButton.onclick.action_name != null){
-      if(this.currentActionButton.onclick.action_name != ''){
-        actionValue = this.currentActionButton.onclick.action_name;
-        if(actionValue != ''){
-          Object.keys(this.forms).forEach((key,i) => {
-            if(key == actionValue){
-              index = i;
-            }
-          });
-          if(index != -1) {
-            this.changeNewForm(actionValue,index)
-          }    
-        }
-      }
-    }
+    let responce = this.apiCallResponceService.checkOnSuccessAction(this.currentActionButton,this.forms);
+    if(responce.index != -1) {
+      this.changeNewForm(responce.actionValue,responce.index)
+    } 
+    // let actionValue = ''
+    // let index = -1;
+    // if(this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.action_name && this.currentActionButton.onclick.action_name != null){
+    //   if(this.currentActionButton.onclick.action_name != ''){
+    //     actionValue = this.currentActionButton.onclick.action_name;
+    //     if(actionValue != ''){
+    //       Object.keys(this.forms).forEach((key,i) => {
+    //         if(key == actionValue){
+    //           index = i;
+    //         }
+    //       });
+    //       if(index != -1) {
+    //         this.changeNewForm(actionValue,index)
+    //       }    
+    //     }
+    //   }
+    // }
   };
   onClickLoadData(parent,field){
-    if(field && field.onClickApiParams && field.onClickApiParams != ''){        
-      let api_params = field.onClickApiParams;
-      let callBackfield = field.onClickCallBackField;
-      let criteria = field.onClickApiParamsCriteria
-      const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
-      let payloads = [];
-      payloads.push(this.commonFunctionService.checkQtmpApi(api_params,field,payload,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true)));
+    if(field && field.onClickApiParams && field.onClickApiParams != ''){  
+      let payloads = this.apiCallService.getOnClickLoadDataPayloads(field,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true));  
       this.callStaticData(payloads);
+      // let api_params = field.onClickApiParams;
+      // let callBackfield = field.onClickCallBackField;
+      // let criteria = field.onClickApiParamsCriteria
+      // const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
+      // let payloads = [];
+      // payloads.push(this.commonFunctionService.checkQtmpApi(api_params,field,payload,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true)));
+      // this.callStaticData(payloads);
     }
   }  
   updateDataOnFormField(formValue){
@@ -3239,7 +3107,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.dataListForUpload[fieldName] = JSON.parse(JSON.stringify(object));
             const value = this.fileHandlerService.modifyFileSetValue(object);
             if(type == 'input_with_uploadfile'){
-              let tooltipMsg = this.getFileTooltipMsg(object);
+              let tooltipMsg = this.fileHandlerService.getFileTooltipMsg(object);
               element['tooltipMsg'] = tooltipMsg;
             }
             this.templateForm.controls[fieldName].setValue(value);
@@ -3293,7 +3161,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                         let custmisedKey = this.commonFunctionService.custmizedKey(element);
                         this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
                         const value = this.fileHandlerService.modifyFileSetValue(object[data.field_name]);
-                        let tooltipMsg = this.getFileTooltipMsg(object[data.field_name]);
+                        let tooltipMsg = this.fileHandlerService.getFileTooltipMsg(object[data.field_name]);
                         element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
                         this.templateForm.get(fieldName).get(data.field_name).setValue(value);
                       }
@@ -3405,7 +3273,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                       let custmisedKey = this.commonFunctionService.custmizedKey(element);
                       this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
                       const value = this.fileHandlerService.modifyFileSetValue(object[data.field_name]);
-                      let tooltipMsg = this.getFileTooltipMsg(object[data.field_name]);
+                      let tooltipMsg = this.fileHandlerService.getFileTooltipMsg(object[data.field_name]);
                       element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
                       this.templateForm.get(fieldName).get(data.field_name).setValue(value);
                     }
@@ -4074,7 +3942,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         let mendatory = false;
         if(element.is_mandatory){
           if(element && element.show_if && element.show_if != ''){
-            if(this.formCreation.checkFieldShowOrHide(element,this.showIfFieldList)){
+            if(this.formCreationService.checkFieldShowOrHide(element,this.showIfFieldList)){
               mendatory = true;
             }else{
               mendatory = false;
