@@ -75,8 +75,8 @@
                                             </div>
                                         </td>
                                         <td [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
-                                            <div *ngIf="head.type == 'tree_view_selection'" class="position-relative">
-                                                <select class="form-control form-control-sm cursor-pointer" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
+                                            <div *ngIf="head.type == 'tree_view_selection'" class="position-relative w-100">
+                                                <select class="form-control form-control-sm cursor-pointer w-100" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
                                                     <option *ngFor="let data of treeViewData[head.field_name]" [value]="data">{{data && data.name ? data.name : data}}</option>
                                                 </select>
                                                 <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
@@ -87,7 +87,7 @@
                                                 </select>
                                                 <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>-->
 
-                                                <mat-form-field appearance="outline">
+                                                <mat-form-field appearance="outline" class="w-100 position-relative">
                                                     <mat-select [formControlName]="head.field_name" (selectionChange)="applyFilter()" disableOptionCentering panelClass="matdropdown">
                                                         <div class="p-1"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="filterdata" [ngModelOptions]="{standalone: true}"></div>
                                                         <mat-option *ngFor="let data of copyStaticData[head.ddn_field] |filter:filterdata; index as i" [value]="data">{{data && data.name ? data.name : data}}</mat-option>
