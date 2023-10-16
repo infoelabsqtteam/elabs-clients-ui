@@ -74,10 +74,24 @@
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
     li {font-size:12px;}
 }
+.tabExtraMenu {
+    cursor: pointer;
+    padding: 0px 5px;
+
+    &:hover {
+        border-radius: 5px;
+        background: var(--buttonColor);
+        color: #000;
+        opacity: 0.8;
+    }
+}
 .tablist {padding-right:190px;
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
-
+.moreMenuFavIcon {
+    font-size: 16px;
+    margin-left: 5px;
+}
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
     li.current, li a {border-radius:100%;overflow:hidden;font-size:13px;}

@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService} from '@core/web-core';
+import { MatTabGroup } from '@angular/material/tabs';
 
 
 @Component({
@@ -15,6 +16,7 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
 })
 export class BuilderComponent implements OnInit,OnDestroy {
 
+  @ViewChild('tabGroupList') tabGroup!: MatTabGroup;
   grid_view_mode:any = '';  
   navigationSubscription;  
   selectTabIndex: number = 0;
@@ -375,6 +377,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }
       const url = this.currentUrl+"/"+this.tabs[this.selectTabIndex].tab_name;
       this._location.go(url); 
+    this.tabGroup.selectedIndex = this.selectTabIndex;
   }
   
   gateTabName(tab) {
