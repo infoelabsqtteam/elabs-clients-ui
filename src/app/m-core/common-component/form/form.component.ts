@@ -2946,6 +2946,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (this.updateMode || this.complete_object_payload_mode){      
       this.tableFields.forEach(element => {
         switch (element.type) {
+          case 'text':
+            formValue[element.field_name].trim()
+            break;
           case 'stepper':
             element.list_of_fields.forEach(step => {
               if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
@@ -3011,6 +3014,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.tableFields.forEach(element => {
         switch (element.type) {
+          case 'text':
+            formValue[element.field_name].trim()
+            break;
           case 'stepper':
             element.list_of_fields.forEach(step => {
               if(step.list_of_fields && step.list_of_fields != null && step.list_of_fields.length > 0){
