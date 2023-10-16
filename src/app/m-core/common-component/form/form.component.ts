@@ -3011,7 +3011,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.tableFields.forEach(element => {
         switch (element.type) {
-          case 'text':
+          case 'text': 
             formValue[element.field_name].trim()
             break;
           case 'stepper':
