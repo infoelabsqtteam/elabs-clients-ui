@@ -10,6 +10,7 @@ import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService} from '@core/web-core';
+import { resolve } from 'path';
 // import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 // import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 // import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
@@ -518,7 +519,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   ngOnChanges(changes: SimpleChanges) {
     //this.formIndex=0;   
     this.saveResponceData = {};
-    if(this.currentMenu == undefined){
+    if(this.currentMenu == undefined || (typeof this.currentMenu == "object" && Object.keys(this.currentMenu).length == 0)){
       this.currentMenu = this.storageService.GetActiveMenu();
     }    
     this.changeForm();    
@@ -744,7 +745,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.form){
       this.formDetails.emit(this.form);
     }
-    let getFields = this.formCreationService.checkFormDetails(this.form,this.tab);
+    let getFields = this.formCreationService.checkFormDetails(this.form,this.tab,this.currentMenu);
     this.currentMenu = getFields['currentMenu'];
     this.bulkupdates = getFields['bulkupdates'];
     this.getLocation = getFields['getLocation'];
@@ -2175,12 +2176,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(dataWithCustValue == undefined){
       formValueWithCustomData = this.getFormValue(true);
     }    
-    let formDataResponce = this.formValueService.getSavePayloadData(this.currentMenu,this.updateMode,this.deleteGridRowData,this.tableFields,formValue,formValueWithCustomData,this.gridSelectionMendetoryList,this.selectedRow,this.custmizedFormValue,this.dataSaveInProgress,this.showNotify,this.formName,this.templateForm.valid);    
-    this.getSavePayload = formDataResponce.getSavePayload;
-    this.deleteGridRowData = formDataResponce.deleteGridRowData;
-    this.showNotify = formDataResponce.showNotify;
-    this.dataSaveInProgress = formDataResponce.dataSaveInProgress; 
+    let formDataResponce = this.formValueService.getSavePayloadData(this.currentMenu,this.updateMode,this.deleteGridRowData,this.tableFields,formValue,formValueWithCustomData,this.gridSelectionMendetoryList,this.selectedRow,this.custmizedFormValue,this.dataSaveInProgress,this.showNotify,this.formName,this.templateForm.valid);   
+    this.deleteGridRowData = formDataResponce.deleteGridRowData;     
     if(this.dataSaveInProgress){
+      this.getSavePayload = formDataResponce.getSavePayload;
+      this.showNotify = formDataResponce.showNotify;
+      this.dataSaveInProgress = formDataResponce.dataSaveInProgress;
       return formDataResponce.data;
     }else{
       let message = formDataResponce.message;
@@ -2537,30 +2538,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       const fieldName = this.curTreeViewField.field_name;      
       this.templateForm.controls[fieldName].setValue(responce);
       let treeResponceData = JSON.parse(JSON.stringify(responce));
-      this.updateTreeViewData(treeResponceData,this.curTreeViewField);
+      let data = this.treeComponentService.updateTreeViewData(treeResponceData,this.curTreeViewField,this.treeViewData);
+      this.treeViewData = data.treeViewData;
     }
-  }
-  updateTreeViewData(responce,field){
-    const fieldName = field.field_name;
-    let keys = [];
-    let fields = [];
-    if(field && field.treeViewKeys){
-      keys = field.treeViewKeys;
-    }
-    if(field && field.fields && field.fields.length > 0){
-      fields = field.fields;
-    }
-    const treeData = this.treeComponentService.buildFileTree(responce,0,keys);
-    //console.log(treeData);
-    let selectedNodeList = this.treeComponentService.convertTreeToList(JSON.parse(JSON.stringify(treeData)),[]);
-    let childList = [];
-    if(fields && fields.length > 0){
-      childList = this.treeComponentService.convertParentNodeToChildNodeList(selectedNodeList,fields);
-    }
-    //console.log(selectedNodeList);
-    //console.log(childList);
-    //this.dataSource[fieldName].data = treeData;
-    this.treeViewData[fieldName] = childList;
   }
   isDisable(parent,chield){
     const  formValue = this.getFormValue(true);  
@@ -3044,422 +3024,27 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       // payloads.push(this.commonFunctionService.checkQtmpApi(api_params,field,payload,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true)));
       // this.callStaticData(payloads);
     }
-  }  
+  } 
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !Array.isArray(formValue) && this.tableFields && this.tableFields.length > 0){
-      this.tableFields.forEach(element => {        
-        if(element && element.field_name && element.field_name != ''){
-          let fieldName = element.field_name;
-          let object = formValue[fieldName];
-          if(object != null && object != undefined){
-            this.updateFormValue(element,formValue);
-          }
-        }
-      });
-      if(this.formFieldButtons.length > 0){
-        this.formFieldButtons.forEach(element => {
-          let fieldName = element.field_name;
-          let object = this.selectedRow[fieldName];
-          if(formValue[fieldName] != null && formValue[fieldName] != undefined){
-            if(element.field_name && element.field_name != ''){              
-              switch (element.type) {
-                case "dropdown":
-                  let dropdownValue = object == null ? null : object;
-                  this.templateForm.controls[element.field_name].setValue(dropdownValue);
-                  break;
-                default:
-                  break;
-              }
-            }
-          }
-        });
+      let result = this.formControlService.updateDataOnForm(this.templateForm,this.tableFields,formValue,this.formFieldButtons,this.custmizedFormValue,this.modifyCustmizedFormValue,this.selectedRow,this.dataListForUpload,this.treeViewData,this.staticData,this.longitude,this.latitude,this.zoom);
+      this.templateForm = result.templateForm;
+      this.tableFields = result.tableFields;
+      this.custmizedFormValue = result.custmizedFormValue;
+      this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
+      this.selectedRow = result.selectedRow;
+      this.dataListForUpload = result.dataListForUpload;
+      this.treeViewData = result.treeViewData;
+      this.staticData = result.staticData;
+      this.latitude = result.latitude;
+      this.longitude = result.longitude;
+      this.zoom = result.zoom;
+      if(result.getAddress){
+        this.getAddress(this.latitude,this.longitude);
       }
       this.getFocusFieldAndFocus();
       this.checkFormFieldIfCondition();
-    }
-  }
-  updateFormValue(element,formValue){  
-      let type = element.type;
-      let datatype = element.datatype;
-      let tree_view_object = element.tree_view_object;
-      let date_format = element.date_format;
-      let fieldName = element.field_name;  
-      let ddn_field = element.ddn_field;
-      let parent = element.parent;
-      let list_of_fields = element.list_of_fields;
-      let object = formValue[fieldName];
-      switch (type) { 
-        case "grid_selection":
-        case 'grid_selection_vertical':
-        case "list_of_string":
-        case "drag_drop":
-          if(object != null && object != undefined){
-            if(Array.isArray(object)){
-              this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));
-              if(type.startsWith("grid_selection")){
-                const modifyData = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,"grid_selection",formValue);
-                this.modifyCustmizedFormValue = modifyData.modifyData;
-                if(modifyData.field_index != -1){
-                  const index = modifyData.field_index;
-                  this.tableFields[index] = modifyData.fields[index];
-                }                    
-              }
-            }
-            this.templateForm.controls[fieldName].setValue('')
-          }
-          break;
-        case "file":
-        case "input_with_uploadfile":
-          if(object != null && object != undefined){
-            this.dataListForUpload[fieldName] = JSON.parse(JSON.stringify(object));
-            const value = this.fileHandlerService.modifyFileSetValue(object);
-            if(type == 'input_with_uploadfile'){
-              let tooltipMsg = this.fileHandlerService.getFileTooltipMsg(object);
-              element['tooltipMsg'] = tooltipMsg;
-            }
-            this.templateForm.controls[fieldName].setValue(value);
-          }
-          break;
-        case "list_of_fields":
-          if(object != null && object != undefined){
-            if(Array.isArray(object)){
-              this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));
-              let modifyObject = this.gridCommonFunctionService.modifyListofFieldsData(element,this.custmizedFormValue[fieldName],element.list_of_fields);
-              this.modifyCustmizedFormValue[fieldName] = modifyObject['data'];
-            }else if(typeof object == "object" && datatype == 'key_value'){
-              this.custmizedFormValue[fieldName] = object;
-            }else{
-              if(list_of_fields && list_of_fields != null && list_of_fields.length > 0){
-                list_of_fields.forEach((data,j) => {
-                  switch (data.type) {
-                    case "list_of_string":
-                    case "grid_selection":
-                    case 'grid_selection_vertical':
-                    case "drag_drop":                    
-                      if(object && object[data.field_name] != null && object[data.field_name] != undefined){
-                        if(Array.isArray(object[data.field_name])){
-                          if (!this.custmizedFormValue[fieldName]) this.custmizedFormValue[fieldName] = {};
-                          this.custmizedFormValue[fieldName][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                        }
-                        this.templateForm.get(fieldName).get(data.field_name).setValue('')
-                        //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
-                      }
-                      break;
-                    case "typeahead":
-                      if(data.datatype == "list_of_object" || datatype == 'chips'){
-                        if(object && object[data.field_name] != null && object[data.field_name] != undefined){
-                          if(Array.isArray(object[data.field_name])){
-                            if (!this.custmizedFormValue[fieldName]) this.custmizedFormValue[fieldName] = {};
-                            this.custmizedFormValue[fieldName][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                          }
-                          this.templateForm.get(fieldName).get(data.field_name).setValue('')
-                          //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue('');
-                        }
-                      }else{
-                        if(object && object[data.field_name] != null && object[data.field_name] != undefined){
-                          const value = object[data.field_name];
-                          this.templateForm.get(fieldName).get(data.field_name).setValue(value)
-                          //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
-                        }
-                      }
-                      break;
-                    case "input_with_uploadfile":
-                      if(object != null && object != undefined && object[data.field_name] != null && object[data.field_name] != undefined){
-                        let custmisedKey = this.commonFunctionService.custmizedKey(element);
-                        this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                        const value = this.fileHandlerService.modifyFileSetValue(object[data.field_name]);
-                        let tooltipMsg = this.fileHandlerService.getFileTooltipMsg(object[data.field_name]);
-                        element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
-                        this.templateForm.get(fieldName).get(data.field_name).setValue(value);
-                      }
-                      break;
-                    default:
-                      if(object && object[data.field_name] != null && object[data.field_name] != undefined){
-                        const value = object[data.field_name];
-                        this.templateForm.get(fieldName).get(data.field_name).setValue(value)
-                        //(<FormGroup>this.templateForm.controls[element.field_name]).controls[data.field_name].patchValue(value);
-                      }
-                      break;
-                  }
-                });
-              }
-            }
-          }
-          break; 
-        case "typeahead":
-          if(datatype == "list_of_object" || datatype == 'chips'){
-            if(object != null && object != undefined){
-              this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));
-              this.templateForm.controls[fieldName].setValue('')
-            }
-          }else{
-            if(object != null && object != undefined){
-              const value = object;
-              this.templateForm.controls[fieldName].setValue(value)
-            }
-          }  
-          break;
-        case "group_of_fields":
-          if(list_of_fields && list_of_fields.length > 0){
-            list_of_fields.forEach((data,j) => {
-              let ChildFieldData = object;
-              let childFieldName = data.field_name;
-              if(data && childFieldName && childFieldName != '' && ChildFieldData && ChildFieldData != null){
-                switch (data.type) {
-                  case "list_of_string":
-                  case "grid_selection":
-                  case 'grid_selection_vertical':
-                  case "drag_drop": 
-                    if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
-                      if (!this.custmizedFormValue[fieldName]) this.custmizedFormValue[fieldName] = {};
-                      const value = JSON.parse(JSON.stringify(ChildFieldData[childFieldName]));
-                      this.custmizedFormValue[fieldName][childFieldName] = value;
-                      this.templateForm.get(fieldName).get(childFieldName).setValue('')
-                      //(<FormGroup>this.templateForm.controls[fieldName]).controls[childFieldName].patchValue('');
-                    }
-                    break;   
-                  case "typeahead":
-                    if(data.datatype == "list_of_object" || data.datatype == 'chips'){
-                      if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
-                        if (!this.custmizedFormValue[fieldName]) this.custmizedFormValue[fieldName] = {};
-                        const value = JSON.parse(JSON.stringify(ChildFieldData[childFieldName]));
-                        this.custmizedFormValue[fieldName][childFieldName] = value;
-                        this.templateForm.get(fieldName).get(childFieldName).setValue(value);
-                        //(<FormGroup>this.templateForm.controls[fieldName]).controls[childFieldName].patchValue('');
-                      }
-                    }else{
-                      if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
-                        const value = ChildFieldData[childFieldName];
-                        this.templateForm.get(fieldName).get(childFieldName).setValue(value)
-                        //(<FormGroup>this.templateForm.controls[fieldName]).controls[childFieldName].patchValue(value);
-                      }
-                    }  
-                    break;               
-                  case "number":
-                    if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
-                      let gvalue;
-                      const value = ChildFieldData[childFieldName];
-                      if(value != null && value != ''){
-                        gvalue = value;
-                      }else{
-                        gvalue = 0;
-                      }
-                      this.templateForm.get(fieldName).get(childFieldName).setValue(gvalue)
-                      //(<FormGroup>this.templateForm.controls[fieldName]).controls[childFieldName].patchValue(gvalue);
-                    }else if(ChildFieldData && ChildFieldData.hasOwnProperty(childFieldName)){
-                      let gvalue = 0;
-                      this.templateForm.get(fieldName).get(childFieldName).setValue(gvalue)
-                    }
-                    break;
-                  case "list_of_checkbox":
-                    this.templateForm.get(fieldName).get(childFieldName).patchValue([])
-                    if(parent){
-                      this.selectedRow[parent] = {}
-                      this.selectedRow[parent][fieldName] = ChildFieldData;
-                    }else{
-                      this.selectedRow[fieldName] = ChildFieldData;
-                    }
-                    //(<FormGroup>this.templateForm.controls[fieldName]).controls[childFieldName].patchValue([]);
-                    break;
-                  case "date":
-                    if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
-                      if(data.date_format && data.date_format !="" && typeof ChildFieldData[childFieldName] === 'string'){
-                        const date = ChildFieldData[childFieldName];
-                        const dateMonthYear = date.split('/');
-                        const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
-                        const value = new Date(formatedDate);
-                        this.templateForm.get(fieldName).get(childFieldName).setValue(value)
-                      }else{                  
-                        const value = formValue[fieldName][childFieldName] == null ? null : formValue[fieldName][childFieldName];
-                        this.templateForm.get(fieldName).get(childFieldName).setValue(value);              
-                      }
-                    }
-                    break;
-                  case "input_with_uploadfile":
-                    if(object != null && object != undefined && object[data.field_name] != null && object[data.field_name] != undefined){
-                      let custmisedKey = this.commonFunctionService.custmizedKey(element);
-                      this.dataListForUpload[custmisedKey][data.field_name] = JSON.parse(JSON.stringify(object[data.field_name]));
-                      const value = this.fileHandlerService.modifyFileSetValue(object[data.field_name]);
-                      let tooltipMsg = this.fileHandlerService.getFileTooltipMsg(object[data.field_name]);
-                      element.list_of_fields[j]['tooltipMsg'] = tooltipMsg;
-                      this.templateForm.get(fieldName).get(data.field_name).setValue(value);
-                    }
-                    break;
-                  default:
-                    if(ChildFieldData && ChildFieldData[childFieldName] != null && ChildFieldData[childFieldName] != undefined && ChildFieldData[childFieldName] != ''){
-                      const value = ChildFieldData[childFieldName];
-                      this.templateForm.get(fieldName).get(childFieldName).setValue(value)
-                      //(<FormGroup>this.templateForm.controls[fieldName]).controls[childFieldName].patchValue(value);
-                    }
-                    break;
-                }
-              }
-            });
-          }
-          break;
-        case "tree_view_selection":
-          if(formValue[fieldName] != null && formValue[fieldName] != undefined){
-            this.treeViewData[fieldName] = [];            
-            let treeDropdownValue = object == null ? null : object;
-            if(treeDropdownValue != ""){
-              this.treeViewData[fieldName].push(JSON.parse(JSON.stringify(treeDropdownValue)));
-            }
-            this.templateForm.controls[fieldName].setValue(treeDropdownValue)
-          }
-          break;
-        case "tree_view":
-          if(formValue[fieldName] != null && formValue[fieldName] != undefined){
-            let treeValue = object == null ? null : object;
-            this.templateForm.controls[fieldName].setValue(treeValue);
-            if(treeValue){
-              this.updateTreeViewData(JSON.parse(JSON.stringify(treeValue)),JSON.parse(JSON.stringify(element)));
-            }            
-          }
-          break;
-        case "stepper":
-          if(list_of_fields && list_of_fields.length > 0){
-            list_of_fields.forEach(step => {
-              if(step.list_of_fields && step.list_of_fields.length > 0){
-                step.list_of_fields.forEach(data => {
-                  let childFieldName = data.field_name;
-                  switch (data.type) {
-                    case "list_of_string":
-                    case "grid_selection":
-                    case 'grid_selection_vertical':
-                      if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){                                             
-                        this.custmizedFormValue[childFieldName] = formValue[childFieldName]                    
-                      }
-                      this.templateForm.get(step.field_name).get(childFieldName).setValue('');
-                      break;
-                    case "typeahead":
-                      if(data.datatype == "list_of_object" || data.datatype == 'chips'){
-                        if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){                      
-                          this.custmizedFormValue[childFieldName] = formValue[childFieldName]
-                          this.templateForm.get(step.field_name).get(childFieldName).setValue('');
-                        }
-                      }else{
-                        if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){
-                          const value = formValue[childFieldName];
-                          this.templateForm.get(step.field_name).get(childFieldName).setValue(value);
-                        }
-                      }
-                      break;
-                    case "number":
-                        let gvalue;
-                        const value = formValue[childFieldName];
-                        if(value != null && value != ''){
-                          gvalue = value;
-                        }else{
-                          gvalue = 0;
-                        }
-                        this.templateForm.get(step.field_name).get(childFieldName).setValue(gvalue);
-                      break;
-                    case "list_of_checkbox":
-                      this.templateForm.get(step.field_name).get(childFieldName).patchValue([]);
-                      break;
-                    default:
-                      if(formValue[childFieldName] != null && formValue[childFieldName] != undefined && formValue[childFieldName] != ''){
-                        const value = formValue[childFieldName];
-                        this.templateForm.get(step.field_name).get(childFieldName).setValue(value);
-                      }
-                      break;
-                  }
-                  if(data.tree_view_object && data.tree_view_object.field_name != ""){
-                    let editeTreeModifyData = JSON.parse(JSON.stringify(data.tree_view_object));
-                    const treeObject = this.selectedRow[editeTreeModifyData.field_name];
-                    this.templateForm.get(step.field_name).get(editeTreeModifyData.field_name).setValue(treeObject);
-                  } 
-                });
-              }
-            });
-          }
-          break;            
-        case "number":
-          if(object != null && object != undefined){
-            let value;
-            if(object != null && object != ''){
-              value = object;
-              this.templateForm.controls[fieldName].setValue(value)
-            }else if(object == 0){
-              value = object;
-              this.templateForm.controls[fieldName].setValue(value)
-            }
-          }
-        break;            
-        case "gmap":        
-        case "gmapview":
-          if(object != null && object != undefined){
-            if(formValue['longitude']){
-              this.longitude = formValue['longitude'];
-            }
-            if(formValue['latitude']){
-              this.latitude = formValue['latitude'];
-            }
-            if(formValue['zoom']){
-              this.zoom = formValue['zoom'];
-            }    
-            if(this.longitude != 0 && this.latitude != 0){
-              this.getAddress(this.latitude,this.longitude)
-            } 
-            this.templateForm.controls[fieldName].setValue(object)
-          }
-          break;
-        case "daterange":
-          if(object != null && object != undefined){
-            let list_of_dates = [
-              {field_name : 'start'},
-              {field_name : 'end'}
-            ]
-            if (list_of_dates.length > 0) {
-              list_of_dates.forEach((data) => { 
-                let childFieldName = data.field_name;
-                this.templateForm.get(fieldName).get(childFieldName).setValue(object[childFieldName]);
-              });
-            } 
-          }                                  
-          break;
-        case "date":
-          if(object != null && object != undefined){
-            if(date_format && date_format != '' && typeof object === 'string'){
-              const date = object[fieldName];
-              const dateMonthYear = date.split('/');
-              const formatedDate = dateMonthYear[2]+"-"+dateMonthYear[1]+"-"+dateMonthYear[0];
-              const value = new Date(formatedDate);
-              this.templateForm.controls[fieldName].setValue(value)
-            }else{                  
-              const value = formValue[fieldName] == null ? null : formValue[fieldName];
-              this.templateForm.controls[fieldName].setValue(value);                  
-            }
-          }
-          break;
-        case "tabular_data_selector":   
-          if(object != undefined && object != null){
-            this.custmizedFormValue[fieldName] = JSON.parse(JSON.stringify(object));     
-          } 
-          if(Array.isArray(this.staticData[ddn_field]) && Array.isArray(this.custmizedFormValue[fieldName])){
-            this.custmizedFormValue[fieldName].forEach(staData => {
-              if(this.staticData[ddn_field][staData._id]){
-                this.staticData[ddn_field][staData._id].selected = true;
-              }
-            });
-          }          
-          break;
-        case "list_of_checkbox":
-          this.templateForm.controls[fieldName].setValue([]);
-          break;
-        default:
-          if(object != null && object != undefined){
-            const value = object == null ? null : object;
-            this.templateForm.controls[fieldName].setValue(value);
-          }
-          break;
-      } 
-     
-    if(tree_view_object && tree_view_object.field_name != ""){
-      let editeTreeModifyData = JSON.parse(JSON.stringify(tree_view_object));
-      const object = this.selectedRow[editeTreeModifyData.field_name];
-      this.templateForm.controls[editeTreeModifyData.field_name].setValue(object)
     }
   }
   private setCurrentLocation() {
