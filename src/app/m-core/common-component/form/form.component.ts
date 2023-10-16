@@ -3011,7 +3011,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.tableFields.forEach(element => {
         switch (element.type) {
-          case 'text': 
+          case 'text':
             formValue[element.field_name].trim()
             break;
           case 'stepper':
@@ -3040,7 +3040,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                   break;
               
                 default:
-                  modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name];
+                  modifyFormValue[element.field_name][data.field_name] = formValue[element.field_name][data.field_name].trim();
                   break;
               }
             });
@@ -3069,7 +3069,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }           
             break;
           default:
-            modifyFormValue[element.field_name] = formValue[element.field_name];
+            modifyFormValue[element.field_name] = formValue[element.field_name].trim();
             //modifyFormValue = formValue;
             break;
         }
