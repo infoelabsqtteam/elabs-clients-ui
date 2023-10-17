@@ -9,7 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService} from '@core/web-core';
 import { resolve } from 'path';
 // import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
 // import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
@@ -232,7 +232,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private formControlService:FormControlService,
     private checkIfService:CheckIfService,
     private gridSelectionService:GridSelectionService,
-    private apiCallResponceService:ApiCallResponceService
+    private apiCallResponceService:ApiCallResponceService,
+    private multipleFormService:MultipleFormService
 ) {
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
@@ -631,15 +632,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
-  // async mapsApiLoaded(){
-  //   // let apiKey:any = this.storageService.getApplicationValueByKey('google_map_apikey');
-  //   let apiKey:any = Common.GOOGLE_API_KEY;
-  //   this.mapsAPILoaded = this.httpClient.jsonp('https://maps.googleapis.com/maps/api/js?key='+ apiKey +'&libraries=places', 'callback')
-  //       .pipe(
-  //         map(() => true),
-  //         catchError(() => of(false)),
-  //       );
-  // }
   async gmapSearchPlaces(inputData?:any,field?:any){
     if(inputData?.target?.value){
       if(this.searchElementRef != undefined){
@@ -1170,7 +1162,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           parentFieldName = element.parent;
           parentIndex = element.parentIndex;
           fieldIndex = element.currentIndex;
-          this.tableFields[parentIndex].list_of_fields[fieldIndex]['notDisplay'] = this.checkShowIfListOfFiedlds(parentFieldName,element);
+          this.tableFields[parentIndex].list_of_fields[fieldIndex]['notDisplay'] = this.checkIfService.checkShowIfListOfFiedlds(parentFieldName,element,this.getFormValue(true));
         }else{
           id = element._id;
         }
@@ -2575,7 +2567,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.modifyCustmizedFormValue = {};
     }
     if(this.multipleFormCollection.length > 0){
-      this.setPreviousFormTargetFieldData();
+      this.multipleFormCollection = this.multipleFormService.setPreviousFormTargetFieldData(this.multipleFormCollection,this.getFormValue(true));
     }
     this.updateMode=false;
     this.dataListForUpload = []
@@ -2621,7 +2613,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   resetForm(){
     if(this.multipleFormCollection.length > 0){
-      this.setPreviousFormTargetFieldData();
+      this.multipleFormCollection = this.multipleFormService.setPreviousFormTargetFieldData(this.multipleFormCollection,this.getFormValue(true));
     }
     this.donotResetField();
     if(this.templateForm && this.templateForm.controls){
@@ -2709,23 +2701,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       } 
     }     
   }  
-  // fileUploadList(parent,field){
-  //   let fileList = [];
-  //   let msg = "";
-  //   if(parent != ''){
-  //     const parentKey = this.commonFunctionService.custmizedKey(parent);
-  //     if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
-  //       fileList = this.dataListForUpload[parentKey][field.field_name];
-  //       msg = this.getFileTooltipMsg(fileList);
-  //     }
-  //   }else{
-  //     if(this.dataListForUpload[field.field_name]){        
-  //       fileList = this.dataListForUpload[field.field_name];
-  //       msg = this.getFileTooltipMsg(fileList);
-  //     }
-  //   }
-  //   return msg;
-  // }  
   uploadModal(parent,field,parentIndex,curIndex) {
     if (field.field_name && field.field_name != "") {
       field['parentIndex'] = parentIndex;
@@ -2840,13 +2815,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const editemode = true;    
     this.viewModal('form_basic-modal', value, fields,editemode); 
   }
-  // getFormLavel(){
-  //   if(this.form && this.form.label){
-  //     return this.form.label;
-  //   }else{
-  //     return 'Add Form';
-  //   }
-  // }
   take_action_on_click(action_button){
     let api='';
     this.currentActionButton=action_button;
@@ -2960,13 +2928,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.notificationService.notify('bg-danger','Next Index are not available.')
     }
   }
-  // onchangeHtmlView(){
-  //   if(this.staticData['onchangeHtmlView'] && this.staticData['onchangeHtmlView'] != null && this.staticData['onchangeHtmlView'] != ''){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
   funCallOnFormLoad(fields){
     fields.forEach(ele => {
       if(ele && ele.type == "group_of_fields"){
@@ -3074,28 +3035,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     })
   } 
-  checkShowIfListOfFiedlds(parent,field){
-    let formValue = this.getFormValue(true);
-    let fieldValue = formValue[parent];    
-    if(fieldValue && fieldValue.length > 0 && field && field.show_if && field.show_if != null && field.show_if != ''){
-      let check = 0;      
-      for (let index = 0; index < fieldValue.length; index++) {
-        const value = fieldValue[index];
-        formValue[parent] = value;
-        if(this.commonFunctionService.showIf(field,formValue)){
-          check = 1;
-          break;
-        }        
-      }
-      if(check == 1){
-        return false;
-      }else{
-        return true;
-      }
-    }else{
-      return false;
-    }
-  }
   refreshApiCall(field:any,check:any){
     const fields = [field];
     const payloads = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
@@ -3343,20 +3282,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     this.multipleFormCollection.splice(lastIndex,1);    
   }
-  checkAddNewButtonOnGridSelection(buttons){
-    let check = false;
-    if(buttons && buttons.length >0){
-        for (let i = 0; i < buttons.length; i++) {
-          const btn = buttons[i];
-          if(btn && btn.onclick && btn.onclick.api && btn.onclick.api == "save"){
-            check = true;
-            break;
-          }
-        }
-    } 
-    return check;
-  }
-
   loadNextForm(form: any){    
     this.form = form;
     this.resetFlagsForNewForm();
@@ -3387,7 +3312,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           const fieldName = nextFormData['current_field']['field_name'];
           if(Array.isArray(cdata)){
             if(this.form && this.form.buttons){
-              if(!this.checkAddNewButtonOnGridSelection(this.form.buttons)){
+              if(!this.checkIfService.checkAddNewButtonOnGridSelection(this.form.buttons)){
                 this.custmizedFormValue[fieldName] = cdata;
                 this.modifyCustmizedValue(fieldName);
               }
@@ -3419,21 +3344,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;
         }        
       }
-    }
-  }
-  setPreviousFormTargetFieldData(){
-    if(this.multipleFormCollection.length > 0){
-      const previousFormIndex = this.multipleFormCollection.length - 1;
-      const previousFormData = this.multipleFormCollection[previousFormIndex];
-      const previousFormField = previousFormData.current_field;
-      const formData = previousFormData.next_form_data;
-      if(previousFormField && previousFormField.add_new_target_field){
-        const targateFieldName = previousFormField.add_new_target_field;          
-        const currentFormValue = this.getFormValue(true)
-        const currentTargetFieldValue = currentFormValue[targateFieldName]
-        formData[targateFieldName] = currentTargetFieldValue;
-      }      
-      this.multipleFormCollection[previousFormIndex]['next_form_data'] = formData;
     }
   }
   setListoffieldData(){
