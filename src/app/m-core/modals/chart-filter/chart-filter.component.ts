@@ -177,7 +177,10 @@ export class ChartFilterComponent implements OnInit {
     let data = responce.data;
     if(item && data){
       this.dashletFilter(item,data);
-    }    
+    }
+    setTimeout(() => {
+      this.isfilterChart = false;
+    }, 6000);  
   }
   dashletFilter(item,data){
     if(item && item.package_name && item.package_name == "mongodb_chart"){
@@ -190,10 +193,6 @@ export class ChartFilterComponent implements OnInit {
     let id = "filter_"+chart.chartId;
     let chartObject = this.createdChartList[id];    
     chartObject.setFilter(data);
-    if(data != "") {
-      this.isfilterChart = false;
-    }
-    
   }
   
   
