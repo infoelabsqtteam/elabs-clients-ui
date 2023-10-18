@@ -5,7 +5,7 @@
     <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
 
         <div class="tablist position-relative d-flex">
-          <mat-tab-group #tabGroupList animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+          <mat-tab-group animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
             <mat-tab *ngFor="let tab of tabs; let i = index" >
               <ng-template mat-tab-label>
                 <div class="mat-tab-label-content pl-3 pr-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>

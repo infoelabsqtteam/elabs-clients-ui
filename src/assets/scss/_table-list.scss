@@ -88,6 +88,11 @@
 .tablist {padding-right:220px;
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
+@media screen and (min-width: 1366px) {
+    .tablist {
+      padding-right: 290px;
+    }
+  }
 .moreMenuFavIcon {
     font-size: 16px;
     margin-left: 5px;
