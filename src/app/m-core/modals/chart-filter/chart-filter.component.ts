@@ -169,7 +169,10 @@ export class ChartFilterComponent implements OnInit {
       }
     }
   }
+
+  isfilterChart:boolean = false;
   filterData(responce){
+    this.isfilterChart = true;
     let item = responce.item;
     let data = responce.data;
     if(item && data){
@@ -187,6 +190,10 @@ export class ChartFilterComponent implements OnInit {
     let id = "filter_"+chart.chartId;
     let chartObject = this.createdChartList[id];    
     chartObject.setFilter(data);
+    if(data != "") {
+      this.isfilterChart = false;
+    }
+    
   }
   
   
@@ -246,7 +253,7 @@ export class ChartFilterComponent implements OnInit {
           console.log('Chart failed to initialise')
           //window.alert('Chart failed to initialise')
           );
-        }        
+        }  
       }
     }
   }
