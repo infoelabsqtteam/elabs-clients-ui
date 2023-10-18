@@ -252,7 +252,7 @@ export class ChartFilterComponent implements OnInit {
           console.log('Chart failed to initialise')
           //window.alert('Chart failed to initialise')
           );
-        }  
+        }    
       }
     }
   }
