@@ -16,7 +16,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 })
 export class BuilderComponent implements OnInit,OnDestroy {
 
-  @ViewChild('tabGroupList') tabGroup!: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
   grid_view_mode:any = '';  
   navigationSubscription;  
   selectTabIndex: number = 0;
