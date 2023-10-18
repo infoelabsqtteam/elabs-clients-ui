@@ -10,11 +10,6 @@ import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService} from '@core/web-core';
-import { resolve } from 'path';
-// import {NestedTreeControl,FlatTreeControl} from '@angular/cdk/tree';
-// import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
-// import {TodoItemNode , TodoItemFlatNode} from '../../modals/permission-tree-view/interface';
-
 
 declare var tinymce: any;
 
@@ -161,7 +156,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   public donotResetFieldLists:any={};
   public fieldApiValidaton:string = '';
   public fieldApiValMsg:string='';
+
   
+  previousFormFocusField:any = {};
+  focusFieldParent:any={};  
+  public dinamicApiField:any="";   
+  currentTreeViewFieldParent:any='';    
+  public addNewRecord:boolean = false;
+  public lastTypeaheadTypeValue="";
 
   //public style:string  = 'width: 100px, height: 100px, backgroundColor: cornflowerblue';
 
@@ -458,15 +460,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.setSaveResponce(responce);
     })
   }
-  // unsubscribe(variable){
-  //   if(variable){
-  //     variable.unsubscribe();
-  //   }
-  // }
-  // moreformResponce(responce) {
-
-  // }
-
   ngOnDestroy() {
     // this.tableFields = [];
     // this.formFieldButtons=[];
@@ -575,8 +568,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.serverReq = false;
     this.updateAddNew = false;
   }
-
-
   ngOnInit(): void {  
     // if (this.editedRowIndex >= 0) {
     //   this.selectedRowIndex = this.editedRowIndex;
@@ -596,8 +587,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 
     this.getGooglepMapCurrentPosition();
 
-  }
-  
+  }  
   updateRunningData(data:any){
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
@@ -805,8 +795,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.notificationService.notify("bg-danger",msg);
     this.tableFields = [];
     this.closeModal();
-  }
-  
+  }  
   setStaticData(staticDatas){   
     if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
@@ -929,14 +918,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     });
   }
-
   setGridRowDeleteResponce(responce){
     if(responce && responce['success']){
       this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
       this.dataSaveInProgress = true;
     }
   }
-
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
       if (saveFromDataRsponce.success && saveFromDataRsponce.success != '' && this.showNotify) {
@@ -1425,7 +1412,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(this.custmizedFormValue[field.field_name]){
           list = this.custmizedFormValue[field.field_name];
         }
-        let checkDublicate = this.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,this.listOfFieldsUpdateIndex,field);
+        let checkDublicate = this.checkIfService.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,this.listOfFieldsUpdateIndex,this.showIfFieldList,this.custmizedFormValue,this.templateForm,field);
         if (!checkDublicate.status) {
           if(this.listOfFieldsUpdateIndex != -1){
               let updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
@@ -1643,8 +1630,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.term = {};
     this.checkFormFieldIfCondition();
-  } 
-   
+  }    
   refreshListofField(field,updatemode){    
     if(field.do_not_refresh_on_add && updatemode){
       this.tableFields.forEach(tablefield => {
@@ -1661,8 +1647,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     } 
     this.listOfFieldsUpdateIndex = -1
     this.listOfFieldUpdateMode = false;
-  }
-  
+  }  
   inputOnChangeFunc(parent,field) {
     if(parent && parent != '' && parent.field_name && parent.field_name != ""){
       field['parent'] = parent.field_name;
@@ -2021,13 +2006,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.callStaticData(payloads);
       }
    }
-  }
-  
+  }  
   clearTypeaheadData() {
     this.apiService.clearTypeaheadData();
   }
-  public addNewRecord:boolean = false;
-  public lastTypeaheadTypeValue="";
   updateData(event, parentfield, field) {
     if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
       return false;
@@ -2073,7 +2055,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
     this.apiService.GetTypeaheadData(payload);    
   }
-
   getOptionText(option) {
     if (option && option.name) {
       return option.name;
@@ -2081,7 +2062,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       return option;
     }
   }
-
   openModal(id, index, parent,child, data, alertType) {
     this.deleteIndex = index;
     if(parent != ''){
@@ -2092,7 +2072,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.commonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
   }
-
   alertResponce(responce) {
     if (responce) {
       if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
@@ -2298,8 +2277,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       return false;
     }    
-  }  
-  currentTreeViewFieldParent:any='';
+  } 
   openTreeView(parent,field) {
     let fieldName;
     if( field && field.tree_view_object && field.tree_view_object.field_name){
@@ -2366,8 +2344,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
     return treeViewData;
-  }
-  
+  }  
   showListOfFieldData(field,index,item){
     let value={};
     let parentObject = this.custmizedFormValue[field.field_name];
@@ -3193,8 +3170,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }      
     }    
   }
-  previousFormFocusField:any = {};
-  focusFieldParent:any={};
   private getDataForNextForm(reqParams,reqCriteria) {    
     const request = this.commonFunctionService.getDataForGrid(1, {}, { 'name': reqParams }, [], {}, '');
     const crList = this.commonFunctionService.getCriteriaList(reqCriteria, {});
@@ -3362,7 +3337,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           let fieldData = previousformData[fieldName];
           let index = previousFormCollection['index'];
-          let checkDublicate = this.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index);
+          let checkDublicate = this.checkIfService.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index,this.showIfFieldList,this.custmizedFormValue,this.templateForm);
           if(!checkDublicate.status){            
             if(Array.isArray(fieldData)){
               if(index != undefined && index >= 0){
@@ -3418,159 +3393,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.close();
     } 
   }
-  checkDublicateOnForm(fields,value,list,i,parent?){
-    let checkDublic = {
-      status : false,
-      msg : ""
-    }
-    if(fields && fields.length > 0){
-      let checkValue = 0;
-      let field_control:any = "";
-      let list_of_field_data = value;
-      for (let index = 0; index < fields.length; index++) {
-        const element = fields[index];
-        let custmizedKey = '';
-        let custmizedData = '';
-        if(parent && parent != ''){
-          custmizedKey = this.commonFunctionService.custmizedKey(parent);
-          field_control = this.templateForm.get(parent.field_name);
-        }
-        if(custmizedKey && custmizedKey != '' && this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][element.field_name]){
-          custmizedData = this.custmizedFormValue[custmizedKey][element.field_name]
-        }else{
-          if(this.custmizedFormValue[element.field_name] && this.custmizedFormValue[element.field_name].length > 0){
-            custmizedData = this.custmizedFormValue[element.field_name]
-          }          
-        }
-        let mendatory = false;
-        if(element.is_mandatory){
-          if(element && element.show_if && element.show_if != ''){
-            if(this.formCreationService.checkFieldShowOrHide(element,this.showIfFieldList)){
-              mendatory = true;
-            }else{
-              mendatory = false;
-            }
-          }else{
-            mendatory = true;
-          }            
-        }                   
-        switch (element.datatype) {
-          case 'list_of_object':              
-            if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-              if(mendatory && custmizedData == ''){
-                if(custmizedData.length == 0){
-                  checkValue = 1;
-                  checkDublic.status = true
-                  checkDublic.msg = "Please Enter " + element.label;
-                  //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                  return checkDublic;
-                }
-              }
-            }else{
-              checkDublic.status = true
-              checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
-              //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return checkDublic;
-            }
-            break; 
-          case 'object':
-            if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-              if(mendatory){                  
-                checkValue = 1;
-                checkDublic.status = true
-                checkDublic.msg = "Please Enter " + element.label;
-                //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                return checkDublic;    
-              }
-            }else if(typeof list_of_field_data[element.field_name] != 'object'){
-              checkDublic.status = true
-              checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
-              //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return checkDublic;
-            }
-            break;         
-          default:
-            break;
-        }
-        switch (element.type) {
-          case 'list_of_string':
-            if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-              if(mendatory && custmizedData == ''){
-                if(custmizedData.length == 0){
-                  checkValue = 1;
-                  checkDublic.status = true
-                  checkDublic.msg = "Please Enter " + element.label;
-                  //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                  return checkDublic;
-                }
-              }
-            }else{
-              checkDublic.status = true
-              checkDublic.msg = 'Entered value for '+element.label+' is not valid. !!!';
-              //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is not valid. !!!');
-              return checkDublic;
-            }
-            break;  
-          case 'typeahead':
-            if(element.datatype == "text"){
-              if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-                if(mendatory){
-                  if(custmizedData.length == 0){
-                    checkValue = 1;
-                    checkDublic.status = true
-                    checkDublic.msg = "Please Enter " + element.label;
-                    //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-                    return checkDublic;
-                  }
-                }
-              }else if(field_control && field_control != "" ){
-                if( field_control.get(element.field_name).errors?.required || field_control.get(element.field_name).errors?.validDataText){
-                  checkDublic.status = true
-                  checkDublic.msg = 'Entered value for '+element.label+' is invalidData. !!!';
-                  //this.notificationService.notify('bg-danger','Entered value for '+element.label+' is invalidData. !!!');
-                  return checkDublic;
-                }
-              }
-
-            }
-            break;        
-          default:
-            if (list_of_field_data[element.field_name] == '' || list_of_field_data[element.field_name] == null) {
-              if(mendatory ){
-                checkValue = 1;
-                checkDublic.msg = "Please Enter " + element.label;
-                //this.notificationService.notify("bg-danger", "Please Enter " + element.label);
-              }
-            }
-            break;
-        }
-        if(element.primary_key_for_list){
-          let primary_key_field_value = value[element.field_name];            
-          let alreadyAdded = {
-            status : false,
-            msg : ""
-          };
-          if(list && list.length > 0){
-            alreadyAdded = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(element,primary_key_field_value,list,i);
-          }
-          if(alreadyAdded && alreadyAdded.status){
-            checkDublic.status = true;
-            if(alreadyAdded.msg && alreadyAdded.msg != ""){
-              checkDublic.msg = alreadyAdded.msg;
-            }else{
-              checkDublic.msg = "Entered value for "+element.label+" is already added. !!!";
-            }
-            break;
-          }
-        }
-      };
-      if (checkValue == 1) {
-        checkDublic.status = true;
-      }
-    }
-    return checkDublic;
-  }
-
   colorchange(tableField:any, colorval:string) {
     if(tableField.field_name  && colorval != "" && colorval.length == 7) {
       this.templateForm.get(tableField.field_name).setValue(colorval)
@@ -3578,7 +3400,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.templateForm.get(tableField.field_name).setValue("")
     }
   }
-  public dinamicApiField:any="";
   dinamicApiCall(tableField,value){
     this.dinamicApiField = tableField.api_call_name;
     let payload:any = '';
@@ -3610,8 +3431,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       correctIndex = this.gridCommonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
     } 
     this.storeFormDetails("",field,correctIndex); 
-  }
-  
+  }  
   nextForm(){
     if(this.nextFormData && this.nextFormData.formName){
       this.openNextForm(true);
@@ -3619,18 +3439,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
   }
   openNextForm(next) {
-    const form = this.nextFormData.formName;
-    const field_name = this.nextFormData.field_name;
-    const form_field_name = this.nextFormData.form_field_name;
-    const field = {
-      'add_new_form': form,
-      'add_next_form_button': next,
-      'field_name': field_name,
-      'type': 'hidden',
-      'form_field_name': form_field_name,
-      'form_value_index' : 0,
-      'moveFieldsToNewForm' : ['employee_name#add_assignments.resource_name']
-    };
+    const field = this.multipleFormService.getNextFormObject(this.nextFormData,next);    
     this.storeFormDetails('', field);
   }
   updateAddNewField(parent,child){
@@ -3654,44 +3463,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
   }
   getNextFormData(formData){
-    if(formData){
-      let parent:any = '';
-      let child:any = '';
-      if(formData['parent_field']){
-        parent = formData['parent_field'];
-      }
-      if(formData['current_field']){
-        child = formData['current_field'];
-      }
-      let formValue = formData['data'];
-      let fieldValue:any = '';
-      if(parent != ''){
-        if(parent.type == 'list_of_fields'){
-          fieldValue = formValue[parent.field_name][this.listOfFieldsUpdateIndex][child.field_name];
-        }else{
-          fieldValue = formValue[parent.field_name][child.field_name];
-        }
-      }else{
-        fieldValue = formValue[child.field_name];
-      }    
-      if(fieldValue && fieldValue._id && fieldValue._id != ''){
-        //console.log(fieldValue._id);
-        const params = child.api_params;
-        if(params && params != ''){
-          const criteria = ["_id;eq;"+fieldValue._id+";STATIC"]
-          const crList = this.commonFunctionService.getCriteriaList(criteria,{});
-          const payload = this.commonFunctionService.getDataForGrid(1,{},{'name':params},[],{},'');
-          payload.data.crList = crList;
-          this.apiService.getGridData(payload);
-          this.updateAddNew = true;
-        }else{
-          this.updateAddNew = false;
-        }     
-      }else{
-        this.updateAddNew = false;
-      }
-    }else{
-      this.updateAddNew = false;
+    let result = this.multipleFormService.getNextFormData(formData,this.listOfFieldsUpdateIndex);
+    if(result.updateAddNew){
+      this.apiService.getGridData(result.payload);
     }
   }
   showData(parent,field){
@@ -3700,12 +3474,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.showGridData[field.field_name] = !this.showGridData[field.field_name];
     }
-
   }
   gridSelectionSearch(field){
     if(this.pageNo[field.field_name]  != 1) this.pageNo[field.field_name] = 1;
   }
-
   onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     
@@ -3745,29 +3517,4 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
   }
-
-
-  // getLevel = (node: TodoItemFlatNode) => node.level;
-
-  // isExpandable = (node: TodoItemFlatNode) => node.expandable;
-
-  // getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
-
-  // hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
-
- // hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
-
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
-  // transformer = (node: TodoItemNode, level: number) => {
-  //   const existingNode = this.nestedNodeMap.get(node);
-  //   const flatNode =
-  //     existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
-  //   flatNode.item = node.item;
-  //   flatNode.level = level;
-  //   flatNode.expandable = !!node.children?.length;
-  //   return flatNode;
-  // };
-
 }
