@@ -37,6 +37,7 @@ export class DownloadReportComponent implements OnInit {
     private dataShareService: DataShareService,
     private activatedRoute: ActivatedRoute
     ) {
+      
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         let reportNo = params["report"];
         this.reportUrlNo = atob(reportNo)
