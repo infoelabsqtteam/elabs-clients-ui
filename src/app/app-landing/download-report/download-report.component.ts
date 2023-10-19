@@ -38,7 +38,8 @@ export class DownloadReportComponent implements OnInit {
     private activatedRoute: ActivatedRoute
     ) {
       this.activatedRoute.queryParams.subscribe((params: Params) => {
-        this.reportUrlNo = params["report"];
+        let reportNo = params["report"];
+        this.reportUrlNo = atob(reportNo)
       });
     this.element = el.nativeElement;
     this.storageService.setAppId('PUB');
@@ -65,6 +66,10 @@ export class DownloadReportComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    let encoded: string = btoa("myPassword!");
+    console.log("encoded :" + encoded);
+    let decode: string = atob(encoded);
+    console.log("Decode :" + decode);
   }
 
   ngOnDistroy(){
