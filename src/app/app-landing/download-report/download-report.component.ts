@@ -66,10 +66,6 @@ export class DownloadReportComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    let encoded: string = btoa("myPassword!");
-    console.log("encoded :" + encoded);
-    let decode: string = atob(encoded);
-    console.log("Decode :" + decode);
   }
 
   ngOnDistroy(){
