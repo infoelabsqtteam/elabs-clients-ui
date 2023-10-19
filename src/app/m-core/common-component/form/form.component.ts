@@ -1,15 +1,15 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit,SimpleChange, ElementRef,NgZone, HostListener} from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
-import { DOCUMENT, DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common'; 
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit, ElementRef,NgZone, HostListener} from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { DOCUMENT } from '@angular/common'; 
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {COMMA, ENTER, TAB, SPACE, F} from '@angular/cdk/keycodes';
-import { Observable, Subscription } from 'rxjs';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, PermissionService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, MenuOrModuleCommonService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService} from '@core/web-core';
 
 declare var tinymce: any;
 
@@ -210,13 +210,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   constructor(
     private formBuilder: FormBuilder, 
     private storageService: StorageService,
-    private permissionService:PermissionService,
     private commonFunctionService:CommonFunctionService, 
     private modalService: ModelService, 
     private router: Router,
     private routers: ActivatedRoute,
     @Inject(DOCUMENT) document,
-    private datePipe: DatePipe,
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private notificationService:NotificationService,
@@ -235,7 +233,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private checkIfService:CheckIfService,
     private gridSelectionService:GridSelectionService,
     private apiCallResponceService:ApiCallResponceService,
-    private multipleFormService:MultipleFormService
+    private multipleFormService:MultipleFormService,
+    private downloadService:DownloadService
 ) {
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
@@ -318,10 +317,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.setGridRowDeleteResponce(responce);
     })
     this.gridFilterDataSubscription = this.dataShareService.gridFilterData.subscribe(data =>{
-      this.setGridFilterData(data);
+      this.tabFilterData = this.apiCallResponceService.setGridFilterData(data,this.tabFilterData);
     })
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
-      this.setTypeaheadData(data);
+      this.typeAheadData = this.apiCallResponceService.setTypeaheadData(data,this.typeAheadData);
     })
     this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
       this.setDinamicForm(form);
@@ -869,54 +868,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.updateDataOnFormField(staticData["FORM_GROUP_FIELDS"]);
         }
         if (this.checkBoxFieldListValue.length > 0 && Object.keys(staticData).length > 0) {
-          this.setCheckboxFileListValue();
+          this.templateForm = this.formControlService.setCheckboxFileListValue(this.checkBoxFieldListValue,this.templateForm, this.staticData,this.selectedRow,this.updateMode);
         }
       });
     }
-  }
-  setCheckboxFileListValue() {
-    this.checkBoxFieldListValue.forEach(element => {
-      let checkCreatControl: any;
-      if (element.parent) {
-        checkCreatControl = this.templateForm.get(element.parent).get(element.field_name);
-      } else {
-        checkCreatControl = this.templateForm.get(element.field_name);
-      }
-      if (this.staticData[element.ddn_field] && checkCreatControl.controls && checkCreatControl.controls.length == 0) {
-        let checkArray: FormArray;
-        if (element.parent) {
-          checkArray = this.templateForm.get(element.parent).get(element.field_name) as FormArray;
-        } else {
-          checkArray = this.templateForm.get(element.field_name) as FormArray;
-        }
-        this.staticData[element.ddn_field].forEach((data, i) => {
-          if (this.updateMode) {
-            let arrayData;
-            if (element.parent) {
-              arrayData = this.selectedRow[element.parent][element.field_name];
-            } else {
-              arrayData = this.selectedRow[element.field_name];
-            }
-            let selected = false;
-            if (arrayData != undefined && arrayData != null) {
-              for (let index = 0; index < arrayData.length; index++) {
-                if (this.commonFunctionService.checkObjecOrString(data) == this.commonFunctionService.checkObjecOrString(arrayData[index])) {
-                  selected = true;
-                  break;
-                }
-              }
-            }
-            if (selected) {
-              checkArray.push(new FormControl(true));
-            } else {
-              checkArray.push(new FormControl(false));
-            }
-          } else {
-            checkArray.push(new FormControl(false));
-          }
-        });
-      }
-    });
   }
   setGridRowDeleteResponce(responce){
     if(responce && responce['success']){
@@ -925,106 +880,31 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   setSaveResponce(saveFromDataRsponce){
-    if (saveFromDataRsponce) {
-      if (saveFromDataRsponce.success && saveFromDataRsponce.success != '' && this.showNotify) {
-        if (saveFromDataRsponce.success == 'success' && !this.updateMode) {
-          if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick.success_msg && this.currentActionButton.onclick.success_msg != ''){
-            this.notificationService.notify("bg-success", this.currentActionButton.onclick.success_msg);
-          }else if(saveFromDataRsponce.success_msg && saveFromDataRsponce.success_msg != ''){
-            this.notificationService.notify("bg-success", saveFromDataRsponce.success_msg);
-          }else{
-            this.notificationService.notify("bg-success", " Form Data Save successfull !!!");
-          }
-          
-          this.checkBeforeResetForm();
-          this.dataListForUpload = {}
-          this.saveResponceData = saveFromDataRsponce.data;
-        } else if (saveFromDataRsponce.success == 'success' && this.updateMode) {
-          if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick.success_msg && this.currentActionButton.onclick.success_msg != ''){
-            this.notificationService.notify("bg-success", this.currentActionButton.onclick.success_msg);
-          }else if(saveFromDataRsponce.success_msg && saveFromDataRsponce.success_msg != ''){
-            this.notificationService.notify("bg-success", saveFromDataRsponce.success_msg);
-          }else{
-            this.notificationService.notify("bg-success", " Form Data Update successfull !!!");
-          }
-          if(this.nextIndex){              
-            this.next();
-          }else{
-            this.checkBeforeResetForm();
-            this.updateMode = false;
-          }                     
-          this.custmizedFormValue = {};  
-          this.modifyCustmizedFormValue = {};
-          this.dataListForUpload = {} 
-          this.saveResponceData = saveFromDataRsponce.data;
-        }        
-        if(this.isStepper){
-          this.stepper.reset();
-        }
-        if(this.envService.getRequestType() == 'PUBLIC'){
-          this.complete_object_payload_mode = false;
-          let _id = this.saveResponceData["_id"];
-          if(this.coreFunctionService.isNotBlank(this.form["details"]) && this.coreFunctionService.isNotBlank(this.form["details"]["on_success_url_key"] != "")){
-            let public_key = this.form["details"]["on_success_url_key"]
-            const data = {
-              "obj":public_key,
-              "key":_id,
-              "key1": "key2",
-              "key2" : "key3",
-            }
-            let payloaddata = {};
-            this.storageService.removeDataFormStorage();
-            const getFormData = {
-              data: payloaddata,
-              _id:_id
-            }
-            getFormData.data=data;
-            this.apiService.GetForm(getFormData);
-            let navigation_url = "pbl/"+public_key+"/"+_id+"/ie09/cnf00v";
-            this.router.navigate([navigation_url]);
-          }else{
-            this.router.navigate(["home_page"]);
-          }
-         
-        }
-        this.showNotify = false;
-        this.dataSaveInProgress = true;
-        this.apiService.ResetSaveResponce()
-        this.checkOnSuccessAction();
+    let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);
+    if(result.resetForm) this.checkBeforeResetForm();
+    if(result.next) this.next();
+    this.dataListForUpload =result.dataListForUpload;
+    this.saveResponceData = result.saveResponceData;
+    this.custmizedFormValue = result.custmizedFormValue;  
+    this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
+    this.updateMode = result.updateMode;
+    if(result.isStepper) this.stepper.reset();
+    this.complete_object_payload_mode=result.complete_object_payload_mode;
+    if(result.public.check){
+      if(result.public.getFormData && Object.keys(result.public.getFormData).length > 0){
+        this.apiService.GetForm(result.public.getFormData);
       }
-      else if (saveFromDataRsponce.error && saveFromDataRsponce.error != '' && this.showNotify) {
-        this.notificationService.notify("bg-danger", saveFromDataRsponce.error);
-        this.showNotify = false;
-        this.dataSaveInProgress = true;
-        this.apiService.ResetSaveResponce()
-      }
-      else{
-        if(this.showNotify){
-          this.showNotify = false;
-          this.notificationService.notify("bg-danger", "No data return");
-          this.dataSaveInProgress = true;
-        }
-      }
+      this.router.navigate([result.public.url]);
     }
-    // this.unsubscribe(this.saveResponceSubscription);
+    this.showNotify = result.showNotify;
+    this.dataSaveInProgress = result.dataSaveInProgress;
+    if(result.resetResponce) this.apiService.ResetSaveResponce();
+    if(result.successAction) this.checkOnSuccessAction();
+    if(result.message){
+      this.notificationService.notify(result.message.class, result.message.msg);
+    }  
     if(this.saveResponceSubscription){
       this.saveResponceSubscription.unsubscribe();
-    }
-  }
-  setGridFilterData(gridFilterData){
-    if (gridFilterData) {
-      if (gridFilterData.data && gridFilterData.data.length > 0) {
-        this.tabFilterData = JSON.parse(JSON.stringify(gridFilterData.data));          
-      } else {
-        this.tabFilterData = [];
-      }
-    }
-  }
-  setTypeaheadData(typeAheadData){
-    if (typeAheadData && typeAheadData.length > 0) {
-      this.typeAheadData = typeAheadData;
-    } else {
-      this.typeAheadData = [];
     }
   }
   setDinamicForm(form){
@@ -1039,17 +919,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setFileData(getfileData){
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
-      let link = document.createElement('a');
-      link.setAttribute('type', 'hidden');
-
       const file = new Blob([getfileData.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(file);
-      link.href = url;
-      link.download = getfileData.filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      // this.downloadPdfCheck = '';
+      this.downloadService.download(url,getfileData.filename);
       this.dataSaveInProgress = true;
       this.checkForDownloadReport = false;
       this.dataSaveInProgress = true;
@@ -1058,15 +930,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setFileDownloadUrl(fileDownloadUrl){
     if (fileDownloadUrl != '' && fileDownloadUrl != null && this.downloadClick != '') {
-      let link = document.createElement('a');
-      link.setAttribute('type', 'hidden');
-      // const file = new Blob([exportExcelLink], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      // const url = window.URL.createObjectURL(file);
-      link.href = fileDownloadUrl;
-      link.download = this.downloadClick;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      this.downloadService.download(fileDownloadUrl,this.downloadClick);
       this.downloadClick = '';
       this.dataSaveInProgress = true;
       this.apiService.ResetDownloadUrl();
@@ -1352,7 +1216,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 this.onchangeNextForm = true;
                 const reqCriteria = ["_id;eq;" + value._id + ";STATIC"];
                 const reqParams = field.api_params;
-                this.getDataForNextForm(reqParams,reqCriteria);
+                this.multipleFormService.getDataForNextForm(reqParams,reqCriteria);
                 this.tempVal[field.field_name + "_add_button"] = false;
               }else{           
                 this.tempVal[field.field_name + "_add_button"] = false;
@@ -2244,7 +2108,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.updateDataOnFormField(this.selectedRow);
     this.getStaticDataWithDependentData();      
     if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
-      this.setCheckboxFileListValue();
+      this.templateForm = this.formControlService.setCheckboxFileListValue(this.checkBoxFieldListValue,this.templateForm, this.staticData,this.selectedRow,this.updateMode);
     }
   }
   getStaticDataWithDependentData(){
@@ -2881,18 +2745,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.commonFunctionService.downloadFile(file);
   }
   downloadFileWithBytes(filedata){
-    let link = document.createElement('a');
-    link.setAttribute('type', 'hidden');
     const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(file);
-    link.href = url;
-    link.download = this.downloadClick;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();   
-  }
-  numberOnly(event){
-    return this.commonFunctionService.numberOnly(event);
+    this.downloadService.download(url,this.downloadClick);
   }
   changePdfView(file){
     if(file.bytes && file.bytes != '' && file.bytes != null){
@@ -2944,36 +2799,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let responce = this.apiCallResponceService.checkOnSuccessAction(this.currentActionButton,this.forms);
     if(responce.index != -1) {
       this.changeNewForm(responce.actionValue,responce.index)
-    } 
-    // let actionValue = ''
-    // let index = -1;
-    // if(this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.action_name && this.currentActionButton.onclick.action_name != null){
-    //   if(this.currentActionButton.onclick.action_name != ''){
-    //     actionValue = this.currentActionButton.onclick.action_name;
-    //     if(actionValue != ''){
-    //       Object.keys(this.forms).forEach((key,i) => {
-    //         if(key == actionValue){
-    //           index = i;
-    //         }
-    //       });
-    //       if(index != -1) {
-    //         this.changeNewForm(actionValue,index)
-    //       }    
-    //     }
-    //   }
-    // }
+    }
   };
   onClickLoadData(parent,field){
     if(field && field.onClickApiParams && field.onClickApiParams != ''){  
       let payloads = this.apiCallService.getOnClickLoadDataPayloads(field,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true));  
       this.callStaticData(payloads);
-      // let api_params = field.onClickApiParams;
-      // let callBackfield = field.onClickCallBackField;
-      // let criteria = field.onClickApiParamsCriteria
-      // const payload = this.commonFunctionService.getPaylodWithCriteria(api_params,callBackfield,criteria,this.getFormValue(false));
-      // let payloads = [];
-      // payloads.push(this.commonFunctionService.checkQtmpApi(api_params,field,payload,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true)));
-      // this.callStaticData(payloads);
     }
   } 
   updateDataOnFormField(formValue){
@@ -3031,170 +2862,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.callStaticData(payloads);
   }  
   storeFormDetails(parent_field:any,field:any,index?:number){
-    let formValueWithCustomData = this.getFormValue(true);
-    let formValue = this.getFormValue(false);
-    let targetFieldName ={}
-    targetFieldName['form'] = {}
-    targetFieldName['custom'] = [];
-
-    let updateMode =  this.updateMode;
-    let formData = JSON.parse(JSON.stringify(formValueWithCustomData));
-    if(field && field.form_field_name){
-      const nextFormReference = {
-        '_id':this.nextFormData._id,
-        'name':this.nextFormData.name
-      }
-      formData[field.form_field_name] = nextFormReference;
-      updateMode = true;
-    }
-    if(this.coreFunctionService.isNotBlank(field.add_new_target_field)){
-      targetFieldName['form'][field.add_new_target_field] = this.lastTypeaheadTypeValue
-    }else if(field){
-      switch (field.type) {
-        case "list_of_fields":
-        case "grid_selection":
-          let currentFieldData = formData[field.field_name];
-          if(currentFieldData && Array.isArray(currentFieldData)){
-              if(index != undefined && index >= 0){        
-                targetFieldName['form'] = currentFieldData[index];
-                targetFieldName['updataModeInPopupType'] = true;
-              }else {
-                targetFieldName['custom'] = currentFieldData;
-              }
-          }
-          break;      
-        default:
-          break;
-      }
-      
-     
-    } 
-    if(this.coreFunctionService.isNotBlank(field.moveFieldsToNewForm)){
-      if(field.moveFieldsToNewForm && field.moveFieldsToNewForm.length > 0){
-        field.moveFieldsToNewForm.forEach(keyValue => {
-          const sourceTarget = keyValue.split("#");
-          let key = sourceTarget[0];
-          let valueField = sourceTarget[1];
-          let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-          let formValueWithMulticollection = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValue);
-          let value = this.commonFunctionService.getObjectValue(valueField,formValueWithMulticollection);
-          targetFieldName['form'][key] = value;
-        });
-      }
-    }   
-    let form = {
-      "collection_name":this.currentMenu.name,
-      "data":formData,
-      "form":this.form,
-      "parent_field":parent_field,
-      "current_field":field,
-      "next_form_data":targetFieldName,
-      "updateMode" : updateMode,
-      "form_value" : JSON.parse(JSON.stringify(formValue)),
-      "index": -1,
-      "listOfFieldUpdateMode":this.listOfFieldUpdateMode,
-      "listOfFieldsUpdateIndex":this.listOfFieldsUpdateIndex
-    }
-    if(field){      
-        const type = field.type;
-        switch (type) {
-          case "list_of_fields":
-          case "grid_selection":
-            if(index != undefined){
-              form['index'] = index;
-            }
-            break;      
-          default:
-            break;
-        }
-           
-    }
-    this.multipleFormCollection.push(form);
-    let id = '';
-    if(field && field.type == "list_of_fields"){
-      let buttonLabel = "";
-      if(index != undefined && index >= 0){
-        buttonLabel = 'Update';
-      }else{
-        buttonLabel = 'Add';
-      }
-      if(field.list_of_fields && field.list_of_fields.length > 0){
-        let fieldList:any = JSON.parse(JSON.stringify(field.list_of_fields));
-        if(fieldList && fieldList.length > 0 && index == undefined){
-          let curField = JSON.parse(JSON.stringify(field));
-          curField['add_list_field'] = 'add';
-          fieldList.push(curField);
-        }
-        let form = {
-          "details": {
-              "class": "",
-              "collection_name":"",
-              "bulk_update":false
-              },
-          "tab_list_buttons": [
-              {
-                  "label": buttonLabel,
-                  "onclick": {
-                          "api": "add", 
-                          "action_name": "", 
-                          "close_form_on_succes": false
-                      },
-                  "type": "button",
-                  "field_name": "save",
-                  "api_params": "",
-                  "show_if":"",
-                  "disable_if":""
-              },
-              {
-                "label": "Ok",
-                "onclick": {
-                        "api": "close", 
-                        "action_name": "", 
-                        "close_form_on_succes": false
-                    },
-                "type": "button",
-                "field_name": "",
-                "api_params": "",
-                "show_if":"",
-                "disable_if":""
-            }
-          ],
-          "tableFields": fieldList,
-          "api_params": null,
-          "label": field.label
-          }
-        this.loadNextForm(form);
-      }else{
-        if(field.form && field.form._id){
-          id = field.form._id;
-        }
-        this.getNextFormById(id);
-      }
-    }else{
-      if(field.add_new_form && field.add_new_form._id){
-        id = field.add_new_form._id;
-      }
-      this.getNextFormById(id);
-      this.addNewRecord = false;
-      if(!this.enableNextButton && field && field.find_child_form){
-        const reqCriteria = ["collection.name;eq;" + this.currentMenu.name + ";STATIC"];
-        const reqParams = 'scheduled_task_form';
-        this.getDataForNextForm(reqParams,reqCriteria);
-      }      
-    }    
-  }
-  private getDataForNextForm(reqParams,reqCriteria) {    
-    const request = this.commonFunctionService.getDataForGrid(1, {}, { 'name': reqParams }, [], {}, '');
-    const crList = this.commonFunctionService.getCriteriaList(reqCriteria, {});
-    request.data.crList = crList;
-    this.apiService.getNextFormData(request);
-  }
-  private getNextFormById(id: string) {
-    const params = "form";
-    const criteria = ["_id;eq;" + id + ";STATIC"];
-    const payload = this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, {});
-    this.apiService.GetNestedForm(payload);
-  }
+    let result = this.multipleFormService.storeFormDetails(parent_field,field,this.getFormValue(false),this.getFormValue(true),this.updateMode,this.nextFormData,this.lastTypeaheadTypeValue,this.multipleFormCollection,this.currentMenu,this.form,this.listOfFieldUpdateMode,this.listOfFieldsUpdateIndex,this.addNewRecord,this.enableNextButton,index);
+    this.multipleFormCollection = result.multipleFormCollection;
+    if(result.form && Object.keys(result.form).length > 0) this.loadNextForm(result.form);
+    if(result.id && result.id != '') this.multipleFormService.getNextFormById(result.id);
+    this.addNewRecord = result.addNewRecord;
+    if(result.params && result.params != '')  this.multipleFormService.getDataForNextForm(result.params,result.criteria);   
+  }  
   loadPreviousForm(){
     let multiFormLength = this.multipleFormCollection.length;
     const lastIndex = multiFormLength - 1;
@@ -3273,66 +2947,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   loadNextForm(form: any){    
     this.form = form;
     this.resetFlagsForNewForm();
-    this.setForm();    
-    let nextFormData:any = {}
-    if(this.multipleFormCollection.length > 0){
-      nextFormData = this.multipleFormCollection[this.multipleFormCollection.length -1];
-    }
+    this.setForm();   
+    let result = this.multipleFormService.updateNextFormData(this.multipleFormCollection,this.nextFormUpdateMode,this.form,this.custmizedFormValue,this.editedRowIndex,this.previousFormFocusField,this.tableFields);
+    let nextFormData:any = result.nextFormData;
     if(this.updateAddNew){
       this.getNextFormData(nextFormData);
     }
-    let cdata = {};
-    let fData = {};
-    if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['custom']){
-       cdata = nextFormData['next_form_data']['custom'];
-    }
-    if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['form']){
-       fData = nextFormData['next_form_data']['form'];
-    }  
-    if(nextFormData['index'] != undefined && nextFormData['index'] >= 0){
-      this.nextFormUpdateMode = true;
-    } 
-    
-    if(nextFormData && nextFormData['current_field'] && nextFormData['current_field']['type'] && (nextFormData['index'] == undefined || nextFormData['index'] == -1)){
-      switch (nextFormData['current_field']['type']) {
-        case 'list_of_fields':
-        case 'grid_selection':
-          const fieldName = nextFormData['current_field']['field_name'];
-          if(Array.isArray(cdata)){
-            if(this.form && this.form.buttons){
-              if(!this.checkIfService.checkAddNewButtonOnGridSelection(this.form.buttons)){
-                this.custmizedFormValue[fieldName] = cdata;
-                this.modifyCustmizedValue(fieldName);
-              }
-            }
-          }
-          break;      
-        default:
-          break;
-      }       
-    }    
-    if(nextFormData && nextFormData['next_form_data'] && nextFormData['next_form_data']['updataModeInPopupType']){
-      this.editedRowData(fData);
-    }else{      
-      this.updateDataOnFormField(fData); 
-      if(this.editedRowIndex >= 0 || Object.keys(fData).length > 0){
-        this.getStaticDataWithDependentData();
-      }   
-    }
-    let nextFormFocusedFieldname = '';
-    for (let key in fData) {
-      nextFormFocusedFieldname = key;
-      break;
-    }
-    if (this.tableFields && this.tableFields.length > 0) {
-      for (let i = 0; i < this.tableFields.length; i++) {
-        const element = this.tableFields[i];
-        if(nextFormFocusedFieldname == element.field_name){
-          this.previousFormFocusField = element;
-          break;
-        }        
-      }
-    }
+    let fData = result.fData;
+    this.nextFormUpdateMode = result.nextFormUpdateMode;
+    this.custmizedFormValue = result.custmizedFormValue;
+    if(result.fieldName && result.fieldName != '') this.modifyCustmizedValue(result.fieldName);
+    if(result.editFunction) this.editedRowData(fData);
+    if(result.updateFormFunction) this.updateDataOnFormField(fData);
+    if(result.getStaticData) this.getStaticDataWithDependentData();
+    this.previousFormFocusField = result.previousFormFocusField;
   }
   setListoffieldData(){
     const previousFormIndex = this.multipleFormCollection.length - 1;
@@ -3467,7 +3095,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.onchangeNextForm = true;
         const reqCriteria = ["_id;eq;" + fieldValue._id + ";STATIC"];
         const reqParams = child.api_params;
-        this.getDataForNextForm(reqParams,reqCriteria);
+        this.multipleFormService.getDataForNextForm(reqParams,reqCriteria);
         this.tempVal[child.field_name + "_add_button"] = false;
       }
     }else{
