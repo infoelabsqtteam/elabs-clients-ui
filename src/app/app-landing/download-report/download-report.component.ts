@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, StorageService, ApiService } from '@core/web-core';
+import { CommonFunctionService, StorageService, ApiService, DataShareService } from '@core/web-core';
+import {Router, ActivatedRoute, Params} from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-download-report',
@@ -22,7 +24,8 @@ export class DownloadReportComponent implements OnInit {
    getStaticDataCall:boolean=true;
    editedRowIndex:number=-1;
    selectContact:any = '';
-
+   reportUrlNo:any = '';
+   tempDataSubscription:Subscription;
   @Input() public pageName;
 
 
@@ -31,7 +34,12 @@ export class DownloadReportComponent implements OnInit {
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private el: ElementRef, 
+    private dataShareService: DataShareService,
+    private activatedRoute: ActivatedRoute
     ) {
+      this.activatedRoute.queryParams.subscribe((params: Params) => {
+        this.reportUrlNo = params["report"];
+      });
     this.element = el.nativeElement;
     this.storageService.setAppId('PUB');
     const menu = {     
@@ -42,12 +50,18 @@ export class DownloadReportComponent implements OnInit {
       "createdBy" : "System Admin"
     }
     this.storageService.SetActiveMenu(menu);
-    
+    this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
+      let object = {
+        "report_no": this.reportUrlNo
+      }
+      this.dataShareService.shareGridRunningData({data: object});
+    })
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
       const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
       this.apiService.GetTempData(payload);     
     }
+
    }
 
   ngOnInit(): void {
