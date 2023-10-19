@@ -52,10 +52,12 @@ export class DownloadReportComponent implements OnInit {
     }
     this.storageService.SetActiveMenu(menu);
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
-      let object = {
-        "report_no": this.reportUrlNo
+      if(this.reportUrlNo && this.reportUrlNo != ""){
+        let object = {
+          "report_no": this.reportUrlNo
+        }
+        this.dataShareService.shareGridRunningData({data: object});
       }
-      this.dataShareService.shareGridRunningData({data: object});
     })
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
