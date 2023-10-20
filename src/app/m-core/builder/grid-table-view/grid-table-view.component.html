@@ -63,7 +63,7 @@
                                 <thead >
                                     <tr>
                                         <th *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" (click)="onSort(headElements[i])" [ngClass]="{'d-none': !head.display}"><div class="heading" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
+                                        <th [resizeColumn]="true" [style.left.px]="fixedcolwidth" [index]="i" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}"><div class="heading" (click)="onSort(headElements[i])" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
                                             <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
                                         </th>                                        
                                     </tr>
