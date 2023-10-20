@@ -1,15 +1,15 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit, ElementRef,NgZone, HostListener} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit, ElementRef,NgZone, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common'; 
 import { ModalDirective } from 'angular-bootstrap-md';
-import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService } from '@core/web-core';
 
 declare var tinymce: any;
 
@@ -352,54 +352,53 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     })
     if(this.dataShareService && this.dataShareService.fieldDinamicResponce){
-    this.dinamicFieldApiSubscription = this.dataShareService.fieldDinamicResponce.subscribe(data =>{
-      this.setDinamicApiResponce(data);
-    })
-  }
-
-  if(this.dataShareService && this.dataShareService.checkValidation){
-    this.validationConditionSubscription = this.dataShareService.checkValidation.subscribe( data =>{
-      if(data.name == "gst_number"){
-        const objectValue = this.templateForm.getRawValue();
-        for (let x in objectValue) {
-          const value = objectValue[x];
-          if(data.value == value){
-            for (let index = 0; index < this.tableFields.length; index++) {
-              let element = this.tableFields[index]
-              if(element.field_name == x){
-                this.dinamicApiCall(element,data.value);
-                break;
+      this.dinamicFieldApiSubscription = this.dataShareService.fieldDinamicResponce.subscribe(data =>{
+        this.setDinamicApiResponce(data);
+      })
+    }
+    if(this.dataShareService && this.dataShareService.checkValidation){
+      this.validationConditionSubscription = this.dataShareService.checkValidation.subscribe( data =>{
+        if(data.name == "gst_number"){
+          const objectValue = this.templateForm.getRawValue();
+          for (let x in objectValue) {
+            const value = objectValue[x];
+            if(data.value == value){
+              for (let index = 0; index < this.tableFields.length; index++) {
+                let element = this.tableFields[index]
+                if(element.field_name == x){
+                  this.dinamicApiCall(element,data.value);
+                  break;
+                }
               }
+              break;
             }
-            break;
-          }
-          if(typeof value == 'object'){
-            for (let y in value) {
-              const childValue = value[y];
-              if(data.value == childValue){
-                for (let index = 0; index < this.tableFields.length; index++) {
-                  let element = this.tableFields[index]                  
-                  if(element.type == "list_of_fields" && element.list_of_fields && element.list_of_fields.length > 0){
-                    for (let index = 0; index < element.list_of_fields.length; index++) {
-                      let child = element.list_of_fields[index]
-                      if(child.field_name == y){
-                        this.dinamicApiCall(child,data.value);
-                        break;
+            if(typeof value == 'object'){
+              for (let y in value) {
+                const childValue = value[y];
+                if(data.value == childValue){
+                  for (let index = 0; index < this.tableFields.length; index++) {
+                    let element = this.tableFields[index]                  
+                    if(element.type == "list_of_fields" && element.list_of_fields && element.list_of_fields.length > 0){
+                      for (let index = 0; index < element.list_of_fields.length; index++) {
+                        let child = element.list_of_fields[index]
+                        if(child.field_name == y){
+                          this.dinamicApiCall(child,data.value);
+                          break;
+                        }
                       }
                     }
                   }
+                  break;
                 }
-                break;
               }
             }
           }
+        }else if(data.name == 'invalid'){
+          this.fieldApiValidaton = '';
+          this.fieldApiValMsg ='';
         }
-      }else if(data.name == 'invalid'){
-        this.fieldApiValidaton = '';
-        this.fieldApiValMsg ='';
-      }
-    })
-  }
+      })
+    }
     this.currentMenu = this.storageService.GetActiveMenu();
     this.userInfo = this.storageService.GetUserInfo();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -453,12 +452,26 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.cancel();
     this.closeModal();
   }
+  ngOnInit(): void {  
+    // if (this.editedRowIndex >= 0) {
+    //   this.selectedRowIndex = this.editedRowIndex;
+    //   if(this.elements.length > 0){
+    //     this.editedRowData(this.elements[this.editedRowIndex]);
+    //   }
+    //   //this.handleDisabeIf();     
+    // }else{
+    //   this.selectedRowIndex = -1;
+    //   //this.handleDisabeIf();
+    // }
+      
+    //this.formControlChanges();
+    if(this.form && this.form.tableFields && this.form.tableFields.length > 0){
+      this.funCallOnFormLoad(this.form.tableFields)
+    }
 
-  saveCallSubscribe(){
-    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
-      this.setSaveResponce(responce);
-    })
-  }
+    this.getGooglepMapCurrentPosition();
+
+  }  
   ngOnDestroy() {
     // this.tableFields = [];
     // this.formFieldButtons=[];
@@ -521,280 +534,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // this.mapsApiLoaded();
     this.gmapSearchPlaces();    
   }
-  changeForm(){
-    this.resetFlagForOnchage();
-    this.resetFlagsForNewForm();
-    const form = this.dataShareService.getDinamicForm();
-    this.setDinamicForm(form)
-    const tempData = this.dataShareService.getTempData();  
-    this.setTempData(tempData); 
-    this.ngOnInit();         
-  }
-  resetFlagsForNewForm(){    
-    //this.tableFields = [];
-    this.calculationFieldList=[];
-    this.showIfFieldList=[];
-    this.buttonIfList=[];
-    this.disableIfFieldList=[];
-    this.mendetoryIfFieldList = [];
-    this.gridSelectionMendetoryList=[];
-    this.customValidationFiels = [];
-    this.canUpdateIfFieldList=[];
-    this.custmizedFormValue = {};
+
+  showModal(object){
+    this.custmizedFormValue = {}    
     this.modifyCustmizedFormValue = {};
-    this.dataListForUpload = {};
-    this.checkBoxFieldListValue = [];
-    this.selectedRow = {}
-    this.formFieldButtons=[];
-    //this.list_of_fields = [];
-    this.typeAheadData = [];
-    this.createFormgroup = true;    
-    this.getTableField = true;
-    this.pageLoading = true;
-    this.dataSaveInProgress = true; 
-    this.isLinear=true;
-    this.isStepper = false;  
-    this.showSidebar = false;  
-    this.checkFormFieldAutfocus = true;
-    this.filePreviewFields = [];    
-    this.nextFormUpdateMode = false;    
-    this.focusFieldParent={};
-    this.term={};
-  }
-  resetFlagForOnchage(){
-    this.listOfFieldUpdateMode=false; 
-    this.listOfFieldsUpdateIndex = -1; 
-    this.serverReq = false;
-    this.updateAddNew = false;
-  }
-  ngOnInit(): void {  
-    // if (this.editedRowIndex >= 0) {
-    //   this.selectedRowIndex = this.editedRowIndex;
-    //   if(this.elements.length > 0){
-    //     this.editedRowData(this.elements[this.editedRowIndex]);
-    //   }
-    //   //this.handleDisabeIf();     
-    // }else{
-    //   this.selectedRowIndex = -1;
-    //   //this.handleDisabeIf();
-    // }
-      
-    //this.formControlChanges();
-    if(this.form && this.form.tableFields && this.form.tableFields.length > 0){
-      this.funCallOnFormLoad(this.form.tableFields)
-    }
-
-    this.getGooglepMapCurrentPosition();
-
+    this.formModal.show();
   }  
-  updateRunningData(data:any){
-    if (this.editedRowIndex >= 0) {
-      this.selectedRowIndex = this.editedRowIndex;
-      if(this.elements.length > 0){
-        if(data && data.data){
-          if(this.elements[this.editedRowIndex]._id == data.data[0]._id){
-            this.editedRowData(data.data[0]);
-          }
-        }else{
-          this.editedRowData(this.elements[this.editedRowIndex]);
-        }
-      }
-    }else{
-      this.selectedRowIndex = -1;
-      if(this.editedRowIndex == -1) {
-        if(data && data._id == undefined) {
-          setTimeout(() => {
-            this.updateDataOnFormField(data);
-          }, 100);
-        }
-      }
-    }
-  }
-  async getGooglepMapCurrentPosition(){
-    if(navigator?.geolocation){
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.zoom = 10;
-      });
-    }
-  }
-  async gmapSearchPlaces(inputData?:any,field?:any){
-    if(inputData?.target?.value){
-      if(this.searchElementRef != undefined){
-        this.searchElementRef.nativeElement.value  = inputData?.target?.value;
-      }
-    }
-    let loadGoogleMap:boolean = false;
-    if(typeof Common.GOOGLE_MAP_IN_FORM == "string"){
-      if(Common.GOOGLE_MAP_IN_FORM == "true"){
-        loadGoogleMap = true;
-      }
-    }else{
-      if(Common.GOOGLE_MAP_IN_FORM){
-        loadGoogleMap = true;
-      }
-    }
-    if(loadGoogleMap){
-      // if(this.mapsAPILoaded){
-        this.geoCoder = new google.maps.Geocoder;
-        if(this.longitude == 0 && this.latitude == 0){
-          await this.setCurrentLocation();
-        }
-        this.center = {
-          "lat": this.latitude,
-          "lng": this.longitude
-        }
-
-        if(this.searchElementRef != undefined){
-          let autocomplete = new google.maps.places.Autocomplete(
-            this.searchElementRef.nativeElement
-          );
-          autocomplete.addListener('place_changed', () => {
-            this.ngZone.run(() => {
-              let place: google.maps.places.PlaceResult = autocomplete?.getPlace();
-              if (place.geometry === undefined || place.geometry === null) {
-                return;
-              }
-              this.searchElementRef.nativeElement.value = place.name;
-              this.address = place.formatted_address;
-              this.latitude = place.geometry.location.lat();
-              this.longitude = place.geometry.location.lng();
-              this.center = {
-                "lat": this.latitude,
-                "lng": this.longitude
-              }
-              this.zoom = 17;
-              this.setAddressOnForm(field);
-              // this.getAddress(this.latitude, this.longitude);
-            });
-          });
-        }
-      // }
-    }
-  }
-  async mapClick(event: google.maps.MapMouseEvent,field?:any) {
-    this.zoom = 17;
-    this.center = (event.latLng.toJSON());
-    await this.getAddress(this.center.lat, this.center.lng);
-    this.setAddressOnForm(field);
-  }
-  openInfoWindow(marker: MapMarker) {
-    this.infoWindow.open(marker);
-  }
-  setAddressOnForm(field:any){
-    if(this.templateForm?.get(field?.field_name)){
-      this.templateForm.get(field?.field_name).setValue(this.address);
-    }else if(this.templateForm?.get('address')){
-      this.templateForm.get('address').setValue(this.address);
-    }
-  }
-  setGridData(gridData){
-    if (gridData) {
-      if (gridData.data && gridData.data.length > 0) {
-        this.elements = gridData.data
-        if(this.updateAddNew){
-          this.updateAddNew=false;
-          this.editedRowData(this.elements[0]);
-          this.apiService.resetGridData();
-        }
-      }
-    }
-    if(this.updateAddNew){
-      this.updateAddNew=false;
-    }
-  }
-  setTempData(tempData){
-    if (tempData && tempData.length > 0 && this.getTableField) {
-      let templateData = this.formCreationService.getTempData(tempData,this.tabIndex,this.currentMenu,this.formName,this.dinamic_form);
-      this.tab = templateData['tab'];
-      this.currentMenu = templateData['currentMenu'];
-      this.grid_view_mode = templateData['grid_view_mode'];
-      this.form = templateData['form'];
-      this.forms = templateData['forms'];
-      if(this.form && Object.keys(this.forms).length > 0 && this.formName != ''){
-        this.setForm();
-      }else{
-        this.tableFields = [];
-        this.formFieldButtons = [];
-      }  
-    }
-  }
-  setForm(){
-    if(this.form){
-      this.formDetails.emit(this.form);
-    }
-    let getFields = this.formCreationService.checkFormDetails(this.form,this.tab,this.currentMenu);
-    this.currentMenu = getFields['currentMenu'];
-    this.bulkupdates = getFields['bulkupdates'];
-    this.getLocation = getFields['getLocation'];
-    this.headerFiledsData = getFields['headerFiledsData'];
-    this.tableFields = getFields['tableFields'];
-    this.getTableField = getFields['getTableField'];
-    this.formFieldButtons = getFields['formFieldButtons'];
-    
-    if (this.tableFields.length > 0 && this.createFormgroup) {
-      this.createFormgroup = false;
-      let formControl = this.formCreationService.setNewForm(this.tableFields,this.formFieldButtons,this.form,this.elements,this.selectedRowIndex);
-      let blankField = formControl['blankField'];
-      if(blankField && (blankField.fieldName != '' || blankField.index != -1)){
-        this.notifyFieldValueIsNull(blankField.fieldName,blankField.index);
-      }
-      this.calculationFieldList=formControl['calculationFieldList'];
-      this.showIfFieldList=formControl['showIfFieldList'];
-      this.buttonIfList=formControl['buttonIfList'];
-      this.disableIfFieldList=formControl['disableIfFieldList'];
-      this.mendetoryIfFieldList = formControl['mendetoryIfFieldList'];
-      this.gridSelectionMendetoryList=formControl['gridSelectionMendetoryList'];
-      this.customValidationFiels = formControl['customValidationFiels'];
-      this.editorTypeFieldList = formControl['editorTypeFieldList'];      
-      const forControl = formControl['forControl'];
-      this.checkBoxFieldListValue = formControl['checkBoxFieldListValue'];
-      let staticModal=formControl['staticModal'];
-      this.filePreviewFields=formControl['filePreviewFields'];
-      this.isStepper=formControl['isStepper'];
-      this.showGridData = formControl['showGridData'];      
-      if (forControl && Object.keys(forControl).length > 0 && this.tableFields.length > 0) {
-        let validators = {};
-        validators['validator'] = [];
-        if(this.customValidationFiels && this.customValidationFiels.length > 0){
-          this.customValidationFiels.forEach(field => {
-            switch (field.type) {
-              case 'date':
-                validators['validator'].push(this.customValidationService.checkDates(field.field_name,field.compareFieldName));
-                break;
-              default:
-                break;
-            }
-          });
-        }
-        this.templateForm = this.formBuilder.group(forControl,validators);
-        if(this.nextIndex){
-          this.nextIndex = false;
-          this.next();
-        }
-      }
-      let formValueWithCustomData = this.getFormValue(true);
-      let fromValue = this.getFormValue(false);
-      staticModal = this.formCreationService.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
-      if(this.tableFields.length > 0 && this.editedRowIndex == -1){
-        this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
-      }
-    }    
-    if (this.tableFields.length > 0 && this.pageLoading) {
-      this.pageLoading = false;
-      let buttonsCondition = this.formCreationService.checkFieldButtonCondition(this.tableFields);
-      this.tempVal = buttonsCondition['tempVal'];      
-    }    
-  }
-  notifyFieldValueIsNull(formName,fieldNo){
-    let msg = "Field No. "+ fieldNo + " value is null";
-    this.notificationService.notify("bg-danger",msg);
-    this.tableFields = [];
-    this.closeModal();
-  }  
+  
+  //Subsribe Variable Responce Handlin Start ------------------
   setStaticData(staticDatas){   
     if(staticDatas && Object.keys(staticDatas).length > 0) {
       Object.keys(staticDatas).forEach(key => {  
@@ -873,108 +620,35 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
-  setGridRowDeleteResponce(responce){
-    if(responce && responce['success']){
-      this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
-      this.dataSaveInProgress = true;
-    }
-  }
-  setSaveResponce(saveFromDataRsponce){
-    let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);
-    if(result.resetForm) this.checkBeforeResetForm();
-    if(result.next) this.next();
-    this.dataListForUpload =result.dataListForUpload;
-    this.saveResponceData = result.saveResponceData;
-    this.custmizedFormValue = result.custmizedFormValue;  
-    this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
-    this.updateMode = result.updateMode;
-    if(result.isStepper) this.stepper.reset();
-    this.complete_object_payload_mode=result.complete_object_payload_mode;
-    if(result.public.check){
-      if(result.public.getFormData && Object.keys(result.public.getFormData).length > 0){
-        this.apiService.GetForm(result.public.getFormData);
-      }
-      this.router.navigate([result.public.url]);
-    }
-    this.showNotify = result.showNotify;
-    this.dataSaveInProgress = result.dataSaveInProgress;
-    if(result.resetResponce) this.apiService.ResetSaveResponce();
-    if(result.successAction) this.checkOnSuccessAction();
-    if(result.message){
-      this.notificationService.notify(result.message.class, result.message.msg);
-    }  
-    if(this.saveResponceSubscription){
-      this.saveResponceSubscription.unsubscribe();
-    }
-  }
-  setDinamicForm(form){
-    if(form && form.DINAMIC_FORM){
-      this.dinamic_form = form.DINAMIC_FORM;
-      if(this.formName == 'DINAMIC_FORM' && this.getTableField){
-        this.grid_view_mode = this.dinamic_form.view_mode
-        this.form = this.dinamic_form
-        this.setForm();
-      }        
-    }
-  }
-  setFileData(getfileData){
-    if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
-      const file = new Blob([getfileData.data], { type: "application/pdf" });
-      const url = window.URL.createObjectURL(file);
-      this.downloadService.download(url,getfileData.filename);
-      this.dataSaveInProgress = true;
-      this.checkForDownloadReport = false;
-      this.dataSaveInProgress = true;
-      this.apiService.ResetFileData();
-    }
-  }
-  setFileDownloadUrl(fileDownloadUrl){
-    if (fileDownloadUrl != '' && fileDownloadUrl != null && this.downloadClick != '') {
-      this.downloadService.download(fileDownloadUrl,this.downloadClick);
-      this.downloadClick = '';
-      this.dataSaveInProgress = true;
-      this.apiService.ResetDownloadUrl();
-    }
-  }
-  setDinamicApiResponce(responce){
-    if(responce){
-      const companyResult = responce.result
-      if(companyResult){
-        this.fieldApiValidaton = companyResult.sts
-      }else{
-        this.fieldApiValidaton = "inactive"
-      }   
-      this.fieldApiValMsg = responce.message;
-    }
-  }
-  formControlChanges(){
-    if(this.templateForm && this.templateForm.valueChanges && this.templateForm.valueChanges != null){
-      this.templateForm.valueChanges.subscribe(val => {
-        this.handleDisabeIf();
-      });
-    }    
-  }
-  handleDisabeIf(){
-    this.getFocusFieldAndFocus();
-    this.checkFormFieldIfCondition(); 
-  }
-  getFocusFieldAndFocus(){
-    if(this.checkFormFieldAutfocus && this.tableFields.length > 0){
-      let focusRelatedFields = this.formCreationService.getFocusField(this.previousFormFocusField,this.tableFields,this.templateForm,this.focusFieldParent,this.checkFormFieldAutfocus);
-      this.checkFormFieldAutfocus = focusRelatedFields['checkFormFieldAutfocus'];
-      this.previousFormFocusField = focusRelatedFields['previousFormFocusField'];
-      this.focusFieldParent = focusRelatedFields['focusFieldParent'];
-      let id = focusRelatedFields['id'];
-      if(id != ''){
-        const invalidControl = document.getElementById(id);
-        if(invalidControl != null){
-          invalidControl.focus();
-          this.checkFormFieldAutfocus = false;
-          if(this.previousFormFocusField && this.previousFormFocusField.type == 'list_of_fields' && this.previousFormFocusField.datatype == 'list_of_object_with_popup'){
-            this.previousFormFocusField = {};
-          }
+  setGridData(gridData){
+    if (gridData) {
+      if (gridData.data && gridData.data.length > 0) {
+        this.elements = gridData.data
+        if(this.updateAddNew){
+          this.updateAddNew=false;
+          this.editedRowData(this.elements[0]);
+          this.apiService.resetGridData();
         }
       }
+    }
+    if(this.updateAddNew){
+      this.updateAddNew=false;
+    }
+  }
+  setTempData(tempData){
+    if (tempData && tempData.length > 0 && this.getTableField) {
+      let templateData = this.formCreationService.getTempData(tempData,this.tabIndex,this.currentMenu,this.formName,this.dinamic_form);
+      this.tab = templateData['tab'];
+      this.currentMenu = templateData['currentMenu'];
+      this.grid_view_mode = templateData['grid_view_mode'];
+      this.form = templateData['form'];
+      this.forms = templateData['forms'];
+      if(this.form && Object.keys(this.forms).length > 0 && this.formName != ''){
+        this.setForm();
+      }else{
+        this.tableFields = [];
+        this.formFieldButtons = [];
+      }  
     }
   }
   checkFormFieldIfCondition(){
@@ -1087,9 +761,181 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       return true;
     } 
   }
-  removeClass = (element, name) => {    
-    element.className = element.className.replace(name, "");
+  setGridRowDeleteResponce(responce){
+    if(responce && responce['success']){
+      this.notificationService.notify("bg-success", responce["success"]+" Data deleted successfull !!!");
+      this.dataSaveInProgress = true;
+    }
   }
+  setDinamicForm(form){
+    if(form && form.DINAMIC_FORM){
+      this.dinamic_form = form.DINAMIC_FORM;
+      if(this.formName == 'DINAMIC_FORM' && this.getTableField){
+        this.grid_view_mode = this.dinamic_form.view_mode
+        this.form = this.dinamic_form
+        this.setForm();
+      }        
+    }
+  }
+  loadNextForm(form: any){    
+    this.form = form;
+    this.resetFlagsForNewForm();
+    this.setForm();   
+    let result = this.multipleFormService.updateNextFormData(this.multipleFormCollection,this.nextFormUpdateMode,this.form,this.custmizedFormValue,this.editedRowIndex,this.previousFormFocusField,this.tableFields);
+    let nextFormData:any = result.nextFormData;
+    if(this.updateAddNew){
+      this.getNextFormData(nextFormData);
+    }
+    let fData = result.fData;
+    this.nextFormUpdateMode = result.nextFormUpdateMode;
+    this.custmizedFormValue = result.custmizedFormValue;
+    if(result.fieldName && result.fieldName != '') this.modifyCustmizedValue(result.fieldName);
+    if(result.editFunction) this.editedRowData(fData);
+    if(result.updateFormFunction) this.updateDataOnFormField(fData);
+    if(result.getStaticData) this.getStaticDataWithDependentData();
+    this.previousFormFocusField = result.previousFormFocusField;
+  }
+  setFileData(getfileData){
+    if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
+      const file = new Blob([getfileData.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(file);
+      this.downloadService.download(url,getfileData.filename);
+      this.dataSaveInProgress = true;
+      this.checkForDownloadReport = false;
+      this.dataSaveInProgress = true;
+      this.apiService.ResetFileData();
+    }
+  }
+  setFileDownloadUrl(fileDownloadUrl){
+    if (fileDownloadUrl != '' && fileDownloadUrl != null && this.downloadClick != '') {
+      this.downloadService.download(fileDownloadUrl,this.downloadClick);
+      this.downloadClick = '';
+      this.dataSaveInProgress = true;
+      this.apiService.ResetDownloadUrl();
+    }
+  }
+  updateRunningData(data:any){
+    if (this.editedRowIndex >= 0) {
+      this.selectedRowIndex = this.editedRowIndex;
+      if(this.elements.length > 0){
+        if(data && data.data){
+          if(this.elements[this.editedRowIndex]._id == data.data[0]._id){
+            this.editedRowData(data.data[0]);
+          }
+        }else{
+          this.editedRowData(this.elements[this.editedRowIndex]);
+        }
+      }
+    }else{
+      this.selectedRowIndex = -1;
+      if(this.editedRowIndex == -1) {
+        if(data && data._id == undefined) {
+          setTimeout(() => {
+            this.updateDataOnFormField(data);
+          }, 100);
+        }
+      }
+    }
+  }
+  openNextForm(next) {
+    const field = this.multipleFormService.getNextFormObject(this.nextFormData,next);    
+    this.storeFormDetails('', field);
+  } 
+  setDinamicApiResponce(responce){
+    if(responce){
+      const companyResult = responce.result
+      if(companyResult){
+        this.fieldApiValidaton = companyResult.sts
+      }else{
+        this.fieldApiValidaton = "inactive"
+      }   
+      this.fieldApiValMsg = responce.message;
+    }
+  }
+  dinamicApiCall(tableField,value){
+    this.dinamicApiField = tableField.api_call_name;
+    let payload:any = '';
+    let api = '';
+    switch (tableField.api_call_name) {
+      case 'gst_number':
+        api = tableField.api;
+        payload = this.commonFunctionService.getPaylodWithCriteria('test','',[],{}) ;
+        payload['gstin'] =  value;        
+        break;    
+      default:
+        break;
+    }
+    if(api != ''){
+      this.apiService.fieldDinamicApi(api,payload);
+    }
+  }
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce) {
+      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);
+      if(result.resetForm) this.checkBeforeResetForm();
+      if(result.next) this.next();
+      this.dataListForUpload =result.dataListForUpload;
+      this.saveResponceData = result.saveResponceData;
+      this.custmizedFormValue = result.custmizedFormValue;  
+      this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
+      this.updateMode = result.updateMode;
+      if(result.isStepper) this.stepper.reset();
+      this.complete_object_payload_mode=result.complete_object_payload_mode;
+      if(result.public.check){
+        if(result.public.getFormData && Object.keys(result.public.getFormData).length > 0){
+          this.apiService.GetForm(result.public.getFormData);
+        }
+        this.router.navigate([result.public.url]);
+      }
+      this.showNotify = result.showNotify;
+      this.dataSaveInProgress = result.dataSaveInProgress;
+      if(result.resetResponce) this.apiService.ResetSaveResponce();
+      if(result.successAction) this.checkOnSuccessAction();
+      if(result.message && result.message.msg && result.message.msg != ''){
+        this.notificationService.notify(result.message.class, result.message.msg);
+      } 
+      if(this.saveResponceSubscription){
+        this.saveResponceSubscription.unsubscribe();
+      }
+    }   
+  }
+  //Subsribe Variable Responce Handling End -------------------
+
+  //Click Evnet Function Handling start -----------------
+  changeNewForm(formName:string,i){
+    this.formName = formName;
+    //this.formIndex = i;
+    this.changeForm();
+  } 
+  changePdfView(file){
+    if(file.bytes && file.bytes != '' && file.bytes != null){
+      const arrayBuffer = file.bytes;
+      this.pdfViewLink = arrayBuffer;
+    }
+  }
+  closeModal(){
+    if(this.updateMode && this.multipleFormCollection.length > 0){      
+      Object.keys(this.custmizedFormValue).forEach(key => {
+        if(this.custmizedFormValue[key] != null && Array.isArray(this.custmizedFormValue[key])){
+          this.custmizedFormValue[key].forEach(element => {
+            if(element.status == 'I'){
+              element.status = 'A';
+            }
+          });
+        }
+      });
+    }else{
+      this.custmizedFormValue = {};
+      this.modifyCustmizedFormValue = {};
+    }
+    if(this.multipleFormCollection.length > 0){
+      this.multipleFormCollection = this.multipleFormService.setPreviousFormTargetFieldData(this.multipleFormCollection,this.getFormValue(true));
+    }
+    this.updateMode=false;
+    this.dataListForUpload = []
+    this.filePreviewFields = [];
+    this.close();
+  } 
   setValue(parentfield,field, add,event?) {
 
     let formValue = this.templateForm.getRawValue();
@@ -1507,7 +1353,101 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.term = {};
     this.checkFormFieldIfCondition();
-  }    
+  } 
+  updateAddNewField(parent,child){
+    if(child && child.onchange_get_next_form){
+      let fieldValue:any = '';
+      if(parent != ''){
+        fieldValue = this.templateForm.get(parent.field_name).get(child.field_name).value;
+      }else{
+        fieldValue = this.templateForm.get(child.field_name).value;
+      }
+      if(fieldValue && fieldValue._id && fieldValue._id != ''){
+        this.onchangeNextForm = true;
+        const reqCriteria = ["_id;eq;" + fieldValue._id + ";STATIC"];
+        const reqParams = child.api_params;
+        this.multipleFormService.getDataForNextForm(reqParams,reqCriteria);
+        this.tempVal[child.field_name + "_add_button"] = false;
+      }
+    }else{
+      this.storeFormDetails(parent,child);
+      this.updateAddNew = true;
+    }    
+  }
+  openModal(id, index, parent,child, data, alertType) {
+    this.deleteIndex = index;
+    if(parent != ''){
+      this.deletefieldName['parent'] = parent;
+      this.deletefieldName['child'] = child;
+    }else{
+      this.deletefieldName['child'] = child;
+    }
+    this.commonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
+  }
+  onClickLoadData(parent,field){
+    if(field && field.onClickApiParams && field.onClickApiParams != ''){  
+      let payloads = this.apiCallService.getOnClickLoadDataPayloads(field,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true));  
+      this.callStaticData(payloads);
+    }
+  }
+  addListOfFields(field){
+    this.storeFormDetails("",field);
+  }
+  openTreeView(parent,field) {
+    let fieldName;
+    if( field && field.tree_view_object && field.tree_view_object.field_name){
+      fieldName = field.tree_view_object;
+    }else{
+      fieldName = field;
+    }
+    if(parent != ''){
+      this.currentTreeViewFieldParent = parent;
+    }
+    if(field.type == "dropdown_on_tree_view_selection"){
+      const field = {
+        "field" : fieldName.onchange_call_back_field
+      }
+      this.apiService.ResetStaticData(field);
+    }
+    if (!this.treeViewData[fieldName.field_name]) this.treeViewData[fieldName.field_name] = [];
+    this.treeViewData[fieldName.field_name] = [];
+    this.curTreeViewField = fieldName;
+    const staticModalGroup = [];
+    if (fieldName.api_params && fieldName.api_params != '') {
+      staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, this.templateForm.getRawValue()));
+    }
+    this.callStaticData(staticModalGroup);   
+    this.commonFunctionService.openTreeModal(fieldName.label, fieldName.ddn_field, 'tree-view-modal');   
+  }
+  uploadModal(parent,field,parentIndex,curIndex) {
+    if (field.field_name && field.field_name != "") {
+      field['parentIndex'] = parentIndex;
+      field['curIndex'] = curIndex;
+      this.curFileUploadField = field;
+      this.curFileUploadFieldparentfield = parent;
+      let selectedFileList = [];
+      if(parent != ''){
+        const parentKey = this.commonFunctionService.custmizedKey(parent);
+        if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
+          selectedFileList = this.dataListForUpload[parentKey][field.field_name];
+        }
+      }else{
+        if(this.dataListForUpload[field.field_name]){
+          selectedFileList = this.dataListForUpload[field.field_name];
+        }        
+      }
+      this.commonFunctionService.openFileUpload(field, 'file-upload-modal', this.templateForm.value,selectedFileList)
+    }
+  }
+  downloadFile(file){
+    this.downloadClick = file.rollName;
+    this.commonFunctionService.downloadFile(file);
+  } 
+  downloadFileWithBytes(filedata){
+    const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(file);
+    this.downloadService.download(url,this.downloadClick);
+  }
   refreshListofField(field,updatemode){    
     if(field.do_not_refresh_on_add && updatemode){
       this.tableFields.forEach(tablefield => {
@@ -1524,7 +1464,224 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     } 
     this.listOfFieldsUpdateIndex = -1
     this.listOfFieldUpdateMode = false;
-  }  
+  } 
+  updateListofFields(field,object,index){
+    let searchValue = this.term[field.field_name];
+    let correctIndex = index;
+    let data = this.custmizedFormValue[field.field_name];    
+    if(searchValue != '' || data && data.length > this.pageSize){
+      if(searchValue == undefined || searchValue == ''){
+        searchValue = this.pageNo;
+      }
+      correctIndex = this.gridCommonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
+    } 
+    this.storeFormDetails("",field,correctIndex); 
+  }
+  editListOfFiedls(index,field){
+    let responce = this.formControlService.editeListFieldData(this.templateForm,this.custmizedFormValue,this.tableFields,field,index,this.listOfFieldsUpdateIndex,this.staticData,this.dataListForUpload);
+    this.listOfFieldUpdateMode = responce['listOfFieldUpdateMode'];
+    this.listOfFieldsUpdateIndex = responce['listOfFieldsUpdateIndex'];
+    this.custmizedFormValue = responce['custmizedFormValue'];
+    this.dataListForUpload = responce['dataListForUpload'];
+    this.templateForm = responce['templateForm'];
+  }
+  showListOfFieldData(field,index,item){
+    let value={};
+    let parentObject = this.custmizedFormValue[field.field_name];
+    let listOfField = parentObject[index];
+    value['data'] = listOfField[item.field_name];
+    let editemode = false; 
+    switch (item.type) {
+      case "typeahead":
+        if(item.datatype == "list_of_object"){        
+          this.viewModal('form_basic-modal', value, item,false);
+        }          
+        break;
+      case "list_of_string":
+      case "list_of_checkbox":
+      case "grid_selection":
+      case "list_of_fields":
+      case "info":
+        if(item["gridColumns"] && item["gridColumns"].length > 0){
+          value['gridColumns']=item.gridColumns;
+        }else if(item["fields"] && item["fields"].length > 0){
+          value['gridColumns']=item.fields;
+        }
+        this.viewModal('form_basic-modal', value, item,false);
+        break;
+      case "file":
+        if (value['data'] && value['data'] != '') {
+          let fileData = {};
+          fileData['data'] = this.fileHandlerService.modifyUploadFiles(value['data']);
+          this.viewModal('fileview-grid-modal', fileData, item, editemode);
+        };
+        break;      
+      default:
+        break;
+    } 
+  }
+  reviewParameters(fields,data){
+    this.clickFieldName=fields;
+    let value={};
+    value['data'] = JSON.parse(JSON.stringify(data));
+    value['gridColumns']=fields.gridColumns;
+    const editemode = true;    
+    this.viewModal('form_basic-modal', value, fields,editemode); 
+  }
+  showData(parent,field){
+    if(parent != ''){
+
+    }else{
+      this.showGridData[field.field_name] = !this.showGridData[field.field_name];
+    }
+  }
+  partialDataSave(feilds,tableField){       
+    const payload = {
+      data:{}
+    };
+    //for gsd call*************************
+    if(feilds.action_name == 'GSD_CALL'){
+      this.envService.setRequestType("PUBLIC");
+      if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
+        payload['path'] = feilds.api;
+      }
+      let list = [];
+      list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
+       payload['data'] = list;
+      this.apiService.DynamicApiCall(payload);
+      this.saveCallSubscribe();
+    }
+    //for deafult call (like save)*******************
+    else{
+      if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
+        payload['path'] = feilds.api+'/'+this.currentMenu.name;
+      }    
+      if(this.updateMode){
+        const _id = this.selectedRow._id;    
+        payload.data['_id'] = _id;
+      }  
+      if(Array.isArray(feilds.payloads_fields) && feilds.payloads_fields.length > 0){
+        if(feilds.payloads_fields[0].toUpperCase() == 'FORM_OBJECT'){
+          const saveFromData = this.getSavePayloadData();
+          if(this.getSavePayload){
+            payload.data = saveFromData.data;
+            if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
+              this.apiService.DynamicApiCall(payload);
+              this.saveCallSubscribe();
+            } 
+          }
+        }else{
+          feilds.payloads_fields.forEach(feild => {
+            if(feild in this.custmizedFormValue){
+              payload.data[feild] = this.custmizedFormValue[feild];
+            }else if(feild in this.templateForm.value){
+              payload.data[feild] = this.templateForm.value[feild]
+            }
+          });
+          if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
+            this.apiService.DynamicApiCall(payload);
+            this.saveCallSubscribe();
+          }
+        }
+      } 
+    }     
+  }
+  refreshApiCall(field:any,check:any){
+    const fields = [field];
+    const payloads = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
+    this.callStaticData(payloads);
+  } 
+  removeAttachedDataFromList(parent,child,index){
+    this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(parent,child,index,this.dataListForUpload);
+  }
+  take_action_on_click(action_button){
+    let api='';
+    this.currentActionButton=action_button;
+    if(this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.api && this.currentActionButton.onclick.api != null){
+      if(this.currentActionButton.onclick.close_form_on_success){
+        this.close_form_on_success = this.currentActionButton.onclick.close_form_on_success;
+      } 
+      api = this.currentActionButton.onclick.api        
+      switch (api.toLowerCase()) {
+        case "save":
+        case "update":
+          this.saveFormData();
+          break; 
+        case "preview":
+          if(this.currentActionButton.onclick.action_name != ''){
+            this.currentMenu.name = this.currentActionButton.onclick.action_name;
+            this.selectedRow = this.saveResponceData;
+          }
+          this.commonFunctionService.previewModal(this.selectedRow,this.currentMenu,'form-preview-modal')
+          break;  
+        case "download_report":
+          this.downloadReport();
+          break;
+        case "download_pdf":
+          this.downloadPdfFileFromFormdata();
+          break;
+        case "public_download_report":
+          this.publicDownloadReport();
+          break;
+        case "reset":
+          this.createFormgroup = true;
+          this.getTableField = true;
+          this.pageLoading = true;
+          this.dataSaveInProgress = true;
+          this.ngOnInit();
+          break;
+        case "previous":        
+          this.previous();
+          break;
+        case "updateandnext":
+          this.saveFormData();
+          this.close_form_on_success = false;
+          this.nextIndex = true;
+          break;
+        case "cancel":
+          this.closeModal();
+          break;
+        case "close":
+          this.close();
+          break;
+        case "send_email":
+          this.saveFormData();
+          break;
+        case "redirect_to_home_page":
+          this.router.navigate(['home_page'])
+          break;
+        case "add":
+          this.setListoffieldData();          
+          break;
+        case "delete_row":
+          this.deleteGridData();
+          break; 
+        default:
+          this.partialDataSave(action_button.onclick,null)
+          break;
+      } 
+    }   
+  }
+  nextForm(){
+    if(this.nextFormData && this.nextFormData.formName){
+      this.openNextForm(true);
+      this.enableNextButton = false;
+    }    
+  }
+  //Map Click
+  async mapClick(event: google.maps.MapMouseEvent,field?:any) {
+    this.zoom = 17;
+    this.center = (event.latLng.toJSON());
+    await this.getAddress(this.center.lat, this.center.lng);
+    this.setAddressOnForm(field);
+  }
+  openInfoWindow(marker: MapMarker) {
+    this.infoWindow.open(marker);
+  }
+  //Map Click
+  //Click Evnet Function Handling end -------------------
+
+  //change Event Functions Handling start ---------------
   inputOnChangeFunc(parent,field) {
     if(parent && parent != '' && parent.field_name && parent.field_name != ""){
       field['parent'] = parent.field_name;
@@ -1862,30 +2019,48 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
     this.checkFormFieldIfCondition();
-  }  
-  changeDropdown(field, object,data_template) {
-    let params = field.onchange_api_params;
-    let callback = field.onchange_call_back_field;
-    let criteria = field.onchange_api_params_criteria;
-    const paramlist = params.split(";");
-    let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
-    let completeObject = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
-    if(paramlist.length>1){
-      
-    }else{
-      const payloads = []      
-      if( params.indexOf("CLTFN") >= 0){
-        const calculatedCost =  this.limsCalculationsService.calculateAdditionalCost(this.getFormValue(true));
-        this.updateDataOnFormField(calculatedCost);
-      }
-      else{
-        payloads.push(this.commonFunctionService.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template),this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true))); 
-        this.callStaticData(payloads);
-      }
-   }
-  }  
-  clearTypeaheadData() {
-    this.apiService.clearTypeaheadData();
+  }
+  colorchange(tableField:any, colorval:string) {
+    if(tableField.field_name  && colorval != "" && colorval.length == 7) {
+      this.templateForm.get(tableField.field_name).setValue(colorval)
+    }else {
+      this.templateForm.get(tableField.field_name).setValue("")
+    }
+  }
+  toggleAll(event: MatCheckboxChange,field) {   
+    let responce = this.gridSelectionService.toggleAll(event.checked,field,this.staticData,this.custmizedFormValue);
+    this.staticData = responce.staticData;
+    this.custmizedFormValue = responce.custmizedFormValue; 
+    // if ( event.checked ) {
+    //   if(this.staticData[field.ddn_field].length > 0){
+    //     this.staticData[field.ddn_field].forEach(row => {
+    //       row.selected=true;
+    //     });
+    //   }
+    // }else{
+    //   if(this.staticData[field.ddn_field].length > 0){
+    //     this.staticData[field.ddn_field].forEach(row => {
+    //       row.selected=false;
+    //     });
+    //   }
+    // }
+    // this.custmizedFormValue[field.field_name] = [];
+    // this.staticData[field.ddn_field].forEach(element => {      
+    //   if(element.selected){
+    //     this.custmizedFormValue[field.field_name].push(element);
+    //   }
+    // }); 
+  }
+  toggle(index,event: MatCheckboxChange,field) {
+    let responce = this.gridSelectionService.toggle(index,event.checked,field,this.staticData,this.custmizedFormValue);
+    this.staticData = responce.staticData;
+    this.custmizedFormValue = responce.custmizedFormValue;
+  }
+  //change Event Functions Handling start ---------------
+
+  //Key Up Evnet Functions Start---------------
+  gridSelectionSearch(field){
+    if(this.pageNo[field.field_name]  != 1) this.pageNo[field.field_name] = 1;
   }
   updateData(event, parentfield, field) {
     if(event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 13 || event.keyCode == 27 || event.keyCode == 9){
@@ -1924,13 +2099,88 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }     
 
   }
-  callTypeaheadData(field,objectValue){
-    this.clearTypeaheadData();   
-    const payload = [];
-    const params = field.api_params;
-    const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
-    this.apiService.GetTypeaheadData(payload);    
+  //Key Up Evnet Functions End-----------------
+
+  //Mouse Event Start
+  onMouseDown(event: MouseEvent): void {
+    event.preventDefault();
+    
+    const element = document.getElementById('form_resize');
+    if(!element) return;
+    const initialWidth = element.offsetWidth;
+    const initialHeight = element.offsetHeight;
+    const initialX = event.clientX;
+    const initialY = event.clientY;
+    
+    const mouseMoveHandler = (e: MouseEvent) => {
+      const width = initialWidth + (e.clientX - initialX);
+      const height = initialHeight + (e.clientY - initialY);
+      element.style.width = `${width}px`;
+      element.style.height = `${height}px`;
+    };
+    
+    const mouseUpHandler = () => {
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+  }
+  //Mouse Event End
+
+  ///html page function start
+  isIndeterminate(ddn_field) {
+    return this.gridSelectionService.isIndeterminate(ddn_field,this.staticData);
+    // let check = 0;
+    // if(this.staticData[ddn_field].length > 0){
+    //   this.staticData[ddn_field].forEach(row => {
+    //     if(row.selected){
+    //       check = check + 1;
+    //     }
+    //   });
+    // }
+    // return (check > 0 && !this.isChecked(ddn_field));
+  };
+  isChecked(ddn_field) {
+    return this.gridSelectionService.isChecked(ddn_field,this.staticData);
+    // let check = 0;
+    // if(this.staticData[ddn_field].length > 0){
+    //   this.staticData[ddn_field].forEach(row => {
+    //     if(row.selected){
+    //       check = check + 1;
+    //     }
+    //   });
+    // }
+    // return this.staticData[ddn_field].length === check;
+  };  
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,event.container.data,event.previousIndex,event.currentIndex);
+    }
+  }
+  typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
+    if(parent != '' && parent != undefined && parent != null){
+      const parentKey = this.commonFunctionService.custmizedKey(parent); 
+      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
+        moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+        moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+      }       
+    }else {
+      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
+        moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+        moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+      }      
+    }    
+  }
+  compareObjects(o1: any, o2: any): boolean {
+    if(o1 != null && o2 != null){
+      return o1._id === o2._id;
+    }else{
+      return false;
+    }    
   }
   getOptionText(option) {
     if (option && option.name) {
@@ -1939,16 +2189,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       return option;
     }
   }
-  openModal(id, index, parent,child, data, alertType) {
-    this.deleteIndex = index;
-    if(parent != ''){
-      this.deletefieldName['parent'] = parent;
-      this.deletefieldName['child'] = child;
-    }else{
-      this.deletefieldName['child'] = child;
-    }
-    this.commonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
-  }
+  get templateFormControl() {
+    return this.templateForm.controls;
+  } 
+  ///html page function end
+
+  //Child Form Responce Handling Start ------------------
   alertResponce(responce) {
     if (responce) {
       if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
@@ -1959,227 +2205,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     } else {
       this.cancel();
     }
-  }
-  deleteitem() {
-      const custmizedKeyChild = this.deletefieldName['child'].field_name;
-      if(this.deletefieldName['parent'] != undefined && this.deletefieldName['parent'] != null && this.deletefieldName['parent'] != ''){
-        const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent']) 
-        let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild]))
-        deleteCustmizedValue.splice(this.deleteIndex, 1);
-        if(this.modifyCustmizedFormValue[custmizedKeyParent] && this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild].splice(this.deleteIndex,1);
-        this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild] = deleteCustmizedValue;
-      }else{
-
-        if(this.deletefieldName['child'].datatype == 'key_value'){
-          delete this.custmizedFormValue[custmizedKeyChild][this.deleteIndex];
-          delete this.modifyCustmizedFormValue[custmizedKeyChild][this.deleteIndex];
-        }else{
-          let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyChild]))
-          deleteCustmizedValue.splice(this.deleteIndex, 1);
-          if(this.modifyCustmizedFormValue[custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyChild].splice(this.deleteIndex,1);
-          this.custmizedFormValue[custmizedKeyChild] = deleteCustmizedValue;
-          const field = this.deletefieldName['child']
-          if(field.onchange_api_params != null && field.onchange_api_params != ''){
-            if( field.onchange_api_params.indexOf("CLTFN") >= 0){
-              const calculatedCost = this.limsCalculationsService.calculateAdditionalCost(this.getFormValue(true));
-              this.updateDataOnFormField(calculatedCost);
-            }
-            if (field.onchange_call_back_field != '') {
-              switch (field.type) {
-                case 'list_of_fields':
-                  let formValue = this.getFormValue(true);
-                  this.changeDropdown(field, formValue,field.onchange_data_template);
-                  break;              
-                default:
-                  break;
-              }
-            }
-          }
-          if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
-           this.inputOnChangeFunc('',field);
-          }
-          
-        }        
-      }
-    
-    // }
-    this.cancel()
-  }
-  cancel() {    
-    this.deleteIndex = "";
-    this.deletefieldName = {};
-    //this.alertData = {};
-  }
-  getFormValue(check){
-    let formValue = this.templateForm.getRawValue();
-    let routersParams = {};
-    if(this.routers.snapshot.params["key1"]){
-      routersParams = this.routers.snapshot.params;
-    }
-    return this.formValueService.getFormValue(check,formValue,this.selectedRow,this.updateMode,this.complete_object_payload_mode,this.tableFields,this.latitude,this.longitude,this.address,this.custmizedFormValue,this.checkBoxFieldListValue,this.staticData,this.dataListForUpload,this.selectContact,this.tabFilterData,routersParams,this.getLocation,this.center); 
-  }
-  getSavePayloadData(dataWithCustValue?) {
-    let formValue = this.templateForm.getRawValue();
-    let formValueWithCustomData = dataWithCustValue;
-    if(dataWithCustValue == undefined){
-      formValueWithCustomData = this.getFormValue(true);
-    }    
-    let formDataResponce = this.formValueService.getSavePayloadData(this.currentMenu,this.updateMode,this.deleteGridRowData,this.tableFields,formValue,formValueWithCustomData,this.gridSelectionMendetoryList,this.selectedRow,this.custmizedFormValue,this.dataSaveInProgress,this.showNotify,this.formName,this.templateForm.valid);   
-    this.deleteGridRowData = formDataResponce.deleteGridRowData;     
-    if(this.dataSaveInProgress){
-      this.getSavePayload = formDataResponce.getSavePayload;
-      this.showNotify = formDataResponce.showNotify;
-      this.dataSaveInProgress = formDataResponce.dataSaveInProgress;
-      return formDataResponce.data;
-    }else{
-      let message = formDataResponce.message;
-      if(message && message.msg && message.msg != ""){
-        this.notificationService.notify(message.class, message.msg)
-      }
-    }
-  }
-  saveFormData(){
-    let dataWithCustValue = this.getFormValue(true);
-    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
-    if(typeof checkValidatiaon != 'object'){
-      const saveFromData = this.getSavePayloadData(dataWithCustValue);
-      if(this.bulkupdates){
-        saveFromData.data['data'] = this.bulkDataList;
-        saveFromData.data['bulk_update'] = true;
-      }
-      if(this.getSavePayload){
-        if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.api && this.currentActionButton.onclick.api != null && this.currentActionButton.onclick.api.toLowerCase() == 'send_email'){
-          this.apiService.SendEmail(saveFromData)
-          this.saveCallSubscribe();
-        }else{
-          this.apiService.SaveFormData(saveFromData);
-          this.saveCallSubscribe();
-        }        
-      }
-    }else{
-      this.notificationService.notify('bg-danger',checkValidatiaon.msg);
-    }     
-  }
-  deleteGridData(){
-    let dataWithCustValue = this.getFormValue(true);
-    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
-    if(typeof checkValidatiaon != 'object'){
-      this.deleteGridRowData = true;
-      const saveFromData = this.getSavePayloadData(dataWithCustValue);
-      if(this.getSavePayload){
-          this.apiService.deleteGridRow(saveFromData);
-      }
-    }else{
-      this.notificationService.notify('bg-danger',checkValidatiaon.msg);
-    } 
-  }
-  downloadReport(){
-    const downloadReportFromData = this.getSavePayloadData();
-    if(downloadReportFromData != null){
-      downloadReportFromData['_id'] = this.elements[this.editedRowIndex]._id;
-    }
-    this.checkForDownloadReport = true;
-    this.apiService.GetFileData(downloadReportFromData);
-  }
-  downloadPdfFileFromFormdata(){
-    const downloadPdfFileFromFormData = this.getSavePayloadData();
-    this.saveCallSubscribe();
-    if(downloadPdfFileFromFormData != null){
-      downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
-      let fileName = this.commonFunctionService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
-      this.dataShareService.sharePdfFileName(fileName);      
-    }
-  }
-  publicDownloadReport(){
-    this.checkForDownloadReport = true;
-    let publicDownloadReportFromData = {};
-    let payload = {};
-    if(this.coreFunctionService.isNotBlank(this.selectedRow["_id"]) && this.coreFunctionService.isNotBlank(this.selectedRow["value"])){
-      publicDownloadReportFromData["_id"] = this.selectedRow["_id"];
-      publicDownloadReportFromData["value"] = this.selectedRow["value"];
-      payload["_id"] = this.selectedRow["_id"];
-      payload["data"] = publicDownloadReportFromData;
-      this.apiService.GetFileData(payload);
-    }
-  }
-  editedRowData(object) {
-    this.selectedRow = JSON.parse(JSON.stringify(object)); 
-    this.updateMode = true;
-    this.updateDataOnFormField(this.selectedRow);
-    this.getStaticDataWithDependentData();      
-    if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
-      this.templateForm = this.formControlService.setCheckboxFileListValue(this.checkBoxFieldListValue,this.templateForm, this.staticData,this.selectedRow,this.updateMode);
-    }
-  }
-  getStaticDataWithDependentData(){
-    let formValueWithCustomData = this.getFormValue(true)
-    let formValue = this.getFormValue(false)
-    const staticModal = this.apiCallService.getOnchangePayload(this.tableFields,formValue,formValueWithCustomData);
-    this.getStaticData(staticModal,formValueWithCustomData,formValue);    
-  }
-  getStaticData(staticModal,object,formDataObject){
-    staticModal = this.apiCallService.getStaticDataPayload(staticModal,object,formDataObject,this.multipleFormCollection,this.tableFields,this.formFieldButtons,this.tab,this.form,this.saveResponceData,this.editedRowIndex);
-    this.callStaticData(staticModal);
-  }
-  callStaticData(payloads){
-    if(payloads.length > 0){
-      this.apiService.getStatiData(payloads);        
-    }else{ 
-      setTimeout(() => {
-        this.checkFormFieldIfCondition();
-      }, 100);           
-    }
-  }
-  candelForm() {    
-    if(this.updateMode && this.custmizedFormValue && Object.keys(this.custmizedFormValue).length > 0){      
-      Object.keys(this.custmizedFormValue).forEach(key => {
-        if(this.custmizedFormValue[key] != null && this.custmizedFormValue[key].length > 0){
-          this.custmizedFormValue[key].forEach(element => {
-            if(element.status == 'I'){
-              element.status = 'A';
-            }
-          });
-        }
-      });
-    }else{
-      this.custmizedFormValue = {};
-      this.modifyCustmizedFormValue = {};
-    }
-    this.updateMode=false;
-    this.addAndUpdateResponce.emit('close');    
-  }
-  compareObjects(o1: any, o2: any): boolean {
-    if(o1 != null && o2 != null){
-      return o1._id === o2._id;
-    }else{
-      return false;
-    }    
-  } 
-  openTreeView(parent,field) {
-    let fieldName;
-    if( field && field.tree_view_object && field.tree_view_object.field_name){
-      fieldName = field.tree_view_object;
-    }else{
-      fieldName = field;
-    }
-    if(parent != ''){
-      this.currentTreeViewFieldParent = parent;
-    }
-    if(field.type == "dropdown_on_tree_view_selection"){
-      const field = {
-        "field" : fieldName.onchange_call_back_field
-      }
-      this.apiService.ResetStaticData(field);
-    }
-    if (!this.treeViewData[fieldName.field_name]) this.treeViewData[fieldName.field_name] = [];
-    this.treeViewData[fieldName.field_name] = [];
-    this.curTreeViewField = fieldName;
-    const staticModalGroup = [];
-    if (fieldName.api_params && fieldName.api_params != '') {
-      staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, this.templateForm.getRawValue()));
-    }
-    this.callStaticData(staticModalGroup);   
-    this.commonFunctionService.openTreeModal(fieldName.label, fieldName.ddn_field, 'tree-view-modal');   
   }
   treeViewResponce(event) {
     const obj = {}
@@ -2206,82 +2231,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.curTreeViewField = {};
     }
   }
-  treeViewOptionData(parent,child):Array<any>{
-    let treeViewData = [];
-    if(parent != ""){
-      if(this.treeViewData && this.treeViewData[parent.field_name]){
-        let parentData = this.treeViewData[parent.field_name];
-        if(parentData && parentData[child.field_name]){
-          treeViewData = parentData[child.field_name];
-        }
-      }
-    }else{
-      if(this.treeViewData && this.treeViewData[child.field_name]){
-        treeViewData = this.treeViewData[child.field_name];
-      }
+  treeViewComponentResponce(responce){
+    if(responce && Object.keys(responce).length > 0 && this.curTreeViewField && this.curTreeViewField.field_name){
+      const fieldName = this.curTreeViewField.field_name;      
+      this.templateForm.controls[fieldName].setValue(responce);
+      let treeResponceData = JSON.parse(JSON.stringify(responce));
+      let data = this.treeComponentService.updateTreeViewData(treeResponceData,this.curTreeViewField,this.treeViewData);
+      this.treeViewData = data.treeViewData;
     }
-    return treeViewData;
-  }  
-  showListOfFieldData(field,index,item){
-    let value={};
-    let parentObject = this.custmizedFormValue[field.field_name];
-    let listOfField = parentObject[index];
-    value['data'] = listOfField[item.field_name];
-    let editemode = false; 
-    switch (item.type) {
-      case "typeahead":
-        if(item.datatype == "list_of_object"){        
-          this.viewModal('form_basic-modal', value, item,false);
-        }          
-        break;
-      case "list_of_string":
-      case "list_of_checkbox":
-      case "grid_selection":
-      case "list_of_fields":
-      case "info":
-        if(item["gridColumns"] && item["gridColumns"].length > 0){
-          value['gridColumns']=item.gridColumns;
-        }else if(item["fields"] && item["fields"].length > 0){
-          value['gridColumns']=item.fields;
-        }
-        this.viewModal('form_basic-modal', value, item,false);
-        break;
-      case "file":
-        if (value['data'] && value['data'] != '') {
-          let fileData = {};
-          fileData['data'] = this.fileHandlerService.modifyUploadFiles(value['data']);
-          this.viewModal('fileview-grid-modal', fileData, item, editemode);
-        };
-        break;      
-      default:
-        break;
-    } 
-  }
-  viewModal(id, object, field,editemode) {
-    this.commonFunctionService.viewModal(id, object, field, this.currentMenu,editemode)
-  }
-  responceData(data) {
-    if(this.clickFieldName.type){
-      switch (this.clickFieldName.type) {
-        case "grid_selection":
-        case 'grid_selection_vertical':
-          if(this.clickFieldName.datatype == 'grid_review'){
-            this.custmizedFormValue[this.clickFieldName.field_name] = data;
-          }          
-          break;      
-        default:
-          break;
-      }
-    }
-    this.clickFieldName = {};
-  }
-  editListOfFiedls(index,field){
-    let responce = this.formControlService.editeListFieldData(this.templateForm,this.custmizedFormValue,this.tableFields,field,index,this.listOfFieldsUpdateIndex,this.staticData,this.dataListForUpload);
-    this.listOfFieldUpdateMode = responce['listOfFieldUpdateMode'];
-    this.listOfFieldsUpdateIndex = responce['listOfFieldsUpdateIndex'];
-    this.custmizedFormValue = responce['custmizedFormValue'];
-    this.dataListForUpload = responce['dataListForUpload'];
-    this.templateForm = responce['templateForm'];
   }
   gridSelectionResponce(responce){ 
     const fieldName = this.curTreeViewField.field_name;    
@@ -2374,95 +2331,360 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.curTreeViewField = {};
     this.currentTreeViewFieldParent = {};
   }
-  modifyCustmizedValue(fieldName){
-    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',this.getFormValue(true));
-    this.modifyCustmizedFormValue = modifyObject.modifyData;
-    this.tableFields = modifyObject.fields;
+  responceData(data) {
+    if(this.clickFieldName.type){
+      switch (this.clickFieldName.type) {
+        case "grid_selection":
+        case 'grid_selection_vertical':
+          if(this.clickFieldName.datatype == 'grid_review'){
+            this.custmizedFormValue[this.clickFieldName.field_name] = data;
+          }          
+          break;      
+        default:
+          break;
+      }
+    }
+    this.clickFieldName = {};
   }
-  treeViewComponentResponce(responce){
-    if(responce && Object.keys(responce).length > 0 && this.curTreeViewField && this.curTreeViewField.field_name){
-      const fieldName = this.curTreeViewField.field_name;      
-      this.templateForm.controls[fieldName].setValue(responce);
-      let treeResponceData = JSON.parse(JSON.stringify(responce));
-      let data = this.treeComponentService.updateTreeViewData(treeResponceData,this.curTreeViewField,this.treeViewData);
-      this.treeViewData = data.treeViewData;
+  fileUploadResponce(response) {
+    let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
+    this.dataListForUpload = uploadFileResponce.dataListForUpload;
+    this.templateForm = uploadFileResponce.templateForm;
+    this.tableFields = this.tableFields; 
+  }
+  previewModalResponce(data){
+    alert(data);
+  }
+  //Child Form Responce Handling End --------------------
+
+  //Dipendency Functions Start----------------------
+  funCallOnFormLoad(fields){
+    fields.forEach(ele => {
+      if(ele && ele.type == "group_of_fields"){
+        ele.list_of_fields.forEach(element => {
+          if(element.onchange_function && element.onchange_function_param != ''){
+            switch (element.onchange_function_param) {
+              case 'buggetForcastCalc':
+                this.limsCalculationsService.buggetForcastCalc(this.templateForm);
+                break;            
+              default:
+                break;
+            }
+          }
+        });
+      }     
+    });
+  }
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      this.setSaveResponce(responce);
+    })
+  }
+  changeForm(){
+    this.resetFlagForOnchage();
+    this.resetFlagsForNewForm();
+    const form = this.dataShareService.getDinamicForm();
+    this.setDinamicForm(form)
+    const tempData = this.dataShareService.getTempData();  
+    this.setTempData(tempData); 
+    this.ngOnInit();         
+  }
+  resetFlagsForNewForm(){    
+    //this.tableFields = [];
+    this.calculationFieldList=[];
+    this.showIfFieldList=[];
+    this.buttonIfList=[];
+    this.disableIfFieldList=[];
+    this.mendetoryIfFieldList = [];
+    this.gridSelectionMendetoryList=[];
+    this.customValidationFiels = [];
+    this.canUpdateIfFieldList=[];
+    this.custmizedFormValue = {};
+    this.modifyCustmizedFormValue = {};
+    this.dataListForUpload = {};
+    this.checkBoxFieldListValue = [];
+    this.selectedRow = {}
+    this.formFieldButtons=[];
+    //this.list_of_fields = [];
+    this.typeAheadData = [];
+    this.createFormgroup = true;    
+    this.getTableField = true;
+    this.pageLoading = true;
+    this.dataSaveInProgress = true; 
+    this.isLinear=true;
+    this.isStepper = false;  
+    this.showSidebar = false;  
+    this.checkFormFieldAutfocus = true;
+    this.filePreviewFields = [];    
+    this.nextFormUpdateMode = false;    
+    this.focusFieldParent={};
+    this.term={};
+  }
+  resetFlagForOnchage(){
+    this.listOfFieldUpdateMode=false; 
+    this.listOfFieldsUpdateIndex = -1; 
+    this.serverReq = false;
+    this.updateAddNew = false;
+  }
+  //Map Related Functions
+  async getGooglepMapCurrentPosition(){
+    if(navigator?.geolocation){
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        this.zoom = 10;
+      });
     }
   }
-  isDisable(parent,chield){
-    const  formValue = this.getFormValue(true);  
-    let responce = this.checkIfService.checkIsDisable(parent,chield,this.updateMode,formValue,this.templateForm);
-    this.templateForm = responce.templateForm;
-    return responce.tobedesabled;
-  }  
-  isMendetory(parent,chield){
-    const  formValue = this.getFormValue(true);
-    let responce = this.checkIfService.checkIsMendetory(parent,chield,formValue,this.templateForm);
-    this.templateForm = responce.templateForm;
-    return responce.tobedesabled;   
+  async gmapSearchPlaces(inputData?:any,field?:any){
+    if(inputData?.target?.value){
+      if(this.searchElementRef != undefined){
+        this.searchElementRef.nativeElement.value  = inputData?.target?.value;
+      }
+    }
+    let loadGoogleMap:boolean = false;
+    if(typeof Common.GOOGLE_MAP_IN_FORM == "string"){
+      if(Common.GOOGLE_MAP_IN_FORM == "true"){
+        loadGoogleMap = true;
+      }
+    }else{
+      if(Common.GOOGLE_MAP_IN_FORM){
+        loadGoogleMap = true;
+      }
+    }
+    if(loadGoogleMap){
+      // if(this.mapsAPILoaded){
+        this.geoCoder = new google.maps.Geocoder;
+        if(this.longitude == 0 && this.latitude == 0){
+          await this.setCurrentLocation();
+        }
+        this.center = {
+          "lat": this.latitude,
+          "lng": this.longitude
+        }
+
+        if(this.searchElementRef != undefined){
+          let autocomplete = new google.maps.places.Autocomplete(
+            this.searchElementRef.nativeElement
+          );
+          autocomplete.addListener('place_changed', () => {
+            this.ngZone.run(() => {
+              let place: google.maps.places.PlaceResult = autocomplete?.getPlace();
+              if (place.geometry === undefined || place.geometry === null) {
+                return;
+              }
+              this.searchElementRef.nativeElement.value = place.name;
+              this.address = place.formatted_address;
+              this.latitude = place.geometry.location.lat();
+              this.longitude = place.geometry.location.lng();
+              this.center = {
+                "lat": this.latitude,
+                "lng": this.longitude
+              }
+              this.zoom = 17;
+              this.setAddressOnForm(field);
+              // this.getAddress(this.latitude, this.longitude);
+            });
+          });
+        }
+      // }
+    }
   }
-  showModal(object){
-    this.custmizedFormValue = {}    
-    this.modifyCustmizedFormValue = {};
-    this.formModal.show();
+  private setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 8;
+        this.getAddress(this.latitude, this.longitude);
+      });
+    }
   }
-  closeModal(){
-    if(this.updateMode && this.multipleFormCollection.length > 0){      
-      Object.keys(this.custmizedFormValue).forEach(key => {
-        if(this.custmizedFormValue[key] != null && Array.isArray(this.custmizedFormValue[key])){
-          this.custmizedFormValue[key].forEach(element => {
-            if(element.status == 'I'){
-              element.status = 'A';
+  async getAddress(latitude, longitude)  {
+    await new Promise((resolve, reject) => { 
+      this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            resolve (this.address = results[0].formatted_address);
+          } else {
+            console.log("Geocoder status error: ", status);
+            reject()
+            window.alert('No results found');
+          }
+        } else {
+          window.alert('Geocoder failed due to: ' + status);
+        }  
+      });
+    })
+  }
+  setAddressOnForm(field:any){
+    if(this.templateForm?.get(field?.field_name)){
+      this.templateForm.get(field?.field_name).setValue(this.address);
+    }else if(this.templateForm?.get('address')){
+      this.templateForm.get('address').setValue(this.address);
+    }
+  }
+  //Map Related Functions
+  
+  setForm(){
+    if(this.form){
+      this.formDetails.emit(this.form);
+    }
+    let getFields = this.formCreationService.checkFormDetails(this.form,this.tab,this.currentMenu);
+    this.currentMenu = getFields['currentMenu'];
+    this.bulkupdates = getFields['bulkupdates'];
+    this.getLocation = getFields['getLocation'];
+    this.headerFiledsData = getFields['headerFiledsData'];
+    this.tableFields = getFields['tableFields'];
+    this.getTableField = getFields['getTableField'];
+    this.formFieldButtons = getFields['formFieldButtons'];
+    
+    if (this.tableFields.length > 0 && this.createFormgroup) {
+      this.createFormgroup = false;
+      let formControl = this.formCreationService.setNewForm(this.tableFields,this.formFieldButtons,this.form,this.elements,this.selectedRowIndex);
+      let blankField = formControl['blankField'];
+      if(blankField && (blankField.fieldName != '' || blankField.index != -1)){
+        this.notifyFieldValueIsNull(blankField.fieldName,blankField.index);
+      }
+      this.calculationFieldList=formControl['calculationFieldList'];
+      this.showIfFieldList=formControl['showIfFieldList'];
+      this.buttonIfList=formControl['buttonIfList'];
+      this.disableIfFieldList=formControl['disableIfFieldList'];
+      this.mendetoryIfFieldList = formControl['mendetoryIfFieldList'];
+      this.gridSelectionMendetoryList=formControl['gridSelectionMendetoryList'];
+      this.customValidationFiels = formControl['customValidationFiels'];
+      this.editorTypeFieldList = formControl['editorTypeFieldList'];      
+      const forControl = formControl['forControl'];
+      this.checkBoxFieldListValue = formControl['checkBoxFieldListValue'];
+      let staticModal=formControl['staticModal'];
+      this.filePreviewFields=formControl['filePreviewFields'];
+      this.isStepper=formControl['isStepper'];
+      this.showGridData = formControl['showGridData'];      
+      if (forControl && Object.keys(forControl).length > 0 && this.tableFields.length > 0) {
+        let validators = {};
+        validators['validator'] = [];
+        if(this.customValidationFiels && this.customValidationFiels.length > 0){
+          this.customValidationFiels.forEach(field => {
+            switch (field.type) {
+              case 'date':
+                validators['validator'].push(this.customValidationService.checkDates(field.field_name,field.compareFieldName));
+                break;
+              default:
+                break;
             }
           });
         }
-      });
-    }else{
-      this.custmizedFormValue = {};
-      this.modifyCustmizedFormValue = {};
-    }
-    if(this.multipleFormCollection.length > 0){
-      this.multipleFormCollection = this.multipleFormService.setPreviousFormTargetFieldData(this.multipleFormCollection,this.getFormValue(true));
-    }
-    this.updateMode=false;
-    this.dataListForUpload = []
-    this.filePreviewFields = [];
-    this.close();
-  }  
-  close(){
-    this.staticData = {};
-    this.typeAheadData = [];
-    this.selectedRow = {};
-    this.showGridData={};
-    this.latitude = 0;
-    this.longitude = 0;
-    this.address = "";
-    this.treeViewData={};
-    this.checkFormAfterCloseModel();
+        this.templateForm = this.formBuilder.group(forControl,validators);
+        if(this.nextIndex){
+          this.nextIndex = false;
+          this.next();
+        }
+      }
+      let formValueWithCustomData = this.getFormValue(true);
+      let fromValue = this.getFormValue(false);
+      staticModal = this.formCreationService.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
+      if(this.tableFields.length > 0 && this.editedRowIndex == -1){
+        this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
+      }
+    }    
+    if (this.tableFields.length > 0 && this.pageLoading) {
+      this.pageLoading = false;
+      let buttonsCondition = this.formCreationService.checkFieldButtonCondition(this.tableFields);
+      this.tempVal = buttonsCondition['tempVal'];      
+    }    
   }
-  checkFormAfterCloseModel(){
-    if(this.multipleFormCollection.length > 0){
-      this.loadPreviousForm();
-    }else{
-      this.addAndUpdateResponce.emit('close');
-      if(this.templateForm && this.templateForm.controls){
-        this.templateForm.reset();
-      }      
-    }
+  notifyFieldValueIsNull(formName,fieldNo){
+    let msg = "Field No. "+ fieldNo + " value is null";
+    this.notificationService.notify("bg-danger",msg);
+    this.tableFields = [];
+    this.closeModal();
   }
-  donotResetField(){
-    if(this.tableFields.length > 0){
-      let FormValue = this.getFormValue(true);
-      this.donotResetFieldLists = this.formCreationService.getDonotResetFields(this.tableFields,this.donotResetFieldLists,FormValue);
+  next(){
+    const nextIndex = this.selectedRowIndex + 1;
+    if(nextIndex < this.elements.length){
+      this.selectedRowIndex = nextIndex;
+      this.editedRowData(this.elements[nextIndex]);
+    }else{
+      this.notificationService.notify('bg-danger','Next Index are not available.')
     }
   }
-  checkBeforeResetForm(){
-    if(this.close_form_on_success){
-      this.close_form_on_success=false;
-      this.close();
-    }else if(this.multipleFormCollection.length > 0){
-      this.close();
-    }else{
-      this.resetForm()
+  getFormValue(check){
+    let formValue = this.templateForm.getRawValue();
+    let routersParams = {};
+    if(this.routers.snapshot.params["key1"]){
+      routersParams = this.routers.snapshot.params;
+    }
+    return this.formValueService.getFormValue(check,formValue,this.selectedRow,this.updateMode,this.complete_object_payload_mode,this.tableFields,this.latitude,this.longitude,this.address,this.custmizedFormValue,this.checkBoxFieldListValue,this.staticData,this.dataListForUpload,this.selectContact,this.tabFilterData,routersParams,this.getLocation,this.center); 
+  }
+  getStaticData(staticModal,object,formDataObject){
+    staticModal = this.apiCallService.getStaticDataPayload(staticModal,object,formDataObject,this.multipleFormCollection,this.tableFields,this.formFieldButtons,this.tab,this.form,this.saveResponceData,this.editedRowIndex);
+    this.callStaticData(staticModal);
+  }
+  callStaticData(payloads){
+    if(payloads.length > 0){
+      this.apiService.getStatiData(payloads);        
+    }else{ 
+      setTimeout(() => {
+        this.checkFormFieldIfCondition();
+      }, 100);           
+    }
+  }
+  editedRowData(object) {
+    this.selectedRow = JSON.parse(JSON.stringify(object)); 
+    this.updateMode = true;
+    this.updateDataOnFormField(this.selectedRow);
+    this.getStaticDataWithDependentData();      
+    if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
+      this.templateForm = this.formControlService.setCheckboxFileListValue(this.checkBoxFieldListValue,this.templateForm, this.staticData,this.selectedRow,this.updateMode);
+    }
+  }
+  updateDataOnFormField(formValue){
+    const checkDataType = typeof formValue;
+    if(checkDataType == 'object' && !Array.isArray(formValue) && this.tableFields && this.tableFields.length > 0){
+      let result = this.formControlService.updateDataOnForm(this.templateForm,this.tableFields,formValue,this.formFieldButtons,this.custmizedFormValue,this.modifyCustmizedFormValue,this.selectedRow,this.dataListForUpload,this.treeViewData,this.staticData,this.longitude,this.latitude,this.zoom);
+      this.templateForm = result.templateForm;
+      this.tableFields = result.tableFields;
+      this.custmizedFormValue = result.custmizedFormValue;
+      this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
+      this.selectedRow = result.selectedRow;
+      this.dataListForUpload = result.dataListForUpload;
+      this.treeViewData = result.treeViewData;
+      this.staticData = result.staticData;
+      this.latitude = result.latitude;
+      this.longitude = result.longitude;
+      this.zoom = result.zoom;
+      if(result.getAddress){
+        this.getAddress(this.latitude,this.longitude);
+      }
+      this.getFocusFieldAndFocus();
+      this.checkFormFieldIfCondition();
+    }
+  }
+  getStaticDataWithDependentData(){
+    let formValueWithCustomData = this.getFormValue(true)
+    let formValue = this.getFormValue(false)
+    const staticModal = this.apiCallService.getOnchangePayload(this.tableFields,formValue,formValueWithCustomData);
+    this.getStaticData(staticModal,formValueWithCustomData,formValue);    
+  }
+  getFocusFieldAndFocus(){
+    if(this.checkFormFieldAutfocus && this.tableFields.length > 0){
+      let focusRelatedFields = this.formCreationService.getFocusField(this.previousFormFocusField,this.tableFields,this.templateForm,this.focusFieldParent,this.checkFormFieldAutfocus);
+      this.checkFormFieldAutfocus = focusRelatedFields['checkFormFieldAutfocus'];
+      this.previousFormFocusField = focusRelatedFields['previousFormFocusField'];
+      this.focusFieldParent = focusRelatedFields['focusFieldParent'];
+      let id = focusRelatedFields['id'];
+      if(id != ''){
+        const invalidControl = document.getElementById(id);
+        if(invalidControl != null){
+          invalidControl.focus();
+          this.checkFormFieldAutfocus = false;
+          if(this.previousFormFocusField && this.previousFormFocusField.type == 'list_of_fields' && this.previousFormFocusField.datatype == 'list_of_object_with_popup'){
+            this.previousFormFocusField = {};
+          }
+        }
+      }
     }
   }
   resetForm(){
@@ -2504,362 +2726,37 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
-  partialDataSave(feilds,tableField){       
-    const payload = {
-      data:{}
-    };
-    //for gsd call*************************
-    if(feilds.action_name == 'GSD_CALL'){
-      this.envService.setRequestType("PUBLIC");
-      if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
-        payload['path'] = feilds.api;
-      }
-      let list = [];
-      list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
-       payload['data'] = list;
-      this.apiService.DynamicApiCall(payload);
-      this.saveCallSubscribe();
+  donotResetField(){
+    if(this.tableFields.length > 0){
+      let FormValue = this.getFormValue(true);
+      this.donotResetFieldLists = this.formCreationService.getDonotResetFields(this.tableFields,this.donotResetFieldLists,FormValue);
     }
-    //for deafult call (like save)*******************
-    else{
-      if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
-        payload['path'] = feilds.api+'/'+this.currentMenu.name;
-      }    
-      if(this.updateMode){
-        const _id = this.selectedRow._id;    
-        payload.data['_id'] = _id;
-      }  
-      if(Array.isArray(feilds.payloads_fields) && feilds.payloads_fields.length > 0){
-        if(feilds.payloads_fields[0].toUpperCase() == 'FORM_OBJECT'){
-          const saveFromData = this.getSavePayloadData();
-          if(this.getSavePayload){
-            payload.data = saveFromData.data;
-            if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
-              this.apiService.DynamicApiCall(payload);
-              this.saveCallSubscribe();
-            } 
-          }
-        }else{
-          feilds.payloads_fields.forEach(feild => {
-            if(feild in this.custmizedFormValue){
-              payload.data[feild] = this.custmizedFormValue[feild];
-            }else if(feild in this.templateForm.value){
-              payload.data[feild] = this.templateForm.value[feild]
-            }
-          });
-          if(payload['path'] && payload['path'] != undefined && payload['path'] != null && payload['path'] != ''){
-            this.apiService.DynamicApiCall(payload);
-            this.saveCallSubscribe();
-          }
-        }
-      } 
-    }     
+  }
+  isDisable(parent,chield){
+    const  formValue = this.getFormValue(true);  
+    let responce = this.checkIfService.checkIsDisable(parent,chield,this.updateMode,formValue,this.templateForm);
+    this.templateForm = responce.templateForm;
+    return responce.tobedesabled;
   }  
-  uploadModal(parent,field,parentIndex,curIndex) {
-    if (field.field_name && field.field_name != "") {
-      field['parentIndex'] = parentIndex;
-      field['curIndex'] = curIndex;
-      this.curFileUploadField = field;
-      this.curFileUploadFieldparentfield = parent;
-      let selectedFileList = [];
-      if(parent != ''){
-        const parentKey = this.commonFunctionService.custmizedKey(parent);
-        if(this.dataListForUpload[parentKey] && this.dataListForUpload[parentKey][field.field_name]){
-          selectedFileList = this.dataListForUpload[parentKey][field.field_name];
-        }
-      }else{
-        if(this.dataListForUpload[field.field_name]){
-          selectedFileList = this.dataListForUpload[field.field_name];
-        }        
-      }
-      this.commonFunctionService.openFileUpload(field, 'file-upload-modal', this.templateForm.value,selectedFileList)
+  isMendetory(parent,chield){
+    const  formValue = this.getFormValue(true);
+    let responce = this.checkIfService.checkIsMendetory(parent,chield,formValue,this.templateForm);
+    this.templateForm = responce.templateForm;
+    return responce.tobedesabled;   
+  }
+  removeClass = (element, name) => {    
+    element.className = element.className.replace(name, "");
+  }
+  getNextFormData(formData){
+    let result = this.multipleFormService.getNextFormData(formData,this.listOfFieldsUpdateIndex);
+    if(result.updateAddNew){
+      this.apiService.getGridData(result.payload);
     }
   }  
-  fileUploadResponce(response) {
-    let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
-    this.dataListForUpload = uploadFileResponce.dataListForUpload;
-    this.templateForm = uploadFileResponce.templateForm;
-    this.tableFields = this.tableFields; 
-  }
-  removeAttachedDataFromList(parent,child,index){
-    this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(parent,child,index,this.dataListForUpload);
-  }
-  toggle(index,event: MatCheckboxChange,field) {
-    let responce = this.gridSelectionService.toggle(index,event.checked,field,this.staticData,this.custmizedFormValue);
-    this.staticData = responce.staticData;
-    this.custmizedFormValue = responce.custmizedFormValue;
-  }
-  isIndeterminate(ddn_field) {
-    return this.gridSelectionService.isIndeterminate(ddn_field,this.staticData);
-    // let check = 0;
-    // if(this.staticData[ddn_field].length > 0){
-    //   this.staticData[ddn_field].forEach(row => {
-    //     if(row.selected){
-    //       check = check + 1;
-    //     }
-    //   });
-    // }
-    // return (check > 0 && !this.isChecked(ddn_field));
-  };
-  isChecked(ddn_field) {
-    return this.gridSelectionService.isChecked(ddn_field,this.staticData);
-    // let check = 0;
-    // if(this.staticData[ddn_field].length > 0){
-    //   this.staticData[ddn_field].forEach(row => {
-    //     if(row.selected){
-    //       check = check + 1;
-    //     }
-    //   });
-    // }
-    // return this.staticData[ddn_field].length === check;
-  };
-  toggleAll(event: MatCheckboxChange,field) {   
-    let responce = this.gridSelectionService.toggleAll(event.checked,field,this.staticData,this.custmizedFormValue);
-    this.staticData = responce.staticData;
-    this.custmizedFormValue = responce.custmizedFormValue; 
-    // if ( event.checked ) {
-    //   if(this.staticData[field.ddn_field].length > 0){
-    //     this.staticData[field.ddn_field].forEach(row => {
-    //       row.selected=true;
-    //     });
-    //   }
-    // }else{
-    //   if(this.staticData[field.ddn_field].length > 0){
-    //     this.staticData[field.ddn_field].forEach(row => {
-    //       row.selected=false;
-    //     });
-    //   }
-    // }
-    // this.custmizedFormValue[field.field_name] = [];
-    // this.staticData[field.ddn_field].forEach(element => {      
-    //   if(element.selected){
-    //     this.custmizedFormValue[field.field_name].push(element);
-    //   }
-    // }); 
-  }
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,event.container.data,event.previousIndex,event.currentIndex);
-    }
-  }
-  typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
-    if(parent != '' && parent != undefined && parent != null){
-      const parentKey = this.commonFunctionService.custmizedKey(parent); 
-      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
-        moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-        moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-      }       
-    }else {
-      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
-        moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-        moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-      }      
-    }    
-  }
-  get templateFormControl() {
-    return this.templateForm.controls;
-  } 
-  reviewParameters(fields,data){
-    this.clickFieldName=fields;
-    let value={};
-    value['data'] = JSON.parse(JSON.stringify(data));
-    value['gridColumns']=fields.gridColumns;
-    const editemode = true;    
-    this.viewModal('form_basic-modal', value, fields,editemode); 
-  }
-  take_action_on_click(action_button){
-    let api='';
-    this.currentActionButton=action_button;
-    if(this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.api && this.currentActionButton.onclick.api != null){
-      if(this.currentActionButton.onclick.close_form_on_success){
-        this.close_form_on_success = this.currentActionButton.onclick.close_form_on_success;
-      } 
-      api = this.currentActionButton.onclick.api        
-      switch (api.toLowerCase()) {
-        case "save":
-        case "update":
-          this.saveFormData();
-          break; 
-        case "preview":
-          if(this.currentActionButton.onclick.action_name != ''){
-            this.currentMenu.name = this.currentActionButton.onclick.action_name;
-            this.selectedRow = this.saveResponceData;
-          }
-          this.commonFunctionService.previewModal(this.selectedRow,this.currentMenu,'form-preview-modal')
-          break;  
-        case "download_report":
-          this.downloadReport();
-          break;
-        case "download_pdf":
-          this.downloadPdfFileFromFormdata();
-          break;
-        case "public_download_report":
-          this.publicDownloadReport();
-          break;
-        case "reset":
-          this.createFormgroup = true;
-          this.getTableField = true;
-          this.pageLoading = true;
-          this.dataSaveInProgress = true;
-          this.ngOnInit();
-          break;
-        case "previous":        
-          this.previous();
-          break;
-        case "updateandnext":
-          this.saveFormData();
-          this.close_form_on_success = false;
-          this.nextIndex = true;
-          break;
-        case "cancel":
-          this.closeModal();
-          break;
-        case "close":
-          this.close();
-          break;
-        case "send_email":
-          this.saveFormData();
-          break;
-        case "redirect_to_home_page":
-          this.router.navigate(['home_page'])
-          break;
-        case "add":
-          this.setListoffieldData();          
-          break;
-        case "delete_row":
-          this.deleteGridData();
-          break; 
-        default:
-          this.partialDataSave(action_button.onclick,null)
-          break;
-      } 
-    }   
-  }
-  previewModalResponce(data){
-    alert(data);
-  }  
-  downloadFile(file){
-    this.downloadClick = file.rollName;
-    this.commonFunctionService.downloadFile(file);
-  }
-  downloadFileWithBytes(filedata){
-    const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(file);
-    this.downloadService.download(url,this.downloadClick);
-  }
-  changePdfView(file){
-    if(file.bytes && file.bytes != '' && file.bytes != null){
-      const arrayBuffer = file.bytes;
-      this.pdfViewLink = arrayBuffer;
-    }
-  }
-  previous(){
-    const previousIndex = this.selectedRowIndex - 1;
-    if(previousIndex != -1){
-      this.selectedRowIndex = previousIndex;
-      this.editedRowData(this.elements[previousIndex]);
-    }else{
-      this.notificationService.notify('bg-danger','Previous Index are not available.')
-    }
-  }
-  next(){
-    const nextIndex = this.selectedRowIndex + 1;
-    if(nextIndex < this.elements.length){
-      this.selectedRowIndex = nextIndex;
-      this.editedRowData(this.elements[nextIndex]);
-    }else{
-      this.notificationService.notify('bg-danger','Next Index are not available.')
-    }
-  }
-  funCallOnFormLoad(fields){
-    fields.forEach(ele => {
-      if(ele && ele.type == "group_of_fields"){
-        ele.list_of_fields.forEach(element => {
-          if(element.onchange_function && element.onchange_function_param != ''){
-            switch (element.onchange_function_param) {
-              case 'buggetForcastCalc':
-                this.limsCalculationsService.buggetForcastCalc(this.templateForm);
-                break;            
-              default:
-                break;
-            }
-          }
-        });
-      }     
-    });
-  }
-  changeNewForm(formName:string,i){
-    this.formName = formName;
-    //this.formIndex = i;
-    this.changeForm();
-  }  
-  checkOnSuccessAction(){
-    let responce = this.apiCallResponceService.checkOnSuccessAction(this.currentActionButton,this.forms);
-    if(responce.index != -1) {
-      this.changeNewForm(responce.actionValue,responce.index)
-    }
-  };
-  onClickLoadData(parent,field){
-    if(field && field.onClickApiParams && field.onClickApiParams != ''){  
-      let payloads = this.apiCallService.getOnClickLoadDataPayloads(field,this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true));  
-      this.callStaticData(payloads);
-    }
-  } 
-  updateDataOnFormField(formValue){
-    const checkDataType = typeof formValue;
-    if(checkDataType == 'object' && !Array.isArray(formValue) && this.tableFields && this.tableFields.length > 0){
-      let result = this.formControlService.updateDataOnForm(this.templateForm,this.tableFields,formValue,this.formFieldButtons,this.custmizedFormValue,this.modifyCustmizedFormValue,this.selectedRow,this.dataListForUpload,this.treeViewData,this.staticData,this.longitude,this.latitude,this.zoom);
-      this.templateForm = result.templateForm;
-      this.tableFields = result.tableFields;
-      this.custmizedFormValue = result.custmizedFormValue;
-      this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
-      this.selectedRow = result.selectedRow;
-      this.dataListForUpload = result.dataListForUpload;
-      this.treeViewData = result.treeViewData;
-      this.staticData = result.staticData;
-      this.latitude = result.latitude;
-      this.longitude = result.longitude;
-      this.zoom = result.zoom;
-      if(result.getAddress){
-        this.getAddress(this.latitude,this.longitude);
-      }
-      this.getFocusFieldAndFocus();
-      this.checkFormFieldIfCondition();
-    }
-  }
-  private setCurrentLocation() {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
-        this.zoom = 8;
-        this.getAddress(this.latitude, this.longitude);
-      });
-    }
-  }  
-  async getAddress(latitude, longitude)  {
-    await new Promise((resolve, reject) => { 
-      this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
-        if (status === google.maps.GeocoderStatus.OK) {
-          if (results[0]) {
-            resolve (this.address = results[0].formatted_address);
-          } else {
-            console.log("Geocoder status error: ", status);
-            reject()
-            window.alert('No results found');
-          }
-        } else {
-          window.alert('Geocoder failed due to: ' + status);
-        }  
-      });
-    })
-  } 
-  refreshApiCall(field:any,check:any){
-    const fields = [field];
-    const payloads = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
-    this.callStaticData(payloads);
+  modifyCustmizedValue(fieldName){
+    let modifyObject = this.gridCommonFunctionService.gridDataModify(this.modifyCustmizedFormValue,this.custmizedFormValue,this.tableFields,fieldName,'grid_selection',this.getFormValue(true));
+    this.modifyCustmizedFormValue = modifyObject.modifyData;
+    this.tableFields = modifyObject.fields;
   }  
   storeFormDetails(parent_field:any,field:any,index?:number){
     let result = this.multipleFormService.storeFormDetails(parent_field,field,this.getFormValue(false),this.getFormValue(true),this.updateMode,this.nextFormData,this.lastTypeaheadTypeValue,this.multipleFormCollection,this.currentMenu,this.form,this.listOfFieldUpdateMode,this.listOfFieldsUpdateIndex,this.addNewRecord,this.enableNextButton,index);
@@ -2868,7 +2765,38 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(result.id && result.id != '') this.multipleFormService.getNextFormById(result.id);
     this.addNewRecord = result.addNewRecord;
     if(result.params && result.params != '')  this.multipleFormService.getDataForNextForm(result.params,result.criteria);   
-  }  
+  }   
+  checkBeforeResetForm(){
+    if(this.close_form_on_success){
+      this.close_form_on_success=false;
+      this.close();
+    }else if(this.multipleFormCollection.length > 0){
+      this.close();
+    }else{
+      this.resetForm()
+    }
+  }
+  close(){
+    this.staticData = {};
+    this.typeAheadData = [];
+    this.selectedRow = {};
+    this.showGridData={};
+    this.latitude = 0;
+    this.longitude = 0;
+    this.address = "";
+    this.treeViewData={};
+    this.checkFormAfterCloseModel();
+  }
+  checkFormAfterCloseModel(){
+    if(this.multipleFormCollection.length > 0){
+      this.loadPreviousForm();
+    }else{
+      this.addAndUpdateResponce.emit('close');
+      if(this.templateForm && this.templateForm.controls){
+        this.templateForm.reset();
+      }      
+    }
+  }
   loadPreviousForm(){
     let multiFormLength = this.multipleFormCollection.length;
     const lastIndex = multiFormLength - 1;
@@ -2944,23 +2872,141 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
     this.multipleFormCollection.splice(lastIndex,1);    
   }
-  loadNextForm(form: any){    
-    this.form = form;
-    this.resetFlagsForNewForm();
-    this.setForm();   
-    let result = this.multipleFormService.updateNextFormData(this.multipleFormCollection,this.nextFormUpdateMode,this.form,this.custmizedFormValue,this.editedRowIndex,this.previousFormFocusField,this.tableFields);
-    let nextFormData:any = result.nextFormData;
-    if(this.updateAddNew){
-      this.getNextFormData(nextFormData);
+  callCalculation(){
+    if(this.calculationFieldList && this.calculationFieldList.length > 0){
+      for (var i = 0;i<this.calculationFieldList.length ;++i){
+        let element = this.calculationFieldList[i];
+        switch (element.onchange_function_param) {        
+            case 'autopopulateFields':
+              this.limsCalculationsService.autopopulateFields(this.templateForm);
+              break;
+          default:
+            this.inputOnChangeFunc('',element);
+        }
+      }
     }
-    let fData = result.fData;
-    this.nextFormUpdateMode = result.nextFormUpdateMode;
-    this.custmizedFormValue = result.custmizedFormValue;
-    if(result.fieldName && result.fieldName != '') this.modifyCustmizedValue(result.fieldName);
-    if(result.editFunction) this.editedRowData(fData);
-    if(result.updateFormFunction) this.updateDataOnFormField(fData);
-    if(result.getStaticData) this.getStaticDataWithDependentData();
-    this.previousFormFocusField = result.previousFormFocusField;
+  }
+  callTypeaheadData(field,objectValue){
+    this.clearTypeaheadData();   
+    const payload = [];
+    const params = field.api_params;
+    const criteria = field.api_params_criteria;
+    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    this.apiService.GetTypeaheadData(payload);    
+  }  
+  clearTypeaheadData() {
+    this.apiService.clearTypeaheadData();
+  }
+  checkOnSuccessAction(){
+    let responce = this.apiCallResponceService.checkOnSuccessAction(this.currentActionButton,this.forms);
+    if(responce.index != -1) {
+      this.changeNewForm(responce.actionValue,responce.index)
+    }
+  }; 
+  //click Function Dependency
+  changeDropdown(field, object,data_template) {
+    let params = field.onchange_api_params;
+    let callback = field.onchange_call_back_field;
+    let criteria = field.onchange_api_params_criteria;
+    const paramlist = params.split(";");
+    let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
+    let completeObject = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,object);
+    if(paramlist.length>1){
+      
+    }else{
+      const payloads = []      
+      if( params.indexOf("CLTFN") >= 0){
+        const calculatedCost =  this.limsCalculationsService.calculateAdditionalCost(this.getFormValue(true));
+        this.updateDataOnFormField(calculatedCost);
+      }
+      else{
+        payloads.push(this.commonFunctionService.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template),this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true))); 
+        this.callStaticData(payloads);
+      }
+   }
+  } 
+  viewModal(id, object, field,editemode) {
+    this.commonFunctionService.viewModal(id, object, field, this.currentMenu,editemode)
+  }
+  getSavePayloadData(dataWithCustValue?) {
+    let formValue = this.templateForm.getRawValue();
+    let formValueWithCustomData = dataWithCustValue;
+    if(dataWithCustValue == undefined){
+      formValueWithCustomData = this.getFormValue(true);
+    }    
+    let formDataResponce = this.formValueService.getSavePayloadData(this.currentMenu,this.updateMode,this.deleteGridRowData,this.tableFields,formValue,formValueWithCustomData,this.gridSelectionMendetoryList,this.selectedRow,this.custmizedFormValue,this.dataSaveInProgress,this.showNotify,this.formName,this.templateForm.valid);   
+    this.deleteGridRowData = formDataResponce.deleteGridRowData;     
+    if(this.dataSaveInProgress){
+      this.getSavePayload = formDataResponce.getSavePayload;
+      this.showNotify = formDataResponce.showNotify;
+      this.dataSaveInProgress = formDataResponce.dataSaveInProgress;
+      return formDataResponce.data;
+    }else{
+      let message = formDataResponce.message;
+      if(message && message.msg && message.msg != ""){
+        this.notificationService.notify(message.class, message.msg)
+      }
+    }
+  }
+  saveFormData(){
+    let dataWithCustValue = this.getFormValue(true);
+    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
+    if(typeof checkValidatiaon != 'object'){
+      const saveFromData = this.getSavePayloadData(dataWithCustValue);
+      if(this.bulkupdates){
+        saveFromData.data['data'] = this.bulkDataList;
+        saveFromData.data['bulk_update'] = true;
+      }
+      if(this.getSavePayload){
+        if(this.currentActionButton && this.currentActionButton.onclick && this.currentActionButton.onclick != null && this.currentActionButton.onclick.api && this.currentActionButton.onclick.api != null && this.currentActionButton.onclick.api.toLowerCase() == 'send_email'){
+          this.apiService.SendEmail(saveFromData)
+          this.saveCallSubscribe();
+        }else{
+          this.apiService.SaveFormData(saveFromData);
+          this.saveCallSubscribe();
+        }        
+      }
+    }else{
+      this.notificationService.notify('bg-danger',checkValidatiaon.msg);
+    }     
+  }
+  downloadReport(){
+    const downloadReportFromData = this.getSavePayloadData();
+    if(downloadReportFromData != null){
+      downloadReportFromData['_id'] = this.elements[this.editedRowIndex]._id;
+    }
+    this.checkForDownloadReport = true;
+    this.apiService.GetFileData(downloadReportFromData);
+  }
+  downloadPdfFileFromFormdata(){
+    const downloadPdfFileFromFormData = this.getSavePayloadData();
+    this.saveCallSubscribe();
+    if(downloadPdfFileFromFormData != null){
+      downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
+      let fileName = this.commonFunctionService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
+      this.dataShareService.sharePdfFileName(fileName);      
+    }
+  }
+  publicDownloadReport(){
+    this.checkForDownloadReport = true;
+    let publicDownloadReportFromData = {};
+    let payload = {};
+    if(this.coreFunctionService.isNotBlank(this.selectedRow["_id"]) && this.coreFunctionService.isNotBlank(this.selectedRow["value"])){
+      publicDownloadReportFromData["_id"] = this.selectedRow["_id"];
+      publicDownloadReportFromData["value"] = this.selectedRow["value"];
+      payload["_id"] = this.selectedRow["_id"];
+      payload["data"] = publicDownloadReportFromData;
+      this.apiService.GetFileData(payload);
+    }
+  }
+  previous(){
+    const previousIndex = this.selectedRowIndex - 1;
+    if(previousIndex != -1){
+      this.selectedRowIndex = previousIndex;
+      this.editedRowData(this.elements[previousIndex]);
+    }else{
+      this.notificationService.notify('bg-danger','Previous Index are not available.')
+    }
   }
   setListoffieldData(){
     const previousFormIndex = this.multipleFormCollection.length - 1;
@@ -3034,128 +3080,116 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.close();
     } 
   }
-  colorchange(tableField:any, colorval:string) {
-    if(tableField.field_name  && colorval != "" && colorval.length == 7) {
-      this.templateForm.get(tableField.field_name).setValue(colorval)
-    }else {
-      this.templateForm.get(tableField.field_name).setValue("")
-    }
-  }
-  dinamicApiCall(tableField,value){
-    this.dinamicApiField = tableField.api_call_name;
-    let payload:any = '';
-    let api = '';
-    switch (tableField.api_call_name) {
-      case 'gst_number':
-        api = tableField.api;
-        payload = this.commonFunctionService.getPaylodWithCriteria('test','',[],{}) ;
-        payload['gstin'] =  value;        
-        break;    
-      default:
-        break;
-    }
-    if(api != ''){
-      this.apiService.fieldDinamicApi(api,payload);
-    }
-  }
-  addListOfFields(field){
-    this.storeFormDetails("",field);
-  }
-  updateListofFields(field,object,index){
-    let searchValue = this.term[field.field_name];
-    let correctIndex = index;
-    let data = this.custmizedFormValue[field.field_name];    
-    if(searchValue != '' || data && data.length > this.pageSize){
-      if(searchValue == undefined || searchValue == ''){
-        searchValue = this.pageNo;
+  deleteGridData(){
+    let dataWithCustValue = this.getFormValue(true);
+    let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
+    if(typeof checkValidatiaon != 'object'){
+      this.deleteGridRowData = true;
+      const saveFromData = this.getSavePayloadData(dataWithCustValue);
+      if(this.getSavePayload){
+          this.apiService.deleteGridRow(saveFromData);
       }
-      correctIndex = this.gridCommonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
+    }else{
+      this.notificationService.notify('bg-danger',checkValidatiaon.msg);
     } 
-    this.storeFormDetails("",field,correctIndex); 
   }  
-  nextForm(){
-    if(this.nextFormData && this.nextFormData.formName){
-      this.openNextForm(true);
-      this.enableNextButton = false;
-    }    
-  }
-  openNextForm(next) {
-    const field = this.multipleFormService.getNextFormObject(this.nextFormData,next);    
-    this.storeFormDetails('', field);
-  }
-  updateAddNewField(parent,child){
-    if(child && child.onchange_get_next_form){
-      let fieldValue:any = '';
-      if(parent != ''){
-        fieldValue = this.templateForm.get(parent.field_name).get(child.field_name).value;
-      }else{
-        fieldValue = this.templateForm.get(child.field_name).value;
-      }
-      if(fieldValue && fieldValue._id && fieldValue._id != ''){
-        this.onchangeNextForm = true;
-        const reqCriteria = ["_id;eq;" + fieldValue._id + ";STATIC"];
-        const reqParams = child.api_params;
-        this.multipleFormService.getDataForNextForm(reqParams,reqCriteria);
-        this.tempVal[child.field_name + "_add_button"] = false;
-      }
+  //click Function Dependency
+  //Child Form Responce dependency
+  deleteitem() {
+    const custmizedKeyChild = this.deletefieldName['child'].field_name;
+    if(this.deletefieldName['parent'] != undefined && this.deletefieldName['parent'] != null && this.deletefieldName['parent'] != ''){
+      const custmizedKeyParent = this.commonFunctionService.custmizedKey(this.deletefieldName['parent']) 
+      let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild]))
+      deleteCustmizedValue.splice(this.deleteIndex, 1);
+      if(this.modifyCustmizedFormValue[custmizedKeyParent] && this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyParent][custmizedKeyChild].splice(this.deleteIndex,1);
+      this.custmizedFormValue[custmizedKeyParent][custmizedKeyChild] = deleteCustmizedValue;
     }else{
-      this.storeFormDetails(parent,child);
-      this.updateAddNew = true;
-    }    
-  }
-  getNextFormData(formData){
-    let result = this.multipleFormService.getNextFormData(formData,this.listOfFieldsUpdateIndex);
-    if(result.updateAddNew){
-      this.apiService.getGridData(result.payload);
-    }
-  }
-  showData(parent,field){
-    if(parent != ''){
 
-    }else{
-      this.showGridData[field.field_name] = !this.showGridData[field.field_name];
-    }
-  }
-  gridSelectionSearch(field){
-    if(this.pageNo[field.field_name]  != 1) this.pageNo[field.field_name] = 1;
-  }
-  onMouseDown(event: MouseEvent): void {
-    event.preventDefault();
-    
-    const element = document.getElementById('form_resize');
-    if(!element) return;
-    const initialWidth = element.offsetWidth;
-    const initialHeight = element.offsetHeight;
-    const initialX = event.clientX;
-    const initialY = event.clientY;
-    
-    const mouseMoveHandler = (e: MouseEvent) => {
-      const width = initialWidth + (e.clientX - initialX);
-      const height = initialHeight + (e.clientY - initialY);
-      element.style.width = `${width}px`;
-      element.style.height = `${height}px`;
-    };
-    
-    const mouseUpHandler = () => {
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
-    };
-    
-    document.addEventListener('mousemove', mouseMoveHandler);
-    document.addEventListener('mouseup', mouseUpHandler);
-  }
-  callCalculation(){
-    if(this.calculationFieldList && this.calculationFieldList.length > 0){
-      for (var i = 0;i<this.calculationFieldList.length ;++i){
-        let element = this.calculationFieldList[i];
-        switch (element.onchange_function_param) {        
-            case 'autopopulateFields':
-              this.limsCalculationsService.autopopulateFields(this.templateForm);
-              break;
-          default:
-            this.inputOnChangeFunc('',element);
+      if(this.deletefieldName['child'].datatype == 'key_value'){
+        delete this.custmizedFormValue[custmizedKeyChild][this.deleteIndex];
+        delete this.modifyCustmizedFormValue[custmizedKeyChild][this.deleteIndex];
+      }else{
+        let deleteCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[custmizedKeyChild]))
+        deleteCustmizedValue.splice(this.deleteIndex, 1);
+        if(this.modifyCustmizedFormValue[custmizedKeyChild]) this.modifyCustmizedFormValue[custmizedKeyChild].splice(this.deleteIndex,1);
+        this.custmizedFormValue[custmizedKeyChild] = deleteCustmizedValue;
+        const field = this.deletefieldName['child']
+        if(field.onchange_api_params != null && field.onchange_api_params != ''){
+          if( field.onchange_api_params.indexOf("CLTFN") >= 0){
+            const calculatedCost = this.limsCalculationsService.calculateAdditionalCost(this.getFormValue(true));
+            this.updateDataOnFormField(calculatedCost);
+          }
+          if (field.onchange_call_back_field != '') {
+            switch (field.type) {
+              case 'list_of_fields':
+                let formValue = this.getFormValue(true);
+                this.changeDropdown(field, formValue,field.onchange_data_template);
+                break;              
+              default:
+                break;
+            }
+          }
         }
-      }
+        if(field.onchange_function && field.onchange_function_param && field.onchange_function_param != ""){
+         this.inputOnChangeFunc('',field);
+        }
+        
+      }        
     }
+    this.cancel()
   }
+  cancel() {    
+    this.deleteIndex = "";
+    this.deletefieldName = {};
+    //this.alertData = {};
+  }
+  //Child Form Responce dependency
+  //Dipendency Functions End----------------------
+
+  //Not Use in any event,subscriber or html
+  // treeViewOptionData(parent,child):Array<any>{
+  //   let treeViewData = [];
+  //   if(parent != ""){
+  //     if(this.treeViewData && this.treeViewData[parent.field_name]){
+  //       let parentData = this.treeViewData[parent.field_name];
+  //       if(parentData && parentData[child.field_name]){
+  //         treeViewData = parentData[child.field_name];
+  //       }
+  //     }
+  //   }else{
+  //     if(this.treeViewData && this.treeViewData[child.field_name]){
+  //       treeViewData = this.treeViewData[child.field_name];
+  //     }
+  //   }
+  //   return treeViewData;
+  // }  
+  // candelForm() {    
+  //   if(this.updateMode && this.custmizedFormValue && Object.keys(this.custmizedFormValue).length > 0){      
+  //     Object.keys(this.custmizedFormValue).forEach(key => {
+  //       if(this.custmizedFormValue[key] != null && this.custmizedFormValue[key].length > 0){
+  //         this.custmizedFormValue[key].forEach(element => {
+  //           if(element.status == 'I'){
+  //             element.status = 'A';
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }else{
+  //     this.custmizedFormValue = {};
+  //     this.modifyCustmizedFormValue = {};
+  //   }
+  //   this.updateMode=false;
+  //   this.addAndUpdateResponce.emit('close');    
+  // }
+  // formControlChanges(){
+  //   if(this.templateForm && this.templateForm.valueChanges && this.templateForm.valueChanges != null){
+  //     this.templateForm.valueChanges.subscribe(val => {
+  //       this.handleDisabeIf();
+  //     });
+  //   }    
+  // }
+  // handleDisabeIf(){
+  //   this.getFocusFieldAndFocus();
+  //   this.checkFormFieldIfCondition(); 
+  // }
 }
