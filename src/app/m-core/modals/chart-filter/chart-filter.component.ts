@@ -169,12 +169,18 @@ export class ChartFilterComponent implements OnInit {
       }
     }
   }
+
+  isfilterChart:boolean = false;
   filterData(responce){
+    this.isfilterChart = true;
     let item = responce.item;
     let data = responce.data;
     if(item && data){
       this.dashletFilter(item,data);
-    }    
+    }
+    setTimeout(() => {
+      this.isfilterChart = false;
+    }, 6000);  
   }
   dashletFilter(item,data){
     if(item && item.package_name && item.package_name == "mongodb_chart"){
@@ -246,7 +252,7 @@ export class ChartFilterComponent implements OnInit {
           console.log('Chart failed to initialise')
           //window.alert('Chart failed to initialise')
           );
-        }        
+        }    
       }
     }
   }
