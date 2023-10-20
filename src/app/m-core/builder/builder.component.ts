@@ -357,6 +357,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
     this.selectTabIndex = i;  
     this.getViewMode(); 
+    this.selected = new FormControl(i);
   } 
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
