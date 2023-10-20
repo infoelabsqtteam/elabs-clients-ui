@@ -12,16 +12,15 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
-.table table {width : 100%;
-    font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    .grid-data {min-width:100px;display: block;overflow: hidden;text-overflow: ellipsis;border-right-width: 1px;}
+.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
+    // .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:3;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
-                .heading {font-weight:500;position:relative;font-size:13px;width: 100% !important;}
-                .grid-heading-nowrap {white-space:nowrap; min-width: 100px !important;overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;}
+                .heading {font-weight:500;position:relative;font-size:13px;}
+                .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
                     .fas { display:inline-block;}
@@ -90,13 +89,49 @@
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
 
-.table table {transition: all 0.3s ease-in-out;
-    &.resizing {-moz-user-select: none;-ms-user-select: none;user-select: none;cursor: col-resize;}
-    thead tr th {position: relative;left: 0px !important;
-        &:not(:last-child) {
-            .resize-holder {cursor: col-resize;width: 20px;height: 100%;position: absolute;right: -10px;top: 0;z-index: 1;}
-        }
-    }
+
+.table {
+	.table-resizable {
+		thead {
+			tr {
+				th {
+					.heading {
+						width: 100% !important;
+					}
+					.grid-heading-nowrap {
+						min-width: 100px !important;
+					}
+					position: relative;
+					left: 0px !important;
+					&:not(:last-child) {
+						.resize-holder {
+							cursor: col-resize;
+							width: 20px;
+							height: 100%;
+							position: absolute;
+							right: -10px;
+							top: 0;
+							z-index: 1;
+						}
+					}
+				}
+			}
+		}
+		.grid-data {
+			min-width: 100px;
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			border-right-width: 1px;
+		}
+		transition: all 0.3s ease-in-out;
+	}
+	table.resizing {
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		cursor: col-resize;
+	}
 }
 
 @media screen and (min-width: 1366px) {
@@ -189,10 +224,9 @@
         strong {color:#333;font-size:14px;}
       }
     }
-
 }
 .colSticky{
-    position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;
+   position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;
 }
 .firstCol{left: 0;}
 .editedColumneIcon{position: absolute;right: 0;top: 5px;cursor: pointer;z-index: 1;}
