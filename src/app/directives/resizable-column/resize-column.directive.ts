@@ -1,13 +1,16 @@
-import {Directive, OnInit, Renderer2, Input, ElementRef, ChangeDetectorRef,} from "@angular/core";
+import { Directive, OnInit, Renderer2, Input, ElementRef, ChangeDetectorRef,} from "@angular/core";
+import { fromEvent, Subscription } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 
 @Directive({
   selector: "[resizeColumn]",
 })
-
 export class ResizeColumnDirective implements OnInit {
   @Input("resizeColumn") resizable: boolean;
 
   @Input() index: number;
+
+  @Input() cellClass?: string;
 
   private startX: number;
 
@@ -19,12 +22,17 @@ export class ResizeColumnDirective implements OnInit {
 
   private pressed: boolean;
 
+  private minimumWidth: number;
+
+  private resizeSubscription: Subscription;
+
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
     private cdr: ChangeDetectorRef
   ) {
     this.column = this.el.nativeElement;
+    this.minimumWidth = 100;
   }
 
   ngOnInit() {
@@ -38,8 +46,19 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.appendChild(this.column, resizer);
       this.renderer.listen(resizer, "mousedown", this.onMouseDown);
       this.renderer.listen(this.table, "mousemove", this.onMouseMove);
+
+      // Use RxJS to debounce the mousemove event
+      this.resizeSubscription = fromEvent(this.table, "mousemove")
+        .pipe(debounceTime(10))
+        .subscribe(this.onMouseMove);
+
       this.renderer.listen("document", "mouseup", this.onMouseUp);
     }
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from the resize event to avoid memory leaks
+    this.resizeSubscription.unsubscribe();
   }
 
   onMouseDown = (event: MouseEvent) => {
@@ -55,22 +74,39 @@ export class ResizeColumnDirective implements OnInit {
 
       let width = this.startWidth + (event.pageX - this.startX - offset);
 
+      if (width < this.minimumWidth) {
+        width = this.minimumWidth;
+      }
+
       // Set table header width
       this.renderer.setStyle(this.column, "width", `${width}px`);
 
-      // Set table cells width -- here in tbody>tr>.grid-data have the fixed width
-      const tableCells = Array.from(this.table.querySelectorAll("tr")).map(
-        (row: any) => row.querySelectorAll(".grid-data").item(this.index)
+      // Set table cell width
+      const td = Array.from(this.table.querySelectorAll("tr")).map((row: any) =>
+        row.querySelectorAll("td").item(this.index + 1)
       );
 
-
-      for (const cell of tableCells) {
-        if (cell != null) {
+      for (let cell of td) {
+        if (cell !== null) {
           this.renderer.setStyle(cell, "width", `${width}px`);
         }
       }
 
-      this.setGridHeadingWidth(width);
+
+      // Set cellClass width
+      if (this.cellClass) {
+        const rows = Array.from(this.table.querySelectorAll("tr")).map(
+          (row: any) =>
+            row.querySelectorAll(`.${this.cellClass}`).item(this.index)
+        );
+
+        for (let cell of rows) {
+          if (cell !== null) {
+            this.renderer.setStyle(cell, "width", `${width+40}px`);
+          }
+        }
+      }
+
       this.cdr.detectChanges();
     }
   };
@@ -81,18 +117,10 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.removeClass(this.table, "resizing");
     }
   };
-
-  setGridHeadingWidth(width: number) {
-    // Get all .grid-heading-nowrap elements in the table header
-    const gridHeadings = Array.from(
-      this.table.querySelectorAll(".grid-heading-nowrap")
-    );
-
-    // Set the width of the corresponding .grid-heading-nowrap elements in the current column
-    gridHeadings.forEach((gridHeading: HTMLElement, index: number) => {
-      if (index === this.index) {
-        this.renderer.setStyle(gridHeading, "width", `${width}px`);
-      }
-    });
-  }
 }
+
+
+// [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'"
+// This directive needs the classess for resizer
+// .resize-holder {cursor: col-resize;width: 20px;height: 100%;position: absolute;right: -10px;top: 0;z-index: 1;}
+// .resizing {-moz-user-select: none;-ms-user-select: none;user-select: none;cursor: col-resize;}
