@@ -1,4 +1,4 @@
-import { Directive, OnInit, Renderer2, Input, ElementRef, ChangeDetectorRef,} from "@angular/core";
+import {Directive, OnInit, Renderer2, Input, ElementRef, ChangeDetectorRef,} from "@angular/core";
 import { fromEvent, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
@@ -72,41 +72,17 @@ export class ResizeColumnDirective implements OnInit {
     if (this.pressed && event.buttons) {
       this.renderer.addClass(this.table, "resizing");
 
-      let width = this.startWidth + (event.pageX - this.startX - offset);
-
-      if (width < this.minimumWidth) {
-        width = this.minimumWidth;
-      }
-
-      // Set table header width
-      this.renderer.setStyle(this.column, "width", `${width}px`);
+      let width = this.calculateNewWidth(event, offset);
+      this.updateElementWidth(this.column, width);
 
       // Set table cell width
-      const td = Array.from(this.table.querySelectorAll("tr")).map((row: any) =>
-        row.querySelectorAll("td").item(this.index + 1)
-      );
-
-      for (let cell of td) {
-        if (cell !== null) {
-          this.renderer.setStyle(cell, "width", `${width}px`);
-        }
-      }
-
+      this.setElementWidth(this.getTableCells(), width);
 
       // Set cellClass width
       if (this.cellClass) {
-        const rows = Array.from(this.table.querySelectorAll("tr")).map(
-          (row: any) =>
-            row.querySelectorAll(`.${this.cellClass}`).item(this.index)
-        );
-
-        for (let cell of rows) {
-          if (cell !== null) {
-            this.renderer.setStyle(cell, "width", `${width+40}px`);
-          }
-        }
+        const cellClassElements = this.getCellClassElements();
+        this.setElementWidth(cellClassElements, width + 40);
       }
-
       this.cdr.detectChanges();
     }
   };
@@ -117,8 +93,36 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.removeClass(this.table, "resizing");
     }
   };
-}
 
+  calculateNewWidth(event: MouseEvent, offset: number): number {
+    let width = this.startWidth + (event.pageX - this.startX - offset);
+    return width < this.minimumWidth ? this.minimumWidth : width;
+  }
+
+  updateElementWidth(element: HTMLElement, width: number) {
+    this.renderer.setStyle(element, "width", `${width}px`);
+  }
+
+  setElementWidth(elements: HTMLElement[], width: number) {
+    elements.forEach((element: any) => {
+      if (element !== null) {
+        this.updateElementWidth(element, width);
+      }
+    });
+  }
+
+  getTableCells(): HTMLElement[] {
+    return Array.from(this.table.querySelectorAll("tr")).map((row: any) =>
+      row.querySelectorAll("td").item(this.index + 1)
+    );
+  }
+
+  getCellClassElements(): HTMLElement[] {
+    return Array.from(this.table.querySelectorAll("tr")).map((row: any) =>
+      row.querySelectorAll(`.${this.cellClass}`).item(this.index)
+    );
+  }
+}
 
 // [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'"
 // This directive needs the classess for resizer
