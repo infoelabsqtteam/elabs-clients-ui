@@ -58,7 +58,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   currentMenu: any;
   selectedRowIndex: any = -1;
 
-  rowSelectionIndex:number=-1;
+  rowSelectionIndex:number=0;
   columnSelectionIndex: number = -1;
   selectedRowData:any = {};
   isShowDiv = false;
