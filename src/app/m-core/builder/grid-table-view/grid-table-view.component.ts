@@ -260,7 +260,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.getPage(page)
     }
   }
-
+  selectRow(i){
+    this.rowSelectionIndex = i;
+  }
 
   viewchage() {
     this.isShowDiv = !this.isShowDiv;

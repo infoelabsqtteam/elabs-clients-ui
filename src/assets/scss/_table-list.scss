@@ -12,9 +12,9 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
-.table table {min-width: max-content;width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;min-width: 100px !important;}
 
+.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
+    // .grid-data {width:auto !important;max-width:140px;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:3;
@@ -34,9 +34,10 @@
 
     tbody {
         tr {
-            &:nth-of-type(odd) td{background-color: #fff;}
-            &:nth-of-type(even) td{background-color:#fafafa;}
-            td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ; overflow: hidden; text-overflow: ellipsis;}
+            &:hover {td {background-color: $row-hover-color;} th {background-color: $row-hover-color;}}
+            // &:nth-of-type(odd) td{background-color: #fff;}
+            // &:nth-of-type(even) td{background-color:#fafafa;}
+            td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
         }
         .grid-coloumn-nowrap {white-space:nowrap;min-width: 100px;width:100%;overflow:hidden;text-overflow:ellipsis;color:#555;}
     }
