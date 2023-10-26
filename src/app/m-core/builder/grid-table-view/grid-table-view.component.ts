@@ -58,7 +58,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   currentMenu: any;
   selectedRowIndex: any = -1;
 
-  rowSelectionIndex:number=0;
+  rowSelectionIndex:number=-1;
   columnSelectionIndex: number = -1;
   selectedRowData:any = {};
   isShowDiv = false;
@@ -260,7 +260,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.getPage(page)
     }
   }
-
+  selectRow(i){
+    this.rowSelectionIndex = i;
+  }
 
   viewchage() {
     this.isShowDiv = !this.isShowDiv;
