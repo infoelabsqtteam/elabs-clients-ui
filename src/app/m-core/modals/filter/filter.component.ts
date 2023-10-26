@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiService, ChartService, CommonFunctionService, DataShareService } from '@core/web-core';
+import { ApiCallService, ApiService, ChartService, CommonFunctionService, DataShareService, FormCreationService } from '@core/web-core';
 
 @Component({
   selector: 'app-filter',
@@ -31,7 +31,9 @@ export class FilterComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private chartService:ChartService
+    private chartService:ChartService,
+    private apiCallService:ApiCallService,
+    private formCreationService:FormCreationService
   ) { 
     this.staticDataSubscription = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
@@ -94,7 +96,7 @@ export class FilterComponent implements OnInit,OnDestroy {
       const payload = [];
       const params = field.api_params;
       const criteria = field.api_params_criteria;
-      payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+      payload.push(this.apiCallService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
       this.apiService.GetTypeaheadData(payload);  
     }  
   }
@@ -114,7 +116,7 @@ export class FilterComponent implements OnInit,OnDestroy {
             case "date":
               field['minDate'] = this.minDate
               field['maxDate'] = this.maxDate;
-              this.commonFunctionService.createFormControl(forControl, field, '', "text")
+              this.formCreationService.createFormControl(forControl, field, '', "text")
                 break; 
             case "daterange":
               const date_range = {};
@@ -124,20 +126,20 @@ export class FilterComponent implements OnInit,OnDestroy {
               ]
               if (list_of_dates.length > 0) {
                 list_of_dates.forEach((data) => {                  
-                  this.commonFunctionService.createFormControl(date_range, data, '', "text")
+                  this.formCreationService.createFormControl(date_range, data, '', "text")
                 });
               }
-              this.commonFunctionService.createFormControl(forControl, field, date_range, "group")                                    
+              this.formCreationService.createFormControl(forControl, field, date_range, "group")                                    
               break; 
                                       
             default:
-              this.commonFunctionService.createFormControl(forControl, field, '', "text");
+              this.formCreationService.createFormControl(forControl, field, '', "text");
               break;
           }   
         });
       } 
       if(formField.length > 0){
-        let staticModalGroup = this.commonFunctionService.commanApiPayload([],formField,[]);
+        let staticModalGroup = this.apiCallService.commanApiPayload([],formField,[]);
         if(staticModalGroup.length > 0){  
           this.apiService.getStatiData(staticModalGroup);
         }
@@ -203,7 +205,7 @@ export class FilterComponent implements OnInit,OnDestroy {
   }
   onChange(field, object,data_template) {    
     const payloads = []      
-    payloads.push(this.commonFunctionService.getPaylodWithCriteria(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, object,data_template));
+    payloads.push(this.apiCallService.getPaylodWithCriteria(field.onchange_api_params, field.onchange_call_back_field, field.onchange_api_params_criteria, object,data_template));
     this.apiService.getStatiData(payloads);   
   }
 
