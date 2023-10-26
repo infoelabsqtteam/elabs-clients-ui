@@ -692,7 +692,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           id = element._id;
         }
         let elementDetails = document.getElementById(id);
-        if(!this.commonFunctionService.checkShowIf(element,this.selectedRow,this.templateForm.getRawValue())){          
+        if(!this.checkIfService.checkShowIf(element,this.selectedRow,this.templateForm.getRawValue())){          
           if(elementDetails && elementDetails != null){
             const classes = Array.from(elementDetails.classList)
             if(!classes.includes('d-none')){
@@ -859,7 +859,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     switch (tableField.api_call_name) {
       case 'gst_number':
         api = tableField.api;
-        payload = this.commonFunctionService.getPaylodWithCriteria('test','',[],{}) ;
+        payload = this.apiCallService.getPaylodWithCriteria('test','',[],{}) ;
         payload['gstin'] =  value;        
         break;    
       default:
@@ -949,7 +949,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           if(parentfield != ''){
             const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
             const value = formValue[parentfield.field_name][field.field_name]
-            const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
+            const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
             if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
@@ -970,7 +970,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             
           }else{
             const value = formValue[field.field_name];
-            const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
+            const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
             if(this.custmizedFormValue[field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
@@ -1009,7 +1009,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             if(parentfield != ''){
               const value = formValue[parentfield.field_name][field.field_name]
               const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);
-              const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
+              const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
               if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && checkDublic.status){
                 this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
               }else{
@@ -1028,7 +1028,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               
             }else{
               const value = formValue[field.field_name];
-              const checkDublic = this.commonFunctionService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
+              const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
                 if(this.custmizedFormValue[field.field_name] && checkDublic.status){
                   this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
                 }else{
@@ -1414,7 +1414,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.curTreeViewField = fieldName;
     const staticModalGroup = [];
     if (fieldName.api_params && fieldName.api_params != '') {
-      staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, this.templateForm.getRawValue()));
+      staticModalGroup.push(this.apiCallService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, this.templateForm.getRawValue()));
     }
     this.callStaticData(staticModalGroup);   
     this.commonFunctionService.openTreeModal(fieldName.label, fieldName.ddn_field, 'tree-view-modal');   
@@ -1473,7 +1473,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       if(searchValue == undefined || searchValue == ''){
         searchValue = this.pageNo;
       }
-      correctIndex = this.gridCommonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
+      correctIndex = this.commonFunctionService.getCorrectIndex(object,index,field,data,searchValue);
     } 
     this.storeFormDetails("",field,correctIndex); 
   }
@@ -1546,7 +1546,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         payload['path'] = feilds.api;
       }
       let list = [];
-      list.push(this.commonFunctionService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
+      list.push(this.apiCallService.getPaylodWithCriteria(tableField.api_params,tableField.call_back_field,tableField.api_params_criteria,this.getFormValue(false)));
        payload['data'] = list;
       this.apiService.DynamicApiCall(payload);
       this.saveCallSubscribe();
@@ -1588,7 +1588,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   refreshApiCall(field:any,check:any){
     const fields = [field];
-    const payloads = this.commonFunctionService.commanApiPayload([],fields,[],this.getFormValue(true));
+    const payloads = this.apiCallService.commanApiPayload([],fields,[],this.getFormValue(true));
     this.callStaticData(payloads);
   } 
   removeAttachedDataFromList(parent,child,index){
@@ -1612,7 +1612,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             this.currentMenu.name = this.currentActionButton.onclick.action_name;
             this.selectedRow = this.saveResponceData;
           }
-          this.commonFunctionService.previewModal(this.selectedRow,this.currentMenu,'form-preview-modal')
+          this.apiCallService.previewModal(this.selectedRow,this.currentMenu,'form-preview-modal')
           break;  
         case "download_report":
           this.downloadReport();
@@ -1993,7 +1993,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                     });
                   }
                   let criteria = crList[0]+"#"+crList[1]+"#"+value;
-                  check = this.commonFunctionService.checkIfCondition(criteria,object);
+                  check = this.checkIfService.checkIfCondition(criteria,object);
                   if(!check){
                     break;
                   } 
@@ -2323,7 +2323,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.curTreeViewField && this.curTreeViewField.onchange_function_param != '' && this.curTreeViewField.onchange_function_param != null){
       if(this.curTreeViewField.onchange_function_param.indexOf('QTMP') >= 0){
         const payloads = [];
-        payloads.push(this.commonFunctionService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
+        payloads.push(this.apiCallService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
         this.callStaticData(payloads);
       }
     }    
@@ -2891,7 +2891,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const payload = [];
     const params = field.api_params;
     const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    payload.push(this.apiCallService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
     this.apiService.GetTypeaheadData(payload);    
   }  
   clearTypeaheadData() {
@@ -2920,7 +2920,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.updateDataOnFormField(calculatedCost);
       }
       else{
-        payloads.push(this.commonFunctionService.checkQtmpApi(params,field,this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template),this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true))); 
+        payloads.push(this.apiCallService.checkQtmpApi(params,field,this.apiCallService.getPaylodWithCriteria(params, callback, criteria, completeObject,data_template),this.multipleFormCollection,this.getFormValue(false),this.getFormValue(true))); 
         this.callStaticData(payloads);
       }
    }
@@ -2983,7 +2983,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.saveCallSubscribe();
     if(downloadPdfFileFromFormData != null){
       downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
-      let fileName = this.commonFunctionService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
+      let fileName = this.apiCallService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
       this.dataShareService.sharePdfFileName(fileName);      
     }
   }

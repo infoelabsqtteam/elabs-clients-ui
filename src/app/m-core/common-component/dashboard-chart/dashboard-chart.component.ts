@@ -1,7 +1,7 @@
 import { Component, OnInit,AfterViewInit,Input, SimpleChanges, OnDestroy, ViewChild } from '@angular/core';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, ApiService, ChartService, ModelService, DataShareService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, ChartService, ModelService, DataShareService, ApiCallService} from '@core/web-core';
 import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
@@ -32,7 +32,8 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
     private apiService:ApiService,
     private commonFunctionService:CommonFunctionService,
     private modelService:ModelService,
-    private chartService:ChartService
+    private chartService:ChartService,
+    private apiCallService:ApiCallService
   ) {
     this.accessToken = this.storageService.GetIdToken();     
     this.dashbordSubscription = this.dataShareService.mongoDashbordList.subscribe(data =>{
@@ -45,7 +46,7 @@ export class DashboardChartComponent implements OnInit,AfterViewInit,OnDestroy {
    }
 
   getMongoChartList(Criteria){
-    const data = this.commonFunctionService.getPaylodWithCriteria('mongo_dashlet_master','',Criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria('mongo_dashlet_master','',Criteria,'');
       data['pageNo'] = this.pageNumber - 1;
       data['pageSize'] = this.itemNumOfGrid; 
       const getFilterData = {

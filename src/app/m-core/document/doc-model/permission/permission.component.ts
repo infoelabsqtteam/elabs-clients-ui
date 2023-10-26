@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormGroupDirective, FormControlDirective, FormControlName } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService, DocApiService, CommonFunctionService, DataShareService, NotificationService, ModelService} from '@core/web-core';
+import { ApiService, DocApiService, CommonFunctionService, DataShareService, NotificationService, ModelService, FormCreationService, ApiCallService, GridCommonFunctionService, CheckIfService } from '@core/web-core';
 
 @Component({
   selector: 'app-permission',
@@ -55,7 +55,11 @@ export class PermissionComponent implements OnInit {
     private apiService: ApiService,
     private dataShareService: DataShareService,
     private notificationService: NotificationService,
-    private docApiService: DocApiService
+    private docApiService: DocApiService,
+    private formCreationService:FormCreationService,
+    private apiCallService:ApiCallService,
+    private gridCommonFunctionService:GridCommonFunctionService,
+    private checkIfService:CheckIfService
   ) {
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data => {
       this.setTypeaheadData(data);
@@ -88,13 +92,13 @@ export class PermissionComponent implements OnInit {
       this.fields.forEach(element => {
         switch (element.type) {
           case "dropdown":
-            this.commonFunctionService.createFormControl(forControl, element, null, "text");
+            this.formCreationService.createFormControl(forControl, element, null, "text");
             break;
           case "checkbox":
-            this.commonFunctionService.createFormControl(forControl, element, false, "checkbox")
+            this.formCreationService.createFormControl(forControl, element, false, "checkbox")
             break;
           default:
-            this.commonFunctionService.createFormControl(forControl, element, '', "text");
+            this.formCreationService.createFormControl(forControl, element, '', "text");
             break;
         }
         
@@ -170,7 +174,7 @@ export class PermissionComponent implements OnInit {
     const payload = [];
     const params = field.api_params;
     const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue, field.data_template));
+    payload.push(this.apiCallService.getPaylodWithCriteria(params, '', criteria, objectValue, field.data_template));
     this.apiService.GetTypeaheadData(payload);
   }
 
@@ -202,7 +206,7 @@ export class PermissionComponent implements OnInit {
       let primary_key_field_name = 'user._id';
       let primary_key_field_value = value['user']['_id'];
       let list = this.listOfPermission;
-      let alreadyAdded = this.commonFunctionService.checkDataAlreadyAddedInListOrNot({"field_name":primary_key_field_name}, primary_key_field_value, list);
+      let alreadyAdded = this.checkIfService.checkDataAlreadyAddedInListOrNot({"field_name":primary_key_field_name}, primary_key_field_value, list);
       if (alreadyAdded.status) {
         this.notificationService.notify('bg-danger', 'Entered value for user is already added. !!!');
         return;
@@ -229,7 +233,7 @@ export class PermissionComponent implements OnInit {
   }
 
   getValueForGrid(field, object) {
-    return this.commonFunctionService.getValueForGrid(field, object);
+    return this.gridCommonFunctionService.getValueForGrid(field, object);
   }
 
   checkValidator() {
@@ -256,7 +260,7 @@ export class PermissionComponent implements OnInit {
       const cr = "folderId;eq;"+ currentFolderId + ";STATIC";
       criteria.push(cr);
     }
-    const data = this.commonFunctionService.getPaylodWithCriteria('document_permission', '', criteria, {});
+    const data = this.apiCallService.getPaylodWithCriteria('document_permission', '', criteria, {});
     data['pageNo'] = this.pageNumber-1;
 		data['pageSize'] = this.pageSize;
 		const getFilterData = {

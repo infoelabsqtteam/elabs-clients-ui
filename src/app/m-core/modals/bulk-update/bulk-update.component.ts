@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { ApiService, CommonFunctionService, DataShareService, ModelService, GridCommonFunctionService, NotificationService } from '@core/web-core';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, NotificationService, ApiCallResponceService, ApiCallService, CheckIfService, minieditorConfig } from '@core/web-core';
 
 
 
@@ -32,77 +32,7 @@ export class BulkUpdateComponent implements OnInit {
   copyStaticData: [] = [];
   typeaheadDataSubscription:Subscription;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  minieditorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: '100px',
-    minHeight: '0',
-    maxHeight: 'auto',
-    width: 'auto',
-    minWidth: '0',
-    translate: 'yes',
-    enableToolbar: false,
-    showToolbar: true,
-    placeholder: 'Enter text here...',
-    defaultParagraphSeparator: '',
-    defaultFontName: '',
-    defaultFontSize: '',
-    fonts: [
-      { class: 'arial', name: 'Arial' },
-      { class: 'times-new-roman', name: 'Times New Roman' },
-      { class: 'calibri', name: 'Calibri' },
-      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
-    ],
-    customClasses: [
-      {
-        name: 'quote',
-        class: 'quote',
-      },
-      {
-        name: 'redText',
-        class: 'redText'
-      },
-      {
-        name: 'titleText',
-        class: 'titleText',
-        tag: 'h1',
-      },
-    ],
-    uploadUrl: 'v1/image',
-    uploadWithCredentials: false,
-    sanitize: true,
-    toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      [],
-      ['fontSize',
-      'textColor',
-      'backgroundColor',
-      'customClasses',
-      'undo',
-      'redo',
-      'bold',
-      'italic',
-      'underline',
-      'link',
-      'unlink',
-      'insertImage',
-      'insertVideo',
-      'insertHorizontalRule',
-      'toggleEditorMode',
-      'justifyLeft',
-      'justifyCenter',
-      'justifyRight',
-      'justifyFull',
-      'indent',
-      'outdent',
-      'insertUnorderedList',
-      'insertOrderedList',
-      'heading',
-      'fontName',
-      'removeFormat',      
-      'strikeThrough']
-    ]
-  };
+  minieditorConfig: AngularEditorConfig = minieditorConfig as AngularEditorConfig;
 
   @Input() id: string;
   @Output() bulkUpdateResponce = new EventEmitter();
@@ -117,8 +47,9 @@ export class BulkUpdateComponent implements OnInit {
     private modalService: ModelService,
     private CommonFunctionService:CommonFunctionService,
     private apiservice:ApiService,
-    private gridCommonFunctionService:GridCommonFunctionService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private apiCallService:ApiCallService,
+    private checkIfService:CheckIfService
   ) { 
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data => {
       this.setTypeaheadData(data);
@@ -226,7 +157,7 @@ export class BulkUpdateComponent implements OnInit {
       if(field.api_params_criteria && field.api_params_criteria != ''){
         criteria =  field.api_params_criteria;
       }
-      let staticModalGroup = this.CommonFunctionService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
+      let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
       staticModal.push(staticModalGroup);
       this.apiservice.GetTypeaheadData(staticModal);
 
@@ -271,7 +202,7 @@ export class BulkUpdateComponent implements OnInit {
   setData(selectedData, field, chipsInput){
     if(field.type != "typeahead"){
       if (this.data[field.field_name] == null) this.data[field.field_name] = [];
-      let duplicacy = this.CommonFunctionService.checkDataAlreadyAddedInListOrNot(field,selectedData,this.data[field.field_name]);
+      let duplicacy = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,selectedData,this.data[field.field_name]);
       if(duplicacy && duplicacy.status){
         this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
       }else{

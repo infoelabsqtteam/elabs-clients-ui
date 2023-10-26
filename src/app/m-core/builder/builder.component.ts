@@ -1,11 +1,11 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService} from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService} from '@core/web-core';
 
 
 @Component({
@@ -63,7 +63,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private notificationService:NotificationService,
     private envService:EnvService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
-    private _location:Location
+    private _location:Location,
+    private apiCallService:ApiCallService
   ) {  
     this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -104,7 +105,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
             if (saveFromDataRsponce.success == 'success') {
-                this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+                this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
             }
         }
     }
@@ -122,7 +123,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.selected = new FormControl(0);   
       this.currentMenu = this.storageService.GetActiveMenu();
       if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-        const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
+        const payload = this.apiCallService.getTemData(this.currentMenu.name); 
         this.apiService.GetTempData(payload);     
       }
     }
@@ -394,7 +395,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
   } 
   addFebMenu(menu,parent){
-    this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+    this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
     this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
     // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
     // this.saveCallSubscribe();

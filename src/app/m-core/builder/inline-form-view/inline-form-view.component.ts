@@ -1,8 +1,6 @@
-import { Component, OnInit,Input,OnChanges, ViewChild, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, OnInit,Input, SimpleChanges } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, ModelService} from '@core/web-core';
+import { StorageService, CommonFunctionService, ApiService, DataShareService, ApiCallService} from '@core/web-core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 export const MY_DATE_FORMATS = {
@@ -47,18 +45,13 @@ export class InlineFormViewComponent implements OnInit {
   tempDataSubscription;
   dinamicFormSubscription;
 
-  constructor(
-    private cdRef: ChangeDetectorRef, 
+  constructor( 
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
-    private permissionService: PermissionService, 
-    private modalService: ModelService, 
-    private formBuilder: FormBuilder, 
     private router: Router, 
-    private datePipe: DatePipe,
-    private routers:ActivatedRoute,
     private apiService:ApiService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private apiCallService:ApiCallService
   ) { 
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp =>{
       this.setTempData(temp);
@@ -69,7 +62,7 @@ export class InlineFormViewComponent implements OnInit {
     this.userInfo = this.storageService.GetUserInfo();
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name);
+      const payload = this.apiCallService.getTemData(this.currentMenu.name);
       this.apiService.GetTempData(payload);
       this.getPage(1);
     }
@@ -87,7 +80,7 @@ export class InlineFormViewComponent implements OnInit {
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name);
+      const payload = this.apiCallService.getTemData(this.currentMenu.name);
       this.apiService.GetTempData(payload);
       this.getPage(1);
     }
@@ -119,7 +112,7 @@ export class InlineFormViewComponent implements OnInit {
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu && this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name);
+      const payload = this.apiCallService.getTemData(this.currentMenu.name);
       this.apiService.GetTempData(payload);
       this.getPage(1);
     }
@@ -195,10 +188,10 @@ export class InlineFormViewComponent implements OnInit {
     if(this.isGridFieldExist("api_params_criteria")){
       grid_api_params_criteria = this.tab.grid.api_params_criteria;
     }
-    const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid;    
-    this.commonFunctionService.getfilterCrlist([],[]).forEach(element => {
+    this.apiCallService.getfilterCrlist([],[]).forEach(element => {
       data.crList.push(element);
     });
     const getFilterData = {

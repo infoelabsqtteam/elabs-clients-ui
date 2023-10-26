@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { ApiService, CommonFunctionService, DataShareService, PermissionService, NotificationService, StorageService, ModelService } from '@core/web-core';
+import { ApiService, CommonFunctionService, DataShareService, PermissionService, NotificationService, StorageService, ModelService, ApiCallService, CheckIfService, GridCommonFunctionService } from '@core/web-core';
 
 
 export const MY_DATE_FORMATS = {
@@ -83,6 +83,9 @@ export class ReportFormComponent implements OnInit {
     private apiService:ApiService,
     private modelService: ModelService,
     private formBuilder: FormBuilder,
+    private apiCallService:ApiCallService,
+    private checkIfService:CheckIfService,
+    private gridCommonFunctionService:GridCommonFunctionService
 
   ) { 
     this.exportExcelSubscription = this.dataShareServices.exportExcelLink.subscribe(data =>{
@@ -126,7 +129,7 @@ export class ReportFormComponent implements OnInit {
     const criteria = [
       "report_flag;eq;true;STATIC"
     ];
-    const payload = this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, {}, 'GET_FORM_FIELDS_FROM_POJO');
+    const payload = this.apiCallService.getPaylodWithCriteria(params, callback, criteria, {}, 'GET_FORM_FIELDS_FROM_POJO');
     this.apiService.getStatiData([payload]);
   }
 
@@ -177,10 +180,10 @@ export class ReportFormComponent implements OnInit {
         this.field = fieldData;
         let type = this.field['type'];
         let criteria = "name;eq;"+type+";STATIC";
-        let payload = this.commonFunctionService.getPaylodWithCriteria('adm:REPORT_FIELD_OPERATOR','operator_list',[criteria],{});
+        let payload = this.apiCallService.getPaylodWithCriteria('adm:REPORT_FIELD_OPERATOR','operator_list',[criteria],{});
         this.apiService.getStatiData([payload]);
         if(type == 'dropdown'  && fieldData.ddn_field) {
-          const payload = this.commonFunctionService.getPaylodWithCriteria(fieldData.api_params,fieldData.call_back_field,[],{});        
+          const payload = this.apiCallService.getPaylodWithCriteria(fieldData.api_params,fieldData.call_back_field,[],{});        
           this.apiService.getStatiData([payload]);
         };
         switch (type) {
@@ -205,7 +208,7 @@ export class ReportFormComponent implements OnInit {
 
 
   private getFielsAndColumn(reportFormValue: any) {
-    const payload = this.commonFunctionService.getPaylodWithCriteria("CORE-QTMP:GET_FIELD_AND_GRID_COLUMN_BY_COLLECTION", '', [], {});
+    const payload = this.apiCallService.getPaylodWithCriteria("CORE-QTMP:GET_FIELD_AND_GRID_COLUMN_BY_COLLECTION", '', [], {});
     const data = reportFormValue;
     payload['data'] = data;
     this.apiService.getStatiData([payload]);
@@ -218,7 +221,7 @@ export class ReportFormComponent implements OnInit {
   addCrlist(){
     const value = this.reportForm.getRawValue();
     const criteria = this.createCrList(value);
-    if(this.commonFunctionService.checkDataAlreadyAddedInListOrNot('fName',criteria.fName,this.crList)){
+    if(this.checkIfService.checkDataAlreadyAddedInListOrNot('fName',criteria.fName,this.crList)){
       const index = this.commonFunctionService.getIndexInArrayById(this.crList,criteria.fName,'fName');
       this.crList[index] = criteria;
     }else{
@@ -337,16 +340,16 @@ export class ReportFormComponent implements OnInit {
   private getQuery() {
     let reportFormValue = this.reportForm.getRawValue();
     let apiprams = reportFormValue.collectionName;
-    const payload = this.commonFunctionService.getDataForGrid(1, {}, { 'name': apiprams }, [], {}, '');
+    const payload = this.apiCallService.getDataForGrid(1, {}, { 'name': apiprams }, [], {}, '');
     payload.data.crList = this.crList;
     return payload;
   }
 
   getValueForGrid(field, object) {
-    return this.commonFunctionService.getValueForGrid(field, object);
+    return this.gridCommonFunctionService.getValueForGrid(field, object);
   }
   getValueForGridTooltip(field, object) {
-    return this.commonFunctionService.getValueForGridTooltip(field, object);
+    return this.gridCommonFunctionService.getValueForGridTooltip(field, object);
   }
 
   compareObjects(o1: any, o2: any): boolean {
@@ -373,8 +376,8 @@ export class ReportFormComponent implements OnInit {
 
   loadquerymodal() {
     const criteria = ["status;eq;Active;STATIC"];
-    const crList = this.commonFunctionService.getCriteriaList(criteria,{});
-    const payload = this.commonFunctionService.getDataForGrid(1, {}, { 'name': 'save_query' }, [], {}, '');
+    const crList = this.apiCallService.getCriteriaList(criteria,{});
+    const payload = this.apiCallService.getDataForGrid(1, {}, { 'name': 'save_query' }, [], {}, '');
     payload.data.crList = crList;
     this.apiService.getReportLoadGridData(payload)
     this.modelService.open('loadquery-modal',{})
@@ -418,7 +421,7 @@ export class ReportFormComponent implements OnInit {
       let gridName = '';
       let grid_api_params_criteria = [];
      
-      const data = this.commonFunctionService.getPaylodWithCriteria(tempNme,'',grid_api_params_criteria,'');     
+      const data = this.apiCallService.getPaylodWithCriteria(tempNme,'',grid_api_params_criteria,'');     
       delete data.log;
       delete data.key;
       

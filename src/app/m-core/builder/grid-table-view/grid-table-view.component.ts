@@ -5,9 +5,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } fr
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common } from '@core/web-core';
-import { MomentUtcDateAdapter } from './moment-utc-date-adapter';
-import { V } from '@angular/cdk/keycodes';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -278,7 +276,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   constructor(
-    private cdRef: ChangeDetectorRef, 
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private permissionService: PermissionService, 
@@ -286,7 +283,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private formBuilder: FormBuilder, 
     private router: Router, 
     private routers: ActivatedRoute,
-    private datePipe: DatePipe,
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private notificationService:NotificationService,
@@ -294,7 +290,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     @Inject(DOCUMENT) private document: Document,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionServie:GridCommonFunctionService,
-    private sanitizer: DomSanitizer
+    private apiCallService:ApiCallService,
+    private checkIfService:CheckIfService,
+    private formCreationService:FormCreationService
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -564,7 +562,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.dinamic_form = form.DINAMIC_FORM;
       this.flagForTdsForm = false;
       this.addNewForm('DINAMIC_FORM');
-      this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[this.selectedRowIndex]);
+      this.apiCallService.getRealTimeGridData(this.currentMenu, this.elements[this.selectedRowIndex]);
     } 
   }
   getTabData(index,formName) {
@@ -642,28 +640,28 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
                 case "number":
                 case "reference_names":
                 case "chips" :
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "tree_view_selection":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "dropdown":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "typeahead":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "date":
               case "datetime":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "daterange":
                 const list_of_fields={}
                 const start={field_name:'start',is_disabled:false,is_mandatory:false}
-                this.commonFunctionService.createFormControl(list_of_fields, start, '', "text")
+                this.formCreationService.createFormControl(list_of_fields, start, '', "text")
                 const end={field_name:'end',is_disabled:false,is_mandatory:false}
-                this.commonFunctionService.createFormControl(list_of_fields, end, '', "text")
-                this.commonFunctionService.createFormControl(forControl, element, list_of_fields, "group")
+                this.formCreationService.createFormControl(list_of_fields, end, '', "text")
+                this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
                 break;
               default:
                 break;
@@ -676,7 +674,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.filterForm = this.formBuilder.group(forControl);
         }
         
-        const staticModalGroup = this.commonFunctionService.commanApiPayload(this.headElements,[],[]);      
+        const staticModalGroup = this.apiCallService.commanApiPayload(this.headElements,[],[]);      
         if (staticModalGroup.length > 0) {
           // this.store.dispatch(
           //   new CusTemGenAction.GetStaticData(staticModalGroup)
@@ -706,7 +704,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
   getTabsCount(tabs){
-    this.commonFunctionService.getTabsCountPyload(tabs);    
+    this.apiCallService.getTabsCountPyload(tabs);    
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce.success != '' && this.updateGridData) {
@@ -843,13 +841,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }   
         if(this.checkFieldsAvailability('UPDATE')){
           this.addNewForm(formName);
-          this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[id]);
+          this.apiCallService.getRealTimeGridData(this.currentMenu, this.elements[id]);
         }else{
           return;
         }        
       }else{
         this.addNewForm(formName);
-        this.commonFunctionService.getRealTimeGridData(this.currentMenu, this.elements[id]);
+        this.apiCallService.getRealTimeGridData(this.currentMenu, this.elements[id]);
       }  
       this.selectedRowIndex = id;    
     } else {
@@ -1008,10 +1006,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   
   
   getValueForGrid(field, object) {
-    return this.commonFunctionService.getValueForGrid(field, object);
+    return this.gridCommonFunctionServie.getValueForGrid(field, object);
   }
   getValueForGridTooltip(field, object) {
-    return this.commonFunctionService.getValueForGridTooltip(field, object);
+    return this.gridCommonFunctionServie.getValueForGridTooltip(field, object);
   }
  
   clickOnGridElement(field, i) {
@@ -1097,7 +1095,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         leadId = contact['lead']._id;
       }
     }
-    const pagePayload = this.commonFunctionService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
+    const pagePayload = this.apiCallService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
     let crList = pagePayload.data.crList;
     let criteriaList = [];
     if(this.recordId){      
@@ -1115,7 +1113,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       })
     }
     if(criteriaList.length > 0){
-      this.commonFunctionService.getCriteriaList(criteriaList,{}).forEach(element => {
+      this.apiCallService.getCriteriaList(criteriaList,{}).forEach(element => {
         crList.push(element);
       });
       pagePayload.data.crList = crList;
@@ -1131,10 +1129,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(this.permissionService.checkPermission(tempNme,'export')){  
       let gridName = '';
       let grid_api_params_criteria = [];
-      if(this.commonFunctionService.isGridFieldExist(this.tab,"api_params_criteria")){
+      if(this.checkIfService.isGridFieldExist(this.tab,"api_params_criteria")){
         grid_api_params_criteria = this.tab.grid.api_params_criteria;
       }
-      const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+      const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
       if(this.tab && this.tab.grid){
         if(this.tab.grid.export_template && this.tab.grid.export_template != null){
           gridName = this.tab.grid.export_template;
@@ -1147,7 +1145,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
       const value = this.filterForm.getRawValue();
-      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
+      const filtewCrlist = this.apiCallService.getfilterCrlist(this.headElements,value);
       if(filtewCrlist.length > 0){
         filtewCrlist.forEach(element => {
           data.crList.push(element);
@@ -1177,7 +1175,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     const value = this.filterForm.getRawValue();
     const getSortData = {
       data: {
-        crList: this.commonFunctionService.getfilterCrlist(this.headElements,value),
+        crList: this.apiCallService.getfilterCrlist(this.headElements,value),
         refCode: this.userInfo.refCode,
         key2: this.storageService.getAppId(),
         log: this.storageService.getUserLog(),
@@ -1197,7 +1195,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     this.pageNumber = 1;
-    let pagePayload = this.commonFunctionService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
@@ -1215,7 +1213,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.curTreeViewField = fieldName;
     const staticModalGroup = [];
     if (fieldName.api_params && fieldName.api_params != '') {
-      staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, {}));
+      staticModalGroup.push(this.apiCallService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, {}));
     }
     if(staticModalGroup.length > 0){
       this.apiService.getStatiData(staticModalGroup);
@@ -1263,7 +1261,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       switch (button.onclick.action_name.toUpperCase()) {
         case "PREVIEW":
           this.checkPreviewData = true;
-          this.commonFunctionService.preview(gridData,this.currentMenu,'grid-preview-modal')          
+          this.apiCallService.preview(gridData,this.currentMenu,'grid-preview-modal')          
           break;
         case "TEMPLATE": 
           let object =JSON.parse(JSON.stringify(gridData))    
@@ -1278,14 +1276,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
             currentMenu = this.currentMenu.name
           }
-          this.downloadPdfCheck = this.commonFunctionService.downloadPdf(gridData,currentMenu);         
+          this.downloadPdfCheck = this.apiCallService.downloadPdf(gridData,currentMenu);         
           break;
         case 'GETFILE':
           let currentsMenu = '';
           if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
             currentsMenu = this.currentMenu.name
           }
-          this.downloadPdfCheck = this.commonFunctionService.getPdf(gridData,currentsMenu);         
+          this.downloadPdfCheck = this.apiCallService.getPdf(gridData,currentsMenu);         
           break;
         case 'TDS':
           let currentMenuForTds = '';
@@ -1294,7 +1292,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
             currentMenuForTds = this.currentMenu.name
           }
-          const getFormData:any = this.commonFunctionService.getFormForTds(gridData,currentMenuForTds,this.elements[index]);        
+          const getFormData:any = this.apiCallService.getFormForTds(gridData,currentMenuForTds,this.elements[index]);        
           if(getFormData._id && getFormData._id != undefined && getFormData._id != null && getFormData._id != ''){
             getFormData.data['data']=gridData;
             this.apiService.GetForm(getFormData);
@@ -1406,7 +1404,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       
     }else{
       const staticModal = []
-      const staticModalPayload = this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object);
+      const staticModalPayload = this.apiCallService.getPaylodWithCriteria(params, callback, criteria, object);
       // staticModalPayload['adkeys'] = {'index':i};
       staticModal.push(staticModalPayload)      
       if(params.indexOf("FORM_GROUP") >= 0){
@@ -1479,7 +1477,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     const payload = [];
     const params = field.api_params;
     const criteria = field.api_params_criteria;
-    payload.push(this.commonFunctionService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
+    payload.push(this.apiCallService.getPaylodWithCriteria(params, '', criteria, objectValue,field.data_template));
     this.apiService.GetTypeaheadData(payload);    
   }
   clearTypeaheadData() {
