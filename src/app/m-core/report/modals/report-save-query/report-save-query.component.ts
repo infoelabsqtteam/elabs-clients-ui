@@ -1,8 +1,8 @@
-import { Component, OnInit,OnDestroy, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
+import { Component, OnInit,OnDestroy, Input, Output,ViewChild,EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl,Validators } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Subscription } from 'rxjs';
-import { ModelService, ApiService, CommonFunctionService, DataShareService, NotificationService } from '@core/web-core';
+import { ModelService, ApiService, CommonFunctionService, DataShareService, NotificationService, GridCommonFunctionService } from '@core/web-core';
 
 @Component({
   selector: 'app-report-save-query',
@@ -28,7 +28,8 @@ export class ReportSaveQueryComponent implements OnInit,OnDestroy {
     private apiService:ApiService,
     private formBuilder: FormBuilder,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private gridCommonFunctionservice:GridCommonFunctionService
     ) {
       this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
         this.setSaveResponce(responce);
@@ -84,7 +85,7 @@ export class ReportSaveQueryComponent implements OnInit,OnDestroy {
     const formValue = {}
       const field_name = field['field_name'];
       formValue[field_name] = object.fValue;       
-      const value = this.commonFunctionService.getValueForGrid(field,formValue);
+      const value = this.gridCommonFunctionservice.getValueForGrid(field,formValue);
       return field.label +' '+operatore+' '+value;
     }
     else{

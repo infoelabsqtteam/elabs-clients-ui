@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, StorageService, ApiService, ModelService } from '@core/web-core';
+import { CommonFunctionService, StorageService, ApiService, ModelService, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -35,7 +35,8 @@ export class FranchiseComponent implements OnInit {
     private commonFunctionService:CommonFunctionService,
     private modalService: ModelService, 
     private el: ElementRef, 
-    private apiService:ApiService
+    private apiService:ApiService,
+    private apiCallService:ApiCallService
   ) {
     this.element = el.nativeElement;
     this.storageService.setAppId('PUB');
@@ -50,7 +51,7 @@ export class FranchiseComponent implements OnInit {
     
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
+      const payload = this.apiCallService.getTemData(this.currentMenu.name); 
       this.apiService.GetTempData(payload);     
     }
    }
@@ -94,7 +95,7 @@ export class FranchiseComponent implements OnInit {
       }else{
         this.tableFields = [];
       }        
-      const staticModalGroup = this.commonFunctionService.commanApiPayload([],this.tableFields,[]);     
+      const staticModalGroup = this.apiCallService.commanApiPayload([],this.tableFields,[]);     
       
       if (staticModalGroup.length > 0 && this.getStaticDataCall) {
         // this.store.dispatch(
