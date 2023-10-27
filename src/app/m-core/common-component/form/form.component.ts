@@ -1817,7 +1817,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               element['show'] = false;
               const objectValue = this.templateForm.getRawValue();
               if(element.type != "group_of_fields" && element.type != "list_of_fields" && objectValue[element.field_name] && objectValue[element.field_name] != ''){
-                this.templateForm.get(element.field_name).setValue('');
+                let controlarName = element.field_name;
+                let count = 0;
+                for (let index = 0; index < this.showIfFieldList.length; index++) {
+                  let showIfItem = this.showIfFieldList[index];
+                  if(controlarName == showIfItem.field_name){
+                    count = count+1;
+                  }
+                  if(count == 2){
+                    break;
+                  }
+                }
+                if(count != 2){
+                  this.templateForm.get(element.field_name).setValue('');
+                }
               } 
               if(element.type == "group_of_fields" || element.type == "list_of_fields"){
                 this.templateForm.get(element.field_name).reset();
@@ -2459,6 +2472,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
           break;
+         case 'calculate_quote_amount_for_lims':          
+          calFormValue = this.limsCalculationsService.calculate_quotation_for_lims(tamplateFormValue,"standard", field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         case 'calculate_quotation_with_subsequent':          
           calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
@@ -2485,6 +2502,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;     
         case 'calculate_lims_invoice':          
           calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break; 
+        case 'calculate_lims_invoice_extra_amount':          
+          calFormValue = this.limsCalculationsService.calculate_lims_invoice_extra_amount(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;      
         case 'calculate_lims_invoice_with_po_items':
@@ -3843,6 +3864,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
           let val1 = this.limsCalculationsService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
           this.updateDataOnFormField(val1);
+          break;
+        case 'calculate_lims_invoice_extra_amount':
+          let val2 = this.limsCalculationsService.calculate_lims_invoice_extra_amount(formValueWithCustomData,'','');
+          this.updateDataOnFormField(val2);
           break;
         case 'calculate_quotation_with_subsequent':          
           let calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(formValueWithCustomData,"standard", {field_name: "qty"});
