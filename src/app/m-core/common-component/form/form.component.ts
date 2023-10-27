@@ -2459,6 +2459,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           calFormValue = this.limsCalculationsService.calculate_quotation(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
           break;
+         case 'calculate_quote_amount_for_lims':          
+          calFormValue = this.limsCalculationsService.calculate_quotation_for_lims(tamplateFormValue,"standard", field);
+          this.updateDataOnFormField(calFormValue);
+          break;
         case 'calculate_quotation_with_subsequent':          
           calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(tamplateFormValue,"standard", field);
           this.updateDataOnFormField(calFormValue);
@@ -2485,6 +2489,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           break;     
         case 'calculate_lims_invoice':          
           calFormValue = this.limsCalculationsService.calculate_lims_invoice(tamplateFormValue,"automotive" ,field);
+          this.updateDataOnFormField(calFormValue);
+          break; 
+        case 'calculate_lims_invoice_extra_amount':          
+          calFormValue = this.limsCalculationsService.calculate_lims_invoice_extra_amount(tamplateFormValue,"automotive" ,field);
           this.updateDataOnFormField(calFormValue);
           break;      
         case 'calculate_lims_invoice_with_po_items':
@@ -3843,6 +3851,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           }
           let val1 = this.limsCalculationsService.calculate_lims_invoice(formValueWithCustomData,'',calculate_on_field);
           this.updateDataOnFormField(val1);
+          break;
+        case 'calculate_lims_invoice_extra_amount':
+          let val2 = this.limsCalculationsService.calculate_lims_invoice_extra_amount(formValueWithCustomData,'','');
+          this.updateDataOnFormField(val2);
           break;
         case 'calculate_quotation_with_subsequent':          
           let calFormValue = this.limsCalculationsService.calculate_quotation_with_subsequent(formValueWithCustomData,"standard", {field_name: "qty"});
