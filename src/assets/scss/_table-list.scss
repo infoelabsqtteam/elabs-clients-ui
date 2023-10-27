@@ -12,19 +12,18 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
-
-.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    // .grid-data {width:auto !important;max-width:140px;}
+.table table {min-width: max-content;width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
+    .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;min-width: 100px !important;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:3;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
-                .heading {font-weight:500;position:relative;font-size:13px;}
-                .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;}
+                .heading {width: auto !important;font-weight:500;position:relative;font-size:13px;}
+                .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;width: 100%;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
-                    .fas { display:inline-block;}   
+                    .fas { display:inline-block;}
                 }
             }
             td {padding:5px 10px;border-top:none;border-bottom:none;}
@@ -37,9 +36,9 @@
             &:hover {td {background-color: $row-hover-color;} th {background-color: $row-hover-color;}}
             // &:nth-of-type(odd) td{background-color: #fff;}
             // &:nth-of-type(even) td{background-color:#fafafa;}
-            td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
+            td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ; overflow: hidden; text-overflow: ellipsis;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
+        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;color:#555;display: inline-block;}
     }
 
     .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:#555 !important;
@@ -57,13 +56,6 @@
 
 
 
-.datalist.table {
-    tbody {
-        tr {
-            td {padding:5px;}
-        }
-    }
-}
 .checkeditmode {display:flex;padding:0 5px;
     .grid-button.material-icons {font-size:14px;line-height:25px;cursor:pointer;}
 
@@ -90,10 +82,37 @@
 .tablist {padding-right:220px;
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
+
+
+.table {
+	.table-resizable {
+				th {
+					position: relative;
+					left: 0px !important;
+					&:not(:last-child) {
+						.resize-holder {
+							cursor: col-resize;
+							width: 20px;
+							height: 100%;
+							position: absolute;
+							right: -10px;
+							top: 0;
+							z-index: 1;
+						}
+					}
+				}
+		transition: all 0.3s;
+	}
+	table.resizing {
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		cursor: col-resize;
+	}
+}
+
 @media screen and (min-width: 1366px) {
-    .tablist {
-      padding-right: 290px;
-    }
+    .tablist {padding-right: 290px;}
   }
 .moreMenuFavIcon {
     font-size: 16px;
@@ -153,7 +172,7 @@
 
 
 .popuptable {
-    .table table tbody tr td {padding:5px;
+    .table table tbody tr td {
         .form-control-sm {font-size:12px;}
     }
 }
@@ -182,10 +201,9 @@
         strong {color:#333;font-size:14px;}
       }
     }
-   
 }
 .colSticky{
-    position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;  
+   position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;
 }
 .firstCol{left: 0;}
 .editedColumneIcon{position: absolute;right: 0;top: 5px;cursor: pointer;z-index: 1;}
