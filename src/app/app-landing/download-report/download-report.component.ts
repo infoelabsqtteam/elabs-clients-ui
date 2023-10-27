@@ -40,7 +40,7 @@ export class DownloadReportComponent implements OnInit {
       
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         let reportNo = params["report"];
-        this.reportUrlNo = atob(reportNo)
+        this.reportUrlNo = reportNo;
       });
     this.element = el.nativeElement;
     this.storageService.setAppId('PUB');
