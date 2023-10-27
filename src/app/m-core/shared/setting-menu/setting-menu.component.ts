@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnCha
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, CommonFunctionService, MenuOrModuleCommonService,StorageTokenStatus,Common } from '@core/web-core';
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -103,8 +103,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         private authService: AuthService,
         private notificationService: NotificationService,
         public envService: EnvService,
-        private commonfunctionService:CommonFunctionService,
         private menuOrModuleCommounService:MenuOrModuleCommonService,
+        private apiCallService:ApiCallService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -227,7 +227,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         if (saveFromDataRsponce) {
             if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
                 if (saveFromDataRsponce.success == 'success') {
-                    this.commonfunctionService.getUserNotification(1);
+                    this.apiCallService.getUserNotification(1);
                 }
             }
         }
@@ -314,7 +314,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     ngOnChanges(changes: SimpleChanges) {
         this.getMenuByModule();
-        this.commonfunctionService.getUserNotification(1);
+        this.apiCallService.getUserNotification(1);
     }
 
     getMenuByModule() {
@@ -757,7 +757,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.dataShareService.sendCurrentPage('DASHBOARD')
         const menuSearchModule = { "value": "menu", key2: item.name }
         const criteria = "appId;eq;"+item.name+";STATIC";
-        const payload = this.commonfunctionService.getPaylodWithCriteria('menu','',[criteria],{});
+        const payload = this.apiCallService.getPaylodWithCriteria('menu','',[criteria],{});
         this.apiService.GetTempMenu(payload)
         this.getTemplateByMenu = true;
         this.showsearchmenu = false;

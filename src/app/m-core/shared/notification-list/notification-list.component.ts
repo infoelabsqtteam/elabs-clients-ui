@@ -2,7 +2,7 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
-import { CommonFunctionService, DataShareService, StorageService, ApiService, MenuOrModuleCommonService,Common } from '@core/web-core';
+import { CommonFunctionService, DataShareService, StorageService, ApiService, MenuOrModuleCommonService,Common, ApiCallService, CheckIfService } from '@core/web-core';
 
 @Component({
   selector: 'app-notification-list',
@@ -27,10 +27,12 @@ export class NotificationListComponent implements OnInit {
     private CommonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private router: Router,
-    private menuOrModuleCommounService:MenuOrModuleCommonService
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private apiCallService:ApiCallService,
+    private checkIfService:CheckIfService
   )
   { 
-    this.CommonFunctionService.getUserNotification(this.pageNumber);
+    this.apiCallService.getUserNotification(this.pageNumber);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
         if (data && data.data && data.data.length > 0) {
             this.setUserNotification(data.data);
@@ -78,7 +80,7 @@ export class NotificationListComponent implements OnInit {
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
             if (saveFromDataRsponce.success == 'success') {
-                this.CommonFunctionService.getUserNotification(this.pageNumber);
+                this.apiCallService.getUserNotification(this.pageNumber);
             }
         }
     }
@@ -86,7 +88,7 @@ export class NotificationListComponent implements OnInit {
 }
   getUserNotification(pageNo){
     this.pageNumber = pageNo;
-    this.CommonFunctionService.getUserNotification(pageNo);
+    this.apiCallService.getUserNotification(pageNo);
   }
   isIndeterminate() {
     let check = 0;
@@ -176,7 +178,7 @@ export class NotificationListComponent implements OnInit {
         condition = this.field.disableRowIf;
       }
       if(condition != ''){
-        if(this.CommonFunctionService.checkDisableRowIf(condition,data)){
+        if(this.checkIfService.checkDisableRowIf(condition,data)){
           check = true;
         }else{
           check = false;
