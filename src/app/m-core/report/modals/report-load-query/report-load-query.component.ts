@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output,ViewChild,EventEmitter, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
+import { Component, OnInit, Input, Output,ViewChild,EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ModelService, CommonFunctionService, DataShareService, ApiService } from '@core/web-core';
+import { ModelService, CommonFunctionService, DataShareService, ApiService, GridCommonFunctionService } from '@core/web-core';
 
 @Component({
   selector: 'app-report-load-query',
@@ -33,6 +33,7 @@ export class ReportLoadQueryComponent implements OnInit {
     private dataShareServices :DataShareService,
     private formBuilder: FormBuilder,
     private apiService:ApiService,
+    private gridCommonFunctionService:GridCommonFunctionService
   ) {
     this.gridDataSubscription = this.dataShareServices.getReportLoadData.subscribe(data =>{
       if(data.data && data.data.length > 0){
@@ -70,10 +71,10 @@ export class ReportLoadQueryComponent implements OnInit {
 
 
   getValueForGrid(field, object) {    
-    return this.commonFunctionService.getValueForGrid(field, object);    
+    return this.gridCommonFunctionService.getValueForGrid(field, object);    
   }
   getValueForGridTooltip(field, object) {
-    return this.commonFunctionService.getValueForGridTooltip(field, object);
+    return this.gridCommonFunctionService.getValueForGridTooltip(field, object);
   }
 
   getChipsValue(object){
@@ -84,7 +85,7 @@ export class ReportLoadQueryComponent implements OnInit {
     const formValue = {}
       const field_name = field['field_name'];
       formValue[field_name] = object.fValue;       
-      const value = this.commonFunctionService.getValueForGrid(field,formValue);
+      const value = this.gridCommonFunctionService.getValueForGrid(field,formValue);
       return field.label +' '+operatore+' '+value;
     }
     else{

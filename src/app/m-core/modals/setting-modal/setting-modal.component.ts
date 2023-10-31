@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiService, CommonFunctionService, CoreFunctionService, DataShareService, EnvService, ModelService, StorageService, AuthDataShareService } from '@core/web-core';
+import { ApiService, CommonFunctionService, CoreFunctionService, DataShareService, EnvService, ModelService, StorageService, AuthDataShareService, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -27,7 +27,8 @@ export class SettingModalComponent implements OnInit {
     private apiService:ApiService,
     private storageService:StorageService,
     private coreFunctionService:CoreFunctionService,
-    private authDataShareService: AuthDataShareService
+    private authDataShareService: AuthDataShareService,
+    private apiCallService:ApiCallService
   ) { 
 
     //this.getHostData();
@@ -57,7 +58,7 @@ export class SettingModalComponent implements OnInit {
     
   }
   getHostData(){
-    const data = this.commonFunctionService.getPaylodWithCriteria('host_master','',[],{});
+    const data = this.apiCallService.getPaylodWithCriteria('host_master','',[],{});
     data['pageNo'] = 0;
     data['pageSize'] = 100;
     const getSortData = {

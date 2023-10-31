@@ -21,6 +21,9 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
   <mat-drawer #drawer mode="side" opened position="end" class="sidechartfilter">
     <app-filter *ngIf="dashboardItem && dashboardItem.fields && dashboardItem.fields.length >0 && showFilter" [dashbord]="dashbord" (filterData)="filterData($event)"></app-filter> 
   </mat-drawer>
+  <div class="form-body-loader" *ngIf="isfilterChart">
+    <mat-spinner diameter="40" class="custom-spinner"></mat-spinner>
+</div>
   <canvas id="chartjs" class="canvaschart w-100" mdbChart *ngIf="dashboardItem.package_name == 'chart_js'"
           [chartType]="chartType[dashboardItem.call_back_field]"
           [datasets]="chartDatasets[dashboardItem.call_back_field]"

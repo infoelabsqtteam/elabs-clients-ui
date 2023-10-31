@@ -1,10 +1,7 @@
-import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { ContextMenuComponent } from 'ngx-contextmenu';
-import {CommonFunctionService, ApiService, NotificationService, EnvService, ModelService, DocDataShareService, DocApiService, StorageService} from '@core/web-core';
-import * as S3 from 'aws-sdk/clients/s3';
-import { config } from '../config.modal';
+import {CommonFunctionService, ApiService, NotificationService, EnvService, ModelService, DocDataShareService, DocApiService, StorageService, ApiCallService} from '@core/web-core';
 
 @Component({
   selector: 'lib-drive-home',
@@ -99,15 +96,13 @@ export class DriveHomeComponent implements OnInit {
 	
 
 	constructor(
-        private http: HttpClient, 
         private storageService: StorageService, 
         private docApiService:DocApiService,
 		private docDataShareService:DocDataShareService,
 		private modelService:ModelService,
-		private envService:EnvService,
 		private commonFunctionService:CommonFunctionService,
-		private apiService:ApiService,
-		private notificationService:NotificationService
+		private notificationService:NotificationService,
+		private apiCallService:ApiCallService
     ) {
 		this.documentSubscription = this.docDataShareService.docData.subscribe(doc =>{
             this.setDocData(doc);
@@ -866,7 +861,7 @@ export class DriveHomeComponent implements OnInit {
 	}
 
 	payloadForGetChildDocs(selectedFolder,criteria){		
-		const data = this.commonFunctionService.getPaylodWithCriteria("aws_docs",'',criteria,'');
+		const data = this.apiCallService.getPaylodWithCriteria("aws_docs",'',criteria,'');
 		data['pageNo'] = this.pageNumber-1;
 		data['pageSize'] = 30;
 		data['data'] = selectedFolder;    
@@ -1297,7 +1292,7 @@ export class DriveHomeComponent implements OnInit {
 	filterData(searchForm){
 		if(searchForm.value["firstname"] && searchForm.value["firstname"].length > 0){
 			let text = searchForm.value["firstname"];
-			const data = this.commonFunctionService.getPaylodWithCriteria("awsdocs",'',[],'');
+			const data = this.apiCallService.getPaylodWithCriteria("awsdocs",'',[],'');
 			data["crList"] = [{fName:  "key",operator:"stw",fValue: this.vdrprentfolder["key"]  },{fName: "rollName",operator:"stwic",fValue: text}]
 			data['pageNo'] = 0;
 			data['pageSize'] = 25;    
