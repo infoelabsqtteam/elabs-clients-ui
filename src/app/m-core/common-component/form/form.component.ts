@@ -128,6 +128,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
+  selectedListofStringIndex:number; // editListOfString() index variable
 
   //Google map variables
   latitude: number = 0;
@@ -957,7 +958,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
               if(value != '' && value != null){
-                custmizedFormValueParant.push(value)            
+                if(this.selectedListofStringIndex >= 0 && this.selectedListofStringIndex!== undefined ){
+                  custmizedFormValueParant[this.selectedListofStringIndex] = value;
+                  this.selectedListofStringIndex = -1;
+                }else{
+                  custmizedFormValueParant.push(value);
+                }           
                 this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
               }
               if(event){
@@ -977,7 +983,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
               if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
-                custmizedFormValue.push(formValue[field.field_name])
+                if(this.selectedListofStringIndex >= 0 && this.selectedListofStringIndex!== undefined ){
+                  custmizedFormValue[this.selectedListofStringIndex] = value;
+                  this.selectedListofStringIndex = -1;
+                }else{
+                  custmizedFormValue.push(formValue[field.field_name])
+                } 
                 this.custmizedFormValue[field.field_name] = custmizedFormValue;
               }
               if(event){
@@ -1668,6 +1679,36 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.enableNextButton = false;
     }    
   }
+  editListOfString(parentfield,field,index, edit?:boolean){
+    this.selectedListofStringIndex = index;
+    let formValue = this.templateForm.getRawValue();
+    this.curFormField = field;
+    this.curParentFormField = parentfield; 
+    switch (field.type) {
+      case "list_of_string":
+        if(edit){
+          if(parentfield != ''){
+            const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
+            const value = formValue[parentfield.field_name][field.field_name];
+            if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name].length > 0 ){
+              let selectedValue = this.custmizedFormValue[custmizedKey][field.field_name][index];
+              this.templateFormControl[parentfield.field_name]['controls'][field.field_name].setValue(selectedValue);
+            }
+          }else{            
+            const value = formValue[field.field_name]; 
+            const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
+              if(this.custmizedFormValue[field.field_name].length>0){
+                let selectedValue = custmizedFormValue[index];
+                this.templateForm.controls[field.field_name].setValue(selectedValue)
+              }
+          }
+        }
+        break;
+    }    
+  }
+
+
+
   //Map Click
   async mapClick(event: google.maps.MapMouseEvent,field?:any) {
     this.zoom = 17;
