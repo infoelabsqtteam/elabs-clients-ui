@@ -68,7 +68,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   pageNumber: number = Common.PAGE_NO;
   total: number;
   loading: boolean;
-  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
+  itemNumOfGrid: any;
   userInfo: any;
   staticData: any = {};
   copyStaticData:any={};
@@ -126,6 +126,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   updateNotification:boolean=true;
   currentBrowseUrl:string="";
   queryParams:any={};
+  gridDisable:boolean = false;
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -470,6 +471,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if(this.selectTabIndex != -1){
+      this.itemNumOfGrid = this.storageService.getDefaultNumOfItem();
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
       this.ngOnInit();
@@ -570,28 +572,33 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getTabData(index,formName) {
     this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
-      this.itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
       if(this.tab.tab_name && this.tab.tab_name != null && this.tab.tab_name != undefined && this.tab.tab_name != ''){
         const menu = {"name":this.tab.tab_name};
         this.storageService.SetActiveMenu(menu);
         this.currentMenu.name = this.tab.tab_name;
       }  
-      if(this.tab.grid && this.tab.grid != undefined){
-        if(this.tab.grid.gridColumns && this.createFilterHeadElement){
-          this.headElements = this.gridCommonFunctionServie.modifyGridColumns(this.tab.grid.gridColumns,{});          
+      let grid = this.tab.grid;
+      if(grid && grid != undefined){
+        if(grid.gridColumns && this.createFilterHeadElement){
+          this.headElements = this.gridCommonFunctionServie.modifyGridColumns(grid.gridColumns,{}); 
           this.createFilterHeadElement = false;
         }
-        if(this.tab.grid.gridColumns == undefined && this.tab.grid.gridColumns == null){
+        if(grid.gridColumns == undefined && grid.gridColumns == null){
           this.headElements = [];
         } 
-        if(this.tab.grid.action_buttons && this.tab.grid.action_buttons != null){
-          this.gridButtons = this.tab.grid.action_buttons;
+        if(grid.action_buttons && grid.action_buttons != null){
+          this.gridButtons = grid.action_buttons;
         }
-        if(this.tab.grid.details && this.tab.grid.details != null){
-          this.details = this.tab.grid.details;
+        if(grid.details && grid.details != null){
+          this.details = grid.details;
+          this.itemNumOfGrid = this.getNoOfItems(grid, this.itemNumOfGrid);
+          if(this.details && this.details.disableGrid && this.details.disableGrid == "true") {
+            this.gridDisable = true;
+          }
+           
         }
-        if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
-          this.typegrapyCriteriaList = this.tab.grid.colorCriteria;
+        if(grid.colorCriteria && grid.colorCriteria != null && grid.colorCriteria.length >= 1){
+          this.typegrapyCriteriaList = grid.colorCriteria;
         }else{
           this.typegrapyCriteriaList = [];
         }     
@@ -688,7 +695,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
           this.currentMenu.name = this.tab.tab_name;          
-          this.getPage(1);
+          if(!this.gridDisable) {
+            this.getPage(1);
+          }
           let gridCount = this.dataShareService.getGridCountData(); 
           let gridCountKey = this.tab.tab_name+"_"+this.tab.name;
           if(index == 0 || gridCount[gridCountKey] == undefined){
@@ -1078,7 +1087,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   pageSizes =[25, 50, 75, 100, 200];
   PageSizeChange(event: any): void {
-    this.itemNumOfGrid = event.target.value;
+    if(event.target.value && event.target.value != "") {
+      this.itemNumOfGrid = event.target.value;
+    }else {
+      this.itemNumOfGrid = this.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
+    }
     this.applyFilter();
   }
 
@@ -1509,7 +1522,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-
+  getNoOfItems(grid:any, defaultNoOfItem:any) {
+    if(grid && grid.details && grid.details.numberOfItems) {
+      defaultNoOfItem = grid.details.numberOfItems;
+    }
+    return defaultNoOfItem;
+  }
 
 
 }
