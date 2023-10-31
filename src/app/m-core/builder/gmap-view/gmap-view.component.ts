@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
-import { CommonFunctionService, StorageService, ApiService, DataShareService} from '@core/web-core';
+import { CommonFunctionService, StorageService, ApiService, DataShareService, ApiCallService} from '@core/web-core';
 
 @Component({
   selector: 'app-gmap-view',
@@ -35,7 +35,8 @@ export class GmapViewComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
     private apiService:ApiService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private apiCallService:ApiCallService
   ) { 
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -113,7 +114,7 @@ export class GmapViewComponent implements OnInit,OnDestroy {
   getCall(payloadList){
     const stati_group = [];
     payloadList.forEach(element => {
-      const getCompanyPayload = this.commonFunctionService.getPaylodWithCriteria(element.api_params,element.call_back_field,element.criteria,element.object)
+      const getCompanyPayload = this.apiCallService.getPaylodWithCriteria(element.api_params,element.call_back_field,element.criteria,element.object)
       stati_group.push(getCompanyPayload);
     });
     if(stati_group.length > 0){
@@ -142,7 +143,7 @@ export class GmapViewComponent implements OnInit,OnDestroy {
       const filterValue = {"user":value}
       this.filterForm['value']=filterValue;
     }    
-    const pagePayload = this.commonFunctionService.getPage(1,this.tab,this.currentMenu,this.headElements,this.filterForm.getrawvalue(),this.selectContact);
+    const pagePayload = this.apiCallService.getPage(1,this.tab,this.currentMenu,this.headElements,this.filterForm.getrawvalue(),this.selectContact);
     this.apiService.getGridData(pagePayload);
     this.headElements=[]
     this.filterForm={};

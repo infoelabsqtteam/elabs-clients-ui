@@ -1,7 +1,7 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import {MatAccordion} from '@angular/material/expansion';
-import { CommonFunctionService, ApiService, DataShareService, ModelService } from '@core/web-core';
+import { CommonFunctionService, ApiService, DataShareService, ModelService, GridCommonFunctionService, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -40,7 +40,9 @@ export class CommunicationDataModalComponent implements OnInit,OnDestroy {
     private el: ElementRef, 
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private gridCommonFunctionService:GridCommonFunctionService,
+    private apiCallService:ApiCallService
   ) {
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -112,7 +114,7 @@ export class CommunicationDataModalComponent implements OnInit,OnDestroy {
     //   this.tab_api_params_criteria = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',this.tab.api_params_criteria,this.selectContact);
     //   console.log(this.tab_api_params_criteria);
     // }
-    const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid;
     data['data'] =  this.selectedGridData;   
@@ -138,7 +140,7 @@ export class CommunicationDataModalComponent implements OnInit,OnDestroy {
   }
 
    getValueForGrid(field, object) {
-    return this.commonFunctionService.getValueForGrid(field, object);
+    return this.gridCommonFunctionService.getValueForGrid(field, object);
   }
 
   typeCheck(el){

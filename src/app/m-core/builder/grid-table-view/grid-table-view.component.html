@@ -3,7 +3,7 @@
   <ng-template matMenuContent let-item="item">
     <button mat-button class="w-100 text-left" color="primary" *ngIf="elements.length > 0" (click)="exportExcel()"><span class="material-icons mr-2">file_download</span> Download Excel</button>
     <button mat-button class="w-100 text-left" color="primary" *ngIf="forms['default']" (click)="addNewForm('NEW')"><span class="material-icons mr-2">add</span> Add Form</button>
-    <ul class="m-0">
+    <ul class="m-0"> 
         <li *ngIf="editedRowIndex != item">
             <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
                 <form #myform="ngForm">
@@ -59,11 +59,11 @@
                     <div class="row mx-0">
                         <div [ngClass]="treeView ? 'col-lg-3 pl-0' : 'd-none'"><app-tree-view></app-tree-view></div>
                         <div class="table-responsive table tableFixHead mb-0 pb-0" [ngClass]="treeView || isShowDiv ? 'col-lg-9 pl-0' : 'col-lg-12 px-0'">
-                            <table class="table-bordered table-striped table-hover">
+                            <table class="table-bordered table-striped table-hover table-resizable">
                                 <thead >
                                     <tr>
                                         <th *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" (click)="onSort(headElements[i])" [ngClass]="{'d-none': !head.display}"><div class="heading" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
+                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}"><div class="heading" (click)="onSort(headElements[i])" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
                                             <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
                                         </th>                                        
                                     </tr>
@@ -137,7 +137,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of modifyGridData | paginate: { id: 'server5', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}" (contextmenu)="onRightClick($event, i)">
+                                    <tr mdbTableCol class="cursor-pointer" *ngFor="let el of modifyGridData | paginate: { id: 'server5', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" (click)="selectRow(i)" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':selectedRowIndex == i,'activetxt':rowSelectionIndex == i && columnSelectionIndex == -1}" (contextmenu)="onRightClick($event, i)">
                                         <td [style.background-color]="el['background-color']">
                                             <span *ngIf="editedRowIndex != i" class="text-nowrap">
                                                 <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
@@ -162,12 +162,12 @@
 
                                         </td>
                                         <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
-                                            <div *ngIf="editedRowIndex != i" class="grid-data" [style.width]="elId.width" [style.text-align]="elId.text_align">
-                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap" href="javascript:void(0)" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
+                                            <div *ngIf="editedRowIndex != i" class="grid-data resizeGridColunms" [style.width]="elId.width" [style.text-align]="elId.text_align">
+                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                     </a>
 
 
-                                                    <a href="javascript:void(0)" class="grid-coloumn-nowrap" href="javascript:void(0)" (click)="clickOnGridElement(elId,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type == 'color'">
+                                                    <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type == 'color'">
                                                         <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{el[elId.field_name]}}</span>
                                                     </a>
                                                     
