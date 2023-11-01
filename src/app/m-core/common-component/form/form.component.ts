@@ -937,7 +937,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.filePreviewFields = [];
     this.close();
   } 
-  setValue(parentfield,field, add,event?) {
+  setValue(parentfield,field, add,event?,edit?,index?) {
 
     let formValue = this.templateForm.getRawValue();
     let formValueWithoutCustomData = this.getFormValue(false);
@@ -958,12 +958,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
               if(value != '' && value != null){
-                if(this.selectedListofStringIndex >= 0 && this.selectedListofStringIndex!== undefined ){
-                  custmizedFormValueParant[this.selectedListofStringIndex] = value;
-                  this.selectedListofStringIndex = -1;
-                }else{
-                  custmizedFormValueParant.push(value);
-                }           
+                updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
+                this.selectedListofStringIndex=-1;
                 this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
               }
               if(event){
@@ -983,12 +979,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
               if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
-                if(this.selectedListofStringIndex >= 0 && this.selectedListofStringIndex!== undefined ){
-                  custmizedFormValue[this.selectedListofStringIndex] = value;
-                  this.selectedListofStringIndex = -1;
-                }else{
-                  custmizedFormValue.push(formValue[field.field_name])
-                } 
+                updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
+                this.selectedListofStringIndex=-1;
                 this.custmizedFormValue[field.field_name] = custmizedFormValue;
               }
               if(event){
@@ -998,7 +990,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.tempVal[field.field_name + "_add_button"] = true;
             }
           }  
-        } else {
+        } else if (edit) {
+          this.selectedListofStringIndex = index;
+          const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);
+          let value;
+          if (parentfield) {
+            let selectedValue = this.custmizedFormValue[custmizedKey][field.field_name][index];
+            this.templateFormControl[parentfield.field_name]['controls'][field.field_name].setValue(selectedValue);
+          } else {
+            value = formValue[field.field_name];
+            const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
+            let selectedValue = custmizedFormValue[index];
+            this.templateForm.controls[field.field_name].setValue(selectedValue)
+          }
+      } else {
           if(parentfield != ''){
             if(formValue && formValue[parentfield.field_name] && formValue[parentfield.field_name][field.field_name].length > 0){
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = false;
@@ -1299,7 +1304,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       default:
         break;
     }
-    
+    function updateCustomizedValue(target: any[], index: number, value: any) {
+      if (index !== null && index >= 0) {
+          target[index] = value;
+          index = -1;
+      } else {
+          target.push(value);
+      }
+  }
     if (field.onchange_api_params && field.onchange_call_back_field) {
         let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
         let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValueWithoutCustomData);
@@ -1677,33 +1689,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.nextFormData && this.nextFormData.formName){
       this.openNextForm(true);
       this.enableNextButton = false;
-    }    
-  }
-  editListOfString(parentfield,field,index, edit?:boolean){
-    this.selectedListofStringIndex = index;
-    let formValue = this.templateForm.getRawValue();
-    this.curFormField = field;
-    this.curParentFormField = parentfield; 
-    switch (field.type) {
-      case "list_of_string":
-        if(edit){
-          if(parentfield != ''){
-            const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
-            const value = formValue[parentfield.field_name][field.field_name];
-            if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name].length > 0 ){
-              let selectedValue = this.custmizedFormValue[custmizedKey][field.field_name][index];
-              this.templateFormControl[parentfield.field_name]['controls'][field.field_name].setValue(selectedValue);
-            }
-          }else{            
-            const value = formValue[field.field_name]; 
-            const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-              if(this.custmizedFormValue[field.field_name].length>0){
-                let selectedValue = custmizedFormValue[index];
-                this.templateForm.controls[field.field_name].setValue(selectedValue)
-              }
-          }
-        }
-        break;
     }    
   }
 
