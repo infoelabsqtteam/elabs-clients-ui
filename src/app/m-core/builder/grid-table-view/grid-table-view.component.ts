@@ -1528,7 +1528,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-  
+
 
 
 }
