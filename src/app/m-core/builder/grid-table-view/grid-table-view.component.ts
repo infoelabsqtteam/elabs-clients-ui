@@ -591,7 +591,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
         if(grid.details && grid.details != null){
           this.details = grid.details;
-          this.itemNumOfGrid = this.getNoOfItems(grid, this.itemNumOfGrid);
+          this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems(grid, this.itemNumOfGrid);
           if(this.details && this.details.disableGrid && this.details.disableGrid == "true") {
             this.gridDisable = true;
           }
@@ -1090,7 +1090,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(event.target.value && event.target.value != "") {
       this.itemNumOfGrid = event.target.value;
     }else {
-      this.itemNumOfGrid = this.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
+      this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
     }
     this.applyFilter();
   }
@@ -1504,8 +1504,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
     }else{
       this.filterForm.get([fieldName]).setValue('');
-    }    
-    this.applyFilter();
+    }  
+    if(this.tab.grid.details && this.tab.grid.details.disableGrid && this.details.disableGrid == "true") {
+      this.modifyGridData = [];
+      this.elements = [];
+      this.gridDisable = true;
+    }else {
+      this.applyFilter();
+    }  
   }
 
   get filterFormValue() {
@@ -1522,12 +1528,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-  getNoOfItems(grid:any, defaultNoOfItem:any) {
-    if(grid && grid.details && grid.details.numberOfItems) {
-      defaultNoOfItem = grid.details.numberOfItems;
-    }
-    return defaultNoOfItem;
-  }
+  
 
 
 }
