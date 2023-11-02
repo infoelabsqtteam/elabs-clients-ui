@@ -958,12 +958,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
               if(value != '' && value != null){
-                if(this.selectedListofStringIndex >= 0){
-                  custmizedFormValueParant[this.selectedListofStringIndex] = value;
-                  this.selectedListofStringIndex = -1;
-                }else{
-                  custmizedFormValueParant.push(value);
-                }     
+                this.formCreationService.updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
+                this.selectedListofStringIndex = -1;
                 this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
               }
               if(event){
@@ -983,12 +979,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
               if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
-                if(this.selectedListofStringIndex >= 0){
-                  custmizedFormValue[this.selectedListofStringIndex] = value;
-                  this.selectedListofStringIndex = -1;
-                }else{
-                  custmizedFormValue.push(formValue[field.field_name])
-                } 
+                this.formCreationService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
+                this.selectedListofStringIndex = -1;
                 this.custmizedFormValue[field.field_name] = custmizedFormValue;
               }
               if(event){
@@ -1364,6 +1356,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.term = {};
     this.checkFormFieldIfCondition();
   } 
+
   editListOfString(parentfield,field,index){
   if (field.type=="list_of_string") {
           this.selectedListofStringIndex = index;
