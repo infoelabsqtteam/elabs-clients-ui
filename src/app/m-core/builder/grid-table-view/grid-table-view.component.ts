@@ -1209,8 +1209,23 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
   applyFilter() {
+    let searchValue = this.filterForm.getRawValue();  
+    // Object.keys(searchValue).forEach(key => {
+    //   console.log(key, searchValue[key]);
+    // });
+    let resultSearchValue:any = [];
+    Object.values(searchValue).forEach(val => {
+      if(val != '') resultSearchValue = val;
+      return;
+    });
+    if(this.gridDisable && resultSearchValue.length == 0) {
+      this.modifyGridData = [];
+      this.elements = [];
+      return 
+    }
     this.pageNumber = 1;
-    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,searchValue,this.selectContact);
+    
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
@@ -1504,14 +1519,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
     }else{
       this.filterForm.get([fieldName]).setValue('');
-    }  
-    if(this.tab.grid.details && this.tab.grid.details.disableGrid && this.details.disableGrid == "true") {
-      this.modifyGridData = [];
-      this.elements = [];
-      this.gridDisable = true;
-    }else {
-      this.applyFilter();
-    }  
+    }    
+    this.applyFilter(); 
   }
 
   get filterFormValue() {
