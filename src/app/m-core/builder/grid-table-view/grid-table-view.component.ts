@@ -1210,9 +1210,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter() {
     let searchValue = this.filterForm.getRawValue();  
-    // Object.keys(searchValue).forEach(key => {
-    //   console.log(key, searchValue[key]);
-    // });
     let resultSearchValue:any = [];
     Object.values(searchValue).forEach(val => {
       if(val != '') resultSearchValue = val;
