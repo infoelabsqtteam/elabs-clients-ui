@@ -1517,7 +1517,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }else{
       this.filterForm.get([fieldName]).setValue('');
     }    
-    this.applyFilter(); 
+    this.applyFilter();
   }
 
   get filterFormValue() {
