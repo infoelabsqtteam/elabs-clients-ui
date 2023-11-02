@@ -453,7 +453,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.closeModal();
   }
   ngOnInit(): void {  
-
     // if (this.editedRowIndex >= 0) {
     //   this.selectedRowIndex = this.editedRowIndex;
     //   if(this.elements.length > 0){
