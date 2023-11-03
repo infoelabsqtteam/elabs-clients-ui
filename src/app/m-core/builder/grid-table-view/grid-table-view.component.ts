@@ -1217,21 +1217,17 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   getGridPayloadData(pagePayload) {
     let ObjectValue = this.filterForm.getRawValue()
-    let returnValue = false;
     if(this.gridDisable){
       Object.values(ObjectValue).forEach(val => {
         if(val != '') {
-          returnValue = true;
+          this.apiService.getGridData(pagePayload);
         }else {
           this.modifyGridData = [];
         }
       });
+    }else {
+      this.apiService.getGridData(pagePayload);
     }
-    return returnValue;
-
-
-
-    this.apiService.getGridData(pagePayload);
   }
   
   openTreeView(field) {
