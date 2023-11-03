@@ -1208,22 +1208,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.orderBy = '-';
     }
   }
-  
+
   applyFilter() {
-    let searchValue = this.filterForm.getRawValue();  
-    let resultSearchValue:any = [];
-    Object.values(searchValue).forEach(val => {
-      if(val != '') resultSearchValue = val;
-      return;
-    });
-    if(this.gridDisable && resultSearchValue.length == 0) {
-      this.modifyGridData = [];
-      this.elements = [];
-      return 
-    }
     this.pageNumber = 1;
-    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,searchValue,this.selectContact);
-    
+    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
