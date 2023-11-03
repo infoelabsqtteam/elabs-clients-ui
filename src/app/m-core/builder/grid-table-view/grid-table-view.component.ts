@@ -1134,7 +1134,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       pagePayload.data.crList = crList;
     }  
     pagePayload.data.pageSize = this.itemNumOfGrid;
-    this.apiService.getGridData(pagePayload);
+    this.getGridPayloadData(pagePayload);
   }
   public downloadClick = '';
 
@@ -1201,21 +1201,38 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       path: columnName
     }
     //this.store.dispatch(new CusTemGenAction.GetGridData(getSortData))
-    this.apiService.getGridData(getSortData)
+    this.getGridPayloadData(getSortData);
     if (this.orderBy == '-') {
       this.orderBy = '';
     } else {
       this.orderBy = '-';
     }
   }
-
   applyFilter() {
     this.pageNumber = 1;
     let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     pagePayload.data.pageSize = this.itemNumOfGrid;
+    this.getGridPayloadData(pagePayload);
+  }
+
+  getGridPayloadData(pagePayload) {
+    let ObjectValue = this.filterForm.getRawValue()
+    let returnValue = false;
+    if(this.gridDisable){
+      Object.values(ObjectValue).forEach(val => {
+        if(val != '') {
+          returnValue = true;
+        }else {
+          this.modifyGridData = [];
+        }
+      });
+    }
+    return returnValue;
+
+
+
     this.apiService.getGridData(pagePayload);
   }
-  
   
   openTreeView(field) {
     let fieldName;
