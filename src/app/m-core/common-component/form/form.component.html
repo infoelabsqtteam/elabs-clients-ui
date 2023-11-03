@@ -574,16 +574,9 @@
                                                 <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
                                             </mat-form-field>
                                             <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div>                                            
-                                            <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
-
-                                               <!-- <mat-icon>
-                                                {{custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && showlistofstringbtn? "update" : "add"}}
-                                                </mat-icon> -->
-                                                                                           
-                                                <mdb-icon fas icon="plus" *ngIf="!(custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && showlistofstringbtn)"></mdb-icon>
-                                                
-                                                <i class="material-icons md-48" *ngIf="(custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && showlistofstringbtn)">update</i>
-                                            
+                                            <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">                                          
+                                                <mdb-icon fas icon="plus" *ngIf="!(custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && showListOfStringBtn)"></mdb-icon>
+                                                <i class="material-icons md-48" *ngIf="(custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && showListOfStringBtn)">update</i>
                                             </button>
 
 
