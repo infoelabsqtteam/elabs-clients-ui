@@ -957,7 +957,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
-              if(value != '' && value != null){
+              if(value.trim() != '' && value != null){
                 this.formCreationService.updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
                 this.selectedListofStringIndex = -1;
                 this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
@@ -978,7 +978,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }else{
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-              if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
+              if(value.trim() != '' && formValue[field.field_name] != null){
                 this.formCreationService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
                 this.selectedListofStringIndex = -1;
                 this.custmizedFormValue[field.field_name] = custmizedFormValue;
@@ -1358,18 +1358,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   } 
 
   editListOfString(parentfield,field,index){
-  if (field.type=="list_of_string") {
-          this.selectedListofStringIndex = index;
-          const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);
-          if (parentfield) {
-            let selectedValue = this.custmizedFormValue[custmizedKey][field.field_name][index];
-            this.templateFormControl[parentfield.field_name]['controls'][field.field_name].setValue(selectedValue);
-          } else {
-            const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-            let selectedValue = custmizedFormValue[index];
-            this.templateForm.controls[field.field_name].setValue(selectedValue)
-          }
-    }
+    this.selectedListofStringIndex = this.formCreationService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateFormControl,this.templateForm);
   }
   updateAddNewField(parent,child){
     if(child && child.onchange_get_next_form){
