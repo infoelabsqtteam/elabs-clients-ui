@@ -958,9 +958,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
               if(value.trim() != '' && value != null){
-                this.formControlService.updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
-                this.selectedListofStringIndex = -1;
-                this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
+                this.selectedListofStringIndex = updateCustomizedValueResponse.selectedListofStringIndex;
+                this.custmizedFormValue[custmizedKey][field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
               }
               if(event){
                 event.value = '';
@@ -979,9 +979,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
               if(value.trim() != '' && value != null){
-                this.formControlService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
-                this.selectedListofStringIndex = -1;
-                this.custmizedFormValue[field.field_name] = custmizedFormValue;
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
+                this.selectedListofStringIndex = updateCustomizedValueResponse.selectedListofStringIndex;
+                this.custmizedFormValue[field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
               }
               if(event){
                 event.value = '';
@@ -990,6 +990,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.tempVal[field.field_name + "_add_button"] = true;
             }
           }  
+          this.showlistofstringbtn = false;
         } else {
           if(parentfield != ''){
             if(formValue && formValue[parentfield.field_name] && formValue[parentfield.field_name][field.field_name].length > 0){
@@ -1356,11 +1357,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.term = {};
     this.checkFormFieldIfCondition();
   } 
-
+  showlistofstringbtn:boolean = false;
   editListOfString(parentfield,field,index){
     let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);
     this.selectedListofStringIndex = response.selectedListofStringIndex;
     this.templateForm = response.templateForm;
+    this.showlistofstringbtn = true;
   }
   updateAddNewField(parent,child){
     if(child && child.onchange_get_next_form){
