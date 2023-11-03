@@ -1,0 +1,25 @@
+.filter-flex-container {
+  border-radius: 5px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.ad-filter-label {
+  padding: 5px;
+  text-align: center;
+  font-weight: 600;
+}
+.filter-flex-item {
+  padding: 5px;
+  border: 1px;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+}
+
+.filter-flex-item input {
+  font-size: 0.75rem;
+  line-height: 1.5;
+}

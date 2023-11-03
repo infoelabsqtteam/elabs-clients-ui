@@ -131,6 +131,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
+  filterTypeString
+  filterTypeNumber
+  filterTypeDate
 
 
 
@@ -476,8 +479,30 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     
   }
-
+  selectedFilterType= null;
   ngOnInit(): void {
+    this.filterTypeNumber ={
+      lessthan: 'Less than',
+      greaterthan: 'Greater than',
+      equalto: 'Equal to',
+      notequal: 'Not Equal'
+    }
+    this.filterTypeString={
+      startwith: 'Start With',
+      endwith: 'End With',
+      contains: 'Contains'
+      }
+      this.filterTypeDate ={
+        lessthan: 'Less than',
+        greaterthan: 'Greater than',
+        daterange : 'Date Range',
+        equalto: 'Equal to',
+        notequal: 'Not Equal',
+      }
+  }
+
+  getFilterTypeKeys(obj: any): string[] {
+    return Object.keys(obj);
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0) {

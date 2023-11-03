@@ -63,9 +63,74 @@
                                 <thead >
                                     <tr>
                                         <th *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}"><div class="heading" (click)="onSort(headElements[i])" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
-                                            <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
-                                        </th>                                        
+                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                            <div class="heading"  [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
+                                                    <span (click)="onSort(headElements[i])" title="Sort"><mdb-icon style="right: 20px;" fas icon="sort"></mdb-icon></span>
+                                                    <!-- mat trigger for column filter  -->
+                                                    <span [title]="'Advance Filter'"  [matMenuTriggerFor]="filterMenu" #menuTrigger><mdb-icon class=" columsFilterIcon fa-sm" fas icon="filter"></mdb-icon></span>
+                                            </div>
+                                                <!-- mat menu for column filter  -->
+                                                <mat-menu #filterMenu="matMenu"  xPosition="after" class="column-filter-menu">
+                                                    <div (click)="$event.stopPropagation()" class="filter-flex-container">
+                                                        <mat-label class="ad-filter-label">Advance Filter</mat-label>
+                                                        <div class="filter-flex-item "
+                                                            *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
+                                                            <input class="form-control form-control-sm pr-3" placeholder="Search">
+                                                        </div>
+                                                        <mat-form-field class="filter-flex-item ">
+                                                            <mat-label>Filter Type</mat-label>
+                                                            <mat-select  [(value)]="selectedFilterType" name="filterType"
+                                                                *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'"
+                                                                label="None">
+                                                                <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeString)">
+                                                                    <mat-option value="{{key}}">{{ filterTypeString[key] }}</mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                            <mat-select [(value)]="selectedFilterType" name="filterType" *ngIf="head.type == 'number'">
+                                                                <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeNumber)">
+                                                                    <mat-option value="{{key}}">{{ filterTypeNumber[key] }}</mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                            <mat-select [(value)]="selectedFilterType" name="filterType"
+                                                                *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')">
+                                                                <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeDate)">
+                                                                    <mat-option value="{{key}}">{{ filterTypeDate[key] }}</mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <ng-container 
+                                                            *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime') && selectedFilterType!='daterange'">
+                                                            <mat-form-field class="filter-flex-item ">
+                                                                <mat-label>Choose a date</mat-label>
+                                                                <input matInput [matDatepicker]="picker">
+                                                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                                <mat-datepicker #picker></mat-datepicker>
+                                                            </mat-form-field>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="selectedFilterType=='daterange'">
+                                                            <mat-form-field class="filter-flex-item ">
+                                                                <mat-label>Enter a date range</mat-label>
+                                                                <mat-date-range-input [rangePicker]="picker">
+                                                                    <input matStartDate placeholder="Start date">
+                                                                    <input matEndDate placeholder="End date">
+                                                                </mat-date-range-input>
+                                                                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                                <mat-date-range-picker #picker></mat-date-range-picker>
+                                                            </mat-form-field>
+                                                        </ng-container>
+                                                        <h6 class="filter-flex-item "> {{selectedFilterType}}</h6>
+                                                        <div class="modal-footer justify-content-end filter-flex-item">
+                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn>
+                                                                Cancel
+                                                            </button>
+                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn
+                                                                (click)="applyFilter()" [disabled]="">Filter</button>
+                                                        </div>
+                                                    </div>
+                                                </mat-menu>
+                                        </th>                                       
                                     </tr>
                                     <tr [formGroup]="filterForm" *ngIf="headElements.length > 0" class="grid-filter">
                                         <td>
