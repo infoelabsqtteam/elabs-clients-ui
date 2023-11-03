@@ -128,7 +128,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
-  selectedListofStringIndex:number; // editListOfString() index variable
+  selectedListofStringIndex:number=-1; // editListOfString() index variable
 
   //Google map variables
   latitude: number = 0;
@@ -958,7 +958,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
               if(value.trim() != '' && value != null){
-                this.formCreationService.updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
+                this.formControlService.updateCustomizedValue(custmizedFormValueParant, this.selectedListofStringIndex, value);
                 this.selectedListofStringIndex = -1;
                 this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
               }
@@ -978,8 +978,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }else{
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-              if(value.trim() != '' && formValue[field.field_name] != null){
-                this.formCreationService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
+              if(value.trim() != '' && value != null){
+                this.formControlService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
                 this.selectedListofStringIndex = -1;
                 this.custmizedFormValue[field.field_name] = custmizedFormValue;
               }
@@ -1358,7 +1358,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   } 
 
   editListOfString(parentfield,field,index){
-    this.selectedListofStringIndex = this.formCreationService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateFormControl,this.templateForm);
+    let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);
+    this.selectedListofStringIndex = response.selectedListofStringIndex;
+    this.templateForm = response.templateForm;
   }
   updateAddNewField(parent,child){
     if(child && child.onchange_get_next_form){
