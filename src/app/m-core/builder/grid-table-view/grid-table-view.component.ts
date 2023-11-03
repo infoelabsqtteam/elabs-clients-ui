@@ -1208,6 +1208,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.orderBy = '-';
     }
   }
+  
   applyFilter() {
     let searchValue = this.filterForm.getRawValue();  
     let resultSearchValue:any = [];
