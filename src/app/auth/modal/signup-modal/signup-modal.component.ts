@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthDataShareService, AuthService, CustomvalidationService, DataShareService, ModelService, NotificationService } from '@core/web-core';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 export class SignupModalComponent implements OnInit {
 
   hide = true;
-  signUpForm: FormGroup;
+  signUpForm: UntypedFormGroup;
   appName: string;
 
   @Input() id: string;
@@ -72,11 +72,11 @@ export class SignupModalComponent implements OnInit {
   }
 
   initForm() {
-    this.signUpForm = new FormGroup({
-      'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
-      'mobile': new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
-      'password': new FormControl('', [Validators.required, ,this.customvalidationService.patternValidator()]),
-      'name': new FormControl('', Validators.required),
+    this.signUpForm = new UntypedFormGroup({
+      'email': new UntypedFormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      'mobile': new UntypedFormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
+      'password': new UntypedFormControl('', [Validators.required, ,this.customvalidationService.patternValidator()]),
+      'name': new UntypedFormControl('', Validators.required),
     });
   }
 

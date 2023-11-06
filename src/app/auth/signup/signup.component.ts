@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators,FormBuilder, EmailValidator } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators,UntypedFormBuilder, EmailValidator } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, DataShareService, EnvService, StorageService, CustomvalidationService, AuthDataShareService, NotificationService} from '@core/web-core';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class SignupComponent implements OnInit {
   hide = true;
-  signUpForm: FormGroup;
+  signUpForm: UntypedFormGroup;
   appName: string;
   appNameSubscription:Subscription;
   signUpInfoSubscribe:Subscription;
@@ -24,7 +24,7 @@ export class SignupComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private fb:FormBuilder,
+    private fb:UntypedFormBuilder,
     private authService:AuthService,
     private dataShareService:DataShareService,
     private envService:EnvService,
@@ -83,13 +83,13 @@ export class SignupComponent implements OnInit {
   }
 
   initForm() {
-    this.signUpForm = new FormGroup({
-      'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
-      'mobileNumber': new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
-      'password': new FormControl('', [Validators.required, this.customValidationService.patternValidator()]),
-      'confirmPassword': new FormControl("", Validators.required),
-      'name': new FormControl('', Validators.required),
-      'admin': new FormControl(false),
+    this.signUpForm = new UntypedFormGroup({
+      'email': new UntypedFormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      'mobileNumber': new UntypedFormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
+      'password': new UntypedFormControl('', [Validators.required, this.customValidationService.patternValidator()]),
+      'confirmPassword': new UntypedFormControl("", Validators.required),
+      'name': new UntypedFormControl('', Validators.required),
+      'admin': new UntypedFormControl(false),
     },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }
     );
   }

@@ -288,7 +288,6 @@
       }
     }
   },
-  "defaultProject": "elabs-client-ui",
   "cli": {
     "analytics": false
   }

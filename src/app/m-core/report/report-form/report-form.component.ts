@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { ApiService, CommonFunctionService, DataShareService, PermissionService, NotificationService, StorageService, ModelService, ApiCallService, CheckIfService, GridCommonFunctionService } from '@core/web-core';
@@ -31,7 +31,7 @@ export const MY_DATE_FORMATS = {
 export class ReportFormComponent implements OnInit {
 
   
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   staticDataSubscription:any;
   staticData = [];
   mySaveQueryData:any;
@@ -82,7 +82,7 @@ export class ReportFormComponent implements OnInit {
     private storageService: StorageService,
     private apiService:ApiService,
     private modelService: ModelService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private apiCallService:ApiCallService,
     private checkIfService:CheckIfService,
     private gridCommonFunctionService:GridCommonFunctionService
@@ -138,11 +138,11 @@ export class ReportFormComponent implements OnInit {
   }
   initForm(){
     this.reportForm = this.formBuilder.group({
-      "collection_name" : new FormControl('',Validators.required),
-      "collectionName" : new FormControl(""),
-      "name" : new FormControl('',Validators.required),
-      "operator" : new FormControl('',Validators.required),
-      "value" : new FormControl('',Validators.required),
+      "collection_name" : new UntypedFormControl('',Validators.required),
+      "collectionName" : new UntypedFormControl(""),
+      "name" : new UntypedFormControl('',Validators.required),
+      "operator" : new UntypedFormControl('',Validators.required),
+      "value" : new UntypedFormControl('',Validators.required),
     })
   }
 

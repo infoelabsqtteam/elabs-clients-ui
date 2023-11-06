@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnInit ,OnDestroy} from '@angular/core';
-import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModelService, PublicApiService, CommonFunctionService, StorageService, ApiService, DataShareService, ApiCallService } from '@core/web-core';
 
@@ -18,7 +18,7 @@ export class CareerWithUsComponent implements OnInit,OnDestroy {
   itemNumOfGrid: any = 50;
   elements:any=[];
   currentMenu:any={};
-  carrerWithForm: FormGroup;
+  carrerWithForm: UntypedFormGroup;
   @Input() public pageName;
   gridDataSubscription;
 
@@ -68,14 +68,14 @@ export class CareerWithUsComponent implements OnInit,OnDestroy {
   }
 
   initFOrm(){
-    this.carrerWithForm = new FormGroup({
-      'name': new FormControl('', Validators.required),
-      'email': new FormControl('', Validators.required),
-      'mobile': new FormControl('',Validators.required),
-      'location': new FormControl('',Validators.required),
-      'qualification': new FormControl('', Validators.required),
-      'experience': new FormControl('', Validators.required),
-      'remarks': new FormControl('', Validators.required)
+    this.carrerWithForm = new UntypedFormGroup({
+      'name': new UntypedFormControl('', Validators.required),
+      'email': new UntypedFormControl('', Validators.required),
+      'mobile': new UntypedFormControl('',Validators.required),
+      'location': new UntypedFormControl('',Validators.required),
+      'qualification': new UntypedFormControl('', Validators.required),
+      'experience': new UntypedFormControl('', Validators.required),
+      'remarks': new UntypedFormControl('', Validators.required)
     })
   }
 
