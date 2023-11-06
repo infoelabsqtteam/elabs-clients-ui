@@ -479,28 +479,28 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     
   }
-  selectedFilterType= null;
+  selectedFilterType:string;
   ngOnInit(): void {
     this.filterTypeNumber ={
-      lessthan: 'Less than',
-      greaterthan: 'Greater than',
-      equalto: 'Equal to',
-      notequal: 'Not Equal'
+      lstn: 'Less than',
+      grtn: 'Greater than',
+      eq: 'Equal to',
+      neq: 'Not Equal'
     }
     this.filterTypeString={
-      startwith: 'Start With',
-      endwith: 'End With',
-      contains: 'Contains'
+      stwh: 'Start With',
+      edwh: 'End With',
+      cntn: 'Contains'
       }
       this.filterTypeDate ={
-        lessthan: 'Less than',
-        greaterthan: 'Greater than',
-        daterange : 'Date Range',
-        equalto: 'Equal to',
-        notequal: 'Not Equal',
+        lstn: 'Less than',
+        grtn: 'Greater than',
+        drng : 'Date Range',
+        eq: 'Equal to',
+        neq: 'Not Equal',
       }
   }
-
+//getFilterKeys Fn
   getFilterTypeKeys(obj: any): string[] {
     return Object.keys(obj);
   }

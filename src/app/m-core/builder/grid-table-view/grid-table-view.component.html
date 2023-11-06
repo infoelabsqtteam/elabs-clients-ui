@@ -64,13 +64,13 @@
                                     <tr>
                                         <th *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
                                         <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
-                                            <div class="heading"  [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
+                                            <div class="heading d-flex"  [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
                                                     <span (click)="onSort(headElements[i])" title="Sort"><mdb-icon style="right: 20px;" fas icon="sort"></mdb-icon></span>
                                                     <!-- mat trigger for column filter  -->
-                                                    <span [title]="'Advance Filter'"  [matMenuTriggerFor]="filterMenu" #menuTrigger><mdb-icon class=" columsFilterIcon fa-sm" fas icon="filter"></mdb-icon></span>
+                                                    <span [title]="'Advance Filter'"  [matMenuTriggerFor]="filterMenu" #menuTrigger><mdb-icon class="columsFilterIcon fa-sm" fas icon="filter"></mdb-icon></span>
                                             </div>
                                                 <!-- mat menu for column filter  -->
-                                                <mat-menu #filterMenu="matMenu"  xPosition="after" class="column-filter-menu">
+                                                <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
                                                     <div (click)="$event.stopPropagation()" class="filter-flex-container">
                                                         <mat-label class="ad-filter-label">Advance Filter</mat-label>
                                                         <div class="filter-flex-item "
@@ -79,24 +79,23 @@
                                                         </div>
                                                         <div class="filter-flex-item ">
                                                             <mat-label>Filter Type</mat-label>
-                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'" placeholder="None">
-                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType">
-                                                                    <mat-option selected>---</mat-option>
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'">
+                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType" placeholder="Select Type">
                                                                     <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeString)">
                                                                     <mat-option [value]="key">{{ filterTypeString[key] }}</mat-option>
                                                                     </ng-container>
                                                                 </mat-select>
                                                             </mat-form-field>
 
-                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'number'" placeholder="None">
-                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType" >
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'number'">
+                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType"  placeholder="Select Type">
                                                                     <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeNumber)">
                                                                     <mat-option [value]="key">{{ filterTypeNumber[key] }}</mat-option>
                                                                     </ng-container>
                                                                 </mat-select>
                                                             </mat-form-field>
-                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')" placeholder="None">
-                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType" >
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')">
+                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType"  placeholder="Select Type">
                                                                     <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeDate)">
                                                                     <mat-option [value]="key">{{ filterTypeDate[key] }}</mat-option>
                                                                     </ng-container>
