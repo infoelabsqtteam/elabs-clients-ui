@@ -77,27 +77,32 @@
                                                             *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
                                                             <input class="form-control form-control-sm pr-3" placeholder="Search">
                                                         </div>
-                                                        <mat-form-field class="filter-flex-item ">
+                                                        <div class="filter-flex-item ">
                                                             <mat-label>Filter Type</mat-label>
-                                                            <mat-select  [(value)]="selectedFilterType" name="filterType"
-                                                                *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'"
-                                                                label="None">
-                                                                <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeString)">
-                                                                    <mat-option value="{{key}}">{{ filterTypeString[key] }}</mat-option>
-                                                                </ng-container>
-                                                            </mat-select>
-                                                            <mat-select [(value)]="selectedFilterType" name="filterType" *ngIf="head.type == 'number'">
-                                                                <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeNumber)">
-                                                                    <mat-option value="{{key}}">{{ filterTypeNumber[key] }}</mat-option>
-                                                                </ng-container>
-                                                            </mat-select>
-                                                            <mat-select [(value)]="selectedFilterType" name="filterType"
-                                                                *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')">
-                                                                <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeDate)">
-                                                                    <mat-option value="{{key}}">{{ filterTypeDate[key] }}</mat-option>
-                                                                </ng-container>
-                                                            </mat-select>
-                                                        </mat-form-field>
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'" placeholder="None">
+                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType">
+                                                                    <mat-option selected>---</mat-option>
+                                                                    <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeString)">
+                                                                    <mat-option [value]="key">{{ filterTypeString[key] }}</mat-option>
+                                                                    </ng-container>
+                                                                </mat-select>
+                                                            </mat-form-field>
+
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'number'" placeholder="None">
+                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType" >
+                                                                    <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeNumber)">
+                                                                    <mat-option [value]="key">{{ filterTypeNumber[key] }}</mat-option>
+                                                                    </ng-container>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')" placeholder="None">
+                                                                <mat-select [(ngModel)]="selectedFilterType" name="filterType" >
+                                                                    <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeDate)">
+                                                                    <mat-option [value]="key">{{ filterTypeDate[key] }}</mat-option>
+                                                                    </ng-container>
+                                                                </mat-select>
+                                                            </mat-form-field>                                                                
+                                                        </div>
                                                         <ng-container 
                                                             *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime') && selectedFilterType!='daterange'">
                                                             <mat-form-field class="filter-flex-item ">
@@ -120,13 +125,11 @@
                                                                 <mat-date-range-picker #picker></mat-date-range-picker>
                                                             </mat-form-field>
                                                         </ng-container>
-                                                        <h6 class="filter-flex-item "> {{selectedFilterType}}</h6>
                                                         <div class="modal-footer justify-content-end filter-flex-item">
                                                             <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn>
                                                                 Cancel
                                                             </button>
-                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn
-                                                                (click)="applyFilter()" [disabled]="">Filter</button>
+                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn>Filter</button>
                                                         </div>
                                                     </div>
                                                 </mat-menu>
