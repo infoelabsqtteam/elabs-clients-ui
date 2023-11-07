@@ -71,11 +71,11 @@
                                             </div>
                                                 <!-- mat menu for column filter  -->
                                                 <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                                    <div (click)="$event.stopPropagation()" class="filter-flex-container">
+                                                    <div (click)="$event.stopPropagation()" class="filter-flex-container" [formGroup]="filterForm">
                                                         <mat-label class="ad-filter-label">Advance Filter</mat-label>
                                                         <div class="filter-flex-item "
                                                             *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
-                                                            <input class="form-control form-control-sm pr-3" placeholder="Search">
+                                                            <input class="form-control form-control-sm pr-3" type="search" placeholder="Search" [formControlName]="head.field_name">
                                                         </div>
                                                         <div class="filter-flex-item ">
                                                             <mat-label>Filter Type</mat-label>
@@ -106,7 +106,7 @@
                                                             *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime') && selectedFilterType!='daterange'">
                                                             <mat-form-field class="filter-flex-item ">
                                                                 <mat-label>Choose a date</mat-label>
-                                                                <input matInput [matDatepicker]="picker">
+                                                                <input matInput [matDatepicker]="picker" [formControlName]="head.field_name">
                                                                 <mat-hint>MM/DD/YYYY</mat-hint>
                                                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                                                 <mat-datepicker #picker></mat-datepicker>
@@ -115,9 +115,9 @@
                                                         <ng-container *ngIf="selectedFilterType=='daterange'">
                                                             <mat-form-field class="filter-flex-item ">
                                                                 <mat-label>Enter a date range</mat-label>
-                                                                <mat-date-range-input [rangePicker]="picker">
+                                                                <mat-date-range-input [rangePicker]="picker" [formGroupName]="head.field_name">
                                                                     <input matStartDate placeholder="Start date">
-                                                                    <input matEndDate placeholder="End date">
+                                                                    <input matEndDate placeholder="End date" >
                                                                 </mat-date-range-input>
                                                                 <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                                                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -128,7 +128,7 @@
                                                             <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn>
                                                                 Cancel
                                                             </button>
-                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn>Filter</button>
+                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" (click)="applyFilter()" mdbbtn>Filter</button>
                                                         </div>
                                                     </div>
                                                 </mat-menu>
