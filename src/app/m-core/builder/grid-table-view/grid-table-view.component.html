@@ -211,14 +211,18 @@
                                             </div>
                                         </td>                                        
                                     </tr>
-                                    <tr *ngIf="elements.length == 0 && headElements.length != 0">
-                                        <td [attr.colspan]="headElements.length + 1"  class="text-center"><div class="py-3 font-weight-bold">No Records Found !!!</div></td>
-                                    </tr>
-                                    <tr *ngIf="elements.length == 0 && headElements.length == 0">
-                                        <td [attr.colspan]="headElements.length + 1"  class="text-center"><div class="py-3 font-weight-bold">Permission denied !!!</div></td>
-                                    </tr>
                                 </tbody>
                             </table>
+                            <ng-container *ngIf="elements.length == 0 && headElements.length != 0 && !gridDisable">
+                                <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">No Records Found !!!</div>
+                            </ng-container>
+                            <ng-container *ngIf="elements.length == 0 && headElements.length != 0 && gridDisable">
+                                <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">Search Grid Fields</div>
+                            </ng-container>
+                            
+                            <ng-container *ngIf="elements.length == 0 && headElements.length == 0">
+                                <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">Permission denied !!!</div>
+                            </ng-container>
                         </div>
 
                         <div [ngClass]="isShowDiv ? 'col-lg-3 pr-0 righttabledata' : 'd-none'">
@@ -253,6 +257,7 @@
         <div class="paginationnumber">
             <small>Items Per Page:</small>
             <select class="paginationsize ml-2" (change)="PageSizeChange($event)">
+                <option></option>
                 <option *ngFor="let size of pageSizes" [ngValue]="size">{{ size }}</option>
             </select>
         </div>
