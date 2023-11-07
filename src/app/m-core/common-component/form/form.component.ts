@@ -129,7 +129,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   currentActionButton:any={};
   saveResponceData:any={};
   selectedListofStringIndex:number=-1; // editListOfString() index variable
-  showListOfStringBtn:boolean = false;
 
   //Google map variables
   latitude: number = 0;
