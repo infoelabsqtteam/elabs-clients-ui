@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ApiCallService, ApiService, ChartService, CommonFunctionService, DataShareService, FormCreationService } from '@core/web-core';
 
 @Component({
@@ -11,7 +11,7 @@ export class FilterComponent implements OnInit,OnDestroy {
 
   @Input() dashbord:any;
   @Output() filterData = new EventEmitter();
-  filterGroup:FormGroup;
+  filterGroup:UntypedFormGroup;
 
   checkGetDashletData:boolean=true;
   staticData: any = {};
@@ -27,7 +27,7 @@ export class FilterComponent implements OnInit,OnDestroy {
   maxDate: Date;
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,

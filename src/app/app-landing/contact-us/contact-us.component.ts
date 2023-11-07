@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
 import { GoogleMap, MapInfoWindow, MapMarker } from "@angular/google-maps";
 import { Router } from '@angular/router';
 import { PublicApiService } from '@core/web-core';
@@ -11,7 +11,7 @@ import { PublicApiService } from '@core/web-core';
 })
 export class ContactUsComponent implements OnInit {
 
-  contactForm: FormGroup;
+  contactForm: UntypedFormGroup;
   @Input() public pageName;
   @ViewChild(GoogleMap, { static: false }) map: GoogleMap;
   @ViewChild(MapInfoWindow, { static: false }) info: MapInfoWindow;
@@ -66,12 +66,12 @@ export class ContactUsComponent implements OnInit {
 
   initForm(){
 
-    this.contactForm = new FormGroup({
-      'name': new FormControl('',Validators.required),
-      'email': new FormControl('', Validators.required),
-      'mobile': new FormControl('', Validators.required),
-      'subject': new FormControl('',Validators.required),
-      'remarks': new FormControl('', Validators.required)
+    this.contactForm = new UntypedFormGroup({
+      'name': new UntypedFormControl('',Validators.required),
+      'email': new UntypedFormControl('', Validators.required),
+      'mobile': new UntypedFormControl('', Validators.required),
+      'subject': new UntypedFormControl('',Validators.required),
+      'remarks': new UntypedFormControl('', Validators.required)
     })
   }
 

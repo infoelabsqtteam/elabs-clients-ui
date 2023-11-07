@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CommonFunctionService, StorageService, ApiService, DataShareService, NotificationService, ApiCallService } from '@core/web-core';
 
@@ -33,7 +33,7 @@ export class ChatViewComponent implements OnInit,OnDestroy, AfterViewChecked {
   formName:any='NEW';
   createFilterHeadElement:boolean=true;
   action_buttons:any=[];
-  filterForm: FormGroup;
+  filterForm: UntypedFormGroup;
   tempDataSubscrption :any;
   chatgridData :any;
    @Input() selectContact:any;

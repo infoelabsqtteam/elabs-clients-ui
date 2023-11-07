@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataShareService, AuthService, ModelService, CustomvalidationService} from '@core/web-core';
 
@@ -14,8 +14,8 @@ import { DataShareService, AuthService, ModelService, CustomvalidationService} f
 export class ForgotpwdModalComponent implements OnInit {
 
   hide = true;
-  fForm: FormGroup;
-  vForm: FormGroup;
+  fForm: UntypedFormGroup;
+  vForm: UntypedFormGroup;
   username: string;
   resetPwd: boolean = true;
   appName: string;
@@ -73,12 +73,12 @@ export class ForgotpwdModalComponent implements OnInit {
 
   initForm() {
     this.username = "";
-    this.fForm = new FormGroup({
-      'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+    this.fForm = new UntypedFormGroup({
+      'email': new UntypedFormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
     });
-    this.vForm = new FormGroup({
-      'verifyCode': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
+    this.vForm = new UntypedFormGroup({
+      'verifyCode': new UntypedFormControl('', [Validators.required]),
+      'password': new UntypedFormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
     });
   }
 

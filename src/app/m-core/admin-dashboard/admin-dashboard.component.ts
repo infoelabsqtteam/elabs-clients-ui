@@ -1,5 +1,5 @@
 import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
 import { CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
@@ -53,7 +53,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // };
   
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     private commonFunctionService:CommonFunctionService,
     //private mapsAPILoader: MapsAPILoader,
     //private ngZone: NgZone,
