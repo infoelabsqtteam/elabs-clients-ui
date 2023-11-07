@@ -695,9 +695,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           const menu = {"name":this.tab.tab_name};
           this.storageService.SetActiveMenu(menu);
           this.currentMenu.name = this.tab.tab_name;          
-          if(!this.gridDisable) {
-            this.getPage(1);
-          }
+          this.getPage(1);
           let gridCount = this.dataShareService.getGridCountData(); 
           let gridCountKey = this.tab.tab_name+"_"+this.tab.name;
           if(index == 0 || gridCount[gridCountKey] == undefined){
