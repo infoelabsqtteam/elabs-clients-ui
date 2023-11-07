@@ -1,8 +1,8 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import * as Diff2Html from 'diff2html';
 import * as Diff from 'diff';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective } from '@angular/forms';
-import { CommonFunctionService, ApiService, DataShareService} from '@core/web-core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ApiService, DataShareService, ApiCallService} from '@core/web-core';
 
 @Component({
   selector: 'app-diff-html',
@@ -23,9 +23,9 @@ export class DiffHtmlComponent implements OnInit,OnDestroy {
 
 
   constructor(
-    private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
-    private dataShareService:DataShareService
+    private dataShareService:DataShareService,
+    private apiCallService:ApiCallService
   ) {
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
@@ -45,7 +45,7 @@ export class DiffHtmlComponent implements OnInit,OnDestroy {
     ]
     this.getCall(payloadList);
     this.currentMenu['name']="compare_master";
-    const pagePayload = this.commonFunctionService.getPage(1,[],this.currentMenu,[],{},'');
+    const pagePayload = this.apiCallService.getPage(1,[],this.currentMenu,[],{},'');
     this.apiService.getGridData(pagePayload);
 
    }
@@ -231,7 +231,7 @@ export class DiffHtmlComponent implements OnInit,OnDestroy {
   getCall(payloadList){
     const stati_group = [];
     payloadList.forEach(element => {
-      const getCompanyPayload = this.commonFunctionService.getPaylodWithCriteria(element.api_params,element.call_back_field,element.criteria,element.object)            
+      const getCompanyPayload = this.apiCallService.getPaylodWithCriteria(element.api_params,element.call_back_field,element.criteria,element.object)            
       stati_group.push(getCompanyPayload);
     });
     if(stati_group.length > 0){

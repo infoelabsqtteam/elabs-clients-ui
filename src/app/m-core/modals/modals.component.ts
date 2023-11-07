@@ -1,8 +1,8 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/web-core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService, GridCommonFunctionService } from '@core/web-core';
 
 
 @Component({
@@ -42,7 +42,9 @@ export class ModalsComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private apiCallService:ApiCallService,
+    private gridCommonFunctionService:GridCommonFunctionService
     ) { 
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
@@ -135,7 +137,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
             element['adkey'] = {'totalRows':this.data.length};
           });          
         }
-        const staticModalGroup = this.commonFunctionService.commanApiPayload(this.gridColumns,[],[]);
+        const staticModalGroup = this.apiCallService.commanApiPayload(this.gridColumns,[],[]);
         if (staticModalGroup.length > 0) {
           // this.store.dispatch(
           //   new CusTemGenAction.GetStaticData(staticModalGroup)
@@ -244,10 +246,10 @@ export class ModalsComponent implements OnInit,OnDestroy {
     return this.commonFunctionService.getddnDisplayVal(val);    
   }
   getValueForGrid(field,object){
-    return this.commonFunctionService.getValueForGrid(field,object);
+    return this.gridCommonFunctionService.getValueForGrid(field,object);
   }
   getValueForGridTooltip(field, object) {
-    return this.commonFunctionService.getValueForGridTooltip(field, object);
+    return this.gridCommonFunctionService.getValueForGridTooltip(field, object);
   }
   clickOnGridElement(field, object, i) {
     let value={};
@@ -266,7 +268,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
       const action = field.onclick.action_name.toUpperCase();
       switch (action) {
         case "DOWNLOAD":
-          this.downloadPdfCheck = this.commonFunctionService.downloadPdf(object,this.field.field_name);
+          this.downloadPdfCheck = this.apiCallService.downloadPdf(object,this.field.field_name);
           break;        
         default:
         break;
@@ -309,7 +311,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
       
     }else{
       const staticModal = []
-      const staticModalPayload = this.commonFunctionService.getPaylodWithCriteria(params, callback, criteria, object);
+      const staticModalPayload = this.apiCallService.getPaylodWithCriteria(params, callback, criteria, object);
       staticModalPayload['adkeys'] = {'index':i};
       staticModal.push(staticModalPayload)      
       if(params.indexOf("FORM_GROUP") >= 0 || params.indexOf("QTMP") >= 0){
