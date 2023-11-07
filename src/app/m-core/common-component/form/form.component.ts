@@ -991,7 +991,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.tempVal[field.field_name + "_add_button"] = true;
             }
           }  
-          this.showListOfStringBtn = false;
         } else {
           if(parentfield != ''){
             if(formValue && formValue[parentfield.field_name] && formValue[parentfield.field_name][field.field_name].length > 0){
@@ -1362,7 +1361,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);
     this.selectedListofStringIndex = response.selectedListofStringIndex;
     this.templateForm = response.templateForm;
-    this.showListOfStringBtn = true;
   }
   updateAddNewField(parent,child){
     if(child && child.onchange_get_next_form){
