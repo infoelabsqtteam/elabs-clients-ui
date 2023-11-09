@@ -94,7 +94,7 @@
                                                                     </ng-container>
                                                                 </mat-select>
                                                             </mat-form-field>
-                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')">
+                                                            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date'|| head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime')">
                                                                 <mat-select [(value)]="selectedFilterType" name="filterType"  placeholder="Select Type">
                                                                     <ng-container *ngFor="let key of getFilterTypeKeys(filterTypeDate)">
                                                                     <mat-option [value]="key">{{ filterTypeDate[key] }}</mat-option>
@@ -112,7 +112,7 @@
                                                                 <mat-datepicker #picker></mat-datepicker>
                                                             </mat-form-field>
                                                         </ng-container>
-                                                        <ng-container *ngIf="selectedFilterType=='drng'">
+                                                        <ng-container *ngIf="head.type != null && (head.type.toLowerCase() == 'date'|| head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime') && selectedFilterType=='drng'">
                                                             <mat-form-field class="filter-flex-item ">
                                                                 <mat-label>Enter a date range</mat-label>
                                                                 <mat-date-range-input [rangePicker]="picker" [formGroupName]="head.field_name">
