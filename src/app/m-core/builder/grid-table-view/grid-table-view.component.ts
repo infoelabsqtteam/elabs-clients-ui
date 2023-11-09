@@ -1216,10 +1216,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     });
       let gridName = '';
       let grid_api_params_criteria = [];
-      if(this.commonFunctionService.isGridFieldExist(this.tab,"api_params_criteria")){
+      if(this.checkIfService.isGridFieldExist(this.tab,"api_params_criteria")){
         grid_api_params_criteria = this.tab.grid.api_params_criteria;
       }
-      const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+      const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
       if(this.tab && this.tab.grid){
         if(this.tab.grid.export_template && this.tab.grid.export_template != null){
           gridName = this.tab.grid.export_template;
@@ -1232,7 +1232,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
       const value = this.filterForm.getRawValue();
-      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
+      const filtewCrlist = this.apiCallService.getfilterCrlist(this.headElements,value);
       if(filtewCrlist.length > 0){
         filtewCrlist.forEach(element => {
           data.crList.push(element);

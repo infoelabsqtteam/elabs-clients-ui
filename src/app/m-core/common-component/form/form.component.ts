@@ -1423,6 +1423,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.field_name && field.field_name != "") {
       field['parentIndex'] = parentIndex;
       field['curIndex'] = curIndex;
+      field['tableFields'] = this.tableFields;
+      const formValue = this.templateForm.getRawValue();
+      if(formValue.defaultBucket != undefined && formValue.defaultS3Key != undefined){
+        field['defaultBucket'] = formValue.defaultBucket;
+        field['defaultS3Key'] = formValue.defaultS3Key;
+      }
       this.curFileUploadField = field;
       this.curFileUploadFieldparentfield = parent;
       let selectedFileList = [];
