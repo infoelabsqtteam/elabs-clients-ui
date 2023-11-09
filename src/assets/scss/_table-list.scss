@@ -12,7 +12,7 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
-.table table {min-width: max-content;width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
+.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
     .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;min-width: 100px !important;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
@@ -92,6 +92,7 @@
 
 .table {
 	.table-resizable {
+        min-width: max-content;
 				th {
 					position: relative;
 					left: 0px !important;
@@ -147,7 +148,7 @@
     }
 }
 
-
+.mat-tab-header-pagination {z-index:1 !important;}
 
 .deletealertmst {text-align:$center;
     .icon-box {width:$size50;height:$size50;margin:$zero $auto;border-radius:$per50;border:3px solid #f15e5e;}
