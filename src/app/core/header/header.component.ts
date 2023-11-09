@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { FormControl } from "@angular/forms";
 
-import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService,StorageTokenStatus} from '@core/web-core';
+import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService, StorageTokenStatus, ApiCallService } from '@core/web-core';
 
 
 
@@ -86,7 +86,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         private authService: AuthService,
         public envService: EnvService,
         private commonfunctionService:CommonFunctionService,
-        private menuOrModuleCommounService:MenuOrModuleCommonService
+        private menuOrModuleCommounService:MenuOrModuleCommonService,
+        private apiCallService:ApiCallService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -270,7 +271,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
 
     ngOnChanges(changes: SimpleChanges) {        
-        this.commonfunctionService.getUserNotification(1);
+        this.apiCallService.getUserNotification(1);
     }    
     getMenuByModuleIndex(moduleIndex:any){
         if (moduleIndex != -1) {

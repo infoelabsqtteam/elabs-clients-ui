@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService,CommonFunctionService,DataShareService, EnvService } from '@core/web-core';
+import { ApiCallService, ApiService,CommonFunctionService,DataShareService, EnvService } from '@core/web-core';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -13,11 +13,13 @@ export class PrivacyPolicyComponent implements OnInit {
    gridDataSubscription;
    privacyPolicy: any={};
 
-  constructor(private router: Router,
-              private commonFunctionService : CommonFunctionService,
-              private apiService : ApiService,
-              private dataShareServices :DataShareService,
-              private envService : EnvService
+  constructor(
+    private router: Router,
+    private commonFunctionService : CommonFunctionService,
+    private apiService : ApiService,
+    private dataShareServices :DataShareService,
+    private envService : EnvService,
+    private apiCallService:ApiCallService
     ) { 
       this. getPrivacyPolicy()
       this.gridDataSubscription = this.dataShareServices.tempData.subscribe(data =>{
@@ -39,7 +41,7 @@ export class PrivacyPolicyComponent implements OnInit {
   };
   
   getPrivacyPolicy(){
-    const payload = this.commonFunctionService.getDataForGrid(1, {}, { 'name': "privacy_policy" }, [], {}, '');
+    const payload = this.apiCallService.getDataForGrid(1, {}, { 'name': "privacy_policy" }, [], {}, '');
     this.apiService.GetTempData(payload.data);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonFunctionService, StorageService, PermissionService, DataShareService, ModelService} from '@core/web-core';
+import { StorageService, DataShareService} from '@core/web-core';
 
 @Component({
   selector: 'app-chart-view',
@@ -18,10 +18,7 @@ export class ChartViewComponent implements OnInit {
   chartDataSubscription;
   
   constructor(
-    private ModalService:ModelService,
-    private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
-    private permissionService: PermissionService,
     private dataShareService:DataShareService
     ) { 
     this.chartDataSubscription=this.dataShareService.chartData.subscribe(data =>{

@@ -1,7 +1,7 @@
 import { Component, OnInit,AfterViewInit,Input, SimpleChanges } from '@angular/core';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 import { Subscription } from 'rxjs';
-import { ChartService, ModelService, CommonFunctionService, ApiService, StorageService, DataShareService} from '@core/web-core';
+import { ChartService, ModelService, CommonFunctionService, ApiService, StorageService, DataShareService, ApiCallService} from '@core/web-core';
 
 @Component({
   selector: 'app-mongodb-chart',
@@ -29,7 +29,8 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
     private apiService:ApiService,
     private commonFunctionService:CommonFunctionService,
     private modelService:ModelService,
-    private chartService:ChartService
+    private chartService:ChartService,
+    private apiCallService:ApiCallService
   ) {
     this.accessToken = this.storageService.GetIdToken();      
     this.gridDataSubscription = this.dataShareService.mongoDbChartList.subscribe(data =>{
@@ -46,7 +47,7 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
    }
 
   getMongoChartList(Criteria){
-    const data = this.commonFunctionService.getPaylodWithCriteria('mongo_dashlet_master','',Criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria('mongo_dashlet_master','',Criteria,'');
       data['pageNo'] = this.pageNumber - 1;
       data['pageSize'] = this.itemNumOfGrid; 
       const getFilterData = {

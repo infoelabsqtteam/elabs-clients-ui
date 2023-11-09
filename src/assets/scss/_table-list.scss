@@ -13,17 +13,17 @@
     td {padding:6px 10px !important;}
 }
 .table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    // .grid-data {width:auto !important;max-width:140px;}
+    .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;min-width: 100px !important;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:3;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
-                .heading {font-weight:500;position:relative;font-size:13px;}
-                .grid-heading-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;}
+                .heading {width: auto !important;font-weight:500;position:relative;font-size:13px;}
+                .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;width: 100%;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
-                    .fas { display:inline-block;}   
+                    .fas { display:inline-block;}
                 }
             }
             td {padding:5px 10px;border-top:none;border-bottom:none;}
@@ -33,11 +33,12 @@
 
     tbody {
         tr {
-            &:nth-of-type(odd) td{background-color: #fff;}
-            &:nth-of-type(even) td{background-color:#fafafa;}
-            td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ;}
+            &:hover {td {background-color: $row-hover-color;} th {background-color: $row-hover-color;}}
+            // &:nth-of-type(odd) td{background-color: #fff;}
+            // &:nth-of-type(even) td{background-color:#fafafa;}
+            td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ; overflow: hidden; text-overflow: ellipsis;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;display:inline-block;color:#555;}
+        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;color:#555;display: inline-block;}
     }
 
     .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:#555 !important;
@@ -52,7 +53,6 @@
     td {background:var(--activebg) !important}
     background:var(--activebg) !important
 }
-
 
 
 .datalist.table {
@@ -77,10 +77,57 @@
         mat-icon {font-size:18px;opacity:0.5;vertical-align:middle;width:auto;height:auto;}
     }
 }
-.tablist {padding-right:190px;
+.tabExtraMenu {
+    cursor: pointer;
+    padding: 0px 5px;
+
+    &:hover {
+        border-radius: 5px;
+        background: var(--buttonColor);
+        color: #000;
+        opacity: 0.8;
+    }
+}
+.tablist {padding-right:220px;
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
 
+
+.table {
+	.table-resizable {
+        min-width: max-content;
+				th {
+					position: relative;
+					left: 0px !important;
+					&:not(:last-child) {
+						.resize-holder {
+							cursor: col-resize;
+							width: 20px;
+							height: 100%;
+							position: absolute;
+							right: -10px;
+							top: 0;
+							z-index: 1;
+						}
+					}
+				}
+		transition: all 0.3s;
+	}
+	table.resizing {
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		cursor: col-resize;
+	}
+}
+
+@media screen and (min-width: 1366px) {
+    .tablist {padding-right: 290px;}
+  }
+.moreMenuFavIcon {
+    font-size: 16px;
+    margin-left: 5px;
+}
 .ngx-pagination {margin-bottom:0px !important;
     li.disabled {font-size:13px;vertical-align:top;}
     li.current, li a {border-radius:100%;overflow:hidden;font-size:13px;}
@@ -104,7 +151,7 @@
     }
 }
 
-
+.mat-tab-header-pagination {z-index:1 !important;}
 
 .deletealertmst {text-align:$center;
     .icon-box {width:$size50;height:$size50;margin:$zero $auto;border-radius:$per50;border:3px solid #f15e5e;}
@@ -164,10 +211,9 @@
         strong {color:#333;font-size:14px;}
       }
     }
-   
 }
 .colSticky{
-    position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;  
+   position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;
 }
 .firstCol{left: 0;}
 .editedColumneIcon{position: absolute;right: 0;top: 5px;cursor: pointer;z-index: 1;}

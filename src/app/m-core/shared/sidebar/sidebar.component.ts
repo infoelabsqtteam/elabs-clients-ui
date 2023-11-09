@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEm
 import { Router, NavigationEnd } from '@angular/router';
 import { MENU } from './menu';
 import { Subscription } from 'rxjs';
-import { StorageService, PermissionService, ApiService, NotificationService, CommonFunctionService, DataShareService, MenuOrModuleCommonService } from '@core/web-core';
+import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,15 +26,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   menuIndexSubscription:Subscription;
   
   constructor( 
-    private router: Router,
     private storageService:StorageService,
-    private permissionService:PermissionService, 
-    private notificationService: NotificationService,
     private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
-    private apiService:ApiService,
     private commonfunctionService:CommonFunctionService,
-    private menuOrModuleCommounService:MenuOrModuleCommonService
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private apiCallService:ApiCallService
   ) {
     
     // this.dataShareService.otherSaveCall.subscribe(responce => {
@@ -91,7 +88,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
             if (saveFromDataRsponce.success == 'success') {
-                this.commonfunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+                this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
             }
         }
     }
@@ -215,7 +212,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
-  this.commonFunctionService.getUserPrefrerence(this.storageService.GetUserInfo());
+  this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
   this.userPreferenceSubscribe(menu,'favoriteMenus',parent);
   // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
   // this.saveCallSubscribe();
