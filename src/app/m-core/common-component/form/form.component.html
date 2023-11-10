@@ -1027,7 +1027,7 @@
                         <div *ngIf="tableField.type == 'file'">
                             <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                             <!-- list of attachment files -->
-                            <div *ngIf="dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
+                            <div *ngIf="dataListForUpload && dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
                                 <table mdbTable small="true" bordered="true">
                                     <thead class="black white-text">
                                         <tr>
