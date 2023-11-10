@@ -1817,7 +1817,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               element['show'] = false;
               const objectValue = this.templateForm.getRawValue();
               if(element.type != "group_of_fields" && element.type != "list_of_fields" && objectValue[element.field_name] && objectValue[element.field_name] != ''){
-                this.templateForm.get(element.field_name).setValue('');
+                let controlarName = element.field_name;
+                let count = 0;
+                for (let index = 0; index < this.showIfFieldList.length; index++) {
+                  let showIfItem = this.showIfFieldList[index];
+                  if(controlarName == showIfItem.field_name){
+                    count = count+1;
+                  }
+                  if(count == 2){
+                    break;
+                  }
+                }
+                if(count != 2){
+                  this.templateForm.get(element.field_name).setValue('');
+                }
               } 
               if(element.type == "group_of_fields" || element.type == "list_of_fields"){
                 this.templateForm.get(element.field_name).reset();
