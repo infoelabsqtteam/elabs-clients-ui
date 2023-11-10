@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, StorageService, ApiService, DataShareService } from '@core/web-core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { CommonFunctionService, StorageService, ApiService, DataShareService, ApiCallService, EncryptionService } from '@core/web-core';
+import { ActivatedRoute, Params} from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -35,12 +34,14 @@ export class DownloadReportComponent implements OnInit {
     private commonFunctionService:CommonFunctionService, 
     private el: ElementRef, 
     private dataShareService: DataShareService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private apiCallService:ApiCallService,
+    private encryptionService: EncryptionService
     ) {
       
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         let reportNo = params["report"];
-        this.reportUrlNo = reportNo;
+        this.reportUrlNo = this.encryptionService.decryptRequest(reportNo);
       });
     this.element = el.nativeElement;
     this.storageService.setAppId('PUB');
@@ -62,7 +63,7 @@ export class DownloadReportComponent implements OnInit {
     })
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name); 
+      const payload = this.apiCallService.getTemData(this.currentMenu.name); 
       this.apiService.GetTempData(payload);     
     }
 
@@ -93,7 +94,7 @@ export class DownloadReportComponent implements OnInit {
       }else{
         this.tableFields = [];
       }        
-      const staticModalGroup = this.commonFunctionService.commanApiPayload([],this.tableFields,[]);     
+      const staticModalGroup = this.apiCallService.commanApiPayload([],this.tableFields,[]);     
       
       if (staticModalGroup.length > 0 && this.getStaticDataCall) {
         // this.store.dispatch(

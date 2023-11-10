@@ -1,7 +1,6 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService, DataShareService, ApiService, ModelService } from '@core/web-core';
+import { DataShareService, ApiService, ModelService, ApiCallResponceService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-multi-download-modal',
@@ -27,10 +26,9 @@ export class MultiDownloadModalComponent implements OnInit,OnDestroy {
   constructor(
     private modalService: ModelService, 
     private el: ElementRef,
-    private formBuilder: FormBuilder,
-    private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private apiCallService:ApiCallService
   ) { 
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
@@ -113,6 +111,6 @@ export class MultiDownloadModalComponent implements OnInit,OnDestroy {
       this.multiDownModal.hide();
     }
     this.downloadFileIndex = this.downloadFileIndex + 1;
-    this.downloadPdfCheck = this.commonFunctionService.downloadPdf(object,this.currentPage);
+    this.downloadPdfCheck = this.apiCallService.downloadPdf(object,this.currentPage);
   }
 }
