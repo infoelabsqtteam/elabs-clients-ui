@@ -67,7 +67,9 @@
 
 }
 
-
+.heading .columsFilterIcon{
+    display: inline-block !important;
+}
 .mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
     mat-icon {font-size:16px;}
 }
