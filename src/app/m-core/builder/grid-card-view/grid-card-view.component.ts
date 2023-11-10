@@ -1,6 +1,6 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/web-core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService, CheckIfService, GridCommonFunctionService, FormCreationService } from '@core/web-core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 export const MY_DATE_FORMATS = {
@@ -68,7 +68,9 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     private formBuilder: FormBuilder,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private apiCallService:ApiCallService,
+    private formCreationService:FormCreationService
   ) { 
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -85,7 +87,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     this.userInfo = this.storageService.GetUserInfo();
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name);
+      const payload = this.apiCallService.getTemData(this.currentMenu.name);
       this.apiService.GetTempData(payload);
       this.getPage(1);
     }
@@ -116,7 +118,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
       this.current_selected_menu = this.currentMenu.name;
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name);
+      const payload = this.apiCallService.getTemData(this.currentMenu.name);
       this.apiService.GetTempData(payload);
       this.getPage(1);
     }
@@ -195,25 +197,25 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
             let disabled = false;
             switch (element.type.toLowerCase()) {
               case "text":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "tree_view_selection":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "dropdown":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "date":
               case "datetime":
-                this.commonFunctionService.createFormControl(forControl, element, '', "text")
+                this.formCreationService.createFormControl(forControl, element, '', "text")
                 break;
               case "daterange":
                 const list_of_fields={}
                 const start={field_name:'start',is_disabled:false,is_mandatory:false}
-                this.commonFunctionService.createFormControl(list_of_fields, start, '', "text")
+                this.formCreationService.createFormControl(list_of_fields, start, '', "text")
                 const end={field_name:'end',is_disabled:false,is_mandatory:false}
-                this.commonFunctionService.createFormControl(list_of_fields, end, '', "text")
-                this.commonFunctionService.createFormControl(forControl, element, list_of_fields, "group")
+                this.formCreationService.createFormControl(list_of_fields, end, '', "text")
+                this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
                 break;
               default:
                 break;
@@ -225,7 +227,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
         if (forControl) {
           this.filterForm = this.formBuilder.group(forControl);
         }
-        const staticModalGroup = this.commonFunctionService.commanApiPayload(this.headElements,this.tableFields,this.form_action_buttons);      
+        const staticModalGroup = this.apiCallService.commanApiPayload(this.headElements,this.tableFields,this.form_action_buttons);      
         if (staticModalGroup.length > 0) {
           // this.store.dispatch(
           //   new CusTemGenAction.GetStaticData(staticModalGroup)
@@ -285,14 +287,14 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
       this.tableFields = [];
     }
     
-    const staticModalGroup=this.commonFunctionService.commanApiPayload([],this.tableFields,this.form_action_buttons);
+    const staticModalGroup=this.apiCallService.commanApiPayload([],this.tableFields,this.form_action_buttons);
     if(this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){
       
       let criteria = [];
       if(this.tab.api_params_criteria && this.tab.api_params_criteria != null){
         criteria=this.tab.api_params_criteria
       }
-      staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
+      staticModalGroup.push(this.apiCallService.getPaylodWithCriteria(this.tab.api_params,this.tab.call_back_field,criteria,{}))
       
     }
     if(this.tableFields.length > 0){
@@ -489,7 +491,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
       if(this.isGridFieldExist("api_params_criteria")){
         grid_api_params_criteria = this.tab.grid.api_params_criteria;
       }
-      const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+      const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
       if(this.tab && this.tab.grid){
         if(this.tab.grid.export_template && this.tab.grid.export_template != null){
           gridName = this.tab.grid.export_template;
@@ -502,7 +504,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
       data['key'] = this.userInfo.refCode;
       data['key3']=gridName;
       const value = this.filterForm.getRawValue();
-      const filtewCrlist = this.commonFunctionService.getfilterCrlist(this.headElements,value);
+      const filtewCrlist = this.apiCallService.getfilterCrlist(this.headElements,value);
       if(filtewCrlist.length > 0){
         filtewCrlist.forEach(element => {
           data.crList.push(element);
@@ -579,14 +581,14 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     if(this.isGridFieldExist("api_params_criteria")){
       grid_api_params_criteria = this.tab.grid.api_params_criteria;
     }
-    const data = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid;  
     let value = {};
     if(this.filterForm) { 
       value = this.filterForm.getRawValue();
     }
-    this.commonFunctionService.getfilterCrlist(this.headElements,value).forEach(element => {
+    this.apiCallService.getfilterCrlist(this.headElements,value).forEach(element => {
       data.crList.push(element);
     });
     const getFilterData = {

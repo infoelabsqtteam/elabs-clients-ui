@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, FileHandlerService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
 import { Subscription } from 'rxjs';
 
@@ -67,77 +67,7 @@ export class GridSelectionModalComponent implements OnInit {
   fieldNameForDeletion: any;
   isGridSelectionOpen: boolean = true;
   fileDownloadUrlSubscription:Subscription;
-  minieditorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: '100px',
-    minHeight: '0',
-    maxHeight: 'auto',
-    width: 'auto',
-    minWidth: '0',
-    translate: 'yes',
-    enableToolbar: false,
-    showToolbar: true,
-    placeholder: 'Enter text here...',
-    defaultParagraphSeparator: '',
-    defaultFontName: '',
-    defaultFontSize: '',
-    fonts: [
-      { class: 'arial', name: 'Arial' },
-      { class: 'times-new-roman', name: 'Times New Roman' },
-      { class: 'calibri', name: 'Calibri' },
-      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
-    ],
-    customClasses: [
-      {
-        name: 'quote',
-        class: 'quote',
-      },
-      {
-        name: 'redText',
-        class: 'redText'
-      },
-      {
-        name: 'titleText',
-        class: 'titleText',
-        tag: 'h1',
-      },
-    ],
-    uploadUrl: 'v1/image',
-    uploadWithCredentials: false,
-    sanitize: true,
-    toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      [],
-      ['fontSize',
-      'textColor',
-      'backgroundColor',
-      'customClasses',
-      'undo',
-      'redo',
-      'bold',
-      'italic',
-      'underline',
-      'link',
-      'unlink',
-      'insertImage',
-      'insertVideo',
-      'insertHorizontalRule',
-      'toggleEditorMode',
-      'justifyLeft',
-      'justifyCenter',
-      'justifyRight',
-      'justifyFull',
-      'indent',
-      'outdent',
-      'insertUnorderedList',
-      'insertOrderedList',
-      'heading',
-      'fontName',
-      'removeFormat',      
-      'strikeThrough']
-    ]
-  };
+  minieditorConfig: AngularEditorConfig = minieditorConfig as AngularEditorConfig;
   fixedcolwidth = 150;
 
   constructor(
@@ -151,7 +81,8 @@ export class GridSelectionModalComponent implements OnInit {
     private gridCommonFunctionService:GridCommonFunctionService,
     private limsCalculationsService: LimsCalculationsService,
     private filterPipe:FilterPipe,
-    private fileHandlerService: FileHandlerService
+    private checkIfService:CheckIfService,
+    private apiCallService:ApiCallService
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -267,7 +198,7 @@ export class GridSelectionModalComponent implements OnInit {
     if(event && event.value){
       selectedData = event.value
     } 
-    let indx = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
+    let indx = this.CommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
     if(selectedData != ""){  
       this.setData(selectedData,field, indx,chipsInput) 
     }
@@ -277,11 +208,11 @@ export class GridSelectionModalComponent implements OnInit {
     if(event && event["option"] && event["option"].value){
       selectedData = event["option"].value
     } 
-    let indx = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
+    let indx = this.CommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
     if(selectedData != ""){ 
       this.setData(selectedData,field, indx,chipsInput);  
     }
-    this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data); 
+    this.checkIfService.checkDisableInRow(this.editableGridColumns,data); 
   }
 
   setData(selectedData, field, index,chipsInput){
@@ -315,7 +246,8 @@ export class GridSelectionModalComponent implements OnInit {
   }
   checkDataInListOrAdd(field,index,selectedData,chipsInput){
     if (this.modifiedGridData[index][field.field_name] == null) this.modifiedGridData[index][field.field_name] = [];
-    if(this.gridCommonFunctionService.checkDataAlreadyAddedInListOrNot(field.field_name,selectedData,this.modifiedGridData[index][field.field_name])){
+    let duplicacy = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,selectedData,this.modifiedGridData[index][field.field_name]);
+    if(duplicacy && duplicacy.status){
       this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
     }else{
       this.modifiedGridData[index][field.field_name].push(selectedData);
@@ -341,7 +273,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   getValueForGrid(column,row){
-    return this.CommonFunctionService.getValueForGrid(column,row);
+    return this.gridCommonFunctionService.getValueForGrid(column,row);
   }
 
   
@@ -366,7 +298,7 @@ export class GridSelectionModalComponent implements OnInit {
       if(field.api_params_criteria && field.api_params_criteria != ''){
         criteria =  field.api_params_criteria;
       }
-      let staticModalGroup = this.CommonFunctionService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
+      let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
       staticModal.push(staticModalGroup);
       this.apiservice.GetTypeaheadData(staticModal);
 
@@ -379,7 +311,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   getStaticDataWithDependentData() {
     const staticModal = []
-    let staticModalGroup = this.CommonFunctionService.commanApiPayload([], this.listOfGridFieldName, [], this.typeaheadObjectWithtext);
+    let staticModalGroup = this.apiCallService.commanApiPayload([], this.listOfGridFieldName, [], this.typeaheadObjectWithtext);
     if (staticModalGroup.length > 0) {
       staticModalGroup.forEach(element => {
         staticModal.push(element);
@@ -571,12 +503,12 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if(this.field && this.field.mendetory_fields && this.field.mendetory_fields.length > 0){            
       if(this.selectedData && this.selectedData.length > 0){
-        this.field.mendetory_fields = this.CommonFunctionService.modifiedGridColumns(this.field.mendetory_fields,this.parentObject)
+        this.field.mendetory_fields = this.gridCommonFunctionService.getModifiedGridColumns(this.field.mendetory_fields,this.parentObject)
         this.field.mendetory_fields.forEach(mField => {          
           const fieldName = mField.field_name;
           if(mField.display){
             this.selectedData.forEach((row,i) => {
-              let checkDisable = this.gridCommonFunctionService.isDisableRuntime(mField,row,i,this.gridData,this.field,this.filterData);
+              let checkDisable = this.checkIfService.isDisableRuntime(mField,row,i,this.gridData,this.field,this.filterData);
               if(row && !checkDisable && (row[fieldName] == undefined || row[fieldName] == '' || row[fieldName] == null)){
                 if(validation.msg == ''){
                   const rowNo = i + 1;
@@ -650,7 +582,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   toggle(data, event: MatCheckboxChange, indx) {
-    let index = this.gridCommonFunctionService.getCorrectIndex(data,indx,this.field,this.gridData,this.filterData);
+    let index = this.CommonFunctionService.getCorrectIndex(data,indx,this.field,this.gridData,this.filterData);
     if (event.checked) {
       this.gridData[index].selected = true;
       this.modifiedGridData[index].selected = true;
@@ -711,7 +643,7 @@ export class GridSelectionModalComponent implements OnInit {
   }
   checkDisableRowIf(index){
     const data = this.gridData[index];
-    return this.gridCommonFunctionService.checkRowIf(data,this.field);
+    return this.checkIfService.checkRowIf(data,this.field);
     
   }
   isIndeterminate() {
@@ -795,13 +727,13 @@ export class GridSelectionModalComponent implements OnInit {
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
       this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
-    this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
+    this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
     // let row = JSON.parse(JSON.stringify(data));
     // let modifyrow = this.gridCommonFunctionService.rowModify(row,this.field,this.listOfGridFieldName,this.editableGridColumns,[]);
     // this.modifiedGridData[index] = modifyrow;
   } 
   checkDisableIf(data){
-    this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
+    this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
   }
 
   
@@ -864,7 +796,7 @@ export class GridSelectionModalComponent implements OnInit {
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
             data[column.field_name] = responce[column.field_name];
-            this.gridCommonFunctionService.checkDisableInRow(this.editableGridColumns,data);
+            this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
             if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
               data[column.field_name] = responce[column.field_name];
               switch (column.type.toLowerCase()) {
@@ -928,7 +860,7 @@ export class GridSelectionModalComponent implements OnInit {
     if(data && data[this.uploadField.field_name] && this.CommonFunctionService.isArray(data[this.uploadField.field_name]) && data[this.uploadField.field_name].length > 0) {
       selectedData = data[this.uploadField.field_name];
     }
-    this.fileuploadedindex = this.gridCommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
+    this.fileuploadedindex = this.CommonFunctionService.getCorrectIndex(data,index,this.field,this.gridData,this.filterData);
     this.CommonFunctionService.openFileUpload(fieldName, 'grid-selection-file-upload', data, selectedData)
   }
 

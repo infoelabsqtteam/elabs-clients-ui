@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
-import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService } from '@core/web-core';
+import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-root',
@@ -32,12 +32,13 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
-    private authDataShareService: AuthDataShareService
+    private authDataShareService: AuthDataShareService,
+    private apiCallService:ApiCallService
 
   ) {
     
     //this.localSetting();
-    this.commonfunctionService.getApplicationAllSettings();
+    this.apiCallService.getApplicationAllSettings();
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
@@ -104,7 +105,7 @@ export class AppComponent implements OnInit {
   }
   redirectToHomePageWithStorage(){
     if(!this.authService.checkApplicationSetting()){
-      this.commonfunctionService.getApplicationAllSettings();
+      this.apiCallService.getApplicationAllSettings();
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
