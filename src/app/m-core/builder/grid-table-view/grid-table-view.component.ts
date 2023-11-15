@@ -296,7 +296,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private gridCommonFunctionServie:GridCommonFunctionService,
     private apiCallService:ApiCallService,
     private checkIfService:CheckIfService,
-    private formCreationService:FormCreationService
+    private formCreationService:FormCreationService,
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -608,10 +608,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(grid.details && grid.details != null){
           this.details = grid.details;
           this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems(grid, this.itemNumOfGrid);
-          if(this.details && this.details.disableGrid && this.details.disableGrid == "true") {
+          if(this.details && this.details.disableGrid) {
             this.gridDisable = true;
+          }else {
+            this.gridDisable = false;
           }
 
+        }else {
+          this.gridDisable = false;
         }
         if(grid.colorCriteria && grid.colorCriteria != null && grid.colorCriteria.length >= 1){
           this.typegrapyCriteriaList = grid.colorCriteria;
@@ -1294,6 +1298,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }else {
       this.modifyGridData = [];
       this.elements = [];
+      this.gridCommonFunctionServie.setOldTabCount(this.tab);
     }
   }
   

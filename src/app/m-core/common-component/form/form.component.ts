@@ -871,24 +871,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
-      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);
-      if(result.resetForm) this.checkBeforeResetForm();
-      if(result.next) this.next();
+      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);      
       this.dataListForUpload =result.dataListForUpload;
       this.saveResponceData = result.saveResponceData;
       this.custmizedFormValue = result.custmizedFormValue;
       this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
       this.updateMode = result.updateMode;
-      if(result.isStepper) this.stepper.reset();
       this.complete_object_payload_mode=result.complete_object_payload_mode;
+      this.showNotify = result.showNotify;
+      this.dataSaveInProgress = result.dataSaveInProgress;
+      if(result.isStepper) this.stepper.reset();
+      if(result.resetForm) this.checkBeforeResetForm();
+      if(result.next) this.next();
       if(result.public.check){
         if(result.public.getFormData && Object.keys(result.public.getFormData).length > 0){
           this.apiService.GetForm(result.public.getFormData);
         }
         this.router.navigate([result.public.url]);
       }
-      this.showNotify = result.showNotify;
-      this.dataSaveInProgress = result.dataSaveInProgress;
+      
       if(result.resetResponce) this.apiService.ResetSaveResponce();
       if(result.successAction) this.checkOnSuccessAction();
       if(result.message && result.message.msg && result.message.msg != ''){
