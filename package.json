@@ -33,7 +33,7 @@
     "@fortawesome/fontawesome-free": "~5.6.3",
     "@kolkov/angular-editor": "^1.1.2",
     "@mongodb-js/charts-embed-dom": "^3.0.0",
-    "@core/web-core": "1.1.57",
+    "@core/web-core": "1.0.49",
     "@ng-bootstrap/ng-bootstrap": "^12.1.2",
     "@popperjs/core": "^2.11.7",
     "@tinymce/tinymce-angular": "^4.2.4",
