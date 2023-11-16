@@ -32,7 +32,7 @@ export class ResizeColumnDirective implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.column = this.el.nativeElement;
-    this.minimumWidth = 100;
+    this.minimumWidth = 10;
   }
 
   ngOnInit() {
