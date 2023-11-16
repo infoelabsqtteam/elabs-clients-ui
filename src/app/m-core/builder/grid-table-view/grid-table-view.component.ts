@@ -488,7 +488,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       neq: 'Not Equal'
     }
     this.filterTypeString={
-      stwh: 'Start With',
+      stwic: 'Start With',
       edwh: 'End With',
       cntn: 'Contains'
       }
@@ -1220,9 +1220,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.orderBy = '-';
     }
   }
-  applyFilter() {
+  applyFilter(filterType?:string) {
     this.pageNumber = 1;
-    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
+    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,filterType);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.apiService.getGridData(pagePayload);
   }
