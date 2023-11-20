@@ -75,13 +75,15 @@ export class ResizeColumnDirective implements OnInit {
       let width = this.calculateNewWidth(event, offset);
       this.updateElementWidth(this.column, width);
 
-      // Set table cell width
-      this.setElementWidth(this.getTableCells(), width);
+
 
       // Set cellClass width
       if (this.cellClass) {
         const cellClassElements = this.getCellClassElements();
-        this.setElementWidth(cellClassElements, width + 40);
+        this.setElementWidth(cellClassElements, width);
+      }else{
+      // Set table cell width
+      this.setElementWidth(this.getTableCells(), width);
       }
       this.cdr.detectChanges();
     }
@@ -100,8 +102,17 @@ export class ResizeColumnDirective implements OnInit {
   }
 
   updateElementWidth(element: HTMLElement, width: number) {
-    this.renderer.setStyle(element, "width", `${width}px`);
+    // Check for inline styles
+    const inlineStyles = element.getAttribute('style');
+    if (inlineStyles && inlineStyles.includes('width')) {
+      // Update inline styles directly
+      element.style.width = `${width}px`;
+    } else {
+      // Use Renderer2 for styles applied through Angular
+      this.renderer.setStyle(element, 'width', `${width}px`);
+    }
   }
+  
 
   setElementWidth(elements: HTMLElement[], width: number) {
     elements.forEach((element: any) => {
@@ -113,7 +124,7 @@ export class ResizeColumnDirective implements OnInit {
 
   getTableCells(): HTMLElement[] {
     return Array.from(this.table.querySelectorAll("tr")).map((row: any) =>
-      row.querySelectorAll("td").item(this.index + 1)
+      row.querySelectorAll("td").item(this.index)
     );
   }
 
@@ -125,6 +136,7 @@ export class ResizeColumnDirective implements OnInit {
 }
 
 // [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'"
-// This directive needs the classess for resizer
+// if resizeGridColunms not provided it will change all td width as default.
+// This directive needs the classess for resize Handler
 // .resize-holder {cursor: col-resize;width: 20px;height: 100%;position: absolute;right: -10px;top: 0;z-index: 1;}
 // .resizing {-moz-user-select: none;-ms-user-select: none;user-select: none;cursor: col-resize;}
