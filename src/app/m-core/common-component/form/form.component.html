@@ -809,7 +809,7 @@
                                         <thead>
                                             <tr> 
                                                 <!-- <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                                -->
-                                                <th [resizeColumn]="true" [index]="i"  [cellClass]="'resizeGridColunms'" *ngFor="let fieldName of tableField.fields;let i=index;" class="resizeGridColunms">{{ fieldName.label | titlecase}}</th>
+                                                <th [resizeColumn]="true" [index]="i"  [cellClass]="'resizeGridColunms'" *ngFor="let fieldName of tableField.fields;let i=index;" class="resizeGridColunms text-wrap">{{ fieldName.label | titlecase}}</th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList >
@@ -904,7 +904,7 @@
                                         <thead>
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
-                                                <th [resizeColumn]="true" [index]="j" [cellClass]="'resizeGridColunms'" *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="resizeGridColunms" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
+                                                <th [resizeColumn]="true" [index]="j" [cellClass]="'resizeGridColunms'" *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="resizeGridColunms text-wrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
