@@ -142,7 +142,8 @@ body.modal-open .modal-backdrop {display:none !important;}
 .mat-button-wrapper,
 ::placeholder,
 .mat-select-value,
-.mat-option {
+.mat-menu-item,
+.mat-drawer {
   opacity: 1 !important;
   color: var(--fontColor) !important;
 }
