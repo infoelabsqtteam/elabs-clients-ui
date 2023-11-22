@@ -704,7 +704,7 @@
                                         <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                     </div>
 
-                                    <table class="table-bordered table-striped table-hover one-line-text" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                    <table class="table-bordered table-hover one-line-text" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr>
                                                 <th width="10%" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">Action</th>
@@ -712,7 +712,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let listOfField of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
+                                            <tr *ngFor="let listOfField of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''" class="border-top border-bottom">
                                                 <td class="px-1" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">
                                                     <a  mdbBtn floating="true" size="sm" *ngIf="tableField.datatype == 'list_of_object_with_popup' && listOfField['actionBtnDisplay']" (click)="updateListofFields(tableField,listOfField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup' && listOfField['actionBtnDisplay']" (click)="editListOfFiedls(i,tableField)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
@@ -726,7 +726,7 @@
                             </div>
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype == 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter" *ngIf="custmizedFormValue[tableField.field_name]">
-                                    <table class="table-bordered table-striped table-hover" *ngIf="objectKeys(custmizedFormValue[tableField.field_name]).length > 0">
+                                    <table class="table-striped table-hover" *ngIf="objectKeys(custmizedFormValue[tableField.field_name]).length > 0">
                                         <thead>
                                             <tr>
                                                 <th width="10%" style="text-align: center">Action</th>
@@ -734,7 +734,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let myobject of custmizedFormValue[tableField.field_name] | keyvalue" [ngClass]="myobject.value.status == 'I' ? 'd-none':''">
+                                            <tr *ngFor="let myobject of custmizedFormValue[tableField.field_name] | keyvalue" [ngClass]="myobject.value.status == 'I' ? 'd-none':''" class="border-top border-bottom">
                                                 <td class="px-1" style="text-align: center"> 
                                                     <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',myobject.key,'',tableField,{},'delete')" mdbWavesEffect class="grid-button btn-danger text-white" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                                        
                                                 </td>
@@ -805,7 +805,7 @@
                                     <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                 </div>                                
                                 <div class="table-responsive table maxheightdata">
-                                    <table class="table-bordered table-striped table-hover table-resizable datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
+                                    <table class="table-bordered table-hover table-resizable datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 
                                                 <!-- <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                                -->
@@ -813,7 +813,7 @@
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList >
-                                            <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" >
+                                            <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" class="border-top border-bottom">
                                                 
                                                 <td *ngFor="let fieldName of tableField.fields" >
                                                     <div class="resizeGridColunms grid-data" [style.width]="fieldName.width">
@@ -900,7 +900,7 @@
                                     </div>
                                 </div>                                
                                 <div class="table-responsive table" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
-                                    <table class="table-bordered table-striped table-hover table-resizable datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                    <table class="table-bordered table-hover table-resizable datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead>
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
@@ -909,7 +909,7 @@
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                             <tr *ngFor="let data of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name] | paginate
-                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y">
+                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y" class="border-top border-bottom">
 
                                                 <td *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled" class="grid-coloumn-nowrap">
                                                     <div class="example-handle cursor-move" cdkDragHandle *ngIf="!tableField.add_new_enabled || tableField.draggable" [ngClass]="{'d-inline-block': tableField.draggable}">
