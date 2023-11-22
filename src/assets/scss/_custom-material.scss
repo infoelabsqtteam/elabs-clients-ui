@@ -48,7 +48,7 @@ body.modal-open .modal-backdrop {display:none !important;}
 .modal-dialog {border-radius:10px;pointer-events:all;
     .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
     .card-header .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;}
-    .mat-form-field-label {color:var(--font-color) !important ;font-size:11px;transform:translateY(6px);}
+    .mat-form-field-label {color:var(--fontColor) !important ;font-size:11px;transform:translateY(6px);}
     .mat-form-field-label .filterlabel {font-size:13px;position:relative;top:2px;}
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75);font-size:$size14;}
     .mat-form-field-label > * {background:$white;padding-right:$size8;}

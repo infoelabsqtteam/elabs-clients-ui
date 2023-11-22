@@ -24,10 +24,10 @@
 :host ::ng-deep ::placeholder,
 :host ::ng-deep .mat-select-value {
   opacity: 1;
-  color: var(--font-color);
+  color: var(--fontColor);
 }
 :host ::ng-deep .mat-option{
-    color: var(--font-color) !important;
+    color: var(--fontColor) !important;
 }
 /* :host ::ng-deep .custom-spinner circle{   
     stroke: #89ca6c;
