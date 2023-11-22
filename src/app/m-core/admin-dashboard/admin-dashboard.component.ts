@@ -36,6 +36,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // Form submit
   // chatSubmit: boolean;
   isShow:boolean = false;
+  isShowGrid:boolean = true;
 
   // formData: FormGroup;
   mongodbChartShow:boolean = false;

@@ -13,12 +13,14 @@ import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 
+import { GridComponent } from './grid/grid.component';
 
 const components = [
   FormComponent,
   ChartComponent,
   MongodbChartComponent,
-  DashboardChartComponent
+  DashboardChartComponent,
+  GridComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
