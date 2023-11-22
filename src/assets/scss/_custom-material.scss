@@ -133,6 +133,19 @@ body.modal-open .modal-backdrop {display:none !important;}
     }
 }
 
+.mat-tab-label,
+.mat-expansion-panel-header-title,
+.mat-expansion-panel,
+.mat-list-base .mat-subheader,
+.ngx-pagination a,
+.mat-drawer-container,
+.mat-button-wrapper,
+::placeholder,
+.mat-select-value,
+.mat-option {
+  opacity: 1 !important;
+  color: var(--fontColor) !important;
+}
 
 
 

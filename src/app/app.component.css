@@ -14,21 +14,6 @@
     left: 50%;
     top:50%;
 }
-:host ::ng-deep .mat-tab-label,
-:host ::ng-deep .mat-expansion-panel-header-title,
-:host ::ng-deep .mat-expansion-panel,
-:host ::ng-deep .mat-list-base .mat-subheader,
-:host ::ng-deep .ngx-pagination a,
-:host ::ng-deep .mat-drawer-container,
-:host ::ng-deep .mat-button-wrapper,
-:host ::ng-deep ::placeholder,
-:host ::ng-deep .mat-select-value {
-  opacity: 1;
-  color: var(--fontColor);
-}
-:host ::ng-deep .mat-option{
-    color: var(--fontColor) !important;
-}
 /* :host ::ng-deep .custom-spinner circle{   
     stroke: #89ca6c;
 } */
