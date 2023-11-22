@@ -12,6 +12,9 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
+table td,table th{
+    font-weight: normal !important;
+}
 .table table {color:var(--fontColor); width:100%;font-size:14px;border:none;border-bottom:1px solid #efefef !important;
     .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
