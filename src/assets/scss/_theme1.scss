@@ -1,7 +1,7 @@
 .theme1 {
   .modal {font-family:$roboto !important;
         .modal-header{height:$size50;padding:$size10;min-height:$auto;background:var(--popupHeaderBg);margin-bottom:$zero;border:$no;
-            h3 {font-size:$size20;color:#242424;font-family:$roboto;}
+            h3 {font-size:$size20;color:$txtColor;font-family:$roboto;}
             .closebtb {width:$size28;height:$size28;background:$white;line-height:$size28;top:$size12;}
             .bg-cerulean{background:var(--buttonColor) !important;width:120px;height:35px;border-radius:4px !important;margin:0 0 0 20px;font-size:14px;}
         }

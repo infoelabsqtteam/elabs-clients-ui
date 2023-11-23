@@ -143,7 +143,10 @@ body.modal-open .modal-backdrop {display:none !important;}
 ::placeholder,
 .mat-select-value,
 .mat-menu-item,
-.mat-drawer {
+.mat-drawer,
+input,
+.text-center,
+.chartbody {
   opacity: 1 !important;
   color: $txtColor !important;
 }
