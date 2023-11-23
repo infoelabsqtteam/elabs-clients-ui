@@ -15,6 +15,7 @@ export class GridComponent implements OnInit,OnChanges {
   sqsNotificationsData: [];
   gridColumns:[];
   currentMenu: any = {};
+  fixedcolwidth: 150;
 
   constructor(
     private apiService: ApiService,
