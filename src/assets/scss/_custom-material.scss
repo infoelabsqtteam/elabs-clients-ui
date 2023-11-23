@@ -48,7 +48,7 @@ body.modal-open .modal-backdrop {display:none !important;}
 .modal-dialog {border-radius:10px;pointer-events:all;
     .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
     .card-header .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;}
-    .mat-form-field-label {color:#7f7f7f;font-size:11px;transform:translateY(6px);}
+    .mat-form-field-label {color:$txtColor !important ;font-size:11px;transform:translateY(6px);}
     .mat-form-field-label .filterlabel {font-size:13px;position:relative;top:2px;}
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75);font-size:$size14;}
     .mat-form-field-label > * {background:$white;padding-right:$size8;}
@@ -133,6 +133,20 @@ body.modal-open .modal-backdrop {display:none !important;}
     }
 }
 
+.mat-tab-label,
+.mat-expansion-panel-header-title,
+.mat-expansion-panel,
+.mat-list-base .mat-subheader,
+.ngx-pagination a,
+.mat-drawer-container,
+.mat-button-wrapper,
+::placeholder,
+.mat-select-value,
+.mat-menu-item,
+.mat-drawer {
+  opacity: 1 !important;
+  color: $txtColor !important;
+}
 
 
 
