@@ -1,8 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ApiService } from 'src/app/services/api/api.service';
-import { CommonFunctionService } from 'src/app/services/common-utils/common-function.service';
-import { DataShareService } from 'src/app/services/data-share/data-share.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { ApiService, CommonFunctionService, DataShareService, StorageService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-grid',
@@ -21,13 +18,11 @@ export class GridComponent implements OnInit,OnChanges {
 
   constructor(
     private apiService: ApiService,
-    private commonFunctionService: CommonFunctionService,
     private dataShareService: DataShareService,
-    private storageService: StorageService,
+    private apiCallService: ApiCallService
   ) {
     
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data => {
-      console.log(data.data)
       this.sqsNotificationsData = data.data;
     });
 
@@ -40,7 +35,7 @@ export class GridComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.isShowGrid == false){
+    if(this.isShowGrid){
       this.getTemplate();
       this.getDataForGrid();
     }
@@ -49,7 +44,7 @@ export class GridComponent implements OnInit,OnChanges {
 
   getDataForGrid() {
     const grid_api_params_criteria = []
-    const data = this.commonFunctionService.getPaylodWithCriteria('sqs_notifications', '', grid_api_params_criteria, '');
+    const data = this.apiCallService.getPaylodWithCriteria('sqs_notifications', '', grid_api_params_criteria, '');
     const getFilterData = {
       data: data,
       path: null
@@ -59,13 +54,13 @@ export class GridComponent implements OnInit,OnChanges {
 
   getTemplate() {
     this.currentMenu = "sqs_notifications";
-    const payload = this.commonFunctionService.getTemData(this.currentMenu);
+    const payload = this.apiCallService.getTemData(this.currentMenu);
     this.apiService.GetTempData(payload);
     
   }
 
   getGridFields(data){
-    if(data.length>0){
+    if(data && data.length>0){
       let template = data[0];
       let templateTabs = template['templateTabs'];
       if(templateTabs.length>0){
