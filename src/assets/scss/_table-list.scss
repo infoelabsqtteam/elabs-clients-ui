@@ -15,7 +15,7 @@
 table td,table th{
     font-weight: normal !important;
 }
-.table table {color:var(--fontColor); width:100%;font-size:14px;border:none;border-bottom:1px solid #efefef !important;
+.table table {color:var(--txtColor); width:100%;font-size:14px;border:none;border-bottom:1px solid #efefef !important;
     .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
@@ -36,15 +36,15 @@ table td,table th{
 
     tbody {
         tr {
-            &:hover {td {color: var(--fontColor); background-color: $row-hover-color;} th {color: var(--fontColor); background-color: $row-hover-color;}}
+            &:hover {td {color: var(--txtColor); background-color: $row-hover-color;} th {color: var(--txtColor); background-color: $row-hover-color;}}
             // &:nth-of-type(odd) td{background-color: #fff;}
             // &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ; overflow: hidden; text-overflow: ellipsis;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;color:var(--fontColor);display: inline-block;}
+        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;color:var(--txtColor);display: inline-block;}
     }
 
-    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:var(--fontColor) !important;
+    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:var(--txtColor) !important;
         &:hover {background:rgba(0,0,0,0.1);box-shadow:none;}
     }
     .material-icons {font-size:inherit;}
