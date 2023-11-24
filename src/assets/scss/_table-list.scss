@@ -12,8 +12,8 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
-table,table td,table th{
-    color:$txtColor !important;
+table,table td{
+    color:$txtColor;
     font-weight: normal !important;
 }
 .table table {color:$txtColor; width:100%;font-size:14px;border:none;border-bottom:1px solid #efefef !important;
