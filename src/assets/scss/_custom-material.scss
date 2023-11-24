@@ -133,7 +133,6 @@ body.modal-open .modal-backdrop {display:none !important;}
     }
 }
 
-.mat-tab-label,
 .mat-expansion-panel-header-title,
 .mat-expansion-panel,
 .mat-list-base .mat-subheader,
@@ -144,12 +143,20 @@ body.modal-open .modal-backdrop {display:none !important;}
 .mat-select-value,
 .mat-menu-item,
 .mat-drawer,
-input,
 .text-center,
-.chartbody {
-  opacity: 1 !important;
+.chartbody,
+.mat-option {
   color: $txtColor !important;
 }
+.mat-tab-label,.ng-touched{
+    color: $txtColor !important;
+    opacity: 1 !important;
+}
+::placeholder,:not(.ng-touched)::-webkit-input-placeholder,
+.mat-form-field-infix {
+    opacity: 0.8 !important;
+}
+
 
 
 
