@@ -1,35 +1,39 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, OnDestroy } from '@angular/core';
 import { ApiService, CommonFunctionService, DataShareService, StorageService, ApiCallService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.css']
 })
-export class GridComponent implements OnInit,OnChanges {
+export class GridComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isShowGrid: boolean;
   pageNumber: number = 1;
   itemNumOfGrid: any = 50;
-  gridDataSubscription;
-  tempDataSubscription;
-  sqsNotificationsData: [];
-  gridColumns:[];
+  gridDataSubscription: Subscription;
+  tempDataSubscription: Subscription;
+  sqsNotificationsData: any[] = [];
+  gridColumns: any[] = [];
   currentMenu: any = {};
-  fixedcolwidth: 150;
+  fixedcolwidth: number = 150;
 
   constructor(
     private apiService: ApiService,
     private dataShareService: DataShareService,
     private apiCallService: ApiCallService
   ) {
-    
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data => {
-      this.sqsNotificationsData = data.data;
+      // Add a check for null or undefined
+      if (data && data.data) {
+        this.sqsNotificationsData = data.data;
+      }
     });
+    
 
-    this.tempDataSubscription = this.dataShareService.tempData.subscribe(data =>{      
+    this.tempDataSubscription = this.dataShareService.tempData.subscribe(data => {
       this.getGridFields(data);
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -42,14 +46,23 @@ export class GridComponent implements OnInit,OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.gridDataSubscription) {
+      this.gridDataSubscription.unsubscribe();
+    }
+
+    if (this.tempDataSubscription) {
+      this.tempDataSubscription.unsubscribe();
+    }
+  }
 
   getDataForGrid() {
-    const grid_api_params_criteria = []
+    const grid_api_params_criteria = [];
     const data = this.apiCallService.getPaylodWithCriteria('sqs_notifications', '', grid_api_params_criteria, '');
     const getFilterData = {
       data: data,
       path: null
-    }
+    };
     this.apiService.getGridData(getFilterData);
   }
 
@@ -57,7 +70,7 @@ export class GridComponent implements OnInit,OnChanges {
     this.currentMenu = "sqs_notifications";
     const payload = this.apiCallService.getTemData(this.currentMenu);
     this.apiService.GetTempData(payload);
-    
+
   }
 
   getGridFields(data){
