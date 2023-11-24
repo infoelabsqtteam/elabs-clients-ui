@@ -36,9 +36,9 @@
       <div class="modal-body pt-0 popuptable">
         <div class="">
             <div class="table without-filter mb-2 grid-selection-modal">            
-                <table *ngIf="field.type == 'grid_selection' && listOfGridFieldName.length > 0" class="table-bordered table-striped table-hover table-resizable  gridselectionform" matSort (matSortChange)="sortData($event)" stickyTable>
+                <table *ngIf="field.type == 'grid_selection' && listOfGridFieldName.length > 0" class="table-bordered table-hover table-resizable  gridselectionform" matSort (matSortChange)="sortData($event)" stickyTable>
                     <thead>
-                        <tr>
+                        <tr class="border">
                             <th *ngIf="grid_row_selection" class="text-center colSticky firstCol">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
@@ -46,7 +46,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter" [ngClass]="{'d-none': onlySelected && !data.selected}">
+                        <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter border" [ngClass]="{'d-none': onlySelected && !data.selected}">
                             <td *ngIf="grid_row_selection" class="text-center colSticky firstCol">
                                 <div  [ngClass]="data.selected && grid_row_refresh_icon || ((data['column_edit'] || !data['column_edit']) && editableGridColumns.length > 1 && !editEnable) ?'checkeditmode':''">
                                     <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled" [matTooltip]="'Select'"></mat-checkbox>
