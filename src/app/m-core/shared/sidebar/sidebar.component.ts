@@ -212,8 +212,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
+  let menuitem = {
+    name: menu.name,
+    _id: menu._id
+  }
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-  this.userPreferenceSubscribe(menu,'favoriteMenus',parent);
+  this.userPreferenceSubscribe(menuitem,'favoriteMenus',parent);
   // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
   // this.saveCallSubscribe();
 }

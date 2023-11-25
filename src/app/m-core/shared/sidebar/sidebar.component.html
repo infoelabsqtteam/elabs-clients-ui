@@ -25,7 +25,7 @@
                     <small class="dropdownmenulist pl-4" [attr.data-parent]="subSubitem.parentId" (click)="getSubmenuTemplateData(item,subSubitem,k,j,$event)">{{ subSubitem.label }}</small>
 
                     <span class="favibtn" style="right: 20px;"  (click)="openInNewTab(item,subSubitem)"><mat-icon>open_in_new</mat-icon></span>
-                    <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,subitem)}" (click)="addFebMenu(subSubitem,subitem)"><mat-icon>grade</mat-icon></span>
+                    <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(subSubitem,'')}" (click)="addFebMenu(subSubitem,'')"><mat-icon>grade</mat-icon></span>
                   </div>
                 </mat-expansion-panel>
               </mat-accordion>
