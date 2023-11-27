@@ -12,15 +12,19 @@
 .verticaltable {width:100%;
     td {padding:6px 10px !important;}
 }
-.table table {width:100%;font-size:13px;border:none;border-bottom:1px solid #efefef !important;
-    .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;min-width: 100px !important;}
+table,table td{
+    color:$txtColor;
+    font-weight: normal !important;
+}
+.table table {color:$txtColor; width:100%;font-size:14px;border:none;border-bottom:1px solid #efefef !important;
+    .grid-data {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
     .form-control.form-control-sm, .mat-form-field .mat-form-field-infix {width:100% !important;}
 
     thead {background:#fafafa;font-family:$roboto;position:sticky;top:0;z-index:3;
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
-                .heading {width: auto !important;font-weight:500;position:relative;font-size:13px;}
-                .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:13px;width: 100%;}
+                .heading {width: auto !important;font-weight:500;position:relative;font-size:14px;}
+                .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:14px;width: 100%;}
                 .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
                 &:hover {
                     .fas { display:inline-block;}
@@ -33,15 +37,15 @@
 
     tbody {
         tr {
-            &:hover {td {background-color: $row-hover-color;} th {background-color: $row-hover-color;}}
+            &:hover {td {color: $txtColor; background-color: $row-hover-color;} th {color: $txtColor; background-color: $row-hover-color;}}
             // &:nth-of-type(odd) td{background-color: #fff;}
             // &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 10px;vertical-align:middle ; overflow: hidden; text-overflow: ellipsis;}
         }
-        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;color:#555;display: inline-block;}
+        .grid-coloumn-nowrap {white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;color:$txtColor;display: inline-block;}
     }
 
-    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:#555 !important;
+    .grid-button {width:30px;height:30px;line-height:36px;border-radius:100%;box-shadow:none;vertical-align:middle;display:inline-block;padding:0;font-size:13px;text-align:center;color:$txtColor !important;
         &:hover {background:rgba(0,0,0,0.1);box-shadow:none;}
     }
     .material-icons {font-size:inherit;}
@@ -96,7 +100,6 @@
 				th {
 					position: relative;
 					left: 0px !important;
-					&:not(:last-child) {
 						.resize-holder {
 							cursor: col-resize;
 							width: 20px;
@@ -106,7 +109,6 @@
 							top: 0;
 							z-index: 1;
 						}
-					}
 				}
 		transition: all 0.3s;
 	}
