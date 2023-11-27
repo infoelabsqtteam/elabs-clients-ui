@@ -1,7 +1,7 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
-import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService} from '@core/web-core';
+import { FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { CommonFunctionService, StorageService, ApiService, DataShareService, NotificationService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-chat-view',
@@ -44,13 +44,12 @@ export class ChatViewComponent implements OnInit,OnDestroy, AfterViewChecked {
   
   constructor(
     private datePipe: DatePipe,
-    private ModalService:ModelService,
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
-    private permissionService: PermissionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private apiCallService:ApiCallService
   ) {
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -171,7 +170,7 @@ scrollToBottom(): void {
           this.currentMenu.name = this.tab.tab_name;
         }
         if(this.tab.api_params_criteria && this.tab.api_params_criteria.length>0){
-          this.tab_api_params_criteria = this.commonFunctionService.getPaylodWithCriteria(this.currentMenu.name,'',this.tab.api_params_criteria,this.selectContact);
+          this.tab_api_params_criteria = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',this.tab.api_params_criteria,this.selectContact);
         }
         if(this.tab.grid && this.tab.grid != undefined){
           if(this.tab.grid.gridColumns){
@@ -212,7 +211,7 @@ scrollToBottom(): void {
       
       if (this.createFilterFormgroup) {
         this.createFilterFormgroup = false;
-        const staticModalGroup = this.commonFunctionService.commanApiPayload(this.headElements,this.tableFields,this.form_action_buttons);      
+        const staticModalGroup = this.apiCallService.commanApiPayload(this.headElements,this.tableFields,this.form_action_buttons);      
         if (staticModalGroup.length > 0) {
           this.apiService.getStatiData(staticModalGroup);
         }

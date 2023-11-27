@@ -1,7 +1,7 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import { chardData,tableData,progressReportData,reportData } from './chartJson';
-import { countDownTimerConfigModel, countDownTimerTexts, CountdownTimerService } from 'ngx-timer';
-import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService } from '@core/web-core';
+import { CountdownTimerService } from 'ngx-timer';
+import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -40,7 +40,8 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
     private permissionService: PermissionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private apiCallService:ApiCallService
   ) {
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -53,7 +54,7 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
     })
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu.name != '') {
-      const payload = this.commonFunctionService.getTemData(this.currentMenu.name);
+      const payload = this.apiCallService.getTemData(this.currentMenu.name);
       this.apiService.GetTempData(payload);
     }
     this.getData();
@@ -88,7 +89,7 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
           let tabs = tempData[0].data.templateTabs;
           let tableFields = tabs[this.selectTabIndex].tableFields;
           this.headElements = tabs[this.selectTabIndex].tableGrids[0].gridColumns;
-          const staticModalGroup = this.commonFunctionService.commanApiPayload(this.headElements,tableFields,[]);      
+          const staticModalGroup = this.apiCallService.commanApiPayload(this.headElements,tableFields,[]);      
           if (staticModalGroup.length > 0) {
             this.apiService.getStatiData(staticModalGroup)
           }
@@ -133,7 +134,7 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
   getData(){
     const getJobschedules={
       path: null,
-      data : this.commonFunctionService.getPaylodWithCriteria('job_schedules','',[],'')
+      data : this.apiCallService.getPaylodWithCriteria('job_schedules','',[],'')
     }
     this.apiService.getGridData(getJobschedules)
   }
