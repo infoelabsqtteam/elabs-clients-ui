@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } fr
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService } from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, FormValueService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -131,9 +131,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-  filterTypeString
-  filterTypeNumber
-  filterTypeDate
+  filterTypeNumber: any;
+  filterTypeString: any;
+  filterTypeDate: any;
 
 
 
@@ -297,8 +297,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private gridCommonFunctionServie:GridCommonFunctionService,
     private apiCallService:ApiCallService,
     private checkIfService:CheckIfService,
-    private formCreationService:FormCreationService
+    private formCreationService:FormCreationService,
+    private FormValueService : FormValueService
   ) {
+    this.filterTypeNumber = this.FormValueService.getFilterTypesNumber();
+    this.filterTypeString = this.FormValueService.getFilterTypesString();
+    this.filterTypeDate = this.FormValueService.getFilterTypesDate();
+    
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
@@ -481,24 +486,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   selectedFilterType:string;
   ngOnInit(): void {
-    this.filterTypeNumber ={
-      lstn: 'Less than',
-      grtn: 'Greater than',
-      eq: 'Equal to',
-      neq: 'Not Equal'
-    }
-    this.filterTypeString={
-      stwic: 'Start With',
-      edwh: 'End With',
-      cntn: 'Contains'
-      }
-      this.filterTypeDate ={
-        lstn: 'Less than',
-        grtn: 'Greater than',
-        drng : 'Date Range',
-        eq: 'Equal to',
-        neq: 'Not Equal',
-      }
   }
 //getFilterKeys Fn
   getFilterTypeKeys(obj: any): string[] {
