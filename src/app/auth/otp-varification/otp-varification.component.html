@@ -18,7 +18,9 @@
                     <input type="tel" class="form-control" placeholder="" NumberOnly="true"  formControlName="verif_code">
                 </div>                
                 
-                <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!OtpVarify.valid" (click)="onVerifyAccWithOtp()">Submit</button>
+                <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!OtpVarify.valid || loading" (click)="onVerifyAccWithOtp()">
+                  <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                  <span *ngIf="!loading">Submit</span></button>
               </div>
 
             <div class="row mt-2 text-muted">

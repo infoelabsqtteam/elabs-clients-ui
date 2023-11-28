@@ -37,7 +37,9 @@
                         </mat-card-content>
                         <mat-card-actions>
                             <div class="row justify-content-center ">
-                                <button mat-raised-button color="primary" style="width:35%!important" type="submit" (click)="onSignIn(f)" class="hover1">Log In</button>
+                                <button mat-raised-button color="primary" style="width:35%!important" type="button" [disabled]="!f.valid || loading" (click)="onSignIn(f)" class="hover1">
+                                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                                    <span *ngIf="!loading">Log In</span></button>
                             </div>
                         </mat-card-actions>
                         <!-- <div class="row mt-3">

@@ -1,6 +1,6 @@
 <div class="row" *ngIf="emailVarify">
     <div class="col-xs-12">
-        <form [formGroup]="verifyForm" (ngSubmit)="onVerify()">
+        <form [formGroup]="verifyForm">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
@@ -27,8 +27,9 @@
             </div>
              <div class="row">
                 <div class="col-xs-12">
-                    <button type="submit" class="btn btn-success"
-                    >Verify Now</button>&nbsp;
+                    <button type="button" class="btn btn-success" [disabled]="!verifyForm.valid || loading" (click)="onVerify()">
+                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                        <span *ngIf="!loading">Verify Now</span></button>&nbsp;
                 </div>
             </div>
         </form>
