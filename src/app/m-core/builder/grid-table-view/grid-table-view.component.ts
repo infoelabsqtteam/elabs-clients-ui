@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } fr
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService } from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, DownloadService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -297,6 +297,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private apiCallService:ApiCallService,
     private checkIfService:CheckIfService,
     private formCreationService:FormCreationService,
+    private downloadService:DownloadService
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -1211,47 +1212,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   exportCSV() {
     let tempNme = this.currentMenu.name;
     if(this.permissionService.checkPermission(tempNme,'export')){
-      let fiteredList=[];
-    this.headElements.forEach(element => {
-      if(element && element.display){
-        // delete element.display;
-        fiteredList.push(element)
-      }
-    });
-      let gridName = '';
-      let grid_api_params_criteria = [];
-      if(this.checkIfService.isGridFieldExist(this.tab,"api_params_criteria")){
-        grid_api_params_criteria = this.tab.grid.api_params_criteria;
-      }
-      const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
-      if(this.tab && this.tab.grid){
-        if(this.tab.grid.export_template && this.tab.grid.export_template != null){
-          gridName = this.tab.grid.export_template;
-        }else{
-          gridName = this.tab.grid._id;
-        }
-      }
-      delete data.log;
-      delete data.key;
-      data['key'] = this.userInfo.refCode;
-      data['key3']=gridName;
-      const value = this.filterForm.getRawValue();
-      const filtewCrlist = this.apiCallService.getfilterCrlist(this.headElements,value);
-      if(filtewCrlist.length > 0){
-        filtewCrlist.forEach(element => {
-          data.crList.push(element);
-        });
-      }
-      const getExportData = {
-        data: {
-          refCode: this.userInfo.refCode,
-          log: this.storageService.getUserLog(),
-          kvp: data,
-          gridData: fiteredList,
-        },
-        responce: { responseType: "arraybuffer" },
-        path: tempNme
-      }
+      const getExportData = this.downloadService.exportCsv(tempNme,this.headElements,this.tab,this.currentMenu,this.userInfo,this.filterForm);
       var fileName = tempNme;
       fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
       this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
@@ -1261,6 +1222,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
   }
+
+
 
   onSort(columnObject) {
     const columnName = this.orderBy + columnObject.field_name;
