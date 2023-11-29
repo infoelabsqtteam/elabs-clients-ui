@@ -715,10 +715,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   hideColumn(elements,index: number) {
     elements[index].display = !elements[index].display;
-    console.log(elements[index].display, !elements[index].display)
   }
   updateColumnList(field,index){
-    
+     
   }
   getTabsCount(tabs){
     this.apiCallService.getTabsCountPyload(tabs);    

@@ -129,7 +129,6 @@ export class GridSelectionModalComponent implements OnInit {
 
   hideColumn(elements,index: number) {
     elements[index].display = !elements[index].display;
-    console.log(elements[index].display, !elements[index].display)
   }
   getViewData(){
     if (this.modifiedGridData && this.modifiedGridData.length > 0) {

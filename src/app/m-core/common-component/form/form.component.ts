@@ -620,6 +620,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
+
+  updateColumnList(field,index){
+    // console.log(field)
+    field.display = !field.display;
+    // field.forEach(column => (column.display = true));
+  }
+  hideColumn(elements,index: number) {
+    // console.log(elements)
+    elements.display = !elements.display;
+  }
   setGridData(gridData){
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
