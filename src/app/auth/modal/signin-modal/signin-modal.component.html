@@ -17,8 +17,7 @@
                     <input type="password" class="form-control"  name="password" ngModel required (keyup.enter)="onSignIn(f)">
                   </div>
                   <button type="button" class="btn mybtn mb-2 w-100" (click)="onSignIn(f)" [disabled]="!f.valid || loading">
-                     <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                     <span *ngIf="!loading">Log In</span></button> <br>
+                     <span>Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span></button> <br>
                   <div class="distribute_between">
                      <label class="form-check-label" for="">New Member? <a href="javascript:void(0)"  class="dark text-bold" (click)="signup()">Signup</a></label>
                      <label class="form-check-label" for=""><a href="javascript:void(0)"  class="dark text-bold" (click)="forgotPwd()">Forgot Password?</a></label>

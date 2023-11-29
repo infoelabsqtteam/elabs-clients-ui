@@ -19,8 +19,7 @@
                 </div>                
                 
                 <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!OtpVarify.valid || loading" (click)="onVerifyAccWithOtp()">
-                  <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span *ngIf="!loading">Submit</span></button>
+                  <span>Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span></button>
               </div>
 
             <div class="row mt-2 text-muted">
