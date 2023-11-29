@@ -19,7 +19,7 @@
               </button>
             </div>
             <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onSignIn()" [disabled]="!signInForm.valid || loading" >
-              <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
               <span *ngIf="!loading">Log In</span>
             </button>
           </form>
@@ -65,7 +65,7 @@
           </mat-card-content>
           <mat-card-actions class="mb-3">
             <button mat-raised-button color="primary" style="width:35%!important" type="submit" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">
-              <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
               <span *ngIf="!loading">Log In</span></button>
           </mat-card-actions>
         </mat-card>
@@ -104,7 +104,7 @@
                       </mat-card-content>
                       <mat-card-actions><div class="row justify-content-center mb-3">
                         <button mat-raised-button color="primary" style="width:35%!important" type="button" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">
-                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                         <span *ngIf="!loading">Log In</span>
                       </button></div></mat-card-actions>
                   </mat-card>
