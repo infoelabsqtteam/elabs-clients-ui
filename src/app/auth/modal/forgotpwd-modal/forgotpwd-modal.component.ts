@@ -12,7 +12,7 @@ import { DataShareService, AuthService, ModelService, CustomvalidationService} f
 })
 
 export class ForgotpwdModalComponent implements OnInit {
-
+  loading = false;
   hide = true;
   fForm: FormGroup;
   vForm: FormGroup;
@@ -65,10 +65,14 @@ export class ForgotpwdModalComponent implements OnInit {
   }
 
   onResetPwd() {
+    this.loading = true;
     this.username = this.fForm.value.email;
     this.authService.TryForgotPassword(this.username)
     this.resetPwd = false;
-
+    setTimeout(()=>{
+      this.loading = false;
+      this.fForm.reset();
+    },2000)
   }
 
   initForm() {
@@ -86,11 +90,16 @@ export class ForgotpwdModalComponent implements OnInit {
     this.resetPwd = true;
   }
   onVerifyPwd() {
+    this.loading = true;
     const code = this.vForm.value.verifyCode;
     const password = this.vForm.value.password;
     const payload = { appName: this.appName, data: { username: this.username, verif_code: code, password: password } };
     this.authService.SaveNewPassword(payload);
     this.forgotPwdResponce.emit('signin');
+    setTimeout(()=>{
+      this.loading = false;
+      this.vForm.reset();
+    },2000)
   }
 
   showModal(alert){

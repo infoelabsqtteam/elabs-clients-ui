@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./otp-varification.component.css']
 })
 export class OtpVarificationComponent implements OnInit {
-
+  loading = false;
   OtpVarify: FormGroup;
   isVerify:boolean = false;
 
@@ -30,6 +30,8 @@ export class OtpVarificationComponent implements OnInit {
     private notificationService: NotificationService
     ) { 
       this.otpVerifySubscriptioin = this.authDataShareService.otpResponse.subscribe(res =>{
+        this.loading = false;
+        this.OtpVarify.reset();
         if(res.msg != '') {
           this.notificationService.notify(res.class, res.msg);
         }
@@ -66,6 +68,7 @@ export class OtpVarificationComponent implements OnInit {
     }
   }
   onVerifyAccWithOtp() { 
+    this.loading = true;
     const value  = this.OtpVarify.getRawValue(); 
     const user = value['username'];
     const code = value['verif_code'];  
