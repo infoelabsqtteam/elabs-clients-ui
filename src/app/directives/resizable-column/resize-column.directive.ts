@@ -45,6 +45,7 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.addClass(resizer, "resize-holder");
       this.renderer.appendChild(this.column, resizer);
       this.renderer.listen(resizer, "mousedown", this.onMouseDown);
+      this.renderer.listen(resizer,'dblclick',this.resetWidth)
       this.renderer.listen(this.table, "mousemove", this.onMouseMove);
 
       // Use RxJS to debounce the mousemove event
@@ -55,6 +56,14 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.listen("document", "mouseup", this.onMouseUp);
     }
   }
+
+  resetWidth = () => {
+    let width = null;
+    this.updateElementWidth(this.column, width);
+    this.cellClass?this.setElementWidth(this.getCellClassElements(), width):this.setElementWidth(this.getTableCells(), width);
+    this.cdr.detectChanges();
+    // console.log("reset");
+  };
 
   ngOnDestroy() {
     // Unsubscribe from the resize event to avoid memory leaks
@@ -74,8 +83,6 @@ export class ResizeColumnDirective implements OnInit {
 
       let width = this.calculateNewWidth(event, offset);
       this.updateElementWidth(this.column, width);
-
-
 
       // Set cellClass width
       if (this.cellClass) {
@@ -101,15 +108,16 @@ export class ResizeColumnDirective implements OnInit {
     return width < this.minimumWidth ? this.minimumWidth : width;
   }
 
-  updateElementWidth(element: HTMLElement, width: number) {
+  updateElementWidth(element: HTMLElement, width: number | null) {
     // Check for inline styles
     const inlineStyles = element.getAttribute('style');
     if (inlineStyles && inlineStyles.includes('width')) {
       // Update inline styles directly
-      element.style.width = `${width}px`;
+      width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
     } else {
       // Use Renderer2 for styles applied through Angular
-      this.renderer.setStyle(element, 'width', `${width}px`);
+      width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+      // this.renderer.setStyle(element, 'width', `${width}px`);
     }
   }
   
@@ -140,3 +148,4 @@ export class ResizeColumnDirective implements OnInit {
 // This directive needs the classess for resize Handler
 // .resize-holder {cursor: col-resize;width: 20px;height: 100%;position: absolute;right: -10px;top: 0;z-index: 1;}
 // .resizing {-moz-user-select: none;-ms-user-select: none;user-select: none;cursor: col-resize;}
+// When double click on resize handler it will expand the width of the column to max-content.
