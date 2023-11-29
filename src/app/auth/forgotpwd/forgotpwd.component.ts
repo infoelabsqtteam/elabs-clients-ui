@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./forgotpwd.component.css']
 })
 export class ForgotPwdComponent implements OnInit {
+  loading = false;
   hide = true;
   fForm: FormGroup;
   vForm: FormGroup;
@@ -35,6 +36,8 @@ export class ForgotPwdComponent implements OnInit {
         this.setAppName(data);
       })
       this.forGotSubscription = this.authDataShareService.forgot.subscribe(data =>{
+        this.loading = false;
+        this.vForm.reset();
         if(data.msg != '') {
           this.notificationService.notify(data.class, data.msg);
         }
@@ -43,6 +46,8 @@ export class ForgotPwdComponent implements OnInit {
         }
       })
       this.resetPassSubscription = this.authDataShareService.resetPass.subscribe(data =>{
+        this.loading = false;
+        this.fForm.reset();
         if(data.msg != '') {
           this.notificationService.notify(data.class, data.msg);
         }
@@ -64,6 +69,7 @@ export class ForgotPwdComponent implements OnInit {
   }
 
   onResetPwd() {
+    this.loading = true;
     this.username = this.fForm.value.userId;
     let admin = this.fForm.value.admin;
     let payload = {userId:this.username,admin:admin};
@@ -86,11 +92,11 @@ export class ForgotPwdComponent implements OnInit {
     this.resetPwd = true;
   }
   onVerifyPwd() {
+    this.loading = true;
     const code = this.vForm.value.verifyCode;
     const password = this.vForm.value.password;
     const payload = { userId: this.username, code: code, newPassword: password };
-    this.authService.SaveNewPassword(payload);
-    
+    this.authService.SaveNewPassword(payload);    
   }
   pageloded(){
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
