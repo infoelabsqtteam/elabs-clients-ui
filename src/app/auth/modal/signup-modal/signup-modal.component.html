@@ -31,8 +31,7 @@
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">I agree to all the T&C and Privacy Policy</label>
                   </div>
-                  <button type="button" class="btn mybtn mb-2 w-100" (click)="onSignUp()" [disabled]="!signUpForm.valid || loading">
-                    <span>Signup <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span></button> <br>
+                  <button type="button" class="btn mybtn mb-2 w-100" (click)="onSignUp()" [disabled]="!signUpForm.valid || loading">Signup <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button> <br>
                   <label class="form-check-label" for="">Already a Member? &nbsp; <a href="javascript:void(0)"  class="dark text-bold" (click)="signin()">Login</a></label>
                 </form>
                 <div>&nbsp;</div>

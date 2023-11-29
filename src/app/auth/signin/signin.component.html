@@ -18,9 +18,7 @@
                 <mat-icon (click)="showPassword()" *ngIf="checkShowPassword">visibility_off</mat-icon>
               </button>
             </div>
-            <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onSignIn()" [disabled]="!signInForm.valid || loading" >
-              <span>Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
-            </button>
+            <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onSignIn()" [disabled]="!signInForm.valid || loading" >Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
           </form>
           <div class="row mt-2 text-muted">
             <div class="col-lg-6"><h4 [routerLink]="['/signup']"><a>Create Account</a></h4></div>
@@ -63,8 +61,7 @@
             </form>
           </mat-card-content>
           <mat-card-actions class="mb-3">
-            <button mat-raised-button color="primary" style="width:35%!important" type="submit" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">
-              <span>Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span></button>
+            <button mat-raised-button color="primary" style="width:35%!important" type="submit" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
           </mat-card-actions>
         </mat-card>
         <div class="row my-3"><div class="col-12 text-center"><p class="text-dark">Don't have an account <a [routerLink]="['/signup']" class="text-dark ml-1"><b>Create New Account</b></a></p></div></div>
@@ -101,9 +98,8 @@
                           </form>
                       </mat-card-content>
                       <mat-card-actions><div class="row justify-content-center mb-3">
-                        <button mat-raised-button color="primary" style="width:35%!important" type="button" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">
-                        <span>Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
-                      </button></div></mat-card-actions>
+                        <button mat-raised-button color="primary" style="width:35%!important" type="button" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
+                    </div></mat-card-actions>
                   </mat-card>
                   <div class="row mt-3"><div class="col-12 text-center"><p class="text-dark">Don't have an account <a [routerLink]="['/signup']" class="text-dark ml-1"><b>Create New Account</b></a></p></div></div>
               </div>

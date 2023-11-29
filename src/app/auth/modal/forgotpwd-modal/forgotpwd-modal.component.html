@@ -30,8 +30,7 @@
                      <label for="confirm_password" class="form-label">Confirm Password</label>
                      <input type="password" class="form-control" id="confirm_password" aria-describedby="confirm_password">
                    </div> -->
-                  <button type="button" class="btn mybtn mb-2 w-100" (click)="onResetPwd()" [disabled]="!fForm.valid || loading">
-                     <span>Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span></button> <br>
+                  <button type="button" class="btn mybtn mb-2 w-100" (click)="onResetPwd()" [disabled]="!fForm.valid || loading">Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button> <br>
                   <label class="form-check-label" for=""><a href="javascript:void(0)" class="dark text-bold" (click)="signin()">Back to Login</a></label>
                 </form>
               </div>
@@ -60,8 +59,7 @@
                          <label for="confirm_password" class="form-label">Confirm Password</label>
                          <input type="password" class="form-control" id="confirm_password" aria-describedby="confirm_password">
                        </div> -->
-                      <button type="button" class="btn mybtn mb-2 w-100" (click)="onVerifyPwd()" [disabled]="!vForm.valid || loading">
-                        <span>Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></span></button> <br>
+                      <button type="button" class="btn mybtn mb-2 w-100" (click)="onVerifyPwd()" [disabled]="!vForm.valid || loading">Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button> <br>
                       <label class="form-check-label" for=""><a href="javascript:void(0)" class="dark text-bold" (click)="signin()">Back to Login</a></label>
                     </form>
               </div>
