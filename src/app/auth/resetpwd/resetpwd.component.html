@@ -31,7 +31,7 @@
                                 </mat-form-field>
                                 <div class="row justify-content-center ">
                                     <button mat-raised-button color="primary" type="button"[disabled]="!resetForm.valid || loading" (click)="resetNewpass()">
-                                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                                         <span *ngIf="!loading">Submit New Password</span></button>
                                 </div>
                               </form>

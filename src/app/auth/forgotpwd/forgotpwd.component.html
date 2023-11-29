@@ -17,7 +17,7 @@
                     </div>
                 </div>
               <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!fForm.valid || loading" (click)="onResetPwd()">
-                <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                 <span *ngIf="!loading">Reset Password</span></button>
             </form>
             <form *ngIf="!resetPwd" class="registration-form" [formGroup]="vForm">
@@ -33,7 +33,7 @@
                     <small class="text-left d-block text-danger" style="font-size:9px;bottom:-16px;" *ngIf="vForm.controls['password'].touched && vForm.controls['password'].dirty && vForm.controls['password'].errors?.invalidPassword" >{{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                   </div>
                 <button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="!vForm.valid || loading" (click)="onVerifyPwd()">
-                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Saving...</span></span>
+                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                     <span *ngIf="!loading">Save New Password</span></button>
               </form>
             <div class="row mt-2 text-muted"><div class="col-lg-12"><h4 [routerLink]="['/signin']">Already have account? <a><b> Log In</b></a></h4></div></div>
@@ -68,7 +68,7 @@
                                         </div>
                                     </div>
                                     <div class="row justify-content-center "><button mat-raised-button color="primary" [disabled]="!fForm.valid || loading" type="button" (click)="onResetPwd()">
-                                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                                          <span *ngIf="!loading">Reset Password</span></button></div>
                                 </form>
                             </div>
@@ -93,7 +93,7 @@
                                             {{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                     </div>
                                     <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!vForm.valid || loading" type="button" (click)="onVerifyPwd()">
-                                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                                         <span *ngIf="!loading">Save New Password</span></button></div>
                                 </form>
                             </div>
@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
                                   <div class="row justify-content-center mt-3"><button mat-raised-button color="primary" [disabled]="!fForm.valid || loading" type="button" (click)="onResetPwd()">
-                                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                                     <span *ngIf="!loading">Reset Password</span></button></div>
                               </form>
                           </div>
@@ -165,7 +165,7 @@
                                         {{ vForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                   </div>
                                   <div class="col-md-12 my-3"><button mat-raised-button color="primary" [disabled]="!vForm.valid || loading"  type="button" (click)="onVerifyPwd()">
-                                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Saving...</span></span>
+                                    <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                                     <span *ngIf="!loading">Save New Password</span></button></div>
                               </form>
                           </div>

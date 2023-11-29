@@ -28,7 +28,7 @@
              <div class="row">
                 <div class="col-xs-12">
                     <button type="button" class="btn btn-success" [disabled]="!verifyForm.valid || loading" (click)="onVerify()">
-                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status"> Loading...</span></span>
+                        <span *ngIf="loading"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span>
                         <span *ngIf="!loading">Verify Now</span></button>&nbsp;
                 </div>
             </div>
