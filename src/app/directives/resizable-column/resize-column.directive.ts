@@ -109,16 +109,20 @@ export class ResizeColumnDirective implements OnInit {
   }
 
   updateElementWidth(element: HTMLElement, width: number | null) {
-    // Check for inline styles
-    const inlineStyles = element.getAttribute('style');
-    if (inlineStyles && inlineStyles.includes('width')) {
-      // Update inline styles directly
-      width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
-    } else {
-      // Use Renderer2 for styles applied through Angular
-      width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
-      // this.renderer.setStyle(element, 'width', `${width}px`);
-    }
+    
+    width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+    
+    
+    // // Check for inline styles
+    // const inlineStyles = element.getAttribute('style');
+    // if (inlineStyles && inlineStyles.includes('width')) {
+    //   // Update inline styles directly
+    //   width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+    // } else {
+    //   // Use Renderer2 for styles applied through Angular
+    //   width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+    //   // this.renderer.setStyle(element, 'width', `${width}px`);
+    // }
   }
   
 

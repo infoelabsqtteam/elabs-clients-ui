@@ -42,7 +42,7 @@
                             <th *ngIf="grid_row_selection" class="text-center colSticky firstCol">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
-                            <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" *ngFor="let fieldName of listOfGridFieldName;let i=index" [stickyHeader]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap resizeGridColunms" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span></div></th>
+                            <th *ngFor="let fieldName of listOfGridFieldName;let i=index" [stickyHeader]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span></div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,7 +56,7 @@
                             </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                               <div>
-                                <div *ngIf="!fieldName.editable" class="grid-data resizeGridColunms" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
+                                <div *ngIf="!fieldName.editable" class="grid-data" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
                                     <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)"></span>
                                 </div>
                                 <div *ngIf="fieldName.editable" style="position: relative;">
