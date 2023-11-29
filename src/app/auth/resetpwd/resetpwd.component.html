@@ -17,7 +17,7 @@
                           
 
                           <div >
-                            <form class="example-form" [formGroup]="resetForm" (ngSubmit)="resetNewpass()">
+                            <form class="example-form" [formGroup]="resetForm">
                                 
 
                                 <mat-form-field appearance="outline" class="w-100">
@@ -30,7 +30,7 @@
                                         {{ resetForm.controls['password'].errors.invalidPassword | titlecase}}</mat-error>
                                 </mat-form-field>
                                 <div class="row justify-content-center ">
-                                    <button mat-raised-button color="primary" type="submit">Submit New Password</button>
+                                    <button mat-raised-button color="primary" type="button"[disabled]="!resetForm.valid || loading" (click)="resetNewpass()">Submit New Password <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
                                 </div>
                               </form>
                           </div>
