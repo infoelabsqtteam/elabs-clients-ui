@@ -20,6 +20,11 @@
             <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown" >
                 <span class="example-list-section">
                     <ul class="ml-2 mt-2 mb-2">
+                        <li (click)="updateColumnList(listOfGridFieldName)" class="pr-2">
+                            <button mat-menu-item class="d-flex justify-content-center">
+                              Show All
+                            </button>
+                          </li>
                         <li *ngFor="let column of listOfGridFieldName; let i = index" >
                             <mat-checkbox [(ngModel)]="column.display" [color]="column.field_class ? column.field_class : 'primary'" (ngModelChange)="updateColumnList(column,i)"(click)="$event.stopPropagation()">
                             {{ column.label }}

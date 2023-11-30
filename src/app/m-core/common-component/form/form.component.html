@@ -885,8 +885,8 @@
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0">({{modifyCustmizedFormValue[tableField.field_name].length}})</span><span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
-                                    <button type="button" (click)="updateColumnList(tableField.gridColumns,i)" mat-icon-button size="sm" class="m-0 ml-2 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">refresh</mat-icon></button>
-                                    <!-- <button  mat-icon-button [matMenuTriggerFor]="hiddenList" size="sm" class="m-0 ml-2 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">filter_alt</mat-icon></button>
+                                    <!-- <button type="button" (click)="updateColumnList(tableField.gridColumns,i)" mat-icon-button size="sm" class="m-0 ml-2 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">refresh</mat-icon></button>
+                                    <button  mat-icon-button [matMenuTriggerFor]="hiddenList" size="sm" class="m-0 ml-2 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">filter_alt</mat-icon></button>
                                     <mat-menu #hiddenList="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown">
                                         <span class="example-list-section">
                                             <ul class="ml-2 mt-2 mb-2">

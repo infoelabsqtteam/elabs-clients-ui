@@ -621,13 +621,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
 
-  updateColumnList(field,index){
-    // console.log(field)
-    field.display = !field.display;
-    // field.forEach(column => (column.display = true));
+  updateColumnList(field,index?:number){
+    index ? field[index].display = !field[index].display : field.forEach(column => (column.display = true))
   }
   hideColumn(elements,index: number) {
-    // console.log(elements)
     elements.display = !elements.display;
   }
   setGridData(gridData){

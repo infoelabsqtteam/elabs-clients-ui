@@ -40,12 +40,17 @@
         <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
             <span class="example-list-section">
                 <ul class="ml-2 mt-2 mb-2">
-                  <li *ngFor="let head of headElements; let i = index" >
-                    <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (ngModelChange)="updateColumnList('display',i)" (click)="$event.stopPropagation()">
-                      {{ head.label }}
-                    </mat-checkbox>
-                  </li>
-                </ul>
+                    <li (click)="updateColumnList(headElements)" class="pr-2">
+                      <button mat-menu-item class="d-flex justify-content-center">
+                        Show All
+                      </button>
+                    </li>
+                    <li *ngFor="let head of headElements; let i = index">
+                      <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (ngModelChange)="updateColumnList(head, i)" (click)="$event.stopPropagation()">
+                        {{ head.label }}
+                      </mat-checkbox>
+                    </li>
+                  </ul>  
             </span>
         </mat-menu>              
     </div>
