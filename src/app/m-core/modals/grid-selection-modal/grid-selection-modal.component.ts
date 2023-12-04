@@ -127,9 +127,7 @@ export class GridSelectionModalComponent implements OnInit {
     //this.treeViewData.data = TREE_DATA;
   }
 
-  hideColumn(elements,index: number) {
-    elements[index].display = !elements[index].display;
-  }
+
   getViewData(){
     if (this.modifiedGridData && this.modifiedGridData.length > 0) {
       this.total = this.modifiedGridData.length;
@@ -495,8 +493,11 @@ export class GridSelectionModalComponent implements OnInit {
     this.getStaticDataWithDependentData()
 
   }
-  updateColumnList(field,index?:number){
-    index ? field[index].display = !field[index].display : field.forEach(column => (column.display = true))
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
+  }
+  hideColumn(columns,index: number) {
+      columns[index].display = !columns[index].display;
   }
   selectGridData() {    
     this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);

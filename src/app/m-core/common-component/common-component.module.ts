@@ -12,13 +12,15 @@ import { ChartComponent } from './chart/chart.component';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
+import { CheckboxMenuComponent } from './checkbox-menu/checkbox-menu.component';
 
 
 const components = [
   FormComponent,
   ChartComponent,
   MongodbChartComponent,
-  DashboardChartComponent
+  DashboardChartComponent,
+  CheckboxMenuComponent,
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
@@ -36,7 +38,7 @@ const maskConfig: Partial<IConfig> = {
     NgxMaskModule.forRoot(maskConfig),
     ModelModule,
     AllPackageModule,
-    GoogleMapsModule
+    GoogleMapsModule,
   ],
   exports:components,
   declarations: components
