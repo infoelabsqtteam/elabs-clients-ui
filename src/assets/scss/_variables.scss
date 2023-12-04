@@ -5,6 +5,8 @@
     --themes:#e8f5fd;
     --white: #fff;
     --module-hover-bg: #eef5fd;
+    //Font Color
+    --fontColor:#000;
     //Header
     --headerbg:#fcfcfc;
     --headericon: #555;
@@ -39,7 +41,12 @@ $buttonHovercolor: var(--buttonHoverColor);
 
 $themecolor: var(--themecolor);
 $themebg: var(--themes);
+// Grid Color Setting
+// Table Row Hover color
+$row-hover-color: var(--activebg);
 
+//Text Color Setting
+$txtColor:var(--fontColor);
 // Theme Setting
 //$themecolor: var(--themecolor);
 $themetext: #77bce8;

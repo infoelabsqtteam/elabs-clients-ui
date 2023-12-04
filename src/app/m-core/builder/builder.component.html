@@ -4,7 +4,7 @@
     </div>
     <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
 
-        <div class="tablist position-relative">
+        <div class="tablist position-relative d-flex">
           <mat-tab-group animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
             <mat-tab *ngFor="let tab of tabs; let i = index" >
               <ng-template mat-tab-label>
@@ -13,8 +13,30 @@
               </ng-template>
             </mat-tab>
           </mat-tab-group>
+        <button *ngIf="tabs.length>5" mat-icon-button [matMenuTriggerFor]="tabExtraMenu" [title]="'More Tabs'">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+
+    <mat-menu #tabExtraMenu="matMenu">
+      <ng-container *ngFor="let tab of tabs; let i = index">
+        <div class="tabExtraMenu">
+          <div class="pl-3 pr-1 py-2 d-flex align-items-center" [ngClass]="{ 'd-none': !tab.display }"
+            (click)="getTab(i, tab.tab_name, $event)">
+            <div class="tab-content">
+              <span>{{ gateTabName(tab) }}</span>
+              <span>({{ gridCountByTab[tab.tab_name + "_" + tab.name] }})</span>
+            </div>
+            <div class="favibtn" style="opacity: 0.5;" [ngClass]="{ active: tab.febMenu, 'd-none': !tab.display }"
+              (click)="addFebMenu(tab, '')">
+              <mat-icon class="moreMenuFavIcon">grade</mat-icon>
+            </div>
           </div>
-        <!-- <div class="tablist position-relative">
+        </div>
+      </ng-container>
+    </mat-menu>
+    <!-- <div class="tablist position-relative">
             <button class="preview" id="firstbtn" (click)="previous()" *ngIf="tabs.length > 6"><mat-icon>arrow_back_ios</mat-icon></button>
           <div class="gridtabs" id="tabdiv">
             <div class="tabsmenu" *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">

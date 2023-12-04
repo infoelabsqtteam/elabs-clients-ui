@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, DataShareService, ApiService, ModelService } from '@core/web-core';
+import { DataShareService, ApiService, ModelService, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -29,10 +29,9 @@ export class PreviewModalComponent implements OnInit, AfterViewInit {
 
   constructor(
     private modalService: ModelService, 
-    private el: ElementRef, 
-    private commonFunctionService: CommonFunctionService,
     private dataShareService:DataShareService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private apiCallService:ApiCallService
     ) {
 
     this.pdfFileSubscription = this.dataShareService.downloadPdfData.subscribe(data =>{
@@ -131,7 +130,7 @@ export class PreviewModalComponent implements OnInit, AfterViewInit {
     this.apiService.resetPreviewHtml();
   }
   downloadPdf() {
-    this.downloadPdfCheck = this.commonFunctionService.downloadPdf(this.gridData,this.currentPage)    
+    this.downloadPdfCheck = this.apiCallService.downloadPdf(this.gridData,this.currentPage)    
   }
   print(): void {
     let popupWin;

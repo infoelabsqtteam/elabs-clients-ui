@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
               <div *ngIf="resetPwd">
-               <form [formGroup]="fForm" (ngSubmit)="onResetPwd()">
+               <form [formGroup]="fForm">
                   <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
                     <input type="email" class="form-control" id="email" formControlName="email" aria-describedby="emailHelp">
@@ -30,12 +30,12 @@
                      <label for="confirm_password" class="form-label">Confirm Password</label>
                      <input type="password" class="form-control" id="confirm_password" aria-describedby="confirm_password">
                    </div> -->
-                  <button type="submit" class="btn mybtn mb-2 w-100">Submit</button> <br>
+                  <button type="button" class="btn mybtn mb-2 w-100" (click)="onResetPwd()" [disabled]="!fForm.valid || loading">Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button> <br>
                   <label class="form-check-label" for=""><a href="javascript:void(0)" class="dark text-bold" (click)="signin()">Back to Login</a></label>
                 </form>
               </div>
               <div *ngIf="!resetPwd">
-                  <form [formGroup]="vForm" (ngSubmit)="onVerifyPwd()">                      
+                  <form [formGroup]="vForm">                      
                       <div class="mb-4">
                          <label for="otp" class="form-label">Enter OTP sent to your email address</label>
                          <div class="d-flex otp">
@@ -59,7 +59,7 @@
                          <label for="confirm_password" class="form-label">Confirm Password</label>
                          <input type="password" class="form-control" id="confirm_password" aria-describedby="confirm_password">
                        </div> -->
-                      <button type="submit" class="btn mybtn mb-2 w-100">Submit</button> <br>
+                      <button type="button" class="btn mybtn mb-2 w-100" (click)="onVerifyPwd()" [disabled]="!vForm.valid || loading">Submit <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button> <br>
                       <label class="form-check-label" for=""><a href="javascript:void(0)" class="dark text-bold" (click)="signin()">Back to Login</a></label>
                     </form>
               </div>

@@ -1,7 +1,7 @@
 import { Component, HostListener, Input, OnInit ,OnDestroy} from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModelService, PublicApiService, CommonFunctionService, StorageService, ApiService, DataShareService } from '@core/web-core';
+import { ModelService, PublicApiService, CommonFunctionService, StorageService, ApiService, DataShareService, ApiCallService } from '@core/web-core';
 
 
 @Component({
@@ -29,7 +29,8 @@ export class CareerWithUsComponent implements OnInit,OnDestroy {
     private storageService: StorageService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private publicApiService:PublicApiService
+    private publicApiService:PublicApiService,
+    private apiCallService:ApiCallService
   ) { 
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -38,7 +39,7 @@ export class CareerWithUsComponent implements OnInit,OnDestroy {
     this.storageService.SetActiveMenu(menu);
     this.currentMenu = this.storageService.GetActiveMenu();
     this.initFOrm();
-    this.commonFunctionService.getTemData(this.currentMenu.name);
+    this.apiCallService.getTemData(this.currentMenu.name);
     this.getPage(1);
   }
 
@@ -144,7 +145,7 @@ if(this.noticeDocument.length > 0){
   }
   getDataForGrid(){ 
     const grid_api_params_criteria = ['status;eq;Active;STATIC'] 
-    const data = this.commonFunctionService.getPaylodWithCriteria('job_vacancies','',grid_api_params_criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria('job_vacancies','',grid_api_params_criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid;    
     const getFilterData = {

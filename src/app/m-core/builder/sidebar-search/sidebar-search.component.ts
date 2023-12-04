@@ -1,6 +1,6 @@
 import { Component, OnInit,Output, EventEmitter,OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { CommonFunctionService, DataShareService, ApiService} from '@core/web-core';
+import { CommonFunctionService, DataShareService, ApiService, ApiCallService} from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar-search',
@@ -30,7 +30,8 @@ export class SidebarSearchComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private router: Router,
     private dataShareService:DataShareService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private apiCallService:ApiCallService
   ) {
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
@@ -87,7 +88,7 @@ export class SidebarSearchComponent implements OnInit,OnDestroy {
       const criteria = this.filter.filterType+';stwic;'+this.filter.search+';STATIC';
       grid_api_params_criteria.push(criteria);
     }
-    const payload = this.commonFunctionService.getPaylodWithCriteria(this.filterTab.tab_name,'',grid_api_params_criteria,'');
+    const payload = this.apiCallService.getPaylodWithCriteria(this.filterTab.tab_name,'',grid_api_params_criteria,'');
     payload['pageNo'] = this.pageNumber - 1;
     payload['pageSize'] = this.itemNumOfGrid;    
     

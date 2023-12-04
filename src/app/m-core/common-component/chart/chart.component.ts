@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, 
 import { FormBuilder } from '@angular/forms';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { ModelService, DataShareService, CommonFunctionService, ApiService} from '@core/web-core';
+import { ModelService, DataShareService, CommonFunctionService, ApiService, ApiCallService} from '@core/web-core';
 import * as _moment from 'moment';
 
 export const MY_DATE_FORMATS = {
@@ -101,7 +101,8 @@ testOption = {
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
-    private modelService: ModelService
+    private modelService: ModelService,
+    private apiCallService:ApiCallService
   ) { 
     this.gridDataSubscription = this.dataShareService.dashletMaster.subscribe(data =>{
       this.setGridData(data);
@@ -221,7 +222,7 @@ testOption = {
     }
   }
   getDataForGrid(Criteria:any){    
-    const data = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','',Criteria,'');
+    const data = this.apiCallService.getPaylodWithCriteria('dashlet_master','',Criteria,'');
     data['pageNo'] = this.pageNumber - 1;
     data['pageSize'] = this.itemNumOfGrid; 
     const getFilterData = {
@@ -240,7 +241,7 @@ testOption = {
     this.checkGetDashletData = true;
   }
   getChartList(){
-    const payload = this.commonFunctionService.getPaylodWithCriteria('dashlet_master','chart_list',[],'');
+    const payload = this.apiCallService.getPaylodWithCriteria('dashlet_master','chart_list',[],'');
     this.apiService.getStatiData([payload]);
   }
   chartHover(e){}

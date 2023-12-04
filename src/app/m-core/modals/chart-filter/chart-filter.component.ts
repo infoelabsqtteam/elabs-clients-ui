@@ -6,7 +6,7 @@ import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as XLSX from 'xlsx';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
-import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService, ChartService } from '@core/web-core';
+import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService, ChartService, ApiCallService } from '@core/web-core';
 
 
 export const MY_DATE_FORMATS = {
@@ -74,7 +74,7 @@ export class ChartFilterComponent implements OnInit {
     private dataShareService:DataShareService,
     private chartService:ChartService,
     private storageService: StorageService,
-    private datePipe: DatePipe
+    private apiCallService:ApiCallService
   ) {
     this.accessToken = this.storageService.GetIdToken();    
     this.dashletDataSubscription = this.dataShareService.dashletData.subscribe(data =>{
@@ -146,7 +146,7 @@ export class ChartFilterComponent implements OnInit {
         const filterData = value;
         let crList = [];
         if(fields && fields.length > 0){
-          crList = this.commonFunctionService.getfilterCrlist(fields,filterData);
+          crList = this.apiCallService.getfilterCrlist(fields,filterData);
         }        
         let object = {}
         // if(filterData){
@@ -169,12 +169,18 @@ export class ChartFilterComponent implements OnInit {
       }
     }
   }
+
+  isfilterChart:boolean = false;
   filterData(responce){
+    this.isfilterChart = true;
     let item = responce.item;
     let data = responce.data;
     if(item && data){
       this.dashletFilter(item,data);
-    }    
+    }
+    setTimeout(() => {
+      this.isfilterChart = false;
+    }, 6000);  
   }
   dashletFilter(item,data){
     if(item && item.package_name && item.package_name == "mongodb_chart"){
@@ -246,7 +252,7 @@ export class ChartFilterComponent implements OnInit {
           console.log('Chart failed to initialise')
           //window.alert('Chart failed to initialise')
           );
-        }        
+        }    
       }
     }
   }
