@@ -1,7 +1,7 @@
 <div *ngIf="columns.length > 0">
   <span class="example-list-section">
     <ul class="ml-2 mt-2 mb-2">
-      <li (click)="updateColumnList(columns)" class="pr-2">
+      <li (click)="updateColumnList()" class="pr-2">
         <button mat-menu-item class="d-flex justify-content-center">
           Show All
         </button>
@@ -10,7 +10,7 @@
         <mat-checkbox
           [(ngModel)]="head.display"
           [color]="head.field_class ? head.field_class : 'primary'"
-          (ngModelChange)="updateColumnList()"
+          (ngModelChange)="showHide()"
           (click)="$event.stopPropagation()"
         >
           {{ head.label }}

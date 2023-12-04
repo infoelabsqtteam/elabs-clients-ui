@@ -11,6 +11,7 @@ export class CheckboxMenuComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    // console.log('Columns in ngOnInit:', this.columns);
     if (this.columns) {
       this.columns.forEach((data) => {
         if (!data.hasOwnProperty("display")) {
@@ -18,9 +19,14 @@ export class CheckboxMenuComponent implements OnInit {
         }
       });
     }
+    // console.log('Columns after initialization:', this.columns);
   }
-
-  updateColumnList(columns?) {
-    if (columns) columns.forEach((column) => (column.display = true));
+  showHide(){
   }
+  updateColumnList() {
+    if (this.columns) {
+      this.columns.forEach((column) => (column.display = true));
+    }
+  }
+  
 }
