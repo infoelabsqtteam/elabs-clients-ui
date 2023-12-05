@@ -79,14 +79,15 @@ table,table td{
     li {font-size:12px;}
 }
 .tabExtraMenu {
+    font-weight: normal !important;
+    color: $txtColor;
     cursor: pointer;
     padding: 0px 5px;
 
     &:hover {
         border-radius: 5px;
         background: var(--buttonColor);
-        color: #000;
-        opacity: 0.8;
+        color: $txtColor;
     }
 }
 .tablist {padding-right:220px;

@@ -3148,6 +3148,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   hideColumn(columns,index: number) {
     columns[index].display = !columns[index].display;
 }
+  // show all columns icon click function 
+updateColumnList(columns?){
+  if(columns) columns.forEach(column=>column.display =true)
+}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
