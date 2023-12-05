@@ -36,7 +36,7 @@
       <div class="modal-body pt-0 popuptable">
         <div class="">
             <div class="table without-filter mb-2 grid-selection-modal">            
-                <table *ngIf="field.type == 'grid_selection' && listOfGridFieldName.length > 0" class="table-bordered table-hover table-resizable  gridselectionform" matSort (matSortChange)="sortData($event)" stickyTable>
+                <table *ngIf="field.type == 'grid_selection' && listOfGridFieldName.length > 0" class="table-bordered table-hover  gridselectionform" matSort (matSortChange)="sortData($event)" stickyTable>
                     <thead>
                         <tr class="border">
                             <th *ngIf="grid_row_selection" class="text-center colSticky firstCol">
