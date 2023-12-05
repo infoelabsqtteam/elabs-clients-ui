@@ -3144,6 +3144,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
+  // Grid hide column icon click function
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 

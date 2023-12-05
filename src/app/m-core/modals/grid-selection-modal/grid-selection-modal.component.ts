@@ -193,6 +193,10 @@ export class GridSelectionModalComponent implements OnInit {
   //   }
   // }
 
+  //Hide Icon Click Function 
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
   add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
     if(event && event.value){
