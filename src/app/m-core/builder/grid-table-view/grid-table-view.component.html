@@ -35,12 +35,11 @@
             <a *ngIf="(btn && btn.grid_header_button) || (bulkuploadList && bulkuploadList.length > 0)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
-        </span>  
+        </span>
         <ng-container *ngIf="headElements.length > 0">
-            <button mat-icon-button (click)="updateColumnList(headElements)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button size="sm" class="m-0 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">autorenew</mat-icon></button>
-            <button mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button size="sm" class="m-0 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">filter_alt</mat-icon></button>
-        </ng-container>      
-        <!-- <button *ngIf="headElements.length > 0" mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button> -->
+            <button mat-icon-button (click)="updateColumnList(headElements)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" size="sm" class="mr-2 grid-button float-right" style="width: 30px; height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">autorenew</mat-icon></button>
+            <button mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" size="sm" class="grid-button float-right" style="width: 30px;height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">filter_alt</mat-icon></button>
+        </ng-container>
         <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
             <app-grid-filter-menu [columns]="headElements"></app-grid-filter-menu>
         </mat-menu>              
@@ -62,7 +61,7 @@
                                         <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div class="heading d-flex"
                                              [style.width]="head.width" [style.text-align]="head.text_align">
-                                                <span (click)="onSort(headElements[i])" class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
+                                                <span (click)="onSort(headElements[i])" class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
                                                 <span (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'">
                                                     <mdb-icon fas icon="sort"></mdb-icon>
                                                 </span>

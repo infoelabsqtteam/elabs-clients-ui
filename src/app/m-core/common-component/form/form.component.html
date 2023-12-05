@@ -910,9 +910,11 @@
                                         <thead class="border">
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
-                                                <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'"><div class="justify-content-between d-flex"> {{ fieldName.label | titlecase}} 
-                                                    <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
-                                                </div></th>
+                                                <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                                                    <div class="justify-content-between t d-flex"> {{ fieldName.label | titlecase}} 
+                                                        <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
