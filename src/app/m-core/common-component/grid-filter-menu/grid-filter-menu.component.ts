@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: "app-checkbox-menu",
-  templateUrl: "./checkbox-menu.component.html",
-  styleUrls: ["./checkbox-menu.component.css"],
+  selector: 'app-grid-filter-menu',
+  templateUrl: './grid-filter-menu.component.html',
+  styleUrls: ['./grid-filter-menu.component.css'],
 })
-export class CheckboxMenuComponent implements OnInit {
+export class GridFilterMenuComponent implements OnInit {
   @Input() columns: any;
 
   constructor() {}

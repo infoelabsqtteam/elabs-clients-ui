@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CheckboxMenuComponent } from "./checkbox-menu.component";
+import { GridFilterMenuComponent } from "./grid-filter-menu.component";
 
-describe("CheckboxMenuComponent", () => {
-  let component: CheckboxMenuComponent;
-  let fixture: ComponentFixture<CheckboxMenuComponent>;
+describe("GridFilterMenuComponent", () => {
+  let component: GridFilterMenuComponent;
+  let fixture: ComponentFixture<GridFilterMenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CheckboxMenuComponent],
+      declarations: [GridFilterMenuComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CheckboxMenuComponent);
+    fixture = TestBed.createComponent(GridFilterMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

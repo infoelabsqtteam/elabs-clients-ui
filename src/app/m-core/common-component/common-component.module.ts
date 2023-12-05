@@ -12,7 +12,7 @@ import { ChartComponent } from './chart/chart.component';
 import { MongodbChartComponent } from './mongodb-chart/mongodb-chart.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
-import { CheckboxMenuComponent } from './checkbox-menu/checkbox-menu.component';
+import { GridFilterMenuComponent } from './grid-filter-menu/grid-filter-menu.component';
 
 
 const components = [
@@ -20,7 +20,7 @@ const components = [
   ChartComponent,
   MongodbChartComponent,
   DashboardChartComponent,
-  CheckboxMenuComponent,
+  GridFilterMenuComponent,
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
