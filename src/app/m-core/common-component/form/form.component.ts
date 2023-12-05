@@ -620,14 +620,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       });
     }
   }
-
-  updateColumnList(columns?){
-    // console.log(columns)
-    if(columns) columns.forEach(column=>column.display =true)
-  }
-  hideColumn(columns,index: number) {
-      columns[index].display = !columns[index].display;
-  }
   setGridData(gridData){
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
@@ -3157,9 +3149,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     columns[index].display = !columns[index].display;
 }
   // show all columns icon click function 
-updateColumnList(columns?){
-  if(columns) columns.forEach(column=>column.display =true)
-}
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
+  }
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
