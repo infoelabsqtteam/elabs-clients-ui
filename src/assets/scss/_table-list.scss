@@ -96,7 +96,6 @@ table,table td{
 
 .table {
 	.table-resizable {
-        min-width: max-content;
 				th {
 					position: relative;
 					left: 0px !important;
@@ -110,7 +109,6 @@ table,table td{
 							z-index: 1;
 						}
 				}
-		transition: all 0.3s;
 	}
 	table.resizing {
 		-moz-user-select: none;
