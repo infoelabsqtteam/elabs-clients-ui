@@ -66,7 +66,7 @@
                                         <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div class="heading d-flex"
                                              [style.width]="head.width" [style.text-align]="head.text_align">
-                                                <span (click)="onSort(headElements[i])" class="grid-heading-nowrap" [title]="head.label">{{ head.label | titlecase }}</span>
+                                                <span (click)="onSort(headElements[i])" class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
                                                 <span (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'">
                                                     <mdb-icon fas icon="sort"></mdb-icon>
                                                 </span>
