@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./verify.component.css']
 })
 export class VerifyComponent implements OnInit {
+  loading = false;
   username: string;
   verifyForm: FormGroup;
   emailVarify:boolean = true;
@@ -22,6 +23,8 @@ export class VerifyComponent implements OnInit {
     private notificationService: NotificationService
   ) {
     this.verifySubscriptioin = this.authDataShareService.otpResponse.subscribe(res =>{
+      this.loading = false;
+      this.verifyForm.reset();
       if(res.msg != '') {
         this.notificationService.notify(res.class, res.msg);
       }
@@ -54,6 +57,7 @@ export class VerifyComponent implements OnInit {
   }
 
   onVerify(){
+    this.loading = true;
     const username = this.verifyForm.value.username;
     const verifycode = this.verifyForm.value.verifycode;
     this.authServie.TryVerify({username:username,verifycode:verifycode})

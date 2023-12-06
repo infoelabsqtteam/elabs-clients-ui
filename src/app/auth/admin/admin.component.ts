@@ -11,6 +11,7 @@ import { AuthService, EnvService} from '@core/web-core';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+  loading = false;
   hide = true;
   @Input() public pageName;
   appName: string;
@@ -29,10 +30,14 @@ export class AdminComponent implements OnInit {
   }
 
   onSignIn(form: NgForm) {
+    this.loading = true;
     const email = form.value.email;
     const password = form.value.password;
     this.authService.Signin({ email: email, password: password })
-
+    setTimeout(()=>{
+      this.loading = false;
+      form.reset();
+    },2000)
     
   }
 
