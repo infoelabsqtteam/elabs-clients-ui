@@ -27,7 +27,7 @@
                             </button>
                           </li>
                         <li *ngFor="let column of listOfGridFieldName; let i = index" >
-                            <mat-checkbox [(ngModel)]="column.display" [color]="column.field_class ? column.field_class : 'primary'" (click)="$event.stopPropagation()">
+                            <mat-checkbox [(ngModel)]="column.display" [color]="'primary'" (click)="$event.stopPropagation()">
                             {{ column.label }}
                             </mat-checkbox>
                         </li>
