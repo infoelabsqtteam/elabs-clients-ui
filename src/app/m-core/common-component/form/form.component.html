@@ -885,7 +885,9 @@
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0">({{modifyCustmizedFormValue[tableField.field_name].length}})</span><span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
-
+                                    <ng-container *ngIf="tableField.gridColumns.length>0" >
+                                        <button (click)="updateColumnList(tableField.gridColumns)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button class="plusicon"><mat-icon>autorenew</mat-icon></button>
+                                    </ng-container>
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled && !tableField.is_disabled && tableField['showButton']" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] ? tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] ? tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
                                     <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] ? tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] : 'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
@@ -904,7 +906,11 @@
                                         <thead class="border">
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
-                                                <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
+                                                <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                                                    <div class="justify-content-between t d-flex"> {{ fieldName.label | titlecase}} 
+                                                        <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
