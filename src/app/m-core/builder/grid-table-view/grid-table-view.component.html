@@ -44,7 +44,7 @@
             <span class="example-list-section">
                 <ul class="ml-2 mt-2 mb-2">
                   <li *ngFor="let head of headElements; let i = index" >
-                    <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (ngModelChange)="updateColumnList()" (click)="$event.stopPropagation()">
+                    <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (click)="$event.stopPropagation()">
                       {{ head.label }}
                     </mat-checkbox>
                   </li>
