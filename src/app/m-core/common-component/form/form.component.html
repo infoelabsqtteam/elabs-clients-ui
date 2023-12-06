@@ -805,7 +805,7 @@
                                     <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                 </div>                                
                                 <div class="table-responsive table maxheightdata">
-                                    <table class="table table-bordered table-hover table-resizable datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
+                                    <table class="table table-bordered table-hover datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
                                         <thead>
                                             <tr class="border"> 
                                                 <!-- <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                                -->
@@ -902,7 +902,7 @@
                                     </div>
                                 </div>                                
                                 <div class="table-responsive table" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
-                                    <table class="table-bordered table-hover table-resizable datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                    <table class="table-bordered table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead class="border">
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
