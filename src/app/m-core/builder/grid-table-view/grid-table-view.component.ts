@@ -1533,7 +1533,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-
+// Grid hide column icon click function
+hideColumn(columns,index: number) {
+  columns[index].display = !columns[index].display;
+}
 
 
 }
