@@ -1766,5 +1766,5 @@
 <app-permission-tree-view id="tree-view" (treeViewComponentResponce)="treeViewComponentResponce($event)"></app-permission-tree-view>
 <app-grid-selection-modal id="grid-selection-modal" (gridSelectionResponce)="gridSelectionResponce($event)"></app-grid-selection-modal>
 <app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
-<app-file-upload-modal id="file-upload-modal" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-file-upload-modal *ngIf="isGridSelectionOpen" id="file-upload-modal" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>
 <app-preview-modal id="form-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>
