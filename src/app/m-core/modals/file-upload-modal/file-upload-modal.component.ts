@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { CommonFunctionService, ModelService, NotificationService, StorageService} from '@core/web-core';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 
 @Component({
@@ -10,7 +11,8 @@ import { CommonFunctionService, ModelService, NotificationService, StorageServic
 })
 export class FileUploadModalComponent implements OnInit {
   @Input() id: string;
-  @Output() fileUploadResponce = new EventEmitter();
+  //@Output() fileUpload: EventEmitter<any>  = new EventEmitter();
+  @Output() fileUpload: Subject<any> = new BehaviorSubject<any>(null);
   @ViewChild('docUploadModal') public docUploadModal: ModalDirective;
 
   fileDrop: boolean = false;
@@ -150,13 +152,13 @@ export class FileUploadModalComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-  uploadFilesSimulator(index) {
+  uploadFilesSimulator() {
     this.uploadFile = true;
     if(this.checkFileSize(this.files)){
       if (this.uploadData && this.uploadData.length > 0) {
-        this.fileUploadResponce.emit(this.uploadData);
+        this.fileUpload.next(this.uploadData);
       } else {
-        this.fileUploadResponce.emit([]);
+        this.fileUpload.next([]);
       }
       this.docUploadModal.hide();
     }    
