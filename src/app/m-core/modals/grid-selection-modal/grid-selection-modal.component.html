@@ -241,4 +241,4 @@
 
 <app-confirm-modal *ngIf="!isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce1($event)"></app-confirm-modal>
 <app-bulk-update id="bulk-update-modal" (bulkUpdateResponce)="bulkUpdateResponce($event)"></app-bulk-update>
-<app-file-upload-modal *ngIf="!isGridSelectionOpen" id="grid-selection-file-upload" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-file-upload-modal *ngIf="!isGridSelectionOpen" id="grid-selection-file-upload" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>
