@@ -38,6 +38,7 @@ import { HtmlViewModalComponent } from './html-view-modal/html-view-modal.compon
 import { BulkUpdateComponent } from './bulk-update/bulk-update.component';
 import { PermissionTreeViewComponent } from './permission-tree-view/permission-tree-view.component';
 import { CommonComponentModule } from '../common-component/common-component.module';
+import { ChartModalComponent } from './chart-modal/chart-modal.component';
 
 
 const models = [
@@ -63,6 +64,7 @@ const models = [
   LandingFunctionsModalComponent,
   ShortcutinfoComponent,
   GitVersionComponent,
+  ChartModalComponent,
   ChartFilterComponent,
   FeedbackComponent,
   DownloadProgressComponent,

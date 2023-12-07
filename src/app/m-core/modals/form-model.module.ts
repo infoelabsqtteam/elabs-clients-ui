@@ -10,14 +10,13 @@ import { CommonFormComponentModule } from '../common-form-component/common-form-
 const models = [
   FormModalComponent,
   FranchiseComponent,
-  ChartModalComponent
+  
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     CommonFormComponentModule,
-    AllPackageModule,
     MDBBootstrapModule.forRoot()
   ],
   exports: models,
