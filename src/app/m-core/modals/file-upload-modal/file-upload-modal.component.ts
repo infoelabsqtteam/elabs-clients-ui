@@ -150,7 +150,7 @@ export class FileUploadModalComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-  uploadFilesSimulator(index) {
+  uploadFilesSimulator() {
     this.uploadFile = true;
     if(this.checkFileSize(this.files)){
       if (this.uploadData && this.uploadData.length > 0) {

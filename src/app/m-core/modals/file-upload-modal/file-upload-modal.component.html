@@ -1,4 +1,4 @@
-<div mdbModal #docUploadModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+<div mdbModal #docUploadModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
 
@@ -37,7 +37,7 @@
             </div>
             <div class="form-group text-right px-2">
                 <button class="btn btn-light btn-sm mr-1" (click)="cancel()">Cancel</button>
-                <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator(0)">Add</button>
+                <button class="btn btn-primary btn-sm " (click)="uploadFilesSimulator()">Add</button>
             </div>
         </div>
     </div>
