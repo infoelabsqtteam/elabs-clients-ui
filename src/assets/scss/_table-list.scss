@@ -25,9 +25,9 @@ table,table td{
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {width: auto !important;font-weight:500;position:relative;font-size:14px;}
                 .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:14px;width: 100%;}
-                .fas { display:none;transition:all 1s;position:absolute;right:5px;top:2px;}
+                .fas { visibility: hidden;transition:all .03s;margin: 0px 2px;}
                 &:hover {
-                    .fas { display:inline-block;}
+                    .fas { visibility:visible}
                 }
             }
             td {padding:5px 10px;border-top:none;border-bottom:none;}
@@ -79,14 +79,15 @@ table,table td{
     li {font-size:12px;}
 }
 .tabExtraMenu {
+    font-weight: normal !important;
+    color: $txtColor;
     cursor: pointer;
     padding: 0px 5px;
 
     &:hover {
         border-radius: 5px;
         background: var(--buttonColor);
-        color: #000;
-        opacity: 0.8;
+        color: $txtColor;
     }
 }
 .tablist {padding-right:220px;
@@ -96,7 +97,6 @@ table,table td{
 
 .table {
 	.table-resizable {
-        min-width: max-content;
 				th {
 					position: relative;
 					left: 0px !important;
@@ -110,7 +110,6 @@ table,table td{
 							z-index: 1;
 						}
 				}
-		transition: all 0.3s;
 	}
 	table.resizing {
 		-moz-user-select: none;

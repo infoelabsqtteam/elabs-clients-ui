@@ -35,13 +35,16 @@
             <a *ngIf="(btn && btn.grid_header_button) || (bulkuploadList && bulkuploadList.length > 0)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
-        </span>        
-        <button *ngIf="headElements.length > 0" mat-icon-button [matMenuTriggerFor]="notify" class="mx-3 filterbtn"><mat-icon>filter_alt</mat-icon></button>
+        </span>
+        <ng-container *ngIf="headElements.length > 0">
+            <button mat-icon-button (click)="updateColumnList(headElements)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" class="mr-2 filterbtn float-right"><mat-icon>autorenew</mat-icon></button>
+            <button mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="filterbtn float-right"><mat-icon>filter_alt</mat-icon></button>
+        </ng-container>
         <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
             <span class="example-list-section">
                 <ul class="ml-2 mt-2 mb-2">
                   <li *ngFor="let head of headElements; let i = index" >
-                    <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (ngModelChange)="updateColumnList('display',i)" (click)="$event.stopPropagation()">
+                    <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (click)="$event.stopPropagation()">
                       {{ head.label }}
                     </mat-checkbox>
                   </li>
@@ -63,8 +66,17 @@
                                 <thead >
                                     <tr>
                                         <th [resizeColumn]="true" [index]="-1" *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}"><div class="heading" (click)="onSort(headElements[i])" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
-                                            <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
+                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                            <div class="heading d-flex"
+                                             [style.width]="head.width" [style.text-align]="head.text_align">
+                                                <span (click)="onSort(headElements[i])" class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
+                                                <span (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'">
+                                                    <mdb-icon fas icon="sort"></mdb-icon>
+                                                </span>
+                                                <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(headElements,i)">
+                                                    <mdb-icon fas icon="eye-slash"></mdb-icon>
+                                                </span>
+                                            </div>
                                         </th>                                        
                                     </tr>
                                     <tr [formGroup]="filterForm" *ngIf="headElements.length > 0" class="grid-filter">

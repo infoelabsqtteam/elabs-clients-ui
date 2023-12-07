@@ -713,8 +713,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
-  updateColumnList(field,index){
-    
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
   }
   getTabsCount(tabs){
     this.apiCallService.getTabsCountPyload(tabs);    
@@ -1533,7 +1533,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-
+// Grid hide column icon click function
+hideColumn(columns,index: number) {
+  columns[index].display = !columns[index].display;
+}
 
 
 }
