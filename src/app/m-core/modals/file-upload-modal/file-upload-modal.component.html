@@ -4,7 +4,7 @@
 
             <div class="modal-body">
                 <div class="dropzone position-relative " appDnd (fileDropped)="onFileDropped($event,false,null)">
-                    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+                    <input type="file" onclick="this.value = null" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
                     <div class="dz-message ">
                         <mdb-icon fas icon="cloud-upload-alt" size="3x" class="animated text-muted"></mdb-icon>
                         <h3>Drop files here or click to upload.</h3>

@@ -10,7 +10,7 @@ import { CommonFunctionService, ModelService, NotificationService, StorageServic
 })
 export class FileUploadModalComponent implements OnInit {
   @Input() id: string;
-  @Output() fileUploadResponce = new EventEmitter();
+  @Output() fileUpload = new EventEmitter<any>();
   @ViewChild('docUploadModal') public docUploadModal: ModalDirective;
 
   fileDrop: boolean = false;
@@ -154,9 +154,9 @@ export class FileUploadModalComponent implements OnInit {
     this.uploadFile = true;
     if(this.checkFileSize(this.files)){
       if (this.uploadData && this.uploadData.length > 0) {
-        this.fileUploadResponce.emit(this.uploadData);
+        this.fileUpload.emit(this.uploadData);
       } else {
-        this.fileUploadResponce.emit([]);
+        this.fileUpload.emit([]);
       }
       this.docUploadModal.hide();
     }    
