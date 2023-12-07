@@ -7,6 +7,7 @@ import { AngularMaterialModule } from './angular-material-module/angular-materia
 import { DirectiveModuleModule } from './directive-module/directive-module.module';
 import { ModelModule } from './modals/model.module';
 import { CommonComponentModule } from './common-component/common-component.module';
+import { FormModelModule } from './modals/form-model.module';
 import { AllPackageModule } from './all-package/all-package.module';
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
@@ -32,12 +33,12 @@ import { AdminComponent } from './admin/admin.component';
 import { DiffHtmlComponent } from './diff-html/diff-html.component';
 
 import { SchedulingDashboardComponent } from './scheduling-dashboard/scheduling-dashboard.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 import { VerticalComponent } from './vertical/vertical.component';
 import { HorizontalComponent } from './horizontal/horizontal.component';
 import { AngularCommonModule } from './angular-common/angular-common.module';
 import { ReportModule } from './report/report.module';
-import { DashboardModule } from './admin-dashboard/dashboard.module';
 
 
 
@@ -68,6 +69,7 @@ const maskConfig: Partial<IConfig> = {
         InlineFormViewComponent,        
         VerticalComponent, 
         HorizontalComponent, 
+        AdminDashboardComponent, 
         SidebarSearchComponent, 
         ChatViewComponent,          
         GmapViewComponent, 
@@ -84,10 +86,10 @@ const maskConfig: Partial<IConfig> = {
         DirectiveModuleModule,
         ModelModule,
         CommonComponentModule,
+        FormModelModule,
         AllPackageModule,
         AngularCommonModule,
-        ReportModule,
-        DashboardModule
+        ReportModule
     ]
 
 })

@@ -18,6 +18,7 @@ import { ForgotpwdModalComponent } from '../auth/modal/forgotpwd-modal/forgotpwd
 
 import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
+import { FormModelModule } from '../m-core/modals/form-model.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
@@ -41,6 +42,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             AllPackageModule,
             AngularMaterialModule,
             AngularCommonModule,
+            FormModelModule,
             ModelModule,
             AllPackageModule
             ],
