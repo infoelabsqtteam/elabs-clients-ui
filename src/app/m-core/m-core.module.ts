@@ -39,6 +39,7 @@ import { VerticalComponent } from './vertical/vertical.component';
 import { HorizontalComponent } from './horizontal/horizontal.component';
 import { AngularCommonModule } from './angular-common/angular-common.module';
 import { ReportModule } from './report/report.module';
+import { CommonFormComponentModule } from './common-form-component/common-form-component.module';
 
 
 
@@ -86,6 +87,7 @@ const maskConfig: Partial<IConfig> = {
         DirectiveModuleModule,
         ModelModule,
         CommonComponentModule,
+        CommonFormComponentModule,
         FormModelModule,
         AllPackageModule,
         AngularCommonModule,
