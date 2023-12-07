@@ -5,7 +5,6 @@ import { MDBBootstrapModule  } from 'angular-bootstrap-md';
 
 
 import { CoreModule } from '../core/core.module';
-import { FormModelModule } from '../m-core/modals/form-model.module';
 import { CommonComponentModule } from '../m-core/common-component/common-component.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { AllPackageModule } from '../m-core/all-package/all-package.module';
@@ -90,11 +89,9 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
         AppLandingRoutingModule,
         MDBBootstrapModule.forRoot(), 
         CoreModule,
-        FormModelModule,
         CommonComponentModule,
         ModelModule,
         AllPackageModule,
-        FormModelModule,
         AngularMaterialModule,
         AngularCommonModule
     ]
