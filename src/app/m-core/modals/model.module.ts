@@ -37,7 +37,7 @@ import { AuditHistoryComponent } from './audit-history/audit-history.component';
 import { HtmlViewModalComponent } from './html-view-modal/html-view-modal.component';
 import { BulkUpdateComponent } from './bulk-update/bulk-update.component';
 import { PermissionTreeViewComponent } from './permission-tree-view/permission-tree-view.component';
-import { FilterComponent } from './filter/filter.component';
+import { CommonComponentModule } from '../common-component/common-component.module';
 
 
 const models = [
@@ -69,8 +69,7 @@ const models = [
   AuditHistoryComponent,
   HtmlViewModalComponent,
   BulkUpdateComponent,
-  PermissionTreeViewComponent,
-  FilterComponent
+  PermissionTreeViewComponent  
 ]
 
 @NgModule({
@@ -81,7 +80,8 @@ const models = [
     DirectiveModuleModule,
     ReactiveFormsModule,
     FormsModule,
-    AllPackageModule
+    AllPackageModule,
+    CommonComponentModule
   ],
   declarations: models,
   exports : models

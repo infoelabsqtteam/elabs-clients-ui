@@ -94,7 +94,6 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
         CommonComponentModule,
         ModelModule,
         AllPackageModule,
-        FormModelModule,
         AngularMaterialModule,
         AngularCommonModule
     ]
