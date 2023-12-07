@@ -864,12 +864,12 @@
                                 </div>
                             </div>
                             <div class="row" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
-                                <div class="col-lg-12 table-responsive py-2" mdbTable [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
+                                <div class="col-lg-12 table-responsive py-2" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
                                     <table class="z-depth-1 verticaltable">
                                         <tbody>
                                         <tr *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
-                                            <td class="border"><strong>{{ fieldName.label | titlecase}}</strong></td>
-                                            <td class="border" *ngFor="let data of modifyCustmizedFormValue[tableField.field_name]; let i = index">
+                                            <td class="border p-1"><strong>{{ fieldName.label | titlecase}}</strong></td>
+                                            <td class="border text-center p-1" *ngFor="let data of modifyCustmizedFormValue[tableField.field_name]; let i = index">
                                                     <span disabled *ngIf="fieldName.type=='checkbox'" >
                                                         <mat-checkbox color="primary"[checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                     </span>
@@ -907,7 +907,7 @@
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
                                                 <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <div class="justify-content-between t d-flex"> {{ fieldName.label | titlecase}} 
+                                                    <div class="justify-content-between d-flex"> {{ fieldName.label | titlecase}} 
                                                         <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
                                                     </div>
                                                 </th>
