@@ -45,6 +45,7 @@ import { IntegrationsComponent } from './services/integrations/integrations.comp
 import { SecuredCloudComponent } from './services/secured-cloud/secured-cloud.component';
 import { DownloadReportComponent } from './download-report/download-report.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { CommonFormComponentModule } from '../m-core/common-form-component/common-form-component.module';
 
 
 
@@ -92,9 +93,9 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
         CoreModule,
         FormModelModule,
         CommonComponentModule,
+        CommonFormComponentModule,
         ModelModule,
         AllPackageModule,
-        FormModelModule,
         AngularMaterialModule,
         AngularCommonModule
     ]
