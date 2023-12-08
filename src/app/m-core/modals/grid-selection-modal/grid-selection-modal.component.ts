@@ -127,6 +127,7 @@ export class GridSelectionModalComponent implements OnInit {
     //this.treeViewData.data = TREE_DATA;
   }
 
+
   getViewData(){
     if (this.modifiedGridData && this.modifiedGridData.length > 0) {
       this.total = this.modifiedGridData.length;
@@ -193,6 +194,10 @@ export class GridSelectionModalComponent implements OnInit {
   //   }
   // }
 
+  //Hide Icon Click Function 
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
   add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
     if(event && event.value){
@@ -492,8 +497,8 @@ export class GridSelectionModalComponent implements OnInit {
     this.getStaticDataWithDependentData()
 
   }
-  updateColumnList(data,index){
-    //this.listOfGridFieldName[index].display = data.display;
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
   }
   selectGridData() {    
     this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
