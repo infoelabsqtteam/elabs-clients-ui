@@ -871,24 +871,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
-      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);
-      if(result.resetForm) this.checkBeforeResetForm();
-      if(result.next) this.next();
+      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);      
       this.dataListForUpload =result.dataListForUpload;
       this.saveResponceData = result.saveResponceData;
       this.custmizedFormValue = result.custmizedFormValue;  
       this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
       this.updateMode = result.updateMode;
-      if(result.isStepper) this.stepper.reset();
       this.complete_object_payload_mode=result.complete_object_payload_mode;
+      this.showNotify = result.showNotify;
+      this.dataSaveInProgress = result.dataSaveInProgress;
+      if(result.isStepper) this.stepper.reset();
+      if(result.resetForm) this.checkBeforeResetForm();
+      if(result.next) this.next();
       if(result.public.check){
         if(result.public.getFormData && Object.keys(result.public.getFormData).length > 0){
           this.apiService.GetForm(result.public.getFormData);
         }
         this.router.navigate([result.public.url]);
       }
-      this.showNotify = result.showNotify;
-      this.dataSaveInProgress = result.dataSaveInProgress;
+      
       if(result.resetResponce) this.apiService.ResetSaveResponce();
       if(result.successAction) this.checkOnSuccessAction();
       if(result.message && result.message.msg && result.message.msg != ''){
@@ -2346,7 +2347,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.clickFieldName = {};
   }
-  fileUploadResponce(response) {
+  fileUploadResponce(response:any) {
     let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
     this.dataListForUpload = uploadFileResponce.dataListForUpload;
     this.templateForm = uploadFileResponce.templateForm;
@@ -3143,6 +3144,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
+  // Grid hide column icon click function
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
+  // show all columns icon click function 
+updateColumnList(columns?){
+  if(columns) columns.forEach(column=>column.display =true)
+}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
