@@ -209,12 +209,12 @@
                                 </mat-select>
                                 <mat-select *ngIf="tableField.multi_select" [compareWith]="compareObjects" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
+                                    <mat-select-trigger> {{templateFormControl[tableField.field_name].value ? templateFormControl[tableField.field_name].value[0].name : ''}} <span *ngIf="templateFormControl[tableField.field_name].value?.length > 1"> (+{{templateFormControl[tableField.field_name].value.length - 1}} others)</span></mat-select-trigger>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [class.d-none]="term[tableField.field_name] && term[tableField.field_name] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term[tableField.field_name].toLowerCase()) === -1" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
                                     </mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="{'_id':'tests','value':'add_new'}">+ Add New</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            
                             <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype != 'object' && tableField.datatype != 'key_value'">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <mat-select *ngIf="!tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name">
@@ -225,7 +225,8 @@
                                 </mat-select>
                                 <mat-select *ngIf="tableField.multi_select" [formControlName]="tableField.field_name" (selectionChange)="setValue('',tableField,false)" [required]="tableField.is_mandatory" [id]="tableField._id+'_'+tableField.field_name" multiple>
                                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field] |filter:term[tableField.field_name]" [value]="staticValue" ><span [innerHtml]="staticValue"></span></mat-option>
+                                    <mat-select-trigger>{{templateFormControl[tableField.field_name].value ? templateFormControl[tableField.field_name].value[0]: ''}}<span *ngIf="templateFormControl[tableField.field_name].value?.length > 1"> (+{{templateFormControl[tableField.field_name].value.length - 1}} others) </span></mat-select-trigger>
+                                    <mat-option *ngFor="let staticValue of staticData[tableField.ddn_field]" [class.d-none]="term[tableField.field_name] && term[tableField.field_name] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term[tableField.field_name].toLowerCase()) === -1" [value]="staticValue" ><span [innerHtml]="staticValue"></span></mat-option>
                                     <mat-option *ngIf="tableField.add_new_enabled"  [value]="'add_new'">+ Add New </mat-option>
                                 </mat-select>
                                 <!-- <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
@@ -703,15 +704,15 @@
                                         <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                     </div>
 
-                                    <table class="table-bordered table-striped table-hover one-line-text" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
-                                        <thead>
+                                    <table class="table table-bordered table-hover one-line-text" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                        <thead class="border">
                                             <tr>
                                                 <th width="10%" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">Action</th>
                                                 <th *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''">{{item.label}}</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let listOfField of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''">
+                                            <tr *ngFor="let listOfField of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" [ngClass]="listOfField.status == 'I' ? 'd-none':''" class="border">
                                                 <td class="px-1" style="text-align: center" *ngIf="!tableField.add_list_field && tableField.add_list_field != 'add'">
                                                     <a  mdbBtn floating="true" size="sm" *ngIf="tableField.datatype == 'list_of_object_with_popup' && listOfField['actionBtnDisplay']" (click)="updateListofFields(tableField,listOfField,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup' && listOfField['actionBtnDisplay']" (click)="editListOfFiedls(i,tableField)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
@@ -725,7 +726,7 @@
                             </div>
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype == 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter" *ngIf="custmizedFormValue[tableField.field_name]">
-                                    <table class="table-bordered table-striped table-hover" *ngIf="objectKeys(custmizedFormValue[tableField.field_name]).length > 0">
+                                    <table class="table table-bordered table-hover" *ngIf="objectKeys(custmizedFormValue[tableField.field_name]).length > 0">
                                         <thead>
                                             <tr>
                                                 <th width="10%" style="text-align: center">Action</th>
@@ -733,7 +734,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let myobject of custmizedFormValue[tableField.field_name] | keyvalue" [ngClass]="myobject.value.status == 'I' ? 'd-none':''">
+                                            <tr *ngFor="let myobject of custmizedFormValue[tableField.field_name] | keyvalue" [ngClass]="myobject.value.status == 'I' ? 'd-none':''" class="border">
                                                 <td class="px-1" style="text-align: center"> 
                                                     <a mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',myobject.key,'',tableField,{},'delete')" mdbWavesEffect class="grid-button btn-danger text-white" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                                        
                                                 </td>
@@ -804,18 +805,18 @@
                                     <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                 </div>                                
                                 <div class="table-responsive table maxheightdata">
-                                    <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
+                                    <table class="table table-bordered table-hover datalist mb-3" mdbTable *ngIf="treeViewData[tableField.field_name].length > 0">
                                         <thead>
-                                            <tr> 
+                                            <tr class="border"> 
                                                 <!-- <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                                -->
-                                                <th *ngFor="let fieldName of tableField.fields" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
+                                                <th *ngFor="let fieldName of tableField.fields;let i=index;" class="text-nowrap">{{ fieldName.label | titlecase}}</th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList >
-                                            <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" >
+                                            <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" class="border">
                                                 
                                                 <td *ngFor="let fieldName of tableField.fields" >
-                                                    <div [style.width]="fieldName.width">
+                                                    <div class="grid-data" [style.width]="fieldName.width">
                                                         <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name] && data[fieldName.field_name].name?data[fieldName.field_name].name:data[fieldName.field_name]"></span>
                                                     </div>
                                                 </td>
@@ -884,7 +885,13 @@
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0">({{modifyCustmizedFormValue[tableField.field_name].length}})</span><span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
-
+                                    <ng-container *ngIf="tableField.gridColumns.length>0" >
+                                        <button (click)="updateColumnList(tableField.gridColumns)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button class="plusicon"><mat-icon>autorenew</mat-icon></button>
+                                        <button  mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="plusicon"><mat-icon>filter_alt</mat-icon></button>
+                                    </ng-container>
+                                    <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown">
+                                        <app-grid-filter-menu [columns]="tableField.gridColumns"></app-grid-filter-menu>
+                                    </mat-menu> 
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled && !tableField.is_disabled && tableField['showButton']" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] ? tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] ? tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
                                     <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] ? tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] : 'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
@@ -899,16 +906,20 @@
                                     </div>
                                 </div>                                
                                 <div class="table-responsive table" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
-                                    <table class="table-bordered table-striped table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
-                                        <thead>
+                                    <table class="table-bordered table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                        <thead class="border">
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled"></th>                               
-                                                <th *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">{{ fieldName.label | titlecase}}</th>
+                                                <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
+                                                    <div class="justify-content-between t d-flex"> {{ fieldName.label | titlecase}} 
+                                                        <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                             <tr *ngFor="let data of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name] | paginate
-                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y">
+                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y" class="border">
 
                                                 <td *ngIf="tableField.add_list_field != 'add' && !updateMode || tableField.add_new_enabled" class="grid-coloumn-nowrap">
                                                     <div class="example-handle cursor-move" cdkDragHandle *ngIf="!tableField.add_new_enabled || tableField.draggable" [ngClass]="{'d-inline-block': tableField.draggable}">
@@ -921,7 +932,7 @@
                                                     <a *ngIf="tableField.add_new_enabled && data['actionBtnDisplay']" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
                                                 <td *ngFor="let fieldName of tableField.gridColumns" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <div [style.width]="fieldName.width">
+                                                    <div class="grid-data" [style.width]="fieldName.width">
                                                         <span disabled *ngIf="fieldName.type=='checkbox'" >
                                                             <mat-checkbox color="primary" 
                                                                 [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
@@ -1026,7 +1037,7 @@
                         <div *ngIf="tableField.type == 'file'">
                             <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
                             <!-- list of attachment files -->
-                            <div *ngIf="dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
+                            <div *ngIf="dataListForUpload && dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
                                 <table mdbTable small="true" bordered="true">
                                     <thead class="black white-text">
                                         <tr>
@@ -1755,5 +1766,5 @@
 <app-permission-tree-view id="tree-view" (treeViewComponentResponce)="treeViewComponentResponce($event)"></app-permission-tree-view>
 <app-grid-selection-modal id="grid-selection-modal" (gridSelectionResponce)="gridSelectionResponce($event)"></app-grid-selection-modal>
 <app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
-<app-file-upload-modal id="file-upload-modal" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-file-upload-modal *ngIf="isGridSelectionOpen" id="file-upload-modal" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>
 <app-preview-modal id="form-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>

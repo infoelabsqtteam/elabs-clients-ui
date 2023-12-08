@@ -68,7 +68,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   pageNumber: number = Common.PAGE_NO;
   total: number;
   loading: boolean;
-  itemNumOfGrid: any = Common.ITEM_NUM_OF_GRID;
+  itemNumOfGrid: any;
   userInfo: any;
   staticData: any = {};
   copyStaticData:any={};
@@ -126,6 +126,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   updateNotification:boolean=true;
   currentBrowseUrl:string="";
   queryParams:any={};
+  gridDisable:boolean = false;
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -478,6 +479,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if(this.selectTabIndex != -1){
+      this.itemNumOfGrid = this.storageService.getDefaultNumOfItem();
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
       this.ngOnInit();
@@ -496,6 +498,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.tabs = tempData[0].templateTabs;
       let tab = this.tabs[this.selectTabIndex];
       if(tab && tab.tab_name && this.permissionService.checkPermission(tab.tab_name,'view')){
+        if(!this.createFilterFormgroup) this.createFilterFormgroup = true;
+        if(!this.createFilterHeadElement) this.createFilterHeadElement = true;
         this.getTabData(this.selectTabIndex,this.formName);
         this.temView = true;
       }else{
@@ -582,28 +586,37 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getTabData(index,formName) {
     this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
-      this.itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
       if(this.tab.tab_name && this.tab.tab_name != null && this.tab.tab_name != undefined && this.tab.tab_name != ''){
         const menu = {"name":this.tab.tab_name};
         this.storageService.SetActiveMenu(menu);
         this.currentMenu.name = this.tab.tab_name;
       }  
-      if(this.tab.grid && this.tab.grid != undefined){
-        if(this.tab.grid.gridColumns && this.createFilterHeadElement){
-          this.headElements = this.gridCommonFunctionServie.modifyGridColumns(this.tab.grid.gridColumns,{});          
+      let grid = this.tab.grid;
+      if(grid && grid != undefined){
+        if(grid.gridColumns && this.createFilterHeadElement){
+          this.headElements = this.gridCommonFunctionServie.modifyGridColumns(grid.gridColumns,{}); 
           this.createFilterHeadElement = false;
         }
-        if(this.tab.grid.gridColumns == undefined && this.tab.grid.gridColumns == null){
+        if(grid.gridColumns == undefined && grid.gridColumns == null){
           this.headElements = [];
         } 
-        if(this.tab.grid.action_buttons && this.tab.grid.action_buttons != null){
-          this.gridButtons = this.tab.grid.action_buttons;
+        if(grid.action_buttons && grid.action_buttons != null){
+          this.gridButtons = grid.action_buttons;
         }
-        if(this.tab.grid.details && this.tab.grid.details != null){
-          this.details = this.tab.grid.details;
+        if(grid.details && grid.details != null){
+          this.details = grid.details;
+          this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems(grid, this.itemNumOfGrid);
+          if(this.details && this.details.disableGrid) {
+            this.gridDisable = true;
+          }else {
+            this.gridDisable = false;
+          }
+           
+        }else {
+          this.gridDisable = false;
         }
-        if(this.tab.grid.colorCriteria && this.tab.grid.colorCriteria != null && this.tab.grid.colorCriteria.length >= 1){
-          this.typegrapyCriteriaList = this.tab.grid.colorCriteria;
+        if(grid.colorCriteria && grid.colorCriteria != null && grid.colorCriteria.length >= 1){
+          this.typegrapyCriteriaList = grid.colorCriteria;
         }else{
           this.typegrapyCriteriaList = [];
         }     
@@ -714,8 +727,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
-  updateColumnList(field,index){
-    
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
   }
   getTabsCount(tabs){
     this.apiCallService.getTabsCountPyload(tabs);    
@@ -1090,7 +1103,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   pageSizes =[25, 50, 75, 100, 200];
   PageSizeChange(event: any): void {
-    this.itemNumOfGrid = event.target.value;
+    if(event.target.value && event.target.value != "") {
+      this.itemNumOfGrid = event.target.value;
+    }else {
+      this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
+    }
     this.applyFilter();
   }
 
@@ -1133,7 +1150,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       pagePayload.data.crList = crList;
     }  
     pagePayload.data.pageSize = this.itemNumOfGrid;
-    this.apiService.getGridData(pagePayload);
+    this.getGridPayloadData(pagePayload);
   }
   public downloadClick = '';
 
@@ -1200,7 +1217,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       path: columnName
     }
     //this.store.dispatch(new CusTemGenAction.GetGridData(getSortData))
-    this.apiService.getGridData(getSortData)
+    this.getGridPayloadData(getSortData);
     if (this.orderBy == '-') {
       this.orderBy = '';
     } else {
@@ -1211,9 +1228,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.pageNumber = 1;
     let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,filterType);
     pagePayload.data.pageSize = this.itemNumOfGrid;
-    this.apiService.getGridData(pagePayload);
+    this.getGridPayloadData(pagePayload);
   }
-  
+
+  getGridPayloadData(pagePayload:any) {  
+    if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.gridDisable)){
+      this.apiService.getGridData(pagePayload);
+    }else {
+      this.modifyGridData = [];
+      this.elements = [];
+      this.gridCommonFunctionServie.setOldTabCount(this.tab);
+    }
+  }
   
   openTreeView(field) {
     let fieldName;
@@ -1521,7 +1547,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-
+// Grid hide column icon click function
+hideColumn(columns,index: number) {
+  columns[index].display = !columns[index].display;
+}
 
 
 }

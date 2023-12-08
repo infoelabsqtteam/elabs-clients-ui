@@ -32,7 +32,7 @@ export class ResizeColumnDirective implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.column = this.el.nativeElement;
-    this.minimumWidth = 50;
+    this.minimumWidth = 10;
   }
 
   ngOnInit() {
@@ -45,6 +45,7 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.addClass(resizer, "resize-holder");
       this.renderer.appendChild(this.column, resizer);
       this.renderer.listen(resizer, "mousedown", this.onMouseDown);
+      this.renderer.listen(resizer,'dblclick',this.resetWidth)
       this.renderer.listen(this.table, "mousemove", this.onMouseMove);
 
       // Use RxJS to debounce the mousemove event
@@ -55,6 +56,14 @@ export class ResizeColumnDirective implements OnInit {
       this.renderer.listen("document", "mouseup", this.onMouseUp);
     }
   }
+
+  resetWidth = () => {
+    let width = null;
+    this.updateElementWidth(this.column, width);
+    this.cellClass?this.setElementWidth(this.getCellClassElements(), width):this.setElementWidth(this.getTableCells(), width);
+    this.cdr.detectChanges();
+    // console.log("reset");
+  };
 
   ngOnDestroy() {
     // Unsubscribe from the resize event to avoid memory leaks
@@ -75,13 +84,13 @@ export class ResizeColumnDirective implements OnInit {
       let width = this.calculateNewWidth(event, offset);
       this.updateElementWidth(this.column, width);
 
-      // Set table cell width
-      this.setElementWidth(this.getTableCells(), width);
-
       // Set cellClass width
       if (this.cellClass) {
         const cellClassElements = this.getCellClassElements();
-        this.setElementWidth(cellClassElements, width + 40);
+        this.setElementWidth(cellClassElements, width);
+      }else{
+      // Set table cell width
+      this.setElementWidth(this.getTableCells(), width);
       }
       this.cdr.detectChanges();
     }
@@ -99,9 +108,23 @@ export class ResizeColumnDirective implements OnInit {
     return width < this.minimumWidth ? this.minimumWidth : width;
   }
 
-  updateElementWidth(element: HTMLElement, width: number) {
-    this.renderer.setStyle(element, "width", `${width}px`);
+  updateElementWidth(element: HTMLElement, width: number | null) {
+    
+    width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+    
+    
+    // // Check for inline styles
+    // const inlineStyles = element.getAttribute('style');
+    // if (inlineStyles && inlineStyles.includes('width')) {
+    //   // Update inline styles directly
+    //   width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+    // } else {
+    //   // Use Renderer2 for styles applied through Angular
+    //   width!=null? element.style.width = `${width}px`:element.style.width = `max-content`;
+    //   // this.renderer.setStyle(element, 'width', `${width}px`);
+    // }
   }
+  
 
   setElementWidth(elements: HTMLElement[], width: number) {
     elements.forEach((element: any) => {
@@ -113,7 +136,7 @@ export class ResizeColumnDirective implements OnInit {
 
   getTableCells(): HTMLElement[] {
     return Array.from(this.table.querySelectorAll("tr")).map((row: any) =>
-      row.querySelectorAll("td").item(this.index + 1)
+      row.querySelectorAll("td").item(this.index)
     );
   }
 
@@ -125,6 +148,8 @@ export class ResizeColumnDirective implements OnInit {
 }
 
 // [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'"
-// This directive needs the classess for resizer
+// if resizeGridColunms not provided it will change all td width as default.
+// This directive needs the classess for resize Handler
 // .resize-holder {cursor: col-resize;width: 20px;height: 100%;position: absolute;right: -10px;top: 0;z-index: 1;}
 // .resizing {-moz-user-select: none;-ms-user-select: none;user-select: none;cursor: col-resize;}
+// When double click on resize handler it will expand the width of the column to max-content.

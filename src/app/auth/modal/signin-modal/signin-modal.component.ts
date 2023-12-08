@@ -14,6 +14,7 @@ export class SigninModalComponent implements OnInit {
   @Input() id: string;
   @Output() signinResponce = new EventEmitter();
   @ViewChild('signinModal') public signinModal: ModalDirective; 
+  loading = false;
 
   
   constructor(
@@ -32,9 +33,14 @@ export class SigninModalComponent implements OnInit {
     this.modalService.add(this);
   }
   onSignIn(form: NgForm) {
+    this.loading = true;
     const email = form.value.email;
     const password = form.value.password;
     this.authService.Signin({ email: email, password: password})
+    setTimeout(()=>{
+      this.loading = false;
+      form.reset();
+    },2000)
   }
 
   showModal(alert){
