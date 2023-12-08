@@ -2347,7 +2347,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.clickFieldName = {};
   }
-  fileUploadResponce(response) {
+  fileUploadResponce(response:any) {
     let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
     this.dataListForUpload = uploadFileResponce.dataListForUpload;
     this.templateForm = uploadFileResponce.templateForm;
@@ -3144,6 +3144,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
+  // Grid hide column icon click function
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
+  // show all columns icon click function 
+updateColumnList(columns?){
+  if(columns) columns.forEach(column=>column.display =true)
+}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
