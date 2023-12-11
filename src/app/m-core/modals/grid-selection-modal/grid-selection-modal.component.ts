@@ -127,6 +127,7 @@ export class GridSelectionModalComponent implements OnInit {
     //this.treeViewData.data = TREE_DATA;
   }
 
+
   getViewData(){
     if (this.modifiedGridData && this.modifiedGridData.length > 0) {
       this.total = this.modifiedGridData.length;

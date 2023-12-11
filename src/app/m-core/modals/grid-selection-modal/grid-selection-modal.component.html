@@ -19,15 +19,7 @@
             <button mat-icon-button (click)="updateColumnList(listOfGridFieldName)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" class="m-0 plusicon"><mat-icon>autorenew</mat-icon></button>
             <button  mat-icon-button [matMenuTriggerFor]="notify" class="mx-2 plusicon float-right"><mat-icon >filter_alt</mat-icon></button>
             <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown" >
-                <span class="example-list-section">
-                    <ul class="ml-2 mt-2 mb-2">
-                        <li *ngFor="let column of listOfGridFieldName; let i = index" >
-                            <mat-checkbox [(ngModel)]="column.display" [color]="column.field_class ? column.field_class : 'primary'" (click)="$event.stopPropagation()">
-                            {{ column.label }}
-                            </mat-checkbox>
-                        </li>
-                    </ul>
-                </span>
+            <app-grid-filter-menu [columns]="listOfGridFieldName"></app-grid-filter-menu>
             </mat-menu> 
         </div>      
         <a class="h5 m-0 closebtb" (click)="closeModal()"><span>×</span></a>
@@ -249,4 +241,4 @@
 
 <app-confirm-modal *ngIf="!isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce1($event)"></app-confirm-modal>
 <app-bulk-update id="bulk-update-modal" (bulkUpdateResponce)="bulkUpdateResponce($event)"></app-bulk-update>
-<app-file-upload-modal id="grid-selection-file-upload" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-file-upload-modal *ngIf="!isGridSelectionOpen" id="grid-selection-file-upload" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>

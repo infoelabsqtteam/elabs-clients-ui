@@ -2349,7 +2349,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.clickFieldName = {};
   }
-  fileUploadResponce(response) {
+  fileUploadResponce(response:any) {
     let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
     this.dataListForUpload = uploadFileResponce.dataListForUpload;
     this.templateForm = uploadFileResponce.templateForm;

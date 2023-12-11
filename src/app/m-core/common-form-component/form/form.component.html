@@ -887,7 +887,11 @@
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
                                     <ng-container *ngIf="tableField.gridColumns.length>0" >
                                         <button (click)="updateColumnList(tableField.gridColumns)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button class="plusicon"><mat-icon>autorenew</mat-icon></button>
+                                        <button  mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="plusicon"><mat-icon>filter_alt</mat-icon></button>
                                     </ng-container>
+                                    <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown">
+                                        <app-grid-filter-menu [columns]="tableField.gridColumns"></app-grid-filter-menu>
+                                    </mat-menu> 
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled && !tableField.is_disabled && tableField['showButton']" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] ? tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] ? tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
                                     <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] ? tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] : 'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
@@ -1762,5 +1766,5 @@
 <app-permission-tree-view id="tree-view" (treeViewComponentResponce)="treeViewComponentResponce($event)"></app-permission-tree-view>
 <app-grid-selection-modal id="grid-selection-modal" (gridSelectionResponce)="gridSelectionResponce($event)"></app-grid-selection-modal>
 <app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
-<app-file-upload-modal id="file-upload-modal" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-file-upload-modal *ngIf="isGridSelectionOpen" id="file-upload-modal" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>
 <app-preview-modal id="form-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>

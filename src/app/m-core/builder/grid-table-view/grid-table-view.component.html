@@ -41,15 +41,7 @@
             <button mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="filterbtn float-right"><mat-icon>filter_alt</mat-icon></button>
         </ng-container>
         <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
-            <span class="example-list-section">
-                <ul class="ml-2 mt-2 mb-2">
-                  <li *ngFor="let head of headElements; let i = index" >
-                    <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (click)="$event.stopPropagation()">
-                      {{ head.label }}
-                    </mat-checkbox>
-                  </li>
-                </ul>
-            </span>
+            <app-grid-filter-menu [columns]="headElements"></app-grid-filter-menu>
         </mat-menu>              
     </div>
 </section>
