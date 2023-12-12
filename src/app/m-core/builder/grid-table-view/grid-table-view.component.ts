@@ -486,6 +486,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.tabs = tempData[0].templateTabs;
       let tab = this.tabs[this.selectTabIndex];
       if(tab && tab.tab_name && this.permissionService.checkPermission(tab.tab_name,'view')){
+        if(!this.createFilterFormgroup) this.createFilterFormgroup = true;
+        if(!this.createFilterHeadElement) this.createFilterHeadElement = true;
         this.getTabData(this.selectTabIndex,this.formName);
         this.temView = true;
       }else{
@@ -713,8 +715,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
-  updateColumnList(field,index){
-    
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
   }
   getTabsCount(tabs){
     this.apiCallService.getTabsCountPyload(tabs);    
@@ -1533,7 +1535,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-
+// Grid hide column icon click function
+hideColumn(columns,index: number) {
+  columns[index].display = !columns[index].display;
+}
 
 
 }
