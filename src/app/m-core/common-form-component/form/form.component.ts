@@ -2163,18 +2163,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
-    if(parent != '' && parent != undefined && parent != null){
-      const parentKey = this.commonFunctionService.custmizedKey(parent); 
-      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
-        moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-        moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-      }       
-    }else {
-      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
-        moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-        moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-      }      
-    }    
+    if(chield.draggable){
+      if(parent != '' && parent != undefined && parent != null){
+        const parentKey = this.commonFunctionService.custmizedKey(parent); 
+        if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
+          moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+          moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+        }       
+      }else {
+        if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
+          moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+          moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+        }      
+      }    
+    }
   }
   compareObjects(o1: any, o2: any): boolean {
     if(o1 != null && o2 != null){
@@ -2347,7 +2349,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.clickFieldName = {};
   }
-  fileUploadResponce(response) {
+  fileUploadResponce(response:any) {
     let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
     this.dataListForUpload = uploadFileResponce.dataListForUpload;
     this.templateForm = uploadFileResponce.templateForm;
@@ -3144,6 +3146,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
+  // Grid hide column icon click function
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
+  // show all columns icon click function 
+updateColumnList(columns?){
+  if(columns) columns.forEach(column=>column.display =true)
+}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 

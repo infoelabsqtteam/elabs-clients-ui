@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class SignupModalComponent implements OnInit {
 
+  loading = false;
   hide = true;
   signUpForm: FormGroup;
   appName: string;
@@ -37,6 +38,8 @@ export class SignupModalComponent implements OnInit {
         this.setAppName(data);
       })
       this.signUpInfoSubscribe = this.authDataShareService.signUpResponse.subscribe(res =>{
+        this.loading = false;
+        this.signUpForm.reset();
         this.notificationService.notify(res.class, res.msg);
         if(res.status == 'success') {
           this.authService.redirectToSignPage();
@@ -61,7 +64,8 @@ export class SignupModalComponent implements OnInit {
   }
 
   onSignUp() {
-
+    
+    this.loading = true;
     const email = this.signUpForm.value.email;
     const password = this.signUpForm.value.password;
     const name = this.signUpForm.value.name;

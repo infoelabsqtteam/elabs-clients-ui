@@ -1,0 +1,21 @@
+<div *ngIf="columns.length > 0">
+  <span class="example-list-section">
+    <ul class="ml-2 mt-2 mb-2">
+      <li class="pr-2">
+          <button mat-menu-item class="d-flex justify-content-center" (click)="updateColumnList()">
+            Show All
+          </button>
+      </li>
+      <li *ngFor="let head of columns; let i = index">
+        <mat-checkbox
+          [(ngModel)]="head.display"
+          [color]="'primary'"
+          (ngModelChange)="showHide()"
+          (click)="$event.stopPropagation()"
+        >
+          {{ head.label }}
+        </mat-checkbox>
+      </li>
+    </ul>
+  </span>
+</div>
