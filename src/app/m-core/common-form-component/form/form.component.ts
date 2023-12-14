@@ -949,7 +949,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if (add) {
           if(parentfield != ''){
             const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
-            const value = formValue[parentfield.field_name][field.field_name]
+            const value = this.coreFunctionService.removeSpaceFromString(formValue[parentfield.field_name][field.field_name]);
             const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
             if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
@@ -970,15 +970,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }
             
           }else{
-            const value = formValue[field.field_name];
+            const value = this.coreFunctionService.removeSpaceFromString(formValue[field.field_name]);
             const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
             if(this.custmizedFormValue[field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
-              const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-              if(formValue[field.field_name] != '' && formValue[field.field_name] != null){
-                custmizedFormValue.push(formValue[field.field_name])
+              const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name]);
+              if(value != '' && value != null){
+                custmizedFormValue.push(value);
                 this.custmizedFormValue[field.field_name] = custmizedFormValue;
               }
               if(event){
