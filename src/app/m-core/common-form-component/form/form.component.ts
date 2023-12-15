@@ -961,7 +961,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
               if(value && value != ''){
                 let index = -1;
-                if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']){
+                if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']>=0){
                   index = this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']
                 }
                 let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, index, value);                
@@ -985,7 +985,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name]);
               if(value != '' && value != null){
                 let index = -1;
-                if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[field.field_name+'_index']){
+                if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[field.field_name+'_index']>=0){
                   index = this.addOrUpdateIconShowHideList[field.field_name+'_index']
                 }
                 let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, index, value); 
@@ -2454,6 +2454,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.listOfFieldsUpdateIndex = -1; 
     this.serverReq = false;
     this.updateAddNew = false;
+    this.addOrUpdateIconShowHideList = {};
   }
   //Map Related Functions
   async getGooglepMapCurrentPosition(){
