@@ -98,6 +98,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   customEntryData:any={};
   typeAheadData: string[] = [];
   public tempVal = {};
+  addOrUpdateIconShowHideList:any={}; // editListOfString() index variable
   listOfFieldUpdateMode:boolean=false;
   listOfFieldsUpdateIndex:any = -1;
   public deleteIndex:any = '';
@@ -128,6 +129,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
+  
 
   //Google map variables
   latitude: number = 0;
@@ -957,15 +959,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[custmizedKey]) this.custmizedFormValue[custmizedKey] = {};
               if (!this.custmizedFormValue[custmizedKey][field.field_name]) this.custmizedFormValue[custmizedKey][field.field_name] = [];
               const custmizedFormValueParant = Object.assign([],this.custmizedFormValue[custmizedKey][field.field_name])
-              if(value != '' && value != null){
-                custmizedFormValueParant.push(value)            
-                this.custmizedFormValue[custmizedKey][field.field_name] = custmizedFormValueParant;
+              if(value && value != ''){
+                let index = -1;
+                if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']>=0){
+                  index = this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']
+                }
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, index, value);                
+                this.custmizedFormValue[custmizedKey][field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
+                this.addOrUpdateIconShowHideList = {};
               }
               if(event){
                 event.value = '';
               }
               this.templateForm.get(parentfield.field_name).get(field.field_name).setValue("");
-              //(<FormGroup>this.templateForm.controls[parentfield.field_name]).controls[field.field_name].patchValue("");
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
             }
             
@@ -978,8 +984,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
               const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name]);
               if(value != '' && value != null){
-                custmizedFormValue.push(value);
-                this.custmizedFormValue[field.field_name] = custmizedFormValue;
+                let index = -1;
+                if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[field.field_name+'_index']>=0){
+                  index = this.addOrUpdateIconShowHideList[field.field_name+'_index']
+                }
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, index, value); 
+                this.custmizedFormValue[field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
+                this.addOrUpdateIconShowHideList = {};
               }
               if(event){
                 event.value = '';
@@ -994,12 +1005,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = false;
             }else{
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
+              this.addOrUpdateIconShowHideList = {};
             }            
           }else{
             if(formValue && formValue[field.field_name] && formValue[field.field_name].length > 0){
               this.tempVal[field.field_name + "_add_button"] = false;
             }else{
               this.tempVal[field.field_name + "_add_button"] = true;
+              this.addOrUpdateIconShowHideList = {};
             }
           } 
         }
@@ -1289,7 +1302,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       default:
         break;
     }
-    
     if (field.onchange_api_params && field.onchange_call_back_field) {
         let multiCollection = JSON.parse(JSON.stringify(this.multipleFormCollection));
         let formValue = this.commonFunctionService.getFormDataInMultiformCollection(multiCollection,formValueWithoutCustomData);
@@ -1355,6 +1367,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.term = {};
     this.checkFormFieldIfCondition();
   } 
+  editListOfString(parentfield,field,index){
+    let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);    
+    this.templateForm = response.templateForm;
+    if(parentfield != ''){
+      this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index'] = index;
+      this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = false;
+    }else{
+      this.addOrUpdateIconShowHideList[field.field_name+'_index'] = index;
+      this.tempVal[field.field_name + "_add_button"] = false;
+    }
+  }
   updateAddNewField(parent,child){
     if(child && child.onchange_get_next_form){
       let fieldValue:any = '';
@@ -1669,6 +1692,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.enableNextButton = false;
     }    
   }
+
+
+
   //Map Click
   async mapClick(event: google.maps.MapMouseEvent,field?:any) {
     this.zoom = 17;
@@ -2428,6 +2454,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.listOfFieldsUpdateIndex = -1; 
     this.serverReq = false;
     this.updateAddNew = false;
+    this.addOrUpdateIconShowHideList = {};
   }
   //Map Related Functions
   async getGooglepMapCurrentPosition(){
