@@ -212,13 +212,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
-  let menuitem = {
-    name: menu.name,
-    _id: menu._id
-  }
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-  this.userPreferenceSubscribe(menuitem,'favoriteMenus',parent);
-  // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  this.userPreferenceSubscribe(menu,'menus',parent);
+  // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'menus',parent);
   // this.saveCallSubscribe();
 }
 updateUserPreference(menu,field,parent){
@@ -231,7 +227,7 @@ checkFebMenuAddOrNot(menu,parent){
   if(parent != ''){
     menuId = parent._id;
   }
-  let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
+  let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('menus');
   if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
     let match = -1;
     for (let index = 0; index < userFebMenu.length; index++) {
