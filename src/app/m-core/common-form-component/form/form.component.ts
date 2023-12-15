@@ -872,24 +872,25 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
-      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);
-      if(result.resetForm) this.checkBeforeResetForm();
-      if(result.next) this.next();
+      let result = this.apiCallResponceService.saveFormResponceHandling(saveFromDataRsponce,this.showNotify,this.updateMode,this.currentActionButton,this.nextIndex,this.dataListForUpload,this.saveResponceData,this.custmizedFormValue,this.modifyCustmizedFormValue,this.dataSaveInProgress,this.isStepper,this.complete_object_payload_mode,this.form);      
       this.dataListForUpload =result.dataListForUpload;
       this.saveResponceData = result.saveResponceData;
       this.custmizedFormValue = result.custmizedFormValue;  
       this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
       this.updateMode = result.updateMode;
-      if(result.isStepper) this.stepper.reset();
       this.complete_object_payload_mode=result.complete_object_payload_mode;
+      this.showNotify = result.showNotify;
+      this.dataSaveInProgress = result.dataSaveInProgress;
+      if(result.isStepper) this.stepper.reset();
+      if(result.resetForm) this.checkBeforeResetForm();
+      if(result.next) this.next();
       if(result.public.check){
         if(result.public.getFormData && Object.keys(result.public.getFormData).length > 0){
           this.apiService.GetForm(result.public.getFormData);
         }
         this.router.navigate([result.public.url]);
       }
-      this.showNotify = result.showNotify;
-      this.dataSaveInProgress = result.dataSaveInProgress;
+      
       if(result.resetResponce) this.apiService.ResetSaveResponce();
       if(result.successAction) this.checkOnSuccessAction();
       if(result.message && result.message.msg && result.message.msg != ''){
@@ -949,7 +950,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if (add) {
           if(parentfield != ''){
             const custmizedKey = this.commonFunctionService.custmizedKey(parentfield);   
-            const value = formValue[parentfield.field_name][field.field_name]
+            const value = this.coreFunctionService.removeSpaceFromString(formValue[parentfield.field_name][field.field_name]);
             const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value, this.custmizedFormValue[custmizedKey]?.[field.field_name] ?? undefined);
             if(this.custmizedFormValue[custmizedKey] && this.custmizedFormValue[custmizedKey][field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
@@ -971,17 +972,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }
             
           }else{
-            const value = formValue[field.field_name];
+            const value = this.coreFunctionService.removeSpaceFromString(formValue[field.field_name]);
             const checkDublic = this.checkIfService.checkDataAlreadyAddedInListOrNot(field,value,this.custmizedFormValue[field.field_name]);
             if(this.custmizedFormValue[field.field_name] && checkDublic.status){
               this.notificationService.notify('bg-danger','Entered value for '+field.label+' is already added. !!!');
             }else{
               if (!this.custmizedFormValue[field.field_name]) this.custmizedFormValue[field.field_name] = [];
-              const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name])
-              if(value.trim() != '' && value != null){
-                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, this.selectedListofStringIndex, value);
-                this.selectedListofStringIndex = updateCustomizedValueResponse.selectedListofStringIndex;
-                this.custmizedFormValue[field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
+              const custmizedFormValue = Object.assign([],this.custmizedFormValue[field.field_name]);
+              if(value != '' && value != null){
+                custmizedFormValue.push(value);
+                this.custmizedFormValue[field.field_name] = custmizedFormValue;
               }
               if(event){
                 event.value = '';
@@ -2172,18 +2172,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
-    if(parent != '' && parent != undefined && parent != null){
-      const parentKey = this.commonFunctionService.custmizedKey(parent); 
-      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
-        moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-        moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-      }       
-    }else {
-      if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
-        moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-        moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-      }      
-    }    
+    if(chield.draggable){
+      if(parent != '' && parent != undefined && parent != null){
+        const parentKey = this.commonFunctionService.custmizedKey(parent); 
+        if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
+          moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+          moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
+        }       
+      }else {
+        if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
+          moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+          moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
+        }      
+      }    
+    }
   }
   compareObjects(o1: any, o2: any): boolean {
     if(o1 != null && o2 != null){
@@ -2356,7 +2358,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
     this.clickFieldName = {};
   }
-  fileUploadResponce(response) {
+  fileUploadResponce(response:any) {
     let uploadFileResponce = this.fileHandlerService.updateFileUploadResponce(this.curFileUploadFieldparentfield,this.curFileUploadField,this.dataListForUpload,this.templateForm,this.tableFields,response);
     this.dataListForUpload = uploadFileResponce.dataListForUpload;
     this.templateForm = uploadFileResponce.templateForm;
@@ -3153,6 +3155,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
+  // Grid hide column icon click function
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
+  // show all columns icon click function 
+updateColumnList(columns?){
+  if(columns) columns.forEach(column=>column.display =true)
+}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
