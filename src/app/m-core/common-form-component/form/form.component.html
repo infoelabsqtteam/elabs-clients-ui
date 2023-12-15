@@ -347,8 +347,8 @@
                                 </mat-form-field>
                                 <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
                                 <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
-                                    <mdb-icon fas icon="plus" [matTooltip]="'Add'" [matTooltipPosition]="'above'" *ngIf=""></mdb-icon>
-                                    <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="">update</i>
+                                    <mdb-icon fas icon="plus" [matTooltip]="'Add'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] == undefined"></mdb-icon>
+                                    <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] != undefined">update</i>
                                 </button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
