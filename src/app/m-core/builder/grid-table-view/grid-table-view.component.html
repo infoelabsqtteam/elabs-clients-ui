@@ -78,7 +78,7 @@
                                                 <button mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
                                             </div>
                                         </td>
-                                        <td class="px-1 py-2" [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                        <td [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div *ngIf="head.type == 'tree_view_selection'" class="position-relative w-100">
                                                 <select class="form-control form-control-sm cursor-pointer w-100" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
                                                     <option *ngFor="let data of treeViewData[head.field_name]" [value]="data">{{data && data.name ? data.name : data}}</option>
