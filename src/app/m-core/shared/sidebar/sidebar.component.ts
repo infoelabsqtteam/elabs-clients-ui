@@ -228,43 +228,48 @@ checkFebMenuAddOrNot(menu,parent){
     menuId = parent._id;
   }
   let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('menus');
-  if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
-    let match = -1;
-    for (let index = 0; index < userFebMenu.length; index++) {
-      const element = userFebMenu[index];
-      if(element._id == menuId ){
-        match = index;
-        break;
-      }     
-    }
-    if(match > -1){
-      if(parent != ''){
-        const submenu = userFebMenu[match]['submenu'];
-        let subMatchIndex = -1;
-        if(submenu && submenu.length > 0){
-          for (let j = 0; j < submenu.length; j++) {
-            const subMenu = submenu[j];
-            if(subMenu._id == menu._id){
-              subMatchIndex = j;
-              break;
-            }
-            
-          }
-        }
-        if(subMatchIndex > -1){
-          return true
-        }else{
-          return false;
-        }
-      }else{
-        return true;
-      }      
+  if (userFebMenu && userFebMenu !== null && typeof userFebMenu === 'object' && Object.keys(userFebMenu).length > 0) {
+    if (parent && parent !== '' && typeof parent === 'object' && userFebMenu) {
+      return this.isMenuAlreadyPresent(menu,userFebMenu);
     }else{
-      return false;
+      return this.isIdExist(userFebMenu,menuId);
     }
-  }else{
-    return false;
+  } else {
+      return false;
   }
 }
 
+isIdExist(obj, targetId) {
+  for (const key in obj) {
+      if (obj.hasOwnProperty(key) && obj[key].reference && obj[key].reference._id === targetId) {
+          return true;
+      }
+  }
+  return false;
+}
+isMenuAlreadyPresent(targetMenu: any, userFebMenu: any): boolean {
+  for (const key in userFebMenu) {
+    if (userFebMenu.hasOwnProperty(key)) {
+      const menu = userFebMenu[key];
+      if (
+        (menu.reference && menu.reference._id === targetMenu._id) ||
+        menu.reference.name === targetMenu.name
+      ) {
+        return true; 
+      }
+
+      if (menu.submenus) {
+        for (const submenuKey in menu.submenus) {
+          if (menu.submenus.hasOwnProperty(submenuKey)) {
+            const submenu = menu.submenus[submenuKey];      
+            if (submenu.reference && submenu.reference._id === targetMenu._id) {
+              return true; 
+            }
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
 }
