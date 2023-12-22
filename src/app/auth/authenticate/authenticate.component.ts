@@ -14,7 +14,7 @@ export class AuthenticateComponent implements OnInit,OnDestroy {
   loading = false;
   authenticateUser: FormGroup;
   isVerify:boolean = false;
-  otpType:String='email';
+  authType:String='email';
 
   title = "";
   template:string = "temp1";
@@ -87,6 +87,10 @@ export class AuthenticateComponent implements OnInit,OnDestroy {
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
     this.title = this.storageService.getPageTitle();
+    let authenticationType = this.storageService.getTwoFactorAuthenticationType();
+    if(authenticationType){
+      this.authType = authenticationType;
+    }
   }
 
 }
