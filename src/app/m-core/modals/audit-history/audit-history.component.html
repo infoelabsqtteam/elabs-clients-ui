@@ -6,72 +6,76 @@
         <button class="closebtb" (click)="close()"><span>&times;</span></button>
       </div>
 
-      <div class="modal-body auditdetails">
-
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <div class="d-flex align-items-center justify-content-between audittitle" *ngIf="auditHistoryList">
-              <h4 class="m-0">{{selectedTab.label}}</h4>
-              <div class="d-flex align-items-center">
-                <select (change)="handleChange($event.target.selectedIndex)">
-                  <option *ngFor="let data of auditHistoryList; let i = index" [value]="data.version">version: {{i}}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="auditdata">
-              <p><strong>Updated By :</strong></p>
-              <p><strong>Updated Date :</strong></p>
-              <p><strong>Version:</strong></p>
-              <p><strong>Id:</strong></p>
-              <p><strong>Name:</strong></p>
-              <p><strong>Alt Name:</strong></p>
-            </div>
-          </div>
-
-
-          <div class="col-md-4" *ngIf="auditHistoryList">
-            <div class="audittitle"><h4 class="m-0">Old</h4></div>
-            <div class="auditdata text-danger" *ngIf="!showdata">
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-            </div>
-            <div class="auditdata text-danger" *ngIf="showdata">
-              <p>{{previousAuditData.createdByName}}</p>
-              <p>{{previousAuditData.createdDate | date:'fullDate'}}</p>
-              <p>{{previousAuditData.version}}</p>
-              <p>{{previousAuditData._id}}</p>
-              <p>{{previousAuditData.currentObject.name}}</p>
-              <p>{{previousAuditData.currentObject.altname}}</p>
-            </div>
-          </div>
-
-          <div class="col-md-4" *ngIf="auditHistoryList">
-            <div class="audittitle"><h4 class="m-0">New</h4></div>
-            <div class="auditdata text-success" *ngIf="!showdata">
-              <p>{{singleAuditHistoryList.createdByName}}</p>
-              <p>{{singleAuditHistoryList.createdDate | date:'fullDate'}}</p>
-              <p>{{singleAuditHistoryList.version}}</p>
-              <p>{{singleAuditHistoryList._id}}</p>
-              <p>{{singleAuditHistoryList.currentObject.name}}</p>
-              <p>{{singleAuditHistoryList.currentObject.altname}}</p>
-            </div>
-            <div class="auditdata text-danger" *ngIf="showdata">
-              <p>{{selectedObject.createdByName}}</p>
-              <p>{{selectedObject.createdDate | date:'fullDate'}}</p>
-              <p>{{selectedObject.version}}</p>
-              <p>{{selectedObject._id}}</p>
-              <p>{{selectedObject.currentObject.name}}</p>
-              <p>{{selectedObject.currentObject.altname}}</p>
-            </div>
-          </div>
+      <div class="d-flex align-items-center justify-content-center bg-light px-3 py-2" *ngIf="auditHistoryList">
+        <h4 class="m-0">{{selectedTab.label}}</h4>
+        <div class="d-flex align-items-center mx-3">
+          <select (change)="handleChange($event.target.selectedIndex)">
+            <option *ngFor="let data of auditHistoryList; let i = index" [value]="data.currentObject.version">{{data.currentObject.version}}
+            </option>
+          </select>
         </div>
-        <ngx-diff2html *ngIf="!showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{singleAuditHistoryList | json}}"></ngx-diff2html>
-        <ngx-diff2html *ngIf="showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{selectedObject | json}}"></ngx-diff2html>
+        <div class="mt-2"><mat-checkbox color="primary">Show Difference</mat-checkbox></div>
+      </div>
+
+      <div class="modal-body auditdetails">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Label</th>
+              <th scope="col">Current Value</th>
+              <th scope="col">Old Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ng-container *ngFor="let data of selectedObject | keyvalue">
+                  <p><span class="d-block"><strong>{{data.key}}</strong></span></p>
+                  <div class="bg-light">
+                    <ng-container *ngFor='let objData of data.value | keyvalue; let i = index'>
+                      <p><mat-icon (click)="toggleAudit(i)">add</mat-icon><strong>{{objData.key}}</strong></p>
+                      <ng-container *ngIf="isShowObj && showIndex === i">
+                        <ng-container *ngFor='let childData of objData.value | keyvalue'>
+                          <p class="childdata">{{childData.key}}</p>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let data of selectedObject | keyvalue">
+                  <p><span class="d-block"><strong>{{data.value}}</strong></span></p>
+                  <div class="bg-light">
+                    <ng-container *ngFor='let objData of data.value | keyvalue; let i = index'>
+                      <p><strong>{{objData.value}}</strong></p>
+                      <ng-container *ngIf="isShowObj && showIndex === i">
+                        <ng-container *ngFor='let childData of objData.value | keyvalue'>
+                          <p class="childdata">{{childData.value}}</p>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let data of previousAuditData | keyvalue">
+                  <p><span class="d-block"><strong>{{data.value}}</strong></span></p>
+                  <div class="bg-light">
+                    <ng-container *ngFor='let objData of data.value | keyvalue; let i = index'>
+                      <p><strong>{{objData.value}}</strong></p>
+                      <ng-container *ngIf="isShowObj && showIndex === i">
+                        <ng-container *ngFor='let childData of objData.value | keyvalue'>
+                          <p class="childdata">{{childData.value}}</p>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

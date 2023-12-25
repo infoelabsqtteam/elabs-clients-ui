@@ -1,34 +1,29 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormGroupDirective, FormControlDirective, FormControlName } from '@angular/forms';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { DataShareService, ModelService } from '@core/web-core';
-
+import { CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-audit-history',
   templateUrl: './audit-history.component.html',
-  styleUrls: ['./audit-history.component.css']
+  styleUrls: ['./audit-history.component.scss']
 })
 export class AuditHistoryComponent implements OnInit {
   @Output() addAndUpdateResponce = new EventEmitter();
 
   @Input() id: string;
   @ViewChild('auditHistory') public auditHistory: ModalDirective;
-  aduitTabIndex
+  aduitTabIndex;
   tempDataSubscription
-  allTabs: any;
   selectedTab: any;
 
   auditHistoryList: any;
-  singleAuditHistoryList: any;
   selectedObject: any;
   previousAuditData: any;
-  showdata = false;
-  showcompareData = false;
 
   constructor(
     private modalService: ModelService,
     private dataShareService: DataShareService,
+    private commonFunctionService:CommonFunctionService, 
   ) {
     this.dataShareService.auditHistoryList.subscribe(auditHistory => {
       this.setAuditHistory(auditHistory);
@@ -37,12 +32,10 @@ export class AuditHistoryComponent implements OnInit {
 
   setAuditHistory(auditHistory: any) {
     this.auditHistoryList = auditHistory;
-    this.singleAuditHistoryList = auditHistory[0];
-    console.log(this.singleAuditHistoryList)
+    this.selectedObject = this.auditHistoryList[0];
   }
 
   ngOnInit(): void {
-    let modal = this;
     this.modalService.remove(this.id);
     this.modalService.add(this);
   }
@@ -53,23 +46,30 @@ export class AuditHistoryComponent implements OnInit {
     this.auditHistory.show();
   }
   close() {
-    this.showdata = false;
     this.previousAuditData = [];
     this.auditHistory.hide();
   }
 
   handleChange(index) {
-    this.showdata = true;
-    this.showcompareData = true;
-    this.selectedObject = this.auditHistoryList[index];
+    this.commonFunctionService.getAuditHistory(this.selectedObject);
+    this.selectedObject = this.auditHistoryList[index];   
     if (index == 0) {
-      this.showdata = false;
       this.previousAuditData = {};
     } else {
       this.previousAuditData = this.auditHistoryList[index - 1];
     }
   }
 
+  isShowObj = false;
+  showIndex = false;
+  toggleAudit(index) {
+    this.isShowObj = !this.isShowObj;
+    this.showIndex = index;
+  }
+
 
 
 }
+
+
+
