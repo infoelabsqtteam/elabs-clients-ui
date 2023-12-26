@@ -1359,11 +1359,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
               "currentRowData" : this.elements[index],
               "auditRowIndex" : index
             }
-            // let payload = {
-            //   "gridData":  gridData,
-            //   "formId": forms._id
-            // }
-            this.commonFunctionService.getAuditHistory(gridData);
+            let payload = {
+              "auditData":  gridData,
+              "formId": forms._id,
+              "selectedversion": gridData.version
+            }
+            this.commonFunctionService.getAuditHistory(payload);
             this.modalService.open('audit-history',obj);
           }else {
             this.permissionService.checkTokenStatusForPermission();
