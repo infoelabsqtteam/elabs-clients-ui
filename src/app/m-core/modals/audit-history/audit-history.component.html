@@ -6,11 +6,11 @@
         <button class="closebtb" (click)="close()"><span>&times;</span></button>
       </div>
 
-      <div class="d-flex align-items-center justify-content-center bg-light px-3 py-2" *ngIf="auditHistoryList">
-        <h4 class="m-0">{{selectedTab.label}}</h4>
-        <div class="d-flex align-items-center mx-3">
-          <select (change)="handleChange($event.target.selectedIndex)">
-            <option *ngFor="let data of auditHistoryList; let i = index" [value]="data.currentObject.version">{{data.currentObject.version}}
+      <div class="d-flex align-items-center justify-content-center bg-light px-3 py-2">
+        <h4 class="m-0" *ngIf="selectedTab">{{selectedTab.label}}</h4>
+        <div class="d-flex align-items-center mx-3" *ngIf="allVersionList && allVersionList.length > 0">
+          <select (change)="changeAuditVersion($event.target.value)">
+            <option *ngFor="let data of allVersionList; let i = index" [value]="data">{{data}}
             </option>
           </select>
         </div>
@@ -18,7 +18,7 @@
       </div>
 
       <div class="modal-body auditdetails">
-        <table class="table">
+        <!-- <table class="table">
           <thead class="thead-light">
             <tr>
               <th scope="col">Label</th>
@@ -75,7 +75,7 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
       </div>
     </div>
   </div>
