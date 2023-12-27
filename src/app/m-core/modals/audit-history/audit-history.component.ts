@@ -14,13 +14,12 @@ export class AuditHistoryComponent implements OnInit {
   @ViewChild('auditHistory') public auditHistory: ModalDirective;
   aduitTabIndex;
   selectedTab: any;
-
-  // auditHistoryList: any;
-  // selectedObject: any;
-  // previousAuditData: any;
   allVersionList:any;
   objectid:any;
   gridButton:any = [];
+  currentObject:any = [];
+  previousObject:any = [];
+  formFieldsList:any = [];
 
 
   
@@ -40,10 +39,11 @@ export class AuditHistoryComponent implements OnInit {
   }
 
   setAuditHistory(auditHistory: any) {
-    if(auditHistory && auditHistory.versionList) {
-      
+    if(auditHistory) {
+        this.getCurrentObj(auditHistory.currentObject);
+        this.getFormFields(auditHistory.formFieldsList)
+        this.getPrevObject(auditHistory.previousObject)
     }
-    
   }
 
   ngOnInit(): void {
@@ -65,7 +65,6 @@ export class AuditHistoryComponent implements OnInit {
     this.auditHistory.show();
   }
   close() {
-    // this.previousAuditData = [];
     this.auditHistory.hide();
   }
 
@@ -73,15 +72,6 @@ export class AuditHistoryComponent implements OnInit {
     let auditSelectedVersion = JSON.parse(version)
     this.getAuditData(auditSelectedVersion)
   }
-
-  isShowObj = false;
-  showIndex = false;
-  toggleAudit(index) {
-    this.isShowObj = !this.isShowObj;
-    this.showIndex = index;
-  }
-
-
 
   getAuditData(version?) {
     let form = this.commonFunctionService.getForm(this.selectedTab.forms,"NEW",this.gridButton);
@@ -93,7 +83,7 @@ export class AuditHistoryComponent implements OnInit {
     payload['data'] = object;
     let payloadData = {
       "data" : payload,
-      "path" : null
+      "path" : 0
     }
     if(version) {
       payloadData.path = version;
@@ -106,7 +96,18 @@ export class AuditHistoryComponent implements OnInit {
   }
 
 
+  getFormFields(formFields) {
+    this.formFieldsList = formFields;
+  }
 
+  getCurrentObj(data){
+    this.currentObject = data;
+  }
+
+  getPrevObject(data){
+    this.previousObject = data;
+  }
+ 
 }
 
 

@@ -18,64 +18,31 @@
       </div>
 
       <div class="modal-body auditdetails">
-        <!-- <table class="table">
+        <table class="table" *ngIf="formFieldsList && formFieldsList.length > 0">
           <thead class="thead-light">
             <tr>
-              <th scope="col">Label</th>
-              <th scope="col">Current Value</th>
-              <th scope="col">Old Value</th>
+              <th scope="col"><p>Form Fields</p></th>
+              <th scope="col"><p>Old Value</p></th>
+              <th scope="col"><p>Current Value</p></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let data of formFieldsList">
               <td>
-                <ng-container *ngFor="let data of selectedObject | keyvalue">
-                  <p><span class="d-block"><strong>{{data.key}}</strong></span></p>
-                  <div class="bg-light">
-                    <ng-container *ngFor='let objData of data.value | keyvalue; let i = index'>
-                      <p><mat-icon (click)="toggleAudit(i)">add</mat-icon><strong>{{objData.key}}</strong></p>
-                      <ng-container *ngIf="isShowObj && showIndex === i">
-                        <ng-container *ngFor='let childData of objData.value | keyvalue'>
-                          <p class="childdata">{{childData.key}}</p>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                  </div>
-                </ng-container>
+                <p *ngIf="data.type == 'label' && data.type != 'grid_selection'" class="labelfield"><strong>{{data.label}}</strong></p>
+                <p *ngIf="data.type != 'label' && data.type != 'grid_selection'">{{data.label}}</p>
+                <p *ngIf="data.type == 'grid_selection'" class="labelfield">
+                   <strong class="mb-3 d-block">{{data.label}}</strong>
+                   <ng-container *ngFor="let childData of data.gridColumns">
+                      <span class="d-block py-2">{{childData.label}}</span>
+                   </ng-container>
+                </p>
               </td>
-              <td>
-                <ng-container *ngFor="let data of selectedObject | keyvalue">
-                  <p><span class="d-block"><strong>{{data.value}}</strong></span></p>
-                  <div class="bg-light">
-                    <ng-container *ngFor='let objData of data.value | keyvalue; let i = index'>
-                      <p><strong>{{objData.value}}</strong></p>
-                      <ng-container *ngIf="isShowObj && showIndex === i">
-                        <ng-container *ngFor='let childData of objData.value | keyvalue'>
-                          <p class="childdata">{{childData.value}}</p>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                  </div>
-                </ng-container>
-              </td>
-              <td>
-                <ng-container *ngFor="let data of previousAuditData | keyvalue">
-                  <p><span class="d-block"><strong>{{data.value}}</strong></span></p>
-                  <div class="bg-light">
-                    <ng-container *ngFor='let objData of data.value | keyvalue; let i = index'>
-                      <p><strong>{{objData.value}}</strong></p>
-                      <ng-container *ngIf="isShowObj && showIndex === i">
-                        <ng-container *ngFor='let childData of objData.value | keyvalue'>
-                          <p class="childdata">{{childData.value}}</p>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                  </div>
-                </ng-container>
-              </td>
+              <td>Old Data</td>
+              <td>Current Value</td>
             </tr>
           </tbody>
-        </table> -->
+        </table>
       </div>
     </div>
   </div>
