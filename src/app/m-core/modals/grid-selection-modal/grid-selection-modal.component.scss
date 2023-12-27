@@ -1,0 +1,21 @@
+.modal-dialog .modal-body {padding:0 !important;margin:15px;border:1px solid #ccc;min-height:auto;border-radius:0 7px 0 7px;
+    .table table {
+        thead {top:-1px;
+            tr {border:none !important;
+                th:nth-child(1) {border-left:none !important;}
+            }
+        }
+        tbody {
+            tr {border-left:none !important;
+                td {background:#fff;}
+                td:nth-child(1) {border-left:none !important;}
+                &:hover {
+                    td {
+                        color: var(--fontColor) !important;
+                        background-color: var(--activebg) !important;
+                    }
+                }
+            }
+        }
+    }
+}

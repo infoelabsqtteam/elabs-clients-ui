@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-grid-selection-modal',
   templateUrl: './grid-selection-modal.component.html',
-  styleUrls: ['./grid-selection-modal.component.css']
+  styleUrls: ['./grid-selection-modal.component.scss']
 })
 export class GridSelectionModalComponent implements OnInit {
 
