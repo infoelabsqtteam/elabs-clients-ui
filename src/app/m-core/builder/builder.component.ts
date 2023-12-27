@@ -395,9 +395,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.selectContact = '';
     }
   } 
-  addFebMenu(menu,parent){
-    this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
+  addFebMenu(tab,parent){
+    tab.febMenu = !tab.febMenu;
+    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
+    // this.userPreferenceSubscribe(tab,'favoriteTabs',parent);
     // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
     // this.saveCallSubscribe();
   }
@@ -406,8 +407,27 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.commonFunctionService.updateUserPreference(menu,field,parent);
     this.saveCallSubscribe();
   }
+  checkFebTabAddOrNot(tab){
+    let menus = this.storageService.getUserPreference();
+    return this.isIdExistInTemplateTabs(menus['menus'],tab._id);
+  }
+  isIdExistInTemplateTabs(obj: any, targetId: string): boolean {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
   
-  
- }
+        if (value && typeof value === 'object') {
+          // Recursively search in nested objects
+          if (this.isIdExistInTemplateTabs(value, targetId)) {
+            return true;
+          }
+        } else if (key === "_id" && value === targetId) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
+}
 
