@@ -346,11 +346,17 @@
                                     </mat-error>                                   
                                 </mat-form-field>
                                 <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
-                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
+                                    <mdb-icon fas icon="plus" [matTooltip]="'Add'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] == undefined"></mdb-icon>
+                                    <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] != undefined">update</i>
+                                </button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
-                                            <p>{{item}} <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                            <p>{{item}} 
+                                                <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString('',tableField,i)" ><i class="fas fa-pen"></i></a>
+                                                <a [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -574,13 +580,19 @@
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
                                             </mat-form-field>
-                                            <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div>
-                                            
-                                            <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                            <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div>                                            
+                                            <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">                                          
+                                                <mdb-icon fas icon="plus" [matTooltip]="'Add'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_'+fields.field_name+'_index'] == undefined"></mdb-icon>
+                                                <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_'+fields.field_name+'_index'] != undefined">update</i>
+                                            </button>
+
+
                                             <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
-                                                        <p class="m-0 small">{{item}} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                        <p class="m-0 small">{{item}} 
+                                                            <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString(tableField,fields,i)" ><i class="fas fa-pen"></i></a>
+                                                            <a [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -609,7 +621,7 @@
                                     <div *ngIf="fields.type == 'html_editor'">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
+                                                <div class="grid-selection-title">{{ fields.label | titlecase}}</div>
                                             </div>
                                             <div class="col-lg-12">
                                                 <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
@@ -673,7 +685,7 @@
                                     <div *ngIf="fields.type == 'radio'">
                                         <div class="row m-0 w-100">
                                             <div class="col-lg-12 px-0">
-                                                <div class="card-header border-0  px-2 py-1 mb-1">{{ tableField.label | titlecase}}</div>
+                                                <div class="card-header border-0  px-2 py-1 mb-1">{{ fields.label | titlecase}}</div>
                                             </div>
                                         </div>
                                         <div class="row m-0 w-100" *ngIf="fields.datatype == 'key_value'">
@@ -865,11 +877,11 @@
                             </div>
                             <div class="row" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
                                 <div class="col-lg-12 table-responsive py-2" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
-                                    <table mdbTable class="z-depth-1 verticaltable">
+                                    <table class="z-depth-1 verticaltable">
                                         <tbody>
                                         <tr *ngFor="let fieldName of tableField.gridColumns" class="text-nowrap" [ngClass]="fieldName.display ? 'ml-1':'d-none'">
-                                            <td ><strong>{{ fieldName.label | titlecase}}</strong></td>
-                                            <td *ngFor="let data of modifyCustmizedFormValue[tableField.field_name]; let i = index">
+                                            <td class="border p-1"><strong>{{ fieldName.label | titlecase}}</strong></td>
+                                            <td class="border text-center p-1" *ngFor="let data of modifyCustmizedFormValue[tableField.field_name]; let i = index">
                                                     <span disabled *ngIf="fieldName.type=='checkbox'" >
                                                         <mat-checkbox color="primary"[checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                     </span>
@@ -885,7 +897,7 @@
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0">({{modifyCustmizedFormValue[tableField.field_name].length}})</span><span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
-                                    <ng-container *ngIf="tableField.gridColumns.length>0" >
+                                    <ng-container *ngIf="tableField.gridColumns && tableField.gridColumns.length>0" >
                                         <button (click)="updateColumnList(tableField.gridColumns)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button class="plusicon"><mat-icon>autorenew</mat-icon></button>
                                         <button  mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="plusicon"><mat-icon>filter_alt</mat-icon></button>
                                     </ng-container>
@@ -906,12 +918,12 @@
                                     </div>
                                 </div>                                
                                 <div class="table-responsive table" [ngClass]="tableField.scroll != undefined && !tableField.scroll ? 'maxheightdata':''">
-                                    <table class="table-bordered table-hover datalist mb-3" mdbTable *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
+                                    <table class="table-bordered table-hover datalist mb-3" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
                                         <thead class="border">
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))"></th>                               
                                                 <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <div class="justify-content-between t d-flex"> {{ fieldName.label | titlecase}} 
+                                                    <div class="justify-content-between d-flex"> {{ fieldName.label | titlecase}} 
                                                         <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
                                                     </div>
                                                 </th>
