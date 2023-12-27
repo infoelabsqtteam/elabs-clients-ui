@@ -728,14 +728,16 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   calculateNetAmount(fieldName, index) {
-    let data = this.modifiedGridData[index];
+    let data = {};
+    if(this.filteredData && this.filteredData.length > 0) {
+      data = this.filteredData[index];
+    }else {
+      data = this.modifiedGridData[index];
+    }
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
       this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
-    // let row = JSON.parse(JSON.stringify(data));
-    // let modifyrow = this.gridCommonFunctionService.rowModify(row,this.field,this.listOfGridFieldName,this.editableGridColumns,[]);
-    // this.modifiedGridData[index] = modifyrow;
   } 
   checkDisableIf(data){
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);

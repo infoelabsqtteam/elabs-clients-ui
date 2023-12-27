@@ -897,7 +897,7 @@
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0">({{modifyCustmizedFormValue[tableField.field_name].length}})</span><span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
-                                    <ng-container *ngIf="tableField.gridColumns.length>0" >
+                                    <ng-container *ngIf="tableField.gridColumns && tableField.gridColumns.length>0" >
                                         <button (click)="updateColumnList(tableField.gridColumns)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button class="plusicon"><mat-icon>autorenew</mat-icon></button>
                                         <button  mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="plusicon"><mat-icon>filter_alt</mat-icon></button>
                                     </ng-container>
