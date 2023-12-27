@@ -2,13 +2,11 @@
     .table table {
         thead {top:-1px;
             tr {border:none !important;
-                th.colSticky {}
             }
         }
         tbody {
             tr {border-left:none !important;
                 td {background:#fff;}
-                td.colSticky {}
                 &:hover {
                     td {
                         color: var(--fontColor) !important;
