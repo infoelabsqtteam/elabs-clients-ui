@@ -2,13 +2,13 @@
     .table table {
         thead {top:-1px;
             tr {border:none !important;
-                th:nth-child(1) {border-left:none !important;}
+                th.colSticky {}
             }
         }
         tbody {
             tr {border-left:none !important;
                 td {background:#fff;}
-                td:nth-child(1) {border-left:none !important;}
+                td.colSticky {}
                 &:hover {
                     td {
                         color: var(--fontColor) !important;
