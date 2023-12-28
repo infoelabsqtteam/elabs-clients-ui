@@ -397,6 +397,15 @@ export class BuilderComponent implements OnInit,OnDestroy {
   } 
   addFebMenu(tab,parent){
     tab.febMenu = !tab.febMenu;
+    let favTabs = this.storageService.GetFavTabs() || [];
+    if (tab.febMenu) {
+      favTabs = [...favTabs, tab];
+  } else {
+    if (Array.isArray(favTabs)) {
+      favTabs = favTabs.filter(item => item._id !== tab._id);
+  }
+  }
+  this.storageService.SetFavTabs(favTabs);
     // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
     // this.userPreferenceSubscribe(tab,'favoriteTabs',parent);
     // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
