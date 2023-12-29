@@ -20,6 +20,7 @@ export class AuthenticateComponent implements OnInit,OnDestroy {
   template:string = "temp1";
 
   logoPath = '';
+  successMsg:any;
   otpVerifySubscriptioin: Subscription;
 
   constructor(
@@ -30,22 +31,24 @@ export class AuthenticateComponent implements OnInit,OnDestroy {
     private authDataShareService: AuthDataShareService,
     private notificationService: NotificationService
   ) { 
-    this.otpVerifySubscriptioin = this.authDataShareService.authResponce.subscribe(res =>{
-      
-      if(res.msg != '') {
-        this.notificationService.notify(res.class, res.msg);
-      }
+    this.otpVerifySubscriptioin = this.authDataShareService.authResponce.subscribe(res =>{      
       if(res.status == 'success') {
+        this.successMsg= res;
         this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
       }else{
+        if(res.msg != '') {
+          this.notificationService.notify(res.class, res.msg);
+        }
         this.loading = false;
-        this.authenticateUser.reset();
       }
     })
     this.pageloded();
   }
 
   ngOnDestroy(): void {
+    if(this.successMsg && this.successMsg.msg !=""){
+      this.notificationService.notify(this.successMsg.class, this.successMsg.msg);
+    }
     this.loading = false;
     if(this.authenticateUser){
       this.authenticateUser.reset();
