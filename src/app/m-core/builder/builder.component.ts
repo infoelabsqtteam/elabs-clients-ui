@@ -407,7 +407,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
   this.storageService.SetFavTabs(favTabs);
     // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    // this.userPreferenceSubscribe(tab,'favoriteTabs',parent);
+    // this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
     // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
     // this.saveCallSubscribe();
   }
@@ -416,10 +416,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.commonFunctionService.updateUserPreference(menu,field,parent);
     this.saveCallSubscribe();
   }
-  checkFebTabAddOrNot(tab){
-    let menus = this.storageService.getUserPreference();
-    return this.isIdExistInTemplateTabs(menus['menus'],tab._id);
-  }
+  checkFebTabAddOrNot(tab) {
+    const menus = this.storageService.getUserPreference()?.menus || {};
+    return this.isIdExistInTemplateTabs(menus, tab._id);
+}
   isIdExistInTemplateTabs(obj: any, targetId: string): boolean {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {

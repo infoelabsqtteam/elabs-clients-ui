@@ -230,46 +230,13 @@ checkFebMenuAddOrNot(menu,parent){
   let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('menus');
   if (userFebMenu && userFebMenu !== null && typeof userFebMenu === 'object' && Object.keys(userFebMenu).length > 0) {
     if (parent && parent !== '' && typeof parent === 'object' && userFebMenu) {
-      return this.isMenuAlreadyPresent(menu,userFebMenu);
+      return this.commonFunctionService.isMenuAlreadyPresentOrNot(menu,userFebMenu);
     }else{
-      return this.isIdExist(userFebMenu,menuId);
+      return this.commonFunctionService.isIdExist(userFebMenu,menuId);
     }
   } else {
       return false;
   }
 }
 
-isIdExist(obj, targetId) {
-  for (const key in obj) {
-      if (obj.hasOwnProperty(key) && obj[key].reference && obj[key].reference._id === targetId) {
-          return true;
-      }
-  }
-  return false;
-}
-isMenuAlreadyPresent(targetMenu: any, userFebMenu: any): boolean {
-  for (const key in userFebMenu) {
-    if (userFebMenu.hasOwnProperty(key)) {
-      const menu = userFebMenu[key];
-      if (
-        (menu.reference && menu.reference._id === targetMenu._id) ||
-        menu.reference.name === targetMenu.name
-      ) {
-        return true; 
-      }
-
-      if (menu.submenus) {
-        for (const submenuKey in menu.submenus) {
-          if (menu.submenus.hasOwnProperty(submenuKey)) {
-            const submenu = menu.submenus[submenuKey];      
-            if (submenu.reference && submenu.reference._id === targetMenu._id) {
-              return true; 
-            }
-          }
-        }
-      }
-    }
-  }
-  return false;
-}
 }
