@@ -12,6 +12,7 @@ import { CreatepwdComponent } from './createpwd/createpwd.component';
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
 import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
         ResetpwdComponent,
         OtpVarificationComponent,
         CreatepwdComponent,
-        UnsubscribeComponent
+        UnsubscribeComponent,
+        AuthenticateComponent
     ],
     imports: [
         AuthRoutingModule,

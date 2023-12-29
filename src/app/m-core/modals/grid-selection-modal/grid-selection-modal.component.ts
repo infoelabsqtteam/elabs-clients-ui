@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-grid-selection-modal',
   templateUrl: './grid-selection-modal.component.html',
-  styleUrls: ['./grid-selection-modal.component.css']
+  styleUrls: ['./grid-selection-modal.component.scss']
 })
 export class GridSelectionModalComponent implements OnInit {
 
@@ -127,6 +127,7 @@ export class GridSelectionModalComponent implements OnInit {
     //this.treeViewData.data = TREE_DATA;
   }
 
+
   getViewData(){
     if (this.modifiedGridData && this.modifiedGridData.length > 0) {
       this.total = this.modifiedGridData.length;
@@ -193,6 +194,10 @@ export class GridSelectionModalComponent implements OnInit {
   //   }
   // }
 
+  //Hide Icon Click Function 
+  hideColumn(columns,index: number) {
+    columns[index].display = !columns[index].display;
+}
   add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
     if(event && event.value){
@@ -492,8 +497,8 @@ export class GridSelectionModalComponent implements OnInit {
     this.getStaticDataWithDependentData()
 
   }
-  updateColumnList(data,index){
-    //this.listOfGridFieldName[index].display = data.display;
+  updateColumnList(columns?){
+    if(columns) columns.forEach(column=>column.display =true)
   }
   selectGridData() {    
     this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
@@ -723,14 +728,16 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   calculateNetAmount(fieldName, index) {
-    let data = this.modifiedGridData[index];
+    let data = {};
+    if(this.filteredData && this.filteredData.length > 0) {
+      data = this.filteredData[index];
+    }else {
+      data = this.modifiedGridData[index];
+    }
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
       this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
-    // let row = JSON.parse(JSON.stringify(data));
-    // let modifyrow = this.gridCommonFunctionService.rowModify(row,this.field,this.listOfGridFieldName,this.editableGridColumns,[]);
-    // this.modifiedGridData[index] = modifyrow;
   } 
   checkDisableIf(data){
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
