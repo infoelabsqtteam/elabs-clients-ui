@@ -18,28 +18,74 @@
       </div>
 
       <div class="modal-body auditdetails">
-        <table class="table" *ngIf="formFieldsList && formFieldsList.length > 0">
+        <table class="table" *ngIf="formFields && formFields.length > 0">
           <thead class="thead-light">
             <tr>
-              <th scope="col"><p>Form Fields</p></th>
-              <th scope="col"><p>Old Value</p></th>
-              <th scope="col"><p>Current Value</p></th>
+              <th scope="col">Form Fields</th>
+              <th scope="col">Old Data</th>
+              <th scope="col">Current Data</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of formFieldsList">
-              <td>
-                <p *ngIf="data.type == 'label' && data.type != 'grid_selection'" class="labelfield"><strong>{{data.label}}</strong></p>
-                <p *ngIf="data.type != 'label' && data.type != 'grid_selection'">{{data.label}}</p>
-                <p *ngIf="data.type == 'grid_selection'" class="labelfield">
-                   <strong class="mb-3 d-block">{{data.label}}</strong>
-                   <ng-container *ngFor="let childData of data.gridColumns">
-                      <span class="d-block py-2">{{childData.label}}</span>
-                   </ng-container>
-                </p>
+            <tr *ngFor="let field of formFields">
+
+              <td colspan="3" *ngIf="field.type == 'label' && field.type != 'grid_selection'" class="labelfield"><strong>{{field.label}}</strong></td>
+
+              <td *ngIf="field.type != 'label' && field.type != 'grid_selection'">{{field.label}}</td>
+
+              <td class="p-0" colspan="3" *ngIf="field.type == 'grid_selection'">
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>{{field.label}}</mat-expansion-panel-header>
+                      <!-- <table *ngIf="(currentObject[field.field_name] && currentObject[field.field_name].length > 0 ) || (previousObject[field.field_name] && previousObject[field.field_name].length > 0 )">
+                        <ng-container *ngFor="let gridCurrentData of currentObject[field.field_name]; index as i">
+                          
+                          <ng-container *ngFor="let gridLastData of previousObject[field.field_name]; index as i">
+                          <tr *ngFor="let childfield of field.gridColumns">
+                            <td>{{childfield.label}}</td>
+                            <ng-container *ngIf="previousObject[field.field_name] && previousObject[field.field_name].length > 0 ">
+                                <td>{{gridLastData[childfield.field_name]}}</td>
+                            </ng-container>
+                            <td>{{gridCurrentData[childfield.field_name]}}</td>
+                          </tr>
+                          </ng-container>
+                        </ng-container>
+                      </table> -->
+                  </mat-expansion-panel>
+                </mat-accordion>
               </td>
-              <td>Old Data</td>
-              <td>Current Value</td>
+
+
+
+              <ng-container *ngIf="previousObject != null">
+                <td>{{previousObject[field.field_name]}}
+                  <!-- <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
+                    {{previousObject[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object'">
+                    {{previousObject[field.field_name]}}
+                  </ng-container> -->
+                </td>
+              </ng-container>
+
+
+              <ng-container *ngIf="currentObject != null">
+                <td>
+                  <ng-container *ngIf="field.datatype == 'text'">
+                    {{currentObject[field.field_name]}}
+                  </ng-container>
+
+
+
+                  <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
+                    {{currentObject[field.field_name].name}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object'">
+                    {{currentObject[field.field_name]}}
+                  </ng-container>
+                </td>
+              </ng-container>
+
             </tr>
           </tbody>
         </table>

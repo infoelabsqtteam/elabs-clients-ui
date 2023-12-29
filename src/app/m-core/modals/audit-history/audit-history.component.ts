@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { ApiCallService, CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { ApiCallService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-audit-history',
@@ -19,8 +19,7 @@ export class AuditHistoryComponent implements OnInit {
   gridButton:any = [];
   currentObject:any = [];
   previousObject:any = [];
-  formFieldsList:any = [];
-
+  formFields:any = [];
 
   
 
@@ -29,6 +28,7 @@ export class AuditHistoryComponent implements OnInit {
     private apiCallService:ApiCallService,
     private dataShareService: DataShareService,
     private commonFunctionService:CommonFunctionService, 
+    private gridCommonFunctionServie:GridCommonFunctionService,
   ) {
     this.dataShareService.auditHistoryList.subscribe(auditHistory => {
       this.setAuditHistory(auditHistory);
@@ -97,15 +97,26 @@ export class AuditHistoryComponent implements OnInit {
 
 
   getFormFields(formFields) {
-    this.formFieldsList = formFields;
+    let modifyFormField = this.gridCommonFunctionServie.modifyGridColumns(formFields,{});
+    this.formFields = modifyFormField;
   }
 
   getCurrentObj(data){
-    this.currentObject = data;
+    let currentData = [];
+    if(data && data != null) {
+      currentData.push(data);
+      let modifyObj = this.gridCommonFunctionServie.modifyGridData(currentData,this.formFields,{},[],[]);
+      this.currentObject = modifyObj;
+    }
   }
 
   getPrevObject(data){
-    this.previousObject = data;
+    let previewData = [];
+    if(data && data != null) {
+      previewData.push(data);
+      let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
+      this.previousObject = modifyObj;
+    }
   }
  
 }
