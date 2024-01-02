@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
+import { AuditHistoryDetailsComponent } from '../audit-history-details/audit-history-details.component';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { ApiCallService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
 
 @Component({
@@ -24,6 +26,7 @@ export class AuditHistoryComponent implements OnInit {
   
 
   constructor(
+    public dialog: MatDialog,
     private modalService: ModelService,
     private apiCallService:ApiCallService,
     private dataShareService: DataShareService,
@@ -42,7 +45,8 @@ export class AuditHistoryComponent implements OnInit {
     if(auditHistory) {
         this.getCurrentObj(auditHistory.currentObject);
         this.getFormFields(auditHistory.formFieldsList)
-        this.getPrevObject(auditHistory.previousObject)
+        this.getPrevObject(auditHistory.previousObject);
+        this.compareData();
     }
   }
 
@@ -70,7 +74,7 @@ export class AuditHistoryComponent implements OnInit {
 
   changeAuditVersion(version) {
     let auditSelectedVersion = JSON.parse(version)
-    this.getAuditData(auditSelectedVersion)
+    this.getAuditData(auditSelectedVersion);
   }
 
   getAuditData(version?) {
@@ -83,7 +87,7 @@ export class AuditHistoryComponent implements OnInit {
     payload['data'] = object;
     let payloadData = {
       "data" : payload,
-      "path" : 0
+      "path" : null
     }
     if(version) {
       payloadData.path = version;
@@ -106,7 +110,7 @@ export class AuditHistoryComponent implements OnInit {
     if(data && data != null) {
       currentData.push(data);
       let modifyObj = this.gridCommonFunctionServie.modifyGridData(currentData,this.formFields,{},[],[]);
-      this.currentObject = modifyObj;
+      this.currentObject = data;
     }
   }
 
@@ -115,8 +119,23 @@ export class AuditHistoryComponent implements OnInit {
     if(data && data != null) {
       previewData.push(data);
       let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
-      this.previousObject = modifyObj;
-    }
+      this.previousObject = data;
+    }  
+  }
+
+
+  compareData() {
+    this.gridCommonFunctionServie.compareAuditHistoryData(this.formFields,this.currentObject,this.previousObject);
+  }
+  
+
+  showGridSelection(fields, allData) {
+    this.dialog.open(AuditHistoryDetailsComponent, {
+      data: {
+        "formFields": fields,
+        "currentData": allData
+      },
+    });
   }
  
 }

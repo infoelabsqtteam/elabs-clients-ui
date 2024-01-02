@@ -3,12 +3,11 @@ select {border:1px solid #ccc;padding:3px 10px;}
 .auditdetails {
     .table {
         tr {
+            td, th {width:33%;}
             .labelfield {background:var(--formLabelBg);color:#333;} 
-            .labelfield ~ td {display:none !important;}
-            td[colspan="3"] ~ td {display:none !important;}
+            p {border-bottom:1px solid #ccc;min-height:25px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;width:100%;}
         }
-       
-        // p {font-size:15px;margin:0;padding:0.75rem;}
     } 
-
+    .bg-danger {background-color:#e7b7b7!important;}
+    mat-icon {display:inline-block;vertical-align:middle;margin-left:5px;font-size:20px;opacity:0.5;}
 }

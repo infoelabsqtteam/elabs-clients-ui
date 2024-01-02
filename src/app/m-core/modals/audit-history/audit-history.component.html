@@ -27,17 +27,56 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let field of formFields">
+            <tr *ngFor="let field of formFields" [ngClass]="field && field.isChanged ? 'bg-danger':'nochange'">
 
-              <td colspan="3" *ngIf="field.type == 'label' && field.type != 'grid_selection'" class="labelfield"><strong>{{field.label}}</strong></td>
+              <td>
+                <ng-container *ngIf="field.datatype != 'list_of_object'">
+                  <strong>{{field.label | titlecase}}</strong>
+                </ng-container>
+                <ng-container *ngIf="field.datatype == 'list_of_object'">
+                  <strong>{{field.label | titlecase}}</strong>
+                  <p *ngFor="let data of field.list_of_fields">{{data.label}}</p>
+                </ng-container>
+              </td>
 
-              <td *ngIf="field.type != 'label' && field.type != 'grid_selection'">{{field.label}}</td>
+              <td *ngIf="previousObject != null && field && field.field_name">
+                  <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
+                    {{previousObject[field.field_name].name}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
+                    {{previousObject[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype == 'list_of_object'">
+                      <p *ngFor="let data of field.list_of_fields">{{previousObject[data.field_name]}}</p>
+                  </ng-container>
+                  <ng-container *ngIf="field.type == 'grid_selection'">
+                    <span>{{field.fields.length}}</span>
+                    <!-- <mat-icon (click)="showGridSelection(field, previousObject[field.field_name])">visibility</mat-icon> -->
+                </ng-container>
+              </td>
 
-              <td class="p-0" colspan="3" *ngIf="field.type == 'grid_selection'">
+              <td *ngIf="currentObject != null && field && field.field_name">
+                  <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
+                    {{currentObject[field.field_name].name}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
+                    {{currentObject[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype == 'list_of_object'">
+                      <p *ngFor="let data of field.list_of_fields">{{currentObject[data.field_name]}}</p>
+                  </ng-container>
+                  <ng-container *ngIf="field.type == 'grid_selection'">
+                    <span>{{field.fields.length}}</span>
+                    <!-- <mat-icon (click)="showGridSelection(field, currentObject[field.field_name])">visibility</mat-icon> -->
+                </ng-container>
+              </td>
+
+
+              <!-- <td class="p-0" colspan="3" *ngIf="field.type == 'grid_selection'">
                 <mat-accordion>
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>{{field.label}}</mat-expansion-panel-header>
-                      <!-- <table *ngIf="(currentObject[field.field_name] && currentObject[field.field_name].length > 0 ) || (previousObject[field.field_name] && previousObject[field.field_name].length > 0 )">
+                      <table *ngIf="(currentObject[field.field_name] && currentObject[field.field_name].length > 0 ) || (previousObject[field.field_name] && previousObject[field.field_name].length > 0 )">
                         <ng-container *ngFor="let gridCurrentData of currentObject[field.field_name]; index as i">
                           
                           <ng-container *ngFor="let gridLastData of previousObject[field.field_name]; index as i">
@@ -50,42 +89,12 @@
                           </tr>
                           </ng-container>
                         </ng-container>
-                      </table> -->
+                      </table>
                   </mat-expansion-panel>
                 </mat-accordion>
-              </td>
+              </td> -->
 
-
-
-              <ng-container *ngIf="previousObject != null">
-                <td>{{previousObject[field.field_name]}}
-                  <!-- <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
-                    {{previousObject[field.field_name]}}
-                  </ng-container>
-                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object'">
-                    {{previousObject[field.field_name]}}
-                  </ng-container> -->
-                </td>
-              </ng-container>
-
-
-              <ng-container *ngIf="currentObject != null">
-                <td>
-                  <ng-container *ngIf="field.datatype == 'text'">
-                    {{currentObject[field.field_name]}}
-                  </ng-container>
-
-
-
-                  <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
-                    {{currentObject[field.field_name].name}}
-                  </ng-container>
-                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object'">
-                    {{currentObject[field.field_name]}}
-                  </ng-container>
-                </td>
-              </ng-container>
-
+              
             </tr>
           </tbody>
         </table>
