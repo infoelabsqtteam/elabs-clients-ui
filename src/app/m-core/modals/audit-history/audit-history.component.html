@@ -29,7 +29,11 @@
           <tbody>
             <tr *ngFor="let field of formFields" [ngClass]="field && field.isChanged ? 'bg-danger':'nochange'">
 
-              <td>
+              <td colspan="3" class="labelfield" *ngIf="field.type == 'label'">
+                <strong>{{field.label | titlecase}}</strong>
+              </td>
+
+              <td *ngIf="field.type != 'label'">
                 <ng-container *ngIf="field.datatype != 'list_of_object'">
                   <strong>{{field.label | titlecase}}</strong>
                 </ng-container>
@@ -39,9 +43,14 @@
                 </ng-container>
               </td>
 
+
+
+
+
+
               <td *ngIf="previousObject != null && field && field.field_name">
                   <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
-                    {{previousObject[field.field_name].name}}
+                    {{previousObject?.[field.field_name]?.name ? previousObject?.[field.field_name].name: previousObject?.[field.field_name]}}
                   </ng-container>
                   <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
                     {{previousObject[field.field_name]}}
@@ -57,7 +66,7 @@
 
               <td *ngIf="currentObject != null && field && field.field_name">
                   <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
-                    {{currentObject[field.field_name].name}}
+                    {{currentObject?.[field.field_name]?.name ? currentObject?.[field.field_name].name : currentObject?.[field.field_name]}}
                   </ng-container>
                   <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
                     {{currentObject[field.field_name]}}
@@ -71,30 +80,6 @@
                 </ng-container>
               </td>
 
-
-              <!-- <td class="p-0" colspan="3" *ngIf="field.type == 'grid_selection'">
-                <mat-accordion>
-                  <mat-expansion-panel>
-                    <mat-expansion-panel-header>{{field.label}}</mat-expansion-panel-header>
-                      <table *ngIf="(currentObject[field.field_name] && currentObject[field.field_name].length > 0 ) || (previousObject[field.field_name] && previousObject[field.field_name].length > 0 )">
-                        <ng-container *ngFor="let gridCurrentData of currentObject[field.field_name]; index as i">
-                          
-                          <ng-container *ngFor="let gridLastData of previousObject[field.field_name]; index as i">
-                          <tr *ngFor="let childfield of field.gridColumns">
-                            <td>{{childfield.label}}</td>
-                            <ng-container *ngIf="previousObject[field.field_name] && previousObject[field.field_name].length > 0 ">
-                                <td>{{gridLastData[childfield.field_name]}}</td>
-                            </ng-container>
-                            <td>{{gridCurrentData[childfield.field_name]}}</td>
-                          </tr>
-                          </ng-container>
-                        </ng-container>
-                      </table>
-                  </mat-expansion-panel>
-                </mat-accordion>
-              </td> -->
-
-              
             </tr>
           </tbody>
         </table>

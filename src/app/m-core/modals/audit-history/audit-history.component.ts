@@ -44,7 +44,7 @@ export class AuditHistoryComponent implements OnInit {
   setAuditHistory(auditHistory: any) {
     if(auditHistory) {
         this.getCurrentObj(auditHistory.currentObject);
-        this.getFormFields(auditHistory.formFieldsList)
+        this.getFormFields(auditHistory.auditFields)
         this.getPrevObject(auditHistory.previousObject);
         this.compareData();
     }
@@ -109,7 +109,7 @@ export class AuditHistoryComponent implements OnInit {
     let currentData = [];
     if(data && data != null) {
       currentData.push(data);
-      let modifyObj = this.gridCommonFunctionServie.modifyGridData(currentData,this.formFields,{},[],[]);
+      // let modifyObj = this.gridCommonFunctionServie.modifyGridData(currentData,this.formFields,{},[],[]);
       this.currentObject = data;
     }
   }
@@ -118,7 +118,7 @@ export class AuditHistoryComponent implements OnInit {
     let previewData = [];
     if(data && data != null) {
       previewData.push(data);
-      let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
+      // let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
       this.previousObject = data;
     }  
   }
