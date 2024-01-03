@@ -3,7 +3,6 @@ import { ModalDirective } from 'angular-bootstrap-md';
 import { AuditHistoryDetailsComponent } from '../audit-history-details/audit-history-details.component';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { ApiCallService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
-import { integer } from 'aws-sdk/clients/cloudfront';
 
 @Component({
   selector: 'app-audit-history',
@@ -23,7 +22,7 @@ export class AuditHistoryComponent implements OnInit {
   currentObject:any = [];
   previousObject:any = [];
   formFields:any = [];
-  lastEdit:integer;
+  lastEdit:number;
 
   
 
