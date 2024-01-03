@@ -6,72 +6,83 @@
         <button class="closebtb" (click)="close()"><span>&times;</span></button>
       </div>
 
-      <div class="modal-body auditdetails">
-
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <div class="d-flex align-items-center justify-content-between audittitle" *ngIf="auditHistoryList">
-              <h4 class="m-0">{{selectedTab.label}}</h4>
-              <div class="d-flex align-items-center">
-                <select (change)="handleChange($event.target.selectedIndex)">
-                  <option *ngFor="let data of auditHistoryList; let i = index" [value]="data.version">version: {{i}}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="auditdata">
-              <p><strong>Updated By :</strong></p>
-              <p><strong>Updated Date :</strong></p>
-              <p><strong>Version:</strong></p>
-              <p><strong>Id:</strong></p>
-              <p><strong>Name:</strong></p>
-              <p><strong>Alt Name:</strong></p>
-            </div>
-          </div>
-
-
-          <div class="col-md-4" *ngIf="auditHistoryList">
-            <div class="audittitle"><h4 class="m-0">Old</h4></div>
-            <div class="auditdata text-danger" *ngIf="!showdata">
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-              <p>No Data</p>
-            </div>
-            <div class="auditdata text-danger" *ngIf="showdata">
-              <p>{{previousAuditData.createdByName}}</p>
-              <p>{{previousAuditData.createdDate | date:'fullDate'}}</p>
-              <p>{{previousAuditData.version}}</p>
-              <p>{{previousAuditData._id}}</p>
-              <p>{{previousAuditData.currentObject.name}}</p>
-              <p>{{previousAuditData.currentObject.altname}}</p>
-            </div>
-          </div>
-
-          <div class="col-md-4" *ngIf="auditHistoryList">
-            <div class="audittitle"><h4 class="m-0">New</h4></div>
-            <div class="auditdata text-success" *ngIf="!showdata">
-              <p>{{singleAuditHistoryList.createdByName}}</p>
-              <p>{{singleAuditHistoryList.createdDate | date:'fullDate'}}</p>
-              <p>{{singleAuditHistoryList.version}}</p>
-              <p>{{singleAuditHistoryList._id}}</p>
-              <p>{{singleAuditHistoryList.currentObject.name}}</p>
-              <p>{{singleAuditHistoryList.currentObject.altname}}</p>
-            </div>
-            <div class="auditdata text-danger" *ngIf="showdata">
-              <p>{{selectedObject.createdByName}}</p>
-              <p>{{selectedObject.createdDate | date:'fullDate'}}</p>
-              <p>{{selectedObject.version}}</p>
-              <p>{{selectedObject._id}}</p>
-              <p>{{selectedObject.currentObject.name}}</p>
-              <p>{{selectedObject.currentObject.altname}}</p>
-            </div>
-          </div>
+      <div class="d-flex align-items-center justify-content-center bg-light px-3 py-2">
+        <h4 class="m-0" *ngIf="selectedTab">{{selectedTab.label}}</h4>
+        <div class="d-flex align-items-center mx-3" *ngIf="allVersionList && allVersionList.length > 0">
+          <select (change)="changeAuditVersion($event.target.value)">
+            <option *ngFor="let data of allVersionList; let i = index" [value]="data">{{data}}
+            </option>
+          </select>
         </div>
-        <ngx-diff2html *ngIf="!showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{singleAuditHistoryList | json}}"></ngx-diff2html>
-        <ngx-diff2html *ngIf="showcompareData" format="side-by-side" left="{{previousAuditData | json}}" right="{{selectedObject | json}}"></ngx-diff2html>
+        <div class="mt-2"><mat-checkbox color="primary">Show Difference</mat-checkbox></div>
+      </div>
+
+      <div class="modal-body auditdetails">
+        <table class="table" *ngIf="formFields && formFields.length > 0">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Form Fields</th>
+              <th scope="col">Old Data</th>
+              <th scope="col">Current Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let field of formFields" [ngClass]="field && field.isChanged ? 'bg-danger':'nochange'">
+
+              <td colspan="3" class="labelfield" *ngIf="field.type == 'label'">
+                <strong>{{field.label | titlecase}}</strong>
+              </td>
+
+              <td *ngIf="field.type != 'label'">
+                <ng-container *ngIf="field.datatype != 'list_of_object'">
+                  <strong>{{field.label | titlecase}}</strong>
+                </ng-container>
+                <ng-container *ngIf="field.datatype == 'list_of_object'">
+                  <strong>{{field.label | titlecase}}</strong>
+                  <p *ngFor="let data of field.list_of_fields">{{data.label}}</p>
+                </ng-container>
+              </td>
+
+
+
+
+
+
+              <td *ngIf="previousObject != null && field && field.field_name">
+                  <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
+                    {{previousObject?.[field.field_name]?.name ? previousObject?.[field.field_name].name: previousObject?.[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
+                    {{previousObject[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype == 'list_of_object'">
+                      <p *ngFor="let data of field.list_of_fields">{{previousObject[data.field_name]}}</p>
+                  </ng-container>
+                  <ng-container *ngIf="field.type == 'grid_selection'">
+                    <span>{{field.fields.length}}</span>
+                    <!-- <mat-icon (click)="showGridSelection(field, previousObject[field.field_name])">visibility</mat-icon> -->
+                </ng-container>
+              </td>
+
+              <td *ngIf="currentObject != null && field && field.field_name">
+                  <ng-container *ngIf="field.datatype == 'object' && field.datatype != 'list_of_object'">
+                    {{currentObject?.[field.field_name]?.name ? currentObject?.[field.field_name].name : currentObject?.[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
+                    {{currentObject[field.field_name]}}
+                  </ng-container>
+                  <ng-container *ngIf="field.datatype == 'list_of_object'">
+                      <p *ngFor="let data of field.list_of_fields">{{currentObject[data.field_name]}}</p>
+                  </ng-container>
+                  <ng-container *ngIf="field.type == 'grid_selection'">
+                    <span>{{field.fields.length}}</span>
+                    <!-- <mat-icon (click)="showGridSelection(field, currentObject[field.field_name])">visibility</mat-icon> -->
+                </ng-container>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

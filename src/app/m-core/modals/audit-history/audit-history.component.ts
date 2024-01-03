@@ -1,48 +1,56 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormGroupDirective, FormControlDirective, FormControlName } from '@angular/forms';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { DataShareService, ModelService } from '@core/web-core';
-
+import { AuditHistoryDetailsComponent } from '../audit-history-details/audit-history-details.component';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { ApiCallService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-audit-history',
   templateUrl: './audit-history.component.html',
-  styleUrls: ['./audit-history.component.css']
+  styleUrls: ['./audit-history.component.scss']
 })
 export class AuditHistoryComponent implements OnInit {
   @Output() addAndUpdateResponce = new EventEmitter();
 
   @Input() id: string;
   @ViewChild('auditHistory') public auditHistory: ModalDirective;
-  aduitTabIndex
-  tempDataSubscription
-  allTabs: any;
+  aduitTabIndex;
   selectedTab: any;
+  allVersionList:any;
+  objectid:any;
+  gridButton:any = [];
+  currentObject:any = [];
+  previousObject:any = [];
+  formFields:any = [];
 
-  auditHistoryList: any;
-  singleAuditHistoryList: any;
-  selectedObject: any;
-  previousAuditData: any;
-  showdata = false;
-  showcompareData = false;
+  
 
   constructor(
+    public dialog: MatDialog,
     private modalService: ModelService,
+    private apiCallService:ApiCallService,
     private dataShareService: DataShareService,
+    private commonFunctionService:CommonFunctionService, 
+    private gridCommonFunctionServie:GridCommonFunctionService,
   ) {
     this.dataShareService.auditHistoryList.subscribe(auditHistory => {
       this.setAuditHistory(auditHistory);
+    });
+    this.dataShareService.auditVersionList.subscribe(data => {
+      this.allVersionList = data;
     })
   }
 
   setAuditHistory(auditHistory: any) {
-    this.auditHistoryList = auditHistory;
-    this.singleAuditHistoryList = auditHistory[0];
-    console.log(this.singleAuditHistoryList)
+    if(auditHistory) {
+        this.getCurrentObj(auditHistory.currentObject);
+        this.getFormFields(auditHistory.auditFields)
+        this.getPrevObject(auditHistory.previousObject);
+        this.compareData();
+    }
   }
 
   ngOnInit(): void {
-    let modal = this;
     this.modalService.remove(this.id);
     this.modalService.add(this);
   }
@@ -50,26 +58,87 @@ export class AuditHistoryComponent implements OnInit {
   showModal(object) {
     this.aduitTabIndex = object["aduitTabIndex"];
     this.selectedTab = object["tabname"][this.aduitTabIndex];
+    if(this.selectedTab && this.selectedTab.grid && this.selectedTab.grid.action_buttons) {
+      this.gridButton =this.selectedTab.grid.action_buttons;
+    }else {
+      this.gridButton = []
+    }
+    this.objectid = object["objectId"];
+    this.getAuditVersionList();
+    this.getAuditData();
     this.auditHistory.show();
   }
   close() {
-    this.showdata = false;
-    this.previousAuditData = [];
     this.auditHistory.hide();
   }
 
-  handleChange(index) {
-    this.showdata = true;
-    this.showcompareData = true;
-    this.selectedObject = this.auditHistoryList[index];
-    if (index == 0) {
-      this.showdata = false;
-      this.previousAuditData = {};
-    } else {
-      this.previousAuditData = this.auditHistoryList[index - 1];
+  changeAuditVersion(version) {
+    let auditSelectedVersion = JSON.parse(version)
+    this.getAuditData(auditSelectedVersion);
+  }
+
+  getAuditData(version?) {
+    let form = this.commonFunctionService.getForm(this.selectedTab.forms,"NEW",this.gridButton);
+    let params = this.objectid;
+    let object = {
+      "formId": form._id
     }
+    let payload = this.apiCallService.getPaylodWithCriteria(params, "", [], {});
+    payload['data'] = object;
+    let payloadData = {
+      "data" : payload,
+      "path" : null
+    }
+    if(version) {
+      payloadData.path = version;
+    }
+    this.commonFunctionService.getAuditHistory(payloadData);
+  }
+
+  getAuditVersionList() {
+    this.commonFunctionService.getAuditVersionList(this.objectid);
   }
 
 
+  getFormFields(formFields) {
+    let modifyFormField = this.gridCommonFunctionServie.modifyGridColumns(formFields,{});
+    this.formFields = modifyFormField;
+  }
 
+  getCurrentObj(data){
+    let currentData = [];
+    if(data && data != null) {
+      currentData.push(data);
+      // let modifyObj = this.gridCommonFunctionServie.modifyGridData(currentData,this.formFields,{},[],[]);
+      this.currentObject = data;
+    }
+  }
+
+  getPrevObject(data){
+    let previewData = [];
+    if(data && data != null) {
+      previewData.push(data);
+      // let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
+      this.previousObject = data;
+    }  
+  }
+
+
+  compareData() {
+    this.gridCommonFunctionServie.compareAuditHistoryData(this.formFields,this.currentObject,this.previousObject);
+  }
+  
+
+  showGridSelection(fields, allData) {
+    this.dialog.open(AuditHistoryDetailsComponent, {
+      data: {
+        "formFields": fields,
+        "currentData": allData
+      },
+    });
+  }
+ 
 }
+
+
+

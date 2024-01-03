@@ -39,7 +39,7 @@ import { BulkUpdateComponent } from './bulk-update/bulk-update.component';
 import { PermissionTreeViewComponent } from './permission-tree-view/permission-tree-view.component';
 import { CommonComponentModule } from '../common-component/common-component.module';
 import { ChartModalComponent } from './chart-modal/chart-modal.component';
-
+import { AuditHistoryDetailsComponent } from './audit-history-details/audit-history-details.component';
 
 const models = [
   ModalsComponent,
@@ -71,7 +71,8 @@ const models = [
   AuditHistoryComponent,
   HtmlViewModalComponent,
   BulkUpdateComponent,
-  PermissionTreeViewComponent  
+  PermissionTreeViewComponent,
+  AuditHistoryDetailsComponent 
 ]
 
 @NgModule({
