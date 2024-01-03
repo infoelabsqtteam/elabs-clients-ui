@@ -22,6 +22,7 @@ export class AuditHistoryComponent implements OnInit {
   currentObject:any = [];
   previousObject:any = [];
   formFields:any = [];
+  lastEdit:number;
 
   
 
@@ -38,6 +39,7 @@ export class AuditHistoryComponent implements OnInit {
     });
     this.dataShareService.auditVersionList.subscribe(data => {
       this.allVersionList = data;
+      this.lastEdit = this.allVersionList[0];
     })
   }
 
@@ -89,7 +91,7 @@ export class AuditHistoryComponent implements OnInit {
       "data" : payload,
       "path" : null
     }
-    if(version) {
+    if(version >= 0) {
       payloadData.path = version;
     }
     this.commonFunctionService.getAuditHistory(payloadData);
@@ -115,12 +117,16 @@ export class AuditHistoryComponent implements OnInit {
   }
 
   getPrevObject(data){
-    let previewData = [];
-    if(data && data != null) {
-      previewData.push(data);
-      // let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
-      this.previousObject = data;
-    }  
+    if(data != null && data != undefined){
+      let previewData = [];
+      if(data && data != null) {
+        previewData.push(data);
+        // let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
+        this.previousObject = data;
+      } 
+    } else{
+      this.previousObject = {};
+    }
   }
 
 
