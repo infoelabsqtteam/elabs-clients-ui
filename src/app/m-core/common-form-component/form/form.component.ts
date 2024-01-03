@@ -1002,18 +1002,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         } else {
           if(parentfield != ''){
             if(formValue && formValue[parentfield.field_name] && formValue[parentfield.field_name][field.field_name].length > 0){
-              const value = this.coreFunctionService.removeSpaceFromString(formValue[parentfield.field_name][field.field_name]);
-              let regexp = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
-              let serchfind = regexp.test(value);
-              if(!serchfind && field.datatype == "email") {
-                this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
-                this.notificationService.notify('bg-danger','Enter Valid '+field.label);
-              }else if(field.datatype == "text" || field.datatype == undefined || field.datatype == null) {
-                this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = false;
-              }else {
-                this.notificationService.notify('bg-success','Successfull '+field.label);
-                this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = false;
-              }
+              this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = false;
             }else{
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
               this.addOrUpdateIconShowHideList = {};
