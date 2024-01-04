@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEm
 import { Router, NavigationEnd } from '@angular/router';
 import { MENU } from './menu';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService } from '@core/web-core';
+import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService } from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar',
@@ -31,7 +31,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private dataShareService:DataShareService,
     private commonfunctionService:CommonFunctionService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private userPrefrenceService:UserPrefrenceService
   ) {
     
     // this.dataShareService.otherSaveCall.subscribe(responce => {
@@ -213,13 +214,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 // }
 addFebMenu(menu,parent){
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-  this.userPreferenceSubscribe(menu,'menus',parent);
-  // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'menus',parent);
+  this.userPreferenceSubscribe(menu,'favouriteMenus',parent);
+  // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'favouriteMenus',parent);
   // this.saveCallSubscribe();
 }
 updateUserPreference(menu,field,parent){
   this.unsubscribe(this.userPreferenceSubscription);
-  this.commonFunctionService.updateUserPreference(menu,field,parent);
+  this.userPrefrenceService.updateUserPreference(menu,field,parent);
   this.saveCallSubscribe();
 }
 checkFebMenuAddOrNot(menu,parent){
@@ -227,12 +228,12 @@ checkFebMenuAddOrNot(menu,parent){
   if(parent != ''){
     menuId = parent._id;
   }
-  let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('menus');
+  let userFebMenu = this.userPrefrenceService.getUserPreferenceByFieldName('favouriteMenus');
   if (userFebMenu && userFebMenu !== null && typeof userFebMenu === 'object' && Object.keys(userFebMenu).length > 0) {
     if (parent && parent !== '' && typeof parent === 'object' && userFebMenu) {
-      return this.commonFunctionService.isMenuAlreadyPresentOrNot(menu,userFebMenu);
+      return this.userPrefrenceService.isMenuAlreadyPresentOrNot(menu,userFebMenu);
     }else{
-      return this.commonFunctionService.isIdExist(userFebMenu,menuId);
+      return this.userPrefrenceService.isIdExist(userFebMenu,menuId);
     }
   } else {
       return false;

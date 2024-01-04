@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService} from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService} from '@core/web-core';
 
 
 @Component({
@@ -64,7 +64,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private envService:EnvService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private _location:Location,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private userPrefrenceService:UserPrefrenceService
   ) {  
     this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -394,49 +395,20 @@ export class BuilderComponent implements OnInit,OnDestroy {
     else{
       this.selectContact = '';
     }
-  } 
-  addFebMenu(tab,parent){
-    tab.febMenu = !tab.febMenu;
-    let favTabs = this.storageService.GetFavTabs() || [];
-    if (tab.febMenu) {
-      favTabs = [...favTabs, tab];
-  } else {
-    if (Array.isArray(favTabs)) {
-      favTabs = favTabs.filter(item => item._id !== tab._id);
-  }
-  }
-  this.storageService.SetFavTabs(favTabs);
-    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    // this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
-    // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  }   
+  addFebMenu(tab,parent){    
+    this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
+    this.userPreferenceSubscribe(tab,'tab',parent);
     // this.saveCallSubscribe();
   }
   updateUserPreference(menu,field,parent){
     this.unsubscribe(this.userPreferenceSubscription);
-    this.commonFunctionService.updateUserPreference(menu,field,parent);
+    this.userPrefrenceService.updateUserPreference(menu,field,parent);
     this.saveCallSubscribe();
   }
   checkFebTabAddOrNot(tab) {
-    const menus = this.storageService.getUserPreference()?.menus || {};
-    return this.isIdExistInTemplateTabs(menus, tab._id);
+    const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+    return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
 }
-  isIdExistInTemplateTabs(obj: any, targetId: string): boolean {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const value = obj[key];
-  
-        if (value && typeof value === 'object') {
-          // Recursively search in nested objects
-          if (this.isIdExistInTemplateTabs(value, targetId)) {
-            return true;
-          }
-        } else if (key === "_id" && value === targetId) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
 }
 
