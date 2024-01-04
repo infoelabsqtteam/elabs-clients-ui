@@ -355,6 +355,9 @@ export class PermissionTreeViewComponent implements OnInit {
     this.staticData = {};
     this.treeView.hide();
   }
+  addRollPermissionTabWise(node){
+    console.log(node);
+  }
 
   /**
    * @description Function to stop recording.
