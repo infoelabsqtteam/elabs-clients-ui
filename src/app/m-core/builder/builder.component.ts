@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService} from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService} from '@core/web-core';
 
 
 @Component({
@@ -37,6 +37,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   selected = new FormControl(0);
   getTempData:boolean = true;
   currentUrl :String = "";
+  isAddFebMenuInProgress:boolean
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -64,7 +65,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private envService:EnvService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private _location:Location,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private userPrefrenceService:UserPrefrenceService
   ) {  
     this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -394,20 +396,25 @@ export class BuilderComponent implements OnInit,OnDestroy {
     else{
       this.selectContact = '';
     }
-  } 
-  addFebMenu(menu,parent){
+  }   
+  addFebMenu(tab,parent){    
+    this.isAddFebMenuInProgress = true;
     this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
-    // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+    this.userPreferenceSubscribe(tab,'tab',parent);
     // this.saveCallSubscribe();
+    this.notificationService.notify('bg-success',"Favorite Tab updated Successfully!");
+    setTimeout(()=>{
+      this.isAddFebMenuInProgress=false;
+    },2000)
   }
   updateUserPreference(menu,field,parent){
     this.unsubscribe(this.userPreferenceSubscription);
-    this.commonFunctionService.updateUserPreference(menu,field,parent);
+    this.userPrefrenceService.updateUserPreference(menu,field,parent);
     this.saveCallSubscribe();
   }
-  
-  
- }
-
+  checkFebTabAddOrNot(tab) {
+    const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+    return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
+}
+}
 
