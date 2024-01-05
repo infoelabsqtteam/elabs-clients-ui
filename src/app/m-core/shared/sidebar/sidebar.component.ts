@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEm
 import { Router, NavigationEnd } from '@angular/router';
 import { MENU } from './menu';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService } from '@core/web-core';
+import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService, NotificationService } from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,12 +24,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   userPreferenceSubscription:Subscription;
   moduleIndexSubscription:Subscription;
   menuIndexSubscription:Subscription;
+  isAddMenuInProgress:boolean;
   
   constructor( 
     private storageService:StorageService,
     private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
-    private commonfunctionService:CommonFunctionService,
+    private notificationService:NotificationService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private apiCallService:ApiCallService,
     private userPrefrenceService:UserPrefrenceService
@@ -219,9 +220,14 @@ addFebMenu(menu,parent){
   // this.saveCallSubscribe();
 }
 updateUserPreference(menu,field,parent){
+  this.isAddMenuInProgress=false;
   this.unsubscribe(this.userPreferenceSubscription);
   this.userPrefrenceService.updateUserPreference(menu,field,parent);
   this.saveCallSubscribe();
+  this.notificationService.notify('bg-success',"Favorite Module updated Successfully!");
+  setTimeout(()=>{
+    this.isAddMenuInProgress=false;
+  },2000)
 }
 checkFebMenuAddOrNot(menu,parent){
   let menuId = menu._id;
