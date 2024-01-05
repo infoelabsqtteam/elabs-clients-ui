@@ -1,0 +1,33 @@
+<div mdbModal #permissionTreeView="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header">
+        <h4 class="modal-title m-0" >{{ fieldName }}</h4>
+        <button type="button" class="closebtb" data-dismiss="modal" (click)="closeModal()"><span>×</span></button>
+      </div>
+      <!--Body-->
+      <div class="modal-body pt-0 tree-view">
+        <mat-form-field appearance="outline" class="example-full-width w-100" >
+            <mat-label>Criterai List</mat-label>
+            <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'','criteria')">
+                <span *ngIf="custmizedFormValue['criteria'] && custmizedFormValue['criteria'].length > 0">
+                    <mat-chip *ngFor="let item of custmizedFormValue['criteria']; let i = index" cdkDrag [selectable]="selectable"
+                            [removable]="removable" (removed)="openModal('confirm-modal',i,'','criteria',item,'delete')">
+                            {{ item.name ? item.name : item }}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                </span>
+                <input matInput type="text" [placeholder]="'test;eq;test'" [formControlName]="'criteria'" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('','criteria',true,$event)"  [id]="'criteria'" autocomplete="off">
+            </mat-chip-list >
+        </mat-form-field>
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button"  mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">Selecte Data</button>
+        <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

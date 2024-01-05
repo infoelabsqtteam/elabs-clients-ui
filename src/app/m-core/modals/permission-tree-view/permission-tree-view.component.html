@@ -15,7 +15,7 @@
             <mat-checkbox class="checklist-leaf-node"
                           [checked]="checklistSelection.isSelected(node)"
                           (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-                          <button  mat-icon-button (click)="addRollPermissionTabWise(node)" class="plusicon"><mat-icon class="material-icons text-cerulean">add</mat-icon></button>
+                          <button *ngIf="checklistSelection.isSelected(node)"  mat-icon-button (click)="addRollPermissionTabWise(node)" class="plusicon"><mat-icon class="material-icons text-cerulean">add</mat-icon></button>
           </mat-tree-node>
         
           <!-- <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
