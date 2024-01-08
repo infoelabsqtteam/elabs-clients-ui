@@ -25,9 +25,12 @@ table,table td{
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {width: auto !important;font-weight:500;position:relative;font-size:14px;}
                 .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:14px;width: 100%;}
-                .fas { display:none ;transition:all .03s;margin: 0px 1px;}
-                &:hover {
-                    .fas { display:inline-block }
+                &:not(:last-child) {
+                    .fas { display:none; margin: 0px 1px;}
+                    &:hover {.fas { display:inline-block }}
+                }
+                &:last-child{.fas {visibility: hidden; margin: 0px 1px;}
+                    &:hover {.fas {visibility: visible;}}
                 }
             }
             td {padding:2px 2px;border-top:none;border-bottom:none;}
