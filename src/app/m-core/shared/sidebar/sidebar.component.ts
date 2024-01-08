@@ -224,8 +224,8 @@ updateUserPreference(menu,field,parent){
   this.unsubscribe(this.userPreferenceSubscription);
   this.userPrefrenceService.updateUserPreference(menu,field,parent);
   this.saveCallSubscribe();
-  this.notificationService.notify('bg-success',"Favorite Module updated Successfully!");
   setTimeout(()=>{
+    this.notificationService.notify('bg-success',"Favorite Module updated Successfully!");
     this.isAddMenuInProgress=false;
   },2000)
 }

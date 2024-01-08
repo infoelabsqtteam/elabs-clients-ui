@@ -402,8 +402,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
     this.userPreferenceSubscribe(tab,'tab',parent);
     // this.saveCallSubscribe();
-    this.notificationService.notify('bg-success',"Favorite Tab updated Successfully!");
     setTimeout(()=>{
+      this.notificationService.notify('bg-success',"Favorite Tab updated Successfully!");
       this.isAddFebMenuInProgress=false;
     },2000)
   }
