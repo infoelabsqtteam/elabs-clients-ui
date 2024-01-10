@@ -214,36 +214,24 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
+  this.isAddMenuInProgress = true;
+  menu.favourite = !menu?.favourite;
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
   this.userPreferenceSubscribe(menu,'favouriteMenus',parent);
   // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'favouriteMenus',parent);
   // this.saveCallSubscribe();
 }
-updateUserPreference(menu,field,parent){
-  this.isAddMenuInProgress=false;
+async updateUserPreference(menu,field,parent){  
   this.unsubscribe(this.userPreferenceSubscription);
-  this.userPrefrenceService.updateUserPreference(menu,field,parent);
-  this.saveCallSubscribe();
-  setTimeout(()=>{
-    this.notificationService.notify('bg-success',"Favorite Module updated Successfully!");
-    this.isAddMenuInProgress=false;
-  },2000)
-}
-checkFebMenuAddOrNot(menu,parent){
-  let menuId = menu._id;
-  if(parent != ''){
-    menuId = parent._id;
-  }
-  let userFebMenu = this.userPrefrenceService.getUserPreferenceByFieldName('favouriteMenus');
-  if (userFebMenu && userFebMenu !== null && typeof userFebMenu === 'object' && Object.keys(userFebMenu).length > 0) {
-    if (parent && parent !== '' && typeof parent === 'object' && userFebMenu) {
-      return this.userPrefrenceService.isMenuAlreadyPresentOrNot(menu,userFebMenu);
-    }else{
-      return this.userPrefrenceService.isIdExist(userFebMenu,menuId);
-    }
+  let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+  if (response?.success) {
+    this.isAddMenuInProgress = false;
+    this.notificationService.notify('bg-success', 'Favourite Menu updated successfully!');
   } else {
-      return false;
+    this.isAddMenuInProgress = false;
+    this.notificationService.notify('bg-warning', 'Failed to save data.');
   }
+  this.saveCallSubscribe();
 }
 
 }
