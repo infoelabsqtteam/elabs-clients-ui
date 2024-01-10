@@ -111,7 +111,6 @@ export class AuditHistoryComponent implements OnInit {
     let currentData = [];
     if(data && data != null) {
       currentData.push(data);
-      // let modifyObj = this.gridCommonFunctionServie.modifyGridData(currentData,this.formFields,{},[],[]);
       this.currentObject = data;
     }
   }
@@ -121,7 +120,6 @@ export class AuditHistoryComponent implements OnInit {
       let previewData = [];
       if(data && data != null) {
         previewData.push(data);
-        // let modifyObj = this.gridCommonFunctionServie.modifyGridData(previewData,this.formFields,{},[],[]);
         this.previousObject = data;
       } 
     } else{
@@ -142,6 +140,10 @@ export class AuditHistoryComponent implements OnInit {
         "currentData": allData
       },
     });
+  }
+
+  copmareListOfFields(fields) {
+    this.gridCommonFunctionServie.copmareListOfFields(fields,this.currentObject,this.previousObject);
   }
  
 }
