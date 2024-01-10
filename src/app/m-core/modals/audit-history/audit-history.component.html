@@ -33,16 +33,6 @@
                 <strong>{{field.label | titlecase}}</strong>
               </td>
 
-              <!-- <td *ngIf="field.type != 'label'">
-                <ng-container *ngIf="field.datatype != 'list_of_object'">
-                  <strong>{{field.label | titlecase}}</strong>
-                </ng-container>
-                <ng-container *ngIf="field.datatype == 'list_of_object'">
-                  <strong>{{field.label | titlecase}}</strong>
-                  <p *ngFor="let data of field.list_of_fields">{{data.label}}</p>
-                </ng-container>
-              </td> -->
-
               <td *ngIf="field.type != 'label' && field.type != 'list_of_fields' && field.type != 'grid_selection'">
                 <strong>{{field.label | titlecase}}</strong>
               </td>
