@@ -118,6 +118,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   pdfFileSubscription;
   previewHtmlSubscription;
   typeaheadDataSubscription;
+  roleChangeSubscription;
 
   filterdata = '';
   fixedcolwidth = 150;
@@ -349,6 +350,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     })
     this.typeaheadDataSubscription = this.dataShareService.typeAheadData.subscribe(data =>{
       this.setTypeaheadData(data);
+    });
+    this.roleChangeSubscription = this.dataShareService.roleChange.subscribe(role =>{
+      //this.modalService.close("form-modal");
+      this.getPage(1);
     })
     this.userInfo = this.storageService.GetUserInfo();
     this.currentMenu = this.storageService.GetActiveMenu(); 

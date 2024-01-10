@@ -17,6 +17,7 @@
     level: number;
     expandable: boolean;
     reference:any;
+    crList:any;
     type:string;
     pId:string;
     pIndex:string;

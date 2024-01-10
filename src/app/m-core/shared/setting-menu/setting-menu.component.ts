@@ -63,6 +63,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     headerNotificationList:any=[];
 
     notificationlist = []
+    roleList:any=[];
+    activeRole:any;
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -140,6 +142,11 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
                 if (this.userInfo.email && this.userInfo.email != null) {
                     this.userFirstLetter = this.userInfo.email.toUpperCase()
                 }
+            }
+            this.roleList = this.storageService.GetRoleList();
+            if(this.roleList && this.roleList.length > 0){
+                this.activeRole = this.roleList[0];
+                this.storageService.setActiveRole(this.activeRole);
             }
         }
 
@@ -803,6 +810,10 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             const value = menu.value;
             this.router.navigate([value]);
         }
+    }
+    setRole(){
+        this.storageService.setActiveRole(this.activeRole);
+        this.dataShareService.shareRoleChange(this.activeRole);
     }
 
 }

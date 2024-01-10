@@ -356,9 +356,14 @@ export class PermissionTreeViewComponent implements OnInit {
     this.treeView.hide();
   }
   addRollPermissionTabWise(node){
-    let criteriaList = ["name;eq;SWAT;STATIC"];
-    if(node && node.reference){
-      node.reference['criteriaList'] = criteriaList;
+    let criObj = {
+      fName : 'name',
+      fValue : 'MAPPA',
+      operator:'eq'
+    }
+    let criteriaList = [criObj];
+    if(node){
+      node['crList'] = criteriaList;
     }
     console.log(node);
   }
