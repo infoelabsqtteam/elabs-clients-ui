@@ -480,7 +480,42 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
+    this.headElements.forEach((column:any) => {
+      if(this.checkHeadExists(column) || column?.hide ){
+          column.display=false
+      }
+    });
   }
+
+  checkHeadExists(head:any){
+    let existingUserPreferenceData=JSON.parse(<any>sessionStorage.getItem("PREFERENCE"));
+    if(!existingUserPreferenceData){
+      return false;
+    }
+    else{
+      if(existingUserPreferenceData["preference"].length>0){
+        console.log(head.name, existingUserPreferenceData["preference"].includes(head._id))
+        return existingUserPreferenceData["preference"].includes(head._id)
+      }
+    }
+  }
+
+
+  checkHeadExists2(head:any){
+    let existingUserPreferenceData=this.storageService.getUserPreference();
+    // console.log("ls",existingUserPreferenceData);
+    if(!existingUserPreferenceData || !existingUserPreferenceData.hasOwnProperty("preference")){
+      return false;
+    }
+    else{
+      // existingUserPreferenceData=JSON.parse(existingUserPreferenceData)
+      if(existingUserPreferenceData.preference.length>0){
+        console.log(head.name, existingUserPreferenceData.preference.includes(head._id))
+        return existingUserPreferenceData.preference.includes(head._id)
+      }
+    }
+  }
+
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
@@ -1533,6 +1568,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.menuTopLeftPosition.y = event.clientY + 'px';  
       this.matMenuTrigger.menuData = {item: index}
       this.matMenuTrigger.openMenu(); 
+      console.log("object");
+      console.log(this.matMenuTrigger);
   }
 
 // Grid hide column icon click function
