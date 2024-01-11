@@ -643,14 +643,6 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         }
         this.authService.Logout(payload);
     }
-   hardRefresh(){
-        this.isPageLoading = true;
-        this.authService.GetUserInfoFromToken(this.storageService.GetIdToken()); 
-        setTimeout(()=>{
-            this.isPageLoading = false;
-            location.reload();
-        },3000)
-    } 
     changeOurSolution(menu) {
         this.dataShareService.sendCurrentPage('HOME2')
         this.router.navigate([menu]);
