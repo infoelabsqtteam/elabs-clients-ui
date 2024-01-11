@@ -931,8 +931,8 @@
                                             <tr> 
                                                 <th *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))"></th>                               
                                                 <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <div class="justify-content-between d-flex"> {{ fieldName.label | titlecase}} 
-                                                        <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
+                                                    <div class="justify-content-between d-flex heading"> {{ fieldName.label | titlecase}} 
+                                                        <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)" class="show-on-hover"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
                                                     </div>
                                                 </th>
                                             </tr>
