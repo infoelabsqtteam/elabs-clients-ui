@@ -56,13 +56,6 @@
                 <mat-accordion>
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>{{field.label | titlecase}} <strong class="mx-3">{{field.gridColumns.length}}</strong></mat-expansion-panel-header>
-                    <!-- <table>
-                      <tr *ngFor="let data of field.gridColumns">
-                        <td>{{data.label}}</td>
-                        <td>{{previousObject[data.field_name]}}</td>
-                        <td>{{currentObject[data.field_name]}}</td>
-                      </tr>
-                    </table> -->
                   </mat-expansion-panel>
                 </mat-accordion>
               </td>
@@ -71,18 +64,12 @@
                 <ng-container>
                   {{previousObject?.[field.field_name]?.name ? previousObject?.[field.field_name].name : previousObject?.[field.field_name]}}
                 </ng-container>
-                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
-                    {{previousObject[field.field_name]}}
-                  </ng-container>
               </td>
 
               <td *ngIf="currentObject != null && field && field.field_name && field.type != 'list_of_fields' && field.type != 'grid_selection'">
                 <ng-container>
                   {{currentObject?.[field.field_name]?.name ? currentObject?.[field.field_name].name : currentObject?.[field.field_name]}}
                 </ng-container>
-                  <ng-container *ngIf="field.datatype != 'object' && field.datatype != 'list_of_object' && field.type != 'grid_selection'">
-                    {{currentObject[field.field_name]}}
-                  </ng-container>
               </td>
 
             </tr>
