@@ -417,5 +417,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
     this.saveCallSubscribe();
   }
+//   checkFebTabAddOrNot(tab) {
+//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+//     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
+// }
 }
 
