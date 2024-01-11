@@ -24,8 +24,8 @@ table,table td{
         tr {box-shadow:0 0 1px #ccc;
             th { cursor: pointer;vertical-align:middle;padding:5px;background:#fafafa;border-top:none;border-bottom:none;
                 .heading {width: auto !important;font-weight:500;position:relative;font-size:14px;
-                    .hide-on-hover {position: absolute; top: 0;right: 0;opacity: 0;transition: opacity 0.3s ease;backdrop-filter: blur(2px);background-color: rgba(255, 255, 255, 0.5);}
-                      &:hover .hide-on-hover {opacity: 1;}
+                    .show-on-hover {position: absolute; top: 0;right: 0;opacity: 0;transition: opacity 0.3s ease;backdrop-filter: blur(2px);background-color: rgba(255, 255, 255, 0.5);}
+                      &:hover .show-on-hover {opacity: 1;}
                 }
                 .grid-heading-nowrap {white-space:nowrap; overflow:hidden;text-overflow:ellipsis;display:block;font-size:14px;width: 100%;}
                 .fas { display:none; margin: 0px 1px;}
