@@ -9,7 +9,7 @@
             <mat-tab *ngFor="let tab of tabs; let i = index" >
               <ng-template mat-tab-label>
                 <div class="mat-tab-label-content pl-3 pr-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
-                <span class="favibtn" [ngClass]="{'active':tab.favorite,'d-none': !tab.display}" (click)="addFebTab(tab,'')"><mat-icon>grade</mat-icon></span>
+                <span class="favibtn" [ngClass]="{'active':tab.favourite,'d-none': !tab.display}" (click)="addFebTab(tab,'')"><mat-icon>grade</mat-icon></span>
               </ng-template>
             </mat-tab>
           </mat-tab-group>
@@ -28,7 +28,7 @@
               <span>{{ gateTabName(tab) }}</span>
               <span>({{ gridCountByTab[tab.tab_name + "_" + tab.name] }})</span>
             </div>
-            <span class="favibtn" [ngClass]="{ 'active': tab.favorite, 'd-none': !tab.display }"
+            <span class="favibtn" [ngClass]="{ 'active': tab.favourite, 'd-none': !tab.display }"
             (click)="addFebTab(tab,'')">
               <mat-icon class="moreMenuFavIcon">grade</mat-icon>
             </span>
@@ -70,6 +70,6 @@
     </div>
 </div>
 
-<div class="loader-overlay" *ngIf="isAddFebTabInProgress">
+<div class="loader-overlay" *ngIf="isPageLoading">
   <mat-spinner diameter="50"></mat-spinner>
 </div>

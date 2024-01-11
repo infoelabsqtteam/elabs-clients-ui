@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   userPreferenceSubscription:Subscription;
   moduleIndexSubscription:Subscription;
   menuIndexSubscription:Subscription;
-  isAddMenuInProgress:boolean;
+  isPageLoading: boolean = false;
   
   constructor( 
     private storageService:StorageService,
@@ -214,7 +214,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
-  this.isAddMenuInProgress = true;
+  this.isPageLoading = true;
   menu.favourite = !menu?.favourite;
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
   this.userPreferenceSubscribe(menu,'favouriteMenus',parent);
@@ -225,10 +225,10 @@ async updateUserPreference(menu,field,parent){
   this.unsubscribe(this.userPreferenceSubscription);
   let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
   if (response?.success) {
-    this.isAddMenuInProgress = false;
+    this.isPageLoading = false;
     this.notificationService.notify('bg-success', 'Favourite Menu updated successfully!');
   } else {
-    this.isAddMenuInProgress = false;
+    this.isPageLoading = false;
     this.notificationService.notify('bg-warning', 'Failed to save data.');
   }
   this.saveCallSubscribe();

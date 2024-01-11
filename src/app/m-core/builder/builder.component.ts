@@ -37,7 +37,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   selected = new FormControl(0);
   getTempData:boolean = true;
   currentUrl :String = "";
-  isAddFebTabInProgress:boolean
+  isPageLoading: boolean = false;
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -398,7 +398,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
   }   
   addFebTab(tab,parent){  
-    this.isAddFebTabInProgress = true;
+    this.isPageLoading = true;
     tab.favourite = !tab.favourite;
     this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
     this.userPreferenceSubscribe(tab,'tab',parent);
@@ -408,11 +408,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
   async updateUserPreference(menu,field,parent){
     this.unsubscribe(this.userPreferenceSubscription);
     let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
-    if (response && response.success) {
-      this.isAddFebTabInProgress = false;
+    if (response?.success) {
+      this.isPageLoading = false;
       this.notificationService.notify('bg-success', 'favourite Tab updated successfully!');
     } else {
-      this.isAddFebTabInProgress = false;
+      this.isPageLoading = false;
       this.notificationService.notify('bg-warning', 'Failed to save data.');
     }
     this.saveCallSubscribe();
