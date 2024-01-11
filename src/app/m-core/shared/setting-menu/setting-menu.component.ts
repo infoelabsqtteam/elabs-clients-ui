@@ -642,6 +642,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         }
         this.authService.Logout(payload);
     }
+
     changeOurSolution(menu) {
         this.dataShareService.sendCurrentPage('HOME2')
         this.router.navigate([menu]);
