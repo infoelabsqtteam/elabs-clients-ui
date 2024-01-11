@@ -1220,7 +1220,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
               if(this.dataListForUpload[keyName]){
                 Object.keys(this.dataListForUpload[keyName]).forEach(childkey => {                 
                   listOfFieldData[childkey] = this.fileHandlerService.modifyUploadFiles(this.dataListForUpload[keyName][childkey]);
-                })
+                });
+                this.dataListForUpload[keyName] = {};
               }
               if (this.checkBoxFieldListValue.length > 0 && Object.keys(this.staticData).length > 0) {
                 this.checkBoxFieldListValue.forEach(listofcheckboxfield => {
