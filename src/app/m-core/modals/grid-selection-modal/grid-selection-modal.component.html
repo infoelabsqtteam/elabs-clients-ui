@@ -51,8 +51,8 @@
                             </td>
                             <td  *ngFor="let fieldName of listOfGridFieldName" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                               <div>
-                                <div *ngIf="!fieldName.editable" class="grid-data d-flex align-items-center " [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
-                                    <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)"></span>
+                                <div *ngIf="!fieldName.editable" class="grid-data d-flex align-items-center copyIconContainer" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
+                                    <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)" class="copyField"></span>
                                     <span *ngIf="data[fieldName.field_name]!='' && data[fieldName.field_name]!=undefined && !containsHtmlElements(data[fieldName.field_name])"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >{{isCopied?'done':'content_copy'}}</span>
                                 </div>
                                 <div *ngIf="fieldName.editable" style="position: relative;">
