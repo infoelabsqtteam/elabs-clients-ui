@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angu
 import { ModalDirective } from 'angular-bootstrap-md';
 import { AuditHistoryDetailsComponent } from '../audit-history-details/audit-history-details.component';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { ApiCallService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
 
 @Component({
   selector: 'app-audit-history',
@@ -28,6 +28,7 @@ export class AuditHistoryComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
+    private apiService:ApiService,
     private modalService: ModelService,
     private apiCallService:ApiCallService,
     private dataShareService: DataShareService,
@@ -98,10 +99,9 @@ export class AuditHistoryComponent implements OnInit {
   }
 
   getAuditVersionList() {
-    this.commonFunctionService.getAuditVersionList(this.objectid);
+    this.apiService.getAuditVersionList(this.objectid);
   }
-
-
+  
   getFormFields(formFields) {
     let modifyFormField = this.gridCommonFunctionServie.modifyGridColumns(formFields,{});
     this.formFields = modifyFormField;
