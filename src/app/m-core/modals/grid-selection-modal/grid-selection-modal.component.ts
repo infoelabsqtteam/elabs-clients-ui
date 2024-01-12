@@ -50,6 +50,7 @@ export class GridSelectionModalComponent implements OnInit {
   editEnable:boolean=false;
   selectedDataLength:number=0;
   buttonlabel:any;
+  isCopied:boolean=false;                      //for grid cell copy icon
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -895,6 +896,19 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
       }
     }
+
+//copy icon on grid cell
+copyText(value:any){       
+  this.isCopied=true
+  navigator.clipboard.writeText(value);
+  setTimeout(()=>{
+      this.isCopied=false
+    },1000)
+}
+
+containsHtmlElements(value): boolean {
+  return value == '<i class="fa fa-eye cursor-pointer"></i>';
+}
   
 }
 

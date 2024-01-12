@@ -166,7 +166,7 @@
 
                                         </td>
                                         <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
-                                            <div *ngIf="editedRowIndex != i" class="grid-data resizeGridColunms" [style.width]="elId.width" [style.text-align]="elId.text_align">
+                                            <div *ngIf="editedRowIndex != i" class="grid-data resizeGridColunms d-flex align-items-center" [style.width]="elId.width" [style.text-align]="elId.text_align">
                                                 <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                     </a>
 
@@ -174,6 +174,7 @@
                                                     <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type == 'color'">
                                                         <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{el[elId.field_name]}}</span>
                                                     </a>
+                                                    <span *ngIf="el[elId.field_name]!='' && el[elId.field_name]!=undefined && !containsHtmlElements(el[elId.field_name])"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(el[elId.field_name])" >{{isCopied?'done':'content_copy'}}</span>
                                                     
                                                 </div>
                                             <div *ngIf="editedRowIndex == i">  

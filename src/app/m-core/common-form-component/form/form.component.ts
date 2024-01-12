@@ -197,7 +197,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showGridData:any={};
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
-  
+  isCopied:boolean=false;                      //for grid cell copy icon
   headerFiledsData = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
@@ -3181,6 +3181,19 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   // show all columns icon click function 
 updateColumnList(columns?){
   if(columns) columns.forEach(column=>column.display =true)
+}
+
+//copy icon on grid cell
+copyText(value:any){       
+  this.isCopied=true
+  navigator.clipboard.writeText(value);
+ setTimeout(()=>{
+    this.isCopied=false
+  },1000)
+}
+
+containsHtmlElements(value): boolean {
+  return value == '<i class="fa fa-eye cursor-pointer"></i>';
 }
   //Child Form Responce dependency
   //Dipendency Functions End----------------------

@@ -217,3 +217,8 @@ table,table td{
 }
 .firstCol{left: 0;}
 .editedColumneIcon{position: absolute;right: 0;top: 5px;cursor: pointer;z-index: 1;}
+
+td{
+    .copyicon {cursor: pointer;margin-inline: 5px;border-radius: 100%;box-shadow: none;vertical-align: middle;padding: 0;font-size: 13px;text-align: center;display: none;}
+     &:hover .copyicon { display: inline-block;}	
+}
