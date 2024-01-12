@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { AuditHistoryDetailsComponent } from '../audit-history-details/audit-history-details.component';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { ApiCallService, ApiService, CommonFunctionService, DataShareService, GridCommonFunctionService, ModelService } from '@core/web-core';
 
@@ -132,15 +131,6 @@ export class AuditHistoryComponent implements OnInit {
     this.gridCommonFunctionServie.compareAuditHistoryData(this.formFields,this.currentObject,this.previousObject);
   }
   
-
-  showGridSelection(fields, allData) {
-    this.dialog.open(AuditHistoryDetailsComponent, {
-      data: {
-        "formFields": fields,
-        "currentData": allData
-      },
-    });
-  }
 
   copmareListOfFields(fields) {
     this.gridCommonFunctionServie.copmareListOfFields(fields,this.currentObject,this.previousObject);
