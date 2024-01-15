@@ -2663,7 +2663,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   editedRowData(object) {
-    this.selectedRow = JSON.parse(JSON.stringify(object)); 
+    this.selectedRow = JSON.parse(JSON.stringify(object));
+    let formObject = this.limsCalculationsService.currencyRate(object);
+    this.selectedRow = formObject;
     this.updateMode = true;
     this.updateDataOnFormField(this.selectedRow);
     this.getStaticDataWithDependentData();      
