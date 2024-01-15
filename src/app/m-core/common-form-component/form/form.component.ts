@@ -2673,6 +2673,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.templateForm = this.formControlService.setCheckboxFileListValue(this.checkBoxFieldListValue,this.templateForm, this.staticData,this.selectedRow,this.updateMode);
     }
   }
+  
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !Array.isArray(formValue) && this.tableFields && this.tableFields.length > 0){
