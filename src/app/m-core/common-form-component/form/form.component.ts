@@ -1618,7 +1618,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   } 
   removeAttachedDataFromList(parent,child,index){
     this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(parent,child,index,this.dataListForUpload);
-  }
+      }
   take_action_on_click(action_button){
     let api='';
     this.currentActionButton=action_button;
@@ -2228,7 +2228,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   alertResponce(responce) {
     if (responce) {
       if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
-        this.dataListForUpload = this.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex);
+        this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex,this.dataListForUpload);
       }else{
         this.deleteitem()
       }      
