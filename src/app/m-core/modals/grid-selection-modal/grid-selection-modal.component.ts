@@ -895,6 +895,13 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
       }
     }
+    
+    //copy specific column in grid
+    copyColumns(headerData,listOfGridFieldName,i) {
+      let fieldName=headerData.field_name;
+      let columnData=this.modifiedGridData.map(ele=>ele[fieldName]).join('\n');
+        navigator.clipboard.writeText(columnData);
+    }
   
 }
 

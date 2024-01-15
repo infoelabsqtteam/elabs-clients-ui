@@ -1540,5 +1540,14 @@ hideColumn(columns,index: number) {
   columns[index].display = !columns[index].display;
 }
 
+//copy specific column in grid
+copyColumns(head,headElements,i):void{
+  if(this.modifyGridData.length>0){
+    let field_name=head.field_name;
+    let columnData=this.modifyGridData.map(ele=>ele[field_name]).join('\n');
+    navigator.clipboard.writeText(columnData);
+  }
+}
+
 
 }
