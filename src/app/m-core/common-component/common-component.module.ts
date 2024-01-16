@@ -12,13 +12,15 @@ import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.compo
 import { GridFilterMenuComponent } from './grid-filter-menu/grid-filter-menu.component';
 import { FilterComponent } from './filter/filter.component';
 
+import { GridComponent } from './grid/grid.component';
 
 const components = [
   ChartComponent,
   MongodbChartComponent,
   DashboardChartComponent,
   GridFilterMenuComponent,
-  FilterComponent
+  FilterComponent,
+  GridComponent
 ];
 
 

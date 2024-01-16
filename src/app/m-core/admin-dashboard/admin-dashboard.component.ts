@@ -1,5 +1,5 @@
 import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
 import { CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
@@ -18,6 +18,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
    userInfo:any = {};
    chartPermission:boolean = false;
    welcometitle:any;
+   selected = new FormControl(0);
 
   // bread crumb items
   // breadCrumbItems: Array<{}>;
@@ -36,6 +37,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // Form submit
   // chatSubmit: boolean;
   isShow:boolean = false;
+  isShowGrid:boolean = false;
 
   // formData: FormGroup;
   mongodbChartShow:boolean = false;
@@ -87,27 +89,38 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     
   }
   
-  getTabIndex(event){
+  getTabIndex(event){    
     if(event == 0){
-      this.isShow = false;
       this.mongodbChartShow = true;
+      this.isShow = false;      
       this.dashboardMongodbChartShow = false;
+      this.isShowGrid = false;
     }
     else if (event == 1){
-      this.mongodbChartShow = false;
       this.isShow = true;
+      this.mongodbChartShow = false;
+      this.isShowGrid = false;
       this.dashboardMongodbChartShow = false;
     }
     else if (event == 2){
       this.dashboardMongodbChartShow = true;
       this.isShow = false;
       this.mongodbChartShow = false;
+      this.isShowGrid = false;
+    }
+    else if (event == 3){
+      this.isShowGrid = true;
+      this.dashboardMongodbChartShow = false;
+      this.isShow = false;
+      this.mongodbChartShow = false;      
     }
     else{
-      this.isShow = false;
-      this.dashboardMongodbChartShow = false;
       this.mongodbChartShow = true;
+      this.isShow = false;
+      this.dashboardMongodbChartShow = false;      
+      this.isShowGrid = false;
     }
+    this.selected.setValue(event);
   }
 
   

@@ -40,7 +40,6 @@ import { PermissionTreeViewComponent } from './permission-tree-view/permission-t
 import { CommonComponentModule } from '../common-component/common-component.module';
 import { ChartModalComponent } from './chart-modal/chart-modal.component';
 
-
 const models = [
   ModalsComponent,
   ConfirmModalComponent,
@@ -71,7 +70,7 @@ const models = [
   AuditHistoryComponent,
   HtmlViewModalComponent,
   BulkUpdateComponent,
-  PermissionTreeViewComponent  
+  PermissionTreeViewComponent
 ]
 
 @NgModule({

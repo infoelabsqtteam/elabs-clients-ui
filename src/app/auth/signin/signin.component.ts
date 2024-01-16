@@ -41,6 +41,11 @@ export class SigninComponent implements OnInit,OnDestroy {
         if(res && res.message && res.message == 'reset'){
           this.notificationService.notify('bg-info', 'Password expired !!!');
           this.router.navigate(['createpwd']);
+        }else if(res && res.msg && res.msg == 'two_factor'){
+          let userId = this.signInForm.getRawValue().userId;
+          console.log(userId);
+          let url = 'authenticate/'+userId;
+          this.router.navigate([url]);
         }else if(res && res.message && res.message == 'notify'){
           if(res.msg != '') {
             this.notificationService.notify(res.class, res.msg);
@@ -51,11 +56,12 @@ export class SigninComponent implements OnInit,OnDestroy {
           }
         }else{        
           if(res.msg != '') {
-            this.notificationService.notify(res.class, res.msg);
-            this.loading = false;
+            this.notificationService.notify(res.class, res.msg);            
           }
           if(res.status == 'success') {
             this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
+          }else{
+            this.loading = false;
           }
         }
       })
