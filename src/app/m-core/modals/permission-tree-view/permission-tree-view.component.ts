@@ -355,15 +355,28 @@ export class PermissionTreeViewComponent implements OnInit {
     this.staticData = {};
     this.treeView.hide();
   }
+  nodeIndex:number=-1;
   addRollPermissionTabWise(node){
-    let criObj = {
-      fName : 'name',
-      fValue : 'MAPPA',
-      operator:'eq'
-    }
-    let criteriaList = {"crList": [criObj]};
     if(node){
-      node['criteria'] = criteriaList;
+      let id = node._id;
+      let selectedData = {};
+      if(node.criteria){
+        selectedData = node.criteria
+      }      
+      if(this.checklistSelection && this.checklistSelection.selected && this.checklistSelection.selected.length > 0){
+        this.nodeIndex = this.commonfunctionService.getIndexInArrayById(this.checklistSelection.selected,id);
+      }
+      this.modalService.open("permission-control-model",selectedData);
+    }
+    
+  }
+  controlResponce(responce){
+    if(this.nodeIndex != -1){
+      let node = this.checklistSelection.selected[this.nodeIndex];
+      if(typeof responce == 'object'){
+        node['criteria'] = responce;
+        this.checklistSelection.selected[this.nodeIndex] = node;
+      }      
     }
   }
 
