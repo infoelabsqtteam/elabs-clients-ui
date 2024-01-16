@@ -148,6 +148,12 @@ table,table td{
         .mat-tab-label-content {font-size:13px;font-family:$roboto;}
     }
 }
+.tab{
+    .favibtn {
+        mat-icon {font-size:13px;color:#333;height:auto;}
+    }
+    .favibtn.active mat-icon {color:#0082d5;}
+}
 
 .mat-tab-header-pagination {z-index:1 !important;}
 
@@ -201,15 +207,14 @@ table,table td{
 .fixedcol:nth-child(12) {left:1500px !important;}
 .fixedcol:nth-child(13) {left:1650px !important;}
 .fixedcol:nth-child(14) {left:1800px !important;}
-
-.auditdetails {
-   .audittitle {min-height:30px;margin-bottom:10px;background:#efefef;padding:0 10px;text-transform:capitalize;}
-   .auditdata {
-      p {font-size:12px;border-bottom:1px solid #ccc;margin:0;padding:5px 10px;min-height:35px;
-        strong {color:#333;font-size:14px;}
-      }
-    }
-}
+// .auditdetails {
+//     .audittitle {min-height:30px;margin-bottom:10px;background:#efefef;padding:0 10px;text-transform:capitalize;}
+//     .auditdata {
+//        p {font-size:12px;border-bottom:1px solid #ccc;margin:0;padding:5px 10px;min-height:35px;
+//          strong {color:#333;font-size:14px;}
+//        }
+//      }
+//  }
 .colSticky{
    position: sticky;z-index: 2;box-shadow: inset -1px 0px 0px #dee2e6;
 }

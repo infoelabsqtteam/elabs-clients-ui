@@ -41,7 +41,6 @@ import { CommonComponentModule } from '../common-component/common-component.modu
 import { ChartModalComponent } from './chart-modal/chart-modal.component';
 import { AddPermissionTreeControlsComponent } from './add-permission-tree-controls/add-permission-tree-controls.component';
 
-
 const models = [
   ModalsComponent,
   ConfirmModalComponent,
@@ -72,7 +71,7 @@ const models = [
   AuditHistoryComponent,
   HtmlViewModalComponent,
   BulkUpdateComponent,
-  PermissionTreeViewComponent  ,
+  PermissionTreeViewComponent,
   AddPermissionTreeControlsComponent
 ]
 

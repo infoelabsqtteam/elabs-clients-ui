@@ -365,7 +365,7 @@ export class GridSelectionModalComponent implements OnInit {
                 break;
             }
           }
-          if(this.selecteData && this.selecteData.length > 0){
+          if(this.selecteData && this.selecteData.length > 0 && this.grid_row_selection){
             this.updateSelectedDataInGridData(this.selecteData);            
           }        
           this.setGridData = false;
