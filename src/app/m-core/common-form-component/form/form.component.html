@@ -32,12 +32,11 @@
                 <div class="row">
                     <div *ngFor="let tableField of tableFields; let i = index" [ngClass]="tableField.field_class" [id]="tableField._id"  >
                         <div *ngIf="tableField.type == 'text'">
-                            <app-text-field [tableField]="tableField" [fieldControl]="templateForm.get(tableField.field_name)"></app-text-field>
-                            <!-- <mat-form-field appearance="outline" class="example-full-width w-100">
+                            <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" *ngIf="tableField.datatype != 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">                              
 	                            <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name" appTitleCase *ngIf="tableField.datatype == 'first_cap'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off"> 
-                            </mat-form-field> -->
+                            </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'email'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -327,8 +326,6 @@
                             <mat-checkbox color="primary" class="example-margin" [formControlName]="tableField.field_name" (change)="inputOnChangeFunc('',tableField)">{{ tableField.label | titlecase}}</mat-checkbox>
                         </div>
                         <div *ngIf="tableField.type == 'list_of_string'">
-                            <app-list-of-string [tableField]="tableField" [fieldControl]="templateForm.get(tableField.field_name)" [custmizedFormValue]="custmizedFormValue" [selectable]="selectable" [removable]="removable" [addOnBlur]="addOnBlur" [separatorKeysCodes]="separatorKeysCodes" [tempVal]="tempVal" [addOrUpdateIconShowHideList]="addOrUpdateIconShowHideList" [templateFormControl]="templateFormControl" [openModal]="openModal.bind(this)" [setValue]="setValue.bind(this)" [typeaheadDragDrop]="typeaheadDragDrop.bind(this)" [editListOfString]="editListOfString.bind(this)"></app-list-of-string>
-<!--                             
                             <mat-form-field appearance="outline" class="example-full-width w-100"  *ngIf="tableField.datatype == 'chips' || tableField.datatype == 'chips_with_mask'">
                                 <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                 <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
@@ -368,7 +365,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                         <div *ngIf="tableField.type == 'list_of_fields' || tableField.type == 'group_of_fields'">
                             <div class="form-label d-flex justify-content-between">

@@ -336,12 +336,12 @@ export class PermissionTreeViewComponent implements OnInit {
   selectGridData(){
     //let treeControlData = this.treeControl.expansionModel.selected;
     //let data = this.dataSource.data;
-    console.log(this.checklistSelection.selected);
+    //console.log(this.checklistSelection.selected);
     let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
-    console.log(selectedData);
+    //console.log(selectedData);
     let allNodes = this.treeControl.dataNodes;
     let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
-    console.log(rearrangedSelectedNode);
+    //console.log(rearrangedSelectedNode);
     let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
     //console.log(mapObjecThroughList);
     this.treeViewComponentResponce.next(mapObjecThroughList);
@@ -361,11 +361,10 @@ export class PermissionTreeViewComponent implements OnInit {
       fValue : 'MAPPA',
       operator:'eq'
     }
-    let criteriaList = [criObj];
+    let criteriaList = {"crList": [criObj]};
     if(node){
-      node['crList'] = criteriaList;
+      node['criteria'] = criteriaList;
     }
-    console.log(node);
   }
 
   /**

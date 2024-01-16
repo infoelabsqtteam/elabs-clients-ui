@@ -10,7 +10,6 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { FormComponent } from './form/form.component';
 import { CommonComponentModule } from '../common-component/common-component.module';
-import { FormFieldsModule } from '../form-fields/form-fields.module';
 
 const components = [
   FormComponent
@@ -32,8 +31,7 @@ const maskConfig: Partial<IConfig> = {
     ModelModule,
     AllPackageModule,
     GoogleMapsModule,
-    CommonComponentModule,
-    FormFieldsModule
+    CommonComponentModule
   ],
   exports:components,
   declarations: components
