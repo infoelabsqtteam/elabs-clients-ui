@@ -1149,7 +1149,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         if(this.custmizedFormValue[field.field_name]){
           list = this.custmizedFormValue[field.field_name];
         }
-        let checkDublicate = this.checkIfService.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,this.listOfFieldsUpdateIndex,this.showIfFieldList,this.custmizedFormValue,this.templateForm,field);
+        let checkDublicate = this.checkIfService.checkDublicateOnForm(field.list_of_fields,formValue[field.field_name],list,this.listOfFieldsUpdateIndex,this.showIfFieldList,this.custmizedFormValue,this.dataListForUpload,this.templateForm,field);
         if (!checkDublicate.status) {
           if(this.listOfFieldsUpdateIndex != -1){
               let updateCustmizedValue = JSON.parse(JSON.stringify(this.custmizedFormValue[field.field_name]))
@@ -1618,7 +1618,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   } 
   removeAttachedDataFromList(parent,child,index){
     this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(parent,child,index,this.dataListForUpload);
-  }
+      }
   take_action_on_click(action_button){
     let api='';
     this.currentActionButton=action_button;
@@ -2228,7 +2228,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   alertResponce(responce) {
     if (responce) {
       if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
-        this.dataListForUpload = this.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex);
+        this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex,this.dataListForUpload);
       }else{
         this.deleteitem()
       }      
@@ -3058,7 +3058,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case 'grid_selection':
           let fieldData = previousformData[fieldName];
           let index = previousFormCollection['index'];
-          let checkDublicate = this.checkIfService.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index,this.showIfFieldList,this.custmizedFormValue,this.templateForm);
+          let checkDublicate = this.checkIfService.checkDublicateOnForm(this.tableFields,this.templateForm.getRawValue(),fieldData,index,this.showIfFieldList,this.custmizedFormValue,this.dataListForUpload,this.templateForm);
           if(!checkDublicate.status){            
             if(Array.isArray(fieldData)){
               if(index != undefined && index >= 0){
