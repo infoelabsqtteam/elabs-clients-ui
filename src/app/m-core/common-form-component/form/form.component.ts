@@ -2663,7 +2663,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   editedRowData(object) {
-    this.selectedRow = JSON.parse(JSON.stringify(object));
+    this.selectedRow = JSON.parse(JSON.stringify(object)); 
     this.updateMode = true;
     this.updateDataOnFormField(this.selectedRow);
     this.getStaticDataWithDependentData();      
@@ -2671,7 +2671,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.templateForm = this.formControlService.setCheckboxFileListValue(this.checkBoxFieldListValue,this.templateForm, this.staticData,this.selectedRow,this.updateMode);
     }
   }
-  
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !Array.isArray(formValue) && this.tableFields && this.tableFields.length > 0){
@@ -3231,7 +3230,5 @@ updateColumnList(columns?){
   // handleDisabeIf(){
   //   this.getFocusFieldAndFocus();
   //   this.checkFormFieldIfCondition(); 
-  // }
-
-  
+  // } 
 }
