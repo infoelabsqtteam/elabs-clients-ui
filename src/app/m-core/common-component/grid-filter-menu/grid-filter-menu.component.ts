@@ -8,6 +8,11 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
 })
 export class GridFilterMenuComponent implements OnInit{
   @Input() columns: any;
+  @Input() form: any;
+  @Input() formTable: any;
+  loading=false;
+  responseData=undefined
+
 
   constructor(
     private storageService: StorageService,
@@ -15,6 +20,7 @@ export class GridFilterMenuComponent implements OnInit{
     private dataShareService: DataShareService,
     private commonFunctionService: CommonFunctionService,
     private userPrefrenceService: UserPrefrenceService,
+    private notificationService: NotificationService,
   ) {}
   showHide(){
   }
@@ -60,6 +66,8 @@ export class GridFilterMenuComponent implements OnInit{
 
   createPayload(columns: any[]){
     console.log(columns)
+    // console.log("currForm",this.form)
+    // console.log("currFormTable",this.formTable)
     const checkedFields=columns.filter(col=>col.display==true);
     const checkedFieldsIds=checkedFields.map(col=>col._id);
     const uncheckedFields=columns.filter(col=>col.display==false);
@@ -82,7 +90,7 @@ export class GridFilterMenuComponent implements OnInit{
     let activeMenu=this.storageService.GetActiveMenu() ///get active tab 
     let selectedTab= allTempleteTabs?.find((tab)=>tab.tab_name== activeMenu?.name);
     let selectedGrid= selectedTab.grid
-    // console.log("uncheck",uncheckedFieldsIds);
+    console.log("allTemp",allTempleteTabs);
     this.checkAndSetPreference2(uncheckedFieldsIds,checkedFieldsIds)
 
     if(submenuIndex!= -1){
@@ -97,7 +105,48 @@ export class GridFilterMenuComponent implements OnInit{
       tab: selectedTab,
       activeField: checkedFields
     }
+    let forms;
+    let grids;
+    if(this.form && this.formTable){
+      selectedGrid=this.formTable.grid;
+       forms= {
+        [this.form["name"]]:{
+          reference : this.createReferenceObject(this.form),
+          grids:{
+            [selectedGrid["name"]]:{
+              reference : {...this.createReferenceObject(selectedGrid),allSelected:true},
+              "fields":checkedFields.map(col =>{
+                return { field_name: col.field_name, 
+                }
+              })
+            }
+  
+          }
+       }
+      }
+    }else{
+        grids={
+          [selectedGrid["name"]]:{
+            reference : {...this.createReferenceObject(selectedGrid),allSelected:true},
+            "fields":checkedFields.map(col =>{
+              return { field_name: col.field_name, 
+              }
+            })
+          }
+
+        }
+    }
     let preference;
+    let templateTabs={
+      [selectedTab["tab_name"]]:{
+        reference : {
+          _id:selectedTab["_id"],
+          name: selectedTab["tab_name"]
+        },
+        ...(this.form && {forms}),
+        ...(this.form == undefined && {grids})
+     }
+    }
     if(submenuIndex != -1){
       preference={
         [selectedModule["name"]]:{
@@ -108,25 +157,7 @@ export class GridFilterMenuComponent implements OnInit{
                submenus: {
                   [selectedSubMenu["name"]]: {
                     reference: this.createReferenceObject(selectedSubMenu),
-                    templateTabs:{
-                      [selectedTab["tab_name"]]:{
-                        reference : {
-                          _id:selectedTab["_id"],
-                          name: selectedTab["tab_name"]
-                        },
-                        grids:{
-                          [selectedGrid["name"]]:{
-                            reference : {...this.createReferenceObject(selectedGrid),allSelected:true},
-                            "fields":checkedFields.map(col =>{
-                              return { field_name: col.field_name,
-                                        // display: col.display  
-                              }
-                            })
-                          }
-        
-                        }
-                     }
-                    }
+                    templateTabs,
                   }
                }
          }
@@ -147,17 +178,9 @@ export class GridFilterMenuComponent implements OnInit{
                     _id:selectedTab["_id"],
                     name: selectedTab["tab_name"]
                   },
-                  grids:{
-                    [selectedGrid["name"]]:{
-                      reference : {...this.createReferenceObject(selectedGrid),allSelected:true},
-                      "fields":checkedFields.map(col =>{
-                        return { field_name: col.field_name,
-                                  // display: col.display  
-                        }
-                      })
-                    }
-  
-                  }
+                  ...(this.form && {forms}),
+                  ...(this.form == undefined && {grids})
+                
                }
               }
          }
@@ -176,31 +199,56 @@ export class GridFilterMenuComponent implements OnInit{
   }
     // console.log("preference",preference);
     // this.storageService.setUserPreference(payload);
-    this.updateUserPreference(payload,"preference");
-    console.log("preference",payload);
-  }
+    this.updateUserPreference(payload,"preference").then((response) => {
+      this.responseData = response; // Store your API response
+      this.notificationService.notify('bg-success',"User preference updated Successfully!");
 
-  updateUserPreference(data: object, fieldName: string, parent?: string) {
-    let payloadData;
-    switch (fieldName) {
-      // case 'favouriteMenus':
-      //   payloadData = this.modifiedMenuObj(data, fieldName, parent);
-      //   break;
-      // case 'tab':
-      //   payloadData = this.addOrRemoveTabs(data);
-      //   break;
-      case 'preference':
-        payloadData = data
-        break;;
-      default:
-        payloadData = this.storageService.getUserPreference();
-        break;
-    }
-    let payload = {
-      curTemp: 'user_preference',
-      data: payloadData,
-    };
+      console.log(response);
+    })
+    .catch((error) => {
+      console.error('API Error:', error);
+    })
+    .finally(() => {
+      setTimeout(()=>{
+        this.loading = false;
+      },5000)
+    });
+    console.log("preference",payload);
+
+   
+  }
+ 
+  updateUserPreference(data: object, fieldName: string, parent?: string) :Promise<any>{
+    return new Promise(async (resolve) => {
+      try {
+        this.loading=true;
+        let payloadData;
+          switch (fieldName) {
+            // case 'favouriteMenus':
+            //   payloadData = this.modifiedMenuObj(data, fieldName, parent);
+            //   break;
+            // case 'tab':
+            //   payloadData = this.addOrRemoveTabs(data);
+            //   break;
+            case 'preference':
+              payloadData = data
+              break;;
+            default:
+              payloadData = this.storageService.getUserPreference();
+              break;
+          }
+        let payload = {
+          curTemp: 'user_preference',
+          data: payloadData,
+        };
     this.apiService.SaveFormData(payload);
+    resolve({success:true})
+      } catch (error) {
+        resolve({success:false})
+      }
+    
+  })
+    
   }
   
   checkAndSetPreference(uncheckedFieldsIds:any[],checkedFieldsIds:any[]){

@@ -58,6 +58,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showSidebar:boolean = false;  
   showNotify: boolean = false;
   currentMenu: any;
+  currentForm:any
   //formSaveBtn: boolean = false;
   //formUpdateBtn: boolean = false;
   //formDeleteBtn: boolean = false;
@@ -1286,7 +1287,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         const gridModalData = {
           "field": this.curTreeViewField,
           "selectedData":selectedData,
-          "object": formValueWithCustomData
+          "object": formValueWithCustomData,
+          "currentForm":this.currentForm
         }
         this.modalService.open('grid-selection-modal', gridModalData);
         break;
