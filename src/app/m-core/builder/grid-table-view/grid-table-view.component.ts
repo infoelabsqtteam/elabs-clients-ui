@@ -1542,12 +1542,29 @@ hideColumn(columns,index: number) {
 
 //copy specific column in grid
 copyColumns(head,headElements,i):void{
+  let columnData = "";
   if(this.modifyGridData.length>0){
     let field_name=head.field_name;
-    let columnData=this.modifyGridData.map(ele=>{
-      if(!ele[field_name].includes("fa-eye")) return ele[field_name];
-    }).join('\n').trim();
-    navigator.clipboard.writeText(columnData);
+    if(head.type == "info"){
+      let childGridColumn = head.gridColumns;
+      let childFieldName = childGridColumn[0]['field_name'];
+      //let childData = this.elements[1][field_name];
+      columnData=this.elements.map(ele=>{
+        if(ele[field_name] && this.commonFunctionService.isArray(ele[field_name]) && ele[field_name].length > 0){
+          ele[field_name].map(chidData =>{
+            return chidData[childFieldName];
+          }).join('\n').trim();  
+        }      
+      }).join('\n').trim();
+      console.log(columnData);
+    }else{
+      columnData=this.modifyGridData.map(ele=>{
+        if(!ele[field_name].includes("fa-eye")) return ele[field_name];
+      }).join('\n').trim();
+    }
+    
+    
+    //navigator.clipboard.writeText(columnData);
   }
 }
 
