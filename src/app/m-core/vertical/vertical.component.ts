@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Inject, ViewChild} from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DataShareService, StorageService, MenuOrModuleCommonService } from '@core/web-core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 
 @Component({
@@ -11,11 +12,13 @@ import { DataShareService, StorageService, MenuOrModuleCommonService } from '@co
   styleUrls: ['./vertical.component.css']
 })
 export class VerticalComponent implements OnInit {
+  @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
   //moduleIndex : any = -1;
   dashbordPage:boolean=false;
   navigationSubscription;
   applicationSettingSubscription:Subscription;
-  logoPath;any = ''
+  logoPath;any = '';
+ 
 
 
   mobileQuery: MediaQueryList;

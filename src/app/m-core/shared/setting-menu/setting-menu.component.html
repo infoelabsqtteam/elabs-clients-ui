@@ -3,11 +3,6 @@
         <div class="prifileimg mx-auto"><img src="assets/img/profile.jpg" alt="" width="60"></div>
         <h3 class="m-0">{{userName}}</h3>
         <h5 class="m-0">{{userEmail}}</h5>
-        <div>
-          <select [(ngModel)]="activeRole" name="" id="" (change)="setRole()">
-            <option *ngFor="let role of roleList"  [ngValue]="role">{{role.name}}</option>
-          </select>
-        </div>
     </div>
     <perfect-scrollbar>
         <mat-list class="pt-0" style="padding-bottom:120px;">

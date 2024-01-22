@@ -3,7 +3,7 @@
       <a class="logo px-2 text-center" (click)="goToHomePage()"><img [src]="logoPath" alt=""></a>
     </div>
     <div class="topheader"><app-header class="w-100"></app-header></div>
-    <div class="settingmenu"><button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>account_circle</mat-icon></button></div>
+    <app-user-account [rightsidenav]="rightsidenav"></app-user-account>
   </mat-toolbar>
   
   

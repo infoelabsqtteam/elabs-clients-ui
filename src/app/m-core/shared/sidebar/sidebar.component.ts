@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEm
 import { Router, NavigationEnd } from '@angular/router';
 import { MENU } from './menu';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService, NotificationService } from '@core/web-core';
+import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService, NotificationService, AuthDataShareService } from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,6 +24,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   userPreferenceSubscription:Subscription;
   moduleIndexSubscription:Subscription;
   menuIndexSubscription:Subscription;
+  settingModelRestSubscription:Subscription;
   isPageLoading: boolean = false;
   
   constructor( 
@@ -33,7 +34,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private notificationService:NotificationService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private apiCallService:ApiCallService,
-    private userPrefrenceService:UserPrefrenceService
+    private userPrefrenceService:UserPrefrenceService,
+    private authDataShareService:AuthDataShareService
   ) {
     
     // this.dataShareService.otherSaveCall.subscribe(responce => {
@@ -57,6 +59,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }  
          
     })
+    this.settingModelRestSubscription = this.authDataShareService.settingData.subscribe(data =>{
+      this.initialize();
+    })
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
@@ -76,7 +81,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     //let moduleList = this.storageService.GetModules();
-    this.AllModuleList = this.storageService.GetModules();
+    
     //this.storageService.SetModifyModules(this.AllModuleList);
     this.initialize();
   }
@@ -102,6 +107,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
    */
   initialize(): void {
     this.menuItems = MENU;
+    this.AllModuleList = this.storageService.GetModules();
   }
 
   /**
