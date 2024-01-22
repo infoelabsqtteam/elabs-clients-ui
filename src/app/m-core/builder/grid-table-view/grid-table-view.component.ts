@@ -1544,7 +1544,9 @@ hideColumn(columns,index: number) {
 copyColumns(head,headElements,i):void{
   if(this.modifyGridData.length>0){
     let field_name=head.field_name;
-    let columnData=this.modifyGridData.map(ele=>ele[field_name]).join('\n');
+    let columnData=this.modifyGridData.map(ele=>{
+      if(!ele[field_name].includes("fa-eye")) return ele[field_name];
+    }).join('\n').trim();
     navigator.clipboard.writeText(columnData);
   }
 }
