@@ -194,7 +194,7 @@ export class GridFilterMenuComponent implements OnInit{
 
   // let result=this.checkPreference(preference);
   let payload={
-    preference : preference,
+    preferenceMap : preference,
     userId: userRef
   }
     // console.log("preference",preference);
