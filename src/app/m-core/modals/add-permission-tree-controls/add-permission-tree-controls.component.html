@@ -30,8 +30,8 @@
                     <input matInput type="text" [placeholder]="'test'"  [formControlName]="'fValue'"  autocomplete="off">  
                 </mat-form-field>               
               </div>
-              <div class="col-lg-1">
-                <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn firstlistofbtn" mdbWavesEffect (click)="addCrList()"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
+              <div class="col-lg-1 pt-1">
+                <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="addCrList()" [disabled]="!crListContral.valid"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
               </div>
             </div>
             <div class="row mb-2">

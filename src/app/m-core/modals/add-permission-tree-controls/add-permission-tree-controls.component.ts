@@ -49,6 +49,9 @@ export class AddPermissionTreeControlsComponent implements OnInit {
         })
     })
   }
+  get crListContral(){
+    return this.criteria.controls['crList'];
+  }
   showModal(alert){  
     if(alert && alert['crList']){
       this.ListOfCrList = alert['crList'];
