@@ -62,13 +62,14 @@
                                             <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
                                                 <span  class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
                                                 <span class="show-on-hover mr-1">
-                                                    <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="ml-1 mr-1"></mdb-icon>
+                                                    <i fas class="fas fa-ellipsis-v ml-1 mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                 </span>
                                                 <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                                     <ng-template matMenuContent *ngIf="headElements.length > 0">
                                                     <ul class="m-0">
                                                         <li>
-                                                            <button mat-button class="w-100 text-left" color="primary"  (click)="onSort(headElements[i])"><span class="material-icons mr-2">sort_by_alpha</span> Sort</button>
+                                                            <button mat-button class="w-100 text-left" color="primary"  (click)="onSort(headElements[i])"><span><i class="fas fa-sort-alpha-{{sortIcon}} ml-1 mr-1"></i></span> Sort</button>
                                                             <button mat-button class="w-100 text-left" color="primary"  (click)="copyColumns(head,headElements,i)"><span class="material-icons mr-2">content_copy</span> Copy Column</button>
                                                             <button mat-button class="w-100 text-left" color="primary"  (click)="hideColumn(headElements,i)"><span class="material-icons mr-2">remove_red_eye</span> Hide</button>
                                                         </li>
