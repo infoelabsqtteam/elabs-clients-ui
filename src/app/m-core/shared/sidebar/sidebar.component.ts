@@ -216,9 +216,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 addFebMenu(menu,parent){
   this.isPageLoading = true;
   menu.favourite = !menu?.favourite;
-  this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-  this.userPreferenceSubscribe(menu,'favouriteMenus',parent);
-  // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'favouriteMenus',parent);
+  // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
+  // this.userPreferenceSubscribe(menu,'preferenceMap',parent);
+  this.updateUserPreference(menu,'preferenceMap',parent);
+  // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'preferenceMap',parent);
   // this.saveCallSubscribe();
 }
 async updateUserPreference(menu,field,parent){  

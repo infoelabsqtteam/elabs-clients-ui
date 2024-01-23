@@ -400,8 +400,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   addFebTab(tab,parent){  
     this.isPageLoading = true;
     tab.favourite = !tab.favourite;
-    this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    this.userPreferenceSubscribe(tab,'tab',parent);
+    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
+    // this.userPreferenceSubscribe(tab,'tab',parent);
+    this.updateUserPreference(tab,'tab',parent);
     // this.saveCallSubscribe();
   }
   
@@ -418,7 +419,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.saveCallSubscribe();
   }
 //   checkFebTabAddOrNot(tab) {
-//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+//     const menus = this.storageService.getUserPreference()?.['preferenceMap'] || {};
 //     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
 // }
 }
