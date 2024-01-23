@@ -898,24 +898,15 @@ export class GridSelectionModalComponent implements OnInit {
     }
   
     //copy specific column in grid
-    copyColumns(headerData,listOfGridFieldName,i) {
-      let fieldName=headerData.field_name;
-      let columnData=this.modifiedGridData.map(ele=>ele[fieldName]).join('\n');
-        navigator.clipboard.writeText(columnData);
+    copyColumns(headerData) {
+        this.CommonFunctionService.copyGridColumnText(headerData,this.modifiedGridData)
     }
-  
-//copy icon on grid cell
-copyText(value:any){       
-  this.isCopied=true
-  navigator.clipboard.writeText(value);
-  setTimeout(()=>{
-      this.isCopied=false
-    },1000)
-}
 
-containsHtmlElements(value): boolean {
-  return value == '<i class="fa fa-eye cursor-pointer"></i>';
-}
+    //copy icon on grid cell
+    copyText(value:any){    
+      this.CommonFunctionService.copyGridCellText(value);
+    }
+
   
 }
 

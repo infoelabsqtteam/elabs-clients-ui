@@ -737,7 +737,7 @@
                                                 </td>
                                                 <td *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''" (click)="showListOfFieldData(tableField,i, item)" class="copyIconContainer">
                                                     {{listOfField[item.field_name]}}
-                                                    <span *ngIf="listOfField[item.field_name]!='' && listOfField[item.field_name]!=undefined && !containsHtmlElements(listOfField[item.field_name])"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >{{isCopied?'done':'content_copy'}}</span>
+                                                    <span *ngIf="listOfField[item.field_name]!='' && listOfField[item.field_name]!=undefined && item.type!='info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >{{isCopied?'done':'content_copy'}}</span>
                                                 </td>                                                
                                             </tr>
                                         </tbody>
@@ -970,7 +970,7 @@
                                                                 [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                         </span>
                                                         <span *ngIf="fieldName.type!='checkbox'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']" (click)="showListOfFieldData(tableField,i, fieldName)" [innerHtml]="data[fieldName.field_name]" class="copyField"></span>
-                                                        <span *ngIf="data[fieldName.field_name]!='' && data[fieldName.field_name]!=undefined && !containsHtmlElements(data[fieldName.field_name])"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >{{isCopied?'done':'content_copy'}}</span>
+                                                        <span *ngIf="data[fieldName.field_name]!='' && fieldName.type!='info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >{{isCopied?'done':'content_copy'}}</span>
                                                     </div>
                                                 </td>
                                             </tr>

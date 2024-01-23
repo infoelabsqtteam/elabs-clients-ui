@@ -3182,12 +3182,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
 //copy specific column in grid
 copyColumns(gridColumns,j,tableField){
   let tableFieldName=tableField.field_name;
-  let fieldName=gridColumns[j].field_name;
-  if(this.modifyCustmizedFormValue[tableFieldName].length>0){
-    let data= this.modifyCustmizedFormValue[tableFieldName];
-    let columnData=data.map(ele=>ele[fieldName]).join('\n');
-    navigator.clipboard.writeText(columnData);
-  }
+  this.commonFunctionService.copyGridColumnText(gridColumns[j],this.modifyCustmizedFormValue[tableFieldName])
 }
   // show all columns icon click function 
 updateColumnList(columns?){
@@ -3196,11 +3191,7 @@ updateColumnList(columns?){
 
 //copy icon on grid cell
 copyText(value:any){       
-  this.isCopied=true
-  navigator.clipboard.writeText(value);
- setTimeout(()=>{
-    this.isCopied=false
-  },1000)
+  this.commonFunctionService.copyGridCellText(value);
 }
 
 containsHtmlElements(value): boolean {

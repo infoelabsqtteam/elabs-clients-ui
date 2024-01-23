@@ -1213,7 +1213,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     } else {
       this.orderBy = '-';
     }
-    this.sortIcon=="down"? (this.sortIcon="up"): (this.sortIcon="down");
+    this.sortIcon=="down"? (this.sortIcon="up-alt"): (this.sortIcon="down");
   }
   applyFilter() {
     this.pageNumber = 1;
@@ -1545,42 +1545,12 @@ hideColumn(columns,index: number) {
 
 //copy specific column in grid
 copyColumns(head,headElements,i):void{
-  let columnData = "";
-  if(this.modifyGridData.length>0){
-    let field_name=head.field_name;
-    if(head.type == "info"){
-      if(head.gridColumns){
-        let childGridColumn = head.gridColumns;
-        let childFieldName = childGridColumn[0]['field_name'];
-        columnData=this.elements.map(ele=>{
-          let childData
-          if(ele[field_name] && this.commonFunctionService.isArray(ele[field_name]) && ele[field_name].length > 0){
-            childData= ele[field_name].map(chidData =>{
-              return chidData[childFieldName];
-            }).join('\n').trim();  
-          }
-          return childData;      
-        }).join('\n').trim();
-        console.log(columnData);
-      }
-    }else{
-      columnData=this.modifyGridData.map(ele=>{
-        if(ele[field_name]!=undefined) return ele[field_name];
-      }).join('\n').trim();
-      console.log(columnData);
-    }
-    navigator.clipboard.writeText(columnData);
-  }
+  this.commonFunctionService.copyGridColumnText(head,this.modifyGridData,this.elements)
 }
 
 //copy icon on grid cell
 copyText(value:any){       
- // this.isCopied=true
-  navigator.clipboard.writeText(value);
-  this.notificationService.notify("bg-success","Coppied Data");
-//  setTimeout(()=>{
-//     this.isCopied=false
-//   },1000)
+  this.commonFunctionService.copyGridCellText(value);
 }
 
 
