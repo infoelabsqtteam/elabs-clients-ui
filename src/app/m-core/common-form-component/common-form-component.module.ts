@@ -30,7 +30,8 @@ const maskConfig: Partial<IConfig> = {
     NgxMaskModule.forRoot(maskConfig),
     ModelModule,
     AllPackageModule,
-    GoogleMapsModule,CommonComponentModule
+    GoogleMapsModule,
+    CommonComponentModule
   ],
   exports:components,
   declarations: components

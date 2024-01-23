@@ -22,6 +22,7 @@ import { FormModelModule } from '../m-core/modals/form-model.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
+import { UserAccountComponent } from './user-account/user-account.component';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
         ForgotpwdModalComponent,
         PageNotFoundComponent,
         VerifyFailedComponent,
+        UserAccountComponent
         ],
         imports :[
             AppRoutingModule,
@@ -52,6 +54,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             HomeComponent,
             FooterComponent,
             HeaderLandingPageComponent,
+            UserAccountComponent
             ],
         providers:[
         { provide : HTTP_INTERCEPTORS,useClass : AuthInterceptor, multi: true},

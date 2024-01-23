@@ -336,12 +336,12 @@ export class PermissionTreeViewComponent implements OnInit {
   selectGridData(){
     //let treeControlData = this.treeControl.expansionModel.selected;
     //let data = this.dataSource.data;
-    console.log(this.checklistSelection.selected);
+    //console.log(this.checklistSelection.selected);
     let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
-    console.log(selectedData);
+    //console.log(selectedData);
     let allNodes = this.treeControl.dataNodes;
     let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
-    console.log(rearrangedSelectedNode);
+    //console.log(rearrangedSelectedNode);
     let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
     //console.log(mapObjecThroughList);
     this.treeViewComponentResponce.next(mapObjecThroughList);
@@ -354,6 +354,30 @@ export class PermissionTreeViewComponent implements OnInit {
     this.keys = [];
     this.staticData = {};
     this.treeView.hide();
+  }
+  nodeIndex:number=-1;
+  addRollPermissionTabWise(node){
+    if(node){
+      let id = node._id;
+      let selectedData = {};
+      if(node.criteria){
+        selectedData = node.criteria
+      }      
+      if(this.checklistSelection && this.checklistSelection.selected && this.checklistSelection.selected.length > 0){
+        this.nodeIndex = this.commonfunctionService.getIndexInArrayById(this.checklistSelection.selected,id);
+      }
+      this.modalService.open("permission-control-model",selectedData);
+    }
+    
+  }
+  controlResponce(responce){
+    if(this.nodeIndex != -1){
+      let node = this.checklistSelection.selected[this.nodeIndex];
+      if(typeof responce == 'object'){
+        node['criteria'] = responce;
+        this.checklistSelection.selected[this.nodeIndex] = node;
+      }      
+    }
   }
 
   /**

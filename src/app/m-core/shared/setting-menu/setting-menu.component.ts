@@ -141,6 +141,11 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
                     this.userFirstLetter = this.userInfo.email.toUpperCase()
                 }
             }
+            // this.roleList = this.storageService.GetRoleList();
+            // if(this.roleList && this.roleList.length > 0){
+            //     this.activeRole = this.roleList[0];
+            //     this.storageService.setActiveRole(this.activeRole);
+            // }
         }
 
         this.subscription = this.dataShareService.currentPage.subscribe(
@@ -804,5 +809,4 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             this.router.navigate([value]);
         }
     }
-
 }

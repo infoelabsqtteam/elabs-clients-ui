@@ -1,0 +1,7 @@
+<div class="settingmenu">
+  <button mat-button [matMenuTriggerFor]="role">{{activeRole}}</button>
+  <mat-menu #role="matMenu" xPosition="before">
+    <button mat-menu-item *ngFor="let role of roleList" (click)="setRole(role)">{{role.name}}</button>
+  </mat-menu>
+  <button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>account_circle</mat-icon></button>
+</div>
