@@ -128,6 +128,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   currentBrowseUrl:string="";
   queryParams:any={};
   gridDisable:boolean = false;
+  // isCopied:boolean=false;                      //for grid cell copy icon
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
@@ -1570,6 +1571,16 @@ copyColumns(head,headElements,i):void{
     }
     navigator.clipboard.writeText(columnData);
   }
+}
+
+//copy icon on grid cell
+copyText(value:any){       
+ // this.isCopied=true
+  navigator.clipboard.writeText(value);
+  this.notificationService.notify("bg-success","Coppied Data");
+//  setTimeout(()=>{
+//     this.isCopied=false
+//   },1000)
 }
 
 
