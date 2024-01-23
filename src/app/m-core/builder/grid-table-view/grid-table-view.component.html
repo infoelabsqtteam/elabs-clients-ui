@@ -171,7 +171,7 @@
                                                     <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type == 'color'">
                                                         <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{el[elId.field_name]}}</span>
                                                     </a>
-                                                    <span *ngIf="el[elId.field_name]!='' && el[elId.field_name]!=undefined && !containsHtmlElements(el[elId.field_name])"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(el[elId.field_name])" >{{isCopied?'done':'content_copy'}}</span>
+                                                    <span *ngIf="el[elId.field_name]!='' && el[elId.field_name]!=undefined && elId.type != 'info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(el[elId.field_name])" >{{'content_copy'}}</span>
                                                     
                                                 </div>
                                             <div *ngIf="editedRowIndex == i">  
