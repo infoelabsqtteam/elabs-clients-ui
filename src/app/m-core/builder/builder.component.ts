@@ -37,7 +37,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   selected = new FormControl(0);
   getTempData:boolean = true;
   currentUrl :String = "";
-  isAddFebMenuInProgress:boolean
+  isPageLoading: boolean = false;
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -397,24 +397,29 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.selectContact = '';
     }
   }   
-  addFebMenu(tab,parent){    
-    this.isAddFebMenuInProgress = true;
+  addFebTab(tab,parent){  
+    this.isPageLoading = true;
+    tab.favourite = !tab.favourite;
     this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
     this.userPreferenceSubscribe(tab,'tab',parent);
     // this.saveCallSubscribe();
-    this.notificationService.notify('bg-success',"Favorite Tab updated Successfully!");
-    setTimeout(()=>{
-      this.isAddFebMenuInProgress=false;
-    },2000)
   }
-  updateUserPreference(menu,field,parent){
+  
+  async updateUserPreference(menu,field,parent){
     this.unsubscribe(this.userPreferenceSubscription);
-    this.userPrefrenceService.updateUserPreference(menu,field,parent);
+    let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+    if (response?.success) {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-success', 'favourite Tab updated successfully!');
+    } else {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-warning', 'Failed to save data.');
+    }
     this.saveCallSubscribe();
   }
-  checkFebTabAddOrNot(tab) {
-    const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
-    return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
-}
+//   checkFebTabAddOrNot(tab) {
+//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+//     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
+// }
 }
 

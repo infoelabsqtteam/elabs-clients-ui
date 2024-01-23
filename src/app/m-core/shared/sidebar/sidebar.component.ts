@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   userPreferenceSubscription:Subscription;
   moduleIndexSubscription:Subscription;
   menuIndexSubscription:Subscription;
-  isAddMenuInProgress:boolean;
+  isPageLoading: boolean = false;
   
   constructor( 
     private storageService:StorageService,
@@ -214,36 +214,68 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
+  this.isPageLoading = true;
+  menu.favourite = !menu?.favourite;
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
   this.userPreferenceSubscribe(menu,'favouriteMenus',parent);
   // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'favouriteMenus',parent);
   // this.saveCallSubscribe();
 }
-updateUserPreference(menu,field,parent){
-  this.isAddMenuInProgress=false;
+async updateUserPreference(menu,field,parent){  
   this.unsubscribe(this.userPreferenceSubscription);
-  this.userPrefrenceService.updateUserPreference(menu,field,parent);
-  this.saveCallSubscribe();
-  this.notificationService.notify('bg-success',"Favorite Module updated Successfully!");
-  setTimeout(()=>{
-    this.isAddMenuInProgress=false;
-  },2000)
-}
-checkFebMenuAddOrNot(menu,parent){
-  let menuId = menu._id;
-  if(parent != ''){
-    menuId = parent._id;
-  }
-  let userFebMenu = this.userPrefrenceService.getUserPreferenceByFieldName('favouriteMenus');
-  if (userFebMenu && userFebMenu !== null && typeof userFebMenu === 'object' && Object.keys(userFebMenu).length > 0) {
-    if (parent && parent !== '' && typeof parent === 'object' && userFebMenu) {
-      return this.userPrefrenceService.isMenuAlreadyPresentOrNot(menu,userFebMenu);
-    }else{
-      return this.userPrefrenceService.isIdExist(userFebMenu,menuId);
-    }
+  let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+  if (response?.success) {
+    this.isPageLoading = false;
+    this.notificationService.notify('bg-success', 'Favourite Menu updated successfully!');
   } else {
-      return false;
+    this.isPageLoading = false;
+    this.notificationService.notify('bg-warning', 'Failed to save data.');
   }
+  this.saveCallSubscribe();
 }
+// checkFebMenuAddOrNot(menu,parent){
+//   let menuId = menu._id;
+//   if(parent != ''){
+//     menuId = parent._id;
+//   }
+//   let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
+//   if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
+//     let match = -1;
+//     for (let index = 0; index < userFebMenu.length; index++) {
+//       const element = userFebMenu[index];
+//       if(element._id == menuId ){
+//         match = index;
+//         break;
+//       }     
+//     }
+//     if(match > -1){
+//       if(parent != ''){
+//         const submenu = userFebMenu[match]['submenu'];
+//         let subMatchIndex = -1;
+//         if(submenu && submenu.length > 0){
+//           for (let j = 0; j < submenu.length; j++) {
+//             const subMenu = submenu[j];
+//             if(subMenu._id == menu._id){
+//               subMatchIndex = j;
+//               break;
+//             }
+            
+//           }
+//         }
+//         if(subMatchIndex > -1){
+//           return true
+//         }else{
+//           return false;
+//         }
+//       }else{
+//         return true;
+//       }      
+//     }else{
+//       return false;
+//     }
+//   }else{
+//     return false;
+//   }
+// }
 
 }
