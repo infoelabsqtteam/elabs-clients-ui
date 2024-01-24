@@ -25,12 +25,6 @@ export class GridFilterMenuComponent implements OnInit{
   showHide(){
   }
   ngOnInit(): void {
-  //   console.log("onnit");
-  //   this.columns.forEach((column:any) => {
-  //     if(this.checkHeadExists(column) || column?.hide ){
-  //         column.display=false
-  //     }
-  // });
   }
 
   updateColumnList() {
@@ -51,314 +45,36 @@ export class GridFilterMenuComponent implements OnInit{
 
   checkHeadExists(head:any){
     let preferenceData=localStorage.getItem("preference");
-    console.log("ls",preferenceData);
     if(!preferenceData){
       return false;
     }
     else{
       preferenceData=JSON.parse(localStorage.getItem("preference"))
       if(preferenceData.length>0){
-        console.log(head.name, preferenceData.includes(head._id))
         return preferenceData.includes(head._id)
       }
     }
   }
 
   createPayload(columns: any[]){
-    console.log(columns)
-    // console.log("currForm",this.form)
-    // console.log("currFormTable",this.formTable)
-    const checkedFields=columns.filter(col=>col.display==true);
-    const checkedFieldsIds=checkedFields.map(col=>col._id);
-    const uncheckedFields=columns.filter(col=>col.display==false);
-    const uncheckedFieldsIds= uncheckedFields.map(col=>col._id)
-    // localStorage.setItem("preference",JSON.stringify(uncheckedFieldsId))
-    // this.storageService.setUserPreference(uncheckedFieldsId);
-    // const fieldArray=checkedFields(col=>{
-    //   field_name:col.name,
-    //   "display":col.display
-    // });
-    let {menuIndex, submenuIndex, moduleIndex}= this.dataShareService.getMenuOrSubmenuIndexs();
-    const allModuleData=this.storageService.GetModules();
-    // console.log("Module",allModuleData[moduleIndex]);
-
-
-    let selectedModule= allModuleData[moduleIndex];
-    let selectedMenu= allModuleData[moduleIndex]?.["menu_list"][menuIndex];
-    let selectedSubMenu= null;
-    let allTempleteTabs= this.dataShareService.getTempData()[0]?.["templateTabs"];
-    let activeMenu=this.storageService.GetActiveMenu() ///get active tab 
-    let selectedTab= allTempleteTabs?.find((tab)=>tab.tab_name== activeMenu?.name);
-    let selectedGrid= selectedTab.grid
-    console.log("allTemp",allTempleteTabs);
-    this.checkAndSetPreference2(uncheckedFieldsIds,checkedFieldsIds)
-
-    if(submenuIndex!= -1){
-       selectedSubMenu= allModuleData[moduleIndex]?.["menu_list"][menuIndex]?.["submenu"][submenuIndex];
+    let data={
+      columns,
+      form:this.form,
+      formTable:this.formTable
     }
-
-    const payloads= {
-      module: selectedModule,
-      menu: selectedMenu,
-      submenu: selectedSubMenu,
-      templeteTab: allTempleteTabs,
-      tab: selectedTab,
-      activeField: checkedFields
-    }
-    let forms;
-    let grids;
-    if(this.form && this.formTable){
-      selectedGrid=this.formTable.grid;
-       forms= {
-        [this.form["name"]]:{
-          reference : this.createReferenceObject(this.form),
-          grids:{
-            [selectedGrid["name"]]:{
-              reference : {...this.createReferenceObject(selectedGrid),allSelected:true},
-              "fields":checkedFields.map(col =>{
-                return { field_name: col.field_name, 
-                }
-              })
-            }
-  
-          }
-       }
-      }
-    }else{
-        grids={
-          [selectedGrid["name"]]:{
-            reference : {...this.createReferenceObject(selectedGrid),allSelected:true},
-            "fields":checkedFields.map(col =>{
-              return { field_name: col.field_name, 
-              }
-            })
-          }
-
-        }
-    }
-    let preference;
-    let templateTabs={
-      [selectedTab["tab_name"]]:{
-        reference : {
-          _id:selectedTab["_id"],
-          name: selectedTab["tab_name"]
-        },
-        ...(this.form && {forms}),
-        ...(this.form == undefined && {grids})
-     }
-    }
-    if(submenuIndex != -1){
-      preference={
-        [selectedModule["name"]]:{
-          reference : this.createReferenceObject(selectedModule),
-          menus:{
-               [selectedMenu["name"]]:{
-               reference : this.createReferenceObject(selectedMenu),
-               submenus: {
-                  [selectedSubMenu["name"]]: {
-                    reference: this.createReferenceObject(selectedSubMenu),
-                    templateTabs,
-                  }
-               }
-         }
-        }
-      }
-    }
-    }
-    else{
-      preference={
-        [selectedModule["name"]]:{
-          reference : this.createReferenceObject(selectedModule),
-          menus:{
-               [selectedMenu["name"]]:{
-               reference : this.createReferenceObject(selectedMenu),
-               templateTabs:{
-                [selectedTab["tab_name"]]:{
-                  reference : {
-                    _id:selectedTab["_id"],
-                    name: selectedTab["tab_name"]
-                  },
-                  ...(this.form && {forms}),
-                  ...(this.form == undefined && {grids})
-                
-               }
-              }
-         }
-        }
-      }
-    }
-    }
-  let userRef = this.createReferenceObject(
-    this.storageService.GetUserInfo()
-  );
-
-  // let result=this.checkPreference(preference);
-  let payload={
-    preferenceMap : preference,
-    userId: userRef
-  }
-    // console.log("preference",preference);
-    // this.storageService.setUserPreference(payload);
-    this.updateUserPreference(payload,"preference").then((response) => {
-      this.responseData = response; // Store your API response
-      this.notificationService.notify('bg-success',"User preference updated Successfully!");
-
-      console.log(response);
-    })
-    .catch((error) => {
-      console.error('API Error:', error);
-    })
-    .finally(() => {
-      setTimeout(()=>{
-        this.loading = false;
-      },5000)
-    });
-    console.log("preference",payload);
-
-   
-  }
- 
-  updateUserPreference(data: object, fieldName: string, parent?: string) :Promise<any>{
-    return new Promise(async (resolve) => {
-      try {
-        this.loading=true;
-        let payloadData;
-          switch (fieldName) {
-            // case 'favouriteMenus':
-            //   payloadData = this.modifiedMenuObj(data, fieldName, parent);
-            //   break;
-            // case 'tab':
-            //   payloadData = this.addOrRemoveTabs(data);
-            //   break;
-            case 'preference':
-              payloadData = data
-              break;;
-            default:
-              payloadData = this.storageService.getUserPreference();
-              break;
-          }
-        let payload = {
-          curTemp: 'user_preference',
-          data: payloadData,
-        };
-    this.apiService.SaveFormData(payload);
-    resolve({success:true})
-      } catch (error) {
-        resolve({success:false})
-      }
-    
-  })
-    
-  }
-  
-  checkAndSetPreference(uncheckedFieldsIds:any[],checkedFieldsIds:any[]){
-    let existingUserPreferences = this.storageService.getUserPreference();
-    console.log(existingUserPreferences);
-    if (!existingUserPreferences) {
-      let uref: any = {};
-      let userRef = this.createReferenceObject(
-        this.storageService.GetUserInfo()
-      );
-      uref['userId'] = userRef;
-      uref['preference'] = uncheckedFieldsIds;
-      existingUserPreferences = uref;
-      this.storageService.setUserPreference(existingUserPreferences);
-    }
-    else if(Object.keys(existingUserPreferences).length > 0){
-
-      if(existingUserPreferences.hasOwnProperty("preference")){
-        let oldPreference=existingUserPreferences.preference;
-
-        //removing duplicate of uncheckedFieldId from newpreference
-        let newpreference=[...new Set([...oldPreference,...uncheckedFieldsIds])];
-
-        //removing checkedFieldsIds which present in newpreference
-        newpreference=newpreference.filter(element=> !checkedFieldsIds.includes(element))
-        
-        existingUserPreferences['preference']=newpreference;
-        this.storageService.setUserPreference(existingUserPreferences);
-      }else{
-
-        existingUserPreferences["preference"]=uncheckedFieldsIds;
-        this.storageService.setUserPreference(existingUserPreferences);
-
-      }
-
-    }
-    
-    
-  }
-  checkAndSetPreference2(uncheckedFieldsIds:any[],checkedFieldsIds:any[]){
-    let existingUserPreferences = sessionStorage.getItem("PREFERENCE");
-    console.log(existingUserPreferences);
-    if (!existingUserPreferences) {
-      let uref: any = {};
-      let userRef = this.createReferenceObject(
-        this.storageService.GetUserInfo()
-      );
-      uref['userId'] = userRef;
-      uref['preference'] = uncheckedFieldsIds;
-      existingUserPreferences = uref;
-      sessionStorage.setItem("PREFERENCE",JSON.stringify(existingUserPreferences));
-    }
-    else if(Object.keys(existingUserPreferences).length > 0){
-      existingUserPreferences = JSON.parse(sessionStorage.getItem("PREFERENCE"))
-      if(existingUserPreferences.hasOwnProperty("preference")){
-        let oldPreference=existingUserPreferences["preference"];
-
-        //removing duplicate of uncheckedFieldId from newpreference
-        let newpreference=[...new Set([...oldPreference,...uncheckedFieldsIds])];
-
-        //removing checkedFieldsIds which present in newpreference
-        newpreference=newpreference.filter(element=> !checkedFieldsIds.includes(element))
-        
-        existingUserPreferences['preference']=newpreference;
-        sessionStorage.setItem("PREFERENCE",JSON.stringify(existingUserPreferences));
-      }else{
-
-        existingUserPreferences["preference"]=uncheckedFieldsIds;
-        sessionStorage.setItem("PREFERENCE",JSON.stringify(existingUserPreferences));
-
-      }
-
-    }
-    
-    
+   this.updateUserPreference(data,"preference")
   }
 
-  mergeNestedObjects(obj1, obj2) {
-    const result = {};
-  
-    for (const key in obj1) {
-      if (obj1.hasOwnProperty(key)) {
-        if(key == "fields"){
-            result[key]=obj2[key]
-        }
-        else if (typeof obj1[key] === 'object' && obj1[key] !== null && obj2.hasOwnProperty(key) && key != "reference") {
-          // If both objects have the same key and the value is an object, recursively merge them
-          result[key] = this.mergeNestedObjects(obj1[key], obj2[key]);
-        } 
-        // else if(key == "dis" && key != "name" && key != "_id"){
-        //     console.log("jvjvhviv",key )
-        //     result[key]= obj2[key]
-        // }
-        else {
-          // If only obj1 has the key or the value is not an object in both objects, use obj1's value
-          result[key] = obj1[key];
-        }
-      }
+  async updateUserPreference(data,field){
+    let response = await this.userPrefrenceService.updateUserPreference(data,field);
+    if (response?.success) {
+      // this.isPageLoading = false;
+      this.notificationService.notify('bg-success', 'Column Field updated successfully!');
+    } else {
+      // this.isPageLoading = false;
+      this.notificationService.notify('bg-warning', 'Failed to save data.');
     }
-    // && key != "name" && key != "_id"
-    // Add keys from obj2 that are not present in obj1
-    for (const key in obj2) {
-      if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
-        result[key] = obj2[key];
-      }
-    }
-  
-    return result;
   }
-
 }
 
 

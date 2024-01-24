@@ -488,30 +488,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
   checkHeadExists(head:any){
-    let existingUserPreferenceData=JSON.parse(<any>sessionStorage.getItem("PREFERENCE"));
+    let existingUserPreferenceData=JSON.parse(<any>this.storageService.getTempGridColumn());
     if(!existingUserPreferenceData){
       return false;
     }
     else{
       if(existingUserPreferenceData["preference"].length>0){
-        console.log(head.name, existingUserPreferenceData["preference"].includes(head._id))
         return existingUserPreferenceData["preference"].includes(head._id)
-      }
-    }
-  }
-
-
-  checkHeadExists2(head:any){
-    let existingUserPreferenceData=this.storageService.getUserPreference();
-    // console.log("ls",existingUserPreferenceData);
-    if(!existingUserPreferenceData || !existingUserPreferenceData.hasOwnProperty("preference")){
-      return false;
-    }
-    else{
-      // existingUserPreferenceData=JSON.parse(existingUserPreferenceData)
-      if(existingUserPreferenceData.preference.length>0){
-        console.log(head.name, existingUserPreferenceData.preference.includes(head._id))
-        return existingUserPreferenceData.preference.includes(head._id)
       }
     }
   }
