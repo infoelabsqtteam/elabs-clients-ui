@@ -128,7 +128,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   currentBrowseUrl:string="";
   queryParams:any={};
   gridDisable:boolean = false;
-  // isCopied:boolean=false;                      //for grid cell copy icon
 
   @Input() selectTabIndex:number;
   @Input() selectContact:string;

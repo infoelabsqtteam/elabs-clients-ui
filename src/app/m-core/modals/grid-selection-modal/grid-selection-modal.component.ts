@@ -50,7 +50,6 @@ export class GridSelectionModalComponent implements OnInit {
   editEnable:boolean=false;
   selectedDataLength:number=0;
   buttonlabel:any;
-  isCopied:boolean=false;                      //for grid cell copy icon
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();

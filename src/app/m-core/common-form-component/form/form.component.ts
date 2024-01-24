@@ -197,7 +197,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showGridData:any={};
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
-  isCopied:boolean=false;                      //for grid cell copy icon
   headerFiledsData = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
@@ -3195,9 +3194,6 @@ copyText(value:any){
   this.commonFunctionService.copyGridCellText(value);
 }
 
-containsHtmlElements(value): boolean {
-  return value == '<i class="fa fa-eye cursor-pointer"></i>';
-}
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
