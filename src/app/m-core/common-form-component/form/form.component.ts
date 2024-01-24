@@ -16,7 +16,7 @@ declare var tinymce: any;
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.css']
+  styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
@@ -2643,6 +2643,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   getFormValue(check){
     let formValue = this.templateForm.getRawValue();
+    formValue = this.coreFunctionService.checkBlankProperties(formValue);
     let routersParams = {};
     if(this.routers.snapshot.params["key1"]){
       routersParams = this.routers.snapshot.params;
