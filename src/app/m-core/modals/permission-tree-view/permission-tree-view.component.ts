@@ -66,9 +66,7 @@ export class PermissionTreeViewComponent implements OnInit {
     );
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
-      this.setStaticData(data);
-    })
+    
     // Initialize form group.
     // this.searchForm = this.fb.group({
     //   searchText: ['', Validators.required],
@@ -101,9 +99,17 @@ export class PermissionTreeViewComponent implements OnInit {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
+    this.unSubscribe();
+  }
+  unSubscribe(){
     if(this.staticDataSubscriber){
       this.staticDataSubscriber.unsubscribe();
     }
+  }
+  subscribeStaticData(){
+    this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
+      this.setStaticData(data);
+    })
   }
   setStaticData(staticDatas){
     if(staticDatas && Object.keys(staticDatas).length > 0 && staticDatas[this.ddnfieldName]) {
@@ -312,7 +318,8 @@ export class PermissionTreeViewComponent implements OnInit {
   //   this.treeComponentService.updateItem(nestedNode!, itemValue);
   // }
 
-  showModal(alert){    
+  showModal(alert){   
+    this.subscribeStaticData(); 
     this.data=alert.selectedData;
     let field = alert.field
     this.fieldName = field.label;
@@ -358,15 +365,12 @@ export class PermissionTreeViewComponent implements OnInit {
   nodeIndex:number=-1;
   addRollPermissionTabWise(node){
     if(node){
-      let id = node._id;
-      let selectedData = {};
-      if(node.criteria){
-        selectedData = node.criteria
-      }      
+      let id = node._id;           
       if(this.checklistSelection && this.checklistSelection.selected && this.checklistSelection.selected.length > 0){
         this.nodeIndex = this.commonfunctionService.getIndexInArrayById(this.checklistSelection.selected,id);
       }
-      this.modalService.open("permission-control-model",selectedData);
+      this.unSubscribe();
+      this.modalService.open("permission-control-model",node);
     }
     
   }
@@ -378,6 +382,7 @@ export class PermissionTreeViewComponent implements OnInit {
         this.checklistSelection.selected[this.nodeIndex] = node;
       }      
     }
+    this.subscribeStaticData();
   }
 
   /**
