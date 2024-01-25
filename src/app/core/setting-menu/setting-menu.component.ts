@@ -815,8 +815,6 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             this.router.navigate([value]);
         }
     }
-<<<<<<< HEAD:src/app/core/setting-menu/setting-menu.component.ts
-=======
     async clearCache() {
         this.isPageLoading = true;
         try {
@@ -874,5 +872,4 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
 
 
->>>>>>> 7aaae1cede1c6a6d7b0345f65ffe04aadc094d57:src/app/m-core/shared/setting-menu/setting-menu.component.ts
 }
