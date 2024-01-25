@@ -10,6 +10,7 @@ import { DataShareService, EnvService, StorageService, MenuOrModuleCommonService
 export class HorizontalComponent implements OnInit {
   @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
   logoPath = ''
+  @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
   constructor(
     private dataShareService:DataShareService,
     private envService:EnvService,
