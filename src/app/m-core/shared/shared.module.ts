@@ -11,7 +11,7 @@ import { MDBBootstrapModule  } from 'angular-bootstrap-md';
 import { AllPackageModule } from '../all-package/all-package.module';
 
 
-import { TopbarComponent } from './topbar/topbar.component';
+// import { TopbarComponent } from './topbar/topbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { StatComponent } from './stat/stat.component';
@@ -23,7 +23,7 @@ import { NotificationListComponent } from './notification-list/notification-list
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [TopbarComponent, FooterComponent, SidebarComponent, StatComponent, NotificationSettingComponent, NotificationListComponent],
+  declarations: [FooterComponent, SidebarComponent, StatComponent, NotificationSettingComponent, NotificationListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -37,7 +37,7 @@ import { NotificationListComponent } from './notification-list/notification-list
     AngularMaterialModule,
     AllPackageModule
   ],
-  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule],
+  exports: [FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule],
   providers: []
 })
 export class SharedModule { }
