@@ -36,6 +36,12 @@
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="downloadpdf()"><mat-icon>lock_clock</mat-icon><div mat-subheader>User Manual</div></mat-list-item>
             <mat-divider></mat-divider>
+            <mat-list-item matRipple (click)="clearCache()"><mat-icon>cached</mat-icon><div mat-subheader>Clear Cache</div></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item matRipple (click)="clearTemp()"><mat-icon>sync</mat-icon><div mat-subheader>Clear Temp</div></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item matRipple (click)="hardRefresh()"><mat-icon>update</mat-icon><div mat-subheader>Hard Refresh</div></mat-list-item>
+            <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="logOut()"><mat-icon>power_settings_new</mat-icon><div mat-subheader>Log out</div></mat-list-item>
             <mat-divider></mat-divider>
         </mat-list>
@@ -50,3 +56,7 @@
       </div> -->
 
 </section>
+
+<div class="loader-overlay" *ngIf="isPageLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
