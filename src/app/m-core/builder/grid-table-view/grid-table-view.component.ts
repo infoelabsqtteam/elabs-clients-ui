@@ -1537,16 +1537,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-// Grid hide column icon click function
-hideColumn(columns,index: number) {
-  columns[index].display = !columns[index].display;
-}
-
-//copy specific column in grid
-copyColumns(head,headElements,i):void{
-  this.commonFunctionService.copyGridColumnText(head,this.modifyGridData,this.elements)
-}
-
 //copy icon on grid cell
 copyText(value:any){       
   this.commonFunctionService.copyGridCellText(value);

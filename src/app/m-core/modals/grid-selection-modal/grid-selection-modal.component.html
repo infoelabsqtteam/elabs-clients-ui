@@ -41,14 +41,7 @@
                                         <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                     </span>
                                     <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
-                                        <ng-template matMenuContent *ngIf="listOfGridFieldName.length > 0">
-                                        <ul class="m-0">
-                                            <li>
-                                                <button mat-button class="w-100 text-left" color="primary"  (click)="copyColumns(fieldName)"><span class="material-icons mr-2">content_copy</span> Copy Column</button>
-                                                <button mat-button class="w-100 text-left" color="primary"  (click)="hideColumn(listOfGridFieldName,i)"><span class="material-icons mr-2">remove_red_eye</span> Hide</button>
-                                            </li>
-                                        </ul>
-                                       </ng-template>
+                                       <app-grid-column-action-menu  [headElements]="listOfGridFieldName" [data]="modifiedGridData" [i]="i"  [head]="fieldName" ></app-grid-column-action-menu>
                                     </mat-menu>
                                 </div></th>
                         </tr>

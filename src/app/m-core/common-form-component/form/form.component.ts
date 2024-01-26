@@ -3174,17 +3174,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
-  // Grid hide column icon click function
-  hideColumn(columns,index: number) {
-    columns[index].display = !columns[index].display;
-}
-
-//copy specific column in grid
-copyColumns(gridColumns,j,tableField){
-  let tableFieldName=tableField.field_name;
-  this.commonFunctionService.copyGridColumnText(gridColumns[j],this.modifyCustmizedFormValue[tableFieldName])
-}
-  // show all columns icon click function 
 updateColumnList(columns?){
   if(columns) columns.forEach(column=>column.display =true)
 }
