@@ -11,10 +11,9 @@ export class GridColumnActionMenuComponent implements OnInit {
   @Input() headElements:any
   @Input() elements:any
   @Input() data:any
-  @Input() head:any
-  @Input() i:number
+  @Input() index:number
   @Input() sortIcon:String
-  @Input() onSort:(head)=>void;
+  @Input() onSort:(col)=>void;
  
   constructor(
     private commonFunctionService:CommonFunctionService
@@ -24,11 +23,11 @@ export class GridColumnActionMenuComponent implements OnInit {
   }
 
   copyColumns():void{
-    this.commonFunctionService.copyGridColumnText(this.head,this.data,this.elements)
+    this.commonFunctionService.copyGridColumnText(this.headElements[this.index],this.data,this.elements)
   }
  
   hideColumn() {
-    this.headElements[this.i].display = !this.headElements[this.i].display;
+    this.headElements[this.index].display = !this.headElements[this.index].display;
   }
 
 }

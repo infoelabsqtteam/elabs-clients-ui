@@ -936,7 +936,7 @@
                                                             <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                         </span>
                                                         <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
-                                                           <app-grid-column-action-menu  [headElements]="tableField.gridColumns" [data]="modifyCustmizedFormValue[tableField.field_name]" [i]="j"  [head]="tableField.gridColumns[j]" ></app-grid-column-action-menu>
+                                                           <app-grid-column-action-menu  [headElements]="tableField.gridColumns" [data]="modifyCustmizedFormValue[tableField.field_name]" [index]="j"  ></app-grid-column-action-menu>
                                                         </mat-menu>
                                                     </div>
                                                 </th>

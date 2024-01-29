@@ -1,7 +1,7 @@
 <div *ngIf="headElements && headElements.length > 0">
         <ul class="m-0">
             <li>
-                <button *ngIf="sortIcon" mat-button class="w-100 text-left" color="primary"  (click)="onSort(head)"><span><i class="fas fa-sort-alpha-{{sortIcon}} mr-2"></i></span> Sort</button>
+                <button *ngIf="sortIcon" mat-button class="w-100 text-left" color="primary"  (click)="onSort(headElements[index])"><span><i class="fas fa-sort-alpha-{{sortIcon}} mr-2"></i></span> Sort</button>
                 <button mat-button class="w-100 text-left" color="primary"  (click)="copyColumns()"><span class="material-icons mr-2">content_copy</span> Copy Column</button>
                 <button mat-button class="w-100 text-left" color="primary"  (click)="hideColumn()"><span class="material-icons mr-2">remove_red_eye</span> Hide</button>
             </li>
