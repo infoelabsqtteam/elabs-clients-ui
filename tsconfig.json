@@ -2,7 +2,6 @@
   "compileOnSave": true,
   "compilerOptions": {
     "experimentalDecorators": true,
-    "allowJs": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "paths": {
@@ -24,8 +23,8 @@
     ]
   },
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "enableIvy" : true
   }
 }
