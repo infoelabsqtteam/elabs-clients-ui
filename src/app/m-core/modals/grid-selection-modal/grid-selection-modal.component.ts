@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
+import { StorageService,CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
 import { Subscription } from 'rxjs';
 
@@ -83,7 +83,8 @@ export class GridSelectionModalComponent implements OnInit {
     private limsCalculationsService: LimsCalculationsService,
     private filterPipe:FilterPipe,
     private checkIfService:CheckIfService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private storageService:StorageService,
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -473,6 +474,12 @@ export class GridSelectionModalComponent implements OnInit {
     this.field['filterLabel'] = this.gridCommonFunctionService.applyOnGridFilterLabel(this.field);
     if (this.field.gridColumns && this.field.gridColumns.length > 0) {      
       this.listOfGridFieldName = this.gridCommonFunctionService.modifyGridColumns(JSON.parse(JSON.stringify(this.field.gridColumns)),this.parentObject);
+      this.listOfGridFieldName.forEach((field)=>{
+        let ishide = field.hide;
+            if(this.checkHeadExists(field) || ishide && ishide != undefined && ishide != null) {
+              field.display = false;
+            }
+      })
       this.editableGridColumns = this.gridCommonFunctionService.getListByKeyValueToList(this.listOfGridFieldName,"editable",true);
       this.gridViewModalSelection.show();
     } else {
@@ -897,6 +904,18 @@ export class GridSelectionModalComponent implements OnInit {
     fileUploadResponce(response) {
       if(response && response.length > 0) {
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
+      }
+    }
+
+    checkHeadExists(head:any){
+      let existingUserPreferenceData=JSON.parse(<any>this.storageService.getTempGridColumn());
+      if(!existingUserPreferenceData){
+        return false;
+      }
+      else{
+        if(existingUserPreferenceData["preference"].length>0){
+          return existingUserPreferenceData["preference"].includes(head._id)
+        }
       }
     }
   
