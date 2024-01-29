@@ -232,7 +232,7 @@ async updateUserPreference(menu,field,parent){
     this.isPageLoading = false;
     this.notificationService.notify('bg-warning', 'Failed to save data.');
   }
-  this.saveCallSubscribe();
+  // this.saveCallSubscribe();
 }
 // checkFebMenuAddOrNot(menu,parent){
 //   let menuId = menu._id;

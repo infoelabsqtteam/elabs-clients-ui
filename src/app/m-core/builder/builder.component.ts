@@ -416,7 +416,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.isPageLoading = false;
       this.notificationService.notify('bg-warning', 'Failed to save data.');
     }
-    this.saveCallSubscribe();
+    // this.saveCallSubscribe();
   }
 //   checkFebTabAddOrNot(tab) {
 //     const menus = this.storageService.getUserPreference()?.['preferenceMap'] || {};
