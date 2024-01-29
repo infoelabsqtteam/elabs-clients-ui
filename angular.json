@@ -152,8 +152,7 @@
               ]
             }
           },
-          "defaultConfiguration": "",
-          "preserveSymlinks":true
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -241,45 +240,45 @@
               "optimization": {
                 "scripts": false,
                 "styles": true
-              },
-              "develop": {
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.develop.ts"
-                  }
-                ],
-                "sourceMap": false,
-                "optimization": {
-                  "scripts": false,
-                  "styles": true
+              }
+            },
+            "develop": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.develop.ts"
                 }
-              },
-              "sit": {
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.sit.ts"
-                  }
-                ],
-                "sourceMap": false,
-                "optimization": {
-                  "scripts": false,
-                  "styles": true
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            },
+            "sit": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.sit.ts"
                 }
-              },
-              "uat": {
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.uat.ts"
-                  }
-                ],
-                "sourceMap": false,
-                "optimization": {
-                  "scripts": false,
-                  "styles": true
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            },
+            "uat": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
                 }
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
               }
             }
           },
