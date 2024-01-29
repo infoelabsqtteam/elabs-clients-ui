@@ -35,6 +35,10 @@
             <mat-list-item matRipple routerLink="/createpwd"><mat-icon>lock_clock</mat-icon><div mat-subheader>Change Password</div></mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="downloadpdf()"><mat-icon>lock_clock</mat-icon><div mat-subheader>User Manual</div></mat-list-item>
+            <mat-divider></mat-divider>            
+            <!-- <mat-list-item matRipple (click)="clearCache()"><mat-icon>cached</mat-icon><div mat-subheader>Clear Cache & Template</div></mat-list-item>
+            <mat-divider></mat-divider> -->
+            <mat-list-item matRipple (click)="updateUserData()"><mat-icon>update</mat-icon><div mat-subheader>Refresh User Data</div></mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="logOut()"><mat-icon>power_settings_new</mat-icon><div mat-subheader>Log out</div></mat-list-item>
             <mat-divider></mat-divider>
@@ -50,3 +54,7 @@
       </div> -->
 
 </section>
+
+<div class="loader-overlay" *ngIf="isPageLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
