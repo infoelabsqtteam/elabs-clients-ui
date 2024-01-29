@@ -63,10 +63,9 @@
                                                 <span (click)="onSort(headElements[i])" class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
                                                 <span class="show-on-hover">
                                                     <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'"></mdb-icon>
-                                                    <mdb-icon fas icon="eye-slash" [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(headElements,i)"></mdb-icon>
-                                                </span>
                                                 <!-- mat trigger for column filter  -->
-                                                <span [title]="'Advance Filter'"  [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger><mdb-icon class="columsFilterIcon fa-sm" fas icon="filter"></mdb-icon>
+                                                    <mdb-icon [title]="'Advance Filter'" [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger size="sm" fas icon="filter"></mdb-icon>
+                                                    <mdb-icon fas icon="eye-slash" [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(headElements,i)"></mdb-icon>
                                                 </span>
                                                 <!-- mat menu for column filter  -->
                                         <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">

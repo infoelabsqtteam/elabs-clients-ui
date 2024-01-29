@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } fr
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, FormValueService } from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, CoreFunctionService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -36,6 +36,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
 
   filterForm: FormGroup;
+  adFilterForm : FormGroup;
   tabs: any = [];
   public tab: any = [];
   //selectTabIndex: number = 0;
@@ -299,12 +300,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private apiCallService:ApiCallService,
     private checkIfService:CheckIfService,
     private formCreationService:FormCreationService,
-    private FormValueService : FormValueService
+    private coreFunctionService : CoreFunctionService
   ) {
-    this.filterTypeNumber = this.FormValueService.getFilterTypesNumber();
-    this.filterTypeString = this.FormValueService.getFilterTypesString();
-    this.filterTypeDate = this.FormValueService.getFilterTypesDate();
-    
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
       this.setTempData(temp);
@@ -488,6 +485,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   selectedFilterType:string;
   ngOnInit(): void {
+    this.filterTypeNumber = this.coreFunctionService.getOperators('number');
+    this.filterTypeString = this.coreFunctionService.getOperators('string');
+    this.filterTypeDate = this.coreFunctionService.getOperators('date');
   }
 //getFilterKeys Fn
   getFilterTypeKeys(obj: any): string[] {
@@ -1226,7 +1226,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   applyFilter(filterType?:string) {
     this.pageNumber = 1;
-    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,filterType);
+    let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
   }
