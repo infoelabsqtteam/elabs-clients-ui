@@ -24,6 +24,7 @@ import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { SettingMenuComponent } from './setting-menu/setting-menu.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
         PageNotFoundComponent,
         VerifyFailedComponent,
         UserAccountComponent,
-        SettingMenuComponent
+        SettingMenuComponent,
+        SidebarComponent
         ],
         imports :[
             AppRoutingModule,
@@ -47,8 +49,7 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
             AngularMaterialModule,
             AngularCommonModule,
             FormModelModule,
-            ModelModule,
-            AllPackageModule
+            ModelModule
             ],
         exports :[
             AppRoutingModule,
@@ -57,7 +58,8 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
             FooterComponent,
             HeaderLandingPageComponent,
             UserAccountComponent,
-            SettingMenuComponent
+            SettingMenuComponent,
+            SidebarComponent
             ],
         providers:[
         { provide : HTTP_INTERCEPTORS,useClass : AuthInterceptor, multi: true},

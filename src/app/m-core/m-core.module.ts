@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { McoreRoutingModule } from './m-core-routing.module';
 import { CoreModule } from '../core/core.module';
-import { SharedModule } from './shared/shared.module';
 import { DocumentModule } from './document/document.module';
 import { AngularMaterialModule } from './angular-material-module/angular-material.module';
 import { DirectiveModuleModule } from './directive-module/directive-module.module';
@@ -80,8 +79,7 @@ const maskConfig: Partial<IConfig> = {
         McoreRoutingModule,        
         MDBBootstrapModule.forRoot(),         
         NgxMaskModule.forRoot(maskConfig),
-        CoreModule,
-        SharedModule,   
+        CoreModule,           
         DocumentModule,
         AngularMaterialModule,
         DirectiveModuleModule,

@@ -13,7 +13,6 @@ import { AllPackageModule } from '../all-package/all-package.module';
 
 // import { TopbarComponent } from './topbar/topbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { StatComponent } from './stat/stat.component';
 import { AngularMaterialModule } from '../../m-core/angular-material-module/angular-material.module';
 import { NotificationSettingComponent } from './notification-setting/notification-setting.component';
@@ -23,7 +22,7 @@ import { NotificationListComponent } from './notification-list/notification-list
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [FooterComponent, SidebarComponent, StatComponent, NotificationSettingComponent, NotificationListComponent],
+  declarations: [FooterComponent, StatComponent, NotificationSettingComponent, NotificationListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -37,7 +36,7 @@ import { NotificationListComponent } from './notification-list/notification-list
     AngularMaterialModule,
     AllPackageModule
   ],
-  exports: [FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule],
+  exports: [FooterComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule],
   providers: []
 })
 export class SharedModule { }
