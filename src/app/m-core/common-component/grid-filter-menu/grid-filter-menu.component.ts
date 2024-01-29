@@ -10,9 +10,6 @@ export class GridFilterMenuComponent implements OnInit{
   @Input() columns: any;
   @Input() form: any;
   @Input() formTable: any;
-  loading=false;
-  responseData=undefined
-
 
   constructor(
     private storageService: StorageService,
@@ -33,45 +30,27 @@ export class GridFilterMenuComponent implements OnInit{
     }
   }
 
-  createReferenceObject(obj:any){
-    let ref:any = {}
-    ref["_id"]=obj._id;
-    ref["name"] = obj.name;
-    if(obj.version != null){
-      ref["version"] = obj.version
-    }
-    return ref;
-  }
-
-  checkHeadExists(head:any){
-    let preferenceData=localStorage.getItem("preference");
-    if(!preferenceData){
-      return false;
-    }
-    else{
-      preferenceData=JSON.parse(localStorage.getItem("preference"))
-      if(preferenceData.length>0){
-        return preferenceData.includes(head._id)
-      }
-    }
-  }
-
   createPayload(columns: any[]){
     let data={
       columns,
       form:this.form,
       formTable:this.formTable
     }
-   this.updateUserPreference(data,"preference")
+    let formId="";
+    let formFieldName="";
+    if(this.form && this.formTable){
+      formId=this.form._id;
+      formFieldName=this.formTable.field_name;
+    }
+    this.updateUserPreference(data,"preference",formId,formFieldName,columns)
   }
 
-  async updateUserPreference(data,field){
+  async updateUserPreference(data,field,formId,formFieldName,columns){
     let response = await this.userPrefrenceService.updateUserPreference(data,field);
     if (response?.success) {
-      // this.isPageLoading = false;
+      this.userPrefrenceService.addHideKeyInExistingTab(columns,formId,formFieldName);
       this.notificationService.notify('bg-success', 'Column Field updated successfully!');
     } else {
-      // this.isPageLoading = false;
       this.notificationService.notify('bg-warning', 'Failed to save data.');
     }
   }

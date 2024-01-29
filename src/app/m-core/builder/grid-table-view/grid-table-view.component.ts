@@ -480,11 +480,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    this.headElements.forEach((column:any) => {      //check userpreference 
-      if(this.checkHeadExists(column) || column?.hide ){
-          column.display=false
-      }
-    });
   }
 
   checkHeadExists(head:any){
@@ -667,11 +662,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
             let fieldName = element.field_name;
             let mandatory = false;
             let disabled = false;
-            let ishide = element.hide;
-            if(ishide && ishide != undefined && ishide != null) {
-              element.display = !ishide;
-            }
-
             switch (element.type.toLowerCase()) {
               case "text":
               case "info":
@@ -1556,8 +1546,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.menuTopLeftPosition.y = event.clientY + 'px';  
       this.matMenuTrigger.menuData = {item: index}
       this.matMenuTrigger.openMenu(); 
-      console.log("object");
-      console.log(this.matMenuTrigger);
   }
 
 // Grid hide column icon click function

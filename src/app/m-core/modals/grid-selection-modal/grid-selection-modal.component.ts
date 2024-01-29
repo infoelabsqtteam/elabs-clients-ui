@@ -474,12 +474,6 @@ export class GridSelectionModalComponent implements OnInit {
     this.field['filterLabel'] = this.gridCommonFunctionService.applyOnGridFilterLabel(this.field);
     if (this.field.gridColumns && this.field.gridColumns.length > 0) {      
       this.listOfGridFieldName = this.gridCommonFunctionService.modifyGridColumns(JSON.parse(JSON.stringify(this.field.gridColumns)),this.parentObject);
-      this.listOfGridFieldName.forEach((field)=>{
-        let ishide = field.hide;
-            if(this.checkHeadExists(field) || ishide && ishide != undefined && ishide != null) {
-              field.display = false;
-            }
-      })
       this.editableGridColumns = this.gridCommonFunctionService.getListByKeyValueToList(this.listOfGridFieldName,"editable",true);
       this.gridViewModalSelection.show();
     } else {
