@@ -74,6 +74,24 @@
                                         <div *ngIf="fieldName.type.toLowerCase() == 'number'">
                                             <input  type="number" style="min-width: 50px;" step="any" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                         </div>
+                                        <div *ngIf="fieldName.type == 'date'">
+                                            <mat-form-field appearance="outline" class="w-100">
+                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                                <input matInput [matDatepicker]="picker" (keyup)="calculateNetAmount(fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="fieldName.type == 'time'">
+                                            <!-- <input type="time" class="form-control form-control-sm" (keyup)="calculateNetAmount(fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']"> -->
+                                            
+                                            <mat-form-field appearance="outline" class="w-100">
+                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" (keyup)="calculateNetAmount(fieldName, i)" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                            </mat-form-field>
+
+                                        </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                                 <mat-chip-list #chipList aria-label="Item selection">
