@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CommonFunctionService, ModelService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-permission-tree-controls',
@@ -23,11 +24,17 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     {"field_name":"operator","label":"Operator"},
     {"field_name":"fValue","label":"Field Value"}
   ]
+  staticDataSubscription:Subscription;
+  staticData:any={};
+
 
   constructor(
     private modalService:ModelService,
     private fb:FormBuilder,
-    private commonFunctionService:CommonFunctionService
+    private commonFunctionService:CommonFunctionService,
+    private dataShareServices:DataShareService,
+    private apiCallService:ApiCallService,
+    private apiService:ApiService
   ) { }
 
   ngOnInit() {
@@ -52,12 +59,25 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   get crListContral(){
     return this.criteria.controls['crList'];
   }
-  showModal(alert){  
-    if(alert && alert['crList']){
-      this.ListOfCrList = alert['crList'];
+  showModal(alert){ 
+    let data = {};
+    let tab = {};
+    let criteria = {};
+    if(alert && alert.reference){
+      tab = alert.reference;
+      data['tab'] = tab;
+    } 
+    if(alert && alert.criteria){
+      criteria = alert.criteria;
+    }
+    if(criteria && criteria['crList']){
+      this.ListOfCrList = criteria['crList'];
     }else{
       this.reset();
     }
+    this.subscribeStaticData();
+    let payload = this.apiCallService.getPaylodWithCriteria("QTMP:GET_GRID_OR_FORM_FIELDS_BY_TAB","",[],data);
+    this.apiService.getStatiData([payload]);
     this.permissionControl.show();    
   } 
   reset(){
@@ -67,11 +87,29 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     this.deleteIndex = -1;
     this.ListOfCrList=[];
   }
-
+  subscribeStaticData(){
+    this.staticDataSubscription = this.dataShareServices.staticData.subscribe(value => {
+      this.setStaticData(value);
+    });
+  }
+  setStaticData(data:any){
+    if(data && typeof data == "object" && Object.keys(data).length > 0){
+      Object.keys(data).forEach(key => {
+        this.staticData[key] = data[key];
+      });
+    }    
+  }
+  unsbuscribeStaticData(){
+    if(this.staticDataSubscription){
+      this.staticDataSubscription.unsubscribe();
+    }
+  }
   closeModal(){    
     this.close();
   }
   close(){
+    this.unsbuscribeStaticData();
+    this.staticData = {};
     this.permissionControl.hide();
     this.reset();
   }
@@ -109,6 +147,16 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       this.ListOfCrList.splice(this.deleteIndex,1);
       this.deleteIndex = -1;
     }
+  }
+  compareObjects(o1: any, o2: any): boolean {
+    if(o1 != null && o2 != null){
+      return o1._id === o2._id;
+    }else{
+      return false;
+    }    
+  }
+  setValue(){
+
   }
 
 }

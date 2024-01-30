@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges, Inject } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService } from '@core/web-core';
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
+import { DOCUMENT } from "@angular/common";
+import { MatSidenav } from "@angular/material/sidenav";
 
 
 @Component({
@@ -15,6 +17,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
   @Input() public pageName;
     @Input() moduleIndex: any;
+    @Input() rightsidenav : MatSidenav;
+    isPageLoading:boolean = false;
 
     subscription: any;
     menuDataSubscription;
@@ -104,7 +108,9 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         private notificationService: NotificationService,
         public envService: EnvService,
         private menuOrModuleCommounService:MenuOrModuleCommonService,
-        private apiCallService:ApiCallService
+        private apiCallService:ApiCallService,
+        @Inject(DOCUMENT) private document: Document,
+        private authDataService:AuthDataShareService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -324,9 +330,9 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     getMenuByModule() {
         this.AllModuleList = this.storageService.GetModules();
-        if (this.moduleIndex != -1) {
+        if (this.moduleIndex && this.moduleIndex != -1) {
             const module = this.AllModuleList[this.moduleIndex]
-            if (module.menu_list != undefined && module.menu_list != null) {
+            if (module && module.menu_list) {
                 this.menuData = module.menu_list;
                 const menu = this.menuData[0];
                 if (menu && menu.submenu) {
@@ -809,4 +815,60 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             this.router.navigate([value]);
         }
     }
+    async clearCache() {
+        this.isPageLoading = true;
+        try {
+            let response:any = await this.apiService.clearCache();
+            if (response?.status === 200) {
+                this.isPageLoading = false;
+                this.notificationService.notify("bg-success", response?.error?.text);
+                this.clearTemp();
+            } else {
+                this.isPageLoading = false;
+                this.notificationService.notify("bg-danger", "Server Cache Clear Failed !!!");
+            }
+          } catch (error) {
+            this.isPageLoading = false;
+            this.notificationService.notify("bg-danger", "Server Cache Clear Failed !!!");
+          }
+        }
+    async clearTemp() {
+        this.isPageLoading = true;
+        try {
+            let response:any = await this.apiService.clearTemplate();
+            if (response?.status === 200) {
+                this.isPageLoading = false;
+                this.notificationService.notify("bg-success", "Template cleared successfully !!!");
+                this.rightsidenav.toggle();
+            } else {
+                this.isPageLoading = false;
+                this.notificationService.notify("bg-danger", "Server Template Clear Failed !!!");
+            }
+          } catch (error) {
+            this.isPageLoading = false;
+            this.notificationService.notify("bg-danger", "Server Template Clear Failed !!!");
+          }
+    }
+    updateUserData(){
+        this.isPageLoading = true;
+        let user = this.storageService.GetUserInfo();
+        let mydocument:any = this.document;
+        this.storageService.setRedirectUrl(mydocument.location['pathname']);
+        let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
+        list.forEach((key:string)=>{
+            this.storageService.removeKeyFromStorage(key);
+        })
+        this.authService.GetUserInfoFromToken(user);
+        this.subscribeGetUserInfo()
+    }
+
+    subscribeGetUserInfo(){
+        this.authDataService.userInfo.subscribe(data =>{
+        this.isPageLoading = false;
+        this.notificationService.notify("bg-success", "User Data successfully updated !!!");
+        this.rightsidenav.toggle();
+        })
+    }
+
+
 }

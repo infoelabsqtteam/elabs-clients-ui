@@ -15,7 +15,7 @@
             <mat-checkbox class="checklist-leaf-node"
                           [checked]="checklistSelection.isSelected(node)"
                           (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-                          <button *ngIf="checklistSelection.isSelected(node)"  mat-icon-button (click)="addRollPermissionTabWise(node)" class="plusicon" [matTooltip]="'Add Filter'" [matTooltipPosition]="'above'"><mat-icon class="material-icons text-cerulean">filter_list</mat-icon></button>
+                          <!-- <button *ngIf="checklistSelection.isSelected(node)"  mat-icon-button (click)="addRollPermissionTabWise(node)" class="plusicon" [matTooltip]="'Add Filter'" [matTooltipPosition]="'above'"><mat-icon class="material-icons text-cerulean">filter_list</mat-icon></button> -->
           </mat-tree-node>
         
           <!-- <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
@@ -37,7 +37,7 @@
             <mat-checkbox class="mr-1" [checked]="descendantsAllSelected(node)"
                           [indeterminate]="descendantsPartiallySelected(node)"
                           (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-            <span class="favibtn cursor-pointer all-sign" *ngIf="descendantsAllSelected(node)" [ngClass]="{'active': descendantsAllSelected(node)}" [matTooltip]="'All Selected'" [matTooltipPosition]="'above'"><mat-icon class="mat-icon-rtl-mirror">grade</mat-icon></span>
+            <!-- <span class="favibtn cursor-pointer all-sign" *ngIf="descendantsAllSelected(node)" [ngClass]="{'active': descendantsAllSelected(node)}" [matTooltip]="'All Selected'" [matTooltipPosition]="'above'"><mat-icon class="mat-icon-rtl-mirror">grade</mat-icon></span> -->
             <!-- <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button> -->
           </mat-tree-node>
         </mat-tree>   

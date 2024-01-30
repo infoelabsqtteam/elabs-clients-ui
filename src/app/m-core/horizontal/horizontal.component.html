@@ -8,7 +8,7 @@
   
   
   <mat-drawer-container>
-    <mat-drawer #rightsidenav mode="over" position="end"><app-setting-menu></app-setting-menu></mat-drawer>
+    <mat-drawer #rightsidenav mode="over" position="end"><app-setting-menu [rightsidenav]="rightsidenav"></app-setting-menu></mat-drawer>
     <div class="pt-3">
       <router-outlet></router-outlet>
       <app-footer></app-footer>

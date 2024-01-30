@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Inject, ViewChild} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild} from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -14,10 +14,10 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class VerticalComponent implements OnInit {
   @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
   //moduleIndex : any = -1;
-  dashbordPage:boolean=false;
+  // dashbordPage:boolean=false;
   navigationSubscription;
   applicationSettingSubscription:Subscription;
-  logoPath;any = '';
+  logoPath:any = '';
  
 
 
@@ -43,64 +43,55 @@ export class VerticalComponent implements OnInit {
         this.pageload();
       }
     })
-    this.navigationSubscription = this.router.events.subscribe((e: any) => {
-      // If it is a NavigationEnd event re-initalise the component
-      if (e instanceof NavigationEnd) {
-        this.initialiseInvites();
-      }
-    });
+    // this.navigationSubscription = this.router.events.subscribe((e: any) => {
+    //   // If it is a NavigationEnd event re-initalise the component
+    //   if (e instanceof NavigationEnd) {
+    //     this.initialiseInvites();
+    //   }
+    // });
    }
 
   ngOnInit(): void {
-    document.body.setAttribute('data-sidebar', 'dark');
-    document.body.removeAttribute('data-layout-size');
-    document.body.removeAttribute('data-layout');
-    document.body.removeAttribute('data-topbar');
-    document.body.classList.remove('auth-body-bg');
-    const routIndex = window.location.href.indexOf("/dashboard");
-    if ( routIndex != -1){
-      // this.router.navigate(['download-report'])
-      this.dashbordPage=true;
-    }else{
-      this.dashbordPage=false;
-    }
+    // document.body.setAttribute('data-sidebar', 'dark');
+    // document.body.removeAttribute('data-layout-size');
+    // document.body.removeAttribute('data-layout');
+    // document.body.removeAttribute('data-topbar');
+    // document.body.classList.remove('auth-body-bg');
+    // const routIndex = window.location.href.indexOf("/dashboard");
+    // if ( routIndex != -1){
+    //   // this.router.navigate(['download-report'])
+    //   this.dashbordPage=true;
+    // }else{
+    //   this.dashbordPage=false;
+    // }
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  initialiseInvites() {    
-    // Set default values and re-fetch any data you need.
-    const routIndex = window.location.href.indexOf("/dashboard");
-    if ( routIndex != -1){
-      // this.router.navigate(['download-report'])
-      this.dashbordPage=true;
-    }else{
-      this.dashbordPage=false;
-    }
+  // initialiseInvites() {    
+  //   // Set default values and re-fetch any data you need.
+  //   const routIndex = window.location.href.indexOf("/dashboard");
+  //   if ( routIndex != -1){
+  //     // this.router.navigate(['download-report'])
+  //     this.dashbordPage=true;
+  //   }else{
+  //     this.dashbordPage=false;
+  //   }
     
-  }
+  // }
   /**
    * On mobile toggle button clicked
    */
-  onToggleMobileMenu() {
-    document.body.classList.toggle('sidebar-enable');
-    document.body.classList.toggle('vertical-collpsed');
+  // onToggleMobileMenu() {
+  //   document.body.classList.toggle('sidebar-enable');
+  //   document.body.classList.toggle('vertical-collpsed');
 
-    if (window.screen.width <= 768) {
-      document.body.classList.remove('vertical-collpsed');
-    }
-  }
-  // changeModul(moduleIndex){
-  //   this.moduleIndex = moduleIndex;
-  //   if(this.moduleIndex != -1) {
-  //     this.dataShareService.sendCurrentPage('DASHBOARD')
+  //   if (window.screen.width <= 768) {
+  //     document.body.classList.remove('vertical-collpsed');
   //   }
   // }
-  // goToHome(){
-  //   this.moduleIndex = -1;
-  // } 
   pageload(){
     this.logoPath = this.storageService.getLogoPath() + "logo.png";
   }
