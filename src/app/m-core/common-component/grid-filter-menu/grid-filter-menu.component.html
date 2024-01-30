@@ -7,7 +7,7 @@
           </button>
       </li>
       <li *ngFor="let head of columns; let i = index">
-        <mat-checkbox [ngClass]="head.display ? 'd-table-cell':'d-none'"
+        <mat-checkbox
           [(ngModel)]="head.display"
           [color]="'primary'"
           (ngModelChange)="showHide()"
