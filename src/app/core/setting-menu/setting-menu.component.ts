@@ -330,7 +330,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     getMenuByModule() {
         this.AllModuleList = this.storageService.GetModules();
-        if (this.moduleIndex != -1) {
+        if (this.moduleIndex && this.moduleIndex != -1) {
             const module = this.AllModuleList[this.moduleIndex]
             if (module && module.menu_list) {
                 this.menuData = module.menu_list;
@@ -819,10 +819,10 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.isPageLoading = true;
         try {
             let response:any = await this.apiService.clearCache();
-            console.log(response);
             if (response?.status === 200) {
                 this.isPageLoading = false;
                 this.notificationService.notify("bg-success", response?.error?.text);
+                this.clearTemp();
             } else {
                 this.isPageLoading = false;
                 this.notificationService.notify("bg-danger", "Server Cache Clear Failed !!!");
@@ -836,11 +836,10 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.isPageLoading = true;
         try {
             let response:any = await this.apiService.clearTemplate();
-            console.log(response);
-
             if (response?.status === 200) {
                 this.isPageLoading = false;
                 this.notificationService.notify("bg-success", "Template cleared successfully !!!");
+                this.rightsidenav.toggle();
             } else {
                 this.isPageLoading = false;
                 this.notificationService.notify("bg-danger", "Server Template Clear Failed !!!");
@@ -850,16 +849,16 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             this.notificationService.notify("bg-danger", "Server Template Clear Failed !!!");
           }
     }
-    hardRefresh(){
+    updateUserData(){
         this.isPageLoading = true;
+        let user = this.storageService.GetUserInfo();
         let mydocument:any = this.document;
         this.storageService.setRedirectUrl(mydocument.location['pathname']);
         let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
         list.forEach((key:string)=>{
             this.storageService.removeKeyFromStorage(key);
         })
-        let user = this.storageService.GetUserInfo()
-        this.authService.GetUserInfoFromToken(user)
+        this.authService.GetUserInfoFromToken(user);
         this.subscribeGetUserInfo()
     }
 
