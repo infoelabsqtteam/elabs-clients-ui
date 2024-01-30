@@ -30,7 +30,7 @@ export class GridFilterMenuComponent implements OnInit{
     }
   }
 
-  createPayload(columns: any[]){
+  saveColumns(columns: any[]){
     let data={
       columns,
       form:this.form,

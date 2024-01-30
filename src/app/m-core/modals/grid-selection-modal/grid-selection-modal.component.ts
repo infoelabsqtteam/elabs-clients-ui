@@ -901,17 +901,6 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }
 
-    checkHeadExists(head:any){
-      let existingUserPreferenceData=JSON.parse(<any>this.storageService.getTempGridColumn());
-      if(!existingUserPreferenceData){
-        return false;
-      }
-      else{
-        if(existingUserPreferenceData["preference"].length>0){
-          return existingUserPreferenceData["preference"].includes(head._id)
-        }
-      }
-    }
   
 }
 
