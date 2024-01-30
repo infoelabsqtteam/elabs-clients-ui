@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild} from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DataShareService, StorageService, MenuOrModuleCommonService } from '@core/web-core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class VerticalComponent implements OnInit {
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
+  @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
 
   constructor(
     private router: Router,
