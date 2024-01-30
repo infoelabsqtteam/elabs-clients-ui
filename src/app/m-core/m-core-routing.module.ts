@@ -4,7 +4,6 @@ import { McoreComponent } from './m-core.component'
 
 import { HomeComponent } from './home/home.component';
 import { BuilderComponent } from './builder/builder.component';
-import { SortTestComponent } from './sort-test/sort-test.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { PermissionsComponent } from './permissions/permissions.component'
 import { QuoteComponent } from './quote/quote.component';
@@ -27,7 +26,6 @@ const elabsRoutes : Routes = [
                 { path : 'browse/:moduleId/:menuId/:tabid', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'browse/:moduleId/:menuId/:tabid/:rowId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'pbl/:action/:key1/:key2/:key3', component:BuilderComponent },
-                { path : 'sort', component: SortTestComponent },
                 { path : 'Navigation', component: NavigationComponent },
                 { path : 'permissions', component: PermissionsComponent },
                 { path : 'quote', component: QuoteComponent },
