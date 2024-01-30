@@ -24,7 +24,6 @@ import { ChatViewComponent } from './builder/chat-view/chat-view.component';
 import { GmapViewComponent } from './builder/gmap-view/gmap-view.component';
 import { TreeViewComponent } from './builder/tree-view/tree-view.component';
 
-import { SortTestComponent } from './sort-test/sort-test.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { QuoteComponent } from './quote/quote.component';
@@ -54,11 +53,9 @@ const maskConfig: Partial<IConfig> = {
         McoreComponent,
         HomeComponent,
         BuilderComponent,
-        SortTestComponent,
         NavigationComponent,
         PermissionsComponent,
-        QuoteComponent,
-        SortTestComponent,        
+        QuoteComponent,       
         AdminComponent,
         TreeViewComponent,        
         SchedulingDashboardComponent,     
