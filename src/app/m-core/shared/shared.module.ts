@@ -15,14 +15,12 @@ import { AllPackageModule } from '../all-package/all-package.module';
 import { FooterComponent } from './footer/footer.component';
 import { StatComponent } from './stat/stat.component';
 import { AngularMaterialModule } from '../../m-core/angular-material-module/angular-material.module';
-import { NotificationSettingComponent } from './notification-setting/notification-setting.component';
-import { NotificationListComponent } from './notification-list/notification-list.component';
 
 
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [FooterComponent, StatComponent, NotificationSettingComponent, NotificationListComponent],
+  declarations: [FooterComponent, StatComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

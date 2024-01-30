@@ -15,8 +15,8 @@ import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { DriveHomeComponent } from './document/drive-home/drive-home.component';
 import { PageNotFoundComponent } from '../core/error/page-not-found.component';
 import { ReportFormComponent } from './report/report-form/report-form.component';
-import { NotificationSettingComponent } from './shared/notification-setting/notification-setting.component';
-import { NotificationListComponent } from './shared/notification-list/notification-list.component';
+import { NotificationSettingComponent } from './notification/notification-setting/notification-setting.component';
+import { NotificationListComponent } from './notification/notification-list/notification-list.component';
 import { AuthGuard } from '@core/web-core';
 
 const elabsRoutes : Routes = [
@@ -41,7 +41,7 @@ const elabsRoutes : Routes = [
                 { path : 'notification-setting', component: NotificationSettingComponent },
                 { path : 'notification-list', component: NotificationListComponent },
                 { path : 'notification/:moduleId/:menuId/:subMenuId/:tabId/:formName/:recordId', component: BuilderComponent },
-                { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
+                { path : '**', pathMatch: 'full', component: PageNotFoundComponent },
             ],
             runGuardsAndResolvers: 'always'
         },

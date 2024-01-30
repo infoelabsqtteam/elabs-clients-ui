@@ -34,11 +34,10 @@ import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { SchedulingDashboardComponent } from './scheduling-dashboard/scheduling-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
-import { VerticalComponent } from './vertical/vertical.component';
-import { HorizontalComponent } from './horizontal/horizontal.component';
 import { AngularCommonModule } from './angular-common/angular-common.module';
 import { ReportModule } from './report/report.module';
 import { CommonFormComponentModule } from './common-form-component/common-form-component.module';
+import { NotificationModule } from './notification/notification.module';
 
 
 
@@ -66,9 +65,7 @@ const maskConfig: Partial<IConfig> = {
         GridTableViewComponent,
         GridCardViewComponent,        
         ChartViewComponent, 
-        InlineFormViewComponent,        
-        VerticalComponent, 
-        HorizontalComponent, 
+        InlineFormViewComponent, 
         AdminDashboardComponent, 
         SidebarSearchComponent, 
         ChatViewComponent,          
@@ -89,7 +86,8 @@ const maskConfig: Partial<IConfig> = {
         FormModelModule,
         AllPackageModule,
         AngularCommonModule,
-        ReportModule
+        ReportModule,
+        NotificationModule
     ]
 
 })
