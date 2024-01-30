@@ -197,7 +197,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showGridData:any={};
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
-  
   headerFiledsData = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
@@ -3175,14 +3174,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
-  // Grid hide column icon click function
-  hideColumn(columns,index: number) {
-    columns[index].display = !columns[index].display;
-}
-  // show all columns icon click function 
 updateColumnList(columns?){
   if(columns) columns.forEach(column=>column.display =true)
 }
+
+//copy icon on grid cell
+copyText(value:any){       
+  this.commonFunctionService.copyGridCellText(value);
+}
+
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 

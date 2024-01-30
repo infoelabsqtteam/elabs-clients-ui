@@ -194,10 +194,6 @@ export class GridSelectionModalComponent implements OnInit {
   //   }
   // }
 
-  //Hide Icon Click Function 
-  hideColumn(columns,index: number) {
-    columns[index].display = !columns[index].display;
-}
   add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
     if(event && event.value){
@@ -895,6 +891,11 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
       }
     }
+    //copy icon on grid cell
+    copyText(value:any){    
+      this.CommonFunctionService.copyGridCellText(value);
+    }
+
   
 }
 
