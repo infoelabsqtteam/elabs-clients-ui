@@ -229,3 +229,4 @@ td{.copyicon {position: absolute;right: 0;cursor: pointer;margin-inline: 5px;bor
     &:hover .copyField{width: 75%;}}
 
 td{&:hover{.copyField{width: 75% !important;}}}
+.notAllow{cursor: no-drop !important;}

@@ -5,7 +5,7 @@
           <button mat-menu-item class="d-flex justify-content-center border mr-2" (click)="updateColumnList()">
             Show All
           </button>
-          <button mat-menu-item class="d-flex justify-content-center border " (click)="saveColumns(columns)">
+          <button mat-menu-item class="d-flex justify-content-center border " [ngClass]="{'notAllow':allCheck }" (click)="saveColumns(columns)">
             Save
           </button>
       </li>
@@ -13,7 +13,7 @@
         <mat-checkbox
           [(ngModel)]="head.display"
           [color]="'primary'"
-          (ngModelChange)="showHide()"
+          (ngModelChange)="checkColumnList(columns)"
           (click)="$event.stopPropagation()"
         >
           {{ head.label }}
