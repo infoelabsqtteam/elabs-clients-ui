@@ -699,6 +699,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
         if (forControl) {
           this.filterForm = this.formBuilder.group(forControl);
+          this.adFilterForm = this.formBuilder.group(forControl);
         }
         
         const staticModalGroup = this.apiCallService.commanApiPayload(this.headElements,[],[]);      
@@ -1224,11 +1225,19 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.orderBy = '-';
     }
   }
-  applyFilter(filterType?:string) {
+  applyFilter() {
     this.pageNumber = 1;
     let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
+  }
+  applyAdFilter(filterType){
+    if(filterType!=''){
+      console.log(this.adFilterForm.getRawValue());
+    }
+  }
+  clearAdFilter(){
+    this.adFilterForm.reset();
   }
 
   getGridPayloadData(pagePayload:any) {  

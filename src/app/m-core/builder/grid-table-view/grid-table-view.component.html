@@ -69,7 +69,7 @@
                                                 </span>
                                                 <!-- mat menu for column filter  -->
                                         <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                            <div (click)="$event.stopPropagation()" class="filter-flex-container" [formGroup]="filterForm">
+                                            <div (click)="$event.stopPropagation()" class="filter-flex-container" [formGroup]="adFilterForm">
                                                 <mat-label class="ad-filter-label">Advance Filter</mat-label>
                                                 <div class="filter-flex-item "
                                                     *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
@@ -123,10 +123,10 @@
                                                     </mat-form-field>
                                                 </ng-container>
                                                 <div class="modal-footer justify-content-end filter-flex-item">
-                                                    <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn (click)="clearFilter(head.field_name,head.type)">
+                                                    <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn (click)="clearAdFilter()">
                                                         Cancel
                                                     </button>
-                                                    <button class="noshadow rounded bg-cerulean text-white btn-sm btn" (click)="applyFilter(selectedFilterType)" mdbbtn>Filter</button>
+                                                    <button class="noshadow rounded bg-cerulean text-white btn-sm btn" (click)="applyAdFilter(selectedFilterType)" mdbbtn>Filter</button>
                                                 </div>
                                             </div>
                                         </mat-menu>   
