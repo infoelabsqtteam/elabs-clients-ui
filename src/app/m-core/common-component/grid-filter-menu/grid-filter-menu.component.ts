@@ -31,6 +31,11 @@ export class GridFilterMenuComponent implements OnInit{
   }
 
   saveColumns(columns: any[]){
+    const unCheckedFields=columns.filter((col:any)=>col.display==false);
+    if(columns && columns.length == unCheckedFields.length){
+      this.notificationService.notify('bg-warning', 'Atleast select one field');
+      return;
+    }
     let data={
       columns,
       form:this.form,
