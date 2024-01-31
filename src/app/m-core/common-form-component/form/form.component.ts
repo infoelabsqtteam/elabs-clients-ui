@@ -58,7 +58,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   showSidebar:boolean = false;  
   showNotify: boolean = false;
   currentMenu: any;
-  currentForm:any
   //formSaveBtn: boolean = false;
   //formUpdateBtn: boolean = false;
   //formDeleteBtn: boolean = false;
@@ -645,7 +644,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.grid_view_mode = templateData['grid_view_mode'];
       this.form = templateData['form'];
       this.forms = templateData['forms'];
-      this.currentForm=this.form;      //for getting current form details
       if(this.form && Object.keys(this.forms).length > 0 && this.formName != ''){
         this.setForm();
       }else{
@@ -1289,7 +1287,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           "field": this.curTreeViewField,
           "selectedData":selectedData,
           "object": formValueWithCustomData,
-          "currentForm":this.currentForm
+          "currentForm":this.form
         }
         this.modalService.open('grid-selection-modal', gridModalData);
         break;

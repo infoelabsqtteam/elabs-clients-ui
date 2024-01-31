@@ -482,8 +482,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   ngOnInit(): void {
   }
-
-
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
