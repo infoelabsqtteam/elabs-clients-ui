@@ -25,7 +25,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
   htmlViewConfig:AngularEditorConfig = htmlViewConfig as AngularEditorConfig;
   tinymceConfig = {} 
-
+  tinymceapikey = Common.TINYMICAPIKEY; 
   templateForm: FormGroup;
 
   //@Output() filledFormData = new EventEmitter();
@@ -2356,9 +2356,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         payloads.push(this.apiCallService.getPaylodWithCriteria(this.curTreeViewField.onchange_function_param,'',[],this.getFormValue(true)));
         this.callStaticData(payloads);
       }
-    }
+    }    
     this.modifyCustmizedValue(fieldName);
-    
     this.curTreeViewField = {};
     this.currentTreeViewFieldParent = {};
   }
