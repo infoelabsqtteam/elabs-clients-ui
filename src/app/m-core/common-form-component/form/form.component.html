@@ -630,7 +630,7 @@
                                                 <div class="grid-selection-title">{{ fields.label | titlecase}}</div>
                                             </div>
                                             <div class="col-lg-12">
-                                                <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
+                                                <editor [apiKey]="tinymceapikey" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
                                             </div>
                                         </div>
                                     </div>
@@ -790,7 +790,7 @@
                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <editor apiKey="iao4rl1otk4n9or5nn6wkyo63ni2jxiud9ul5tkh6dxibdb2" [formControlName]="tableField.field_name" [init]="tinymceConfig"></editor>
+                                    <editor [apiKey]="tinymceapikey" [formControlName]="tableField.field_name" [init]="tinymceConfig"></editor>
                                 </div>
                             </div>
                         </div>
@@ -1605,7 +1605,7 @@
                                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                                 </div>
                                                 <div class="col-lg-12">
-                                                    <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
+                                                    <editor [apiKey]="tinymceapikey" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
                                                 </div>
                                             </div>
                                         </div>
