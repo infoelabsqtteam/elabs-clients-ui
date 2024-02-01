@@ -736,8 +736,9 @@
                                                     <a *ngIf="listOfField['actionBtnDisplay']" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,listOfField,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                                                 </td>
                                                 <td *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''" (click)="showListOfFieldData(tableField,i, item)" class="copyIconContainer">
-                                                    <span class="grid-coloumn-nowrap copyField">{{listOfField[item.field_name]}}</span>
-                                                    <span *ngIf="listOfField[item.field_name]!='' && listOfField[item.field_name]!=undefined && item.type!='info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
+                                                    <span *ngIf="item.type!='typeahead'" class="copyField" >{{listOfField[item.field_name]}}</span>
+                                                    <span *ngIf="item.type=='typeahead'"  [innerHtml]="listOfField[item.field_name]"></span>
+                                                    <span *ngIf="listOfField[item.field_name]!='' && listOfField[item.field_name]!=undefined && item.type!='info' && item.type!='typeahead'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
                                                 </td>                                                
                                             </tr>
                                         </tbody>
@@ -836,8 +837,14 @@
                                             <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" class="border">
                                                 
                                                 <td *ngFor="let fieldName of tableField.fields" >
-                                                    <div class="grid-data" [style.width]="fieldName.width">
-                                                        <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name] && data[fieldName.field_name].name?data[fieldName.field_name].name:data[fieldName.field_name]"></span>
+                                                    <div class="grid-data copyIconContainer" [style.width]="fieldName.width">
+                                                        <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  *ngIf="data[fieldName.field_name] && data[fieldName.field_name]?.name">
+                                                        <span class="copyField">{{data[fieldName.field_name].name}}</span>
+                                                        <span *ngIf="data[fieldName.field_name].name!='' && data[fieldName.field_name].name!=undefined && fieldName.type!='info' && fieldName.type!='typeahead'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name].name)" >content_copy</span> 
+                                                        </span>
+                                                        <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  *ngIf="data[fieldName.field_name] && !data[fieldName.field_name]?.name">
+                                                        <span class="copyField">{{data[fieldName.field_name]}}</span>
+                                                        <span *ngIf="data[fieldName.field_name]!='' && data[fieldName.field_name]!=undefined && fieldName.type!='info' && fieldName.type!='typeahead'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >content_copy</span>                                                  </span>
                                                     </div>
                                                 </td>
                                             </tr>
