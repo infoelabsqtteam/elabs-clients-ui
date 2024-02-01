@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
+import { StorageService,CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
 import { Subscription } from 'rxjs';
 
@@ -50,6 +50,7 @@ export class GridSelectionModalComponent implements OnInit {
   editEnable:boolean=false;
   selectedDataLength:number=0;
   buttonlabel:any;
+  currentForm:any;
 
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
@@ -82,7 +83,8 @@ export class GridSelectionModalComponent implements OnInit {
     private limsCalculationsService: LimsCalculationsService,
     private filterPipe:FilterPipe,
     private checkIfService:CheckIfService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private storageService:StorageService,
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -448,6 +450,9 @@ export class GridSelectionModalComponent implements OnInit {
     this.field = alert.field;
     if (alert.object) {
       this.parentObject = alert.object;
+    }
+    if(alert.currentForm){
+      this.currentForm=alert.currentForm
     }
     if(this.field && this.field.grid_selection_button_label != null && this.field.grid_selection_button_label != ''){
       this.buttonlabel = this.field.grid_selection_button_label;

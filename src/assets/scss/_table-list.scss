@@ -102,10 +102,10 @@ table,table td{
 					left: 0px !important;
 						.resize-holder {
 							cursor: col-resize;
-							width: 20px;
+							width: 5px;
 							height: 100%;
 							position: absolute;
-							right: -10px;
+							right: 0px;
 							top: 0;
 							z-index: 1;
 						}
@@ -229,3 +229,4 @@ td{.copyicon {position: absolute;right: 0;cursor: pointer;margin-inline: 5px;bor
     &:hover .copyField{width: 75%;}}
 
 td{&:hover{.copyField{width: 75% !important;}}}
+.notAllow{cursor: no-drop !important;}
