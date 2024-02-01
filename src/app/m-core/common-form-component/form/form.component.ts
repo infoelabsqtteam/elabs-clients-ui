@@ -2357,12 +2357,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.callStaticData(payloads);
       }
     }
-    if(this.custmizedFormValue[fieldName] && this.custmizedFormValue[fieldName].length > 0) {
-      this.modifyCustmizedValue(fieldName);
-    } else {
-      this.custmizedFormValue[fieldName] = [];
-      this.modifyCustmizedFormValue = [];
-    }
+    this.modifyCustmizedValue(fieldName);
+    
     this.curTreeViewField = {};
     this.currentTreeViewFieldParent = {};
   }
