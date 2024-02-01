@@ -846,22 +846,24 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
     updateUserData(){
         this.isPageLoading = true;
-        let user = this.storageService.GetUserInfo();
-        let mydocument:any = this.document;
-        this.storageService.setRedirectUrl(mydocument.location['pathname']);
+        this.apiService.resetGridData();
+        let userToken = this.storageService.GetIdToken();
         let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
         list.forEach((key:string)=>{
             this.storageService.removeKeyFromStorage(key);
         })
-        this.authService.GetUserInfoFromToken(user);
-        this.subscribeGetUserInfo()
+        this.authService.GetUserInfoFromToken(userToken);
+        this.subscribeGetUserInfo();
     }
 
     subscribeGetUserInfo(){
+        let currentUrl = this.document.location['pathname'];
         this.authDataService.userInfo.subscribe(data =>{
         this.isPageLoading = false;
         this.notificationService.notify("bg-success", "User Data successfully updated !!!");
         this.rightsidenav.toggle();
+        // location.reload();
+        location.assign(currentUrl);
         })
     }
 
