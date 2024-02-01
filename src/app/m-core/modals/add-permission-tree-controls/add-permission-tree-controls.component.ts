@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ApiCallService, ApiService, CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -17,8 +17,11 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   @ViewChild('permissionControl') public permissionControl: ModalDirective; 
 
   fieldName:string='';
-  listOfFieldUpdateMode:boolean=false;
-  ListOfCrList:any=[];
+  listOfFieldUpdateMode={
+    crList:false,
+    userCrList:false
+  };
+  custMizedFormValue:any={};  
   list_of_fields:any =[
     {"field_name":"fName","label":"Field Name"},
     {"field_name":"operator","label":"Operator"},
@@ -32,6 +35,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     private modalService:ModelService,
     private fb:FormBuilder,
     private commonFunctionService:CommonFunctionService,
+    private coreFunctionService:CoreFunctionService,
     private dataShareServices:DataShareService,
     private apiCallService:ApiCallService,
     private apiService:ApiService
@@ -49,20 +53,29 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   initForm(){
     this.criteria = this.fb.group({
+      "selfData": new FormControl(false),
       "crList" : new FormGroup({
           "fName": new FormControl("",Validators.required),
           "operator": new FormControl("",Validators.required),
           "fValue": new FormControl("",Validators.required),
-        })
+        }),
+      "userCrList" : new FormGroup({
+        "fName": new FormControl("",Validators.required),
+        "operator": new FormControl("",Validators.required),
+        "fValue": new FormControl("",Validators.required),
+      })
     })
   }
   get crListContral(){
     return this.criteria.controls['crList'];
   }
+  get userCrListContral(){
+    return this.criteria.controls['userCrList'];
+  }
   showModal(alert){ 
     let data = {};
     let tab = {};
-    let criteria = {};
+    let criteria:any = {};
     if(alert && alert.reference){
       tab = alert.reference;
       data['tab'] = tab;
@@ -70,8 +83,13 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     if(alert && alert.criteria){
       criteria = alert.criteria;
     }
+    if(alert.item){
+      this.fieldName = alert.item;
+    }
     if(criteria && criteria['crList']){
-      this.ListOfCrList = criteria['crList'];
+      this.custMizedFormValue['crList'] = criteria['crList'];
+      this.custMizedFormValue['userCrList'] = criteria['userCrList'];
+      if(criteria.selfData) this.criteria.get('selfData').setValue(criteria.selfData);
     }else{
       this.reset();
     }
@@ -82,10 +100,16 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   } 
   reset(){
     this.criteria.reset();
-    this.updateIndex=-1;
-    this.listOfFieldUpdateMode = false;
+    this.updateIndex={
+      crList:-1,
+      userCrList:-1
+    };
+    this.listOfFieldUpdateMode={
+      crList:false,
+      userCrList:false
+    };
     this.deleteIndex = -1;
-    this.ListOfCrList=[];
+    this.custMizedFormValue={};
   }
   subscribeStaticData(){
     this.staticDataSubscription = this.dataShareServices.staticData.subscribe(value => {
@@ -115,38 +139,50 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   selectGridData(){
     let value = this.criteria.getRawValue();
-    value['crList'] = this.ListOfCrList;
+    if(this.custMizedFormValue && Object.keys(this.custMizedFormValue).length > 0){
+      Object.keys(this.custMizedFormValue).forEach((key) =>{
+        value[key] = this.custMizedFormValue[key];
+      })
+    }
     this.permissionControlResponce.next(value);
     this.close();
   }
-  addCrList(){
-    let crList = this.criteria.get('crList').value;
-    if(this.listOfFieldUpdateMode){
-      this.ListOfCrList[this.updateIndex]=crList;
-      this.updateIndex=-1;
-      this.listOfFieldUpdateMode = false;
+  addCrList(key){
+    let crList = this.criteria.get(key).value;
+    if(this.listOfFieldUpdateMode[key]){
+      let index = this.updateIndex[key];
+      this.custMizedFormValue[key][index]=crList;
+      this.updateIndex[key]=-1;
+      this.listOfFieldUpdateMode[key] = false;
     }else{
-      this.ListOfCrList.push(crList);
+      if(!this.custMizedFormValue[key]) this.custMizedFormValue[key]=[];
+      this.custMizedFormValue[key].push(crList);
     }    
-    this.criteria.get('crList').reset();
+    this.criteria.get(key).reset();
   }
-  updateIndex:number=-1;
-  editListOfFiedls(i){
-    this.updateIndex=i;
-    this.listOfFieldUpdateMode = true;
-    let data = this.ListOfCrList[i];
-    this.criteria.get('crList').setValue(data);
+  updateIndex={
+    crList:-1,
+    userCrList:-1
+  };
+  editListOfFiedls(i,key){
+    this.updateIndex[key]=i;
+    this.listOfFieldUpdateMode[key] = true;
+    let data = this.custMizedFormValue[key][i];
+    this.criteria.get(key).setValue(data);
   }
   deleteIndex:number=-1;
-  openModal(i){
+  deleteKey:string='';
+  openModal(i,key){
     this.deleteIndex = i;
+    this.deleteKey = key
     this.commonFunctionService.openAlertModal('permission-confirm-modal','delete','Are You Sure ?','Delete This record.');
   }
   permissionAlertResponce(responce){
     if(responce){
-      this.ListOfCrList.splice(this.deleteIndex,1);
-      this.deleteIndex = -1;
+      this.custMizedFormValue[this.deleteKey].splice(this.deleteIndex,1);      
     }
+    this.deleteIndex = -1;
+    this.deleteKey = '';
   }
   compareObjects(o1: any, o2: any): boolean {
     if(o1 != null && o2 != null){
@@ -155,8 +191,27 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       return false;
     }    
   }
-  setValue(){
-
+  setValue(fName:string,callBackField:string,key:string){
+    if(fName == 'fName'){
+      let value = this.criteria.value[key].fName;
+      let list = this.staticData['grid_field_list'];
+      let index = this.commonFunctionService.getIndexInArrayById(list,value,'field_name');
+      let type = list[index].type;
+      let operatorType = '';
+      switch (type.toLowerCase()) {
+        case 'text':
+          operatorType = 'string';
+          break;
+        case 'date' :
+          operatorType = 'date';   
+        case 'number' :
+          operatorType = 'number';  
+        default:
+          break;
+      }
+      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType);
+    }
   }
 
+  
 }
