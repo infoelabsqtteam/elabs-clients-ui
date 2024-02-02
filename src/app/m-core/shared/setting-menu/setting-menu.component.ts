@@ -847,6 +847,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     updateUserData(){
         this.isPageLoading = true;
         this.apiService.resetGridData();
+        let currentUrl = this.document.location['pathname'];
+        this.storageService.setRedirectUrl(currentUrl);
         let userToken = this.storageService.GetIdToken();
         let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
         list.forEach((key:string)=>{
@@ -857,13 +859,11 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
 
     subscribeGetUserInfo(){
-        let currentUrl = this.document.location['pathname'];
         this.authDataService.userInfo.subscribe(data =>{
         this.isPageLoading = false;
         this.notificationService.notify("bg-success", "User Data successfully updated !!!");
         this.rightsidenav.toggle();
-        // location.reload();
-        location.assign(currentUrl);
+        location.reload();
         })
     }
 
