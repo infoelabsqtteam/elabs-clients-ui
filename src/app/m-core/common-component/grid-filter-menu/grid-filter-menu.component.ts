@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
-import {StorageService,CommonFunctionService,PermissionService,DataShareService,ApiService,NotificationService,EnvService,MenuOrModuleCommonService,ApiCallService,UserPrefrenceService,} from "@core/web-core";
+import {NotificationService,UserPrefrenceService,} from "@core/web-core";
 
 @Component({
-  selector: "app-grid-filter-menu",
-  templateUrl: "./grid-filter-menu.component.html",
-  styleUrls: ["./grid-filter-menu.component.css"],
+  selector: 'app-grid-filter-menu',
+  templateUrl: './grid-filter-menu.component.html',
+  styleUrls: ['./grid-filter-menu.component.css'],
 })
 export class GridFilterMenuComponent implements OnInit{
   @Input() columns: any;
@@ -13,10 +13,6 @@ export class GridFilterMenuComponent implements OnInit{
   allCheck = false;
 
   constructor(
-    private storageService: StorageService,
-    private apiService: ApiService,
-    private dataShareService: DataShareService,
-    private commonFunctionService: CommonFunctionService,
     private userPrefrenceService: UserPrefrenceService,
     private notificationService: NotificationService
   ) {}
