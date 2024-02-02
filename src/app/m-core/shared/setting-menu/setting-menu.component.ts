@@ -846,7 +846,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
     updateUserData(){
         this.isPageLoading = true;
-        this.apiService.resetGridData();
+        // this.apiService.resetGridData();
         let userToken = this.storageService.GetIdToken();
         let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
         list.forEach((key:string)=>{
