@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 import { DataShareService, EnvService, StorageService, MenuOrModuleCommonService } from '@core/web-core';
 
 @Component({
@@ -8,6 +9,7 @@ import { DataShareService, EnvService, StorageService, MenuOrModuleCommonService
 })
 export class HorizontalComponent implements OnInit {
   logoPath = ''
+  @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
   constructor(
     private dataShareService:DataShareService,
     private envService:EnvService,
