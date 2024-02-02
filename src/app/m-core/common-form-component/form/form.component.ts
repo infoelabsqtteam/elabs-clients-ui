@@ -199,7 +199,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   
   headerFiledsData = [];
-  /** Map froms nested node to flattened node. This helps us to keep the same object for selection */
+  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
   // treeControl:any={};
   // treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
