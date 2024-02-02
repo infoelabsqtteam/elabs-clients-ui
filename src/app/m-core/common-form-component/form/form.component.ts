@@ -2643,7 +2643,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   getFormValue(check){
     let formValue = this.templateForm.getRawValue();
-    formValue = this.coreFunctionService.checkBlankProperties(formValue);
     let routersParams = {};
     if(this.routers.snapshot.params["key1"]){
       routersParams = this.routers.snapshot.params;
