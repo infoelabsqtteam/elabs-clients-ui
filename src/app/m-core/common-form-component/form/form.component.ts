@@ -25,7 +25,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
   htmlViewConfig:AngularEditorConfig = htmlViewConfig as AngularEditorConfig;
   tinymceConfig = {} 
-
+  tinymceapikey = Common.TINYMICAPIKEY; 
   templateForm: FormGroup;
 
   //@Output() filledFormData = new EventEmitter();
