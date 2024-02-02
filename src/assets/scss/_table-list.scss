@@ -226,7 +226,8 @@ td{.copyicon {position: absolute;right: 0;cursor: pointer;margin-inline: 5px;bor
 }
 
 .copyIconContainer{position: relative; 
-    &:hover .copyField{width: 75%;}}
+    .copyField{ display: block; overflow:hidden; text-overflow: ellipsis;}
+    &:hover .copyField{width: 75% !important;}}
 
 td{&:hover{.copyField{width: 75% !important;}}}
 .notAllow{cursor: no-drop !important;}
