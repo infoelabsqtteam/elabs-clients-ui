@@ -60,11 +60,14 @@
                                         <th [resizeColumn]="true" [index]="-1" *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
                                         <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
-                                                <span (click)="onSort(headElements[i])" class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
-                                                <span class="show-on-hover">
-                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'"></mdb-icon>
-                                                    <mdb-icon fas icon="eye-slash" [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(headElements,i)"></mdb-icon>
+                                                <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
+                                                <span class="show-on-hover mr-1">
+                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="ml-1 mr-1"></mdb-icon>
+                                                    <i fas class="fas fa-ellipsis-v ml-1 mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                 </span>
+                                                <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
+                                                    <app-grid-column-action-menu [elements]="elements" [sortIcon]="sortIcon" [headElements]="headElements" [data]="modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
+                                                </mat-menu>  
                                             </div>
                                         </th>                                        
                                     </tr>
@@ -163,14 +166,15 @@
 
                                         </td>
                                         <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
-                                            <div *ngIf="editedRowIndex != i" class="grid-data resizeGridColunms" [style.width]="elId.width" [style.text-align]="elId.text_align">
-                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
+                                            <div *ngIf="editedRowIndex != i" class="grid-data copyIconContainer resizeGridColunms d-flex align-items-center" [style.width]="elId.width" [style.text-align]="elId.text_align" >
+                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap copyField" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                     </a>
 
 
                                                     <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type == 'color'">
                                                         <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{el[elId.field_name]}}</span>
                                                     </a>
+                                                    <span *ngIf="el[elId.field_name]!='' && el[elId.field_name]!=undefined && elId.type != 'info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(el[elId.field_name])" >content_copy</span>
                                                     
                                                 </div>
                                             <div *ngIf="editedRowIndex == i">  

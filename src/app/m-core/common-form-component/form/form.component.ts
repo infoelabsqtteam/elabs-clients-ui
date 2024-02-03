@@ -1287,7 +1287,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         const gridModalData = {
           "field": this.curTreeViewField,
           "selectedData":selectedData,
-          "object": formValueWithCustomData
+          "object": formValueWithCustomData,
+          "currentForm":this.form
         }
         this.modalService.open('grid-selection-modal', gridModalData);
         break;
@@ -3174,14 +3175,15 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
-  // Grid hide column icon click function
-  hideColumn(columns,index: number) {
-    columns[index].display = !columns[index].display;
-}
-  // show all columns icon click function 
 updateColumnList(columns?){
   if(columns) columns.forEach(column=>column.display =true)
 }
+
+//copy icon on grid cell
+copyText(value:any){       
+  this.commonFunctionService.copyGridCellText(value);
+}
+
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 
