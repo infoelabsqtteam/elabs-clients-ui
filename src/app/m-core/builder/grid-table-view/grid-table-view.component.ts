@@ -1354,9 +1354,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
             let obj = {
               "aduitTabIndex": this.selectTabIndex,
-              "tabname": this.tabs
+              "tabname": this.tabs,
+              "objectId": gridData._id 
             }
-            this.commonFunctionService.getAuditHistory(gridData);
             this.modalService.open('audit-history',obj);
           }else {
             this.permissionService.checkTokenStatusForPermission();
@@ -1400,7 +1400,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   preview(): void {
     let popupWin;
     popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');    
-    popupWin.document.write('<div class="noprint" style="text-align:right;"><a onClick="window.print()" style="text-align: right;display: inline-block;cursor: pointer;border: 2px solid #4285f4!important;background-color: transparent!important;color: #4285f4!important;box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);padding: 7px 25px;font-size: .81rem;transition: .2s ease-in-out;margin: .375rem;text-transform: uppercase;">Print</a></div><style>@media print{.noprint{display:none;}}</style>'+this.previewData);   
+    popupWin.document.write('<div class="noprint" style="text-align:right;"><a onClick="window.print()" style="text-align: right;display: inline-block;cursor: pointer;border: 2px solid #4285f4!important;background-color: transparent!important;color: #4285f4!important;box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);padding: 7px 25px;font-size: .81rem;transition: .2s ease-in-out;margin: .375rem;text-transform: uppercase;">Print</a></div><style>@media print{.noprint{display:none;}}</style>'+this.previewData);
     popupWin.document.close();
   }  
   pdfViewModalResponce(event){

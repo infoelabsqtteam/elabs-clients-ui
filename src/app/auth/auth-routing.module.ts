@@ -9,6 +9,7 @@ import {ResetpwdComponent} from './resetpwd/resetpwd.component';
 import { OtpVarificationComponent } from './otp-varification/otp-varification.component';
 import { CreatepwdComponent } from './createpwd/createpwd.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 const authRoutes : Routes = [
     {path:'signup',component:SignupComponent, children:[]},
@@ -17,6 +18,7 @@ const authRoutes : Routes = [
     {path:'verify/:code/:user',component:VerifyComponent},
     {path:'admin',component:AdminComponent},
     {path:'resetpwd/:username',component:ResetpwdComponent},
+    {path:'authenticate/:username',component:AuthenticateComponent},
     {path:'otp_varify/:username',component:OtpVarificationComponent},
     {path:'createpwd',component:CreatepwdComponent},
     {path:'unsubscribe/:email/:list',component:UnsubscribeComponent}

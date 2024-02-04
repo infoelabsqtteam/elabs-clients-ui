@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit,Output, EventEm
 import { Router, NavigationEnd } from '@angular/router';
 import { MENU } from './menu';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService } from '@core/web-core';
+import { StorageService, CommonFunctionService, DataShareService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService, NotificationService } from '@core/web-core';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,14 +24,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   userPreferenceSubscription:Subscription;
   moduleIndexSubscription:Subscription;
   menuIndexSubscription:Subscription;
+  isPageLoading: boolean = false;
   
   constructor( 
     private storageService:StorageService,
     private commonFunctionService:CommonFunctionService,
     private dataShareService:DataShareService,
-    private commonfunctionService:CommonFunctionService,
+    private notificationService:NotificationService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private userPrefrenceService:UserPrefrenceService
   ) {
     
     // this.dataShareService.otherSaveCall.subscribe(responce => {
@@ -212,59 +214,68 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 //     }
 // }
 addFebMenu(menu,parent){
+  this.isPageLoading = true;
+  menu.favourite = !menu?.favourite;
   this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-  this.userPreferenceSubscribe(menu,'favoriteMenus',parent);
-  // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  this.userPreferenceSubscribe(menu,'favouriteMenus',parent);
+  // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'favouriteMenus',parent);
   // this.saveCallSubscribe();
 }
-updateUserPreference(menu,field,parent){
+async updateUserPreference(menu,field,parent){  
   this.unsubscribe(this.userPreferenceSubscription);
-  this.commonFunctionService.updateUserPreference(menu,field,parent);
+  let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+  if (response?.success) {
+    this.isPageLoading = false;
+    this.notificationService.notify('bg-success', 'Favourite Menu updated successfully!');
+  } else {
+    this.isPageLoading = false;
+    this.notificationService.notify('bg-warning', 'Failed to save data.');
+  }
   this.saveCallSubscribe();
 }
-checkFebMenuAddOrNot(menu,parent){
-  let menuId = menu._id;
-  if(parent != ''){
-    menuId = parent._id;
-  }
-  let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
-  if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
-    let match = -1;
-    for (let index = 0; index < userFebMenu.length; index++) {
-      const element = userFebMenu[index];
-      if(element._id == menuId ){
-        match = index;
-        break;
-      }     
-    }
-    if(match > -1){
-      if(parent != ''){
-        const submenu = userFebMenu[match]['submenu'];
-        let subMatchIndex = -1;
-        if(submenu && submenu.length > 0){
-          for (let j = 0; j < submenu.length; j++) {
-            const subMenu = submenu[j];
-            if(subMenu._id == menu._id){
-              subMatchIndex = j;
-              break;
-            }
+// checkFebMenuAddOrNot(menu,parent){
+//   let menuId = menu._id;
+//   if(parent != ''){
+//     menuId = parent._id;
+//   }
+//   let userFebMenu = this.commonFunctionService.getUserPreferenceByFieldName('favoriteMenus');
+//   if(userFebMenu && userFebMenu != null && userFebMenu.length > 0){
+//     let match = -1;
+//     for (let index = 0; index < userFebMenu.length; index++) {
+//       const element = userFebMenu[index];
+//       if(element._id == menuId ){
+//         match = index;
+//         break;
+//       }     
+//     }
+//     if(match > -1){
+//       if(parent != ''){
+//         const submenu = userFebMenu[match]['submenu'];
+//         let subMatchIndex = -1;
+//         if(submenu && submenu.length > 0){
+//           for (let j = 0; j < submenu.length; j++) {
+//             const subMenu = submenu[j];
+//             if(subMenu._id == menu._id){
+//               subMatchIndex = j;
+//               break;
+//             }
             
-          }
-        }
-        if(subMatchIndex > -1){
-          return true
-        }else{
-          return false;
-        }
-      }else{
-        return true;
-      }      
-    }else{
-      return false;
-    }
-  }else{
-    return false;
-  }
-}
+//           }
+//         }
+//         if(subMatchIndex > -1){
+//           return true
+//         }else{
+//           return false;
+//         }
+//       }else{
+//         return true;
+//       }      
+//     }else{
+//       return false;
+//     }
+//   }else{
+//     return false;
+//   }
+// }
 
 }
