@@ -134,6 +134,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
+  selectedFilterType:string; // For advance filter type selection
   filterTypeNumber: any;
   filterTypeString: any;
   filterTypeDate: any;
@@ -484,12 +485,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     
   }
-  selectedFilterType:string;
-  ngOnInit(): void {
+  ngOnInit(): void {  
+    this.getOperatorsList();
   }
-//getFilterKeys Fn
-  getFilterTypeKeys(): string[] {
-    return [];
+
+  getOperatorsList(){
+    this.filterTypeNumber = this.coreFunctionService.getOperators('number');
+    this.filterTypeString = this.coreFunctionService.getOperators('string');
+    this.filterTypeDate = this.coreFunctionService.getOperators('date');
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0) {

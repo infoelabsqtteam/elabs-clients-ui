@@ -233,3 +233,12 @@ td{.copyicon {position: absolute;right: 0;cursor: pointer;margin-inline: 5px;bor
 
 td{&:hover{.copyField{width: 75% !important;}}}
 .notAllow{cursor: no-drop !important;}
+
+
+.filter-flex-container {max-width: 228px;border-radius: 5px;padding: 15px;display: flex;flex-direction: column;justify-content: flex-start;align-items: stretch;
+	.ad-filter-label {text-align: center;font-weight: 600;}
+	.filter-flex-item {
+        padding: 5px;border: 1px;flex-shrink: 1;flex-basis: auto;align-self: auto;
+		input {font-size: 0.75rem;line-height: 1.5;}
+	}
+}

@@ -82,23 +82,23 @@
                                                             <mat-label>Filter Type</mat-label>
                                                             <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'">
                                                                 <mat-select [(value)]="selectedFilterType" name="filterType" placeholder="Select Type">
-                                                                    <ng-container *ngFor="let key of getFilterTypeKeys()">
-                                                                    <mat-option [value]="key">{{ filterTypeString[key] }}</mat-option>
+                                                                    <ng-container *ngFor="let filter of filterTypeString | keyvalue">
+                                                                    <mat-option [value]="filter.key">{{ filter.value }}</mat-option>
                                                                     </ng-container>
                                                                 </mat-select>
                                                             </mat-form-field>
 
                                                             <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'number'">
                                                                 <mat-select [(value)]="selectedFilterType" name="filterType"  placeholder="Select Type">
-                                                                    <ng-container *ngFor="let key of getFilterTypeKeys()">
-                                                                    <mat-option [value]="key">{{ filterTypeNumber[key] }}</mat-option>
+                                                                    <ng-container *ngFor="let filter of filterTypeNumber | keyvalue">
+                                                                    <mat-option [value]="filter.key">{{ filter.value }}</mat-option>
                                                                     </ng-container>
                                                                 </mat-select>
                                                             </mat-form-field>
                                                             <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date'|| head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime')">
                                                                 <mat-select [(value)]="selectedFilterType" name="filterType"  placeholder="Select Type">
-                                                                    <ng-container *ngFor="let key of getFilterTypeKeys()">
-                                                                    <mat-option [value]="key">{{ filterTypeDate[key] }}</mat-option>
+                                                                    <ng-container *ngFor="let filter of filterTypeDate | keyvalue">
+                                                                    <mat-option [value]="filter.key">{{ filter.value }}</mat-option>
                                                                     </ng-container>
                                                                 </mat-select>
                                                             </mat-form-field>                                                                
@@ -120,7 +120,7 @@
                                                                     <input matStartDate placeholder="Start date" formControlName="start">
                                                                     <input matEndDate placeholder="End date" formControlName="end">
                                                                 </mat-date-range-input>
-                                                                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                                                                <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
                                                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                                                 <mat-date-range-picker #picker></mat-date-range-picker>
                                                             </mat-form-field>
