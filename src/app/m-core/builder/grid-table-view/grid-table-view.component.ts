@@ -486,13 +486,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   selectedFilterType:string;
   ngOnInit(): void {
-    this.filterTypeNumber = this.coreFunctionService.getOperators('number');
-    this.filterTypeString = this.coreFunctionService.getOperators('string');
-    this.filterTypeDate = this.coreFunctionService.getOperators('date');
   }
 //getFilterKeys Fn
-  getFilterTypeKeys(obj: any): string[] {
-    return Object.keys(obj);
+  getFilterTypeKeys(): string[] {
+    return [];
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
