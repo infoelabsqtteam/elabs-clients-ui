@@ -277,7 +277,7 @@
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
-                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion py-0" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                         <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
                                             <p class="m-0">{{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
@@ -630,7 +630,7 @@
                                                 <div class="grid-selection-title">{{ fields.label | titlecase}}</div>
                                             </div>
                                             <div class="col-lg-12">
-                                                <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
+                                                <editor [apiKey]="tinymceapikey" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
                                             </div>
                                         </div>
                                     </div>
@@ -736,7 +736,10 @@
                                                     <a mdbBtn floating="true" size="sm" *ngIf="tableField.datatype != 'list_of_object_with_popup' && listOfField['actionBtnDisplay']" (click)="editListOfFiedls(i,tableField)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                                     <a *ngIf="listOfField['actionBtnDisplay']" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,listOfField,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                                                 </td>
-                                                <td *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''" (click)="showListOfFieldData(tableField,i, item)" [innerHtml]="listOfField[item.field_name]"></td>                                                
+                                                <td *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''"  class="copyIconContainer">
+                                                    <span  class="copyField" [innerHTML]="listOfField[item.field_name]" (click)="showListOfFieldData(tableField,i, item)"></span>
+                                                    <span class="material-icons copyicon" *ngIf="!(item && item.hideCopy)"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
+                                                </td>                                                
                                             </tr>
                                         </tbody>
                                     </table>
@@ -790,7 +793,7 @@
                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="tableField.field_name" [init]="tinymceConfig"></editor>
+                                    <editor [apiKey]="tinymceapikey" [formControlName]="tableField.field_name" [init]="tinymceConfig"></editor>
                                 </div>
                             </div>
                         </div>
@@ -834,8 +837,9 @@
                                             <tr *ngFor="let data of treeViewData[tableField.field_name] | filter:term[tableField.field_name]" class="border">
                                                 
                                                 <td *ngFor="let fieldName of tableField.fields" >
-                                                    <div class="grid-data" [style.width]="fieldName.width">
-                                                        <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name] && data[fieldName.field_name].name?data[fieldName.field_name].name:data[fieldName.field_name]"></span>
+                                                    <div class="grid-data copyIconContainer" [style.width]="fieldName.width">
+                                                            <span [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name] && data[fieldName.field_name].name?data[fieldName.field_name].name:data[fieldName.field_name]"></span>
+                                                            <span *ngIf="data[fieldName.field_name] || data[fieldName.field_name]?.name" class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name] && data[fieldName.field_name].name?data[fieldName.field_name].name:data[fieldName.field_name])" >content_copy</span> 
                                                     </div>
                                                 </td>
                                             </tr>
@@ -908,7 +912,7 @@
                                         <button  mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="plusicon"><mat-icon>filter_alt</mat-icon></button>
                                     </ng-container>
                                     <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown">
-                                        <app-grid-filter-menu [columns]="tableField.gridColumns"></app-grid-filter-menu>
+                                        <app-grid-filter-menu [columns]="tableField.gridColumns" [formTable]="tableField" [form]="form"></app-grid-filter-menu>
                                     </mat-menu> 
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled && !tableField.is_disabled && tableField['showButton']" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] ? tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] ? tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
@@ -930,7 +934,12 @@
                                                 <th *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))"></th>                               
                                                 <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
                                                     <div class="justify-content-between d-flex heading"> {{ fieldName.label | titlecase}} 
-                                                        <span [matTooltip]="'Hide'" [matTooltipPosition]="'above'" (click)="hideColumn(tableField.gridColumns,j)" class="show-on-hover"><mdb-icon fas icon="eye-slash"></mdb-icon></span>
+                                                        <span  class="show-on-hover mr-1">
+                                                            <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                        </span>
+                                                        <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
+                                                           <app-grid-column-action-menu  [headElements]="tableField.gridColumns" [data]="modifyCustmizedFormValue[tableField.field_name]" [index]="j"  ></app-grid-column-action-menu>
+                                                        </mat-menu>
                                                     </div>
                                                 </th>
                                             </tr>
@@ -949,13 +958,14 @@
                                                     <a  mdbBtn floating="true" size="sm" *ngIf="tableField.add_new_enabled && data['actionBtnDisplay']" (click)="updateListofFields(tableField,data,i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>                                                    
                                                     <a *ngIf="tableField.add_new_enabled && data['actionBtnDisplay']" mdbBtn floating="true" size="sm" (click)="openModal('confirm-modal',i,'',tableField,data,'delete')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>
                                                 </td>
-                                                <td *ngFor="let fieldName of tableField.gridColumns" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
-                                                    <div class="grid-data" [style.width]="fieldName.width">
+                                                <td *ngFor="let fieldName of tableField.gridColumns" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'" class="copyIconContainer">
+                                                    <div class="grid-data d-flex align-items-center " [style.width]="fieldName.width">
                                                         <span disabled *ngIf="fieldName.type=='checkbox'" >
                                                             <mat-checkbox color="primary" 
                                                                 [checked]="data[fieldName.field_name]" disabled></mat-checkbox>
                                                         </span>
-                                                        <span *ngIf="fieldName.type!='checkbox'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']" (click)="showListOfFieldData(tableField,i, fieldName)" [innerHtml]="data[fieldName.field_name]"></span>
+                                                        <span *ngIf="fieldName.type!='checkbox'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']" (click)="showListOfFieldData(tableField,i, fieldName)" [innerHtml]="data[fieldName.field_name]" class="copyField"></span>
+                                                        <span *ngIf="data[fieldName.field_name] && !fieldName.hideCopy"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >content_copy</span>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1605,7 +1615,7 @@
                                                     <div class="grid-selection-title">{{ tableField.label | titlecase}}</div>
                                                 </div>
                                                 <div class="col-lg-12">
-                                                    <editor apiKey="fd53498jjif4rtditwuh1rz5zj6ma6xjc3helvr4wufcpttb" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
+                                                    <editor [apiKey]="tinymceapikey" [formControlName]="fields.field_name" [init]="tinymceConfig"></editor>
                                                 </div>
                                             </div>
                                         </div>
