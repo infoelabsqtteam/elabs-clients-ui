@@ -934,8 +934,8 @@
                                                 <th *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))"></th>                               
                                                 <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
                                                     <div class="justify-content-between d-flex heading"> {{ fieldName.label | titlecase}} 
-                                                        <span  class="show-on-hover mr-1">
-                                                            <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                        <span  class="show-on-hover px-1">
+                                                            <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                         </span>
                                                         <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                                            <app-grid-column-action-menu  [headElements]="tableField.gridColumns" [data]="modifyCustmizedFormValue[tableField.field_name]" [index]="j"  ></app-grid-column-action-menu>

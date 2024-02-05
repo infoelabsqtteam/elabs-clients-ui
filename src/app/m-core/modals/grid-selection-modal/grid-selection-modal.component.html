@@ -37,8 +37,8 @@
                             </th>
                             <th *ngFor="let fieldName of listOfGridFieldName;let i=index" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                                 <div class="heading"  [style.width]="fieldName.width" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span>
-                                    <span class="show-on-hover mr-1">
-                                        <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                    <span class="show-on-hover px-1">
+                                        <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                     </span>
                                     <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                        <app-grid-column-action-menu  [headElements]="listOfGridFieldName" [data]="modifiedGridData" [index]="i"></app-grid-column-action-menu>

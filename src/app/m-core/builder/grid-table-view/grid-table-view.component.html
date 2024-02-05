@@ -62,8 +62,8 @@
                                             <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
                                                 <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
                                                 <span class="show-on-hover mr-1">
-                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="ml-1 mr-1"></mdb-icon>
-                                                    <i fas class="fas fa-ellipsis-v ml-1 mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
+                                                    <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                 </span>
                                                 <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                                     <app-grid-column-action-menu [elements]="elements" [sortIcon]="sortIcon" [headElements]="headElements" [data]="modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
