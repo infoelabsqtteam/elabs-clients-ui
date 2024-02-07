@@ -11,6 +11,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 import { GridFilterMenuComponent } from './grid-filter-menu/grid-filter-menu.component';
 import { FilterComponent } from './filter/filter.component';
+import { GridColumnActionMenuComponent } from './grid-column-action-menu/grid-column-action-menu.component';
 
 import { GridComponent } from './grid/grid.component';
 
@@ -20,7 +21,8 @@ const components = [
   DashboardChartComponent,
   GridFilterMenuComponent,
   FilterComponent,
-  GridComponent
+  GridComponent,
+  GridColumnActionMenuComponent
 ];
 
 

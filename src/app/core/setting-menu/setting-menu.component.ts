@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 
 import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
-import { DOCUMENT } from "@angular/common";
 import { MatSidenav } from "@angular/material/sidenav";
 
 
@@ -109,7 +108,6 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         public envService: EnvService,
         private menuOrModuleCommounService:MenuOrModuleCommonService,
         private apiCallService:ApiCallService,
-        @Inject(DOCUMENT) private document: Document,
         private authDataService:AuthDataShareService
     ) {
 
@@ -815,51 +813,16 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             this.router.navigate([value]);
         }
     }
-    async clearCache() {
-        this.isPageLoading = true;
-        try {
-            let response:any = await this.apiService.clearCache();
-            if (response?.status === 200) {
-                this.isPageLoading = false;
-                this.notificationService.notify("bg-success", response?.error?.text);
-                this.clearTemp();
-            } else {
-                this.isPageLoading = false;
-                this.notificationService.notify("bg-danger", "Server Cache Clear Failed !!!");
-            }
-          } catch (error) {
-            this.isPageLoading = false;
-            this.notificationService.notify("bg-danger", "Server Cache Clear Failed !!!");
-          }
-        }
-    async clearTemp() {
-        this.isPageLoading = true;
-        try {
-            let response:any = await this.apiService.clearTemplate();
-            if (response?.status === 200) {
-                this.isPageLoading = false;
-                this.notificationService.notify("bg-success", "Template cleared successfully !!!");
-                this.rightsidenav.toggle();
-            } else {
-                this.isPageLoading = false;
-                this.notificationService.notify("bg-danger", "Server Template Clear Failed !!!");
-            }
-          } catch (error) {
-            this.isPageLoading = false;
-            this.notificationService.notify("bg-danger", "Server Template Clear Failed !!!");
-          }
-    }
     updateUserData(){
         this.isPageLoading = true;
-        let user = this.storageService.GetUserInfo();
-        let mydocument:any = this.document;
-        this.storageService.setRedirectUrl(mydocument.location['pathname']);
+        // this.apiService.resetGridData();
+        let userToken = this.storageService.GetIdToken();
         let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
         list.forEach((key:string)=>{
             this.storageService.removeKeyFromStorage(key);
         })
-        this.authService.GetUserInfoFromToken(user);
-        this.subscribeGetUserInfo()
+        this.authService.GetUserInfoFromToken(userToken);
+        this.subscribeGetUserInfo();
     }
 
     subscribeGetUserInfo(){
@@ -867,6 +830,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         this.isPageLoading = false;
         this.notificationService.notify("bg-success", "User Data successfully updated !!!");
         this.rightsidenav.toggle();
+        location.reload();
         })
     }
 
