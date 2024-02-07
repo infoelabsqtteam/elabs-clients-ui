@@ -15,6 +15,7 @@
           [color]="'primary'"
           (ngModelChange)="checkColumnList(columns)"
           (click)="$event.stopPropagation()"
+          [disabled]="head.show"
         >
           {{ head.label }}
         </mat-checkbox>
