@@ -277,9 +277,8 @@
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
-                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion py-0" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                        <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
                                             <p class="m-0">{{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
                                         </div>
                                     </div>
