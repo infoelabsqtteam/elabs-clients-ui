@@ -3176,7 +3176,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     //this.alertData = {};
   }
 updateColumnList(columns?){
-  if(columns) columns.forEach(column=>column.display =true)
+  if(columns) {columns.forEach(column=>{
+    if(!column.show)column.display = true;
+  }
+)}
 }
 
 //copy icon on grid cell
