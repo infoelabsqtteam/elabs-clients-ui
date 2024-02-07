@@ -20,7 +20,11 @@ export class GridFilterMenuComponent implements OnInit{
 
   updateColumnList() {
     if (this.columns) {
-      this.columns.forEach((column) => (column.display = true));
+      this.columns.forEach((column) => {
+        if(!column.show){
+          column.display = true;
+        }
+      });
     }
   }
 
