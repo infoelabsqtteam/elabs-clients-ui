@@ -51,7 +51,7 @@ export class GridSelectionModalComponent implements OnInit {
   selectedDataLength:number=0;
   buttonlabel:any;
   currentForm:any;
-
+  currencyRate:any;
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
@@ -450,6 +450,9 @@ export class GridSelectionModalComponent implements OnInit {
     this.field = alert.field;
     if (alert.object) {
       this.parentObject = alert.object;
+      if(alert.object.currencyRate){
+        this.currencyRate=alert.object.currencyRate;
+      }
     }
     if(alert.currentForm){
       this.currentForm=alert.currentForm
@@ -736,7 +739,7 @@ export class GridSelectionModalComponent implements OnInit {
       data = this.modifiedGridData[index];
     }
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
-      this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
+      this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"],this.currencyRate);
     }    
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
   } 
