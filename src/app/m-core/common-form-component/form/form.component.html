@@ -278,8 +278,7 @@
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion py-0" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                        <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
                                             <p class="m-0"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> 
