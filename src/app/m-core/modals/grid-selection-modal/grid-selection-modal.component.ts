@@ -497,12 +497,6 @@ export class GridSelectionModalComponent implements OnInit {
     this.getStaticDataWithDependentData()
 
   }
-  updateColumnList(columns?){
-    if(columns) {columns.forEach(column=>{
-      if(!column.show)column.display = true;
-    }
-  )}
-  }
   selectGridData() {    
     this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
     let check = 0;
