@@ -16,11 +16,7 @@
         </div>
         <div *ngIf="listOfGridFieldName && listOfGridFieldName.length > 0" style="position: absolute;
             right: 50px;">
-            <button mat-icon-button (click)="updateColumnList(listOfGridFieldName)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" class="m-0 plusicon"><mat-icon>autorenew</mat-icon></button>
-            <button  mat-icon-button [matMenuTriggerFor]="notify" class="mx-2 plusicon float-right"><mat-icon >filter_alt</mat-icon></button>
-            <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown" >
-            <app-grid-filter-menu [columns]="listOfGridFieldName" [form]="currentForm" [formTable]="field"></app-grid-filter-menu>
-            </mat-menu> 
+            <app-grid-filter-menu [extraClass]="'plusicon float-left'" [columns]="listOfGridFieldName" [form]="currentForm" [formTable]="field"></app-grid-filter-menu>
         </div>      
         <a class="h5 m-0 closebtb" (click)="closeModal()"><span>×</span></a>
       </div>
@@ -37,8 +33,8 @@
                             </th>
                             <th *ngFor="let fieldName of listOfGridFieldName;let i=index" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                                 <div class="heading"  [style.width]="fieldName.width" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span>
-                                    <span class="show-on-hover mr-1">
-                                        <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                    <span class="show-on-hover px-1">
+                                        <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                     </span>
                                     <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                        <app-grid-column-action-menu  [headElements]="listOfGridFieldName" [data]="modifiedGridData" [index]="i"></app-grid-column-action-menu>
