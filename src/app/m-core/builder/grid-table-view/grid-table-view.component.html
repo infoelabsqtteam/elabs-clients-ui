@@ -36,13 +36,7 @@
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
         </span>
-        <ng-container *ngIf="headElements && headElements.length > 0">
-            <button mat-icon-button (click)="updateColumnList(headElements)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" class="mr-2 filterbtn float-right"><mat-icon>autorenew</mat-icon></button>
-            <button mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="filterbtn float-right"><mat-icon>filter_alt</mat-icon></button>
-        </ng-container>
-        <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
-            <app-grid-filter-menu [columns]="headElements"></app-grid-filter-menu>
-        </mat-menu>              
+        <app-grid-filter-menu [extraClass]="'filterbtn float-right'" [columns]="headElements"></app-grid-filter-menu>
     </div>
 </section>
 

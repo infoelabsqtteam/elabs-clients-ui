@@ -10,6 +10,7 @@ export class GridFilterMenuComponent implements OnInit{
   @Input() columns: any;
   @Input() form: any;
   @Input() formTable: any;
+  @Input() extraClass?:string;
   allCheck = false;
 
   constructor(
