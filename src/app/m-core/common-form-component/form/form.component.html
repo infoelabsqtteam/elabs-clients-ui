@@ -277,12 +277,12 @@
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
-                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion py-0" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
                                             <p class="m-0"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> 
-                                            {{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                            {{ item.name ? item.name : item }}  <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -359,11 +359,11 @@
                                     <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] != undefined">update</i>
                                 </button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
-                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
                                             <p>{{item}} 
                                                 <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString('',tableField,i)" ><i class="fas fa-pen"></i></a>
-                                                <a [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
+                                                <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
                                             </p>
                                         </div>
                                     </div>
@@ -596,11 +596,11 @@
 
 
                                             <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
-                                                <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
                                                         <p class="m-0 small">{{item}} 
                                                             <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString(tableField,fields,i)" ><i class="fas fa-pen"></i></a>
-                                                            <a [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                            <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                     </div>
                                                 </div>
                                             </div>
