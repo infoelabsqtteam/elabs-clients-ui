@@ -103,6 +103,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   tabFilterData:any=[];
   typeAheadData: string[] = [];
   typegrapyCriteriaList:any=[];
+  sortIcon="down"
 
   
   navigationSubscription;
@@ -715,9 +716,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
-  updateColumnList(columns?){
-    if(columns) columns.forEach(column=>column.display =true)
-  }
   getTabsCount(tabs){
     this.apiCallService.getTabsCountPyload(tabs);    
   }
@@ -1211,6 +1209,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     } else {
       this.orderBy = '-';
     }
+    this.sortIcon=="down"? (this.sortIcon="up-alt"): (this.sortIcon="down");
   }
   applyFilter() {
     this.pageNumber = 1;
@@ -1535,9 +1534,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.matMenuTrigger.openMenu(); 
   }
 
-// Grid hide column icon click function
-hideColumn(columns,index: number) {
-  columns[index].display = !columns[index].display;
+//copy icon on grid cell
+copyText(value:any){       
+  this.commonFunctionService.copyGridCellText(value);
 }
 
 

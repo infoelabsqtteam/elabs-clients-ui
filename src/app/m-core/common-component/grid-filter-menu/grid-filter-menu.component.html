@@ -1,21 +1,31 @@
-<div *ngIf="columns && columns.length > 0">
-  <span class="example-list-section">
-    <ul class="ml-2 mt-2 mb-2">
-      <li class="pr-2">
-          <button mat-menu-item class="d-flex justify-content-center" (click)="updateColumnList()">
-            Show All
-          </button>
-      </li>
-      <li *ngFor="let head of columns; let i = index">
-        <mat-checkbox
-          [(ngModel)]="head.display"
-          [color]="'primary'"
-          (ngModelChange)="showHide()"
-          (click)="$event.stopPropagation()"
-        >
-          {{ head.label }}
-        </mat-checkbox>
-      </li>
-    </ul>
-  </span>
-</div>
+<ng-container *ngIf="columns && columns.length > 0">
+  <button mat-icon-button (click)="updateColumnList()" [ngClass]="extraClass != '' ? extraClass : '' " [matTooltip]="'Show All'" [matTooltipPosition]="'above'"><mat-icon>autorenew</mat-icon></button>
+  <button mat-icon-button [matMenuTriggerFor]="notify" [ngClass]="extraClass != '' ? extraClass : '' " [matTooltip]="'All Columns'" [matTooltipPosition]="'above'"><mat-icon>filter_alt</mat-icon></button>
+</ng-container>
+<mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
+  <div *ngIf="columns && columns.length > 0">
+    <span class="example-list-section">
+      <ul class="ml-2 mt-2 mb-2">
+        <li class="pr-2 d-flex justify-content-between mb-2">
+            <button mat-menu-item class="d-flex justify-content-center border mr-2" (click)="updateColumnList()">
+              Show All
+            </button>
+            <button mat-menu-item class="d-flex justify-content-center border " [ngClass]="{'notAllow':allCheck }" (click)="saveColumns(columns)">
+              Save
+            </button>
+        </li>
+        <li *ngFor="let head of columns; let i = index">
+          <mat-checkbox
+            [(ngModel)]="head.display"
+            [color]="'primary'"
+            (ngModelChange)="checkColumnList(columns)"
+            (click)="$event.stopPropagation()"
+            [disabled]="head.show"
+          >
+            {{ head.label }}
+          </mat-checkbox>
+        </li>
+      </ul>
+    </span>
+  </div>
+</mat-menu>
