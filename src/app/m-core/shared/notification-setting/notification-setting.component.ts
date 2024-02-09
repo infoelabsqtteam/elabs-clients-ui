@@ -10,6 +10,7 @@ import { StorageService } from '@core/web-core';
 export class NotificationSettingComponent implements OnInit {
 
   AllModuleList:any=[];
+  nofifyIcon='fa-bell-slash'
 
   constructor(
     private storageService:StorageService,
@@ -19,6 +20,12 @@ export class NotificationSettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.AllModuleList.forEach((module)=>{
+      // module.notify="fa-bell-slash"
+      module.notify="notifications_off"
+    })
+    console.log(this.AllModuleList);
+    console.log(this.storageService.getThemeSetting());
   }
 
 
@@ -43,6 +50,19 @@ export class NotificationSettingComponent implements OnInit {
     }else{
       return false;
     }
+  }
+
+  notificationFunction(e:any,i){
+    e.stopPropagation();
+    this.AllModuleList[i].notify=this.AllModuleList[i].notify=='notifications_off'? 'notifications_active' : 'notifications_off'
+  
+    // this.nofifyIcon=this.nofifyIcon=='fa-bell-slash'? 'fa-bell' : 'fa-bell-slash'
+  }
+
+  menuNotification(e:any,m){
+    e.stopPropagation();
+    console.log("e>>",e);
+    console.log("e>>",m);
   }
 
 }

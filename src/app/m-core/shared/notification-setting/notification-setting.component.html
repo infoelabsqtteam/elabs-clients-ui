@@ -8,21 +8,62 @@
         <mat-accordion>
             <mat-expansion-panel *ngFor="let item of AllModuleList; let i = index">
                 <mat-expansion-panel-header>
-                    <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}</mat-panel-title>
+                    <!-- <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}<span class="ml-auto px-2 d-flex justify-content-center"><i class="px-2 fa-regular {{item.notify}}" (click)="notificationFunction($event,i)"></i></span></mat-panel-title> -->
+                    <!-- <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}<span class="ml-auto px-2 d-flex justify-content-center"><i class="material-icons" style="color: #414950;" (click)="notificationFunction($event,i)">{{item.notify}}</i></span></mat-panel-title> -->
+                    <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}<span class="ml-auto px-2 d-flex justify-content-center"><mat-slide-toggle class="ml-auto "  color="primary" #menukey (click)="menuNotification($event,menukey)" [checked]="false"></mat-slide-toggle></span></mat-panel-title>
                 </mat-expansion-panel-header>
 
                 <div *ngFor="let subitem of item.menu_list; let i = index">
-                    <div *ngIf="!hasSubMenu(subitem)" class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                        <small class="text-muted">{{ subitem.label }}</small>
-                        <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="1"><label class="custom-control-label" for="1"></label></div>
-                    </div>
+                    <mat-accordion class="notificationmenu">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header class=" pl-3 pb-2 mb-2" *ngIf="!hasSubMenu(subitem)">{{ subitem.label }} <mat-slide-toggle class="ml-auto mr-3"  color="primary" #menukey (click)="menuNotification($event,menukey)" [checked]="false"></mat-slide-toggle></mat-expansion-panel-header>
+                    <!-- <div *ngIf="!hasSubMenu(subitem)" class="d-flex justify-content-between border-bottom pb-2 mb-2"> -->
+                        <!-- <small class="text-muted">{{ subitem.label }}</small> -->
+                        <!-- <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="1"><label class="custom-control-label" for="1"></label></div> -->
+                        <!-- <div class="custom-control custom-switch"><input type="checkbox"  data-toggle="toggle"></div> -->
+                        <!-- <mat-slide-toggle  color="primary"></mat-slide-toggle> -->
+                    <!-- </div> -->
+                        <!-- <div> -->
+                            <div class="d-flex justify-content-between pb-2 border-bottom mb-2 px-5"  *ngFor="let tabs of subitem.templateTabs; let j = index">
+                                <mat-panel-title  class="text-muted">{{ tabs}}</mat-panel-title >
+                                <!-- <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="customSwitch2"><label class="custom-control-label" for="customSwitch2"></label></div> -->
+                                <mat-slide-toggle  color="primary"></mat-slide-toggle>
+                            </div>
+                        <!-- </div> -->
+                        </mat-expansion-panel>
+                    </mat-accordion>
 
                     <mat-accordion class="notificationmenu">
                         <mat-expansion-panel>
-                            <mat-expansion-panel-header class=" border-bottom pb-2 mb-2" *ngIf="hasSubMenu(subitem)">{{ subitem.label }}</mat-expansion-panel-header>
-                            <div class="d-flex justify-content-between mb-2" *ngFor="let subSubitem of subitem.submenu; let i = index">
-                                <small class="text-muted">{{ subSubitem.label }}</small>
+                            <mat-expansion-panel-header class=" pl-3 pb-2 mb-2" *ngIf="hasSubMenu(subitem)">{{ subitem.label }}</mat-expansion-panel-header>
+                            <div class=" mb-2 pl-5" *ngFor="let subSubitem of subitem.submenu; let i = index">
+                               
+
+
+                                <mat-accordion class="notificationmenu">
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header class=" pl-3 " >{{ subSubitem.label }} <mat-slide-toggle class="ml-auto mr-3"  color="primary" #menukey (click)="menuNotification($event,menukey)" [checked]="false"></mat-slide-toggle></mat-expansion-panel-header>
+                                <!-- <div *ngIf="!hasSubMenu(subitem)" class="d-flex justify-content-between border-bottom pb-2 mb-2"> -->
+                                    <!-- <small class="text-muted">{{ subitem.label }}</small> -->
+                                    <!-- <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="1"><label class="custom-control-label" for="1"></label></div> -->
+                                    <!-- <div class="custom-control custom-switch"><input type="checkbox"  data-toggle="toggle"></div> -->
+                                    <!-- <mat-slide-toggle  color="primary"></mat-slide-toggle> -->
+                                <!-- </div> -->
+                                    <!-- <div> -->
+                                        <div class="d-flex justify-content-between pb-2 border-bottom  px-5 mr-2"  *ngFor="let tabs of subSubitem.templateTabs; let j = index">
+                                            <mat-panel-title  class="text-muted">{{ tabs}}</mat-panel-title >
+                                            <!-- <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="customSwitch2"><label class="custom-control-label" for="customSwitch2"></label></div> -->
+                                            <mat-slide-toggle  color="primary"></mat-slide-toggle>
+                                        </div>
+                                    <!-- </div> -->
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+
+
+                               
+                                <!-- <small class="text-muted">{{ subSubitem.label }}</small>
                                 <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="customSwitch2"><label class="custom-control-label" for="customSwitch2"></label></div>
+                                <mat-slide-toggle  color="primary"></mat-slide-toggle> -->
                             </div>
                         </mat-expansion-panel>
                     </mat-accordion>
