@@ -746,7 +746,7 @@
                                                 </td>
                                                 <td *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''"  class="copyIconContainer">
                                                     <span  class="copyField" [innerHTML]="listOfField[item.field_name]" (click)="showListOfFieldData(tableField,i, item)"></span>
-                                                    <span class="material-icons copyicon" *ngIf="!(item && item.hideCopy)"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
+                                                    <span class="material-icons copyicon" *ngIf="!(item && item.hideCopy) && listOfField[item.field_name]"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
                                                 </td>                                                
                                             </tr>
                                         </tbody>
