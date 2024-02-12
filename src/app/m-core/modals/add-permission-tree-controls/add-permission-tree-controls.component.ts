@@ -29,6 +29,10 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   ]
   staticDataSubscription:Subscription;
   staticData:any={};
+  term:any={};
+  crListFieldType:string='text';
+  userCrListOperatorType:string = 'text';
+  checkMultiple:boolean=false;
 
 
   constructor(
@@ -69,8 +73,14 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   get crListContral(){
     return this.criteria.controls['crList'];
   }
+  getCrListValue(){
+    return this.criteria.controls['crList'].value;
+  }
   get userCrListContral(){
     return this.criteria.controls['userCrList'];
+  }
+  get userCrListValue(){
+    return this.criteria.controls['userCrList'].value;
   }
   showModal(alert){ 
     let data = {};
@@ -88,7 +98,9 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     }
     if(criteria && criteria['crList']){
       this.custMizedFormValue['crList'] = criteria['crList'];
+      this.criteria.get('crList').reset();
       this.custMizedFormValue['userCrList'] = criteria['userCrList'];
+      this.criteria.get('userCrList').reset();
       if(criteria.selfData) this.criteria.get('selfData').setValue(criteria.selfData);
     }else{
       this.reset();
@@ -149,6 +161,12 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   addCrList(key){
     let crList = this.criteria.get(key).value;
+    if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
+      crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
+    }else if(crList && crList.fValue && typeof crList.fValue == 'object'){
+      let value = ''; 
+      crList.fValue = crList.fValue;
+    }
     if(this.listOfFieldUpdateMode[key]){
       let index = this.updateIndex[key];
       this.custMizedFormValue[key][index]=crList;
@@ -159,6 +177,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       this.custMizedFormValue[key].push(crList);
     }    
     this.criteria.get(key).reset();
+    this.crListFieldType = '';
   }
   updateIndex={
     crList:-1,
@@ -168,7 +187,22 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     this.updateIndex[key]=i;
     this.listOfFieldUpdateMode[key] = true;
     let data = this.custMizedFormValue[key][i];
+    if(key == 'userCrList'){
+      data.fValue = this.convertColonStringToList(data.fValue);
+    }
     this.criteria.get(key).setValue(data);
+    if(key == 'userCrList'){
+      this.setValue('fName','userOperators','userCrList','user_filter_field_list')
+    }else{
+      this.setValue('fName','operators','crList','grid_field_list')
+    }
+  }
+  convertColonStringToList(value:string){
+    let list = [];
+    if(value && value != ''){
+      list = value.split(':');
+    }
+    return list;
   }
   deleteIndex:number=-1;
   deleteKey:string='';
@@ -191,26 +225,79 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       return false;
     }    
   }
-  setValue(fName:string,callBackField:string,key:string){
+  setValue(fName:string,callBackField:string,key:string,dataKey:string){
     if(fName == 'fName'){
       let value = this.criteria.value[key].fName;
-      let list = this.staticData['grid_field_list'];
+      let list = this.staticData[dataKey];
       let index = this.commonFunctionService.getIndexInArrayById(list,value,'field_name');
-      let type = list[index].type;
+      let field = list[index];
+      let type = field.type;
       let operatorType = '';
-      switch (type.toLowerCase()) {
-        case 'text':
-          operatorType = 'string';
-          break;
-        case 'date' :
-          operatorType = 'date';   
-        case 'number' :
-          operatorType = 'number';  
-        default:
-          break;
+      if(type && type != ''){
+        if(key == 'crList'){
+          this.crListFieldType = '';
+          this.modifyCrListController(key);
+          this.crListFieldType = type.toLowerCase();
+        }       
+        switch (type.toLowerCase()) {
+          case 'text':
+            operatorType = 'string';
+            break;
+          case 'date' :
+            operatorType = 'date';   
+            break;
+          case 'number' :
+            operatorType = 'number';  
+          default:
+            break;
+        }
       }
+      this.criteria.get(key).get('operator').reset();
+      this.criteria.get(key).get('fValue').reset();
       this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType);
+      if(dataKey == 'user_filter_field_list' && field.onchange_api_params && field.onchange_api_params != ''){
+        this.subscribeStaticData();
+        let payload = this.apiCallService.getPaylodWithCriteria(field.onchange_api_params,"user_value_list",[],{});
+        this.apiService.getStatiData([payload]);
+      }
     }
+  }
+  changeOperator(key:string){
+    let value = this.criteria.value[key];
+    let operator = value.operator;
+    if(operator && key == 'userCrList'){
+      if(operator == 'in'){
+        this.checkMultiple = true;
+      }else{
+        this.checkMultiple = false;
+      }
+    }else{
+      if(this.crListFieldType == 'date' && operator == 'in'){
+        this.crListFieldType = '';
+        const parentGroup = this.criteria.get(key) as FormGroup;
+        const newNestedGroup = this.fb.group({
+          start: [''],
+          end : ['']
+        });
+        parentGroup.removeControl('fValue'); 
+        parentGroup.addControl('fValue', newNestedGroup);  
+        this.crListFieldType ='daterange';      
+      }else{ 
+        let oldValue = this.crListFieldType;
+        this.crListFieldType = '';
+        this.modifyCrListController(key);   
+        if(oldValue == 'daterange'){
+          this.crListFieldType = 'date';
+        }else{
+          this.crListFieldType = oldValue;
+        }       
+      }
+    }
+  }
+  modifyCrListController(key:string){
+    const parentGroup = this.criteria.get(key) as FormGroup; 
+    parentGroup.removeControl('fValue');       
+    parentGroup.addControl('fValue', new FormControl(''));    
   }
 
   
