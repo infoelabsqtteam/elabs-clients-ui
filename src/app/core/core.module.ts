@@ -22,6 +22,9 @@ import { FormModelModule } from '../m-core/modals/form-model.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
+import { UserAccountComponent } from './user-account/user-account.component';
+import { SettingMenuComponent } from './setting-menu/setting-menu.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 @NgModule({
@@ -35,6 +38,9 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
         ForgotpwdModalComponent,
         PageNotFoundComponent,
         VerifyFailedComponent,
+        UserAccountComponent,
+        SettingMenuComponent,
+        SidebarComponent
         ],
         imports :[
             AppRoutingModule,
@@ -43,8 +49,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             AngularMaterialModule,
             AngularCommonModule,
             FormModelModule,
-            ModelModule,
-            AllPackageModule
+            ModelModule
             ],
         exports :[
             AppRoutingModule,
@@ -52,6 +57,9 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             HomeComponent,
             FooterComponent,
             HeaderLandingPageComponent,
+            UserAccountComponent,
+            SettingMenuComponent,
+            SidebarComponent
             ],
         providers:[
         { provide : HTTP_INTERCEPTORS,useClass : AuthInterceptor, multi: true},

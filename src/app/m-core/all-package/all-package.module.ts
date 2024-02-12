@@ -12,6 +12,7 @@ import { MomentDateModule } from '@angular/material-moment-adapter';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgxDiff2htmlModule } from 'ngx-diff2html';
 import { PipesModule } from '../../pipes/pipes.module';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 const packages = [
   CommonModule,
@@ -26,7 +27,8 @@ const packages = [
   MomentDateModule,
   EditorModule,
   CarouselModule,
-  NgxDiff2htmlModule
+  NgxDiff2htmlModule,
+  PerfectScrollbarModule
 ]
 
 @NgModule({

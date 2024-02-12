@@ -226,7 +226,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
               }                        
             }else{
                 this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
-                this.router.navigate['/dashboard'];
+                this.storageService.setRedirectUrl('/');
+                this.dataShareService.setModuleIndex(-1);     
+                this.router.navigate(['/dashboard']);                        
             }                    
         }else{
             if(moduleIndex != -1){
@@ -234,7 +236,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
                 this.dataShareService.setModuleIndex(moduleIndex);
             }else{
                 this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
-                this.router.navigate['/dashboard'];
+                this.storageService.setRedirectUrl('/');
+                this.dataShareService.setModuleIndex(-1);
+                this.router.navigate(['/dashboard']);
+                
             }
         }  
       }                   
@@ -289,7 +294,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.tabs = [];
       }
       if(this.tabs.length > 0){
-        this.filterTab = tempData[0].filterTab;
+        this.filterTab = tempData[0]?.filterTab;
         if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
           this.isTabFilter = true;
         }else{
@@ -322,11 +327,13 @@ export class BuilderComponent implements OnInit,OnDestroy {
   setGridData(gridData){
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
-        this.total = gridData.data_size;
-        const currentTabName = this.storageService.GetActiveMenu()['name'];        
+        this.total = gridData.data_size;                
         const tab = this.tabs[this.selectTabIndex];
-        const key = currentTabName+"_"+tab.name;
-        this.gridCountByTab[key] = gridData.data_size;
+        if(tab && tab.name){
+          const currentTabName = this.storageService.GetActiveMenu()['name'];
+          const key = currentTabName+"_"+tab.name;
+          this.gridCountByTab[key] = gridData.data_size;
+        }        
       } else {
         this.total = 0;
       }
