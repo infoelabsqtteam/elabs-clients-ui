@@ -295,7 +295,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }
       if(this.tabs.length > 0){
         this.filterTab = tempData[0]?.filterTab;
-        if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
+        if(this.filterTab?.tab_name){
           this.isTabFilter = true;
         }else{
           this.isTabFilter = false;          

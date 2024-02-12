@@ -17,8 +17,7 @@
                   <mat-label>Field Name</mat-label>
                   <mat-select  [compareWith]="compareObjects" [formControlName]="'fName'" (selectionChange)="setValue()">                      
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let staticValue of staticData['grid_field_list']" [ngClass]="{'d-none':staticValue.type == 'info'}"  [value]="staticValue.field_name" [innerHtml]="staticValue && staticValue.label ?staticValue.label : staticValue">
-                      </mat-option>
+                      <mat-option *ngFor="let staticValue of staticData['grid_field_list']" [ngClass]="{'d-none':staticValue.type == 'info'}"  [value]="staticValue.field_name">{{ staticValue?.label ? staticValue.label : staticValue }}</mat-option>
                   </mat-select>   
                 </mat-form-field>              
               </div>
@@ -45,7 +44,7 @@
                       <thead class="border">
                           <tr>
                               <th width="10%" style="text-align: center">Action</th>
-                              <th *ngFor="let item of list_of_fields">{{item.label}}</th>                                                
+                              <th *ngFor="let item of list_of_fields">{{item?.label}}</th>                                                
                           </tr>
                       </thead>
                       <tbody>
