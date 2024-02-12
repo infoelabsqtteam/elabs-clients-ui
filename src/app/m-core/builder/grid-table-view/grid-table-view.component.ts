@@ -721,9 +721,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
 
   }
-  updateColumnList(columns?){
-    if(columns) columns.forEach(column=>column.display =true)
-  }
   getTabsCount(tabs){
     this.apiCallService.getTabsCountPyload(tabs);    
   }

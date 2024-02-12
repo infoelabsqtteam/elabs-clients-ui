@@ -277,10 +277,12 @@
                                     <mdb-icon fas icon="edit"></mdb-icon>
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
-                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion py-0" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                        <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
-                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
-                                            <p class="m-0">{{ item.name ? item.name : item }}  <a (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList  [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
+                                            <p class="m-0"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                              </svg></span> 
+                                            {{ item.name ? item.name : item }}  <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -357,11 +359,13 @@
                                     <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] != undefined">update</i>
                                 </button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
-                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
-                                            <p>{{item}} 
+                                            <p><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                              </svg></span> {{item}} 
                                                 <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString('',tableField,i)" ><i class="fas fa-pen"></i></a>
-                                                <a [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
+                                                <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
                                             </p>
                                         </div>
                                     </div>
@@ -502,23 +506,6 @@
                                     </div>
 
                                     <div *ngIf="fields.type == 'typeahead'">
-                                        <div class="w-100 position-relative d-flex" *ngIf="fields.datatype != 'chips'">
-                                            <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
-                                                <mat-label>{{fields.label}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                <input type="text" [placeholder]="fields.label"   aria-label="Number" matInput [formControlName]="fields.field_name" [matAutocomplete]="first"
-                                                    (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
-                                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,false)" [displayWith]="getOptionText">
-                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
-                                                    <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
-                                                </mat-autocomplete>
-                                            </mat-form-field>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
-                                                <mdb-icon fas icon="plus"></mdb-icon>
-                                            </button>
-                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button modelplusbtn"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
-                                                <mdb-icon fas icon="edit"></mdb-icon>
-                                            </button>
-                                        </div>
                                         <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
                                                 <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
@@ -538,14 +525,33 @@
                                                 </mat-chip-list>
                                             </mat-form-field>                                
                                         </div>
+                                        <div class="w-100 position-relative d-flex dropdowndata" *ngIf="fields.datatype != 'chips'">
+                                            <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
+                                                <mat-label>{{fields.label}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
+                                                <input type="text" [placeholder]="fields.label"   aria-label="Number" matInput [formControlName]="fields.field_name" [matAutocomplete]="first"
+                                                    (keyup)="updateData($event,tableField,fields)" [id]="fields._id+'_'+fields.field_name">
+                                                <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue(tableField,fields,false)" [displayWith]="getOptionText">
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
+                                                    <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                            <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div> 
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
+                                                <mdb-icon fas icon="plus"></mdb-icon>
+                                            </button>
+                                            <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button modelplusbtn"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
+                                                <mdb-icon fas icon="edit"></mdb-icon>
+                                            </button>
                                         <div *ngIf="fields.datatype == 'list_of_object'">
-                                            <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                            <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                 <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
-                                                    <p>{{ item.name ? item.name : item }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                    <p><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                                        <path d="M0 0h24v24H0z" fill="none"></path>
+                                                      </svg></span> {{ item.name ? item.name : item }} <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                 </div>                                                
                                             </div>
                                         </div>
-
+                                      </div>
                                     </div>
                                     <div *ngIf="fields.type == 'list_of_checkbox'">
                                         <div class="row w-100 m-0">
@@ -594,11 +600,13 @@
 
 
                                             <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
-                                                <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list autosuggestion" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
-                                                        <p class="m-0 small">{{item}} 
+                                                        <p class="m-0 small"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                                            <path d="M0 0h24v24H0z" fill="none"></path>
+                                                          </svg></span>{{item}} 
                                                             <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString(tableField,fields,i)" ><i class="fas fa-pen"></i></a>
-                                                            <a [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                            <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -738,7 +746,7 @@
                                                 </td>
                                                 <td *ngFor="let item of tableField.list_of_fields && tableField.list_of_fields.length > 0 ? tableField.list_of_fields : tableField.gridColumns && tableField.gridColumns.length > 0 ? tableField.gridColumns:[]" [ngClass]="item.hide_in_inline_grid  || tableField.notDisplay ? 'd-none' : ''"  class="copyIconContainer">
                                                     <span  class="copyField" [innerHTML]="listOfField[item.field_name]" (click)="showListOfFieldData(tableField,i, item)"></span>
-                                                    <span class="material-icons copyicon" *ngIf="!(item && item.hideCopy)"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
+                                                    <span class="material-icons copyicon" *ngIf="!(item && item.hideCopy) && listOfField[item.field_name]"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(listOfField[item.field_name])" >content_copy</span>
                                                 </td>                                                
                                             </tr>
                                         </tbody>
@@ -907,13 +915,7 @@
                             <div class="form-label d-flex justify-content-between">
                                 <div class="grid-selection-title">{{ tableField.label | titlecase}}<span *ngIf="modifyCustmizedFormValue[tableField.field_name] && modifyCustmizedFormValue[tableField.field_name].length > 0">({{modifyCustmizedFormValue[tableField.field_name].length}})</span><span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></div>
                                 <div class="grid-selection-buttons" *ngIf="tableField.add_list_field != 'add'">
-                                    <ng-container *ngIf="tableField.gridColumns && tableField.gridColumns.length>0" >
-                                        <button (click)="updateColumnList(tableField.gridColumns)" [matTooltip]="'Show All'" [matTooltipPosition]="'above'" mat-icon-button class="plusicon"><mat-icon>autorenew</mat-icon></button>
-                                        <button  mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'All Columns'" [matTooltipPosition]="'above'" class="plusicon"><mat-icon>filter_alt</mat-icon></button>
-                                    </ng-container>
-                                    <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown">
-                                        <app-grid-filter-menu [columns]="tableField.gridColumns" [formTable]="tableField" [form]="form"></app-grid-filter-menu>
-                                    </mat-menu> 
+                                    <app-grid-filter-menu [extraClass]="'float-left plusicon'" [columns]="tableField.gridColumns" [formTable]="tableField" [form]="form"></app-grid-filter-menu>
                                     <button [id]="tableField._id+'_'+tableField.field_name" *ngIf="tableField.add_new_enabled && !tableField.is_disabled && tableField['showButton']" class="plusicon" mat-icon-button  (click)="addListOfFields(tableField)" [matTooltip]="tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] ? tableField['addNewButtonProperty'] && tableField['addNewButtonProperty']['toolTip'] : 'Add'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons">add_circle</span></button>                                    
                                     <button class="plusicon" mat-icon-button *ngIf="tableField.datatype != 'grid_review' && !tableField.is_disabled" (click)="setValue('',tableField,false)" [matTooltip]="tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] ? tableField['selectButtonProperty'] && tableField['selectButtonProperty']['toolTip'] : 'Select'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">add_task</span></button>
                                     <button class="plusicon" mat-icon-button *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0 && tableField.datatype == 'grid_review' && !tableField.is_disabled" (click)="reviewParameters(tableField,custmizedFormValue[tableField.field_name])" [matTooltip]="tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] ? tableField['reviewButtonProperty'] && tableField['reviewButtonProperty']['toolTip'] : 'Review'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'" [disabled]="templateFormControl[tableField.field_name].disabled"><span class="material-icons">reviews</span></button>
@@ -934,8 +936,8 @@
                                                 <th *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))"></th>                               
                                                 <th *ngFor="let fieldName of tableField.gridColumns; let j=index;" class="text-nowrap" [ngClass]="fieldName.display ? 'd-table-cell':'d-none'">
                                                     <div class="justify-content-between d-flex heading"> {{ fieldName.label | titlecase}} 
-                                                        <span  class="show-on-hover mr-1">
-                                                            <i fas class="fas fa-ellipsis-v mr-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                        <span  class="show-on-hover px-1">
+                                                            <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                         </span>
                                                         <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                                            <app-grid-column-action-menu  [headElements]="tableField.gridColumns" [data]="modifyCustmizedFormValue[tableField.field_name]" [index]="j"  ></app-grid-column-action-menu>
