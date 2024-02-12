@@ -29,7 +29,7 @@ export class UserAccountComponent implements OnInit {
     let activeRole = this.storageService.getActiveRole();  
     if(this.roleList && this.roleList.length == 1){
       this.roleList = roleList;
-      if(activeRole && typeof activeRole == 'object' && activeRole.name){
+      if(activeRole && typeof activeRole == 'object' && activeRole?.name){
         this.activeRole = activeRole.name;
       }else{
         this.activeRole = this.roleList[0].name;
@@ -41,7 +41,7 @@ export class UserAccountComponent implements OnInit {
       roleList.forEach(role => {
         this.roleList.push(role);
       }); 
-      if(activeRole && typeof activeRole == 'object' && activeRole.name){
+      if(activeRole && typeof activeRole == 'object' && activeRole?.name){
         this.activeRole = activeRole.name;
       }else{
         this.activeRole = 'All';
