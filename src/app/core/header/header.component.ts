@@ -29,11 +29,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     isShow: boolean = true;
 
 
-    public userInfo: any;
-    public userColorCode: any;
-    public userName: any;
-    public userEmail: any;
-    public userFirstLetter: any;
+    // public userInfo: any;
+    // public userColorCode: any;
+    // public userName: any;
+    // public userEmail: any;
+    // public userFirstLetter: any;
     public menuData: any = [];
     currentPage: any;
     logedin: boolean = false;
@@ -98,16 +98,17 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             }
         });
         this.moduleIndexSubscription = this.dataShareService.moduleIndex.subscribe(index =>{
-            if(index != -1){
-                this.getMenuByModuleIndex(index);
+            if(index != -1){                
                 this.moduleIndex = index;
             }else{
                 this.moduleIndex = -1;
             }
+            this.getMenuByModuleIndex(index);
         })
         this.menuIndexSubscription = this.dataShareService.menuIndexs.subscribe(indexs =>{ 
             if(indexs.moduleIndex != undefined && indexs.moduleIndex != -1){
                 this.moduleIndex = indexs.moduleIndex;
+                this.AllModuleList = this.storageService.GetModules();
                 let module = this.AllModuleList[this.moduleIndex]; 
                 this.menuData = module.menu_list;
                 //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
@@ -135,19 +136,19 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             }     
         };
 
-        if (this.storageService.GetUserInfo()) {
-            this.userInfo = this.storageService.GetUserInfo();
-            this.userName = this.userInfo.name;
-            this.userEmail = this.userInfo.email;
-            this.teamname = this.userInfo.list1
-            if (this.userName && this.userName != null) {
-                this.userFirstLetter = this.userName.charAt(0).toUpperCase()
-            } else {
-                if (this.userInfo.email && this.userInfo.email != null) {
-                    this.userFirstLetter = this.userInfo.email.toUpperCase()
-                }
-            }
-        }
+        // if (this.storageService.GetUserInfo()) {
+        //     this.userInfo = this.storageService.GetUserInfo();
+        //     this.userName = this.userInfo.name;
+        //     this.userEmail = this.userInfo.email;
+        //     this.teamname = this.userInfo.list1
+        //     if (this.userName && this.userName != null) {
+        //         this.userFirstLetter = this.userName.charAt(0).toUpperCase()
+        //     } else {
+        //         if (this.userInfo.email && this.userInfo.email != null) {
+        //             this.userFirstLetter = this.userInfo.email.toUpperCase()
+        //         }
+        //     }
+        // }
 
         this.subscription = this.dataShareService.currentPage.subscribe(
             (data: any) => {
@@ -303,9 +304,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.menuOrModuleCommounService.getTemplateData(module,menu)
             } else {
                 this.menuData = [];
+                this.menuBoxDashboard = false;
             }
         } else {
             this.menuData = [];
+            this.menuBoxDashboard = false;
         }
     }  
      

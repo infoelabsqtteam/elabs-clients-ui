@@ -66,9 +66,7 @@ export class PermissionTreeViewComponent implements OnInit {
     );
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
-      this.setStaticData(data);
-    })
+    
     // Initialize form group.
     // this.searchForm = this.fb.group({
     //   searchText: ['', Validators.required],
@@ -101,9 +99,17 @@ export class PermissionTreeViewComponent implements OnInit {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
+    this.unSubscribe();
+  }
+  unSubscribe(){
     if(this.staticDataSubscriber){
       this.staticDataSubscriber.unsubscribe();
     }
+  }
+  subscribeStaticData(){
+    this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
+      this.setStaticData(data);
+    })
   }
   setStaticData(staticDatas){
     if(staticDatas && Object.keys(staticDatas).length > 0 && staticDatas[this.ddnfieldName]) {
@@ -312,7 +318,8 @@ export class PermissionTreeViewComponent implements OnInit {
   //   this.treeComponentService.updateItem(nestedNode!, itemValue);
   // }
 
-  showModal(alert){    
+  showModal(alert){   
+    this.subscribeStaticData(); 
     this.data=alert.selectedData;
     let field = alert.field
     this.fieldName = field.label;
@@ -336,12 +343,12 @@ export class PermissionTreeViewComponent implements OnInit {
   selectGridData(){
     //let treeControlData = this.treeControl.expansionModel.selected;
     //let data = this.dataSource.data;
-    console.log(this.checklistSelection.selected);
+    //console.log(this.checklistSelection.selected);
     let selectedData = this.treeComponentService.modifySelectedDataWithParentId(this.checklistSelection.selected);
-    console.log(selectedData);
+    //console.log(selectedData);
     let allNodes = this.treeControl.dataNodes;
     let rearrangedSelectedNode = this.treeComponentService.getSelectedNodeWithParent(allNodes,selectedData,this.keys);
-    console.log(rearrangedSelectedNode);
+    //console.log(rearrangedSelectedNode);
     let mapObjecThroughList = this.treeComponentService.buildTreeObject(rearrangedSelectedNode);
     //console.log(mapObjecThroughList);
     this.treeViewComponentResponce.next(mapObjecThroughList);
@@ -354,6 +361,28 @@ export class PermissionTreeViewComponent implements OnInit {
     this.keys = [];
     this.staticData = {};
     this.treeView.hide();
+  }
+  nodeIndex:number=-1;
+  addRollPermissionTabWise(node){
+    if(node){
+      let id = node._id;           
+      if(this.checklistSelection && this.checklistSelection.selected && this.checklistSelection.selected.length > 0){
+        this.nodeIndex = this.commonfunctionService.getIndexInArrayById(this.checklistSelection.selected,id);
+      }
+      this.unSubscribe();
+      this.modalService.open("permission-control-model",node);
+    }
+    
+  }
+  controlResponce(responce){
+    if(this.nodeIndex != -1){
+      let node = this.checklistSelection.selected[this.nodeIndex];
+      if(typeof responce == 'object'){
+        node['criteria'] = responce;
+        this.checklistSelection.selected[this.nodeIndex] = node;
+      }      
+    }
+    this.subscribeStaticData();
   }
 
   /**
