@@ -58,7 +58,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   @ViewChild('typeheadInput') typeheadInput: ElementRef<HTMLInputElement>;
   @ViewChild('typeheadchips') typeheadchips: ElementRef<HTMLInputElement>;
-
+  isDisabled = false;
 
   typeAheadData: any=[];
   addedDataInList: any;
@@ -240,6 +240,14 @@ export class GridSelectionModalComponent implements OnInit {
     if(field.type == "typeahead"){
       if(field.datatype != 'chips'){
         this.modifiedGridData[index][field.field_name]= selectedData;
+        let fieldIndex = this.CommonFunctionService.getIndexInArrayById(this.listOfGridFieldName,field._id);
+        delete this.listOfGridFieldName[fieldIndex]["errormsg"];
+        this.isDisabled = false;
+        this.listOfGridFieldName.forEach(element => {
+          if(element.errormsg) {
+            this.isDisabled = true;
+          }
+        });
       }else if(field.datatype == 'chips'){
         this.checkDataInListOrAdd(field,index,selectedData,chipsInput);
       }
@@ -283,14 +291,12 @@ export class GridSelectionModalComponent implements OnInit {
 
   typeaheadObjectWithtext;
   searchTypeaheadData(field, currentObject,chipsInputValue) {
-    //console.log(chipsInputValue)
+    
     if(chipsInputValue != ''){
       this.typeaheadObjectWithtext = currentObject;
-
       this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
-
       this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
-
+      let fieldIndex = this.CommonFunctionService.getIndexInArrayById(this.listOfGridFieldName,field._id);
       let call_back_field = '';
       let criteria = [];
       const staticModal = []
@@ -303,8 +309,14 @@ export class GridSelectionModalComponent implements OnInit {
       let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
       staticModal.push(staticModalGroup);
       this.apiservice.GetTypeaheadData(staticModal);
-
-      this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
+      if(field?.type != "text" && typeof this.addedDataInList == "object" && this.addedDataInList?.name){
+        this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
+        delete this.listOfGridFieldName[fieldIndex]["errormsg"];
+      }else {
+        this.listOfGridFieldName[fieldIndex]["errormsg"] = "Invalid Data";
+        this.isDisabled = true;
+      }
+      //this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
     }else{
       this.typeAheadData = [];
     }
