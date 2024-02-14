@@ -22,7 +22,6 @@ import { FileViewsModalComponent } from './file-views-modal/file-views-modal.com
 import { CommunicationDataModalComponent } from './communication-data-modal/communication-data-modal.component';
 import { SettingModalComponent } from './setting-modal/setting-modal.component';
 import { ShortcutinfoComponent } from './shortcutinfo/shortcutinfo.component';
-import { LandingFunctionsModalComponent } from './landing-functions-modal/landing-functions-modal.component';
 
 import { BisFormComponent } from './report-form/bis-form/bis-form.component';
 import { PharmaFormComponent } from './report-form/pharma-form/pharma-form.component';
@@ -62,7 +61,6 @@ const models = [
   ApedaFormatComponent,
   EicFormatComponent,
   SettingModalComponent,
-  LandingFunctionsModalComponent,
   ShortcutinfoComponent,
   GitVersionComponent,
   ChartModalComponent,
