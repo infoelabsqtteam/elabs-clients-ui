@@ -48,17 +48,14 @@ export class McoreComponent implements OnInit {
    }
 
   ngOnInit() {
-    // default settings
-    const menuType =  this.storageService.GetMenuType();
     if(this.envService.getRequestType() == 'PUBLIC'){
       this.layoutType = LAYOUT_HORIZONTAL; 
-      this.dataShareService.sendCurrentPage('HOME4')
+      this.dataShareService.sendCurrentPage('MODULE')
     }
-    else{
-      this.dataShareService.sendCurrentPage('MODULE');
+    else{    
+      const menuType =  this.storageService.GetMenuType();  
       if(menuType == 'Horizontal'){
         this.layoutType = LAYOUT_HORIZONTAL; 
-       // this.layoutType = LAYOUT_VERTICAL;
       }else{
         this.layoutType = LAYOUT_VERTICAL; 
       } 

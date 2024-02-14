@@ -1,6 +1,6 @@
 <nav class="mx-3 position-relative">
     <div class="headermenu">
-      <ng-container *ngIf="menuBoxDashboard || showUserAccount">
+      <ng-container>
         <mat-tab-group animationDuration="0ms" *ngIf="menuBoxDashboard" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
           <mat-tab>
             <ng-template mat-tab-label><a class="px-2" [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'"
@@ -26,7 +26,7 @@
     <ul class="d-flex align-items-center rightheader m-0">
       <li class="nav-item avatar">
         <div class="searchbox">
-          <input [(ngModel)]="filterdata" class="form-control rounded-pill" (keyup)="searchmodel()" placeholder="Search items..." autocomplete="off">
+          <input  #serachData class="form-control rounded-pill" (keyup)="searchmodel(serachData.value)" placeholder="Search items..." autocomplete="off">
           <div class="searchicon"><mat-icon>search</mat-icon></div>
           <div class="moduleitems" *ngIf="showsearchmenu">
             <div class="modulesdata">
