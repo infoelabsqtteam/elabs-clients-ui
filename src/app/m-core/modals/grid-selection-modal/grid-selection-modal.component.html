@@ -51,7 +51,7 @@
                                     <span *ngIf="data.selected && editableGridColumns.length > 1 && !editEnable" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
                                 </div>
                             </td>
-                            <td  *ngFor="let fieldName of listOfGridFieldName" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
+                            <td  *ngFor="let fieldName of listOfGridFieldName; let j = index" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                               <div>
                                 <div *ngIf="!fieldName.editable" class="grid-data d-flex align-items-center copyIconContainer" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
                                     <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)" class="copyField"></span>
@@ -129,12 +129,12 @@
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
-                                                        [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value)" autocomplete="off">
+                                                        [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value,i,j)" autocomplete="off" [disabled]="istypeheadDisabled">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadInput,data)"  [displayWith]="getOptionText">
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>                                  
                                                 </mat-form-field>
-                                                <small class="typeheaderrormsg">{{fieldName.errormsg? fieldName.errormsg: ''}}</small>
+                                                <small class="typeheaderrormsg" *ngIf="typeheadRowIndex == i && typeheadColIndex == j">{{fieldName.errormsg? fieldName.errormsg: ''}}</small>
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
