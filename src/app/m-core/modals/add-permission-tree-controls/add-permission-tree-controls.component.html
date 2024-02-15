@@ -11,11 +11,19 @@
       <div class="modal-body pt-0 tree-view" [formGroup]="criteria">
         <div class="row m-0">
           <div [ngClass]="'col-lg-12'">
+            <div class="row">
+              <div [ngClass]="'col-lg-4'">
+                <mat-checkbox color="primary" class="example-margin" [formControlName]="'selfData'">Self Data</mat-checkbox>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12"><div class="form-label" >CrList</div></div>
+            </div>
             <div class="row" [formGroupName]="'crList'">
               <div class="col-lg-4">              
                 <mat-form-field appearance="outline" class="w-100" >
                   <mat-label>Field Name</mat-label>
-                  <mat-select  [compareWith]="compareObjects" [formControlName]="'fName'" (selectionChange)="setValue()">                      
+                  <mat-select  [compareWith]="compareObjects" [formControlName]="'fName'" (selectionChange)="setValue('fName','operators','crList','grid_field_list')">                      
                       <mat-option></mat-option>
                       <mat-option *ngFor="let staticValue of staticData['grid_field_list']" [ngClass]="{'d-none':staticValue.type == 'info'}"  [value]="staticValue.field_name">{{ staticValue?.label ? staticValue.label : staticValue }}</mat-option>
                   </mat-select>   
@@ -24,23 +32,47 @@
               <div class="col-lg-4">                
                 <mat-form-field appearance="outline" class="example-full-width w-100">
                     <mat-label>Operator</mat-label>
-                    <input matInput type="text" [placeholder]="'eq'"  [formControlName]="'operator'"  autocomplete="off">  
+                    <mat-select  [formControlName]="'operator'" (selectionChange)="changeOperator('crList')">                      
+                      <mat-option></mat-option>
+                      <mat-option *ngFor="let staticValue of staticData['operators'] | keyvalue"  [value]="staticValue.key" [innerHtml]="staticValue.value">
+                      </mat-option>
+                    </mat-select>
+                    <!-- <input matInput type="text" [placeholder]="'eq'"  [formControlName]="'operator'"  autocomplete="off">   -->
                 </mat-form-field>               
               </div>
               <div class="col-lg-3">                
-                <mat-form-field appearance="outline" class="example-full-width w-100">
+                <mat-form-field appearance="outline" class="example-full-width w-100" *ngIf="crListFieldType == 'text'"  >
                     <mat-label>Field Value</mat-label>
                     <input matInput type="text" [placeholder]="'test'"  [formControlName]="'fValue'"  autocomplete="off">  
-                </mat-form-field>               
+                </mat-form-field>   
+                <mat-form-field appearance="outline" class="example-full-width w-100" *ngIf="crListFieldType == 'number'" >
+                  <mat-label>Field Value</mat-label>
+                  <input matInput type="number" [formControlName]="'fValue'" autocomplete="off"> 
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="example-full-width w-100" *ngIf="crListFieldType == 'date'" >
+                  <mat-label>Field Value</mat-label>
+                  <input matInput [matDatepicker]="picker2" [formControlName]="'fValue'">
+                  <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
+                  <mat-datepicker #picker2 color="primary" ></mat-datepicker>
+                </mat-form-field>    
+                <mat-form-field appearance="outline" *ngIf="crListFieldType == 'daterange'" >
+                  <mat-label>Field Value</mat-label>
+                  <mat-date-range-input [formGroupName]="'fValue'" [rangePicker]="picker" >
+                      <input matStartDate formControlName="start" placeholder="Start date" >
+                      <input matEndDate formControlName="end" placeholder="End date">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>  
+                </mat-form-field>        
               </div>
               <div class="col-lg-1 pt-1">
-                <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="addCrList()" [disabled]="!crListContral.valid"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode">update</i></button>
+                <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="addCrList('crList')" [disabled]="!crListContral.valid"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode['crList']"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode['crList']">update</i></button>
               </div>
             </div>
             <div class="row mb-2">
-              <div class="col-lg-12 table-responsive table without-filter mt-2 maxheightdata" *ngIf="ListOfCrList">          
+              <div class="col-lg-12 table-responsive table without-filter mt-2 maxheightdata" *ngIf="custMizedFormValue['crList']">          
 
-                  <table class="table table-bordered table-hover one-line-text" *ngIf="ListOfCrList.length > 0">
+                  <table class="table table-bordered table-hover one-line-text" *ngIf="custMizedFormValue['crList'].length > 0">
                       <thead class="border">
                           <tr>
                               <th width="10%" style="text-align: center">Action</th>
@@ -48,17 +80,89 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr *ngFor="let data of ListOfCrList; let i = index" class="border">
+                          <tr *ngFor="let data of custMizedFormValue['crList']; let i = index" class="border">
                               <td class="px-1" style="text-align: center">                                  
-                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFiedls(i)" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
-                                  <a mdbBtn floating="true" size="sm" (click)="openModal(i)" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
+                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFiedls(i,'crList')" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                  <a mdbBtn floating="true" size="sm" (click)="openModal(i,'crList')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                               </td>
                               <td *ngFor="let item of list_of_fields">{{data[item.field_name]}}<td>                                                
                           </tr>
                       </tbody>
                   </table>
               </div>
-          </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12"><div class="form-label" >User CrList</div></div>
+            </div>
+            <div class="row" [formGroupName]="'userCrList'">
+              <div class="col-lg-4">              
+                <mat-form-field appearance="outline" class="w-100" >
+                  <mat-label>Field Name</mat-label>
+                  <mat-select  [compareWith]="compareObjects" [formControlName]="'fName'" (selectionChange)="setValue('fName','userOperators','userCrList','user_filter_field_list')">                      
+                      <mat-option></mat-option>
+                      <mat-option *ngFor="let staticValue of staticData['user_filter_field_list']"   [value]="staticValue.field_name" [innerHtml]="staticValue && staticValue.lable ? staticValue.lable : staticValue">
+                      </mat-option>
+                  </mat-select>   
+                </mat-form-field>              
+              </div>
+              <div class="col-lg-4">                
+                <mat-form-field appearance="outline" class="example-full-width w-100">
+                    <mat-label>Operator</mat-label>
+                    <mat-select   [formControlName]="'operator'" (selectionChange)="changeOperator('userCrList')">                      
+                      <mat-option></mat-option>
+                      <mat-option *ngFor="let staticValue of staticData['userOperators'] | keyvalue"  [value]="staticValue.key" [innerHtml]="staticValue.value">
+                      </mat-option>
+                    </mat-select>
+                    <!-- <input matInput type="text" [placeholder]="'eq'"  [formControlName]="'operator'"  autocomplete="off">   -->
+                </mat-form-field>               
+              </div>
+              <div class="col-lg-3">                
+                <mat-form-field appearance="outline" class="example-full-width w-100">
+                  <mat-label>Field Value</mat-label>
+                   
+                  <mat-select  [formControlName]="'fValue'" *ngIf="!checkMultiple">
+                      <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term['fValue']" [ngModelOptions]="{standalone: true}"></div>
+                      
+                      <!-- <mat-select-trigger> {{userCrListContral['fValue']?.value ? userCrListContral['fValue']?.value[0]?.name : ''}} <span *ngIf="userCrListContral['fValue']?.value?.length > 1"> (+{{userCrListContral['fValue']?.value.length - 1}} others)</span></mat-select-trigger> -->
+                      <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue._id" ><span [innerHtml]="staticValue.name"></span>
+                      </mat-option>
+                  </mat-select>
+                  <mat-select  [formControlName]="'fValue'" multiple *ngIf="checkMultiple">
+                    <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term['fValue']" [ngModelOptions]="{standalone: true}"></div>                
+                    
+                    <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue._id" ><span [innerHtml]="staticValue.name"></span>
+                    </mat-option>
+                </mat-select>
+
+
+              </mat-form-field>           
+              </div>
+              <div class="col-lg-1 pt-1">
+                <button mdbBtn type="button" size="sm" class="icon-button  text-white list_of_field_button modelplusbtn" mdbWavesEffect (click)="addCrList('userCrList')" [disabled]="!userCrListContral.valid"><mdb-icon fas icon="plus" *ngIf="!listOfFieldUpdateMode['userCrList']"></mdb-icon><i class="material-icons md-48" *ngIf="listOfFieldUpdateMode['userCrList']">update</i></button>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-lg-12 table-responsive table without-filter mt-2 maxheightdata" *ngIf="custMizedFormValue['userCrList']">          
+
+                  <table class="table table-bordered table-hover one-line-text" *ngIf="custMizedFormValue['userCrList'].length > 0">
+                      <thead class="border">
+                          <tr>
+                              <th width="10%" style="text-align: center">Action</th>
+                              <th *ngFor="let item of list_of_fields">{{item.label}}</th>                                                
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let data of custMizedFormValue['userCrList']; let i = index" class="border">
+                              <td class="px-1" style="text-align: center">                                  
+                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFiedls(i,'userCrList')" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                  <a mdbBtn floating="true" size="sm" (click)="openModal(i,'userCrList')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
+                              </td>
+                              <td *ngFor="let item of list_of_fields">{{data[item.field_name]}}<td>                                                
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
