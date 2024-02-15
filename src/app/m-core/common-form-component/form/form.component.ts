@@ -25,7 +25,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
   htmlViewConfig:AngularEditorConfig = htmlViewConfig as AngularEditorConfig;
   tinymceConfig = {} 
-  tinymceapikey = Common.TINYMICAPIKEY; 
+  tinymceapikey:any; 
   templateForm: FormGroup;
 
   //@Output() filledFormData = new EventEmitter();
@@ -246,7 +246,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // );
     //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
+    let tinymicEditorKey = this.storageService.getApplicationSetting().tinyMicCapikey;
+    if(tinymicEditorKey && tinymicEditorKey != ''){
+      this.tinymceapikey = tinymicEditorKey;
+    }else {
+      this.tinymceapikey = Common.TINYMICAPIKEY; 
+    }
     this.tinymceConfig = {
       height: 500,
       menubar: false,
