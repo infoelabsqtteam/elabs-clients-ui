@@ -2,6 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "experimentalDecorators": true,
+    "allowJs": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "paths": {
@@ -18,13 +19,12 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2020",
+      "es2018",
       "dom"
     ]
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true,
-    "enableIvy" : true
+    "strictInjectionParameters": true
   }
 }

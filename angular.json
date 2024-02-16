@@ -150,14 +150,6 @@
                   "maximumError": "150kb"
                 }
               ]
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -179,12 +171,9 @@
             },
             "uat": {
               "browserTarget": "elabs-client-ui:build:uat"
-            },
-            "development": {
-              "browserTarget": "elabs-client-ui:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": ""
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -228,9 +217,6 @@
             },
             "uat": {
               "devServerTarget": "elabs-client-ui:serve:uat"
-            },
-            "development": {
-              "devServerTarget": "elabs-client-ui:serve:development"
             }
           }
         },
@@ -290,13 +276,6 @@
                   "with": "src/environments/environment.uat.ts"
                 }
               ],
-              "sourceMap": false,
-              "optimization": {
-                "scripts": false,
-                "styles": true
-              }
-            },
-            "development": {
               "sourceMap": false,
               "optimization": {
                 "scripts": false,
