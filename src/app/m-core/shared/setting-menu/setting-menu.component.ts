@@ -1,11 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges, Inject } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
-
+import { HttpClient } from '@angular/common/http';
 import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
 import { MatSidenav } from "@angular/material/sidenav";
-
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-setting-menu',
   templateUrl: './setting-menu.component.html',
@@ -98,6 +97,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     constructor(
         private router: Router,
+        private http:HttpClient,
+        private _snackBar: MatSnackBar,
         private storageService: StorageService,
         private permissionService: PermissionService,
         private dataShareService: DataShareService,
@@ -231,7 +232,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         if (saveFromDataRsponce) {
             if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
                 if (saveFromDataRsponce.success == 'success') {
-                    this.apiCallService.getUserNotification(1);
+                    // this.apiCallService.getUserNotification(1);
                 }
             }
         }
@@ -318,7 +319,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     ngOnChanges(changes: SimpleChanges) {
         this.getMenuByModule();
-        this.apiCallService.getUserNotification(1);
+        // this.apiCallService.getUserNotification(1);
     }
 
     getMenuByModule() {
@@ -822,12 +823,44 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     subscribeGetUserInfo(){
         this.authDataService.userInfo.subscribe(data =>{
+            console.log(data);
         this.isPageLoading = false;
         this.notificationService.notify("bg-success", "User Data successfully updated !!!");
         this.rightsidenav.toggle();
-        location.reload();
+        // location.reload();
+        })
+    }
+    subscribeGetUserNotifyInfo(){
+        this.dataShareService.userNotification.subscribe(data =>{
+            console.log(data);
+        this.isPageLoading = false;
+        // this.notificationService.notify("bg-success", "User Data successfully updated !!!");
+        // this.rightsidenav.toggle();
+        // location.reload();s
         })
     }
 
+    notificationSetting(){
+        this.isPageLoading = true;
+        // setTimeout(()=>{
+        // this.isPageLoading = false;
+        // this.router.navigate(["notification-setting"]);
+        // },3000)
+        const token=this.storageService.GetIdToken()
+        const reqBody = { key: token };
+        this.http.post('http://localhost:8104/rest/rpts/getNotification',reqBody).subscribe((res)=>{
+            this.isPageLoading = false;
+            // this.dataShareService.shareUserNotification(reqBody);
+            console.log(res);
+            // console.log(reqBody);
+            // this.router.navigate(["notification-setting"]);
+            // this.openSnackBar();
+        })
+        // this.subscribeGetUserNotifyInfo();
+    }
+
+    openSnackBar() {
+        this._snackBar.open("MessageComponent")
+        }
 
 }

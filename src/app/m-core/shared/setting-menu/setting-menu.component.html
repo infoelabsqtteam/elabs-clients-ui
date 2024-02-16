@@ -17,7 +17,8 @@
             <mat-list-item *ngIf="toggle"><div mat-line matRipple class="px-3 py-1" [ngClass]="{'font-weight-bold': data.notificationStatus == 'UNREAD'}" *ngFor="let data of headerNotificationList; let i = index" (click)="readNotification(i)"><small>{{i + 1}} &nbsp; {{data.message}}</small></div></mat-list-item>
             <button mat-button *ngIf="toggle" color="primary" class="w-100" routerLink="/notification-list">All Notifications <mat-icon>chevron_right</mat-icon></button>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple routerLink="/notification-setting"><mat-icon>settings</mat-icon><div mat-subheader>Notificatoin Setting</div></mat-list-item>
+            <!-- <mat-list-item matRipple routerLink="/notification-setting"><mat-icon>settings</mat-icon><div mat-subheader>Notificatoin Setting</div></mat-list-item> -->
+            <mat-list-item matRipple (click)="notificationSetting()"><mat-icon>settings</mat-icon><div mat-subheader>Notificatoin Setting</div></mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="gitInfo()"><mat-icon>info</mat-icon><div mat-subheader>Version: {{gitVersion}}</div></mat-list-item>
             <mat-divider></mat-divider>

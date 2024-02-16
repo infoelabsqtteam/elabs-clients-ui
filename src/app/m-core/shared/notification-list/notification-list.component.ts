@@ -80,7 +80,7 @@ export class NotificationListComponent implements OnInit {
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
             if (saveFromDataRsponce.success == 'success') {
-                this.apiCallService.getUserNotification(this.pageNumber);
+                // this.apiCallService.getUserNotification(this.pageNumber);
             }
         }
     }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '@core/web-core';
+import { StorageService,DataShareService } from '@core/web-core';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-notification-setting',
@@ -11,12 +12,21 @@ export class NotificationSettingComponent implements OnInit {
 
   AllModuleList:any=[];
   nofifyIcon='fa-bell-slash'
-
+  userNotificationSubsription;
+  noficationData=[];
   constructor(
     private storageService:StorageService,
+    private dataShareService:DataShareService,
   )
   { 
+
+    this.dataShareService.userNotification.subscribe(data =>{
+      console.log("object notiSetting",data);
+      this.noficationData.push(data);
+    })
     this.AllModuleList = this.storageService.GetModules();
+    
+
   }
 
   ngOnInit(): void {
@@ -24,7 +34,7 @@ export class NotificationSettingComponent implements OnInit {
       // module.notify="fa-bell-slash"
       module.notify="notifications_off"
     })
-    console.log(this.AllModuleList);
+       console.log(this.AllModuleList);
     console.log(this.storageService.getThemeSetting());
   }
 

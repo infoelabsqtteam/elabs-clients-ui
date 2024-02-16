@@ -10,7 +10,13 @@
                 <mat-expansion-panel-header>
                     <!-- <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}<span class="ml-auto px-2 d-flex justify-content-center"><i class="px-2 fa-regular {{item.notify}}" (click)="notificationFunction($event,i)"></i></span></mat-panel-title> -->
                     <!-- <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}<span class="ml-auto px-2 d-flex justify-content-center"><i class="material-icons" style="color: #414950;" (click)="notificationFunction($event,i)">{{item.notify}}</i></span></mat-panel-title> -->
-                    <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}<span class="ml-auto px-2 d-flex justify-content-center"><mat-slide-toggle class="ml-auto "  color="primary" #menukey (click)="menuNotification($event,menukey)" [checked]="false"></mat-slide-toggle></span></mat-panel-title>
+                    <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}
+                        <mat-button-toggle-group name="ingredients" aria-label="Ingredients" (click)="$event.stopPropagation()" ToggleType="checkbox" multiple class="ml-auto">
+                            <mat-button-toggle value="email">E-mail</mat-button-toggle>
+                            <mat-button-toggle value="mobile">Mobile</mat-button-toggle>
+                            <mat-button-toggle value="whatsapp">whatsapp</mat-button-toggle>
+                          </mat-button-toggle-group>
+                        <span class="ml-1 px-2 d-flex justify-content-center"><mat-slide-toggle class="ml-auto "  color="primary" #menukey (click)="menuNotification($event,menukey)" [checked]="false"></mat-slide-toggle></span></mat-panel-title>
                 </mat-expansion-panel-header>
 
                 <div *ngFor="let subitem of item.menu_list; let i = index">
