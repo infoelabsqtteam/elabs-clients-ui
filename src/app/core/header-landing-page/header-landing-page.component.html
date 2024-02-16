@@ -3,13 +3,13 @@
     <mdb-navbar-brand><a class="navbar-brand"><img [src]="logoPath" alt="Elabs" width="120px"></a></mdb-navbar-brand>
     <links *ngIf="menuBoxHome">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item active"><button mat-button class="nav-link" [routerLink]="['/home_page']">Home</button></li>
-        <li class="nav-item"><button mat-button class="nav-link" [routerLink]="['/download-manual-report']">Download Report</button></li>
+        <li class="nav-item active"><button mat-button class="nav-link" (click)="navigateStatic('home_page')">Home</button></li>
+        <li class="nav-item"><button mat-button class="nav-link" (click)="navigateStatic('download-manual-report')">Download Report</button></li>
         
         <li class="nav-item">
           <button mat-button class="nav-link" [matMenuTriggerFor]="menu2">Solutions <i class="material-icons-outlined">arrow_drop_down</i></button>
           <mat-menu #menu2="matMenu" class="moremenulist">
-             <button mat-button class="dropdown-item" *ngFor="let item of solutions" [routerLink]="['/'+item.value]">{{item.name}}</button>
+             <button mat-button class="dropdown-item" *ngFor="let item of solutions" (click)="navigateStatic(item?.value)">{{item?.name}}</button>
             </mat-menu>
         </li>
 
@@ -23,19 +23,13 @@
           </mat-menu>
         </li>
        
-        <li class="nav-item"><button mat-button class="nav-link" [routerLink]="['/career-with-us']">Career with Us</button></li>
-        <li class="nav-item"><button mat-button class="nav-link" [routerLink]="['/contact-us']">Contact Us</button></li>
+        <li class="nav-item"><button mat-button class="nav-link" (click)="navigateStatic('career-with-us')">Career with Us</button></li>
+        <li class="nav-item"><button mat-button class="nav-link" (click)="navigateStatic('contact-us')">Contact Us</button></li>
         <li class="nav-item" *ngIf="!logedin"><button mat-button class="nav-link" (click)="navigateSigninPage()">Login</button></li>
         <li class="nav-item" *ngIf="logedin"><button mat-button class="nav-link" (click)="navigateDashboard()">Dashboard</button></li>
       </ul>
     </links>
   </mdb-navbar>
 </header>
-
-
-
-<app-signin-modal id="signin-modal" (signinResponce)="signinResponce($event)"></app-signin-modal>
-<app-signup-modal id="signup-modal" (signupResponce)="signupResponce($event)"></app-signup-modal>
-<app-forgotpwd-modal id="fgpwd-modal" (forgotPwdResponce)="forgotPwdResponce($event)"></app-forgotpwd-modal>
 
  
