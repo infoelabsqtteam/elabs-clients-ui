@@ -19,7 +19,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3"],
+            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3","moment","diff-match-patch","luxon"],
             "aot": false,
             "assets": [
               "src/favicon.ico",
@@ -150,9 +150,17 @@
                   "maximumError": "150kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -171,8 +179,12 @@
             },
             "uat": {
               "browserTarget": "elabs-client-ui:build:uat"
+            },
+            "development": {
+              "browserTarget": "elabs-client-ui:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -216,6 +228,9 @@
             },
             "uat": {
               "devServerTarget": "elabs-client-ui:serve:uat"
+            },
+            "development": {
+              "devServerTarget": "elabs-client-ui:serve:development"
             }
           }
         },
@@ -275,6 +290,13 @@
                   "with": "src/environments/environment.uat.ts"
                 }
               ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            },
+            "development": {
               "sourceMap": false,
               "optimization": {
                 "scripts": false,
