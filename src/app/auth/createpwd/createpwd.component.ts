@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 
 export class CreatepwdComponent implements OnInit 
 {
-  
+  loading = false;
   hide = true;
   resetPsswordForm: UntypedFormGroup;
   checkShowPassword = false;
@@ -40,6 +40,8 @@ export class CreatepwdComponent implements OnInit
   ) {
     this.pageloded();
     this.changePasswordSubscribe = this.authDataShareService.createPwd.subscribe(res =>{
+      this.loading = false;
+      this.resetPsswordForm.reset();
       if(res.msg != '') {
         this.notificationService.notify(res.class, res.msg);
       }
@@ -67,13 +69,12 @@ export class CreatepwdComponent implements OnInit
 
   
   onChangePwd(){
+    this.loading = true;
     let value = this.resetPsswordForm.getRawValue();
-     const oldpwd = value.oldpwd;
-     const newpwd = value.password;
-     const confirmpwd=value.confirmPassword;     
-      this.authService.changePassword({currentPassword: oldpwd,newPassword:newpwd,confirmNewPassword:confirmpwd })
-      
-   
+    const oldpwd = value.oldpwd;
+    const newpwd = value.password;
+    const confirmpwd=value.confirmPassword;     
+    this.authService.changePassword({currentPassword: oldpwd,newPassword:newpwd,confirmNewPassword:confirmpwd })
   }
 
   onBack() {

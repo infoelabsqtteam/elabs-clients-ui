@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService} from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService} from '@core/web-core';
 
 
 @Component({
@@ -37,6 +37,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   selected = new UntypedFormControl(0);
   getTempData:boolean = true;
   currentUrl :String = "";
+  isPageLoading: boolean = false;
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -64,7 +65,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private envService:EnvService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private _location:Location,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private userPrefrenceService:UserPrefrenceService
   ) {  
     this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -394,20 +396,31 @@ export class BuilderComponent implements OnInit,OnDestroy {
     else{
       this.selectContact = '';
     }
-  } 
-  addFebMenu(menu,parent){
-    this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
-    // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  }   
+  addFebTab(tab,parent){  
+    this.isPageLoading = true;
+    tab.favourite = !tab.favourite;
+    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
+    // this.userPreferenceSubscribe(tab,'tab',parent);
+    this.updateUserPreference(tab,'tab',parent);
     // this.saveCallSubscribe();
   }
-  updateUserPreference(menu,field,parent){
+  
+  async updateUserPreference(menu,field,parent){
     this.unsubscribe(this.userPreferenceSubscription);
-    this.commonFunctionService.updateUserPreference(menu,field,parent);
-    this.saveCallSubscribe();
+    let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+    if (response?.success) {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-success', 'favourite Tab updated successfully!');
+    } else {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-warning', 'Failed to save data.');
+    }
+    // this.saveCallSubscribe();
   }
-  
-  
- }
-
+//   checkFebTabAddOrNot(tab) {
+//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+//     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
+// }
+}
 
