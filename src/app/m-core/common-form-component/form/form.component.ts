@@ -27,7 +27,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   tinymceConfig = {} 
   tinymceapikey = Common.TINYMICAPIKEY;
   templateForm: FormGroup;
-
+  showSearchLength = 10;
   //@Output() filledFormData = new EventEmitter();
   @Output() addAndUpdateResponce = new EventEmitter();
   @Output() formDetails = new EventEmitter();
