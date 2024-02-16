@@ -1,5 +1,5 @@
 <div class="settingmenu">
-  <button class="role-button" mat-button [matMenuTriggerFor]="role">{{activeRole}}</button>
+  <button class="role-button" mat-button [matMenuTriggerFor]="role" [title]="activeRole">{{activeRole}}</button>
   <mat-menu #role="matMenu" xPosition="before">
     <button mat-menu-item *ngFor="let role of roleList" (click)="setRole(role)">{{role?.name}}</button>
   </mat-menu>

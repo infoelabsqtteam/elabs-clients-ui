@@ -1,32 +1,33 @@
 @media only screen and (min-width:1024px){
+  .tablist{padding-right: 285px;} 
   .topheader {width:75%;}
   .top-header-container{width: 75%;}
 }
-@media only screen and (min-width:1200px){
+@media only screen and (min-width:1220px){
   .tablist{padding-right: 300px;} 
   .topheader {width:85%;}
 }
 
-// @media screen and (max-width: 1366px) {
-//   .tablist {padding-right: 290px;}
-// }
 
+@media screen and (min-width: 1360px) {
+  .tablist {padding-right: 290px;}
+  .topheader {width:82%;}
+  .top-header-container{width: 81%;}
+}
+@media screen and (min-width: 1530px) {
+  .tablist {padding-right: 290px;}
+  .topheader {width:83%;}
+  .top-header-container{width: 82%;}
+}
 
-// @media only screen and (max-width:1450px) {
-//   .topheader {width:74%;}
-// }
+@media only screen and (min-width:1920px) {
+  .topheader {width:84%;}
+  .top-header-container{width: 86%;}
+}
 
-// @media only screen and (max-width:1540px) {
-//   .topheader {width:80%;}
-// }
-
-// @media only screen and (max-width:1920px) {
-//   .topheader {width:82%;}
-// }
-
-// @media only screen and (max-width:2048px) {
-//   .topheader {width:84%;}
-// }
+@media only screen and (min-width:2048px) {
+  .top-header-container{width: 86%;}
+}
 
 @media only screen and (max-width: 991px) {
     .header nav { justify-content:end !important;}
