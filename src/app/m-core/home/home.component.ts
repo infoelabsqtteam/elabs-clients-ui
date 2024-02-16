@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { StorageService, CommonFunctionService, DataShareService, AuthService, MenuOrModuleCommonService} from '@core/web-core';
+import { StorageService, CommonFunctionService, DataShareService, AuthService, MenuOrModuleCommonService, AuthDataShareService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,18 +11,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   AllModuleList:any=[];
   filterdata = ''; 
   module:boolean=true;
+  settingModelRestSubscription:Subscription;
 
   constructor(
     private commonFunctionService: CommonFunctionService,
     private storageService:StorageService,
     private dataShareService:DataShareService,
     private authService:AuthService,
-    private menuOrModuleCommounService:MenuOrModuleCommonService
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private authDataShareService:AuthDataShareService
   ) {
     
-    //let moduleList = this.storageService.GetModules();
-    this.AllModuleList = this.storageService.GetModules();
-    //this.storageService.SetModifyModules(this.AllModuleList);
+    this.initialize();
     if(this.AllModuleList != undefined && Array.isArray(this.AllModuleList)){
       if(this.AllModuleList.length == 1){
         this.GoToSelectedModule(this.AllModuleList[0],"");
@@ -29,6 +30,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }else{
       this.module = false;
     }
+
+    this.settingModelRestSubscription = this.authDataShareService.settingData.subscribe(data =>{
+      this.initialize();
+    })
   }
 
   ngOnDestroy(): void {
@@ -38,7 +43,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     
-  }  
+  } 
+  /**
+   * Initialize
+   */
+  initialize(): void {
+    this.AllModuleList = this.storageService.GetModules();
+  } 
   GoToSelectedModule(module,event){
     if(event != "" && event.ctrlKey){
       const rout = 'browse/'+module.name;
