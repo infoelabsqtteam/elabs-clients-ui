@@ -3,21 +3,27 @@
   .topheader {width:75%;}
   .top-header-container{width: 75%;}
 }
+
 @media only screen and (min-width:1220px){
   .tablist{padding-right: 300px;} 
   .topheader {width:85%;}
 }
-
 
 @media screen and (min-width: 1360px) {
   .tablist {padding-right: 290px;}
   .topheader {width:82%;}
   .top-header-container{width: 81%;}
 }
+
 @media screen and (min-width: 1530px) {
   .tablist {padding-right: 290px;}
   .topheader {width:83%;}
   .top-header-container{width: 82%;}
+}
+
+@media screen and (min-width: 1700px) {
+  .topheader {width:85%;}
+  .top-header-container{width: 84%;}
 }
 
 @media only screen and (min-width:1920px) {
