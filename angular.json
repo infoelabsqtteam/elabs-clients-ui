@@ -19,7 +19,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3"],
+            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3","moment","diff-match-patch","luxon"],
             "aot": false,
             "assets": [
               "src/favicon.ico",
@@ -152,8 +152,7 @@
               ]
             }
           },
-          "defaultConfiguration": "",
-          "preserveSymlinks":true
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -173,7 +172,8 @@
             "uat": {
               "browserTarget": "elabs-client-ui:build:uat"
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -241,45 +241,45 @@
               "optimization": {
                 "scripts": false,
                 "styles": true
-              },
-              "develop": {
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.develop.ts"
-                  }
-                ],
-                "sourceMap": false,
-                "optimization": {
-                  "scripts": false,
-                  "styles": true
+              }
+            },
+            "develop": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.develop.ts"
                 }
-              },
-              "sit": {
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.sit.ts"
-                  }
-                ],
-                "sourceMap": false,
-                "optimization": {
-                  "scripts": false,
-                  "styles": true
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            },
+            "sit": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.sit.ts"
                 }
-              },
-              "uat": {
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.uat.ts"
-                  }
-                ],
-                "sourceMap": false,
-                "optimization": {
-                  "scripts": false,
-                  "styles": true
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            },
+            "uat": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
                 }
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
               }
             }
           },

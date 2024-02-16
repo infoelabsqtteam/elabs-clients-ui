@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from '../app-routing.module';
+// import { AppRoutingModule } from '../app-routing.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { HomeComponent } from './home/home.component';
@@ -15,7 +15,6 @@ import { HeaderLandingPageComponent } from './header-landing-page/header-landing
 import { SigninModalComponent } from '../auth/modal/signin-modal/signin-modal.component';
 import { SignupModalComponent } from '../auth/modal/signup-modal/signup-modal.component';
 import { ForgotpwdModalComponent } from '../auth/modal/forgotpwd-modal/forgotpwd-modal.component';
-
 import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
 import { FormModelModule } from '../m-core/modals/form-model.module';
@@ -37,7 +36,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
         VerifyFailedComponent,
         ],
         imports :[
-            AppRoutingModule,
+            // AppRoutingModule,
             MDBBootstrapModule.forRoot(),
             AllPackageModule,
             AngularMaterialModule,
@@ -47,7 +46,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             AllPackageModule
             ],
         exports :[
-            AppRoutingModule,
+            // AppRoutingModule,
             HeaderComponent,
             HomeComponent,
             FooterComponent,
