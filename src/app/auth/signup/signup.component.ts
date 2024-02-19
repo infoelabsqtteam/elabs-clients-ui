@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
+  loading = false;
   hide = true;
   signUpForm: UntypedFormGroup;
   appName: string;
@@ -37,6 +38,8 @@ export class SignupComponent implements OnInit {
         this.setAppName(data);
       })
       this.signUpInfoSubscribe = this.authDataShareService.signUpResponse.subscribe(res =>{
+        this.loading=false;
+        this.signUpForm.reset();
         if(res.msg != '') {
           this.notificationService.notify(res.class, res.msg);
         }
@@ -67,6 +70,7 @@ export class SignupComponent implements OnInit {
   }
 
   onSignUp() {
+    this.loading = true;
     const payload = this.signUpForm.getRawValue();
     const hostName = this.envService.getHostName('origin');
     const domain = hostName + "/verify";

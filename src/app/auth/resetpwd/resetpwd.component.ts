@@ -11,6 +11,7 @@ import { StorageService, AuthService, EnvService, CustomvalidationService } from
   styleUrls: ['./resetpwd.component.css']
 })
 export class ResetpwdComponent implements OnInit {
+  loading = false;
   hide = true;
   @Input() public pageName;
   appName: string;
@@ -47,6 +48,7 @@ export class ResetpwdComponent implements OnInit {
   }
 
   resetNewpass() {
+    this.loading = true;
     const userName = this.userName;
     const password = this.resetForm.value.password;
     const session = this.storageService.getResetNewPasswordSession();
@@ -54,7 +56,11 @@ export class ResetpwdComponent implements OnInit {
       appId:this.envService.getAppId(),
       data :{ username: userName, password: password, idToken: session }
     }
-    this.authService.ResetPass(payload);    
+    this.authService.ResetPass(payload);
+    setTimeout(()=>{
+      this.loading = false;
+      this.resetForm.reset();
+    },2000)    
   }
 
 }

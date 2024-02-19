@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges, Inject } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService } from '@core/web-core';
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
+import { MatSidenav } from "@angular/material/sidenav";
 
 
 @Component({
@@ -15,6 +16,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
   @Input() public pageName;
     @Input() moduleIndex: any;
+    @Input() rightsidenav : MatSidenav;
+    isPageLoading:boolean = false;
 
     subscription: any;
     menuDataSubscription;
@@ -104,7 +107,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
         private notificationService: NotificationService,
         public envService: EnvService,
         private menuOrModuleCommounService:MenuOrModuleCommonService,
-        private apiCallService:ApiCallService
+        private apiCallService:ApiCallService,
+        private authDataService:AuthDataShareService
     ) {
 
         this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -319,7 +323,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
 
     getMenuByModule() {
         this.AllModuleList = this.storageService.GetModules();
-        if (this.moduleIndex != -1) {
+        if (this.moduleIndex && this.moduleIndex != -1) {
             const module = this.AllModuleList[this.moduleIndex]
             if (module.menu_list != undefined && module.menu_list != null) {
                 this.menuData = module.menu_list;
@@ -804,5 +808,26 @@ export class SettingMenuComponent implements OnInit, OnDestroy, AfterViewInit, O
             this.router.navigate([value]);
         }
     }
+    updateUserData(){
+        this.isPageLoading = true;
+        // this.apiService.resetGridData();
+        let userToken = this.storageService.GetIdToken();
+        let list = ["TEMPLATE_INDEX","ALL_TEMPLATE","USER"];
+        list.forEach((key:string)=>{
+            this.storageService.removeKeyFromStorage(key);
+        })
+        this.authService.GetUserInfoFromToken(userToken);
+        this.subscribeGetUserInfo();
+    }
+
+    subscribeGetUserInfo(){
+        this.authDataService.userInfo.subscribe(data =>{
+        this.isPageLoading = false;
+        this.notificationService.notify("bg-success", "User Data successfully updated !!!");
+        this.rightsidenav.toggle();
+        location.reload();
+        })
+    }
+
 
 }

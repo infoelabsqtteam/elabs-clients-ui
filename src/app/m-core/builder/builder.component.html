@@ -9,11 +9,11 @@
             <mat-tab *ngFor="let tab of tabs; let i = index" >
               <ng-template mat-tab-label>
                 <div class="mat-tab-label-content pl-3 pr-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
-                <span class="favibtn" [ngClass]="{'active': tab.febMenu,'d-none': !tab.display}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
+                <span class="favibtn" [ngClass]="{'active':tab.favourite,'d-none': !tab.display}" (click)="addFebTab(tab,'')"><mat-icon>grade</mat-icon></span>
               </ng-template>
             </mat-tab>
           </mat-tab-group>
-        <button *ngIf="tabs.length>3" mat-icon-button [matMenuTriggerFor]="tabExtraMenu" [title]="'More Tabs'">
+        <button *ngIf="tabs.length>5" mat-icon-button [matMenuTriggerFor]="tabExtraMenu" [title]="'More Tabs'">
           <mat-icon>more_vert</mat-icon>
         </button>
     </div>
@@ -22,16 +22,16 @@
     <mat-menu #tabExtraMenu="matMenu">
       <ng-container *ngFor="let tab of tabs; let i = index">
         <div class="tabExtraMenu">
-          <div class="pl-3 pr-1 py-2 d-flex align-items-center" [ngClass]="{ 'd-none': !tab.display }"
+          <div class="pl-3 pr-1 py-2 d-flex align-items-center tab" [ngClass]="{ 'd-none': !tab.display }"
             (click)="getTab(i, tab.tab_name, $event)">
             <div class="tab-content">
               <span>{{ gateTabName(tab) }}</span>
               <span>({{ gridCountByTab[tab.tab_name + "_" + tab.name] }})</span>
             </div>
-            <div class="favibtn" style="opacity: 0.5;" [ngClass]="{ active: tab.febMenu, 'd-none': !tab.display }"
-              (click)="addFebMenu(tab, '')">
+            <span class="favibtn" [ngClass]="{ 'active': tab.favourite, 'd-none': !tab.display }"
+            (click)="addFebTab(tab,'')">
               <mat-icon class="moreMenuFavIcon">grade</mat-icon>
-            </div>
+            </span>
           </div>
         </div>
       </ng-container>
@@ -68,4 +68,8 @@
             <app-gmap-view></app-gmap-view>
         </div>
     </div>
+</div>
+
+<div class="loader-overlay" *ngIf="isPageLoading">
+  <mat-spinner diameter="50"></mat-spinner>
 </div>

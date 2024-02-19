@@ -1,25 +1,27 @@
 :root {
     --primary-color: #0d6efd;
     --secondary-color: #6c757d;
-    --themecolor:#e8f5fd;
+    //--themecolor:#e8f5fd;
     --themes:#e8f5fd;
     --white: #fff;
     --module-hover-bg: #eef5fd;
+    //Font Color
+    //--fontColor:#000;
     //Header
-    --headerbg:#fcfcfc;
-    --headericon: #555;
-    --headericonhover: #777;
+    //--headerbg:#fcfcfc;
+    //--headericon: #555;
+    //--headericonhover: #777;
     //Navigation
-    --navtxtcolor: #222;
-    --navtxthovercolor:#77bce8;
-    --activebg: #77bce8;
+    //--navtxtcolor: #222;
+    //--navtxthovercolor:#77bce8;
+    //--activebg: #77bce8;
     --activecolor: #fff;
     //Button
-    --buttonColor: #2597de;
-    --buttonHoverColor: #0b71b0;
-    --footerbg: #77bce8;
-    --popupHeaderBg: #CEE7F7;
-    --formLabelBg: #E4F2FA;
+    //--buttonColor: #2597de;
+    //--buttonHoverColor: #0b71b0;
+    //--footerbg: #77bce8;
+    //--popupHeaderBg: #CEE7F7;
+    //--formLabelBg: #E4F2FA;
     --chartheaderBg: #8dcbf2;
 }
 
@@ -43,6 +45,8 @@ $themebg: var(--themes);
 // Table Row Hover color
 $row-hover-color: var(--activebg);
 
+//Text Color Setting
+$txtColor:var(--fontColor);
 // Theme Setting
 //$themecolor: var(--themecolor);
 $themetext: #77bce8;
