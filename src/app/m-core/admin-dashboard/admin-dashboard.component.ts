@@ -2,7 +2,8 @@ import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@an
 import { UntypedFormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-import { CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
+import { AuthDataShareService, CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -42,7 +43,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // formData: FormGroup;
   mongodbChartShow:boolean = false;
   dashboardMongodbChartShow:boolean = false;
-  
+  settingModelRestSubscription:Subscription;
 
 
   // options = {
@@ -60,10 +61,14 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
     //private mapsAPILoader: MapsAPILoader,
     //private ngZone: NgZone,
     private dataShareService:DataShareService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private authDataShareService:AuthDataShareService
   ) {
       this.welcometitle = this.storageService.getPageTitle();
       this.mongodbChartShow = true;
+      this.settingModelRestSubscription = this.authDataShareService.settingData.subscribe(data =>{
+        this.initialize();
+      })
       
     }
 
@@ -72,22 +77,20 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+      this.initialize();  
+  }
+  /**
+   * Initialize
+   */
+  initialize(): void {
     this.dataShareService.setChartModelShowHide(false);
-    // this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
-    // this.formData = this.formBuilder.group({
-    //   message: ['', [Validators.required]],
-    // });
-    // this._fetchData();
     this.userInfo = this.storageService.GetUserInfo();
     if(this.userInfo && this.userInfo.chart) {
       this.chartPermission = true;
     }else {
       this.chartPermission = false;
     }
-    
-      
-    
-  }
+  } 
   
   getTabIndex(event){    
     if(event == 0){
