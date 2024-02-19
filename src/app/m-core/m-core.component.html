@@ -4,9 +4,9 @@
         <a  class="logo px-2" (click)="goToHomePage()"><img [src]="logoPath" alt=""></a>
         <button *ngIf="layoutType == 'vertical'" mat-icon-button (click)="toggleSideBar()"><mat-icon>sort</mat-icon></button>
       </div>
-      <div class="d-flex align-content-stretch justify-content-between flex-row top-header-container">
-        <div class="topheader"><app-header class="w-100"></app-header></div>
-        <app-user-account [rightsidenav]="rightsidenav"></app-user-account>
+      <div class="topheader row align-items-center">
+        <div class="col-md-9"><app-header></app-header></div>
+        <div class="col-md-3"><app-user-account [rightsidenav]="rightsidenav"></app-user-account></div>
       </div>
     </mat-toolbar>
     

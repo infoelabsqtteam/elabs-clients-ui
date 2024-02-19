@@ -1,39 +1,8 @@
-@media only screen and (min-width:1024px){
-  .tablist{padding-right: 285px;} 
-  .topheader {width:75%;}
-  .top-header-container{width: 75%;}
+@media only screen and (max-width:1024px){
+  .topheader {width:77%;}
 }
 
-@media only screen and (min-width:1220px){
-  .tablist{padding-right: 300px;} 
-  .topheader {width:85%;}
-}
 
-@media screen and (min-width: 1360px) {
-  .tablist {padding-right: 290px;}
-  .topheader {width:82%;}
-  .top-header-container{width: 81%;}
-}
-
-@media screen and (min-width: 1530px) {
-  .tablist {padding-right: 290px;}
-  .topheader {width:83%;}
-  .top-header-container{width: 83%;}
-}
-
-@media screen and (min-width: 1700px) {
-  .topheader {width:85%;}
-  .top-header-container{width: 84%;}
-}
-
-@media only screen and (min-width:1920px) {
-  .topheader {width:84%;}
-  .top-header-container{width: 86%;}
-}
-
-@media only screen and (min-width:2048px) {
-  .top-header-container{width: 86%;}
-}
 
 @media only screen and (max-width: 991px) {
     .header nav { justify-content:end !important;}
@@ -42,7 +11,7 @@
 
 @media only screen and (max-width:778px) {
   .header .logoitem {width:180px;}
-  .tablist {padding-right:0px !important;margin-top:20px;}
+  .tablist {padding-right:30px !important;margin-top:20px;}
   .downloadbtn {top:-12px;}
   .searchbox:hover {width:200px;}
 }

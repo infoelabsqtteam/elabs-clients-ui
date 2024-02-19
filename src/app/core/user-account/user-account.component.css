@@ -1,6 +1,1 @@
-.role-button{
-    max-width: 120px;
-    padding: 0 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+.role-button{padding:0 5px;}
