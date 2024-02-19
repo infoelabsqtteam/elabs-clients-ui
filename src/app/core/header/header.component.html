@@ -7,7 +7,7 @@
                 [ngClass]="activeclass ? 'selectedclass' : ''" (click)="goToMOdule()" *ngIf="menuBoxDashboard"
                 #tooltip="matTooltip" matTooltip="Press B">Home</a></ng-template>
           </mat-tab>
-          <mat-tab *ngFor="let menu of menuData | slice:0:8;let i = index" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
+          <mat-tab *ngFor="let menu of menuData | slice:0:maxMenuCount;let i = index" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
             <ng-template mat-tab-label>
               <a class="p-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
                 #tooltip="matTooltip" matTooltip="Press Ctrl + c" [ngClass]="{}">{{ menu.label }}</a>
@@ -20,7 +20,7 @@
             </ng-template>
           </mat-tab>
         </mat-tab-group>
-        <div *ngIf="menuData && menuData.length > 8">
+        <div *ngIf="menuData && menuData.length > maxMenuCount">
           <button mat-icon-button [matMenuTriggerFor]="moreMenu"><mat-icon>more_vert</mat-icon></button>
         </div>
       </ng-container>
@@ -50,18 +50,18 @@
       </li> -->
 </nav>
 
-
 <mat-menu #moreMenu="matMenu" xPosition="after" class="headerMoreMenu">
-  <ng-container *ngFor="let menu of menuData | slice:8;let i = index">
-    <li [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''" *ngIf="menu.submenu == undefined && menu.submenu == null">
-      <a (click)="getTemplateMenuData(menu,i,-1,$event)">{{ menu.label }}</a>
+  <ng-container *ngFor="let menu of menuData | slice:maxMenuCount; let i = index">
+    <li *ngIf="!menu.submenu">
+      <button mat-menu-item (click)="getTemplateMenuData(menu, i, -1, $event)" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">{{ menu.label }}</button>
     </li>
-    <li *ngIf="menu.submenu && menu.submenu != null">
-      <a (click)="activeLinkD(menu.label,false)" [ngClass]="{}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
-      <div class="submenulist">
-        <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)">{{
-          submenu.label }}</button>
-      </div>
+    <li *ngIf="menu.submenu && menu.submenu.length > 0">
+      <button mat-menu-item [matMenuTriggerFor]="submenu" [ngClass]="isSubMenuActive(menu.submenu) ? 'active' : ''" (click)="activeLinkD(menu.label,false)">{{menu.label}}</button>
+      <mat-menu #submenu="matMenu" class="headerMoreMenu">
+        <div *ngFor="let submenu of menu.submenu; let j = index">
+          <button mat-menu-item [ngClass]="getCurrentMenu() == submenu.name ? 'active' : ''" (click)="getTemplateMenuData(submenu,i,j,$event)">{{submenu.label}}</button>        
+        </div>
+      </mat-menu>
     </li>
   </ng-container>
 </mat-menu>
