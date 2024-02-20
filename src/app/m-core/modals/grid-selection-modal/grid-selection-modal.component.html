@@ -129,12 +129,12 @@
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
-                                                        [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value,i,j)" autocomplete="off">
+                                                        [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value,i,j)" (blur)="checkValidData(fieldName)" autocomplete="off">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadInput,data)"  [displayWith]="getOptionText">
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>                                  
                                                 </mat-form-field>
-                                                <small class="typeheaderrormsg" *ngIf="typeheadRowIndex == i && typeheadColIndex == j">{{fieldName.errormsg? fieldName.errormsg: ''}}</small>
+                                                <small class="typeheaderrormsg" *ngIf="typeaheadRowIndex == i && typeaheadColIndex == j">{{fieldName?.errormsg ? fieldName.errormsg: ''}}</small>
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">

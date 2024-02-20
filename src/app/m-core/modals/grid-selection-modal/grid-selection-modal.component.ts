@@ -243,6 +243,7 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[index][field.field_name]= selectedData;
         delete field["errormsg"];
         this.isDisabled = false;
+        this.notificationService.notify("bg-success", "Selected is valid Data");
       }else if(field.datatype == 'chips'){
         this.checkDataInListOrAdd(field,index,selectedData,chipsInput);
       }
@@ -285,16 +286,13 @@ export class GridSelectionModalComponent implements OnInit {
 
 
   typeaheadObjectWithtext;
-  typeheadRowIndex;
-  typeheadColIndex;
+  typeaheadRowIndex:any;
+  typeaheadColIndex:any
   searchTypeaheadData(field,currentObject,chipsInputValue,rowIndex?,colIndex?) {
-    
     if(chipsInputValue != ''){
       this.typeaheadObjectWithtext = currentObject;
       this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
       this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
-      this.typeheadRowIndex = rowIndex;
-      this.typeheadColIndex = colIndex;
       let call_back_field = '';
       let criteria = [];
       const staticModal = []
@@ -307,22 +305,35 @@ export class GridSelectionModalComponent implements OnInit {
       let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
       staticModal.push(staticModalGroup);
       this.apiservice.GetTypeaheadData(staticModal);
-    
-
-      if(field?.type != "text" && typeof this.addedDataInList == "object" && this.addedDataInList?.name){
-        this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
-        delete field["errormsg"];
-        this.isDisabled = false;
-      }else {
-          field["errormsg"] = "Invalid Data";
-          this.isDisabled = true;          
-      }
+      this.typeheadValidation(field, this.addedDataInList,rowIndex,colIndex);
     }else{
+      delete field["errormsg"];
       this.typeAheadData = [];
     }
   }
 
 
+typeheadValidation(field, currentData,rowIndex,colIndex) {
+  this.typeaheadRowIndex = rowIndex;
+  this.typeaheadColIndex = colIndex;
+  if(field?.type != "text" && typeof currentData == "object" && currentData?.name){
+    this.typeaheadObjectWithtext[field.field_name] = currentData;
+    delete field["errormsg"];
+  }else {
+    field["errormsg"] = "Invalid Data";
+    this.isDisabled = true;
+     this.notificationService.notify("bg-danger", "Please Select a Valid Data.");
+  }
+}
+checkValidData(field:any){
+  if(field.is_Invalid){
+    this.notificationService.notify("bg-danger", "Please Select a Valid Data.");
+  }
+  
+}
+
+
+  
   getStaticDataWithDependentData() {
     const staticModal = []
     let staticModalGroup = this.apiCallService.commanApiPayload([], this.listOfGridFieldName, [], this.typeaheadObjectWithtext);
@@ -814,9 +825,7 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected || !this.grid_row_selection){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
-            if(responce[column.field_name] != undefined) {
-              data[column.field_name] = responce[column.field_name];
-            }
+            // data[column.field_name] = responce[column.field_name];
             this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
             if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
               data[column.field_name] = responce[column.field_name];
