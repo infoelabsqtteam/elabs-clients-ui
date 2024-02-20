@@ -1,10 +1,9 @@
-import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { FormControl } from "@angular/forms";
 
 import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService, StorageTokenStatus, ApiCallService } from '@core/web-core';
-import { MatMenuTrigger } from "@angular/material/menu";
 
 
 
@@ -20,8 +19,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     subscription: any;    
     active_menu_d: any = 'custom-template';
     moduleIndex:any=-1;
-    maxMenuCount = 8;
-    @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
     //menuBoxHome: boolean = false;
     menuBoxDashboard: boolean = false;
@@ -332,22 +329,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.menuOrModuleCommounService.shareMenuIndex(menuIndex,subMenuIndex);
             this.menuOrModuleCommounService.getTemplateData(module,submenu);
         }
-        this.closeMenu(event);
     }
 
-    closeMenu(event: MouseEvent) {
-        if (this.trigger.menuOpen) {
-          this.trigger.closeMenu();
-        }
-      }
 
-    isSubMenuActive(submenus: any): boolean {
-    if (!submenus || submenus.length === 0)  return false;
-    for (let submenu of submenus) {
-        if (submenu.name === this.getCurrentMenu()) return true;
-    }
-    return false;
-    }
         
     goToMOdule() {
         this.menuOrModuleCommounService.goToMOdule();
