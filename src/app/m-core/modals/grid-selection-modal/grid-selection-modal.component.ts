@@ -243,7 +243,7 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[index][field.field_name]= selectedData;
         delete field["errormsg"];
         this.isDisabled = false;
-        this.notificationService.notify("bg-success", "Selected is valid Data");
+        this.notificationService.notify("bg-success", "Selected valid Data");
       }else if(field.datatype == 'chips'){
         this.checkDataInListOrAdd(field,index,selectedData,chipsInput);
       }
@@ -305,6 +305,7 @@ export class GridSelectionModalComponent implements OnInit {
       let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
       staticModal.push(staticModalGroup);
       this.apiservice.GetTypeaheadData(staticModal);
+      this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
       this.typeheadValidation(field, this.addedDataInList,rowIndex,colIndex);
     }else{
       delete field["errormsg"];
