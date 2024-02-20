@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { AuthService, StorageService } from '@core/web-core';
+import { AuthService,MenuOrModuleCommonService, StorageService } from '@core/web-core';
 
 @Component({
   selector: 'app-user-account',
@@ -13,11 +13,15 @@ export class UserAccountComponent implements OnInit {
   @Input() rightsidenav: MatSidenav;
   roleList:any=[];
   activeRole:any="";
+  filterdata:any;
+  showsearchmenu = false;
+  AllModuleList: any = [];
 
   constructor(    
     @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
-    private authApiService:AuthService
+    private authApiService:AuthService,
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
   ) { 
     this.pageload();
   }
@@ -25,6 +29,7 @@ export class UserAccountComponent implements OnInit {
   ngOnInit() {
   }
   pageload(){
+    this.AllModuleList = this.storageService.GetModules();
     let roleList = this.storageService.GetRoleList();  
     let activeRole = this.storageService.getActiveRole();  
     if(this.roleList && this.roleList.length == 1){
@@ -65,5 +70,28 @@ export class UserAccountComponent implements OnInit {
     }
     this.activeRole = role.name;
   }
+
+
+  searchmodel(data:string) {
+    this.filterdata = data;
+    this.showsearchmenu = true;
+    if(data != ''){
+        this.showsearchmenu = true;
+    }else {
+        this.showsearchmenu = false;
+    }
+  }
+  GoToSelectedModule(module){
+    this.menuOrModuleCommounService.GoToSelectedModule(module);
+  }
+  getTemplateData(module,menu,event){
+        if(event.ctrlKey){
+            const rout = 'browse/'+module.name+'/'+menu.name;
+            this.storageService.setChildWindowUrl(rout);
+            window.open(rout, '_blank');
+        }else{
+            this.menuOrModuleCommounService.getTemplateData(module,menu)
+        }
+    }
 
 }
