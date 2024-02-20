@@ -330,8 +330,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.menuOrModuleCommounService.getTemplateData(module,submenu);
         }
     }
-
-
         
     goToMOdule() {
         this.menuOrModuleCommounService.goToMOdule();
