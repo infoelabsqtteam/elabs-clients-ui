@@ -9,6 +9,14 @@
   .topheader {width: 83%;}
 }
 
+@media only screen and (min-width: 1461px) and (max-width: 1600px) {
+  .topheader {width: 84%;}
+}
+
+@media only screen and (min-width: 1601px) {
+  .topheader {width: 86%;}
+}
+
 @media only screen and (max-width: 991px) {
     .header nav { justify-content:end !important;}
     .header .headermenu {display:none;}
