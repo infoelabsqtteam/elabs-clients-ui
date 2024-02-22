@@ -1,5 +1,25 @@
-<div class="settingmenu">
-  <button class="role-button" mat-button [matMenuTriggerFor]="role">{{activeRole}}</button>
+<div class="settingmenu position-relative text-right">
+  <mat-menu #menu="matMenu" class="searchmenu">
+    <div (click)="$event.stopPropagation();$event.preventDefault();">
+      <input #serachData (keyup)="searchmodel(serachData.value)" placeholder="Search items..." autocomplete="off">
+      <div class="modulesdata bg-white" [ngClass]="showsearchmenu? 'd-block': 'd-none'">
+        <div class="searchitem">
+          <div *ngFor="let item of AllModuleList |filter:filterdata; let i = index">
+            <button mat-button *ngIf="item.title" class="text-left w-100" (click)="GoToSelectedModule(item)">{{ item.title }}</button>
+            <div *ngFor="let subitem of item.menu_list |filter:filterdata">
+              <button mat-button class="text-left w-100" (click)="getTemplateData(item,subitem,$event)"><small>{{ subitem.label }}</small></button>
+              <div class="px-3" *ngFor="let subSubitem of subitem.submenu |filter:filterdata">
+                <button mat-button class="text-left w-100" (click)="getTemplateData(item,subSubitem,$event)"><small>{{ subSubitem.label }}</small></button>
+              </div>
+            </div>
+          </div>
+          <p class="text-center p-3 pt-4" *ngIf="(AllModuleList | filter: filterdata).length === 0"><small>No Data Match</small></p>
+        </div>
+      </div>
+    </div>
+  </mat-menu>
+  <button mat-icon-button class="headsearchicon" [matMenuTriggerFor]="menu"><mat-icon>search</mat-icon></button>
+  <button class="role-button" mat-button [matMenuTriggerFor]="role" [title]="activeRole">{{activeRole}}</button>
   <mat-menu #role="matMenu" xPosition="before">
     <button mat-menu-item *ngFor="let role of roleList" (click)="setRole(role)">{{role?.name}}</button>
   </mat-menu>
