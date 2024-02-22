@@ -55,10 +55,6 @@
                                         <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
                                                 <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
-                                                <span class="show-on-hover mr-1">
-                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
-                                                    <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
-                                                </span>
                                                 <span class="show-on-hover">
                                                     <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="ml-1 mr-1"></mdb-icon>
                                                     <!-- mat trigger for column filter  -->
@@ -70,7 +66,7 @@
                                                 </mat-menu>  
                                                 <!-- mat menu for column filter  -->
                                                 <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                                    <div (click)="$event.stopPropagation()" class="filter-flex-container" [formGroup]="adFilterForm">
+                                                    <div (click)="$event.stopPropagation();$event.preventDefault()" class="filter-flex-container" [formGroup]="adFilterForm">
                                                         <mat-label class="ad-filter-label">Advance Filter</mat-label>
                                                         <div class="filter-flex-item "
                                                             *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
@@ -123,11 +119,13 @@
                                                                 <mat-date-range-picker #picker></mat-date-range-picker>
                                                             </mat-form-field>
                                                         </ng-container>
-                                                        <div class="modal-footer justify-content-end filter-flex-item">
-                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" mdbbtn (click)="clearAdFilter()">
-                                                                Cancel
+                                                        <div class="adFilterBtn">
+                                                            <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="clearAdFilter()">
+                                                                Clear
                                                             </button>
-                                                            <button class="noshadow rounded bg-cerulean text-white btn-sm btn" (click)="applyAdFilter(selectedFilterType)" mdbbtn>Filter</button>
+                                                            <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="applyAdFilter()">
+                                                                Apply
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </mat-menu>  

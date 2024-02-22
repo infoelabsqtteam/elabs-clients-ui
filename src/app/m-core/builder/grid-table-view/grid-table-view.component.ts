@@ -705,7 +705,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
         if (forControl) {
           this.filterForm = this.formBuilder.group(forControl);
-          this.adFilterForm = this.formBuilder.group(forControl);
         }
         
         const staticModalGroup = this.apiCallService.commanApiPayload(this.headElements,[],[]);      
@@ -730,6 +729,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
 
       }
+      this.createAdFilterFormgroup();
     }
 
 
@@ -1235,13 +1235,90 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
   }
-  applyAdFilter(filterType){
-    if(filterType!=''){
-      console.log(this.adFilterForm.getRawValue());
-    }
+
+  filterPayloads: any[] = [];
+
+  applyAdFilter(){
+    let formData = this.adFilterForm.getRawValue();
+
+    const payload = [];
+    Object.keys(formData).forEach(key => {
+      if (formData[key]) {
+        // Check if the field is already present in existing payloads
+        const existingPayload = this.filterPayloads.find(obj => obj.fName === key);
+        if (existingPayload) {
+          // If the field is already present, just add the value
+          existingPayload.fValue = formData[key];
+        } else {
+          // If the field is not present, create a new payload object
+          payload.push({
+            fName: key,
+            fValue: formData[key],
+            operator: this.selectedFilterType
+          });
+        }
+      }
+    });
+
+    this.filterPayloads = this.filterPayloads.concat(payload);
+    console.log(this.filterPayloads);
+
+    this.pageNumber = 1;
+    let pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber,this.tab,this.currentMenu,this.filterPayloads);
+    pagePayload.data.pageSize = this.itemNumOfGrid;
+    this.getGridPayloadData(pagePayload);
+
   }
   clearAdFilter(){
     this.adFilterForm.reset();
+    this.filterPayloads = [];
+    this.applyAdFilter();
+  }
+
+  createAdFilterFormgroup(){
+    const forControl = {};
+        if(this.headElements.length > 0){
+          this.headElements.forEach(element => {
+            if(element != null && element.type != null){
+            switch (element.type.toLowerCase()) {
+              case "text":
+              case "info":
+                case "number":
+                case "reference_names":
+                case "chips" :
+                this.formCreationService.createFormControl(forControl, element, '', "text")
+                break;
+              case "tree_view_selection":
+                this.formCreationService.createFormControl(forControl, element, '', "text")
+                break;
+              case "dropdown":
+                this.formCreationService.createFormControl(forControl, element, '', "text")
+                break;
+              case "typeahead":
+                this.formCreationService.createFormControl(forControl, element, '', "text")
+                break;
+              case "date":
+              case "datetime":
+                this.formCreationService.createFormControl(forControl, element, '', "text")
+                break;
+              case "daterange":
+                const list_of_fields={}
+                const start={field_name:'start',is_disabled:false,is_mandatory:false}
+                this.formCreationService.createFormControl(list_of_fields, start, '', "text")
+                const end={field_name:'end',is_disabled:false,is_mandatory:false}
+                this.formCreationService.createFormControl(list_of_fields, end, '', "text")
+                this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
+                break;
+              default:
+                break;
+            }      
+          }
+          });
+        }
+
+        if (forControl) {
+          this.adFilterForm = this.formBuilder.group(forControl);
+        }
   }
 
   getGridPayloadData(pagePayload:any) {  
