@@ -11,16 +11,16 @@
                   <div class="btn-group col-xs-12 ml-auto mt-3">
                     <div class="select" *ngIf="notificationTypeCategories.includes('EMAIL')">
                         <input type="checkbox"  [(ngModel)]="tab.email" (change)="checkfun(tab,'email',$event)" id="item_1">
-                        <label class="btn btn-warning button_select" for="item_1"><i class="fa-regular fa-envelope"></i></label>
+                        <label class="btnn  button_select" for="item_1"><i class="fa-regular fa-envelope"></i></label>
                     </div>
                     
                     <div class="select option" *ngIf="notificationTypeCategories.includes('WHATSAPP')">
                         <input type="checkbox" [(ngModel)]="tab.whatsapp" (change)="checkfun(tab,'whatsapp',$event)" id="item_2">
-                        <label class="btn btn-warning button_select" for="item_2"><i class="fa-brands fa-whatsapp"></i></label>
+                        <label class="btnn  button_select" for="item_2"><i class="fa-brands fa-whatsapp"></i></label>
                     </div>
                     <div class="select option" *ngIf="notificationTypeCategories.includes('SMS')">
                         <input type="checkbox" [(ngModel)]="tab.sms" (change)="checkfun(tab,'whatsapp',$event)" id="item_2">
-                        <label class="btn btn-warning button_select" for="item_2"><i class="fa-solid fa-comment-sms"></i></label>
+                        <label class="btnn  button_select" for="item_2"><i class="fa-solid fa-comment-sms"></i></label>
                     </div>
                 </div>
                 </mat-list-item>

@@ -14,6 +14,10 @@
           &:active{
             background-color: #cdcedb;      
           }
+
+          .btnn{
+            padding: 12px 6px !important;
+          }
       } 
       
       .ng-touched {
@@ -73,6 +77,11 @@
       background-color: transparent;      
     }
   }
+}
+
+.btnn{
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
 }
 
 ::ng-deep mat-dialog-container{
