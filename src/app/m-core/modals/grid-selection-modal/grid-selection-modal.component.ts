@@ -59,7 +59,7 @@ export class GridSelectionModalComponent implements OnInit {
 
   @ViewChild('typeheadInput') typeheadInput: ElementRef<HTMLInputElement>;
   @ViewChild('typeheadchips') typeheadchips: ElementRef<HTMLInputElement>;
-  isDisabled = false;
+  
 
   typeAheadData: any=[];
   addedDataInList: any;
@@ -241,14 +241,17 @@ export class GridSelectionModalComponent implements OnInit {
     if(field.type == "typeahead"){
       if(field.datatype != 'chips'){
         this.modifiedGridData[index][field.field_name]= selectedData;
-        delete field["errormsg"];
-        this.isDisabled = false;
-        this.notificationService.notify("bg-success", "Selected valid Data");
       }else if(field.datatype == 'chips'){
         this.checkDataInListOrAdd(field,index,selectedData,chipsInput);
       }
     }   
-    this.typeAheadData = [];    
+    this.typeAheadData = [];
+    let column = this.listOfGridFieldName[this.colIndex];
+    let fieldName = column?.field_name;
+    let errorMsgKey = fieldName + "_errormsg";
+    delete this.modifiedGridData[this.rowIndex][errorMsgKey];
+    this.rowIndex = -1;
+    this.colIndex = -1;   
   }
   checkDataInListOrAdd(field,index,selectedData,chipsInput){
     if (this.modifiedGridData[index][field.field_name] == null) this.modifiedGridData[index][field.field_name] = [];
@@ -286,55 +289,46 @@ export class GridSelectionModalComponent implements OnInit {
 
 
   typeaheadObjectWithtext;
-  typeaheadRowIndex:any;
-  typeaheadColIndex:any
-  searchTypeaheadData(field,currentObject,chipsInputValue,rowIndex?,colIndex?) {
-    if(chipsInputValue != ''){
-      this.typeaheadObjectWithtext = currentObject;
-      this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
-      this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
-      let call_back_field = '';
-      let criteria = [];
-      const staticModal = []
-      if (field.call_back_field && field.call_back_field != '') {
-        call_back_field = field.call_back_field;
-      }
-      if(field.api_params_criteria && field.api_params_criteria != ''){
-        criteria =  field.api_params_criteria;
-      }
-      let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
-      staticModal.push(staticModalGroup);
-      this.apiservice.GetTypeaheadData(staticModal);
-      this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
-      this.typeheadValidation(field, this.addedDataInList,rowIndex,colIndex);
-    }else{
-      delete field["errormsg"];
-      this.typeAheadData = [];
-    }
+  rowIndex = -1;
+  colIndex = -1;
+  searchTypeaheadData(field,currentObject,chipsInputValue,rowIndex,colIndex) {
+    if((this.rowIndex == -1 && this.colIndex == -1) || (this.colIndex == colIndex && this.rowIndex == rowIndex)) {
+      if(chipsInputValue != ''){
+          this.rowIndex = rowIndex;
+          this.colIndex = colIndex;
+          this.typeaheadObjectWithtext = currentObject;
+          this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
+          this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
+          let call_back_field = '';
+          let criteria = [];
+          const staticModal = []
+          if (field.call_back_field && field.call_back_field != '') {
+            call_back_field = field.call_back_field;
+          }
+          if(field.api_params_criteria && field.api_params_criteria != ''){
+            criteria =  field.api_params_criteria;
+          }
+          let staticModalGroup = this.apiCallService.getPaylodWithCriteria(field.api_params, call_back_field, criteria, this.typeaheadObjectWithtext ? this.typeaheadObjectWithtext : {});
+          staticModal.push(staticModalGroup);
+          this.apiservice.GetTypeaheadData(staticModal);
+          this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
+    
+          }else{
+            this.typeAheadData = [];
+            this.rowIndex = -1;
+            this.colIndex = -1;
+          }
+        } else {
+          this.typeAheadData = [];
+          chipsInputValue = "";
+          this.modifiedGridData[rowIndex][field.field_name]= this.gridData[rowIndex][field.field_name];
+          let column = this.listOfGridFieldName[this.colIndex];
+          let fieldName = column?.field_name;
+          let errorMsgKey = fieldName + "_errormsg";
+          this.modifiedGridData[this.rowIndex][errorMsgKey] = "Invalid Data";
+        }
   }
 
-
-typeheadValidation(field, currentData,rowIndex,colIndex) {
-  this.typeaheadRowIndex = rowIndex;
-  this.typeaheadColIndex = colIndex;
-  if(field?.type != "text" && typeof currentData == "object" && currentData?.name){
-    this.typeaheadObjectWithtext[field.field_name] = currentData;
-    delete field["errormsg"];
-  }else {
-    field["errormsg"] = "Invalid Data";
-    this.isDisabled = true;
-     this.notificationService.notify("bg-danger", "Please Select a Valid Data.");
-  }
-}
-checkValidData(field:any){
-  if(field.is_Invalid){
-    this.notificationService.notify("bg-danger", "Please Select a Valid Data.");
-  }
-  
-}
-
-
-  
   getStaticDataWithDependentData() {
     const staticModal = []
     let staticModalGroup = this.apiCallService.commanApiPayload([], this.listOfGridFieldName, [], this.typeaheadObjectWithtext);
@@ -525,7 +519,8 @@ checkValidData(field:any){
 
   }
   selectGridData() {    
-    this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
+    if(this.rowIndex == -1 && this.colIndex == -1){
+      this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
     let check = 0;
     let validation = {
       'msg' : ''
@@ -556,7 +551,13 @@ checkValidData(field:any){
       this.gridSelectionResponce.emit(this.selectedData);
       this.closeModal();
       this.filteredData = [];
-    }    
+    } 
+    }else {
+      let column = this.listOfGridFieldName[this.colIndex];
+      let fieldName = column?.field_name;
+      let errorMsgKey = fieldName + "_errormsg";
+      this.modifiedGridData[this.rowIndex][errorMsgKey] = "Invalid Data";
+    } 
   }
   
 

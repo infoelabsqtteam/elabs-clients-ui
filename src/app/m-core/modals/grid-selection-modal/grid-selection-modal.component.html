@@ -102,7 +102,7 @@
                                                         </mat-chip>
                                                     </span>
                                                     <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value,i,j)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>
@@ -118,7 +118,7 @@
                                                         </mat-chip>
                                                     </span>
                                                     <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                        [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,i,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value,i,j)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                     <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,chipsInput,data)" [displayWith]="getOptionText">
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>
@@ -126,15 +126,15 @@
                                             </mat-form-field>                                
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'typeahead'">
-                                            <div class="w-100 position-relative" *ngIf="fieldName.datatype != 'chips'">
+                                            <div class="position-relative" [ngClass]="!fieldName.width ? 'wdth-150':'w-100'" *ngIf="fieldName.datatype != 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
                                                     <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
-                                                        [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value,i,j)" (blur)="checkValidData(fieldName)" autocomplete="off">
+                                                        [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value,i,j)" autocomplete="off">
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadInput,data)"  [displayWith]="getOptionText">
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>                                  
                                                 </mat-form-field>
-                                                <small class="typeheaderrormsg" *ngIf="typeaheadRowIndex == i && typeaheadColIndex == j">{{fieldName?.errormsg ? fieldName.errormsg: ''}}</small>
+                                                <small class="typeheaderrormsg" *ngIf="data && data[fieldName.field_name + '_errormsg']">{{data[fieldName.field_name + '_errormsg']}}</small>
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -145,7 +145,7 @@
                                                             </mat-chip>
                                                         </span>
                                                         <input type="text" #typeheadchips [placeholder]="fieldName.label" aria-label="Number" matInput
-                                                            [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name">
+                                                            [matAutocomplete]="first" [matChipInputFor]="chipList" [disabled]="data[fieldName.field_name+'_disabled']"                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value,i,j)" [id]="fieldName._id+'_'+fieldName.field_name">
                                                         <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,i,typeheadchips,data)" [displayWith]="getOptionText">
                                                             <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                         </mat-autocomplete>
@@ -252,7 +252,7 @@
             <mat-checkbox color="primary" class="mb-0 ml-3" aria-label="Only Selected" [(ngModel)]="editEnable" (change)="enableSelectedEdit($event)" [matTooltip]="'Edite Selected Items'">Edit Selected</mat-checkbox>
         </span>
         <button type="button" *ngIf="checkSelectedData && onlySelectedData" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="bulkUpdate()">Bulk Update</button>
-        <button type="button" [disabled]="isDisabled" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ buttonlabel }}</button>
+        <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect  (click)="selectGridData()">{{ buttonlabel }}</button>
         <button type="button" mdbBtn color="primary" size="sm" class="noshadow rounded bg-cerulean" mdbWavesEffect data-dismiss="modal" (click)="closeModal()">Close</button>
       </div>
     </div>
