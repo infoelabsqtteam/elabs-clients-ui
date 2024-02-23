@@ -246,10 +246,10 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }   
     this.typeAheadData = [];
-    let column = this.listOfGridFieldName[this.colIndex];
-    let fieldName = column?.field_name;
-    let errorMsgKey = fieldName + "_errormsg";
-    delete this.modifiedGridData[this.rowIndex][errorMsgKey];
+    // let column = this.listOfGridFieldName[this.colIndex];
+    // let fieldName = column?.field_name;
+    // let errorMsgKey = fieldName + "_errormsg";
+    delete this.modifiedGridData[this.rowIndex].equipment_errormsg;
     this.rowIndex = -1;
     this.colIndex = -1;   
   }
@@ -322,11 +322,15 @@ export class GridSelectionModalComponent implements OnInit {
           this.typeAheadData = [];
           chipsInputValue = "";
           this.modifiedGridData[rowIndex][field.field_name]= this.gridData[rowIndex][field.field_name];
-          let column = this.listOfGridFieldName[this.colIndex];
-          let fieldName = column?.field_name;
-          let errorMsgKey = fieldName + "_errormsg";
-          this.modifiedGridData[this.rowIndex][errorMsgKey] = "Invalid Data";
+          this.setErrorMsg ();
         }
+  }
+
+  setErrorMsg() {
+    let column = this.listOfGridFieldName[this.colIndex];
+    let fieldName = column?.field_name;
+    let errorMsgKey = fieldName + "_errormsg";
+    this.modifiedGridData[this.rowIndex][errorMsgKey] = "Invalid Data";
   }
 
   getStaticDataWithDependentData() {
@@ -553,10 +557,7 @@ export class GridSelectionModalComponent implements OnInit {
       this.filteredData = [];
     } 
     }else {
-      let column = this.listOfGridFieldName[this.colIndex];
-      let fieldName = column?.field_name;
-      let errorMsgKey = fieldName + "_errormsg";
-      this.modifiedGridData[this.rowIndex][errorMsgKey] = "Invalid Data";
+      this.setErrorMsg ();
     } 
   }
   
