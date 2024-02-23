@@ -135,7 +135,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-  selectedFilterType:string; // For advance filter type selection
+  selectedFilterType = "cntsic" // For advance filter type selection
   filterTypeNumber: any;
   filterTypeString: any;
   filterTypeDate: any;
@@ -1236,19 +1236,23 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.getGridPayloadData(pagePayload);
   }
 
-  filterPayloads: any[] = [];
+  crList: any[] = [];
 
   applyAdFilter(){
     let formData = this.adFilterForm.getRawValue();
-
+    // console.log(formData);
     const payload = [];
     Object.keys(formData).forEach(key => {
       if (formData[key]) {
+        console.log(formData[key]);
         // Check if the field is already present in existing payloads
-        const existingPayload = this.filterPayloads.find(obj => obj.fName === key);
+        const existingPayload = this.crList.find(obj => obj.fName === key);
         if (existingPayload) {
           // If the field is already present, just add the value
           existingPayload.fValue = formData[key];
+          // if(existingPayload.operator != this.selectedFilterType) {
+          //   existingPayload.operator = this.selectedFilterType;
+          // }
         } else {
           // If the field is not present, create a new payload object
           payload.push({
@@ -1260,18 +1264,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     });
 
-    this.filterPayloads = this.filterPayloads.concat(payload);
-    console.log(this.filterPayloads);
+    this.crList = this.crList.concat(payload);
+    console.log(this.crList);
 
     this.pageNumber = 1;
-    let pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber,this.tab,this.currentMenu,this.filterPayloads);
+    let pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber,this.tab,this.currentMenu,this.crList);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
 
   }
   clearAdFilter(){
     this.adFilterForm.reset();
-    this.filterPayloads = [];
+    this.crList = [];
     this.applyAdFilter();
   }
 
@@ -1286,28 +1290,20 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
                 case "number":
                 case "reference_names":
                 case "chips" :
-                this.formCreationService.createFormControl(forControl, element, '', "text")
-                break;
-              case "tree_view_selection":
-                this.formCreationService.createFormControl(forControl, element, '', "text")
-                break;
-              case "dropdown":
-                this.formCreationService.createFormControl(forControl, element, '', "text")
-                break;
-              case "typeahead":
-                this.formCreationService.createFormControl(forControl, element, '', "text")
-                break;
-              case "date":
-              case "datetime":
-                this.formCreationService.createFormControl(forControl, element, '', "text")
-                break;
-              case "daterange":
-                const list_of_fields={}
-                const start={field_name:'start',is_disabled:false,is_mandatory:false}
-                this.formCreationService.createFormControl(list_of_fields, start, '', "text")
-                const end={field_name:'end',is_disabled:false,is_mandatory:false}
-                this.formCreationService.createFormControl(list_of_fields, end, '', "text")
-                this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
+                case "tree_view_selection":
+                case "dropdown":
+                case "typeahead":
+                case "date":
+                case "datetime":
+                  this.formCreationService.createFormControl(forControl, element, '', "text")
+                  break;
+                case "daterange":
+                  const list_of_fields={}
+                  const start={field_name:'start',is_disabled:false,is_mandatory:false}
+                  this.formCreationService.createFormControl(list_of_fields, start, '', "text")
+                  const end={field_name:'end',is_disabled:false,is_mandatory:false}
+                  this.formCreationService.createFormControl(list_of_fields, end, '', "text")
+                  this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
                 break;
               default:
                 break;
