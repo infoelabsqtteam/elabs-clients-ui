@@ -52,6 +52,9 @@ export class GridSelectionModalComponent implements OnInit {
   buttonlabel:any;
   currentForm:any;
   currencyRate:any;
+  typeaheadObjectWithtext;
+  rowIndex = -1;
+  colIndex = -1;
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
@@ -60,7 +63,6 @@ export class GridSelectionModalComponent implements OnInit {
   @ViewChild('typeheadInput') typeheadInput: ElementRef<HTMLInputElement>;
   @ViewChild('typeheadchips') typeheadchips: ElementRef<HTMLInputElement>;
   
-
   typeAheadData: any=[];
   addedDataInList: any;
   deleteIndex: any;
@@ -246,9 +248,6 @@ export class GridSelectionModalComponent implements OnInit {
       }
     }   
     this.typeAheadData = [];
-    // let column = this.listOfGridFieldName[this.colIndex];
-    // let fieldName = column?.field_name;
-    // let errorMsgKey = fieldName + "_errormsg";
     delete this.modifiedGridData[this.rowIndex].equipment_errormsg;
     this.rowIndex = -1;
     this.colIndex = -1;   
@@ -285,12 +284,7 @@ export class GridSelectionModalComponent implements OnInit {
     return this.gridCommonFunctionService.getValueForGrid(column,row);
   }
 
-  
 
-
-  typeaheadObjectWithtext;
-  rowIndex = -1;
-  colIndex = -1;
   searchTypeaheadData(field,currentObject,chipsInputValue,rowIndex,colIndex) {
     if((this.rowIndex == -1 && this.colIndex == -1) || (this.colIndex == colIndex && this.rowIndex == rowIndex)) {
       if(chipsInputValue != ''){
