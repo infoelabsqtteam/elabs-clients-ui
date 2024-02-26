@@ -1107,7 +1107,7 @@
                         </div>
                         <div *ngIf="tableField.type == 'pdf_view'">
                             <div *ngIf="pdfViewLink != ''">
-                                <ngx-extended-pdf-viewer [base64Src]="pdfViewLink"  height="58vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false" [showBookmarkButton]="false"></ngx-extended-pdf-viewer>
+                                <ngx-extended-pdf-viewer [base64Src]="pdfViewLink"  height="58vh" [useBrowserLocale]="true" [textLayer]="false" [showHandToolButton]="true" [enablePrint]="false" [filenameForDownload]="'downloadPdf'" [showDownloadButton]="true" [showFindButton]="false" [showOpenFileButton]="false" [showPagingButtons]="true" [showPresentationModeButton]="false" [showRotateButton]="false" [showScrollingButton]="false" [showToolbar]="true" [showSecondaryToolbarButton]="false" [showPropertiesButton]="false"></ngx-extended-pdf-viewer>
                                 <!-- list of attachment files -->
                                 <div *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 0">
                                     <table mdbTable small="true" bordered="true">
