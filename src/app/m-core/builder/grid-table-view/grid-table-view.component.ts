@@ -36,7 +36,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
 
   filterForm: FormGroup;
-  adFilterForm : FormGroup;
+  // adFilterForm : FormGroup;
   tabs: any = [];
   public tab: any = [];
   //selectTabIndex: number = 0;
@@ -729,7 +729,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
 
       }
-      this.createAdFilterFormgroup();
+      // this.createAdFilterFormgroup();
     }
 
 
@@ -1236,86 +1236,84 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.getGridPayloadData(pagePayload);
   }
 
-  crList: any[] = [];
+  // crList: any[] = [];
 
-  applyAdFilter(){
-    let formData = this.adFilterForm.getRawValue();
-    // console.log(formData);
-    const payload = [];
-    Object.keys(formData).forEach(key => {
-      if (formData[key]) {
-        console.log(formData[key]);
-        // Check if the field is already present in existing payloads
-        const existingPayload = this.crList.find(obj => obj.fName === key);
-        if (existingPayload) {
-          // If the field is already present, just add the value
-          existingPayload.fValue = formData[key];
-          // if(existingPayload.operator != this.selectedFilterType) {
-          //   existingPayload.operator = this.selectedFilterType;
-          // }
-        } else {
-          // If the field is not present, create a new payload object
-          payload.push({
-            fName: key,
-            fValue: formData[key],
-            operator: this.selectedFilterType
-          });
-        }
-      }
-    });
+  // applyAdFilter(fieldNameToUpdate?: string){
+  //   let formData = this.adFilterForm.getRawValue();
+  //   const payload = [];
+  //   Object.keys(formData).forEach(key => {
+  //     if (formData[key]) {
+  //       console.log(formData[key]);
+  //       // Check if the field is already present in existing payloads
+  //       const existingPayload = this.crList.find(obj => obj.fName === key);
+  //       if (existingPayload) {
+  //         existingPayload.fValue = formData[key];
+  //       } else {
+  //         payload.push({
+  //           fName: key,
+  //           fValue: formData[key],
+  //           operator: this.selectedFilterType
+  //         });
+  //       }
+  //     }
+  //   });
 
-    this.crList = this.crList.concat(payload);
-    console.log(this.crList);
+  //   const payloadToUpdate = this.crList.find(obj => obj.fName === fieldNameToUpdate);
+  //   if (payloadToUpdate) {
+  //     payloadToUpdate.operator = this.selectedFilterType;
+  //   }
 
-    this.pageNumber = 1;
-    let pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber,this.tab,this.currentMenu,this.crList);
-    pagePayload.data.pageSize = this.itemNumOfGrid;
-    this.getGridPayloadData(pagePayload);
+  //   this.crList = this.crList.concat(payload);
 
-  }
-  clearAdFilter(){
-    this.adFilterForm.reset();
-    this.crList = [];
-    this.applyAdFilter();
-  }
+  //   this.pageNumber = 1;
+  //   let pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber,this.tab,this.currentMenu,this.crList);
+  //   pagePayload.data.pageSize = this.itemNumOfGrid;
+  //   this.getGridPayloadData(pagePayload);
 
-  createAdFilterFormgroup(){
-    const forControl = {};
-        if(this.headElements.length > 0){
-          this.headElements.forEach(element => {
-            if(element != null && element.type != null){
-            switch (element.type.toLowerCase()) {
-              case "text":
-              case "info":
-                case "number":
-                case "reference_names":
-                case "chips" :
-                case "tree_view_selection":
-                case "dropdown":
-                case "typeahead":
-                case "date":
-                case "datetime":
-                  this.formCreationService.createFormControl(forControl, element, '', "text")
-                  break;
-                case "daterange":
-                  const list_of_fields={}
-                  const start={field_name:'start',is_disabled:false,is_mandatory:false}
-                  this.formCreationService.createFormControl(list_of_fields, start, '', "text")
-                  const end={field_name:'end',is_disabled:false,is_mandatory:false}
-                  this.formCreationService.createFormControl(list_of_fields, end, '', "text")
-                  this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
-                break;
-              default:
-                break;
-            }      
-          }
-          });
-        }
+  // }
+  // clearAdFilter(){
+  //   this.adFilterForm.reset();
+  //   this.crList = [];
+  //   this.applyAdFilter();
+  // }
 
-        if (forControl) {
-          this.adFilterForm = this.formBuilder.group(forControl);
-        }
-  }
+  // createAdFilterFormgroup(){
+  //   const forControl = {};
+  //       if(this.headElements.length > 0){
+  //         this.headElements.forEach(element => {
+  //           if(element != null && element.type != null){
+  //           switch (element.type.toLowerCase()) {
+  //             case "text":
+  //             case "info":
+  //               case "number":
+  //               case "reference_names":
+  //               case "chips" :
+  //               case "tree_view_selection":
+  //               case "dropdown":
+  //               case "typeahead":
+  //               case "date":
+  //               case "datetime":
+  //                 this.formCreationService.createFormControl(forControl, element, '', "text")
+  //                 break;
+  //               case "daterange":
+  //                 const list_of_fields={}
+  //                 const start={field_name:'start',is_disabled:false,is_mandatory:false}
+  //                 this.formCreationService.createFormControl(list_of_fields, start, '', "text")
+  //                 const end={field_name:'end',is_disabled:false,is_mandatory:false}
+  //                 this.formCreationService.createFormControl(list_of_fields, end, '', "text")
+  //                 this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
+  //               break;
+  //             default:
+  //               break;
+  //           }      
+  //         }
+  //         });
+  //       }
+
+  //       if (forControl) {
+  //         this.adFilterForm = this.formBuilder.group(forControl);
+  //       }
+  // }
 
   getGridPayloadData(pagePayload:any) {  
     if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.gridDisable)){

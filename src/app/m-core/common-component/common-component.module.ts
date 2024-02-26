@@ -14,6 +14,7 @@ import { FilterComponent } from './filter/filter.component';
 import { GridColumnActionMenuComponent } from './grid-column-action-menu/grid-column-action-menu.component';
 
 import { GridComponent } from './grid/grid.component';
+import { GridAdvanceFilterComponent } from './grid-advance-filter/grid-advance-filter.component';
 
 const components = [
   ChartComponent,
@@ -22,7 +23,8 @@ const components = [
   GridFilterMenuComponent,
   FilterComponent,
   GridComponent,
-  GridColumnActionMenuComponent
+  GridColumnActionMenuComponent,
+  GridAdvanceFilterComponent
 ];
 
 

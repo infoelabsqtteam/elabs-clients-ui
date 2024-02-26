@@ -66,7 +66,8 @@
                                                 </mat-menu>  
                                                 <!-- mat menu for column filter  -->
                                                 <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                                    <div (click)="$event.stopPropagation();$event.preventDefault()" class="filter-flex-container" [formGroup]="adFilterForm">
+                                                    <app-grid-advance-filter [headElements]="headElements" [head]="head" [pageNumber]="pageNumber" [itemNumOfGrid]="itemNumOfGrid" [getGridPayloadData]="getGridPayloadData.bind(this)" [tab]="tab" [currentMenu]="currentMenu"></app-grid-advance-filter>
+                                                    <!-- <div (click)="$event.stopPropagation();$event.preventDefault()" class="filter-flex-container" [formGroup]="adFilterForm">
                                                         <mat-label class="ad-filter-label">Advance Filter</mat-label>
                                                         <div class="filter-flex-item "
                                                             *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
@@ -123,11 +124,11 @@
                                                             <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="clearAdFilter()">
                                                                 Clear
                                                             </button>
-                                                            <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="applyAdFilter()">
+                                                            <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="applyAdFilter(head.field_name)">
                                                                 Apply
                                                             </button>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                 </mat-menu>  
                                             </div>
                                         </th>                                        
