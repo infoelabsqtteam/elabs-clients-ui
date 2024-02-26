@@ -55,8 +55,8 @@ export class UserAccountComponent implements OnInit {
     }
   }
   setRole(role){
-    let mydocument:any = this.document;
-    this.storageService.setRedirectUrl(mydocument.location['pathname']);
+    // let mydocument:any = this.document;
+    // this.storageService.setRedirectUrl(mydocument.location['pathname']);
     if(role.name != 'All'){
       this.storageService.setActiveRole(role);
       let payload = {
