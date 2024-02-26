@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService,MenuOrModuleCommonService, StorageService } from '@core/web-core';
+// import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-user-account',
@@ -18,7 +18,7 @@ export class UserAccountComponent implements OnInit {
   AllModuleList: any = [];
 
   constructor(    
-    @Inject(DOCUMENT) private document: Document,
+    // @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
     private authApiService:AuthService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
@@ -55,8 +55,8 @@ export class UserAccountComponent implements OnInit {
     }
   }
   setRole(role){
-    let mydocument:any = this.document;
-    this.storageService.setRedirectUrl(mydocument.location['pathname']);
+    // let mydocument:any = this.document;
+    // this.storageService.setRedirectUrl(mydocument.location['pathname']);
     if(role.name != 'All'){
       this.storageService.setActiveRole(role);
       let payload = {
