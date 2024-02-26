@@ -238,6 +238,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private multipleFormService:MultipleFormService,
     private downloadService:DownloadService
 ) {
+    let tinymicEditorKey = this.storageService.getApplicationSetting()?.tinyMicCapikey;
+    if(tinymicEditorKey && tinymicEditorKey != '') this.tinymceapikey = tinymicEditorKey;
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
     //   this.getLevel,
