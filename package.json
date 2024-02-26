@@ -60,7 +60,7 @@
     "ngx-filter-pipe": "^2.1.2",
     "ngx-mask": "^14.3.3",
     "ngx-material-timepicker": "^13.1.1",
-    "ngx-owl-carousel-o": "^5.1.0",
+    "ngx-owl-carousel-o": "^14.0.1",
     "ngx-pagination": "^5.0.0",
     "ngx-perfect-scrollbar": "^10.1.1",
     "ngx-timer": "^1.0.6",
