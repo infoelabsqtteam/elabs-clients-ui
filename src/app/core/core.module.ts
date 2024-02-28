@@ -12,9 +12,6 @@ import { LoggingInterceptor } from '../shared/logging.interceptor';
 import { MDBBootstrapModule  } from 'angular-bootstrap-md';
 import { AllPackageModule } from '../m-core/all-package/all-package.module';
 import { HeaderLandingPageComponent } from './header-landing-page/header-landing-page.component';
-import { SigninModalComponent } from '../auth/modal/signin-modal/signin-modal.component';
-import { SignupModalComponent } from '../auth/modal/signup-modal/signup-modal.component';
-import { ForgotpwdModalComponent } from '../auth/modal/forgotpwd-modal/forgotpwd-modal.component';
 
 import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
@@ -22,6 +19,9 @@ import { FormModelModule } from '../m-core/modals/form-model.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
+import { UserAccountComponent } from './user-account/user-account.component';
+import { SettingMenuComponent } from './setting-menu/setting-menu.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 @NgModule({
@@ -30,11 +30,11 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
         HomeComponent,
         FooterComponent,
         HeaderLandingPageComponent,
-        SigninModalComponent,
-        SignupModalComponent,
-        ForgotpwdModalComponent,
         PageNotFoundComponent,
         VerifyFailedComponent,
+        UserAccountComponent,
+        SettingMenuComponent,
+        SidebarComponent
         ],
         imports :[
             AppRoutingModule,
@@ -43,8 +43,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             AngularMaterialModule,
             AngularCommonModule,
             FormModelModule,
-            ModelModule,
-            AllPackageModule
+            ModelModule
             ],
         exports :[
             AppRoutingModule,
@@ -52,6 +51,9 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
             HomeComponent,
             FooterComponent,
             HeaderLandingPageComponent,
+            UserAccountComponent,
+            SettingMenuComponent,
+            SidebarComponent
             ],
         providers:[
         { provide : HTTP_INTERCEPTORS,useClass : AuthInterceptor, multi: true},
