@@ -160,13 +160,13 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     this.close();
   }
   addCrList(key){
-    let crList = this.criteria.get(key).value;
-    if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
-      crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
-    }else if(crList && crList.fValue && typeof crList.fValue == 'object'){
-      let value = ''; 
-      crList.fValue = crList.fValue;
-    }
+    let crList = JSON.parse(JSON.stringify(this.criteria.value[key]));
+    // if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
+    //   crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
+    // }else if(crList && crList.fValue && typeof crList.fValue == 'object'){
+    //   let value = ''; 
+    //   crList.fValue = crList.fValue;
+    // }
     if(this.listOfFieldUpdateMode[key]){
       let index = this.updateIndex[key];
       this.custMizedFormValue[key][index]=crList;
@@ -227,16 +227,18 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   setValue(fName:string,callBackField:string,key:string,dataKey:string){
     if(fName == 'fName'){
-      let value = this.criteria.value[key].fName;
-      let list = this.staticData[dataKey];
-      let index = this.commonFunctionService.getIndexInArrayById(list,value,'field_name');
-      let field = list[index];
+      //let value = this.criteria.value[key].fName;
+      //let list = this.staticData[dataKey];
+      //let index = this.commonFunctionService.getIndexInArrayById(list,value,'field_name');
+      let field = this.criteria.value[key].fName;
       let type = field.type;
       let operatorType = '';
       if(type && type != ''){
         if(key == 'crList'){
           this.crListFieldType = '';
-          this.modifyCrListController(key);
+          if(this.criteria.value[key].fValue && typeof this.criteria.value[key].fValue == 'object'){
+            this.modifyCrListController(key);
+          }
           this.crListFieldType = type.toLowerCase();
         }       
         switch (type.toLowerCase()) {
@@ -266,13 +268,13 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     let value = this.criteria.value[key];
     let operator = value.operator;
     if(operator && key == 'userCrList'){
-      if(operator == 'in'){
+      if(operator == 'IN'){
         this.checkMultiple = true;
       }else{
         this.checkMultiple = false;
       }
     }else{
-      if(this.crListFieldType == 'date' && operator == 'in'){
+      if(this.crListFieldType == 'date' && operator == 'IN'){
         this.crListFieldType = '';
         const parentGroup = this.criteria.get(key) as FormGroup;
         const newNestedGroup = this.fb.group({
@@ -285,7 +287,9 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       }else{ 
         let oldValue = this.crListFieldType;
         this.crListFieldType = '';
-        this.modifyCrListController(key);   
+        if(this.criteria.value[key].fValue && typeof this.criteria.value[key].fValue == 'object'){
+          this.modifyCrListController(key);
+        } 
         if(oldValue == 'daterange'){
           this.crListFieldType = 'date';
         }else{
@@ -296,8 +300,33 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   modifyCrListController(key:string){
     const parentGroup = this.criteria.get(key) as FormGroup; 
+    let control = this.fb.control('');
     parentGroup.removeControl('fValue');       
-    parentGroup.addControl('fValue', new FormControl(''));    
+    parentGroup.addControl('fValue', control);    
+  }
+  getGridValue(data:any,field:any){
+    let fieldName = field.field_name;
+    switch(fieldName){
+      case 'fName':
+        return data[fieldName].label;
+      case 'fValue':
+        let type = data['fName'].type;
+        let operator = data['operator'];
+        if(type == 'date' && operator != 'IN'){
+          return this.commonFunctionService.dateFormat(data[fieldName]);
+        }else if(type == 'date' && operator == 'IN'){
+          const value = data[fieldName];
+          const startData = this.commonFunctionService.dateFormat(value.start);
+          const endData = this.commonFunctionService.dateFormat(value.end);
+          return ''+startData+"-"+endData;
+        }else if(data[fieldName] && typeof data[fieldName] == 'object'){
+          return data[fieldName].label?data[fieldName].label:data[fieldName].name;
+        }else{
+          return data[fieldName]
+        }
+      default:
+        return data[fieldName];
+    }
   }
 
   
