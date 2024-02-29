@@ -33,7 +33,7 @@ export class UserAccountComponent implements OnInit {
     this.AllModuleList = this.storageService.GetModules();
     let roleList = this.storageService.GetRoleList();  
     let activeRole = this.storageService.getActiveRole();  
-    if(this.roleList && this.roleList.length == 1){
+    if(roleList && roleList.length == 1){
       this.roleList = roleList;
       if(activeRole && typeof activeRole == 'object' && activeRole?.name){
         this.activeRole = activeRole.name;
@@ -58,19 +58,21 @@ export class UserAccountComponent implements OnInit {
   setRole(role){
     // let mydocument:any = this.document;
     // this.storageService.setRedirectUrl(mydocument.location['pathname']);
-    this.dataShareService.setModuleIndex(-1);
-    if(role.name != 'All'){
-      this.storageService.setActiveRole(role);
-      let payload = {
-        token : this.storageService.GetIdToken(),
-        roleName : role.name
+    if(this.roleList && this.roleList.length > 1){
+      this.dataShareService.setModuleIndex(-1);
+      if(role.name != 'All'){
+        this.storageService.setActiveRole(role);
+        let payload = {
+          token : this.storageService.GetIdToken(),
+          roleName : role.name
+        }
+        this.authApiService.GetUserInfoFromToken(payload);
+      }else{
+        this.storageService.setActiveRole({});
+        this.authApiService.GetUserInfoFromToken(this.storageService.GetIdToken());
       }
-      this.authApiService.GetUserInfoFromToken(payload);
-    }else{
-      this.storageService.setActiveRole({});
-      this.authApiService.GetUserInfoFromToken(this.storageService.GetIdToken());
+      this.activeRole = role.name;
     }
-    this.activeRole = role.name;
   }
 
 
