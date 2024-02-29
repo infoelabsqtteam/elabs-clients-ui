@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl} from '@angular/forms';
 
 
 @Component({
@@ -10,7 +10,7 @@ import { FormGroup, FormControl} from '@angular/forms';
 export class AyurvedicFormComponent implements OnInit {
 
   @ViewChild('ce') ces:ElementRef;
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   listOfData:any;
   editable:boolean = false;
   update:boolean = true;
@@ -86,24 +86,24 @@ export class AyurvedicFormComponent implements OnInit {
   }
 
   onInitialise(){
-      this.reportForm = new FormGroup({
-        'sample_name': new FormControl(this.listOfData.sample_name),
-        'supplied_by': new FormControl(this.listOfData.supplied_by),
-        'report_date': new FormControl(this.listOfData.report_date),
-        'manufactured_by': new FormControl(this.listOfData.manufactured_by),
-        'report_number': new FormControl(this.listOfData.report_number),
-        'submitted_by': new FormControl(this.listOfData.submitted_by),
-        'booking_code': new FormControl(this.listOfData.booking_code),
-        'mfg': new FormControl(this.listOfData.mfg),
-        'booking_date': new FormControl(this.listOfData.booking_date),
-        'party_ref_no': new FormControl(this.listOfData.party_ref_no),
-        'address': new FormControl(this.listOfData.address),
-        'batch_no': new FormControl(this.listOfData.batch_no),
-        'batch_size': new FormControl(this.listOfData.batch_size),
-        'party_ref_date': new FormControl(this.listOfData.party_ref_date),
-        'dm': new FormControl(this.listOfData.dm),
-        'de': new FormControl(this.listOfData.de),
-        'sample_qty': new FormControl(this.listOfData.sample_qty),
+      this.reportForm = new UntypedFormGroup({
+        'sample_name': new UntypedFormControl(this.listOfData.sample_name),
+        'supplied_by': new UntypedFormControl(this.listOfData.supplied_by),
+        'report_date': new UntypedFormControl(this.listOfData.report_date),
+        'manufactured_by': new UntypedFormControl(this.listOfData.manufactured_by),
+        'report_number': new UntypedFormControl(this.listOfData.report_number),
+        'submitted_by': new UntypedFormControl(this.listOfData.submitted_by),
+        'booking_code': new UntypedFormControl(this.listOfData.booking_code),
+        'mfg': new UntypedFormControl(this.listOfData.mfg),
+        'booking_date': new UntypedFormControl(this.listOfData.booking_date),
+        'party_ref_no': new UntypedFormControl(this.listOfData.party_ref_no),
+        'address': new UntypedFormControl(this.listOfData.address),
+        'batch_no': new UntypedFormControl(this.listOfData.batch_no),
+        'batch_size': new UntypedFormControl(this.listOfData.batch_size),
+        'party_ref_date': new UntypedFormControl(this.listOfData.party_ref_date),
+        'dm': new UntypedFormControl(this.listOfData.dm),
+        'de': new UntypedFormControl(this.listOfData.de),
+        'sample_qty': new UntypedFormControl(this.listOfData.sample_qty),
       })
 
   }

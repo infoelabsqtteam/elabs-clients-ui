@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -68,7 +68,7 @@ export class ChartFilterComponent implements OnInit {
 
   constructor(
     private modalService: ModelService,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,

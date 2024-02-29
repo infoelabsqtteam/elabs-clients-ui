@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, FormArray, Validators,FormGroupDirective,FormControlDirective,FormControlName } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService, CommonFunctionService, DataShareService, ModelService, StorageService } from '@core/web-core';
 
@@ -15,7 +15,7 @@ export class FeedbackComponent implements OnInit {
   @Input() id: string;
   @ViewChild('feedback') public feedback: ModalDirective;  
   uploadFilesList:any = [];
-  feedbackForm: FormGroup;
+  feedbackForm: UntypedFormGroup;
   uploadedData;
   dataListForUpload:any = {};
   downloadClick='';
@@ -33,7 +33,7 @@ export class FeedbackComponent implements OnInit {
 
   constructor(
     private modelService: ModelService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dataShareService: DataShareService,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
@@ -62,9 +62,9 @@ export class FeedbackComponent implements OnInit {
   initForm(){
     const forControlName = {};
     this.feedbackForm = this.formBuilder.group({
-      "customerName" : new FormControl(forControlName,Validators.required),
-      "summary" : new FormControl('',Validators.required),
-      "description" : new FormControl('',Validators.required),
+      "customerName" : new UntypedFormControl(forControlName,Validators.required),
+      "summary" : new UntypedFormControl('',Validators.required),
+      "description" : new UntypedFormControl('',Validators.required),
     })
   }
 

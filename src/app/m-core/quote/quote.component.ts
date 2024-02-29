@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -81,7 +81,7 @@ export class QuoteComponent implements OnInit {
   public isOtpFeilds: boolean = false;
   public enterNoForOtp: boolean = false;
   public isGrid: boolean = false
-  quoteForm: FormGroup;
+  quoteForm: UntypedFormGroup;
   categoryDataList: any = [];
   departmentsList: any = [];
   testParameters: any = [];
@@ -205,18 +205,18 @@ export class QuoteComponent implements OnInit {
 
 
   initForm() {
-    this.quoteForm = new FormGroup({
-      'first_name': new FormControl('', Validators.required),
-      'last_name': new FormControl('', Validators.required),
-      'email': new FormControl('', Validators.required),
-      'company': new FormControl('', Validators.required),
-      'phone': new FormControl('', Validators.required),
-      'address': new FormControl('', Validators.required),
-      'address2': new FormControl(''),
-      'city': new FormControl('', Validators.required),
-      'state': new FormControl('', Validators.required),
-      'zip': new FormControl('', Validators.required),
-      'country': new FormControl('', Validators.required),
+    this.quoteForm = new UntypedFormGroup({
+      'first_name': new UntypedFormControl('', Validators.required),
+      'last_name': new UntypedFormControl('', Validators.required),
+      'email': new UntypedFormControl('', Validators.required),
+      'company': new UntypedFormControl('', Validators.required),
+      'phone': new UntypedFormControl('', Validators.required),
+      'address': new UntypedFormControl('', Validators.required),
+      'address2': new UntypedFormControl(''),
+      'city': new UntypedFormControl('', Validators.required),
+      'state': new UntypedFormControl('', Validators.required),
+      'zip': new UntypedFormControl('', Validators.required),
+      'country': new UntypedFormControl('', Validators.required),
 
     })
   }
@@ -226,18 +226,18 @@ export class QuoteComponent implements OnInit {
     this.isInfoFeild = true;
     this.conformDetails = false;
     this.isUpdate = true;
-    this.quoteForm = new FormGroup({
-      'first_name': new FormControl(this.quoteForm.get('first_name').value, Validators.required),
-      'last_name': new FormControl(this.quoteForm.get('last_name').value, Validators.required),
-      'email': new FormControl(this.quoteForm.get('email').value, Validators.required),
-      'company': new FormControl(this.quoteForm.get('company').value, Validators.required),
-      'phone': new FormControl(this.quoteForm.get('phone').value, Validators.required),
-      'address': new FormControl(this.quoteForm.get('address').value, Validators.required),
-      'address2': new FormControl(this.quoteForm.get('address2').value),
-      'city': new FormControl(this.quoteForm.get('city').value, Validators.required),
-      'state': new FormControl(this.quoteForm.get('state').value, Validators.required),
-      'zip': new FormControl(this.quoteForm.get('zip').value, Validators.required),
-      'country': new FormControl(this.quoteForm.get('country').value, Validators.required),
+    this.quoteForm = new UntypedFormGroup({
+      'first_name': new UntypedFormControl(this.quoteForm.get('first_name').value, Validators.required),
+      'last_name': new UntypedFormControl(this.quoteForm.get('last_name').value, Validators.required),
+      'email': new UntypedFormControl(this.quoteForm.get('email').value, Validators.required),
+      'company': new UntypedFormControl(this.quoteForm.get('company').value, Validators.required),
+      'phone': new UntypedFormControl(this.quoteForm.get('phone').value, Validators.required),
+      'address': new UntypedFormControl(this.quoteForm.get('address').value, Validators.required),
+      'address2': new UntypedFormControl(this.quoteForm.get('address2').value),
+      'city': new UntypedFormControl(this.quoteForm.get('city').value, Validators.required),
+      'state': new UntypedFormControl(this.quoteForm.get('state').value, Validators.required),
+      'zip': new UntypedFormControl(this.quoteForm.get('zip').value, Validators.required),
+      'country': new UntypedFormControl(this.quoteForm.get('country').value, Validators.required),
 
     })
   }

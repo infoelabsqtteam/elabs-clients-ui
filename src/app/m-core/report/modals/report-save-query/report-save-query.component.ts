@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy, Input, Output,ViewChild,EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl,Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl,Validators } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Subscription } from 'rxjs';
 import { ModelService, ApiService, CommonFunctionService, DataShareService, NotificationService, GridCommonFunctionService } from '@core/web-core';
@@ -18,7 +18,7 @@ export class ReportSaveQueryComponent implements OnInit,OnDestroy {
   @Input() saveQurydata;
   @Input() fields;
   @Input() mode;
-  saveQueryForm: FormGroup;
+  saveQueryForm: UntypedFormGroup;
   crList:any = [];
   saveResponceSubscription:Subscription;
 
@@ -26,7 +26,7 @@ export class ReportSaveQueryComponent implements OnInit,OnDestroy {
     private commonFunctionService:CommonFunctionService,
     private modalService: ModelService,
     private apiService:ApiService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dataShareService:DataShareService,
     private notificationService:NotificationService,
     private gridCommonFunctionservice:GridCommonFunctionService
@@ -71,7 +71,7 @@ export class ReportSaveQueryComponent implements OnInit,OnDestroy {
 
   initForm(){
     this.saveQueryForm = this.formBuilder.group({
-      "name" : new FormControl('',Validators.required),
+      "name" : new UntypedFormControl('',Validators.required),
     })
 
   }

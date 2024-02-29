@@ -121,7 +121,7 @@
 
       <div class="row" *ngIf="template == 'temp3'">
         <div class="col-md-6"><p class="text-white m-0">(&copy;) {{currentYear}} All Rights Reserved {{title | titlecase}}. Website Designed By E-Labs.</p></div>
-        <div class="col-md-6"><div class="text-md-right"><a [routerLink]="['/home_page']" class="text-white">Powered by E-Labs.ai</a></div></div>
+        <div class="col-md-6"><div class="text-md-right"><a (click)="navigateStatic('home_page')" class="text-white">Powered by E-Labs.ai</a></div></div>
       </div>
 
       <div class="row" *ngIf="template == 'temp2'">
