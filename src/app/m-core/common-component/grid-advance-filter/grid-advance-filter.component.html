@@ -1,9 +1,11 @@
-<div>
+<div *ngIf="headElements && headElements.length > 0">
     <div (click)="$event.stopPropagation();$event.preventDefault()" class="filter-flex-container" [formGroup]="adFilterForm">
         <mat-label class="ad-filter-label">Advance Filter</mat-label>
-        <div class="filter-flex-item "
+        <div class="filter-flex-item position-relative"
             *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
-            <input class="form-control form-control-sm pr-3" type="search" placeholder="Search" [formControlName]="head.field_name">
+            <!-- <input type="search" [id]="head._id+'_'+head.field_name" class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyAdFilter(head.field_name,head.type)"> -->
+            <input type="text" #searchInput placeholder="Search.." [(ngModel)]="searchField"  class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyAdFilter(head.field_name,head.type)">
+            <mat-icon *ngIf="searchField" class="clearInput" (click)="searchField=''">close</mat-icon>
         </div>
         <div class="filter-flex-item ">
             <mat-label>Filter Type</mat-label>
@@ -31,7 +33,7 @@
             </mat-form-field>                                                                
         </div>
         <ng-container 
-            *ngIf="head.type != null && (head.type.toLowerCase() == 'date'|| head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime') && selectedFilterType!='drng'">
+            *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime')">
             <mat-form-field class="filter-flex-item ">
                 <mat-label>Choose a date</mat-label>
                 <input matInput [matDatepicker]="picker" [formControlName]="head.field_name">

@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, CoreFunctionService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
+import { GridAdvanceFilterComponent } from '../../common-component/grid-advance-filter/grid-advance-filter.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -34,9 +35,12 @@ export const MY_DATE_FORMATS = {
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
+  @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent;
 
   filterForm: FormGroup;
-  // adFilterForm : FormGroup;
+  adFilterForm : FormGroup;
+  isAdFilter = false; // To know advance filter applied or not
+  adFilterList:any[] = [];
   tabs: any = [];
   public tab: any = [];
   //selectTabIndex: number = 0;
@@ -135,10 +139,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-  selectedFilterType = "cntsic" // For advance filter type selection
-  filterTypeNumber: any;
-  filterTypeString: any;
-  filterTypeDate: any;
+  // selectedFilterType = "cntsic" // For advance filter type selection
+  // filterTypeNumber: any;
+  // filterTypeString: any;
+  // filterTypeDate: any;
 
 
 
@@ -491,14 +495,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
   ngOnInit(): void {  
-    this.getOperatorsList();
+    // this.getOperatorsList();
   }
 
-  getOperatorsList(){
-    this.filterTypeNumber = this.coreFunctionService.getOperators('number');
-    this.filterTypeString = this.coreFunctionService.getOperators('string');
-    this.filterTypeDate = this.coreFunctionService.getOperators('date');
-  }
+  // getOperatorsList(){
+  //   this.filterTypeNumber = this.coreFunctionService.getOperators('number');
+  //   this.filterTypeString = this.coreFunctionService.getOperators('string');
+  //   this.filterTypeDate = this.coreFunctionService.getOperators('date');
+  // }
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
@@ -729,7 +733,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
 
       }
-      // this.createAdFilterFormgroup();
+      this.createAdFilterFormgroup();
     }
 
 
@@ -1236,22 +1240,40 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.getGridPayloadData(pagePayload);
   }
 
+  onAdFilter(isAdFilterApplied:boolean){
+    this.isAdFilter = isAdFilterApplied;
+    isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
+  }
+
+  setCrList(list:any){
+    this.adFilterList = list;
+  }
+
+  clearAdFilter(){
+    this.advanceFilterComponent.clearAdFilter();
+  }
+
   // crList: any[] = [];
 
-  // applyAdFilter(fieldNameToUpdate?: string){
+  // applyAdFilter(fieldNameToUpdate?: string,type?:string){
   //   let formData = this.adFilterForm.getRawValue();
   //   const payload = [];
   //   Object.keys(formData).forEach(key => {
   //     if (formData[key]) {
-  //       console.log(formData[key]);
+  //       // console.log(formData[key]);
   //       // Check if the field is already present in existing payloads
   //       const existingPayload = this.crList.find(obj => obj.fName === key);
   //       if (existingPayload) {
   //         existingPayload.fValue = formData[key];
   //       } else {
+  //         let fValue = formData[key];
+  //         if (type === 'date') {
+  //           fValue = this.formatDate(formData[key]);
+  //         }
   //         payload.push({
   //           fName: key,
-  //           fValue: formData[key],
+  //           fValue: fValue,
+  //           fieldType : type,
   //           operator: this.selectedFilterType
   //         });
   //       }
@@ -1271,49 +1293,60 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   //   this.getGridPayloadData(pagePayload);
 
   // }
+
+  // formatDate(fValue: string): string {
+  //   const date = new Date(fValue);
+    
+  //   const day = date.getDate().toString().padStart(2, '0');
+  //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //   const year = date.getFullYear().toString();
+    
+  //   return `${day}/${month}/${year}`;
+  // }
+
   // clearAdFilter(){
   //   this.adFilterForm.reset();
   //   this.crList = [];
   //   this.applyAdFilter();
   // }
 
-  // createAdFilterFormgroup(){
-  //   const forControl = {};
-  //       if(this.headElements.length > 0){
-  //         this.headElements.forEach(element => {
-  //           if(element != null && element.type != null){
-  //           switch (element.type.toLowerCase()) {
-  //             case "text":
-  //             case "info":
-  //               case "number":
-  //               case "reference_names":
-  //               case "chips" :
-  //               case "tree_view_selection":
-  //               case "dropdown":
-  //               case "typeahead":
-  //               case "date":
-  //               case "datetime":
-  //                 this.formCreationService.createFormControl(forControl, element, '', "text")
-  //                 break;
-  //               case "daterange":
-  //                 const list_of_fields={}
-  //                 const start={field_name:'start',is_disabled:false,is_mandatory:false}
-  //                 this.formCreationService.createFormControl(list_of_fields, start, '', "text")
-  //                 const end={field_name:'end',is_disabled:false,is_mandatory:false}
-  //                 this.formCreationService.createFormControl(list_of_fields, end, '', "text")
-  //                 this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
-  //               break;
-  //             default:
-  //               break;
-  //           }      
-  //         }
-  //         });
-  //       }
+  createAdFilterFormgroup(){
+    const forControl = {};
+        if(this.headElements.length > 0){
+          this.headElements.forEach(element => {
+            if(element != null && element.type != null){
+            switch (element.type.toLowerCase()) {
+              case "text":
+              case "info":
+                case "number":
+                case "reference_names":
+                case "chips" :
+                case "tree_view_selection":
+                case "dropdown":
+                case "typeahead":
+                case "date":
+                case "datetime":
+                  this.formCreationService.createFormControl(forControl, element, '', "text")
+                  break;
+                case "daterange":
+                  const list_of_fields={}
+                  const start={field_name:'start',is_disabled:false,is_mandatory:false}
+                  this.formCreationService.createFormControl(list_of_fields, start, '', "text")
+                  const end={field_name:'end',is_disabled:false,is_mandatory:false}
+                  this.formCreationService.createFormControl(list_of_fields, end, '', "text")
+                  this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
+                break;
+              default:
+                break;
+            }      
+          }
+          });
+        }
 
-  //       if (forControl) {
-  //         this.adFilterForm = this.formBuilder.group(forControl);
-  //       }
-  // }
+        if (forControl) {
+          this.adFilterForm = this.formBuilder.group(forControl);
+        }
+  }
 
   getGridPayloadData(pagePayload:any) {  
     if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.gridDisable)){
