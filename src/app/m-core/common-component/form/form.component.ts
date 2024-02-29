@@ -1548,7 +1548,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     };
     //for gsd call*************************
     if(feilds.action_name == 'GSD_CALL'){
-      this.envService.setRequestType("PUBLIC");
+      if(!this.storageService.GetIdToken()) this.envService.setRequestType("PUBLIC");
       if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
         payload['path'] = feilds.api;
       }
