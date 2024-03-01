@@ -30,7 +30,7 @@
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/platform-server": "^14.3.0",
     "@angular/router": "^14.3.0",
-    "@core/web-core": "^1.1.142",
+    "@core/web-core": "^1.0.81",
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@kolkov/angular-editor": "^1.1.2",
     "@mongodb-js/charts-embed-dom": "^3.0.0",
