@@ -1,5 +1,7 @@
 select {border:1px solid #ccc;padding:3px 10px;}
-
+.jsonviewbtn {position:absolute;right:30px;top:10px;
+    label {padding:3px 10px;border-radius:5px;font-size:12px;cursor:pointer;background:#b1b1b1;color:#fff;}
+}
 .auditdetails {
     .table {
         tr {
