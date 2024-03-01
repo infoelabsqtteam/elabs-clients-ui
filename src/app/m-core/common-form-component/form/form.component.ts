@@ -9,6 +9,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
 import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService } from '@core/web-core';
 
 declare var tinymce: any;
@@ -19,7 +20,8 @@ declare var tinymce: any;
   styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
-
+  
+  editorOptions: JsonEditorOptions;
   //https://www.npmjs.com/package/@kolkov/angular-editor
   editorConfig:AngularEditorConfig = editorConfig as AngularEditorConfig;
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
@@ -246,6 +248,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // );
     //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    this.editorOptions = new JsonEditorOptions();
+    this.editorOptions.mode = "text";
     let tinymicEditorKey = this.storageService.getApplicationSetting()?.tinyMicCapikey;
     if(tinymicEditorKey && tinymicEditorKey != '') this.tinymceapikey = tinymicEditorKey;
     
