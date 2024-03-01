@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { AuthService, DataShareService, StorageService, AuthDataShareService, NotificationService, CustomvalidationService} from '@core/web-core';
 import { Subscription } from 'rxjs';
 
@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
 export class ForgotPwdComponent implements OnInit {
   loading = false;
   hide = true;
-  fForm: FormGroup;
-  vForm: FormGroup;
+  fForm: UntypedFormGroup;
+  vForm: UntypedFormGroup;
   username: string;
   resetPwd: boolean = true;
   appName: string;
@@ -78,13 +78,13 @@ export class ForgotPwdComponent implements OnInit {
 
   initForm() {
     this.username = "";
-    this.fForm = new FormGroup({
-      'userId': new FormControl('', [Validators.required]),
-      "admin":new FormControl(false)
+    this.fForm = new UntypedFormGroup({
+      'userId': new UntypedFormControl('', [Validators.required]),
+      "admin":new UntypedFormControl(false)
     });
-    this.vForm = new FormGroup({
-      'verifyCode': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
+    this.vForm = new UntypedFormGroup({
+      'verifyCode': new UntypedFormControl('', [Validators.required]),
+      'password': new UntypedFormControl('', [Validators.required,this.customvalidationService.patternValidator()]),
     });
   }
 

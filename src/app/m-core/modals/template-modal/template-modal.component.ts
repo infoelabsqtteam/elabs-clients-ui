@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 
-import {FormGroup, FormControl} from '@angular/forms';
+import {UntypedFormGroup, UntypedFormControl} from '@angular/forms';
 import { ModelService } from '@core/web-core';
 
 
@@ -17,21 +17,21 @@ export class TemplateModalComponent implements OnInit {
   @ViewChild('templateModal') public templateModal: ModalDirective;
   templateName:any='';
   objectData:any={};
-  campaignOne: FormGroup;
-  campaignTwo: FormGroup;
+  campaignOne: UntypedFormGroup;
+  campaignTwo: UntypedFormGroup;
   constructor(private modalService: ModelService, private el: ElementRef) { 
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    this.campaignOne = new FormGroup({
-      start: new FormControl(new Date(year, month, 13)),
-      end: new FormControl(new Date(year, month, 16))
+    this.campaignOne = new UntypedFormGroup({
+      start: new UntypedFormControl(new Date(year, month, 13)),
+      end: new UntypedFormControl(new Date(year, month, 16))
     });
 
-    this.campaignTwo = new FormGroup({
-      start: new FormControl(new Date(year, month, 15)),
-      end: new FormControl(new Date(year, month, 19))
+    this.campaignTwo = new UntypedFormGroup({
+      start: new UntypedFormControl(new Date(year, month, 15)),
+      end: new UntypedFormControl(new Date(year, month, 19))
     });
   }
 

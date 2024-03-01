@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-environment-form',
@@ -8,7 +8,7 @@ import { FormGroup, FormControl} from '@angular/forms'
 })
 export class EnvironmentFormComponent implements OnInit {
 
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   listOfData:any;
   editable:boolean = false;
   update:boolean = true;
@@ -72,35 +72,35 @@ export class EnvironmentFormComponent implements OnInit {
   }
 
   onInitialise(){
-    this.reportForm = new FormGroup({
-      'issued_to': new FormControl(this.listOfData.issued_to),
-      'reg_no': new FormControl(this.listOfData.reg_no),
-      'reg_date': new FormControl(this.listOfData.reg_date),
-      'report_date': new FormControl(this.listOfData.report_date),
-      'report_no': new FormControl(this.listOfData.report_no),
-      'nabl_ulr_no': new FormControl(this.listOfData.nabl_ulr_no),
-      'customer_ref_no': new FormControl(this.listOfData.customer_ref_no),
-      'letter_dated': new FormControl(this.listOfData.letter_dated),
-      'test_report_per': new FormControl(this.listOfData.test_report_per),
-      'emission_source': new FormControl(this.listOfData.emission_source),
-      'capacity': new FormControl(this.listOfData.capacity),
-      'sampling_capacity': new FormControl(this.listOfData.sampling_capacity),
-      'fuel_type': new FormControl(this.listOfData.fuel_type),
-      'operating_schedule': new FormControl(this.listOfData.operating_schedule),
-      'stack_identification': new FormControl(this.listOfData.stack_identification),
-      'type_of_stack': new FormControl(this.listOfData.type_of_stack),
-      'ground_level': new FormControl(this.listOfData.ground_level),
-      'diameter': new FormControl(this.listOfData.diameter),
-      'duration': new FormControl(this.listOfData.duration),
-      'purpose': new FormControl(this.listOfData.purpose),
-      'pollution_measure': new FormControl(this.listOfData.pollution_measure),
-      'status': new FormControl(this.listOfData.status),
-      'recovery': new FormControl(this.listOfData.recovery),
-      'fugitive_emission': new FormControl(this.listOfData.fugitive_emission),
-      'gas_temp': new FormControl(this.listOfData.gas_temp),
-      'gas_velocity': new FormControl(this.listOfData.gas_velocity),
-      'flow_rate': new FormControl(this.listOfData.flow_rate),
-      'air_temp': new FormControl(this.listOfData.air_temp),
+    this.reportForm = new UntypedFormGroup({
+      'issued_to': new UntypedFormControl(this.listOfData.issued_to),
+      'reg_no': new UntypedFormControl(this.listOfData.reg_no),
+      'reg_date': new UntypedFormControl(this.listOfData.reg_date),
+      'report_date': new UntypedFormControl(this.listOfData.report_date),
+      'report_no': new UntypedFormControl(this.listOfData.report_no),
+      'nabl_ulr_no': new UntypedFormControl(this.listOfData.nabl_ulr_no),
+      'customer_ref_no': new UntypedFormControl(this.listOfData.customer_ref_no),
+      'letter_dated': new UntypedFormControl(this.listOfData.letter_dated),
+      'test_report_per': new UntypedFormControl(this.listOfData.test_report_per),
+      'emission_source': new UntypedFormControl(this.listOfData.emission_source),
+      'capacity': new UntypedFormControl(this.listOfData.capacity),
+      'sampling_capacity': new UntypedFormControl(this.listOfData.sampling_capacity),
+      'fuel_type': new UntypedFormControl(this.listOfData.fuel_type),
+      'operating_schedule': new UntypedFormControl(this.listOfData.operating_schedule),
+      'stack_identification': new UntypedFormControl(this.listOfData.stack_identification),
+      'type_of_stack': new UntypedFormControl(this.listOfData.type_of_stack),
+      'ground_level': new UntypedFormControl(this.listOfData.ground_level),
+      'diameter': new UntypedFormControl(this.listOfData.diameter),
+      'duration': new UntypedFormControl(this.listOfData.duration),
+      'purpose': new UntypedFormControl(this.listOfData.purpose),
+      'pollution_measure': new UntypedFormControl(this.listOfData.pollution_measure),
+      'status': new UntypedFormControl(this.listOfData.status),
+      'recovery': new UntypedFormControl(this.listOfData.recovery),
+      'fugitive_emission': new UntypedFormControl(this.listOfData.fugitive_emission),
+      'gas_temp': new UntypedFormControl(this.listOfData.gas_temp),
+      'gas_velocity': new UntypedFormControl(this.listOfData.gas_velocity),
+      'flow_rate': new UntypedFormControl(this.listOfData.flow_rate),
+      'air_temp': new UntypedFormControl(this.listOfData.air_temp),
       
 
     })
