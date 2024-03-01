@@ -22,7 +22,8 @@ export class AuditHistoryComponent implements OnInit {
   previousObject:any = [];
   formFields:any = [];
   lastEdit:number;
-
+  isJsonView = false;
+  isJsonMode = false;
   
 
   constructor(
@@ -134,6 +135,13 @@ export class AuditHistoryComponent implements OnInit {
 
   copmareListOfFields(fields) {
     this.gridCommonFunctionServie.copmareListOfFields(fields,this.currentObject,this.previousObject);
+  }
+
+  viewModeChange() {
+    this.isJsonView = !this.isJsonView
+  }
+  jsonViewMode(){
+    this.isJsonMode = !this.isJsonMode;
   }
  
 }
