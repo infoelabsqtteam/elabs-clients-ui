@@ -2,10 +2,10 @@
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService} from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService} from '@core/web-core';
 
 
 @Component({
@@ -34,9 +34,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
   gridDataCountSubscription:any;
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
-  selected = new FormControl(0);
+  selected = new UntypedFormControl(0);
   getTempData:boolean = true;
   currentUrl :String = "";
+  isPageLoading: boolean = false;
   
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
@@ -64,7 +65,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
     private envService:EnvService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private _location:Location,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private userPrefrenceService:UserPrefrenceService
   ) {  
     this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -120,7 +122,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTempData = false;
       this.selectContact = '';
       this.selectTabIndex = 0;
-      this.selected = new FormControl(0);   
+      this.selected = new UntypedFormControl(0);   
       this.currentMenu = this.storageService.GetActiveMenu();
       if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
         const payload = this.apiCallService.getTemData(this.currentMenu.name); 
@@ -224,7 +226,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
               }                        
             }else{
                 this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
-                this.router.navigate['/dashboard'];
+                this.storageService.setRedirectUrl('/');
+                this.dataShareService.setModuleIndex(-1);     
+                this.router.navigate(['/dashboard']);                        
             }                    
         }else{
             if(moduleIndex != -1){
@@ -232,7 +236,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
                 this.dataShareService.setModuleIndex(moduleIndex);
             }else{
                 this.notificationService.notify('bg-info',"Module not exits,connect to admin!");
-                this.router.navigate['/dashboard'];
+                this.storageService.setRedirectUrl('/');
+                this.dataShareService.setModuleIndex(-1);
+                this.router.navigate(['/dashboard']);
+                
             }
         }  
       }                   
@@ -287,8 +294,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.tabs = [];
       }
       if(this.tabs.length > 0){
-        this.filterTab = tempData[0].filterTab;
-        if(this.filterTab && this.filterTab.tab_name && this.filterTab.tab_name != ''){
+        this.filterTab = tempData[0]?.filterTab;
+        if(this.filterTab?.tab_name){
           this.isTabFilter = true;
         }else{
           this.isTabFilter = false;          
@@ -310,7 +317,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
             }
           }          
         } 
-        this.selected = new FormControl(this.selectTabIndex);    
+        this.selected = new UntypedFormControl(this.selectTabIndex);    
         this.getViewMode(); 
       }else{
         this.grid_view_mode = '';
@@ -320,11 +327,13 @@ export class BuilderComponent implements OnInit,OnDestroy {
   setGridData(gridData){
     if (gridData) {
       if (gridData.data && gridData.data.length > 0) {
-        this.total = gridData.data_size;
-        const currentTabName = this.storageService.GetActiveMenu()['name'];        
+        this.total = gridData.data_size;                
         const tab = this.tabs[this.selectTabIndex];
-        const key = currentTabName+"_"+tab.name;
-        this.gridCountByTab[key] = gridData.data_size;
+        if(tab && tab.name){
+          const currentTabName = this.storageService.GetActiveMenu()['name'];
+          const key = currentTabName+"_"+tab.name;
+          this.gridCountByTab[key] = gridData.data_size;
+        }        
       } else {
         this.total = 0;
       }
@@ -358,7 +367,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
     this.selectTabIndex = i;  
     this.getViewMode(); 
-    this.selected = new FormControl(i);
+    this.selected = new UntypedFormControl(i);
   } 
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
@@ -394,20 +403,31 @@ export class BuilderComponent implements OnInit,OnDestroy {
     else{
       this.selectContact = '';
     }
-  } 
-  addFebMenu(menu,parent){
-    this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    this.userPreferenceSubscribe(menu,'favoriteTabs',parent);
-    // this.commonFunctionService.updateUserPreference(menu,'favoriteMenus',parent);
+  }   
+  addFebTab(tab,parent){  
+    this.isPageLoading = true;
+    tab.favourite = !tab.favourite;
+    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
+    // this.userPreferenceSubscribe(tab,'tab',parent);
+    this.updateUserPreference(tab,'tab',parent);
     // this.saveCallSubscribe();
   }
-  updateUserPreference(menu,field,parent){
+  
+  async updateUserPreference(menu,field,parent){
     this.unsubscribe(this.userPreferenceSubscription);
-    this.commonFunctionService.updateUserPreference(menu,field,parent);
-    this.saveCallSubscribe();
+    let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+    if (response?.success) {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-success', 'favourite Tab updated successfully!');
+    } else {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-warning', 'Failed to save data.');
+    }
+    // this.saveCallSubscribe();
   }
-  
-  
- }
-
+//   checkFebTabAddOrNot(tab) {
+//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
+//     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
+// }
+}
 

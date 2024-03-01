@@ -1,0 +1,66 @@
+<div class="row w-100 m-0">
+    <div class="col-lg-12 mt-0 px-0">
+        <mat-card class="m-0 p-0 bg-aluminium">
+            <mat-card-content>
+                <div class="row mx-0">
+                    <div class="table-responsive table tableFixHead mb-0 pb-0 ">
+                        <table mdbTable class="table table-resizable table-bordered table-striped table-hover">
+                            <thead>
+                                <tr mdbTableCol *ngIf="sqsNotificationsData && sqsNotificationsData.length > 0">
+                                    <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'"
+                                        [style.left.px]="fixedcolwidth"
+                                        *ngFor="let header of gridColumns;let i = index">
+                                        <div class="heading" [style.width]="header.width"
+                                            [style.text-align]="header.text_align">
+                                            <span class="text-center grid-heading-nowrap" [title]="header.label">
+                                                {{header.label | titlecase}}
+                                            </span>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr mdbTableCol class="cursor-pointer"
+                                    *ngFor="let row of sqsNotificationsData; let i = index">
+                                    <td [style.background-color]="row['background-color']"
+                                        [style.left.px]="fixedcolwidth" *ngFor="let header of gridColumns">
+                                        <div *ngIf="header.type != null && header.type == ''|| header.type == 'Text' || header.type == 'info' || header.type == 'reference_names' || header.type == 'number' || header.type == 'chips'"
+                                            class="grid-data resizeGridColunms" [style.width]="header.width"
+                                            [style.text-align]="header.text_align">
+                                            <a href="javascript:void(0)" class="grid-coloumn-nowrap"
+                                                [matTooltip]="row[header.field_name]" [matTooltipPosition]="'above'"
+                                                [ngClass]="header.field_class != ''?header.field_class:''"
+                                                *ngIf="header.type != 'color'">
+                                                {{row[header.field_name]}}
+                                            </a>
+                                        </div>
+                                        <div *ngIf="header.type != null && (header.type.toLowerCase() == 'date' || header.type.toLowerCase() == 'datetime')"
+                                            class="grid-data resizeGridColunms" [style.width]="header.width"
+                                            [style.text-align]="header.text_align">
+                                            <a href="javascript:void(0)" class="grid-coloumn-nowrap"
+                                                [matTooltip]="row[header.field_name] | date:'dd/MM/yyyy'"
+                                                [matTooltipPosition]="'above'"
+                                                [ngClass]="header.field_class != ''?header.field_class:''"
+                                                *ngIf="header.type != 'color'">
+                                                {{row[header.field_name] | date:'dd/MM/yyyy'}}
+                                            </a>
+                                        </div>
+                                        <div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!sqsNotificationsData || sqsNotificationsData.length==0">
+                                    <td class="text-center">
+                                        <div class="py-3 font-weight-bold">No Records Found !!!</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

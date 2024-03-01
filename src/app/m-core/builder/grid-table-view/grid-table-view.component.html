@@ -24,36 +24,24 @@
   </ng-template> 
 </mat-menu> 
 
-<section class="downloadbtn">
-    <button *ngIf="headElements.length > 0" mat-icon-button [matMenuTriggerFor]="notify" [matTooltip]="'Filter Columns'" [matTooltipPosition]="'above'"><mat-icon>filter_alt</mat-icon></button>
-    <mat-menu #notify="matMenu" xPosition="before" class="filterdrowdownmenu">
-        <span class="example-list-section">
-            <ul class="ml-2 mt-2 mb-2">
-                <li *ngFor="let head of headElements; let i = index">
-                <mat-checkbox [(ngModel)]="head.display" [color]="head.field_class ? head.field_class : 'primary'" (ngModelChange)="updateColumnList('display',i)" (click)="$event.stopPropagation()">{{ head.label }}</mat-checkbox>
-                </li>
-            </ul>
+<section>
+    <div class="downloadbtn">
+        <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
+        <button *ngIf="forms['default'] && tab.addForm" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
+        <button mat-icon-button [matMenuTriggerFor]="beforeMenu" [matTooltip]="'Export CSV (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="heavyDownload"><mat-icon>download</mat-icon></button>
+        <mat-menu #beforeMenu="matMenu" xPosition="before" class="filterdrowdownmenu">
+            <button mat-menu-item (click)="exportCSV()"><mat-icon>download</mat-icon>Download CSV</button>
+        </mat-menu>
+        <ng-container *ngIf="forms['default'] && tab && tab.grid && tab.grid.copyRequired">
+            <button mdbBtn type="button" size="sm" (click)="cloneData()" mdbWavesEffect class="m-0 px-2 mr-2 py-1 grid-button float-right" [matTooltip]="'Copy Selected Row'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">content_copy</span> Copy</button>
+        </ng-container>
+        <span *ngFor="let btn of gridButtons">
+            <a *ngIf="(btn && btn.grid_header_button) || (bulkuploadList && bulkuploadList.length > 0)" mdbBtn floating="true" size="sm" (click)="gridButtonAction(0,btn)" mdbWavesEffect class="m-0 mr-1 grid-button" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
+                <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
+            </a>
         </span>
-    </mat-menu>
-
-    <ng-container *ngFor="let btn of gridButtons" >
-        <button mat-icon-button (click)="gridButtonAction(0,btn)" *ngIf="(btn && btn.grid_header_button) || (bulkuploadList && bulkuploadList.length > 0)" [matTooltip]="btn.label" [matTooltipDisabled]="btn.is_disabled" [matTooltipPosition]="'above'" [matTooltipClass]="btn.field_class">
-            <mat-icon [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</mat-icon>
-        </button>
-    </ng-container>
-    
-    <ng-container *ngIf="forms['default'] && tab && tab.grid && tab.grid.copyRequired">
-        <button mat-icon-button (click)="cloneData()" [matTooltip]="'Copy Selected Row'" [matTooltipPosition]="'above'"><mat-icon>file_copy</mat-icon></button>
-    </ng-container>
-        
-    <button mat-icon-button *ngIf="forms['default'] && tab.addForm" (click)="addNewForm('NEW')" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'"><mat-icon>library_add</mat-icon></button>
-
-    <button mat-icon-button [matTooltip]="'Export Excel (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="!heavyDownload" (click)="exportExcel()"><mat-icon>download</mat-icon></button>
-
-    <button mat-icon-button [matMenuTriggerFor]="beforeMenu" [matTooltip]="'Export CSV (ALT + CTRL + D)'" [matTooltipPosition]="'above'" *ngIf="heavyDownload"><mat-icon>download</mat-icon></button>
-    <mat-menu #beforeMenu="matMenu" xPosition="before" class="filterdrowdownmenu">
-        <button mat-menu-item (click)="exportCSV()"><mat-icon>download</mat-icon>Download CSV</button>
-    </mat-menu>
+        <app-grid-filter-menu [extraClass]="'filterbtn float-right'" [columns]="headElements"></app-grid-filter-menu>
+    </div>
 </section>
 
 <section>
@@ -68,8 +56,17 @@
                                 <thead >
                                     <tr>
                                         <th [resizeColumn]="true" [index]="-1" *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}"><div class="heading" (click)="onSort(headElements[i])" [style.width]="head.width" [style.text-align]="head.text_align"><span class="grid-heading-nowrap resizeGridColunms" [title]="head.label">{{ head.label | titlecase }}</span>
-                                            <span><mdb-icon fas icon="sort"></mdb-icon></span></div>
+                                        <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                            <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
+                                                <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
+                                                <span class="show-on-hover mr-1">
+                                                    <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
+                                                    <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                </span>
+                                                <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
+                                                    <app-grid-column-action-menu [elements]="elements" [sortIcon]="sortIcon" [headElements]="headElements" [data]="modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
+                                                </mat-menu>
+                                            </div>
                                         </th>                                        
                                     </tr>
                                     <tr [formGroup]="filterForm" *ngIf="headElements.length > 0" class="grid-filter">
@@ -79,7 +76,7 @@
                                                 <button mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
                                             </div>
                                         </td>
-                                        <td [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                        <td class="px-1 py-2" [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div *ngIf="head.type == 'tree_view_selection'" class="position-relative w-100">
                                                 <select class="form-control form-control-sm cursor-pointer w-100" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
                                                     <option *ngFor="let data of treeViewData[head.field_name]" [value]="data">{{data && data.name ? data.name : data}}</option>
@@ -167,15 +164,16 @@
 
                                         </td>
                                         <td [style.left.px]="fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':rowSelectionIndex == i && columnSelectionIndex == j}" [style.background-color]="el['background-color']">
-                                            <div *ngIf="editedRowIndex != i" class="grid-data resizeGridColunms" [style.width]="elId.width" [style.text-align]="elId.text_align">
-                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
+                                            <div *ngIf="editedRowIndex != i" class="grid-data copyIconContainer resizeGridColunms d-flex align-items-center" [style.width]="elId.width" [style.text-align]="elId.text_align" >
+                                                <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [class.copyField]="!elId.hideCopy" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                     </a>
 
 
                                                     <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type == 'color'">
                                                         <span [style.background]="el[elId.field_name]" class="colorbox"></span> <span class="colorcode">{{el[elId.field_name]}}</span>
                                                     </a>
-                                                    
+                                                    <span *ngIf="!elId.hideCopy"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(el[elId.field_name])" >content_copy</span>
+
                                                 </div>
                                             <div *ngIf="editedRowIndex == i">  
                                                 <div *ngIf="elId.type == 'boolean'">

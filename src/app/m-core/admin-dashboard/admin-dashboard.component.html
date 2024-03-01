@@ -1,5 +1,5 @@
 <div class="container-fluid position-relative">
-  <mat-tab-group *ngIf="chartPermission"  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
+  <mat-tab-group *ngIf="chartPermission" [selectedIndex]="selected.value"  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
     <mat-tab>
       <ng-template mat-tab-label>
         <div class="mat-tab-label-content px-3 py-2" >Chart</div>
@@ -17,7 +17,13 @@
         <div class="mat-tab-label-content px-3 py-2" >Dashboard</div>
       </ng-template>
        <app-dashboard-chart *ngIf="dashboardMongodbChartShow" [showDashboardMongoChart]="dashboardMongodbChartShow"></app-dashboard-chart>   
-    </mat-tab>   
+    </mat-tab> 
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="mat-tab-label-content px-3 py-2" >In Progress Records</div>
+      </ng-template>
+      <app-grid *ngIf="isShowGrid" [isShowGrid]="isShowGrid"></app-grid>
+    </mat-tab>  
   </mat-tab-group>  
 
 
@@ -28,13 +34,4 @@
     </div>
 
   </section>
-  <!-- <div class="row">
-    <div class="col-xl-8">
-      <div class="row">
-        <div *ngFor="let stat of statData" class="col-md-4">
-          <app-stat [title]="stat.title" [value]="stat.value" [icon]="stat.icon"></app-stat>
-        </div>
-      </div>
-    </div>
-  </div> -->
 </div>

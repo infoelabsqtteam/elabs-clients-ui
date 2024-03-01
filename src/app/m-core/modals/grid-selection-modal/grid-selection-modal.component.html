@@ -16,18 +16,7 @@
         </div>
         <div *ngIf="listOfGridFieldName && listOfGridFieldName.length > 0" style="position: absolute;
             right: 50px;">
-            <button  mat-icon-button [matMenuTriggerFor]="notify" size="sm" class="m-0 ml-2 grid-button float-right" style="height: 25px;line-height: 25px;"><mat-icon style="font-size: 20px;">filter_alt</mat-icon></button>
-            <mat-menu #notify="matMenu" xPosition="before" class="dropdownmenu gridFilterDropdown" >
-                <span class="example-list-section">
-                    <ul class="ml-2 mt-2 mb-2">
-                        <li *ngFor="let column of listOfGridFieldName; let i = index" >
-                            <mat-checkbox [(ngModel)]="column.display" [color]="column.field_class ? column.field_class : 'primary'" (ngModelChange)="updateColumnList(column,i)"(click)="$event.stopPropagation()">
-                            {{ column.label }}
-                            </mat-checkbox>
-                        </li>
-                    </ul>
-                </span>
-            </mat-menu> 
+            <app-grid-filter-menu [extraClass]="'plusicon float-left'" [columns]="listOfGridFieldName" [form]="currentForm" [formTable]="field"></app-grid-filter-menu>
         </div>      
         <a class="h5 m-0 closebtb" (click)="closeModal()"><span>×</span></a>
       </div>
@@ -36,13 +25,21 @@
       <div class="modal-body pt-0 popuptable">
         <div class="">
             <div class="table without-filter mb-2 grid-selection-modal">            
-                <table *ngIf="field.type == 'grid_selection' && listOfGridFieldName.length > 0" class="table-bordered table-hover table-resizable  gridselectionform" matSort (matSortChange)="sortData($event)" stickyTable>
+                <table *ngIf="field.type == 'grid_selection' && listOfGridFieldName.length > 0" class="table-bordered table-hover  gridselectionform" matSort (matSortChange)="sortData($event)">
                     <thead>
                         <tr class="border">
                             <th *ngIf="grid_row_selection" class="text-center colSticky firstCol">
                               <mat-checkbox color="primary" class="mb-0" aria-label="Select All" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
                             </th>
-                            <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" *ngFor="let fieldName of listOfGridFieldName;let i=index" [stickyHeader]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}"><div class="heading" [mat-sort-header]="fieldName.field_name" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap resizeGridColunms" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span></div></th>
+                            <th *ngFor="let fieldName of listOfGridFieldName;let i=index" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
+                                <div class="heading"  [style.width]="fieldName.width" [style.text-align]="fieldName.text_align"><span class="grid-heading-nowrap" [title]="fieldName.label">{{ fieldName.label }}<span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></span>
+                                    <span class="show-on-hover px-1">
+                                        <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                    </span>
+                                    <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
+                                       <app-grid-column-action-menu  [headElements]="listOfGridFieldName" [data]="modifiedGridData" [index]="i"></app-grid-column-action-menu>
+                                    </mat-menu>
+                                </div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,12 +51,13 @@
                                     <span *ngIf="data.selected && editableGridColumns.length > 1 && !editEnable" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
                                 </div>
                             </td>
-                            <td  *ngFor="let fieldName of listOfGridFieldName" [sticky]="fieldName.sticky" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
+                            <td  *ngFor="let fieldName of listOfGridFieldName" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                               <div>
-                                <div *ngIf="!fieldName.editable" class="grid-data resizeGridColunms" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
-                                    <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)"></span>
+                                <div *ngIf="!fieldName.editable" class="grid-data d-flex align-items-center copyIconContainer" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
+                                    <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)" class="copyField"></span>
+                                    <span *ngIf="data[fieldName.field_name]!='' && data[fieldName.field_name]!=undefined && fieldName.type!='info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >content_copy</span>
                                 </div>
-                                <div *ngIf="fieldName.editable" style="position: relative;">
+                                <div *ngIf="fieldName.editable" style="position: relative;" [style.width]="fieldName.width">
                                     <div *ngIf="!data['column_edit']">
                                         <span [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="getValueForGrid(fieldName,data)" (click)="showGriddData(i,fieldName)"></span>
                                     </div>
@@ -78,6 +76,22 @@
                                         </div>
                                         <div *ngIf="fieldName.type.toLowerCase() == 'number'">
                                             <input  type="number" style="min-width: 50px;" step="any" class="form-control form-control-sm d-inline mr-2" (keyup)="calculateNetAmount(fieldName, i)"  [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                        </div>
+                                        <div *ngIf="fieldName.type == 'date'">
+                                            <mat-form-field appearance="outline" class="w-100">
+                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                                <input matInput [matDatepicker]="picker" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                        </div> 
+                                        <div *ngIf="fieldName.type == 'time'">
+                                            <mat-form-field appearance="outline" class="w-100">
+                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                            </mat-form-field>
+
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100">
@@ -246,4 +260,4 @@
 
 <app-confirm-modal *ngIf="!isGridSelectionOpen" id="confirm-modal" (alertResponce)="alertResponce1($event)"></app-confirm-modal>
 <app-bulk-update id="bulk-update-modal" (bulkUpdateResponce)="bulkUpdateResponce($event)"></app-bulk-update>
-<app-file-upload-modal id="grid-selection-file-upload" (fileUploadResponce)="fileUploadResponce($event)"></app-file-upload-modal>
+<app-file-upload-modal *ngIf="!isGridSelectionOpen" id="grid-selection-file-upload" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>

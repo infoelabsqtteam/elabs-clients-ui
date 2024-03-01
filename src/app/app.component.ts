@@ -90,7 +90,11 @@ export class AppComponent implements OnInit {
         ) { 
           // if(event.url.startsWith("/browse") && this.storageService.getChildWindowUrl() == '/'){
           //   this.storageService.setRedirectUrl(event.urlAfterRedirects);
-          // }         
+          // }  
+          let themeSettings =  this.storageService.getThemeSetting();
+          if(themeSettings){
+            this.envService.setThemeSetting(themeSettings);
+          }      
           this.redirectToHomePageWithStorage();
         }
       }      

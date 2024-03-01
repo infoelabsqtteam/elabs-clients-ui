@@ -1,8 +1,9 @@
 import { Component, OnInit ,OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { ChartType, Stat, Chat, Transaction } from './dashboard.model';
 import { statData, revenueChart, salesAnalytics, sparklineEarning, sparklineMonthly, chatData, transactions } from './data';
-import { CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
+import { AuthDataShareService, CommonFunctionService, DataShareService, StorageService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -18,6 +19,7 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
    userInfo:any = {};
    chartPermission:boolean = false;
    welcometitle:any;
+   selected = new FormControl(0);
 
   // bread crumb items
   // breadCrumbItems: Array<{}>;
@@ -36,11 +38,12 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // Form submit
   // chatSubmit: boolean;
   isShow:boolean = false;
+  isShowGrid:boolean = false;
 
   // formData: FormGroup;
   mongodbChartShow:boolean = false;
   dashboardMongodbChartShow:boolean = false;
-  
+  settingModelRestSubscription:Subscription;
 
 
   // options = {
@@ -53,15 +56,19 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   // };
   
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     private commonFunctionService:CommonFunctionService,
     //private mapsAPILoader: MapsAPILoader,
     //private ngZone: NgZone,
     private dataShareService:DataShareService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private authDataShareService:AuthDataShareService
   ) {
       this.welcometitle = this.storageService.getPageTitle();
       this.mongodbChartShow = true;
+      this.settingModelRestSubscription = this.authDataShareService.settingData.subscribe(data =>{
+        this.initialize();
+      })
       
     }
 
@@ -70,44 +77,53 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+      this.initialize();  
+  }
+  /**
+   * Initialize
+   */
+  initialize(): void {
     this.dataShareService.setChartModelShowHide(false);
-    // this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
-    // this.formData = this.formBuilder.group({
-    //   message: ['', [Validators.required]],
-    // });
-    // this._fetchData();
     this.userInfo = this.storageService.GetUserInfo();
     if(this.userInfo && this.userInfo.chart) {
       this.chartPermission = true;
     }else {
       this.chartPermission = false;
     }
-    
-      
-    
-  }
+  } 
   
-  getTabIndex(event){
+  getTabIndex(event){    
     if(event == 0){
-      this.isShow = false;
       this.mongodbChartShow = true;
+      this.isShow = false;      
       this.dashboardMongodbChartShow = false;
+      this.isShowGrid = false;
     }
     else if (event == 1){
-      this.mongodbChartShow = false;
       this.isShow = true;
+      this.mongodbChartShow = false;
+      this.isShowGrid = false;
       this.dashboardMongodbChartShow = false;
     }
     else if (event == 2){
       this.dashboardMongodbChartShow = true;
       this.isShow = false;
       this.mongodbChartShow = false;
+      this.isShowGrid = false;
+    }
+    else if (event == 3){
+      this.isShowGrid = true;
+      this.dashboardMongodbChartShow = false;
+      this.isShow = false;
+      this.mongodbChartShow = false;      
     }
     else{
-      this.isShow = false;
-      this.dashboardMongodbChartShow = false;
       this.mongodbChartShow = true;
+      this.isShow = false;
+      this.dashboardMongodbChartShow = false;      
+      this.isShowGrid = false;
     }
+    this.selected.setValue(event);
   }
 
   

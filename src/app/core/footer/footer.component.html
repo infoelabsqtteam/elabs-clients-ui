@@ -121,7 +121,7 @@
 
       <div class="row" *ngIf="template == 'temp3'">
         <div class="col-md-6"><p class="text-white m-0">(&copy;) {{currentYear}} All Rights Reserved {{title | titlecase}}. Website Designed By E-Labs.</p></div>
-        <div class="col-md-6"><div class="text-md-right"><a [routerLink]="['/home_page']" class="text-white">Powered by E-Labs.ai</a></div></div>
+        <div class="col-md-6"><div class="text-md-right"><a (click)="navigateStatic('home_page')" class="text-white">Powered by E-Labs.ai</a></div></div>
       </div>
 
       <div class="row" *ngIf="template == 'temp2'">
@@ -137,41 +137,4 @@
 
     </div>
   </div>
-</footer>
-
-
-
-
-
-<footer class="page-footer font-small" style="background: #f7f7fd;" *ngIf="false">
-  <div class="container text-center text-md-left text-dark pt-5">
-    <div class="row">
-      <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4 my-auto"> <img src="../../../assets/img/2.png"> </div>
-      <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-        <h4 class="text-uppercase font-weight-bold">Useful links</h4>
-        <hr class="bg-custome-theme accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 100px;">
-        <p> <a href="#!" class="text-dark">Contact Us</a> </p>
-        <p> <a href="#!" class="text-dark">Support</a> </p>
-        <p> <a href="#!" class="text-dark">About Us</a> </p>
-        <p> <a href="#!" class="text-dark">Location</a> </p>
-      </div>
-      <div class="col-md-6 col-lg-5 col-xl-5 mx-auto mb-md-0 mb-4">
-        <h4 class="text-uppercase font-weight-bold">Contact</h4>
-        <hr class="bg-custome-theme accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 70px;">
-        <!-- <p>
-              <mdb-icon fas icon="home" class="mr-3"></mdb-icon> 86, Industrial Area,
-              Phase-1, Panchkula-134109 (Haryana),
-              <span class="ml-5">Plot No.2, S.No.12/2A, Industrial Area Perungudi, </span>
-                 <span class="ml-5"> Sholinganallur Taluk,Chennai-600096.</span>
-            </p> -->
-        <p>
-          <mdb-icon fas icon="envelope" class="mr-3"></mdb-icon>
-          sales@itclabs.com, customersupport@itclabs.com, <span class="ml-5">itclabs.chennai@itclabs.com</span> </p>
-        <p>
-          <mdb-icon fas icon="phone" class="mr-3"></mdb-icon>
-          Panchkula: 0172-2565825, 2561543, +91 8284004455, <span class="ml-5">8284004411 Chennai: 044- 24962512</span> </p>
-      </div>
-    </div>
-  </div>
-  <div class="text-center py-3 text-dark" style="background: #f7f7fd;">Copyright © {{currentYear}} E-Labs. All Rights Reserved. </div>
 </footer>

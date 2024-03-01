@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgForm,FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgForm, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, EnvService, StorageService, DataShareService, AuthDataShareService, NotificationService } from '@core/web-core';
@@ -9,12 +9,12 @@ import { AuthService, EnvService, StorageService, DataShareService, AuthDataShar
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit,OnDestroy {
   hide = true;
   loading = false;
   @Input() public pageName;
   appName: string;
-  signInForm:FormGroup;
+  signInForm:UntypedFormGroup;
   checkShowPassword = false;
   template:string = "temp1";
   logoPath = '';
@@ -38,24 +38,30 @@ export class SigninComponent implements OnInit {
         }
       })
       this.loginInfoSubscribe = this.authDataShareService.signinResponse.subscribe(res =>{
-        this.loading = false;
-        this.signInForm.reset();
         if(res && res.message && res.message == 'reset'){
           this.notificationService.notify('bg-info', 'Password expired !!!');
           this.router.navigate(['createpwd']);
+        }else if(res && res.msg && res.msg == 'two_factor'){
+          let userId = this.signInForm.getRawValue().userId;
+          console.log(userId);
+          let url = 'authenticate/'+userId;
+          this.router.navigate([url]);
         }else if(res && res.message && res.message == 'notify'){
           if(res.msg != '') {
             this.notificationService.notify(res.class, res.msg);
+            this.loading = false;
           }
           if(res.status == 'success') {
             this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
           }
         }else{        
           if(res.msg != '') {
-            this.notificationService.notify(res.class, res.msg);
+            this.notificationService.notify(res.class, res.msg);            
           }
           if(res.status == 'success') {
             this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
+          }else{
+            this.loading = false;
           }
         }
       })
@@ -66,16 +72,27 @@ export class SigninComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.loading = false;
+    this.signInForm.reset();
+    this.unsubscribeSubscription();
+  }
+
+  unsubscribeSubscription(){
+    this.unsubscribe(this.applicationSettingSubscription)
+    this.unsubscribe(this.loginInfoSubscribe)
+    this.unsubscribe(this.sessionSubscribe)
+  }
 
   ngOnInit() {
     this.initForm();
     this.pageloded();
   }
   initForm() {
-    this.signInForm = new FormGroup({
+    this.signInForm = new UntypedFormGroup({
       //'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
-      'userId': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required])
+      'userId': new UntypedFormControl('', [Validators.required]),
+      'password': new UntypedFormControl('', [Validators.required])
     });
   }
 
@@ -107,6 +124,12 @@ export class SigninComponent implements OnInit {
 
   showPassword() {
     this.checkShowPassword = !this.checkShowPassword;
+  }
+
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
 }

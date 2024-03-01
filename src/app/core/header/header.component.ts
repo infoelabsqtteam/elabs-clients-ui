@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 
 import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService, StorageTokenStatus, ApiCallService } from '@core/web-core';
 
@@ -15,25 +15,25 @@ import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthServi
 
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {    
     
-    selected = new FormControl(0);
+    selected = new UntypedFormControl(0);
     subscription: any;    
     active_menu_d: any = 'custom-template';
     moduleIndex:any=-1;
 
-    menuBoxHome: boolean = false;
+    //menuBoxHome: boolean = false;
     menuBoxDashboard: boolean = false;
-    showUserAccount: boolean = false;
-    fullHeader: boolean = false;
-    loginUserIcon: boolean = false;
-    getmenu: boolean = true;
+    //showUserAccount: boolean = false;
+    //fullHeader: boolean = false;
+    //loginUserIcon: boolean = false;
+    //getmenu: boolean = true;
     isShow: boolean = true;
 
 
-    public userInfo: any;
-    public userColorCode: any;
-    public userName: any;
-    public userEmail: any;
-    public userFirstLetter: any;
+    // public userInfo: any;
+    // public userColorCode: any;
+    // public userName: any;
+    // public userEmail: any;
+    // public userFirstLetter: any;
     public menuData: any = [];
     currentPage: any;
     logedin: boolean = false;
@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     activeclass = false;
     AllModuleList: any = [];
-    filterdata = '';
+    filterdata:any;
     public teamname: any;
     teamNameMenu = '';
     showsearchmenu = false;
@@ -60,16 +60,17 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     @HostListener('window:keyup.alt.h') onCtrlH() {
         this.activeclass = true;
+        this.selected.setValue(0);
     }
 
 
-    @HostListener('window:keyup.alt.o') onCtrlO() {
-        this.shortcutinfo();
-    }
+    // @HostListener('window:keyup.alt.o') onCtrlO() {
+    //     this.shortcutinfo();
+    // }
 
-    @HostListener('window:keyup.alt.control.c') onCtrlChart() {
-        this.chartModel();
-    }
+    // @HostListener('window:keyup.alt.control.c') onCtrlChart() {
+    //     this.chartModel();
+    // }
 
     @HostListener('window:keyup.enter') onCtrlenter() {
         if (this.activeclass) {
@@ -98,16 +99,17 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             }
         });
         this.moduleIndexSubscription = this.dataShareService.moduleIndex.subscribe(index =>{
-            if(index != -1){
-                this.getMenuByModuleIndex(index);
+            if(index != -1){                
                 this.moduleIndex = index;
             }else{
                 this.moduleIndex = -1;
             }
+            this.getMenuByModuleIndex(index);
         })
         this.menuIndexSubscription = this.dataShareService.menuIndexs.subscribe(indexs =>{ 
             if(indexs.moduleIndex != undefined && indexs.moduleIndex != -1){
                 this.moduleIndex = indexs.moduleIndex;
+                this.AllModuleList = this.storageService.GetModules();
                 let module = this.AllModuleList[this.moduleIndex]; 
                 this.menuData = module.menu_list;
                 //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
@@ -135,19 +137,19 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             }     
         };
 
-        if (this.storageService.GetUserInfo()) {
-            this.userInfo = this.storageService.GetUserInfo();
-            this.userName = this.userInfo.name;
-            this.userEmail = this.userInfo.email;
-            this.teamname = this.userInfo.list1
-            if (this.userName && this.userName != null) {
-                this.userFirstLetter = this.userName.charAt(0).toUpperCase()
-            } else {
-                if (this.userInfo.email && this.userInfo.email != null) {
-                    this.userFirstLetter = this.userInfo.email.toUpperCase()
-                }
-            }
-        }
+        // if (this.storageService.GetUserInfo()) {
+        //     this.userInfo = this.storageService.GetUserInfo();
+        //     this.userName = this.userInfo.name;
+        //     this.userEmail = this.userInfo.email;
+        //     this.teamname = this.userInfo.list1
+        //     if (this.userName && this.userName != null) {
+        //         this.userFirstLetter = this.userName.charAt(0).toUpperCase()
+        //     } else {
+        //         if (this.userInfo.email && this.userInfo.email != null) {
+        //             this.userFirstLetter = this.userInfo.email.toUpperCase()
+        //         }
+        //     }
+        // }
 
         this.subscription = this.dataShareService.currentPage.subscribe(
             (data: any) => {
@@ -176,12 +178,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }
     }
 
-    shortcutinfo() {
-        this.modelService.open('shortcutinfo_model', {})
-    }
-    chartModel() {
-        this.modelService.open('chart_model', {})
-    }
+    // shortcutinfo() {
+    //     this.modelService.open('shortcutinfo_model', {})
+    // }
+    // chartModel() {
+    //     this.modelService.open('chart_model', {})
+    // }
     
     unsubscribe(variable){
         if(variable){
@@ -198,56 +200,21 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     }
     setpage(res) {
-        switch (res) {
-            case "HOME":
-                this.fullHeader = true;
-                this.menuBoxHome = true;
-                this.menuBoxDashboard = false;
-                this.loginUserIcon = false;
-                this.showUserAccount = false;
-                break;
-            case "EXAMTEST":
-                this.fullHeader = true;
-                this.menuBoxHome = false;
-                this.menuBoxDashboard = false;
-                this.loginUserIcon = true;
-                this.showUserAccount = false;
-                break;
-            case "DASHBOARD":
-                if (this.getmenu) {
-                    this.getmenu = false;
-
-                }
-                this.fullHeader = true;
-                this.menuBoxHome = false;
+        switch (res) {                         
+            case "DASHBOARD":                
                 this.menuBoxDashboard = true;
-                this.loginUserIcon = true;
-                this.showUserAccount = true;
                 break;
-            case "MODULE":
-                this.fullHeader = true;
-                this.menuBoxHome = false;
-                this.menuBoxDashboard = false;
-                this.loginUserIcon = true;
-                this.showUserAccount = true;
-                break;
-            case "HOME2":
-                this.fullHeader = true;
-                this.menuBoxHome = true;
-                this.menuBoxDashboard = false;
-                this.loginUserIcon = false;
-                this.showUserAccount = false;
-                break;
+            case "HOME":                
+            case "EXAMTEST": 
+            case "MODULE":               
+            case "HOME2":                
             default:
-                this.fullHeader = true;
-                this.menuBoxHome = false;
                 this.menuBoxDashboard = false;
-                this.loginUserIcon = false;
                 break;
 
         }
         if (this.storageService != null && this.storageService.GetIdToken() != null) {
-            const idToken = this.storageService.GetIdToken();
+            //const idToken = this.storageService.GetIdToken();
             if (this.storageService.GetIdTokenStatus() == StorageTokenStatus.ID_TOKEN_ACTIVE) {
                 this.logedin = true;
             } else {
@@ -303,9 +270,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 this.menuOrModuleCommounService.getTemplateData(module,menu)
             } else {
                 this.menuData = [];
+                this.menuBoxDashboard = false;
             }
         } else {
             this.menuData = [];
+            this.menuBoxDashboard = false;
         }
     }  
      
@@ -367,20 +336,20 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
     
 
-    @HostListener('window:scroll', ['$event'])
+    // @HostListener('window:scroll', ['$event'])
 
-    onWindowScroll(e) {
-        let element = document.querySelector('.navbar');
-        if (element && element.clientHeight) {
-            if (window.pageYOffset > element.clientHeight) {
-                element.classList.add('navbar-inverse', 'shadow');
-            } else {
-                element.classList.remove('navbar-inverse', 'shadow');
-            }
+    // onWindowScroll(e) {
+    //     let element = document.querySelector('.navbar');
+    //     if (element && element.clientHeight) {
+    //         if (window.pageYOffset > element.clientHeight) {
+    //             element.classList.add('navbar-inverse', 'shadow');
+    //         } else {
+    //             element.classList.remove('navbar-inverse', 'shadow');
+    //         }
 
-        }
+    //     }
 
-    }
+    // }
   
     getCurrentMenu() {
         const currentMenu = this.storageService.GetActiveMenu();
@@ -391,8 +360,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         }
     }     
     
-    searchmodel() {
-        if(this.filterdata != ''){
+    searchmodel(data:string) {
+        this.filterdata = data;
+        if(data != ''){
             this.showsearchmenu = true;
         }else {
             this.showsearchmenu = false;

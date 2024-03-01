@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
+import { StorageService,CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
 import { Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-grid-selection-modal',
   templateUrl: './grid-selection-modal.component.html',
-  styleUrls: ['./grid-selection-modal.component.css']
+  styleUrls: ['./grid-selection-modal.component.scss']
 })
 export class GridSelectionModalComponent implements OnInit {
 
@@ -50,7 +50,7 @@ export class GridSelectionModalComponent implements OnInit {
   editEnable:boolean=false;
   selectedDataLength:number=0;
   buttonlabel:any;
-
+  currentForm:any;
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
@@ -82,7 +82,8 @@ export class GridSelectionModalComponent implements OnInit {
     private limsCalculationsService: LimsCalculationsService,
     private filterPipe:FilterPipe,
     private checkIfService:CheckIfService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private storageService:StorageService,
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -126,6 +127,7 @@ export class GridSelectionModalComponent implements OnInit {
     })
     //this.treeViewData.data = TREE_DATA;
   }
+
 
   getViewData(){
     if (this.modifiedGridData && this.modifiedGridData.length > 0) {
@@ -360,7 +362,7 @@ export class GridSelectionModalComponent implements OnInit {
                 break;
             }
           }
-          if(this.selecteData && this.selecteData.length > 0){
+          if(this.selecteData && this.selecteData.length > 0 && this.grid_row_selection){
             this.updateSelectedDataInGridData(this.selecteData);            
           }        
           this.setGridData = false;
@@ -448,6 +450,9 @@ export class GridSelectionModalComponent implements OnInit {
     if (alert.object) {
       this.parentObject = alert.object;
     }
+    if(alert.currentForm){
+      this.currentForm=alert.currentForm
+    }
     if(this.field && this.field.grid_selection_button_label != null && this.field.grid_selection_button_label != ''){
       this.buttonlabel = this.field.grid_selection_button_label;
     }else {
@@ -491,9 +496,6 @@ export class GridSelectionModalComponent implements OnInit {
     //For dropdown data in grid selection
     this.getStaticDataWithDependentData()
 
-  }
-  updateColumnList(data,index){
-    //this.listOfGridFieldName[index].display = data.display;
   }
   selectGridData() {    
     this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
@@ -723,14 +725,16 @@ export class GridSelectionModalComponent implements OnInit {
   }
 
   calculateNetAmount(fieldName, index) {
-    let data = this.modifiedGridData[index];
+    let data = {};
+    if(this.filteredData && this.filteredData.length > 0) {
+      data = this.filteredData[index];
+    }else {
+      data = this.modifiedGridData[index];
+    }
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
       this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
-    // let row = JSON.parse(JSON.stringify(data));
-    // let modifyrow = this.gridCommonFunctionService.rowModify(row,this.field,this.listOfGridFieldName,this.editableGridColumns,[]);
-    // this.modifiedGridData[index] = modifyrow;
   } 
   checkDisableIf(data){
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
@@ -888,6 +892,11 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
       }
     }
+    //copy icon on grid cell
+    copyText(value:any){    
+      this.CommonFunctionService.copyGridCellText(value);
+    }
+
   
 }
 

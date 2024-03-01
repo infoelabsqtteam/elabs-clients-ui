@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { CommonFunctionService, ModelService, NotificationService, StorageService} from '@core/web-core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { resolve } from 'path';
 import * as S3 from 'aws-sdk/clients/s3';
 import { DocApiService } from '@core/web-core';
 import { config } from '../../document/config.modal';
@@ -13,7 +15,8 @@ import { config } from '../../document/config.modal';
 })
 export class FileUploadModalComponent implements OnInit {
   @Input() id: string;
-  @Output() fileUploadResponce = new EventEmitter();
+  //@Output() fileUpload: EventEmitter<any>  = new EventEmitter();
+  @Output() fileUpload: Subject<any> = new BehaviorSubject<any>(null);
   @ViewChild('docUploadModal') public docUploadModal: ModalDirective;
 
   fileDrop: boolean = false;
@@ -60,14 +63,18 @@ export class FileUploadModalComponent implements OnInit {
 
   onFileDropped($event, fileDrop: boolean, selectedFolder: any) {
     this.fileDrop = fileDrop;
+    for (const item of $event) {
+      item.progress = 0;
+      this.files.push(item);
+    }
     this.prepareFilesList($event);
   }
 	/**
 	 * handle file from browsing
 	 */
-  fileBrowseHandler(files) {
+  fileBrowseHandler(event:any) {
     this.fileDrop = false;
-    this.prepareFilesList(files);
+    this.setFilesOnChange(event);
   }
 
 	/**
@@ -96,26 +103,29 @@ export class FileUploadModalComponent implements OnInit {
 	 * Convert Files list to normal array list
 	 * @param files (Files List)
 	 */
-  public xtr: any;
-  public obj: any = {};
+  // public xtr: any;
+  // public obj: any = {};
   public uploadData: any = []
-  public uploadFilesData: any = [];
-  prepareFilesList(files: Array<any>) {
-    for (const item of files) {
-      item.progress = 0;
-      this.files.push(item);
-    }
-    for (var i = 0; i < files.length; i++) {
-      var file = files[i];
-      this.uploadFilesData.push(file);
-      var reader = new FileReader();
-      reader.onload = this.readNoticeFile
-      reader.readAsDataURL(file);
-    }
-    // console.log(this.files);
-    // console.log(this.uploadData);
+ // public uploadFilesData: any = [];
+  // prepareFilesList(files: Array<any>) {
+  //   for (const item of files) {
+  //     item.progress = 0;
+  //     this.files.push(item);
+  //   }
+  //   for (var i = 0; i < files.length; i++) {
+  //     var file = files[i];
+  //    // this.uploadFilesData.push(file);
+  //     var reader = new FileReader();
+  //     // reader.onload = this.readNoticeFile
+  //     reader.onload = ((fileName: string) => (event: any) => {
+  //       this.readNoticeFile(event, fileName);
+  //     })(file.name);
+  //     reader.readAsDataURL(file);
+  //   }
+  //   // console.log(this.files);
+  //   // console.log(this.uploadData);
 
-  }
+  // }
   base64ToArrayBuffer(base64) {
     const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
@@ -136,18 +146,75 @@ export class FileUploadModalComponent implements OnInit {
     return array; */
   }
 
-  readNoticeFile = (e) => {
-    var rxFile = this.uploadFilesData[0];
-    this.uploadFilesData.splice(0, 1);
-    this.uploadData.push({
-      fileData: e.target.result.split(',')[1],
-      fileName: rxFile.name,
-      fileExtn:  rxFile.name.split(".").pop(),
-      size: rxFile.size,
-      innerBucketPath: rxFile.name,
-      log: this.storageService.getUserLog()
-    });
+  // readNoticeFile(e:any,fileName:string) {
+  //   // var rxFile = this.uploadFilesData[0];
+  //   // this.uploadFilesData.splice(0, 1);
+  //   this.uploadData.push({
+  //     fileData: e.target.result.split(',')[1],
+  //     fileName: fileName,
+  //     fileExtn:  fileName.split(".").pop(),
+  //     // size: rxFile.size,
+  //     innerBucketPath: fileName,
+  //     log: this.storageService.getUserLog()
+  //   });
 
+  // }
+
+
+  readNoticeFile(file: File): Promise<{ fileName: string,fileExtn: string, innerBucketPath: string, log:any, fileData: string }> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (event: any) => {
+        const dataURL = event.target.result;
+        resolve({
+          fileData: dataURL.split(',')[1],
+          fileName: file.name,
+          fileExtn:  file.name.split(".").pop(),
+          // size: rxFile.size,
+          innerBucketPath: file.name,
+          log: this.storageService.getUserLog()
+        });
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  setFilesOnChange(event: any) {
+    const files = event.target.files;
+    for (const item of files) {
+      item.progress = 0;
+      this.files.push(item);
+    }
+    this.prepareFilesList(files);
+  }
+
+
+  prepareFilesList(files:any) {
+    if (files && files.length > 0) {
+      const promises: Promise<{ fileName: string,fileExtn: string, innerBucketPath: string, log:any, fileData: string }>[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(this.readNoticeFile(files[i]));
+      }
+      Promise.all(promises)
+        .then((results) => {
+          // All files have been processed
+          if(results && results.length > 0 && this.uploadData) {
+            results.forEach(element => {
+              this.uploadData.push(element);
+            })
+          }
+        })
+.catch((error) => {
+          console.error('Error reading files:', error);
+        });
+    }
   }
 
 	/**
@@ -165,13 +232,13 @@ export class FileUploadModalComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-  uploadFilesSimulator(index) {
+  uploadFilesSimulator() {
     this.uploadFile = true;
     if(this.checkFileSize(this.files)){
       if (this.uploadData && this.uploadData.length > 0) {
-        this.fileUploadResponce.emit(this.uploadData);
+        this.fileUpload.next(this.uploadData);
       } else {
-        this.fileUploadResponce.emit([]);
+        this.fileUpload.next([]);
       }
       this.docUploadModal.hide();
     }    
@@ -243,7 +310,7 @@ export class FileUploadModalComponent implements OnInit {
   }
 
   uploadFilesSimulatorForS3(){
-    this.uploadByS3(); 
+    this.uploadByS3();
   }
 
   uploadByS3(index?){
@@ -255,7 +322,7 @@ export class FileUploadModalComponent implements OnInit {
     // this.files.forEach((file,i)=>{
       this.currentFileIndex = index;
       if(this.s3bucket != '' && this.s3bucket != undefined){
-        const bucket = new S3(config);	        
+        const bucket = new S3(config);
         const params = {
           Bucket: this.s3bucket,
           Key: this.s3Key+'/'+file.name,
@@ -264,7 +331,7 @@ export class FileUploadModalComponent implements OnInit {
           ContentType: file.type
         };
 
-        bucket.upload(params).on('httpUploadProgress', (evt) => {        
+        bucket.upload(params).on('httpUploadProgress', (evt) => {
           this.uploadProgressValue = Math.round(100.0 * (evt.loaded / evt.total));
           //console.log(this.uploadProgressValue + ' %' + evt.loaded + ' of ' + evt.total + ' Bytes');
         }).send( (err, data) => {
@@ -272,10 +339,10 @@ export class FileUploadModalComponent implements OnInit {
             this.notificationService.notify("success","There was an error uploading your file: "+ err);
             //console.log('There was an error uploading your file: ', err);
             return false;
-          }	
+          }
           // ++this.currentFileIndex;
 
-          this.uploadProgressValue = 0;		
+          this.uploadProgressValue = 0;
           let s3Object = {
             "bucket":data.Bucket,
             "rollName":file.name,
@@ -299,7 +366,7 @@ export class FileUploadModalComponent implements OnInit {
           // this.files[this.currentFileIndex].upload = true;
           // this.uploadProgressValue = 0;
           // this.docApiService.SaveUploadFile(newObj);
-          // this.uploadFilesData = [];					
+          // this.uploadFilesData = [];
           // return true;
         });
       }else{
@@ -330,7 +397,7 @@ export class FileUploadModalComponent implements OnInit {
         if(defaultKeyTableFields.length >0){
           this.s3Key = defaultKeyTableFields[0].defaultValue;
         }
-      } 
+      }
     }
 }
 

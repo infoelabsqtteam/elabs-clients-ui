@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy, OnChanges,SimpleChanges, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService, CheckIfService, GridCommonFunctionService, FormCreationService } from '@core/web-core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -49,7 +49,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
   formName:any='NEW';
   createFilterHeadElement:boolean=true;
   action_buttons:any=[];
-  filterForm: FormGroup;
+  filterForm: UntypedFormGroup;
   filterFieldName:string='name';
 
   selectContactAdd:string='';
@@ -65,7 +65,7 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
     private commonFunctionService:CommonFunctionService,
     private storageService: StorageService,
     private permissionService: PermissionService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private apiService:ApiService,
     private dataShareService:DataShareService,
     private notificationService:NotificationService,
@@ -621,8 +621,8 @@ export class GridCardViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   clearFilter(fieldName,type){
     if(type.toLowerCase() == 'daterange'){
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
+      (<UntypedFormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
+      (<UntypedFormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
     }else{
       this.filterForm.get([fieldName]).setValue('');
     }    

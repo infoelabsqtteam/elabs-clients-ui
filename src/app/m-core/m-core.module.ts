@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { McoreRoutingModule } from './m-core-routing.module';
 import { CoreModule } from '../core/core.module';
-import { SharedModule } from './shared/shared.module';
 import { DocumentModule } from './document/document.module';
 import { AngularMaterialModule } from './angular-material-module/angular-material.module';
 import { DirectiveModuleModule } from './directive-module/directive-module.module';
@@ -25,7 +24,6 @@ import { ChatViewComponent } from './builder/chat-view/chat-view.component';
 import { GmapViewComponent } from './builder/gmap-view/gmap-view.component';
 import { TreeViewComponent } from './builder/tree-view/tree-view.component';
 
-import { SortTestComponent } from './sort-test/sort-test.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { QuoteComponent } from './quote/quote.component';
@@ -35,10 +33,10 @@ import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { SchedulingDashboardComponent } from './scheduling-dashboard/scheduling-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
-import { VerticalComponent } from './vertical/vertical.component';
-import { HorizontalComponent } from './horizontal/horizontal.component';
 import { AngularCommonModule } from './angular-common/angular-common.module';
 import { ReportModule } from './report/report.module';
+import { CommonFormComponentModule } from './common-form-component/common-form-component.module';
+import { NotificationModule } from './notification/notification.module';
 
 
 
@@ -55,20 +53,16 @@ const maskConfig: Partial<IConfig> = {
         McoreComponent,
         HomeComponent,
         BuilderComponent,
-        SortTestComponent,
         NavigationComponent,
         PermissionsComponent,
-        QuoteComponent,
-        SortTestComponent,        
+        QuoteComponent,       
         AdminComponent,
         TreeViewComponent,        
         SchedulingDashboardComponent,     
         GridTableViewComponent,
         GridCardViewComponent,        
         ChartViewComponent, 
-        InlineFormViewComponent,        
-        VerticalComponent, 
-        HorizontalComponent, 
+        InlineFormViewComponent, 
         AdminDashboardComponent, 
         SidebarSearchComponent, 
         ChatViewComponent,          
@@ -79,17 +73,18 @@ const maskConfig: Partial<IConfig> = {
         McoreRoutingModule,        
         MDBBootstrapModule.forRoot(),         
         NgxMaskModule.forRoot(maskConfig),
-        CoreModule,
-        SharedModule,   
+        CoreModule,           
         DocumentModule,
         AngularMaterialModule,
         DirectiveModuleModule,
         ModelModule,
         CommonComponentModule,
+        CommonFormComponentModule,
         FormModelModule,
         AllPackageModule,
         AngularCommonModule,
-        ReportModule
+        ReportModule,
+        NotificationModule
     ]
 
 })
