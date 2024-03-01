@@ -14,6 +14,9 @@
 @import "~angular-bootstrap-md/assets/scss/mdb.scss";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~diff2html/bundles/css/diff2html.min.css";
+@import "~jsoneditor/dist/jsoneditor.min.css";
+.jsoneditor-poweredBy, .jsoneditor-menu{display:none;}
+.ace-jsoneditor, textarea.jsoneditor-text {min-height:320px;}
 .d2h-file-header, .d2h-info, .d2h-cntx  {display:none !important;}
 .d2h-files-diff {display:flex !important;}
 .d2h-file-side-diff {overflow:hidden !important}
