@@ -11,20 +11,16 @@ import { MDBBootstrapModule  } from 'angular-bootstrap-md';
 import { AllPackageModule } from '../all-package/all-package.module';
 
 
-import { TopbarComponent } from './topbar/topbar.component';
+// import { TopbarComponent } from './topbar/topbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { StatComponent } from './stat/stat.component';
 import { AngularMaterialModule } from '../../m-core/angular-material-module/angular-material.module';
-import { NotificationSettingComponent } from './notification-setting/notification-setting.component';
-import { NotificationListComponent } from './notification-list/notification-list.component';
-import { SettingMenuComponent } from './setting-menu/setting-menu.component';
 
 
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [TopbarComponent, FooterComponent, SidebarComponent, StatComponent, NotificationSettingComponent, NotificationListComponent, SettingMenuComponent],
+  declarations: [FooterComponent, StatComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -38,7 +34,7 @@ import { SettingMenuComponent } from './setting-menu/setting-menu.component';
     AngularMaterialModule,
     AllPackageModule
   ],
-  exports: [TopbarComponent, FooterComponent, SidebarComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule,SettingMenuComponent],
+  exports: [FooterComponent,StatComponent,PerfectScrollbarModule,NgbDropdownModule],
   providers: []
 })
 export class SharedModule { }

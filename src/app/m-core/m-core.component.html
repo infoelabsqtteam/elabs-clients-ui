@@ -1,9 +1,24 @@
 <div class="mat-typography">
-    <!-- vertical layout -->
-    <app-vertical *ngIf="isVerticalLayoutRequested()"></app-vertical>
-
-    <!-- horizontal layout -->
-    <app-horizontal *ngIf="isHorizontalLayoutRequested()"></app-horizontal>
+    <mat-toolbar class="header pl-0 w-100">
+      <div [ngStyle]="{'background': layoutType == 'vertical' ? '' : 'transparent'}" class="logoitem d-flex align-items-center justify-content-between px-2">
+        <a  class="logo px-2" (click)="goToHomePage()"><img [src]="logoPath" alt=""></a>
+        <button *ngIf="layoutType == 'vertical'" mat-icon-button (click)="toggleSideBar()"><mat-icon>sort</mat-icon></button>
+      </div>
+      <div class="topheader"><app-header class="w-100"></app-header></div>
+      <app-user-account [rightsidenav]="rightsidenav"></app-user-account>
+    </mat-toolbar>
+    
+    
+    <mat-drawer-container>
+      <mat-drawer *ngIf="layoutType == 'vertical'"  #drawer [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'"><app-sidebar></app-sidebar></mat-drawer>
+      <mat-drawer #rightsidenav mode="over" position="end" class="rightsidebar">
+        <app-setting-menu [rightsidenav]="rightsidenav"></app-setting-menu>
+      </mat-drawer>
+      <div class="pt-3">
+        <router-outlet></router-outlet>
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-container>
 </div>
 <app-shortcutinfo id="shortcutinfo_model" (shortcutinfoResponce)="shortcutinfoResponce($event)" ></app-shortcutinfo>
 <app-chart-modal *ngIf="isShow" id="chart_model" (chartModalResponce)="chartModalResponce($event)" ></app-chart-modal>
