@@ -1,14 +1,17 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit,OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatSidenav } from '@angular/material/sidenav';
-import { AuthService,MenuOrModuleCommonService, StorageService } from '@core/web-core';
+import { Router } from '@angular/router';
+import { AuthService,MenuOrModuleCommonService, StorageService ,ApiCallService,DataShareService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-account',
   templateUrl: './user-account.component.html',
   styleUrls: ['./user-account.component.css']
 })
-export class UserAccountComponent implements OnInit {
+export class UserAccountComponent implements OnInit,OnDestroy {
 
   @Input() rightsidenav: MatSidenav;
   roleList:any=[];
@@ -16,17 +19,44 @@ export class UserAccountComponent implements OnInit {
   filterdata:any;
   showsearchmenu = false;
   AllModuleList: any = [];
-
+  userNotificationSubscription:Subscription;
+  notificationlist:any=[]
+  noOfNotification:any=0;
+  @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
+  @ViewChild('notify') notify:MatMenu;
   constructor(    
     @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
     private authApiService:AuthService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private apiCallService:ApiCallService,
+    private dataShareService:DataShareService,
+    private router:Router
   ) { 
     this.pageload();
+    // this.apiCallService.getUserNotificationList(1);
+    this.apiCallService.getUserNotification(1);
+    this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
+      console.log(data);
+        if (data && data.data && data.data.length > 0) {
+            // this.setUserNotification(data.data);
+            // this.total = data.data_size;
+            console.log("list from icon",data);
+            this.notificationlist =data.data;
+            this.noOfNotification=this.notificationlist.length;
+        }else{
+          // this.notificationlist = [];
+          // this.total = 0;
+        }
+    });
   }
 
   ngOnInit() {
+  }
+  ngOnDestroy(): void {
+    if(this.userNotificationSubscription){
+      this.userNotificationSubscription.unsubscribe();
+    }
   }
   pageload(){
     this.AllModuleList = this.storageService.GetModules();
@@ -71,7 +101,13 @@ export class UserAccountComponent implements OnInit {
     this.activeRole = role.name;
   }
 
-
+  showMore(){
+    if(this.notifyMenuTrigger.menuOpen){
+      this.notifyMenuTrigger.closeMenu();
+    }
+    this.apiCallService.getUserNotification(1);
+    this.router.navigate(["notification-list"]);
+  }
   searchmodel(data:string) {
     this.filterdata = data;
     this.showsearchmenu = true;

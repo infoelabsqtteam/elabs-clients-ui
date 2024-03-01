@@ -25,7 +25,33 @@
     mat-checkbox {margin:10px;display:block;}
     .mat-checkbox .mat-checkbox-layout {margin:0;}
     .table td {padding:2px 10px;}
-    span {font-size:12px;display:block;color:#999}
+    // span {font-size:12px;display:block;color:#999}
+    .mat-tab-label-active {
+        background-color: var(--activebg) !important;
+    }
+
+    .mat-list-base{
+        background-color:var(--themecolor) !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        font-family: "Roboto Condensed", sans-serif !important;
+        &:hover{
+            background-color: var(--activebg) !important;
+        }
+    }
+    
+      .mat-list-item-content{
+        display: flex;
+        width: 100%;
+        padding: 0px 11px !important;
+        font-size: 14px !important;
+        .div1{width: 5%;}
+        .div2{width: 70%;}
+        .div3{width: 10%;}
+        .div4{width: 5%;}
+        .div5{width: 10%;}
+      }
+    
 }
 
 .gridFilterDropdown {
@@ -41,6 +67,158 @@
         font-size: 12px;
     }
 }
+
+.notificationdetails{
+    .mat-tab-label {
+        min-width: 50% !important;
+        height: 48px !important;
+        padding: 0 24px !important;
+    }
+  
+}
+.notificationMenu{  max-width: none !important; } 
+.notificationdetailsMenu{width: 400px !important;.mat-tab-label {
+    min-width: 50% !important;
+    height: 36px !important;
+    padding: 12px !important;
+    }
+    .mat-tab-label-active {
+        background-color: var(--activebg) !important;
+    }
+    .mat-list-base{
+        background-color: var(--themecolor) !important;
+        padding-top: 0 !important;
+        font-size: 14px;
+        font-weight: 400;
+        // height: 36px !important;
+        font-family: "Roboto Condensed", sans-serif;
+        
+    }
+    .mat-list-item-content{
+        display: inline-block !important;
+        font-size: 14px !important;
+        background-color: var(--themecolor) !important;
+        width: 100% !important;
+        &:hover{
+            background-color: var(--activebg) !important;
+        }
+    }
+    .mat-list-item{
+        height: 36px !important;
+    }
+ }
+
+.mat-badge-content { padding-left: 1px !important;}
+
+.notification-model {
+    min-width: 500px;
+
+    .btn-group {
+        .select {
+            position: relative;
+
+            .btn-warning {
+                color: #212529;
+                background-color: none;
+                border: none;
+            }
+      
+            input:checked + label {
+                background-color: #cdcedb;
+                
+                &:hover,
+                &:focus,
+                &:active {
+                    background-color: #cdcedb;
+                }
+
+                .btnn {
+                    padding: 12px 6px !important;
+                }
+            }
+
+            .ng-touched {
+                opacity: 0 !important;
+            }
+
+            input {
+                opacity: 0;
+                position: absolute;
+                width: 40px;
+                height: 30px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &[disabled] {
+                    cursor: not-allowed !important;
+                }
+            }
+
+            .button_select {
+                margin: 0 10px 10px 0;
+                display: flex;
+                background-color: transparent;
+
+                &:hover,
+                &:focus,
+                &:active {
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+
+}
+
+.mat-dialog-container {
+    height: auto !important;
+    padding: 18px !important;
+}
+
+.option {
+    position: relative;
+
+    input {
+        opacity: 0;
+        position: absolute;
+    }
+
+    input:checked + span {
+        background-color: #8da3a5;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: #8da3a5;
+        }
+    }
+
+    .btn-option {
+        margin: 0 10px 10px 0;
+        display: flex;
+        background-color: transparent;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: transparent;
+        }
+    }
+}
+
+.btnn {
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+}
+
+
+
+
+
+
+
 
 
 

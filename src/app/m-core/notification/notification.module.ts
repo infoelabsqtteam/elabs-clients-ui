@@ -6,7 +6,7 @@ import { AngularMaterialModule } from '../angular-material-module/angular-materi
 import { AllPackageModule } from '../all-package/all-package.module';
 import { NotificationModelComponent } from './notification-model/notification-model.component';
 import { FormsModule } from '@angular/forms';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 let components = [
   NotificationSettingComponent,
   NotificationListComponent,
@@ -17,7 +17,8 @@ let components = [
     CommonModule,
     AngularMaterialModule,
     AllPackageModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ],
   declarations: components,
   exports : components

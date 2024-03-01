@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnCha
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { HttpClient } from '@angular/common/http';
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
+import { StorageService, PermissionService, CommonFunctionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
 import { MatSidenav } from "@angular/material/sidenav";
 
 
@@ -28,6 +28,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
 
     gitVersionSubscription: Subscription;
     userNotificationSubscription:Subscription;
+    userNotificationSettingSubscription:Subscription;
     saveResponceSubscription:Subscription;
     // subscription: Subscription;
     // menuDataSubscription:Subscription;
@@ -122,7 +123,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         public envService: EnvService,
         private menuOrModuleCommounService:MenuOrModuleCommonService,
         private apiCallService:ApiCallService,
-        private authDataService:AuthDataShareService
+        private authDataService:AuthDataShareService,
+        private commonFunctionService:CommonFunctionService
     ) {
 
         // this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -137,6 +139,23 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
                 this.setUserNotification(data.data);
             }
         });
+        this.userNotificationSettingSubscription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
+            if(res){
+                this.isPageLoading =false;
+                console.log(res);
+                this.rightsidenav.toggle();
+            }     
+        })
+        this.userNotificationSubscription=this.dataShareService.userNotification.subscribe((res)=>{
+            if(res){
+                this.isPageLoading =false;
+                console.log(res);
+                console.log(this.rightsidenav.opened);
+                if(this.rightsidenav.opened){
+                    this.rightsidenav.toggle();
+                }
+            }     
+        })
         
 
 
@@ -242,9 +261,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         // if (this.menuDataSubscription) {
         //     this.menuDataSubscription.unsubscribe();
         // }
-        if(this.userNotificationSubscription){
-            this.userNotificationSubscription.unsubscribe();
-        }
+        this.unsubscribe(this.userNotificationSubscription);
+        this.unsubscribe(this.userNotificationSettingSubscription);
     }
     setSaveResponce(saveFromDataRsponce){
         if (saveFromDataRsponce) {
@@ -848,166 +866,164 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         })
     }
 
+    notificationList(){
+        this.isPageLoading=true;
+        this.apiCallService.getUserNotification(1);
+        this.router.navigate(["notification-list"]);
+    }
+
     notificationSetting(){
         this.isPageLoading = true;
-        const token=this.storageService.GetIdToken()
-        const reqBody = { key: token };
-        this.http.post('http://localhost:8104/rest/rpts/getNotification',reqBody).subscribe((res)=>{
-            this.isPageLoading = false;
-            // this.dataShareService.shareUserNotification(reqBody);
-            console.log("brfore",res);
-            // console.log(reqBody);
-            console.log("after",this.getModulesFromNotificationObject(res));
-            sessionStorage.setItem("NOTIFICATION", JSON.stringify(this.getModulesFromNotificationObject(res)));
-            this.rightsidenav.toggle();
-            this.router.navigate(["notification-setting"]);
-
-            // this.openSnackBar();
-        })
-        // this.subscribeGetUserNotifyInfo();
+        this.apiCallService.getUserNotificationSetting();
+        this.router.navigate(["notification-setting"]);     
     }
-    getModulesFromNotificationObject(obj:any){
-        let utvn:any = {};
-        if(obj.userId){
-            utvn.userId=obj.userId;
-        }
-        if(obj.notifications){
-            obj=obj.notifications
+    // unsubscribee(variable:any){
+    //         if(variable){
+    //             variable
+    //         }
+    // }
+    // getModulesFromNotificationObject(obj:any){
+    //     let utvn:any = {};
+    //     if(obj.userId){
+    //         utvn.userId=obj.userId;
+    //     }
+    //     if(obj.notifications){
+    //         obj=obj.notifications
         
-        let modules:any = [];
-        if(obj && Object.keys(obj).length > 0){
-          Object.keys(obj).forEach((mokey,i) => {
-            let moduleObj:any = {};
-            let module = obj[mokey];
+    //     let modules:any = [];
+    //     if(obj && Object.keys(obj).length > 0){
+    //       Object.keys(obj).forEach((mokey,i) => {
+    //         let moduleObj:any = {};
+    //         let module = obj[mokey];
             
-            if(module && module.reference){
-              moduleObj = module.reference;
-              moduleObj.keyName=mokey;
-            }
-            if(module && module.notification){
-              moduleObj.notification = module.notification;
-            }else{
-              moduleObj.notification = false;
-            }
-            let menuList:any = [];
-            if(module && module.menus){
-              let menus = module.menus;
-              if(Object.keys(menus).length > 0){
-                Object.keys(menus).forEach((mekey,j) => {
-                  let menuobj:any = {};
-                  let menu = menus[mekey];
-                  if(menu && menu.reference){
-                    menuobj = menu.reference;
-                    menuobj.keyName=mekey;
-                    let tabsList:any=[];
-                    if(menu?.templateTabs){
-                      let tabs=menu.templateTabs;
-                      if(Object.keys(tabs).length > 0){
-                        Object.keys(tabs).forEach((tabkey,k) => {
-                            let tabObj:any = {};
-                            let tab = tabs[tabkey];
-                            if(tab && tab.reference){
-                                tabObj = tab.reference;
-                                tabObj.keyName=tabkey;
-                                let alerts=tab.activeAlerts;
-                                if(alerts){
-                                    alerts.forEach((alert:any)=>{
-                                        if(alert=="EMAIL"){
-                                            tabObj.email=true;
-                                        }
-                                        if(alert=="WHATSAPP"){
-                                            tabObj.whatsapp=true;
-                                        }
-                                        if(alert=="SMS"){
-                                            tabObj.sms=true;
-                                        }
-                                    })
-                                }
-                                // tabObj-{...tabObj,activeAlerts:tab?.activeAlerts}                                
-                                tabsList.push(tabObj);
-                            }    
-                        })
-                      }
-                      menuobj={...menuobj,templateTabs:tabsList};
-                    }
-                  }
-                  let submenuList:any = [];
-                  if(menu && menu.submenus){
-                    let submenus = menu.submenus;
-                    if(Object.keys(submenus).length > 0){
-                      Object.keys(submenus).forEach((smkey,k) => {
-                        let submenuObj:any = {};
-                        let submenu = submenus[smkey];
-                        if(submenu && submenu.reference){
-                          submenuObj = submenu.reference;
-                          submenuObj.keyName=smkey;
-                          let tabsList:any=[];
-                          if(submenu?.templateTabs){
-                            let tabs=submenu.templateTabs;
-                            if(Object.keys(tabs).length > 0){
-                              Object.keys(tabs).forEach((tabkey,k) => {
-                                  let tabObj:any = {};
-                                  let tab = tabs[tabkey];
-                                  if(tab && tab.reference){
-                                      tabObj = tab.reference;
-                                      tabObj.keyName=tabkey;
-                                      let alerts=tab.activeAlerts;
-                                        if(alerts){
-                                            alerts.forEach((alert:any)=>{
-                                                if(alert=="EMAIL"){
-                                                    tabObj.email=true;
-                                                }
-                                                if(alert=="WHATSAPP"){
-                                                    tabObj.whatsapp=true;
-                                                }
-                                                if(alert=="SMS"){
-                                                    tabObj.sms=true;
-                                                }
-                                            })
-                                        }
-                                      tabsList.push(tabObj);
-                                  }    
-                              })
-                            }
-                            submenuObj={...submenuObj,templateTabs:tabsList};
-                          }
-                        }
-                        submenuList.push(submenuObj);
-                      });
-                    }
-                  }
-                  if(submenuList && submenuList.length > 0){
-                    menuobj['submenu'] = this.sortMenu(submenuList);
-                  }else{
-                    menuobj['submenu'] = null;
-                  }
-                  menuList.push(menuobj);
-                })
-              }
-            }
-            if(menuList && menuList.length > 0){
-              moduleObj['menu_list'] = this.sortMenu(menuList);
-            }else{
-              moduleObj['menu_list'] = null;
-            }
-            modules.push(moduleObj);
-          });
-        }
-        utvn['modules'] = modules;
-     }
-        return utvn;
-      }
+    //         if(module && module.reference){
+    //           moduleObj = module.reference;
+    //           moduleObj.keyName=mokey;
+    //         }
+    //         if(module && module.notification){
+    //           moduleObj.notification = module.notification;
+    //         }else{
+    //           moduleObj.notification = false;
+    //         }
+    //         let menuList:any = [];
+    //         if(module && module.menus){
+    //           let menus = module.menus;
+    //           if(Object.keys(menus).length > 0){
+    //             Object.keys(menus).forEach((mekey,j) => {
+    //               let menuobj:any = {};
+    //               let menu = menus[mekey];
+    //               if(menu && menu.reference){
+    //                 menuobj = menu.reference;
+    //                 menuobj.keyName=mekey;
+    //                 let tabsList:any=[];
+    //                 if(menu?.templateTabs){
+    //                   let tabs=menu.templateTabs;
+    //                   if(Object.keys(tabs).length > 0){
+    //                     Object.keys(tabs).forEach((tabkey,k) => {
+    //                         let tabObj:any = {};
+    //                         let tab = tabs[tabkey];
+    //                         if(tab && tab.reference){
+    //                             tabObj = tab.reference;
+    //                             tabObj.keyName=tabkey;
+    //                             let alerts=tab.activeAlerts;
+    //                             if(alerts){
+    //                                 alerts.forEach((alert:any)=>{
+    //                                     if(alert=="EMAIL"){
+    //                                         tabObj.email=true;
+    //                                     }
+    //                                     if(alert=="WHATSAPP"){
+    //                                         tabObj.whatsapp=true;
+    //                                     }
+    //                                     if(alert=="SMS"){
+    //                                         tabObj.sms=true;
+    //                                     }
+    //                                 })
+    //                             }
+    //                             // tabObj-{...tabObj,activeAlerts:tab?.activeAlerts}                                
+    //                             tabsList.push(tabObj);
+    //                         }    
+    //                     })
+    //                   }
+    //                   menuobj={...menuobj,templateTabs:tabsList};
+    //                 }
+    //               }
+    //               let submenuList:any = [];
+    //               if(menu && menu.submenus){
+    //                 let submenus = menu.submenus;
+    //                 if(Object.keys(submenus).length > 0){
+    //                   Object.keys(submenus).forEach((smkey,k) => {
+    //                     let submenuObj:any = {};
+    //                     let submenu = submenus[smkey];
+    //                     if(submenu && submenu.reference){
+    //                       submenuObj = submenu.reference;
+    //                       submenuObj.keyName=smkey;
+    //                       let tabsList:any=[];
+    //                       if(submenu?.templateTabs){
+    //                         let tabs=submenu.templateTabs;
+    //                         if(Object.keys(tabs).length > 0){
+    //                           Object.keys(tabs).forEach((tabkey,k) => {
+    //                               let tabObj:any = {};
+    //                               let tab = tabs[tabkey];
+    //                               if(tab && tab.reference){
+    //                                   tabObj = tab.reference;
+    //                                   tabObj.keyName=tabkey;
+    //                                   let alerts=tab.activeAlerts;
+    //                                     if(alerts){
+    //                                         alerts.forEach((alert:any)=>{
+    //                                             if(alert=="EMAIL"){
+    //                                                 tabObj.email=true;
+    //                                             }
+    //                                             if(alert=="WHATSAPP"){
+    //                                                 tabObj.whatsapp=true;
+    //                                             }
+    //                                             if(alert=="SMS"){
+    //                                                 tabObj.sms=true;
+    //                                             }
+    //                                         })
+    //                                     }
+    //                                   tabsList.push(tabObj);
+    //                               }    
+    //                           })
+    //                         }
+    //                         submenuObj={...submenuObj,templateTabs:tabsList};
+    //                       }
+    //                     }
+    //                     submenuList.push(submenuObj);
+    //                   });
+    //                 }
+    //               }
+    //               if(submenuList && submenuList.length > 0){
+    //                 menuobj['submenu'] = this.sortMenu(submenuList);
+    //               }else{
+    //                 menuobj['submenu'] = null;
+    //               }
+    //               menuList.push(menuobj);
+    //             })
+    //           }
+    //         }
+    //         if(menuList && menuList.length > 0){
+    //           moduleObj['menu_list'] = this.sortMenu(menuList);
+    //         }else{
+    //           moduleObj['menu_list'] = null;
+    //         }
+    //         modules.push(moduleObj);
+    //       });
+    //     }
+    //     utvn['modules'] = modules;
+    //  }
+    //     return utvn;
+    //   }
 
-      sortMenu(menuList:any){
-        let list:any=[];
-        let mlist = menuList.sort((a:any,b:any) =>  a.index - b.index);
-        if(mlist && mlist.length > 0){
-          mlist.forEach((m:any) => {
-            list.push(m);
-          });
-        }
-        return list;
-      }
+    //   sortMenu(menuList:any){
+    //     let list:any=[];
+    //     let mlist = menuList.sort((a:any,b:any) =>  a.index - b.index);
+    //     if(mlist && mlist.length > 0){
+    //       mlist.forEach((m:any) => {
+    //         list.push(m);
+    //       });
+    //     }
+    //     return list;
+    //   }
 
 
 }

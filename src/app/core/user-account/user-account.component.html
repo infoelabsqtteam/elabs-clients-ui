@@ -19,9 +19,59 @@
     </div>
   </mat-menu>
   <button mat-icon-button class="headsearchicon" [matMenuTriggerFor]="menu"><mat-icon>search</mat-icon></button>
+  
+  <button mat-button [matMenuTriggerFor]="notify" #notifyMenuTrigger="matMenuTrigger"><mat-icon [matBadge]="noOfNotification==0?'':noOfNotification" matBadgeColor="warn" matBadgeSize="small">notifications</mat-icon></button>
+  <mat-menu #notify="matMenu" xPosition="before" class="notificationMenu">
+    <!-- <app-notification-list></app-notification-list> -->
+    <div class="notificationdetailsMenu"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+    <mat-tab-group animationDuration="0ms">
+      <mat-tab label="All" (click)="$event.stopPropagation()">
+          <div class="card-body p-0">
+                <mat-list  >
+                  <mat-list-item *ngFor="let data of notificationlist"  class="d-flex justify-content-between">
+                      <!-- <div class="div1"><mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox></div> -->
+                      <div  (click)="readNotification(i)" style="cursor:pointer;" class="d-flex justify-content-between h-100 align-items-center px-3">
+                          <div>{{data.message | titlecase}}</div>
+                          <div> Type: {{data.notificationType|titlecase}}</div>
+                      </div>
+                      <!-- <div class="div3">{{data.userId.name}}</div> -->
+                      <!-- <div class="div4"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></div> -->
+                      <!-- <div class="div5" [innerHtml]="getDay(i)"></div> -->
+                  </mat-list-item>
+                
+                  <mat-list-item >
+                    <div class="d-flex justify-content-center h-100 align-items-center cursor-pointer" (click)="showMore()">Show More</div>
+                  </mat-list-item> 
+              </mat-list>
+          </div>
+      </mat-tab>
+      <mat-tab label="Unread" (click)="$event.stopPropagation()"> 
+            <div class="card-body p-0">
+              <mat-list  >
+                <mat-list-item *ngFor="let data of notificationlist; let i = index" [ngClass]="{'table-secondary': data.notificationStatus == 'UNREAD'}" class="d-flex justify-content-between">
+                    <!-- <div class="div1"><mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox></div> -->
+                    <div  (click)="readNotification(i)" style="cursor:pointer;" class="d-flex justify-content-between h-100 align-items-center px-3">
+                        <div>{{data.message | titlecase}}</div>
+                        <div> Type: {{data.notificationType |titlecase}}</div>
+                    </div>
+                    <!-- <div class="div3">{{data.userId.name}}</div> -->
+                    <!-- <div class="div4"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></div> -->
+                    <!-- <div class="div5" [innerHtml]="getDay(i)"></div> -->
+                </mat-list-item>
+                <mat-list-item >
+                  <div class="d-flex justify-content-center h-100 align-items-center cursor-pointer" (click)="showMore()">Show More</div>
+                </mat-list-item>   
+              </mat-list>
+            </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  </mat-menu>
   <button class="role-button" mat-button [matMenuTriggerFor]="role" [title]="activeRole">{{activeRole}}</button>
   <mat-menu #role="matMenu" xPosition="before">
     <button mat-menu-item *ngFor="let role of roleList" (click)="setRole(role)">{{role?.name}}</button>
   </mat-menu>
   <button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>account_circle</mat-icon></button>
 </div>
+
+<!-- | paginate: { id: 'Notification', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" [ngClass]="{'table-secondary': data.notificationStatus == 'UNREAD'}" -->

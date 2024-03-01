@@ -16,10 +16,14 @@ export class NotificationListComponent implements OnInit {
   notificationlist:any=[];
   userNotificationSubscription:Subscription;
   saveResponceSubscription:Subscription;
-  pageNumber = Common.PAGE_NO;
+  pageNumber = 1;
   itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
   total:number;
   field:any;
+  selectTabIndex:any=1;
+  selectContact:any='';
+  unreadNotification:any=[]
+  isPageLoading=false;
 
   constructor(
     private storageService:StorageService,
@@ -32,11 +36,17 @@ export class NotificationListComponent implements OnInit {
     private checkIfService:CheckIfService
   )
   { 
-    this.apiCallService.getUserNotification(this.pageNumber);
+    // this.apiCallService.getUserNotificationList(this.pageNumber);
+    // this.isPageLoading=true;
+    // this.apiCallService.getUserNotification(this.pageNumber);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
+      console.log(data);
         if (data && data.data && data.data.length > 0) {
-            this.setUserNotification(data.data);
-            this.total = data.data_size;
+            // this.setUserNotification(data.data);
+            this.total = 100;
+            // this.total = data.data_size;
+            console.log("list",data);
+            this.notificationlist =data.data
         }else{
           this.notificationlist = [];
           this.total = 0;
@@ -87,6 +97,7 @@ export class NotificationListComponent implements OnInit {
     this.unsubscribe(this.saveResponceSubscription);
 }
   getUserNotification(pageNo){
+    console.log(pageNo);
     this.pageNumber = pageNo;
     this.apiCallService.getUserNotification(pageNo);
   }
@@ -235,6 +246,13 @@ export class NotificationListComponent implements OnInit {
       return obj['days'] +" days ago";
     }
   }
+
+  pageSizes =[25, 50, 75, 100, 200];
+  PageSizeChange(event: any): void {
+    console.log(event);
+    if(event.target.value && event.target.value != "") {
+
+    }}
   
 
 }

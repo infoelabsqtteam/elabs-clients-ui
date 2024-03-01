@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { StorageService,DataShareService ,ModelService,CommonFunctionService,ApiService} from '@core/web-core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
+import { StorageService,DataShareService,ApiCallService,NotificationService,CoreFunctionService ,ModelService,CommonFunctionService,ApiService} from '@core/web-core';
 // import {MatButtonToggleModule} from '@angular/material/button-toggle';
 // import {MatListModule} from '@angular/material/list';
 import {
@@ -7,52 +7,58 @@ import {
 } from '@angular/material/dialog';
 // import {MatButtonModule} from '@angular/material/button';
 import { NotificationModelComponent } from '../notification-model/notification-model.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-notification-setting',
   templateUrl: './notification-setting.component.html',
   styleUrls: ['./notification-setting_styles.css'],
 })
-export class NotificationSettingComponent implements OnInit {
+export class NotificationSettingComponent implements OnInit,OnDestroy {
 
   AllModuleList:any=[];
   // nofifyIcon='fa-bell-slash'
-  userNotificationSubsription;
+  userNotificationSubsription:Subscription;
   notificationData:any;
-  notificationSetting
-  currentData:any=""
+  notificationSetting:any={}
+  currentData:any="";
+  isPageLoading=false;
   constructor(
     private storageService:StorageService,
     private dataShareService:DataShareService,
     private modalService: ModelService,
     private commonFunctionService: CommonFunctionService,
     private apiService: ApiService,
+    private apiCallService: ApiCallService,
+    private coreFunctionService: CoreFunctionService,
+    private notificationService: NotificationService,
     public dialog: MatDialog
   )
   { 
-
-    // this.dataShareService.userNotification.subscribe(data =>{
-    //   console.log("object notiSetting",data);
-    //   this.notificationData.push(data);
-    // })
-    // this.AllModuleList = this.storageService.GetModules();
-    this.notificationSetting = JSON.parse(sessionStorage.getItem("NOTIFICATION"));
-    if(this.notificationSetting?.modules){
-      this.AllModuleList=this.notificationSetting.modules;
-    }
+    this.userNotificationSubsription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
+      if(res){
+        this.notificationSetting =this.notificationService.getModulesFromNotificationObject(res);
+        console.log(this.notificationSetting);
+        if(this.notificationSetting.modules){
+          this.AllModuleList=this.notificationSetting.modules;
+        }
+        // this.dataShareService.shareUserNotificationSetting('g');
+      }   
+  })
 
   }
 
   ngOnInit(): void {
   }
+  ngOnDestroy(): void {
+    if(this.userNotificationSubsription){
+      this.userNotificationSubsription.unsubscribe();
+    }
+  }
 
   openDialog(menu:any,module:any) {
     let data={menu,module}
     let dialogRef=this.dialog.open(NotificationModelComponent,{data});
-    // dialogRef.afterClosed().subscribe(result=>{
-    //   console.log("result",result);
-    //   console.log(this.AllModuleList);
-    // })
   }
 
   saveNotification(){
@@ -83,7 +89,7 @@ export class NotificationSettingComponent implements OnInit {
 
       let payloadData={
         notifications : data,
-        userId: this.notificationSetting.userId
+        userId: userRef
       }
       try {    
         const payload = {
