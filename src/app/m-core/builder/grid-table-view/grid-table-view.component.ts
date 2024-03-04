@@ -35,12 +35,12 @@ export const MY_DATE_FORMATS = {
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
-  @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent;
+  @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent; // adFilter Component.
 
   filterForm: FormGroup;
-  adFilterForm : FormGroup;
+  adFilterForm : FormGroup; // adFilter Form Group
   isAdFilter = false; // To know advance filter applied or not
-  adFilterList:any[] = [];
+  adFilterList:any[] = []; // CrList for Adfilter
   tabs: any = [];
   public tab: any = [];
   //selectTabIndex: number = 0;
@@ -139,10 +139,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-  // selectedFilterType = "cntsic" // For advance filter type selection
-  // filterTypeNumber: any;
-  // filterTypeString: any;
-  // filterTypeDate: any;
 
 
 
@@ -733,6 +729,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
 
       }
+      // Calling for create From group for adFilter
       this.createAdFilterFormgroup();
     }
 
@@ -1240,106 +1237,30 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.getGridPayloadData(pagePayload);
   }
 
-  onAdFilter(isAdFilterApplied:boolean){
+// Getting input from adFilter component for filter applied or not.
+  onAdFilter (isAdFilterApplied:boolean) {
     this.isAdFilter = isAdFilterApplied;
-    isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
+    // To enable & disable filterForm when AdFilter is applied
+    // isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
   }
 
-  setCrList(list:any){
+// Getting input list from adFilter component to prepare crList.
+  setCrList (list:any) {
     this.adFilterList = list;
   }
 
-  clearAdFilter(){
+// Calling the clear Filter fn from adFilter component.
+  clearAdFilter (){
     this.advanceFilterComponent.clearAdFilter();
   }
-
-  // crList: any[] = [];
-
-  // applyAdFilter(fieldNameToUpdate?: string,type?:string){
-  //   let formData = this.adFilterForm.getRawValue();
-  //   const payload = [];
-  //   Object.keys(formData).forEach(key => {
-  //     if (formData[key]) {
-  //       // console.log(formData[key]);
-  //       // Check if the field is already present in existing payloads
-  //       const existingPayload = this.crList.find(obj => obj.fName === key);
-  //       if (existingPayload) {
-  //         existingPayload.fValue = formData[key];
-  //       } else {
-  //         let fValue = formData[key];
-  //         if (type === 'date') {
-  //           fValue = this.formatDate(formData[key]);
-  //         }
-  //         payload.push({
-  //           fName: key,
-  //           fValue: fValue,
-  //           fieldType : type,
-  //           operator: this.selectedFilterType
-  //         });
-  //       }
-  //     }
-  //   });
-
-  //   const payloadToUpdate = this.crList.find(obj => obj.fName === fieldNameToUpdate);
-  //   if (payloadToUpdate) {
-  //     payloadToUpdate.operator = this.selectedFilterType;
-  //   }
-
-  //   this.crList = this.crList.concat(payload);
-
-  //   this.pageNumber = 1;
-  //   let pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber,this.tab,this.currentMenu,this.crList);
-  //   pagePayload.data.pageSize = this.itemNumOfGrid;
-  //   this.getGridPayloadData(pagePayload);
-
-  // }
-
-  // formatDate(fValue: string): string {
-  //   const date = new Date(fValue);
-    
-  //   const day = date.getDate().toString().padStart(2, '0');
-  //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //   const year = date.getFullYear().toString();
-    
-  //   return `${day}/${month}/${year}`;
-  // }
-
-  // clearAdFilter(){
-  //   this.adFilterForm.reset();
-  //   this.crList = [];
-  //   this.applyAdFilter();
-  // }
-
+// Creating From group for AfFilter.
   createAdFilterFormgroup(){
     const forControl = {};
         if(this.headElements.length > 0){
           this.headElements.forEach(element => {
             if(element != null && element.type != null){
-            switch (element.type.toLowerCase()) {
-              case "text":
-              case "info":
-                case "number":
-                case "reference_names":
-                case "chips" :
-                case "tree_view_selection":
-                case "dropdown":
-                case "typeahead":
-                case "date":
-                case "datetime":
-                  this.formCreationService.createFormControl(forControl, element, '', "text")
-                  break;
-                case "daterange":
-                  const list_of_fields={}
-                  const start={field_name:'start',is_disabled:false,is_mandatory:false}
-                  this.formCreationService.createFormControl(list_of_fields, start, '', "text")
-                  const end={field_name:'end',is_disabled:false,is_mandatory:false}
-                  this.formCreationService.createFormControl(list_of_fields, end, '', "text")
-                  this.formCreationService.createFormControl(forControl, element, list_of_fields, "group")
-                break;
-              default:
-                break;
-            }      
-          }
+              this.formCreationService.createFormControl(forControl, element, '', "text")    
+           }
           });
         }
 

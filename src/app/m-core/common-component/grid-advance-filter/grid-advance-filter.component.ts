@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ApiCallService, CoreFunctionService, NotificationService } from '@core/web-core';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { ApiCallService, CommonFunctionService, CoreFunctionService, StorageService } from '@core/web-core';
 
 @Component({
   selector: 'app-grid-advance-filter',
@@ -14,7 +15,8 @@ export class GridAdvanceFilterComponent implements OnInit {
   @Input() headElements: any;
   @Input() pageNumber:number;
   @Input() itemNumOfGrid:any;
-  @Input() getGridPayloadData:(load)=>void;
+  @Input() getGridPayloadData:(payLoad:any)=>void;
+  @Input() adFilterMenuTrigger!:MatMenuTrigger;
   @Input() tab:any;
   @Input() currentMenu:any;
   @Input() adFilterForm: FormGroup;
@@ -22,9 +24,14 @@ export class GridAdvanceFilterComponent implements OnInit {
 
   @Output() isAdFilter = new EventEmitter<boolean>();
   @Output() setCrList = new EventEmitter<any>();
+  // @Output() adFiltermenuOpened = new EventEmitter<void>();
 
-  selectedFilterType = "cnts";
-  searchField = ""
+  defaultOperator = JSON.stringify(this.storageService.getDefaultSearchOperator());
+  selectedFilterType = JSON.parse(this.defaultOperator);
+  searchField = "";
+  dateField = "";
+  isSearchFieldEmpty = false;
+  isDateFieldEmpty = false;
   
   filterTypeNumber: any;
   filterTypeString: any;
@@ -32,84 +39,208 @@ export class GridAdvanceFilterComponent implements OnInit {
 
   adFilterApplied = false;
 
-  @ViewChild('searchInput') searchInput!: ElementRef;
+  // @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChild('startDate') startDateInput: ElementRef;
+  @ViewChild('endDate') endDateInput: ElementRef;
 
   constructor(
     private apiCallService:ApiCallService,
     private coreFunctionService:CoreFunctionService,
-    private notificationService: NotificationService,
-  ) { }
-
-  ngOnInit(): void {
-    this.getOperatorsList();
+    private commonFunctionService: CommonFunctionService,
+    private storageService : StorageService
+  ) { 
+    this.getOperatorsList();    
   }
 
-  getOperatorsList(){
-    this.filterTypeNumber = this.coreFunctionService.getOperators('number');
-    this.filterTypeString = this.coreFunctionService.getOperators('string');
-    this.filterTypeDate = this.coreFunctionService.getOperators('date');
-  }
-
-  applyAdFilter(fieldNameToUpdate?: string, type?: string) {
-    const formData = this.adFilterForm.getRawValue();
-    const payload = [];
-  
-    Object.keys(formData).forEach(key => {
-      const value = formData[key];
-      if (value) {
-        let fieldValue = value;
-        if (type && ['date', 'datetime', 'daterange'].includes(type.toLowerCase())) {
-          fieldValue = this.formatDate(value);
-        }
-  
-        const existingPayload = this.crList.find(obj => obj.fName === key);
-        if (existingPayload) {
-          existingPayload.fValue = fieldValue;
-        } else {
-          payload.push({ fName: key, fValue: fieldValue, fieldType: type, operator: this.selectedFilterType });
-        }
-        this.head["isAdFiltered"] = true;
-      }
-    });
-  
-    if (fieldNameToUpdate) {
-      const payloadToUpdate = this.crList.find(obj => obj.fName === fieldNameToUpdate);
-      if (payloadToUpdate) {
-        payloadToUpdate.operator = this.selectedFilterType;
-      }
+  ngOnInit(): void { 
+// Change default operator for 'date', 'datetime', 'daterange' to EQUAL
+    if(this.head && ['date', 'datetime', 'daterange'].includes(this.head?.type.toLowerCase())){
+      this.defaultOperator = "eq";
+      this.selectedFilterType = this.defaultOperator;
     }
-  
-    this.crList = this.crList.concat(payload);
+  }
 
-    if(this.crList && this.crList.length>0){
+  // Getting operator List for adfilter
+  getOperatorsList(){
+    this.filterTypeNumber = this.removeKeys(this.coreFunctionService.getOperators('number'),["in"]);
+    this.filterTypeString = this.removeKeys(this.coreFunctionService.getOperators('string'),["in"]);
+    this.filterTypeDate = this.removeKeys(this.coreFunctionService.getOperators('date'),["in","lt","gt","cntsic","cnts"]);
+  }
+
+// Apply Advance filter payload preparation
+  applyAdFilter(fieldNameToUpdate?: string, type?: string) {
+    
+    let payload = [];
+
+    switch (this.selectedFilterType) {
+
+      case 'drng': {
+          let startDate =  this.startDateInput.nativeElement.value;
+          let endDate =  this.endDateInput.nativeElement.value;
+
+            if(startDate && startDate != '' && endDate && endDate != ''){
+              let crList = [
+                ...this.prepareCrList(fieldNameToUpdate,startDate,type,"gte"),
+                ...this.prepareCrList(fieldNameToUpdate,endDate,type,"lte")
+              ]
+
+              if (fieldNameToUpdate) {
+                const prevPayload = this.crList.filter(obj => obj.fName != fieldNameToUpdate);
+                const payloadToUpdate = this.crList.filter(obj => obj.fName === fieldNameToUpdate);
+                this.head["isAdFiltered"] = true;
+
+                if(payloadToUpdate.length > 0){
+                  
+                  if (payloadToUpdate.length == 2) {
+  
+                    payloadToUpdate[0].fValue = startDate;
+                    payloadToUpdate[1].fValue = endDate;
+
+                    payload = this.getPayloadObj(prevPayload,payloadToUpdate);  
+                  } else {
+                    payload = this.getPayloadObj(prevPayload,crList);
+                  }
+                } else {
+                  payload = this.getPayloadObj(prevPayload,crList);
+                }
+                
+              }
+              
+              this.head["isAdFiltered"] = true;
+              this.crList = payload;
+            }
+        }
+
+        break;
+
+      default:  {
+
+        const formData = this.adFilterForm.getRawValue();
+        const prevPayload = this.crList.filter(obj => obj.fName != fieldNameToUpdate);
+      
+        Object.keys(formData).forEach(key => {
+          const value = formData[key];
+          if (value) {
+            let fieldValue = value;
+            if (type && ['date', 'datetime', 'daterange'].includes(type.toLowerCase()) && key == fieldNameToUpdate) {
+              fieldValue = this.commonFunctionService.dateFormat(value);
+              this.isDateFieldEmpty = false;
+            }
+
+            const existingPayload = this.crList.filter(obj => obj.fName === key);
+            const remainingPayload = this.crList.filter(obj => obj.fName != key);
+
+            if (existingPayload?.length == 1) {
+              existingPayload[0].fValue = fieldValue;
+            } else {
+              let updatedObj = this.prepareCrList(key,fieldValue,type,this.selectedFilterType);
+            
+              payload = this.getPayloadObj(remainingPayload,updatedObj);
+            }
+            this.head["isAdFiltered"] = true;
+          }
+        });
+
+        if (type && !['date', 'datetime', 'daterange'].includes(type.toLowerCase()) && !this.searchField ){
+          this.isSearchFieldEmpty = true;
+        }
+        if (type && ['date', 'datetime', 'daterange'].includes(type.toLowerCase()) && !formData[fieldNameToUpdate]){
+          this.isDateFieldEmpty = true;
+        }
+      
+        if (fieldNameToUpdate) {
+          const payloadToUpdate = this.crList.filter(obj => obj.fName === fieldNameToUpdate);
+          if (payloadToUpdate.length) {
+            payloadToUpdate[0].operator = this.selectedFilterType;
+            payload =  this.getPayloadObj(prevPayload,payloadToUpdate);
+          } 
+        }
+        this.crList = [...payload];
+      }
+        
+      break;
+    }
+      
+
+    if ( this.crList && this.crList.length>0 ) {
       this.setCrList.emit(this.crList);
       this.adFilterApplied = this.crList.length > 0;
       this.isAdFilter.emit(this.adFilterApplied);
-      this.notificationService.notify('bg-success',"Filter Applied Successfully");
+      // this.notificationService.notify('bg-success',"Filter Applied Successfully");
+      this.closeAdFilterMenu();
     }  
+    // calling apply filter function
+    this.applyFilter(this.crList);
+  }
+
+// Prepare crList [] through function
+  getPayloadObj(prevPayload: any[], currentPayload: any[]): any[] {
+    let payload: any[] = [];
+
+    if (prevPayload.length > 0 && currentPayload.length > 0) {
+        payload = [...currentPayload, ...prevPayload];
+    } else if (prevPayload.length > 0) {
+        payload = [...prevPayload];
+    } else if (currentPayload.length > 0) {
+        payload = [...currentPayload];
+    }
+
+    return payload;
+  }
+
+// prepare filter Object
+  prepareCrList(fName: string, fValue: any, fieldType: string, operator: string): any[] {
+    let list: any[] = [];
+    let obj = {
+        fName: fName,
+        fValue: fValue,
+        fieldType: fieldType,
+        operator: operator
+      };
+    list.push(obj);
+    return list;
+  }
+
+// Clear Advance filter function.
+  clearAdFilter(fieldName?: string) {
+    if (fieldName && fieldName !== "") {
+      // Removing current filter from payload.
+      this.crList = this.crList.filter(obj => obj.fName !== fieldName);
+      if(this.crList){
+        this.head.isAdFiltered = false;
+      }
+    } else {
+      // Removing All filter from payload
+      this.crList = [];
+      this.clearIsFiltered(this.headElements);
+    }
   
+    this.adFilterApplied = this.crList.length > 0;
+    this.isAdFilter.emit(this.adFilterApplied);
+  
+    this.selectedFilterType = this.defaultOperator;
+    this.adFilterForm.reset();
+    this.isSearchFieldEmpty = false;
+    this.isDateFieldEmpty = false;
+  
+    this.setCrList.emit(this.crList);
+    this.applyFilter(this.crList);
+  
+    // this.closeAdFilterMenu();
+  }
+
+// Apply filter function
+  applyFilter(crList:any){
     this.pageNumber = 1;
-    const pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber, this.tab, this.currentMenu, this.crList);
+    const pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber, this.tab, this.currentMenu,crList);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
   }
 
-  clearAdFilter(){
-    this.selectedFilterType = "cnts";
-    this.adFilterForm.reset();
-    this.crList = [];
-    this.applyAdFilter();
-    this.adFilterApplied = false;
-    this.notificationService.notify('bg-info',"Filter Cleared Successfully");
-    //Emiting to parant
-    this.setCrList.emit(this.crList);
-    this.isAdFilter.emit(this.adFilterApplied);
-    this.clearIsFiltered(this.headElements);
-  }
-
-  clearIsFiltered(headElements: any) {
+// Removing isAdfilter boolean frim all column headers
+  clearIsFiltered (headElements: any) {
     if (headElements && headElements.length > 0) {
-      headElements.forEach(head => {
+      headElements.forEach((head:any) => {
         if (head.isAdFiltered) {
           head.isAdFiltered = false;
         }
@@ -117,12 +248,43 @@ export class GridAdvanceFilterComponent implements OnInit {
     }
   }
 
-  clearInput(input:any){
+// Clear input function
+  clearInput (input:any) {
     if(input!=''){
       input = '';
     }
   }
 
+  // onAdFilterMenuOpened () {
+  //   this.adFiltermenuOpened.emit();
+  // }
+
+// Close menu function after 200 ms 
+  closeAdFilterMenu () {
+    if(this.adFilterMenuTrigger){
+      setTimeout(()=>{
+        this.adFilterMenuTrigger.closeMenu();
+      },200)
+    }
+  }
+
+  // focusOnSearchField() {
+  //   if (this.searchInput) {
+  //     this.searchInput.nativeElement.focus();
+  //   }
+  // }
+
+// Remove unwanted operators using romoveKeys function.
+  removeKeys(obj:Object, keysToRemove:string[]) {
+    if(obj && keysToRemove.length>0 ){
+      keysToRemove.forEach(key => {
+          delete obj[key];
+      });
+    }
+    return this.coreFunctionService.sortOperators(obj);
+}
+
+// FormatDate function for get date format "DD/MM/YYYY"
   formatDate(fValue: string): string {
     const date = new Date(fValue);
 
