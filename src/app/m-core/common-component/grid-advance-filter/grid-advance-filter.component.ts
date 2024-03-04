@@ -232,7 +232,7 @@ export class GridAdvanceFilterComponent implements OnInit {
 // Apply filter function
   applyFilter(crList:any){
     this.pageNumber = 1;
-    const pagePayload = this.apiCallService.getDataForGridAdvanceFilter(this.pageNumber, this.tab, this.currentMenu,crList);
+    const pagePayload = this.apiCallService.getDataForGridFilter(this.pageNumber, this.tab, this.currentMenu,crList);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
   }
