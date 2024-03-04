@@ -1,7 +1,7 @@
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, HostListener, ChangeDetectorRef, OnDestroy, SimpleChanges,Inject, ViewChild } from '@angular/core';
 import { DatePipe, Location,DOCUMENT } from '@angular/common';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
@@ -37,8 +37,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
   @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent; // adFilter Component.
 
-  filterForm: FormGroup;
-  adFilterForm : FormGroup; // adFilter Form Group
+  filterForm: UntypedFormGroup;
+  adFilterForm : UntypedFormGroup; // adFilter Form Group
   isAdFilter = false; // To know advance filter applied or not
   adFilterList:any[] = []; // CrList for Adfilter
   tabs: any = [];
@@ -290,7 +290,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private commonFunctionService:CommonFunctionService, 
     private permissionService: PermissionService, 
     private modalService: ModelService, 
-    private formBuilder: FormBuilder, 
+    private formBuilder: UntypedFormBuilder, 
     private router: Router, 
     private routers: ActivatedRoute,
     private apiService:ApiService,
@@ -1563,8 +1563,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }  
   clearFilter(fieldName,type){
     if(type.toLowerCase() == 'daterange'){
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
-      (<FormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
+      (<UntypedFormGroup>this.filterForm.controls[fieldName]).controls['start'].patchValue('');
+      (<UntypedFormGroup>this.filterForm.controls[fieldName]).controls['end'].patchValue('');
     }else{
       this.filterForm.get([fieldName]).setValue('');
     }    

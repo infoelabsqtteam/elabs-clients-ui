@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthDataShareService, AuthService, EnvService, NotificationService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
@@ -11,8 +11,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./otp-varification.component.css']
 })
 export class OtpVarificationComponent implements OnInit {
+
   loading = false;
-  OtpVarify: FormGroup;
+  OtpVarify: UntypedFormGroup;
   isVerify:boolean = false;
 
   title = "";
@@ -57,9 +58,9 @@ export class OtpVarificationComponent implements OnInit {
     });
   }
   initForm() {
-    this.OtpVarify = new FormGroup({
-      'username': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
-      'verif_code': new FormControl('', [Validators.required])
+    this.OtpVarify = new UntypedFormGroup({
+      'username': new UntypedFormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
+      'verif_code': new UntypedFormControl('', [Validators.required])
     });
     if(this.storageService.getVerifyType() == "mobile"){
       this.isVerify = true;

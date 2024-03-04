@@ -1,5 +1,5 @@
 import { Component,Input ,OnInit } from '@angular/core';
-import { Form, FormGroup, NgForm,FormBuilder,FormControl, Validators } from '@angular/forms';
+import { Form, UntypedFormGroup, NgForm,UntypedFormBuilder,UntypedFormControl, Validators } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { Router,ActivatedRoute   } from '@angular/router';
 import { StorageService, AuthService, EnvService, CustomvalidationService } from '@core/web-core';
@@ -16,12 +16,12 @@ export class ResetpwdComponent implements OnInit {
   @Input() public pageName;
   appName: string;
   userName: string = '';
-  resetForm:FormGroup;
+  resetForm:UntypedFormGroup;
 
   constructor(
     private activeRouter :ActivatedRoute,
     private storageService: StorageService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private authService:AuthService,
     private envService:EnvService,
     private customvalidationService:CustomvalidationService 
@@ -42,7 +42,7 @@ export class ResetpwdComponent implements OnInit {
   initForm(){
     this.resetForm =this.formBuilder.group(
       {
-        'password' : new FormControl('',[Validators.required,this.customvalidationService.patternValidator()])
+        'password' : new UntypedFormControl('',[Validators.required,this.customvalidationService.patternValidator()])
       }
     )
   }

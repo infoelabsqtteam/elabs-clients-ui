@@ -83,6 +83,13 @@ export class HeaderLandingPageComponent implements OnInit {
     // )
     this.router.navigate(['signin'])
   }
+  navigateStatic(routerLink:string) {
+    if(routerLink){
+        this.router.navigate(['/'+routerLink]);
+    }else{
+        console.log(routerLink+' is not a valid Link or undefined')
+    }
+  }
   setpage(res){
     switch(res){
         case "HOME":
