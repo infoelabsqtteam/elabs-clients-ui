@@ -272,9 +272,10 @@
                                         {{ tableField.label | titlecase}} is <strong>invalidData</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
+                                
                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
                                     <mdb-icon fas icon="plus"></mdb-icon>
+                                    <span class="countno" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">{{custmizedFormValue[tableField.field_name].length}}</span>
                                 </button>
                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !tempVal[tableField.field_name+'_add_button']"  (click)="updateAddNewField('',tableField)" >
                                     <mdb-icon fas icon="edit"></mdb-icon>
@@ -356,10 +357,11 @@
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>                                   
                                 </mat-form-field>
-                                <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name].length}}</span></div>
+                               
                                 <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="tableField.type == 'list_of_string'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
                                     <mdb-icon fas icon="plus" [matTooltip]="'Add'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] == undefined"></mdb-icon>
                                     <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_index'] != undefined">update</i>
+                                    <span class="countno" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">{{custmizedFormValue[tableField.field_name].length}}</span>
                                 </button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
@@ -538,9 +540,10 @@
                                                     <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                 </mat-autocomplete>
                                             </mat-form-field>
-                                            <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div> 
+                                            
                                             <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
                                                 <mdb-icon fas icon="plus"></mdb-icon>
+                                                <span class="countno" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span>
                                             </button>
                                             <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button modelplusbtn"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
                                                 <mdb-icon fas icon="edit"></mdb-icon>
@@ -595,13 +598,12 @@
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                 <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(tableField,fields,false)">
                                             </mat-form-field>
-                                            <div class="btncounter" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0"><span>{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span></div>                                            
+                                                                                    
                                             <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">                                          
                                                 <mdb-icon fas icon="plus" [matTooltip]="'Add'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_'+fields.field_name+'_index'] == undefined"></mdb-icon>
-                                                <i class="material-icons md-48" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_'+fields.field_name+'_index'] != undefined">update</i>
+                                                <i class="material-icons" [matTooltip]="'Update'" [matTooltipPosition]="'above'" *ngIf="addOrUpdateIconShowHideList && addOrUpdateIconShowHideList[tableField.field_name+'_'+fields.field_name+'_index'] != undefined">update</i> 
+                                                <span class="countno" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span> 
                                             </button>
-
-
                                             <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
