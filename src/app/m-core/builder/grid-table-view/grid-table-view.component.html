@@ -59,9 +59,6 @@
                                                 <mat-icon class="d-flex align-items-center" *ngIf="head.isAdFiltered">filter_list</mat-icon>
                                                 <span class="show-on-hover">
                                                     <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="ml-1 mr-1"></mdb-icon>
-                                                    <!-- mat trigger for Advance column filter -->
-                                                    <!-- <mdb-icon [title]="'Advance Filter'" [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger="matMenuTrigger" size="sm" fas icon="filter"></mdb-icon> -->
-                                                    <!-- mat trigger for More Menu -->
                                                     <i fas class="fas fa-ellipsis-v px-2" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                 </span> 
                                                 <!-- mat menu for More Menu -->
@@ -81,7 +78,7 @@
                                         <td>
                                             <div class="heading text-center">
                                                 <span *ngIf="tab.grid && tab.grid.details && tab.grid.details.bulk_update"><input type="checkbox" id="selectAllCheckbox" (change)="selectAll()"><span class="ml-1 mr-1">All</span></span>
-                                                <button [disabled]="isAdFilter" mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
+                                                <button mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
                                             </div>
                                         </td>
                                         <td class="px-1 py-2" [style.left.px]="fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">

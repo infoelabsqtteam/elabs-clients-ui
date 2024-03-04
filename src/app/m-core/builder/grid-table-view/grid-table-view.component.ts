@@ -491,14 +491,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     
   }
   ngOnInit(): void {  
-    // this.getOperatorsList();
   }
 
-  // getOperatorsList(){
-  //   this.filterTypeNumber = this.coreFunctionService.getOperators('number');
-  //   this.filterTypeString = this.coreFunctionService.getOperators('string');
-  //   this.filterTypeDate = this.coreFunctionService.getOperators('date');
-  // }
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
