@@ -59,7 +59,7 @@ export class GridAdvanceFilterComponent implements OnInit {
 
 // Getting operator List for adfilter
   getOperatorsList(){
-    this.filterTypeNumber = this.removeKeys(this.coreFunctionService.getOperators('number'),["in"]);
+    this.filterTypeNumber = this.removeKeys(this.coreFunctionService.getOperators('number'),["in","cntsic"]);
     this.filterTypeString = this.removeKeys(this.coreFunctionService.getOperators('string'),["in"]);
     this.filterTypeDate = this.removeKeys(this.coreFunctionService.getOperators('date'),["in","lt","gt","cntsic","cnts"]);
   }
@@ -281,9 +281,9 @@ export class GridAdvanceFilterComponent implements OnInit {
     return this.coreFunctionService.sortOperators(obj);
 }
 
-// Change default operator for 'date', 'datetime', 'daterange' to EQUAL
+// Change default operator for 'number' , 'date', 'datetime', 'daterange' to EQUAL
   getDefaultOperatorForAdFilter(){
-    if (this.head && ['date', 'datetime', 'daterange'].includes(this.head?.type.toLowerCase())) {
+    if (this.head && ['number', 'date', 'datetime', 'daterange'].includes(this.head?.type.toLowerCase())) {
       this.defaultOperator = "eq";
     } else {
       this.defaultOperator = JSON.parse(JSON.stringify(this.storageService.getDefaultSearchOperator()));
