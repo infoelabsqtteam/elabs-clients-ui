@@ -26,8 +26,8 @@ export class GridAdvanceFilterComponent implements OnInit {
   @Output() setCrList = new EventEmitter<any>();
   // @Output() adFiltermenuOpened = new EventEmitter<void>();
 
-  defaultOperator = JSON.stringify(this.storageService.getDefaultSearchOperator());
-  selectedFilterType = JSON.parse(this.defaultOperator);
+  defaultOperator = "";
+  selectedFilterType = "";
   searchField = "";
   dateField = "";
   isSearchFieldEmpty = false;
@@ -54,13 +54,10 @@ export class GridAdvanceFilterComponent implements OnInit {
 
   ngOnInit(): void { 
 // Change default operator for 'date', 'datetime', 'daterange' to EQUAL
-    if(this.head && ['date', 'datetime', 'daterange'].includes(this.head?.type.toLowerCase())){
-      this.defaultOperator = "eq";
-      this.selectedFilterType = this.defaultOperator;
-    }
+    this.selectedFilterType = this.getDefaultOperatorForAdFilter();
   }
 
-  // Getting operator List for adfilter
+// Getting operator List for adfilter
   getOperatorsList(){
     this.filterTypeNumber = this.removeKeys(this.coreFunctionService.getOperators('number'),["in"]);
     this.filterTypeString = this.removeKeys(this.coreFunctionService.getOperators('string'),["in"]);
@@ -218,7 +215,7 @@ export class GridAdvanceFilterComponent implements OnInit {
     this.adFilterApplied = this.crList.length > 0;
     this.isAdFilter.emit(this.adFilterApplied);
   
-    this.selectedFilterType = this.defaultOperator;
+    this.selectedFilterType = this.getDefaultOperatorForAdFilter();
     this.adFilterForm.reset();
     this.isSearchFieldEmpty = false;
     this.isDateFieldEmpty = false;
@@ -283,6 +280,17 @@ export class GridAdvanceFilterComponent implements OnInit {
     }
     return this.coreFunctionService.sortOperators(obj);
 }
+
+// Change default operator for 'date', 'datetime', 'daterange' to EQUAL
+  getDefaultOperatorForAdFilter(){
+    if (this.head && ['date', 'datetime', 'daterange'].includes(this.head?.type.toLowerCase())) {
+      this.defaultOperator = "eq";
+    } else {
+      this.defaultOperator = JSON.parse(JSON.stringify(this.storageService.getDefaultSearchOperator()));
+    }
+    return this.defaultOperator;
+  }
+
 
 // FormatDate function for get date format "DD/MM/YYYY"
   formatDate(fValue: string): string {
