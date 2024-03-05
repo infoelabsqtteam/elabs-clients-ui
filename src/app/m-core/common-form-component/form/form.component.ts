@@ -2721,6 +2721,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       }
     }
   }
+  // Dummy function for no-space-directive
+  spaceKeyDown(event:KeyboardEvent){
+    console.log(event);
+  }
   resetForm(){
     if(this.multipleFormCollection.length > 0){
       this.multipleFormCollection = this.multipleFormService.setPreviousFormTargetFieldData(this.multipleFormCollection,this.getFormValue(true));
