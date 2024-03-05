@@ -5,9 +5,10 @@ import { UntypedFormBuilder, UntypedFormGroup, FormControl, FormArray, Validator
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
-import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService } from '@core/web-core';
+import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, CoreFunctionService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DomSanitizer } from '@angular/platform-browser';
+import { GridAdvanceFilterComponent } from '../../common-component/grid-advance-filter/grid-advance-filter.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -34,8 +35,12 @@ export const MY_DATE_FORMATS = {
 export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
+  @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent; // adFilter Component.
 
   filterForm: UntypedFormGroup;
+  adFilterForm : UntypedFormGroup; // adFilter Form Group
+  isAdFilter = false; // To know advance filter applied or not
+  adFilterList:any[] = []; // CrList for Adfilter
   tabs: any = [];
   public tab: any = [];
   //selectTabIndex: number = 0;
@@ -298,6 +303,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private apiCallService:ApiCallService,
     private checkIfService:CheckIfService,
     private formCreationService:FormCreationService,
+    private coreFunctionService : CoreFunctionService
   ) {
     this.getUrlParameter();    
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
@@ -484,9 +490,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
     
   }
-
-  ngOnInit(): void {
+  ngOnInit(): void {  
   }
+
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
       this.tabs = tempData[0].templateTabs;
@@ -717,6 +723,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         }
 
       }
+      // Calling for create From group for adFilter
+      this.createAdFilterFormgroup();
     }
 
 
@@ -1221,6 +1229,38 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     let pagePayload = this.apiCallService.getDataForGrid(this.pageNumber,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact);
     pagePayload.data.pageSize = this.itemNumOfGrid;
     this.getGridPayloadData(pagePayload);
+  }
+
+// Getting input from adFilter component for filter applied or not.
+  onAdFilter (isAdFilterApplied:boolean) {
+    this.isAdFilter = isAdFilterApplied;
+    // To enable & disable filterForm when AdFilter is applied
+    // isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
+  }
+
+// Getting input list from adFilter component to prepare crList.
+  setCrList (list:any) {
+    this.adFilterList = list;
+  }
+
+// Calling the clear Filter fn from adFilter component.
+  clearAdFilter (){
+    this.advanceFilterComponent.clearAdFilter();
+  }
+// Creating From group for AfFilter.
+  createAdFilterFormgroup(){
+    const forControl = {};
+        if(this.headElements.length > 0){
+          this.headElements.forEach(element => {
+            if(element != null && element.type != null){
+              this.formCreationService.createFormControl(forControl, element, '', "text")    
+           }
+          });
+        }
+
+        if (forControl) {
+          this.adFilterForm = this.formBuilder.group(forControl);
+        }
   }
 
   getGridPayloadData(pagePayload:any) {  
