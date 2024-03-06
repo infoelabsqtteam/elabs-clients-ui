@@ -1,8 +1,8 @@
 
 <div class="notification-model">
-        <div class="d-flex justify-content-center align-items-center" style="background-color: var(--popupHeaderBg);padding-block: 7px;">
+        <div class="d-flex justify-content-center align-items-center header">
         <span><h4  style="margin-bottom: 0; font-weight:400;">{{data.menu.name | titlecase}}</h4></span>
-        <!-- <button mat-button color="primar" style="align-self: flex-end;" class=" ml-auto mr-2 closebtb" [mat-dialog-close]="{data}" (click)="saveNotification(data)">X</button> -->
+        <button class=" ml-auto mr-2 closebutton" [mat-dialog-close]="{data}">x</button>
         </div>
         <div *ngIf="data.menu.templateTabs && data.menu.templateTabs.length>0">
             <mat-list >

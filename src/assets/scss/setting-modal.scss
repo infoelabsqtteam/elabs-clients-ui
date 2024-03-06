@@ -6,7 +6,24 @@
 .notifybadge {position:absolute;top:0;right:0;background:red;color:#fff;width:18px;height:18px;border-radius:100%;line-height:18px;font-size:10px;}
 .mat-menu-panel.notificationdrowdown {min-width:230px;}
 
-
+.notificationdetails{
+    .card{
+        position: relative;
+        // height: 440px;
+    }
+    .mat-tab-group {
+        position: sticky;
+        top: 0;
+        background-color: white; /* Adjust as needed */
+        z-index: 1; /* Ensure the tabs are above the content */
+      }
+      
+      .mat-tab-body-wrapper {
+        overflow-y: auto; 
+        max-height: 63vh; 
+      }
+      
+}
 
 .notificationSetting {
     .mat-expansion-panel-spacing {margin:0;}
@@ -21,13 +38,20 @@
    .mat-expanded.mat-expansion-panel-spacing {border-radius:0;}
 }
 
+.unread-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: blue;
+    border-radius: 50%;
+  }
+
 .notificationdetails {
     mat-checkbox {margin:10px;display:block;}
     .mat-checkbox .mat-checkbox-layout {margin:0;}
     .table td {padding:2px 10px;}
     // span {font-size:12px;display:block;color:#999}
     .mat-tab-label-active {
-        background-color: var(--activebg) !important;
+        background-color: var(--themecolor) !important;
     }
 
     .mat-list-base{
@@ -53,6 +77,9 @@
       }
     
 }
+.notificationdetails::-webkit-scrollbar {
+    display: none !important; /* Hide the scrollbar in Chrome, Safari, and Opera */
+  }
 
 .gridFilterDropdown {
     .mat-checkbox-inner-container{    
@@ -69,13 +96,22 @@
 }
 
 .notificationdetails{
+    min-width: 450px;
     .mat-tab-label {
         min-width: 50% !important;
         height: 48px !important;
         padding: 0 24px !important;
     }
-  
+
+  .notification-item{
+    &:hover{
+        background-color: $row-hover-color;
+    }
+    &:nth-of-type(odd) { background-color: #fff;}
+    &:nth-of-type(even) { background-color: #fafafa;}
+  }
 }
+
 .notificationMenu{  max-width: none !important; } 
 .notificationdetailsMenu{width: 400px !important;.mat-tab-label {
     min-width: 50% !important;
@@ -83,7 +119,7 @@
     padding: 12px !important;
     }
     .mat-tab-label-active {
-        background-color: var(--activebg) !important;
+        background-color: var(--themecolor) !important;
     }
     .mat-list-base{
         background-color: var(--themecolor) !important;
@@ -106,6 +142,11 @@
     .mat-list-item{
         height: 36px !important;
     }
+ }
+
+ .showMoreBtn{
+    font-size: 15px;
+    font-weight: 500;
  }
 
 .mat-badge-content { padding-left: 1px !important;}
@@ -169,6 +210,15 @@
             }
         }
     }
+
+    .header{background-color: var(--popupHeaderBg) !important;padding-block: 7px;position:relative;
+    .closebutton{position: absolute;width: 28px;border-radius: 50%;right: 0px;
+        height: 28px;
+        background: var(--white);
+        color: black !important;
+        font-size: 22px;
+        line-height: 0px;
+        }}
 
 }
 

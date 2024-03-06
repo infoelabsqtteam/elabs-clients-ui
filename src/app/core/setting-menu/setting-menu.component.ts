@@ -135,27 +135,22 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
             }
         });
         this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
-            if (data && data.data && data.data.length > 0) {
-                this.setUserNotification(data.data);
+            if (data) {
+                this.isPageLoading =false;
+                if(this.rightsidenav.opened){
+                    this.rightsidenav.toggle();
+                }
             }
         });
         this.userNotificationSettingSubscription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
             if(res){
                 this.isPageLoading =false;
-                console.log(res);
-                this.rightsidenav.toggle();
-            }     
-        })
-        this.userNotificationSubscription=this.dataShareService.userNotification.subscribe((res)=>{
-            if(res){
-                this.isPageLoading =false;
-                console.log(res);
-                console.log(this.rightsidenav.opened);
                 if(this.rightsidenav.opened){
                     this.rightsidenav.toggle();
                 }
             }     
         })
+
         
 
 
@@ -268,7 +263,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         if (saveFromDataRsponce) {
             if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
                 if (saveFromDataRsponce.success == 'success') {
-                    this.apiCallService.getUserNotification(1);
+                    // this.apiCallService.getUserNotification(1);
                 }
             }
         }
@@ -489,8 +484,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
                 'curTemp' : 'user_notification',
                 'data' : notification
             }
-            this.apiService.SaveFormData(payload);
-            this.saveCallSubscribe();
+            // this.apiService.SaveFormData(payload);
+            // this.saveCallSubscribe();
         }
         
     }

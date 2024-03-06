@@ -1,87 +1,80 @@
-<section class="notificationdetails pt-4 px-3" style="height: 70vh;">
+<div (click)="$event.stopPropagation()">
+<section class="notificationdetails" [ngClass]="{'px-3 pt-1' : !menuView}" >
     <div class="card">
-        <!-- <div class="card-header bg-white d-flex align-items-center justify-content-between">
-            <div class="form-check" class="d-flex align-items-center">
-                <mat-checkbox color="primary" class="m-0 pr-2" [checked]="isChecked()" [indeterminate]="isIndeterminate()" (change)="$event ? toggleAll($event) : null" [matTooltip]="'Select All'"></mat-checkbox>
-                <label class="form-check-label" for="select">Select All</label>
-            </div>
-            <label>Total Notifications: {{notificationlist.length}}</label>
-        </div> -->
-        <app-grid-table-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact' ></app-grid-table-view>
-        <mat-tab-group animationDuration="0ms">
+        <mat-tab-group animationDuration="0ms" #tabGroup (selectedTabChange)="tabChanged($event)">
             <mat-tab label="Unread">
-                <div class="card-body p-0">
-                    <!-- <table class="table table-striped table-sm table-hover m-0">
-                        <tbody>
-                          <tr *ngFor="let data of notificationlist | paginate: { id: 'Notification', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" [ngClass]="{'table-secondary': data.notificationStatus == 'UNREAD'}" class="px-2 py-3">
-                            <td width="20"><mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox></td>
-                            <td width="70%" (click)="readNotification(i)" style="cursor:pointer;" class="py-2 py-3">
-                                <h5 class="m-0">{{data.message | titlecase}}</h5>
-                                <span>Notification Type: {{data.notificationType}}</span>
-                            </td>
-                            <td><span class="mt-2">{{data.userId.name}}</span></td>
-                            <td><span class="mt-2"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></span></td>
-                            <td><span class="mt-2" [innerHtml]="getDay(i)"></span></td>
-                          </tr>
-                        </tbody>
-                      </table> -->
-                      <mat-list  *ngFor="let data of notificationlist | paginate: { id: 'Notification',itemsPerPage: 6, currentPage: pageNumber, totalItems: total }; let i = index" [ngClass]="{'table-secondary': data.notificationStatus == 'UNREAD'}">
-                        <mat-list-item  class="d-flex justify-content-between">
-                            <!-- <div class="div1"><mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox></div> -->
-                            <div  (click)="readNotification(i)" style="cursor:pointer;" class="div2">
-                                <div class="m-0">{{data.message | titlecase}}</div>
-                                <div>Notification Type: {{data.notificationType}}</div>
+                <div class="card-body p-0">                    
+                      <div class="bg-white rounded box-shadow">
+                        <div *ngFor="let data of notificationlist | paginate: { id: 'unReadNotification',itemsPerPage: 10, currentPage: unReadTabPageno, totalItems: total }; let i = index" class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" (click)="readNotification(data)">
+                            <div class="d-flex justify-content-between align-items-center">
+                            <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1" style="width: 10px;height: 10px;"></div>
+                            <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded" width="40" height="40">
+                        </div>
+                        <div class="media-body mb-0 lh-125">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-block text-dark" style="font-weight: 500;">{{data.userId.name}}</div>
+                                <span class="text-body">{{data.notificationType | titlecase}}</span>
                             </div>
-                            <div class="div3">{{data.userId.name}}</div>
-                            <div class="div4"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></div>
-                            <div class="div5" [innerHtml]="getDay(i)"></div>
-                        </mat-list-item>
-                      </mat-list>
+                            <div class="d-flex justify-content-between">
+                                <span>{{data.message | titlecase}}</span>
+                                <span  [innerHtml]="getDay(i)"></span>
+                            </div>
+                        </div>
+                        </div>
+                       </div>
                 </div>
             </mat-tab>
             <mat-tab label="All"> 
-                <div class="card-body p-0">
-                      <mat-list  *ngFor="let data of notificationlist | paginate: {id: 'Notification',  itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total }; let i = index" [ngClass]="{'table-secondary': data.notificationStatus == 'UNREAD'}">
-                        <mat-list-item  class="d-flex justify-content-between">
-                            <!-- <div class="div1"><mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="checkDisableRowIf(i)"> </mat-checkbox></div> -->
-                            <div  (click)="readNotification(i)" style="cursor:pointer;" class="div2">
-                                <div class="m-0">{{data.message | titlecase}}</div>
-                                <div>Notification Type: {{data.notificationType}}</div>
-                            </div>
-                            <div class="div3">{{data.userId.name}}</div>
-                            <div class="div4"><img src="assets/img/profile.jpg" class="rounded" width="20" height="20"></div>
-                            <div class="div5" [innerHtml]="getDay(i)"></div>
-                        </mat-list-item>
-                      </mat-list>
-                </div>
+                <div class="bg-white rounded box-shadow">
+                    <div class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" *ngFor="let data of notificationlist | paginate: { id: 'allNotification',itemsPerPage: 10, currentPage: allTabPageno, totalItems: total }; let i = index" (click)="readNotification(data)" >
+                        <div class="d-flex justify-content-between align-items-center">
+                        <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1" style="width: 10px;height: 10px;"></div>
+                        <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded" width="40" height="40">
+                    </div>
+                    <div class="media-body mb-0 lh-125">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-block text-dark" style="font-weight: 500;">{{data.userId.name}}</div>
+                            <span class="text-body">{{data.notificationType | titlecase}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>{{data.message | titlecase}}</span>
+                            <span  [innerHtml]="getDay(i)"></span>
+                        </div>
+                    </div>
+                    </div>
+
+                   </div>
             </mat-tab>
           </mat-tab-group>
         
     </div>
 </section>
-
-<!-- <section class="mt-5">
-    <mat-card-content class="m-0 pt-4 text-center">
-        <pagination-controls (pageChange)="getUserNotification($event)" id="Notification"></pagination-controls>
-        <!-- <div class="paginationnumber">
-            <small>Items Per Page:</small>
-            <select class="paginationsize ml-2" (change)="PageSizeChange($event)">
-                <option></option>
-                <option *ngFor="let size of pageSizes" [ngValue]="size">{{ size }}</option>
-            </select>
-        </div> -->
-    <!-- </mat-card-content> -->
-<!-- </section> --> -->
-<section>
-    <div class="row m-0 w-100">
+<section *ngIf="!menuView">
+    <div *ngIf="activeTabIndex==0" class="row m-0 w-100">
         <div class="col-lg-12 text-center mt-0">
             <mat-card class="mb-2 pb-0 bg-aluminium rounded-top-0">
                 <div class="text-white px-2 mat-card-image  mb-0 d-block">
                     <mat-card-content class="mb-0 py-2">
-                        <pagination-controls (pageChange)="getUserNotification($event)" id="Notification"></pagination-controls> 
+                        <pagination-controls (pageChange)="onPageChangeUnRead($event)" id="unReadNotification"></pagination-controls> 
                     </mat-card-content>                                         
                 </div>
             </mat-card>      
         </div>
-    </div>
+  </div>
+  <div *ngIf="activeTabIndex==1" class="row m-0 w-100">
+        <div class="col-lg-12 text-center mt-0">
+            <mat-card class="mb-2 pb-0 bg-aluminium rounded-top-0">
+                <div class="text-white px-2 mat-card-image  mb-0 d-block">
+                    <mat-card-content class="mb-0 py-2">
+                        <pagination-controls (pageChange)="onPageChangeAllTab($event)" id="allNotification"></pagination-controls> 
+                    </mat-card-content>                                         
+                </div>
+            </mat-card>      
+        </div>
+ </div>
 </section>
+
+</div>
+<div *ngIf="menuView" class="cursor-pointer py-2 notification-item text-center showMoreBtn" (click)="showMore()">
+    Show more
+</div>

@@ -14,12 +14,12 @@ notificationTypeCategories:any=[];
 constructor(@Inject(MAT_DIALOG_DATA) public data:any,private storageService:StorageService) {
   let applicationSetting=this.storageService.getApplicationSetting();
   if(applicationSetting.notificationTypeCategories){
-    // this.notificationTypeCategories=applicationSetting.notificationTypeCategories;
+    this.notificationTypeCategories=applicationSetting.notificationTypeCategories;
   }
-  this.notificationTypeCategories=["EMAIL","WHATSAPP"];
+  // this.notificationTypeCategories=["EMAIL","WHATSAPP"];
   // this.notificationTypeCategories=["SMS"];
   // console.log(data);
-  console.log(this.notificationTypeCategories);
+  // console.log(this.notificationTypeCategories);
 }
 
 ngOnInit(): void {

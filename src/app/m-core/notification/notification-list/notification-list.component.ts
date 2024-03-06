@@ -1,8 +1,9 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit,ViewChild ,AfterViewInit, Input} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { CommonFunctionService, DataShareService, StorageService, ApiService, MenuOrModuleCommonService,Common, ApiCallService, CheckIfService } from '@core/web-core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-notification-list',
@@ -12,7 +13,8 @@ import { CommonFunctionService, DataShareService, StorageService, ApiService, Me
 })
 export class NotificationListComponent implements OnInit {
   
-  
+  @Input() menuView: any;
+  @Input() notifyMenuTrigger: any;
   notificationlist:any=[];
   userNotificationSubscription:Subscription;
   saveResponceSubscription:Subscription;
@@ -24,6 +26,12 @@ export class NotificationListComponent implements OnInit {
   selectContact:any='';
   unreadNotification:any=[]
   isPageLoading=false;
+  activeTabIndex=0;
+  unReadTabPageno=1;
+  allTabPageno=1;
+  allTabData=[];
+  allData=[];
+  
 
   constructor(
     private storageService:StorageService,
@@ -36,17 +44,16 @@ export class NotificationListComponent implements OnInit {
     private checkIfService:CheckIfService
   )
   { 
-    // this.apiCallService.getUserNotificationList(this.pageNumber);
-    // this.isPageLoading=true;
-    // this.apiCallService.getUserNotification(this.pageNumber);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
-      console.log(data);
         if (data && data.data && data.data.length > 0) {
-            // this.setUserNotification(data.data);
-            this.total = 100;
-            // this.total = data.data_size;
-            console.log("list",data);
-            this.notificationlist =data.data
+            this.allData=data
+            this.total = data.data_size;
+              this.notificationlist =data.data;
+              if(this.menuView){
+                this.notificationlist=this.notificationlist.slice(0,6);
+              }
+              console.log("unread",this.unReadTabPageno);
+              console.log("all",this.allTabPageno);
         }else{
           this.notificationlist = [];
           this.total = 0;
@@ -66,6 +73,11 @@ export class NotificationListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.menuView && this.activeTabIndex==1){
+      this.allTabData=this.allTabData.slice(0,6)
+    }else if(this.menuView && this.activeTabIndex==0){
+      this.notificationlist= this.notificationlist.slice(0,6)
+    }
   }
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
@@ -74,8 +86,24 @@ export class NotificationListComponent implements OnInit {
       this.userNotificationSubscription.unsubscribe();
     }
   }
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.activeTabIndex=tabChangeEvent.index;
+    if(this.activeTabIndex==1){
+      this.apiCallService.getUserNotification(1,"All");
+    }
+    if(this.activeTabIndex==0){
+      this.apiCallService.getUserNotification(1);
+    }
+  }
   setUserNotification(data){
       this.notificationlist = this.setKeyValueInObjectList(data,'selected',false);
+  }
+  showMore(){
+    if(this.notifyMenuTrigger?.menuOpen){
+      this.notifyMenuTrigger.closeMenu();
+    }
+    this.apiCallService.getUserNotification(1);
+    this.router.navigate(["notification-list"]);
   }
   setKeyValueInObjectList(list,key,value){
     let newList = [];
@@ -90,7 +118,11 @@ export class NotificationListComponent implements OnInit {
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
             if (saveFromDataRsponce.success == 'success') {
-                // this.apiCallService.getUserNotification(this.pageNumber);
+              if(this.activeTabIndex==0){
+                this.apiCallService.getUserNotification(this.unReadTabPageno);
+              }else{
+                this.apiCallService.getUserNotification(this.allTabPageno,"All");
+              }
             }
         }
     }
@@ -99,7 +131,18 @@ export class NotificationListComponent implements OnInit {
   getUserNotification(pageNo){
     console.log(pageNo);
     this.pageNumber = pageNo;
+    // this.apiCallService.getUserNotification(pageNo);
+  }
+  onPageChangeUnRead(pageNo){
+    console.log("unread page",pageNo);
+    this.unReadTabPageno = pageNo;
     this.apiCallService.getUserNotification(pageNo);
+  }
+
+  onPageChangeAllTab(pageNo){
+    this.allTabPageno = pageNo;
+    console.log("all page",this.allTabPageno);
+     this.apiCallService.getUserNotification(pageNo,"All");
   }
   isIndeterminate() {
     let check = 0;
@@ -200,51 +243,67 @@ export class NotificationListComponent implements OnInit {
   }
 
   
-  readNotification(index){
-    let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
+  readNotification(data){
+    // let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
+    // if(data.notificationStatus == 'UNREAD'){
+    //       data['notificationStatus'] = 'READ';
+        //   const payload = {
+        //     'curTemp' : 'user_notification',
+        //     'data' : notification
+        // }
+    //   }
+    // console.log(this.allData);
+    // this.dataShareService.shareUserNotification(this.allData);
     //let rout = "notification/5f8a7df93fead0865fab7356/5f8e8c63efa14277b0ec62e8/605e10135234aa12be92ec4b/5fa51e62eb4a3c2940eb9d1b/default/62e22131b74b6a45e713d14a";
-    let url = notification.url;
-    let rout = "notification/"+url;
-    let list = rout.split("/");
-    let moduleId = list[1];
-    let menuId = list[2];
-    let submenuId = list[3];
-    let moduleIndex = this.menuOrModuleCommounService.getModuleIndexById(moduleId);
+    // let url = notification.url;
+    // let rout = "notification/"+url;
+    // let list = rout.split("/");
+    // let moduleId = list[1];
+    // let menuId = list[2];
+    // let submenuId = list[3];
+    // let moduleIndex = this.menuOrModuleCommounService.getModuleIndexById(moduleId);
     //this.dataShareService.setModuleIndex(moduleIndex);
-    if(moduleIndex != undefined){
-      let moduleList = this.storageService.GetModules();
-      let module = moduleList[moduleIndex];
-      let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
-      let menu = {
-        "name" : menuName
-      }
-      this.storageService.SetActiveMenu(menu);
-      this.router.navigate([rout]); 
+    // if(moduleIndex != undefined){
+    //   let moduleList = this.storageService.GetModules();
+    //   let module = moduleList[moduleIndex];
+    //   let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
+    //   let menu = {
+    //     "name" : menuName
+    //   }
+    //   this.storageService.SetActiveMenu(menu);
+    //   this.router.navigate([rout]); 
+    // }
+    if(this.notifyMenuTrigger?.menuOpen){
+      this.notifyMenuTrigger.closeMenu();
     }
-    
-    if(notification.notificationStatus == 'UNREAD'){
-        notification['notificationStatus'] = 'READ';
+    console.log(data.url);
+    if(data.notificationStatus == 'UNREAD'){
+        data['notificationStatus'] = 'READ';
         const payload = {
-          'curTemp' : 'user_notification',
-          'data' : notification
-      }
+          'curTemp' : 'user_notification_master',
+          'data' : data
+        }
       this.apiService.SaveFormData(payload);
       this.saveCallSubscribe();
-    }    
+
+    }   
+    if(data.url){
+      this.router.navigate([data.url]);
+    } 
   }
   getDay(index){
-    let notification = this.notificationlist[index];
-    let createdDate = notification.createdDate;
-    let obj = this.CommonFunctionService.dateDiff(createdDate);
-    if(obj && obj['days'] == 0){
-      if(obj['hours'] == 0){
-        return obj['minutes']+" Minutes ago";
-      }else{        
-        return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
-      }      
-    }else{
-      return obj['days'] +" days ago";
-    }
+    // let notification = this.notificationlist[index];
+    // let createdDate = notification.createdDate;
+    // let obj = this.CommonFunctionService.dateDiff(createdDate);
+    // if(obj && obj['days'] == 0){
+    //   if(obj['hours'] == 0){
+    //     return obj['minutes']+" Minutes ago";
+    //   }else{        
+    //     return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
+    //   }      
+    // }else{
+    //   return obj['days'] +" days ago";
+    // }
   }
 
   pageSizes =[25, 50, 75, 100, 200];

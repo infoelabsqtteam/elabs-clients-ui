@@ -20,7 +20,6 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   showsearchmenu = false;
   AllModuleList: any = [];
   userNotificationSubscription:Subscription;
-  notificationlist:any=[]
   noOfNotification:any=0;
   @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
   @ViewChild('notify') notify:MatMenu;
@@ -34,19 +33,11 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     private router:Router
   ) { 
     this.pageload();
-    // this.apiCallService.getUserNotificationList(1);
     this.apiCallService.getUserNotification(1);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
       console.log(data);
         if (data && data.data && data.data.length > 0) {
-            // this.setUserNotification(data.data);
-            // this.total = data.data_size;
-            console.log("list from icon",data);
-            this.notificationlist =data.data;
-            this.noOfNotification=this.notificationlist.length;
-        }else{
-          // this.notificationlist = [];
-          // this.total = 0;
+            this.noOfNotification=data.data.filter((ele)=>ele.notificationStatus== "UNREAD").length;
         }
     });
   }
@@ -101,12 +92,8 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     this.activeRole = role.name;
   }
 
-  showMore(){
-    if(this.notifyMenuTrigger.menuOpen){
-      this.notifyMenuTrigger.closeMenu();
-    }
+  getNotification(){
     this.apiCallService.getUserNotification(1);
-    this.router.navigate(["notification-list"]);
   }
   searchmodel(data:string) {
     this.filterdata = data;
