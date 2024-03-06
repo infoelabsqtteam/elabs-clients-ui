@@ -357,7 +357,8 @@ export class FileUploadModalComponent implements OnInit {
           }else{
             this.files = [];
             this.uploadData = [];
-            this.fileUploadResponce.emit(this.uploadDataForS3);
+            this.fileUpload.next(this.uploadDataForS3);
+            // this.fileUploadResponce.emit(this.uploadDataForS3);
             this.cancel();
           }
           // newObj.key = key;
