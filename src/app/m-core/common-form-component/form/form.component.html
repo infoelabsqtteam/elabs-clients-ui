@@ -282,7 +282,9 @@
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList  [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
+                                        <div *ngIf="custmizedFormValue[tableField.field_name].length > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
+
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
                                             <p class="m-0"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> 
@@ -365,7 +367,8 @@
                                 </button>
                                 <div *ngIf="tableField.type == 'list_of_string' && tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
-                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag>
+                                        <div *ngIf="custmizedFormValue[tableField.field_name].length > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                        <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
                                             <p><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> {{item}} 
@@ -550,7 +553,8 @@
                                             </button>
                                         <div *ngIf="fields.datatype == 'list_of_object'">
                                             <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
+                                                <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                                <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
                                                     <p><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                         <path d="M0 0h24v24H0z" fill="none"></path>
                                                       </svg></span> {{ item.name ? item.name : item }} <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
@@ -606,7 +610,8 @@
                                             </button>
                                             <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
-                                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
+                                                    <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                                    <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]  | filter:term[tableField.field_name]; let i = index" cdkDrag>
                                                         <p class="m-0 small"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                             <path d="M0 0h24v24H0z" fill="none"></path>
                                                           </svg></span>{{item}} 
@@ -732,7 +737,7 @@
                             <div class="row mb-2" *ngIf="tableField.type == 'list_of_fields' && tableField.datatype != 'key_value'">
                                 <div class="col-lg-12 table-responsive table without-filter mt-2 maxheightdata" *ngIf="modifyCustmizedFormValue[tableField.field_name]">
                                     <div class="row px-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > pageSize">
-                                        <div class="col-lg-3 my-2"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
+                                        <div class="col-lg-3 my-2" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > showSearchLength"><input class="form-control form-control-sm" [(ngModel)]="term[tableField.field_name]" [placeholder]="'Search...'" [ngModelOptions]="{standalone: true}"/></div>
                                     </div>
 
                                     <table class="table table-bordered table-hover one-line-text" *ngIf="modifyCustmizedFormValue[tableField.field_name].length > 0">
