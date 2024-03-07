@@ -7,12 +7,12 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { GoogleMapsModule } from "@angular/google-maps";
 import {NgxPaginationModule} from 'ngx-pagination';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { NgxTimerModule } from 'ngx-timer';
+// import { NgxTimerModule } from 'ngx-timer';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { EditorModule } from '@tinymce/tinymce-angular';
-import { NgxDiff2htmlModule } from 'ngx-diff2html';
+// import { NgxDiff2htmlModule } from 'ngx-diff2html';
 import { PipesModule } from '../../pipes/pipes.module';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+// import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
 const packages = [
@@ -24,12 +24,12 @@ const packages = [
   GoogleChartsModule,
   GoogleMapsModule,
   NgxPaginationModule,
-  NgxTimerModule,
+  // NgxTimerModule,
   MomentDateModule,
   EditorModule,
   CarouselModule,
-  NgxDiff2htmlModule,
-  PerfectScrollbarModule,
+  // NgxDiff2htmlModule,
+  // PerfectScrollbarModule,
   NgScrollbarModule
 ]
 
