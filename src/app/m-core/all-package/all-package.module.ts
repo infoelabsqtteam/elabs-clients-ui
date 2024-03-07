@@ -12,7 +12,7 @@ import { MomentDateModule } from '@angular/material-moment-adapter';
 import { EditorModule } from '@tinymce/tinymce-angular';
 // import { NgxDiff2htmlModule } from 'ngx-diff2html';
 import { PipesModule } from '../../pipes/pipes.module';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+// import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
 const packages = [
@@ -29,7 +29,7 @@ const packages = [
   EditorModule,
   CarouselModule,
   // NgxDiff2htmlModule,
-  PerfectScrollbarModule,
+  // PerfectScrollbarModule,
   NgScrollbarModule
 ]
 
