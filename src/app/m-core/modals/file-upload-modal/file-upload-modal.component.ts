@@ -62,26 +62,22 @@ export class FileUploadModalComponent implements OnInit {
     this.docUploadModal.show()
   }
 
-  check:boolean = false;
   onFileDropped($event, fileDrop: boolean, selectedFolder: any) {
-    if(!this.isMultiple && $event.length > 1){
-      this.notificationService.notify('bg-danger', "Cant add multiple files");
-      return;
-    }
-    this.fileDrop = fileDrop;
-    for (const item of $event) {
-      item.progress = 0;
-      if(!this.isMultiple && this.files.length == 1){
-        this.notificationService.notify('bg-danger', "Cant add multiple files")
-        this.check = true
-        break;
+    if(!this.isMultiple){
+      if(this.files.length > 0){
+        this.notificationService.notify('bg-danger', "Cant add multiple files");
+        return;
       }else{
+        this.files.push($event[0])
+      }
+    }else{
+      this.fileDrop = fileDrop;
+      for (const item of $event) {
+        item.progress = 0;
         this.files.push(item);
       }
     }
-    if(!this.check){
-      this.prepareFilesList(this.files);
-    }
+    this.prepareFilesList(this.files);
   }
 	/**
 	 * handle file from browsing
