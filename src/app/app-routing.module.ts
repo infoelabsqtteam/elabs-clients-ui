@@ -12,7 +12,7 @@ const appRoutes: Routes = [
 ]
 
 @NgModule({
-    imports: [RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules, onSameUrlNavigation: "reload", useHash: false, relativeLinkResolution: 'legacy',scrollPositionRestoration: 'top' })],
+    imports: [RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules, onSameUrlNavigation: "reload", useHash: false, relativeLinkResolution: 'legacy',scrollPositionRestoration: 'top', initialNavigation: 'enabledBlocking' })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

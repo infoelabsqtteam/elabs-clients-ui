@@ -57,7 +57,7 @@
                                     <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(i,fieldName)" class="copyField"></span>
                                     <span *ngIf="data[fieldName.field_name]!='' && data[fieldName.field_name]!=undefined && fieldName.type!='info'"  class="material-icons copyicon"  [matTooltip]="'copy'" #tooltipTrigger="matTooltip" [matTooltipPosition]="'above'" (click)="copyText(data[fieldName.field_name])" >content_copy</span>
                                 </div>
-                                <div *ngIf="fieldName.editable" style="position: relative;">
+                                <div *ngIf="fieldName.editable" style="position: relative;" [style.width]="fieldName.width">
                                     <div *ngIf="!data['column_edit']">
                                         <span [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="getValueForGrid(fieldName,data)" (click)="showGriddData(i,fieldName)"></span>
                                     </div>
