@@ -36,6 +36,7 @@ export class FileUploadModalComponent implements OnInit {
   bufferValue = 100;
   uploadStart:boolean=true;
   uploadDataForS3: any = [];
+  isMultiple: boolean = true;
 
   constructor(
     private modalService: ModelService, 
@@ -61,13 +62,26 @@ export class FileUploadModalComponent implements OnInit {
     this.docUploadModal.show()
   }
 
+  check:boolean = false;
   onFileDropped($event, fileDrop: boolean, selectedFolder: any) {
+    if(!this.isMultiple && $event.length > 1){
+      this.notificationService.notify('bg-danger', "Cant add multiple files");
+      return;
+    }
     this.fileDrop = fileDrop;
     for (const item of $event) {
       item.progress = 0;
-      this.files.push(item);
+      if(!this.isMultiple && this.files.length == 1){
+        this.notificationService.notify('bg-danger', "Cant add multiple files")
+        this.check = true
+        break;
+      }else{
+        this.files.push(item);
+      }
     }
-    this.prepareFilesList($event);
+    if(!this.check){
+      this.prepareFilesList(this.files);
+    }
   }
 	/**
 	 * handle file from browsing
@@ -274,13 +288,14 @@ export class FileUploadModalComponent implements OnInit {
       this.fileSize = 0;
       this.fileSizeHints = '';
     }
-    this.tableFields = object.tableFields;
-    this.getBucketAndS3Key(object);
     if(this.field.type == 'file_for_s3'){
+      this.tableFields = object.tableFields;
+      this.getBucketAndS3Key(object);
       this.fileForS3 = true;
+      this.uploadStart = true;
+      this.uploadDataForS3 = [];
+      this.isMultiple = false;
     }
-    this.uploadStart = true;
-    this.uploadDataForS3 = [];
     this.docUploadModal.show();
   }
 
