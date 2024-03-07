@@ -65,10 +65,13 @@ export class FileUploadModalComponent implements OnInit {
   onFileDropped($event, fileDrop: boolean, selectedFolder: any) {
     if(!this.isMultiple){
       if(this.files.length > 0){
-        this.notificationService.notify('bg-danger', "Cant add multiple files");
+        this.notificationService.notify('bg-danger', "Can't add multiple files");
         return;
       }else{
         this.files.push($event[0])
+        if($event.length > 1){
+          this.notificationService.notify('bg-danger', "Can't add more then 1 file");
+        }
       }
     }else{
       this.fileDrop = fileDrop;
@@ -77,7 +80,7 @@ export class FileUploadModalComponent implements OnInit {
         this.files.push(item);
       }
     }
-    this.prepareFilesList(this.files);
+    if(this.files.length > 0)this.prepareFilesList(this.files);
   }
 	/**
 	 * handle file from browsing
