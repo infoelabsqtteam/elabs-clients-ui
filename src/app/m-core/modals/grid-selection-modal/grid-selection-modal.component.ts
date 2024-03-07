@@ -314,6 +314,7 @@ export class GridSelectionModalComponent implements OnInit {
             this.typeAheadData = [];
             this.rowIndex = -1;
             this.colIndex = -1;
+            this.setErrorMsg("delete");
           }
         } else {
           this.typeAheadData = [];
@@ -805,22 +806,27 @@ export class GridSelectionModalComponent implements OnInit {
     }
   }
   bulkUpdate(){
-    let object = {};
-    let data = {};
-    object["editedColumns"] = this.editableGridColumns;
-    for (let i = 0; i < this.modifiedGridData.length; i++) {
-      const row = this.modifiedGridData[i];
-      if(row.selected || !this.grid_row_selection){
-        for (let j = 0; j < this.editableGridColumns.length; j++) {
-          const column = this.editableGridColumns[j];
-          data[column.field_name] = row[column.field_name];            
+    if(this.rowIndex == -1 && this.colIndex == -1){
+        let object = {};
+        let data = {};
+        object["editedColumns"] = this.editableGridColumns;
+        for (let i = 0; i < this.modifiedGridData.length; i++) {
+          const row = this.modifiedGridData[i];
+          if(row.selected || !this.grid_row_selection){
+            for (let j = 0; j < this.editableGridColumns.length; j++) {
+              const column = this.editableGridColumns[j];
+              data[column.field_name] = row[column.field_name];            
+            }
+            break;
+          }      
         }
-        break;
-      }      
-    }
-    object["data"] = data;
-    object["copyStaticData"] = this.copyStaticData;
-    this.modalService.open("bulk-update-modal",object);
+        object["data"] = data;
+        object["copyStaticData"] = this.copyStaticData;
+        this.modalService.open("bulk-update-modal",object);
+      }else {
+        this.setErrorMsg("add");
+      }
+      
   }
   bulkUpdateResponce(responce){
     if(this.modifiedGridData && this.modifiedGridData.length > 0){
