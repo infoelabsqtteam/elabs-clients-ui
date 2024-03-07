@@ -487,8 +487,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
       this.ngOnInit();
+      this.isAdFilter = false;
     }
-    
   }
   ngOnInit(): void {  
   }
@@ -1563,6 +1563,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.filterForm.get([fieldName]).setValue('');
     }    
     this.applyFilter();
+    this.clearAdFilter();
   }
 
   get filterFormValue() {
