@@ -134,7 +134,6 @@
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                     </mat-autocomplete>                                  
                                                 </mat-form-field>
-                                                <small class="typeheaderrormsg" *ngIf="data && data[fieldName.field_name + '_errormsg']">{{data[fieldName.field_name + '_errormsg']}}</small>
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100">
