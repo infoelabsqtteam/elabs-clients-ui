@@ -2,6 +2,7 @@ import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, El
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
 import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService, GridCommonFunctionService } from '@core/web-core';
 
 
@@ -31,7 +32,7 @@ export class ModalsComponent implements OnInit,OnDestroy {
   private element: any;
   staticDataSubscriber;
   pdfFileSubscription;
-  
+  editorOptions: JsonEditorOptions;
   @Output() responceData = new EventEmitter();
   @ViewChild('basicTableModal') basicTableModal: ModalDirective;
   
@@ -53,6 +54,8 @@ export class ModalsComponent implements OnInit,OnDestroy {
       this.setDownloadPdfData(data);
     })
     this.element = el.nativeElement;
+    this.editorOptions = new JsonEditorOptions();
+    this.editorOptions.mode = "text";
   }
   resetFlags(){
     this.field = {};

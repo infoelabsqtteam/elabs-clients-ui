@@ -72,6 +72,9 @@ export class AuditHistoryComponent implements OnInit {
     this.auditHistory.show();
   }
   close() {
+    this.previousObject = {};
+    this.currentObject = {};
+    this.isJsonView = false;
     this.auditHistory.hide();
   }
 
