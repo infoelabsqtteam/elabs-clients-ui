@@ -38,11 +38,9 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
     this.userNotificationSubsription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
       if(res){
         this.notificationSetting =this.notificationService.getModulesFromNotificationObject(res);
-        console.log(this.notificationSetting);
         if(this.notificationSetting.modules){
           this.AllModuleList=this.notificationSetting.modules;
         }
-        // this.dataShareService.shareUserNotificationSetting('g');
       }   
   })
 
@@ -77,7 +75,6 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
         obj[name]=mod
       }
     })
-    // console.log("payload",obj);
     this.updateUserNotification(obj,"user_notification")
   }
 
@@ -97,7 +94,6 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
           data: payloadData,
         };
         this.apiService.SaveFormData(payload);
-        console.log("payload>>",payload);
         // resolve({ success: true });
       } catch (error) {
         // resolve({ success: false });
@@ -201,19 +197,9 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
   }
 
   menuNotification(e:any,m,item,ind?){
-    console.log(item);
-    console.log(m);
-    // this.modalService.open('form-modal',item)
-    // this.currentData=item;
-    // console.log(this.currentData);
-    // e.stopPropagation();
-    // console.log("e>>",e);
-    console.log("e>>",e.checked);
     item.notification=e.checked;
     this.AllModuleList[ind].notification=item.notification;
     // this.setOnAll(item,item.notification)
-    console.log(item);
-    console.log(this.AllModuleList);
   }
 
   setOnAll(obj,value){
@@ -242,11 +228,9 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
       })
   }
 
-  checkfun(tabs,type){
-    console.log(tabs);
-    tabs[type] = !tabs.type;
-    console.log(tabs);
-  }
+  // checkfun(tabs,type){
+  //   tabs[type] = !tabs.type;
+  // }
 
   // saveNotification(data){
   //   this.createPayload();

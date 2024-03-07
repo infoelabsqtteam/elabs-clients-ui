@@ -111,6 +111,12 @@
     &:nth-of-type(even) { background-color: #fafafa;}
   }
 }
+.notificationdetailsMenu{
+    width: 400px;
+    .notificationMenuHeader{
+        background-color: var(--popupHeaderBg);
+    }
+}
 
 .notificationMenu{  max-width: none !important; } 
 .notificationdetailsMenu{width: 400px !important;.mat-tab-label {
@@ -263,7 +269,15 @@
     border-radius: 4px !important;
 }
 
-
+.notifyMoreBtn{
+    width: 36px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 50%;
+    &:hover{
+        background-color: var(--popupHeaderBg);
+    }
+}
 
 
 

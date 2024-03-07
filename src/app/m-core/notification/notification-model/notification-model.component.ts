@@ -62,7 +62,5 @@ checkfun(item:any,type,e:any) {
     }else{
       this.data.module.notification=this.checkAllTabAlerts();
     }
-    console.log(item);
-    console.log(this.data);
     }
 }

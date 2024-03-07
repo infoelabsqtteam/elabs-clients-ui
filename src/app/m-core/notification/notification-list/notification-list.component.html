@@ -1,11 +1,11 @@
 <div (click)="$event.stopPropagation()">
 <section class="notificationdetails" [ngClass]="{'px-3 pt-1' : !menuView}" >
     <div class="card">
-        <mat-tab-group animationDuration="0ms" #tabGroup (selectedTabChange)="tabChanged($event)">
+        <mat-tab-group animationDuration="0ms" #tabGroup (selectedTabChange)="tabChanged($event)" [selectedIndex]="selectedIndex">
             <mat-tab label="Unread">
                 <div class="card-body p-0">                    
                       <div class="bg-white rounded box-shadow">
-                        <div *ngFor="let data of notificationlist | paginate: { id: 'unReadNotification',itemsPerPage: 10, currentPage: unReadTabPageno, totalItems: total }; let i = index" class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" (click)="readNotification(data)">
+                        <div *ngFor="let data of notificationlist | paginate: { id: 'unReadNotification',itemsPerPage: 10, currentPage: pageNumber, totalItems: total }; let i = index" class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" (click)="readNotification(data)">
                             <div class="d-flex justify-content-between align-items-center">
                             <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1" style="width: 10px;height: 10px;"></div>
                             <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded" width="40" height="40">
@@ -17,16 +17,19 @@
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span>{{data.message | titlecase}}</span>
-                                <span  [innerHtml]="getDay(i)"></span>
+                                <span  [innerHtml]="getDay(data)"></span>
                             </div>
+                        </div>
+                        <div >
+                            <i class="fa-regular fa-envelope-open px-1 mx-2 notifyMoreBtn" [matMenuTriggerFor]="more" [matTooltip]="'Mark as read'" [matTooltipPosition]="'above'" (click)="readNotification(data,'READ')"></i>
                         </div>
                         </div>
                        </div>
                 </div>
             </mat-tab>
-            <mat-tab label="All"> 
+            <mat-tab label="All" *ngIf="!menuView"> 
                 <div class="bg-white rounded box-shadow">
-                    <div class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" *ngFor="let data of notificationlist | paginate: { id: 'allNotification',itemsPerPage: 10, currentPage: allTabPageno, totalItems: total }; let i = index" (click)="readNotification(data)" >
+                    <div class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" *ngFor="let data of allTabData | paginate: { id: 'unReadNotification',itemsPerPage: 10, currentPage: pageNumber, totalItems: total }; let i = index" (click)="readNotification(data)" >
                         <div class="d-flex justify-content-between align-items-center">
                         <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1" style="width: 10px;height: 10px;"></div>
                         <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded" width="40" height="40">
@@ -38,8 +41,11 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>{{data.message | titlecase}}</span>
-                            <span  [innerHtml]="getDay(i)"></span>
+                            <span  [innerHtml]="getDay(data)"></span>
                         </div>
+                    </div>
+                    <div >
+                        <i class="fa-regular fa-envelope-open px-1 mx-2 notifyMoreBtn" [matMenuTriggerFor]="more" [matTooltip]="'Mark as read'" [matTooltipPosition]="'above'" (click)="readNotification(data,'READ')"></i>
                     </div>
                     </div>
 
@@ -50,7 +56,7 @@
     </div>
 </section>
 <section *ngIf="!menuView">
-    <div *ngIf="activeTabIndex==0" class="row m-0 w-100">
+    <div class="row m-0 w-100">
         <div class="col-lg-12 text-center mt-0">
             <mat-card class="mb-2 pb-0 bg-aluminium rounded-top-0">
                 <div class="text-white px-2 mat-card-image  mb-0 d-block">
@@ -61,7 +67,7 @@
             </mat-card>      
         </div>
   </div>
-  <div *ngIf="activeTabIndex==1" class="row m-0 w-100">
+  <!-- <div *ngIf="activeTabIndex==1" class="row m-0 w-100">
         <div class="col-lg-12 text-center mt-0">
             <mat-card class="mb-2 pb-0 bg-aluminium rounded-top-0">
                 <div class="text-white px-2 mat-card-image  mb-0 d-block">
@@ -71,10 +77,11 @@
                 </div>
             </mat-card>      
         </div>
- </div>
+ </div> -->
 </section>
 
 </div>
-<div *ngIf="menuView" class="cursor-pointer py-2 notification-item text-center showMoreBtn" (click)="showMore()">
-    Show more
+
+<div class="loader-overlay" *ngIf="isPageLoading">
+    <mat-spinner diameter="50"></mat-spinner>
 </div>

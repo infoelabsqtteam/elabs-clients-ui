@@ -21,6 +21,7 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   AllModuleList: any = [];
   userNotificationSubscription:Subscription;
   noOfNotification:any=0;
+  notificationlist=[];
   @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
   @ViewChild('notify') notify:MatMenu;
   constructor(    
@@ -30,13 +31,14 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private apiCallService:ApiCallService,
     private dataShareService:DataShareService,
-    private router:Router
+    private router:Router,
   ) { 
     this.pageload();
     this.apiCallService.getUserNotification(1);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
       console.log(data);
-        if (data && data.data && data.data.length > 0) {
+        if (data && data.data && data.data.length > 0 && data.type && data.type=="Unread") {
+            this.notificationlist=data.data.slice(0,5);
             this.noOfNotification=data.data.filter((ele)=>ele.notificationStatus== "UNREAD").length;
         }
     });
@@ -91,8 +93,9 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     }
     this.activeRole = role.name;
   }
-
+  iconOpen = false;
   getNotification(){
+    this.iconOpen = true
     this.apiCallService.getUserNotification(1);
   }
   searchmodel(data:string) {
@@ -116,5 +119,15 @@ export class UserAccountComponent implements OnInit,OnDestroy {
             this.menuOrModuleCommounService.getTemplateData(module,menu)
         }
     }
+  showMore(){
+      if(this.notifyMenuTrigger?.menuOpen){
+        this.notifyMenuTrigger.closeMenu();
+      }
+      this.apiCallService.getUserNotification(1);
+      this.router.navigate(["notification-list"]);
+  }
+  readNotification(data:any){
+    // this.notificationComponent.readNotification(data);
+  }
 
 }
