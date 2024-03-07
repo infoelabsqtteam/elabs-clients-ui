@@ -40,7 +40,7 @@
     "@tinymce/tinymce-angular": "^7.0.0",
     "@types/chart.js": "^2.9.37",
     "@types/diff": "^5.0.1",
-    "angular-bootstrap-md": "^14.0.0",
+    "angular-bootstrap-md": "^15.0.0",
     "angular-google-charts": "2.2.3",
     "angular-svg-icon": "^14.0.0",
     "animate.css": "~3.7.2",
