@@ -5,7 +5,7 @@ name: Angular CI with Node - awsprodclient
 
 on:
   push:
-    branches: [ awsprodclient ]
+    branches: [ awsprodworkclient ]
 
 jobs:
   build:
@@ -52,5 +52,5 @@ jobs:
       run: aws s3 sync dist s3://work-project-testing-123
       
     - name: Clean up cache for Work Project
-      run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
+      run: aws cloudfront create-invalidation --distribution-id E1D5CMBNNR6KJX --paths '/*'    
         
