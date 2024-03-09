@@ -5,7 +5,7 @@ name: Angular CI with Node - awsprodworkclient
 
 on:
   push:
-    branches: [ awsprodworkclient ]
+    branches: [ workclient ]
 
 jobs:
   build:
