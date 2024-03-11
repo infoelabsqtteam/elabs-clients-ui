@@ -232,7 +232,8 @@
     <!-- <ng-template contextMenuItem (execute)="rightViewFile($event);recentData($event)"><div class="text-dark mhover"><i class="dripicons-preview px-2 mhover"></i>Preview</div></ng-template> 
     <ng-template contextMenuItem divider="true"></ng-template>
     <ng-template contextMenuItem (execute)="moveFromMenu($event)" *ngIf="hideRightClickMove"><div class="text-dark py-1 mhover"><i class="mdi mdi-folder-move px-2 mhover"></i>Move to</div></ng-template>-->
-    <ng-template contextMenuItem (execute)="renameFromMenu($event)" *ngIf="hideRightClickMove"><div class="text-dark py-1 mhover"><i class="fa fa-pencil px-2 mhover"></i>Renamedfwee</div></ng-template>
+    <!-- <ng-template contextMenuItem (execute)="renameFromMenu($event)" *ngIf="hideRightClickMove"><div class="text-dark py-1 mhover"><i class="fa fa-pencil px-2 mhover"></i>Rename</div></ng-template> -->
+    <ng-template contextMenuItem (execute)="openRenameModal()" *ngIf="hideRightClickMove"><div class="text-dark py-1 mhover"><i class="fa fa-pencil px-2 mhover"></i>Rename</div></ng-template>
     <ng-template contextMenuItem (execute)="viewDetails($event)"><div class="text-dark py-1 mhover"><i class="fa fa-info px-2 mx-1 mhover"></i>View details</div></ng-template>
     <ng-template contextMenuItem (execute)="downloadFromMenu($event)" *ngIf="selectedRowFile"><div class="text-dark py-1 mhover"><i class="fa fa-download px-2 mhover"></i>Download</div></ng-template>
 </context-menu>
