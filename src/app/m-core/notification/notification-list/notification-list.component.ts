@@ -23,7 +23,7 @@ export class NotificationListComponent implements OnInit {
   itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
   total:number;
   field:any;
-  selectTabIndex:any=1;
+  selectTabIndex:any=0;
   selectContact:any='';
   unreadNotification:any=[]
   isPageLoading=false;

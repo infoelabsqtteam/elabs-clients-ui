@@ -872,6 +872,14 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         this.apiCallService.getUserNotificationSetting();
         this.router.navigate(["notification-setting"]);     
     }
+
+    gotoNotificationPage(){
+        // this.apiCallService.getData(1);
+        if(this.rightsidenav.opened){
+            this.rightsidenav.toggle();
+        }
+        this.router.navigate(["browse/DEVLP/notification_settings/user_notification_master"]);  
+    }
     // unsubscribee(variable:any){
     //         if(variable){
     //             variable

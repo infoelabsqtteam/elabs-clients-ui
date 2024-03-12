@@ -1033,6 +1033,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   clickOnGridElement(field, i) {
     let value={};
     let object = this.elements[i];
+    console.log(object);
     value['data'] = this.commonFunctionService.getObjectValue(field.field_name, object)
     if(field.gridColumns && field.gridColumns.length > 0){
       value['gridColumns'] = field.gridColumns;
@@ -1067,6 +1068,13 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.viewModal('grid-html-view-modal', value, field, i, field.field_name,editemode);
         };
         break;
+      case "redirect":
+        if (value && value != '') {
+          if(object && object.url){
+            this.router.navigate([object.url])
+         }
+        };
+        break;
       case "file":
         if (value['data'] && value['data'] != '') {
           this.selectedViewRowIndex = -1;
@@ -1090,6 +1098,18 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       default: return;
     }
 
+  }
+
+  readNotification(data,type?:any){
+    if (data.notificationStatus === 'UNREAD') {
+        data.notificationStatus = 'READ';
+        const payload = {
+            curTemp: 'user_notification_master',
+            data: data
+        };
+        this.apiService.SaveFormData(payload);
+        this.saveCallSubscribe();
+    }
   }
 
   pageSizes =[25, 50, 75, 100, 200];

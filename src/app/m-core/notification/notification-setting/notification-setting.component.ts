@@ -19,6 +19,7 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
   AllModuleList:any=[];
   // nofifyIcon='fa-bell-slash'
   userNotificationSubsription:Subscription;
+  saveResponceSubscription:Subscription;
   notificationData:any;
   notificationSetting:any={}
   currentData:any="";
@@ -60,47 +61,47 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
   }
 
   saveNotification(){
-    let obj={}
-    this.AllModuleList.forEach((module:any)=>{
-      if(module && module.name && module.notification && module.keyName){
-        let name=module.keyName;
-        let mod={
-            reference:{
-              name:module.name,
-              _id:module._id
-            },
-            menus:this.getMenuDetails(module?.menu_list),
-            notification:module.notification
-        }
-        obj[name]=mod
-      }
-    })
-    this.updateUserNotification(obj,"user_notification")
+    let data=this.notificationService.saveNotification(this.AllModuleList);
+    this.updateUserNotification(data,"user_notification")
   }
 
   updateUserNotification(data: object, fieldName: string){
-    // return new Promise(async (resolve) => {
+      this.isPageLoading=true;
       let userRef = this.commonFunctionService.getReferenceObject(
         this.storageService.GetUserInfo()
       );
-
       let payloadData={
         notifications : data,
         userId: userRef
       }
-      try {    
-        const payload = {
+      const payload = {
           curTemp: 'user_notification',
           data: payloadData,
-        };
-        this.apiService.SaveFormData(payload);
-        // resolve({ success: true });
-      } catch (error) {
-        // resolve({ success: false });
-      }
-    // }
-  // );
+      };
+      this.apiService.SaveFormData(payload);
+      this.saveCallSubscribe();
   } 
+
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
+      console.log(responce)
+      if (responce) {
+        if (responce.success && responce.success != '') {
+            if (responce.success == 'success') {
+                this.isPageLoading=false;
+                this.notificationService.notify("bg-success","Notification setting updated successfully!");
+            }
+        }
+    }
+    this.unsubscribe(this.saveResponceSubscription);
+    })
+  }
+
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
 
   getMenuDetails(module:any){
     let obj={};
