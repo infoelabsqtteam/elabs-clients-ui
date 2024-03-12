@@ -1,0 +1,62 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Angular CI with Node - awsprodworkclient
+
+on:
+  push:
+    branches: [ workclient ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    ########################### Elabs Aws - ###########################
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ELABS_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ELABS_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.ELABS_REGION }}
+        
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.20.0'
+    
+    - name: Installing source NPM dependencies...
+      run: |
+        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
+        aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 292474393014 --region ap-south-1
+        echo $CODEARTIFACT_AUTH_TOKEN        
+        npm install -g @angular/cli@13.0.0
+        npm install
+    
+    
+    - name: Set Node Options
+      run: echo "NODE_OPTIONS=--max_old_space_size=${{ secrets.RAM }}" >> $GITHUB_ENV
+    
+    - name: Building
+      run: ng build --configuration=production
+     
+    - name: Configure AWS credentials 2
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.WORK_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.WORK_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.WORK_REGION }}
+    
+  # Deploy Qualitek Labs
+    - name: Clean up existing deployment - For Production Only UI Client
+      run: aws s3 rm s3://work-project-testing-123 --recursive
+
+    - name: Upload data
+      run: aws s3 sync dist s3://work-project-testing-123
+      
+    - name: Clean up cache for Work Project
+      run: aws cloudfront create-invalidation --distribution-id E1D5CMBNNR6KJX --paths '/*'    
+        
