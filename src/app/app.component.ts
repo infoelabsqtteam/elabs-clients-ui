@@ -89,19 +89,19 @@ export class AppComponent implements OnInit, OnDestroy {
    async getAppSettingAsync (){
 
     let hostname:any ="";
-    let isProd = this.isProd();
+    // let isProd = this.isProd();
     if(this.storageService.checkPlatForm() == 'mobile'){
       hostname = this.storageService.getClientName();
     }else{
       hostname = this.envService.getHostName('hostname');
     }
     if(hostname == 'localhost'){
-      // let res = await this.awsSecretManagerService.getSecret(isProd,"itclabs.e-labs.ai");    
-      // console.log(res);
-      hostname = this.storageService.getClientCodeEnviorment().serverhost;
-      this.storageService.setHostNameDinamically(hostname+"/rest/")
+      let res = await this.awsSecretManagerService.getSecret("lims-sanskar.e-labs.ai");    
+      console.log(res);
+      // hostname = this.storageService.getClientCodeEnviorment().serverhost;
+      // this.storageService.setHostNameDinamically(hostname+"/rest/");
     }else{
-      await this.awsSecretManagerService.getSecret(isProd,hostname);
+      await this.awsSecretManagerService.getSecret(hostname);
     }
     this.apiCallService.getApplicationAllSettings();
     
