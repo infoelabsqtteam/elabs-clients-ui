@@ -1,15 +1,16 @@
-import { Component, OnInit ,HostListener } from '@angular/core';
+import { Component, OnInit ,HostListener, OnDestroy } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
-import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService, ApiCallService } from '@core/web-core';
+import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService, ApiCallService, AwsSecretManagerService } from '@core/web-core';
+import { environment } from '../environments/environment'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   loadedFeature = 'signin';
   pageName: any;
@@ -33,12 +34,13 @@ export class AppComponent implements OnInit {
     private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
     private authDataShareService: AuthDataShareService,
-    private apiCallService:ApiCallService
-
+    private apiCallService:ApiCallService,
+    private awsSecretManagerService : AwsSecretManagerService
   ) {
+    this.getAppSettingAsync()
     
     //this.localSetting();
-    this.apiCallService.getApplicationAllSettings();
+    // this.apiCallService.getApplicationAllSettings();
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
@@ -77,6 +79,36 @@ export class AppComponent implements OnInit {
       }
 
     })
+   }
+  ngOnDestroy(): void {
+    this.unsubscribe(this.themeSettingSubscription);
+    this.unsubscribe(this.applicationSettingSubscription);
+    this.unsubscribe(this.settingModelRestSubscription);
+  }
+
+   async getAppSettingAsync (){
+
+    let hostname:any ="";
+    let isProd = this.isProd();
+    if(this.storageService.checkPlatForm() == 'mobile'){
+      hostname = this.storageService.getClientName();
+    }else{
+      hostname = this.envService.getHostName('hostname');
+    }
+    if(hostname == 'localhost'){
+      // let res = await this.awsSecretManagerService.getSecret(isProd,"itclabs.e-labs.ai");    
+      // console.log(res);
+      hostname = this.storageService.getClientCodeEnviorment().serverhost;
+      this.storageService.setHostNameDinamically(hostname+"/rest/")
+    }else{
+      await this.awsSecretManagerService.getSecret(isProd,hostname);
+    }
+    this.apiCallService.getApplicationAllSettings();
+    
+   }
+
+   isProd(){
+    return environment.production;
    }
 
   ngOnInit() {     
@@ -140,4 +172,10 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.storageService.getPageTitle());
     this.themeName = this.storageService.getPageThmem();
   }
+
+  unsubscribe(variable){
+    if(variable){
+        variable.unsubscribe();
+    }
+  }   
 }
