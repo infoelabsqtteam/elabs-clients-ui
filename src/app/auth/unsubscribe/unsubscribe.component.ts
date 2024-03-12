@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { Validators, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute} from '@angular/router';
 import { AuthService, EnvService, StorageService} from '@core/web-core';
 
@@ -17,7 +17,7 @@ import { AuthService, EnvService, StorageService} from '@core/web-core';
 export class UnsubscribeComponent implements OnInit {
 
   username: string;
-  verifyForm: FormGroup;
+  verifyForm: UntypedFormGroup;
   emailVarify:boolean = true;
   
   constructor(
@@ -59,9 +59,9 @@ export class UnsubscribeComponent implements OnInit {
   }
   
   private initForm(){
-    this.verifyForm = new FormGroup({
-      'username' : new FormControl(this.username, Validators.required),
-      'verifycode':new FormControl('',Validators.required)
+    this.verifyForm = new UntypedFormGroup({
+      'username' : new UntypedFormControl(this.username, Validators.required),
+      'verifycode':new UntypedFormControl('',Validators.required)
     });
     //console.log(this.verifyForm);
   }

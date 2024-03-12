@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import {DataShareService, EnvService, StorageService } from '@core/web-core';
 
@@ -18,7 +19,8 @@ export class FooterComponent implements OnInit {
   constructor(
     private dataShareService:DataShareService,
     private envService:EnvService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private router: Router
   ) {
     this.pageloded();
     this.setpage(this.dataShareService.getCurrentPage());
@@ -65,5 +67,12 @@ export class FooterComponent implements OnInit {
   pageloded(){
     this.template = this.storageService.getTemplateName();
     this.title = this.storageService.getPageTitle();
+  }
+  navigateStatic(routerLink:string) {
+    if(routerLink){
+        this.router.navigate(['/'+routerLink]);
+    }else{
+        console.log(routerLink+' router is not a valid Link or undefined')
+    }
   }
 }

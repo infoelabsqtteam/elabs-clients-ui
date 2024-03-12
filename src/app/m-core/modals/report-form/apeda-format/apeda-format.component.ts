@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-apeda-format',
@@ -8,7 +8,7 @@ import { FormGroup, FormControl} from '@angular/forms'
 })
 export class ApedaFormatComponent implements OnInit {
 
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   listOfData:any;
   editable:boolean = false;
   update:boolean = true;
@@ -76,29 +76,29 @@ export class ApedaFormatComponent implements OnInit {
   }
 
   onInitialise(){
-    this.reportForm = new FormGroup({
-      'issued_to': new FormControl(this.listOfData.issued_to),
-      'received_on': new FormControl(this.listOfData.received_on),
-      'commenced_on': new FormControl(this.listOfData.commenced_on),
-      'complete_date': new FormControl(this.listOfData.complete_date),
-      'report_date': new FormControl(this.listOfData.report_date),
-      'reg_no': new FormControl(this.listOfData.reg_no),
-      'description': new FormControl(this.listOfData.description),
-      'appearance': new FormControl(this.listOfData.appearance),
-      'quantity': new FormControl(this.listOfData.quantity),
-      'condition': new FormControl(this.listOfData.condition),
-      'block': new FormControl(this.listOfData.block),
-      'village': new FormControl(this.listOfData.village),
-      'name_of_group': new FormControl(this.listOfData.name_of_group),
-      'district': new FormControl(this.listOfData.district),
-      'farmer_name': new FormControl(this.listOfData.farmer_name),
-      'father_name': new FormControl(this.listOfData.father_name),
-      'aadhar': new FormControl(this.listOfData.aadhar),
-      'contact_no': new FormControl(this.listOfData.contact_no),
-      'khasara_no': new FormControl(this.listOfData.khasara_no),
-      'customer_ref': new FormControl(this.listOfData.customer_ref),
-      'discipline': new FormControl(this.listOfData.discipline),
-      'group': new FormControl(this.listOfData.group),
+    this.reportForm = new UntypedFormGroup({
+      'issued_to': new UntypedFormControl(this.listOfData.issued_to),
+      'received_on': new UntypedFormControl(this.listOfData.received_on),
+      'commenced_on': new UntypedFormControl(this.listOfData.commenced_on),
+      'complete_date': new UntypedFormControl(this.listOfData.complete_date),
+      'report_date': new UntypedFormControl(this.listOfData.report_date),
+      'reg_no': new UntypedFormControl(this.listOfData.reg_no),
+      'description': new UntypedFormControl(this.listOfData.description),
+      'appearance': new UntypedFormControl(this.listOfData.appearance),
+      'quantity': new UntypedFormControl(this.listOfData.quantity),
+      'condition': new UntypedFormControl(this.listOfData.condition),
+      'block': new UntypedFormControl(this.listOfData.block),
+      'village': new UntypedFormControl(this.listOfData.village),
+      'name_of_group': new UntypedFormControl(this.listOfData.name_of_group),
+      'district': new UntypedFormControl(this.listOfData.district),
+      'farmer_name': new UntypedFormControl(this.listOfData.farmer_name),
+      'father_name': new UntypedFormControl(this.listOfData.father_name),
+      'aadhar': new UntypedFormControl(this.listOfData.aadhar),
+      'contact_no': new UntypedFormControl(this.listOfData.contact_no),
+      'khasara_no': new UntypedFormControl(this.listOfData.khasara_no),
+      'customer_ref': new UntypedFormControl(this.listOfData.customer_ref),
+      'discipline': new UntypedFormControl(this.listOfData.discipline),
+      'group': new UntypedFormControl(this.listOfData.group),
       
       
       

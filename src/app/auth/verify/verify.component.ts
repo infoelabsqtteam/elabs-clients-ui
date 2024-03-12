@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { Validators, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute} from '@angular/router';
 import { AuthDataShareService, AuthService, NotificationService } from '@core/web-core';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 export class VerifyComponent implements OnInit {
   loading = false;
   username: string;
-  verifyForm: FormGroup;
+  verifyForm: UntypedFormGroup;
   emailVarify:boolean = true;
   verifySubscriptioin: Subscription;
   constructor(
@@ -64,9 +64,9 @@ export class VerifyComponent implements OnInit {
   }
   
   private initForm(){
-    this.verifyForm = new FormGroup({
-      'username' : new FormControl(this.username, Validators.required),
-      'verifycode':new FormControl('',Validators.required)
+    this.verifyForm = new UntypedFormGroup({
+      'username' : new UntypedFormControl(this.username, Validators.required),
+      'verifycode':new UntypedFormControl('',Validators.required)
     });
     //console.log(this.verifyForm);
   }
