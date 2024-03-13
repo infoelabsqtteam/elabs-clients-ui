@@ -1,16 +1,15 @@
-import { Component, OnInit ,HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
 import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService, ApiCallService, AwsSecretManagerService } from '@core/web-core';
-import { environment } from '../environments/environment'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
   loadedFeature = 'signin';
   pageName: any;
@@ -80,11 +79,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     })
    }
-  ngOnDestroy(): void {
-    this.unsubscribe(this.themeSettingSubscription);
-    this.unsubscribe(this.applicationSettingSubscription);
-    this.unsubscribe(this.settingModelRestSubscription);
-  }
 
    async getAppSettingAsync (){
 
@@ -165,10 +159,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(this.storageService.getPageTitle());
     this.themeName = this.storageService.getPageThmem();
   }
-
-  unsubscribe(variable){
-    if(variable){
-        variable.unsubscribe();
-    }
-  }   
+  
 }
