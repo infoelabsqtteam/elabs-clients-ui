@@ -63,6 +63,7 @@ export class FileUploadModalComponent implements OnInit {
   }
 
   onFileDropped($event, fileDrop: boolean, selectedFolder: any) {
+    this.fileDrop = fileDrop;
     if(!this.isMultiple){
       if(this.files.length > 0){
         this.notificationService.notify('bg-danger', "Can't add multiple files");
@@ -74,13 +75,16 @@ export class FileUploadModalComponent implements OnInit {
         }
       }
     }else{
-      this.fileDrop = fileDrop;
       for (const item of $event) {
         item.progress = 0;
         this.files.push(item);
       }
     }
-    if(this.files.length > 0)this.prepareFilesList(this.files);
+    if(this.isMultiple){
+      this.prepareFilesList($event);
+    }else{
+      this.prepareFilesList([$event[0]]);
+    }
   }
 	/**
 	 * handle file from browsing
@@ -200,11 +204,16 @@ export class FileUploadModalComponent implements OnInit {
 
   setFilesOnChange(event: any) {
     const files = event.target.files;
+    if(!this.isMultiple && this.uploadData.length > 0){
+      this.notificationService.notify("bg-danger","Can't add more then 1 file");
+      return;
+    }
     for (const item of files) {
       item.progress = 0;
       this.files.push(item);
     }
     this.prepareFilesList(files);
+    
   }
 
 
@@ -320,6 +329,8 @@ export class FileUploadModalComponent implements OnInit {
     this.docUploadModal.hide();
     this.fileSize = 0;
     this.fileSizeHints = '';
+    this.files = [];
+    this.isMultiple = true;
     //this.fileUploadResponce.emit(this.uploadData);
   }
 
