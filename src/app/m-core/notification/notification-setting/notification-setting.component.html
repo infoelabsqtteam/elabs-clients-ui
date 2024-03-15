@@ -15,18 +15,18 @@
               <mat-list>
                 <mat-list-item  *ngIf="menu.submenu==null" (click)="openDialog(menu,module)" class="list">
                     <span style="font-size: 15px;font-weight: 400;">{{ menu.name | titlecase }}</span>
-                    <span class="ml-auto"><i class="fa-solid fa-arrow-right" style="color: gray !important;"></i></span>
+                    <span class="ml-auto"><i class="fa-solid fa-arrow-right gray"></i></span>
                 </mat-list-item>
              </mat-list>    
                  <ng-container *ngIf="menu.submenu!=null">
-                        <mat-expansion-panel >
+                        <mat-expansion-panel class="NotificationsubMenu">
                           <mat-expansion-panel-header class="px-3 list">
                             {{ menu.name | titlecase }}
                           </mat-expansion-panel-header>
                           <mat-list>
                             <mat-list-item *ngFor="let submenu of menu.submenu" (click)="openDialog(submenu,module)" class="list">
                                 <span style="font-size: 15px;font-weight: 400;">{{ submenu.name }}</span>
-                                <span class="ml-auto"><i class="fa-solid fa-arrow-right" style="color: gray;"></i></span>
+                                <span class="ml-auto"><i class="fa-solid fa-arrow-right gray" ></i></span>
                             </mat-list-item>
                            </mat-list>
                         </mat-expansion-panel>

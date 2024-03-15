@@ -725,15 +725,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.apiCallService.getTabsCountPyload(tabs);    
   }
   setSaveResponce(saveFromDataRsponce){
-    if (saveFromDataRsponce.success != '' && this.updateGridData) {
+    if (saveFromDataRsponce &&saveFromDataRsponce.success != '' && this.updateGridData) {
       if (saveFromDataRsponce.success == 'success') {
         this.updateGridData = false;
         this.notificationService.notify("bg-success", " Grid Data Update successfull !!!");
         this.getPage(this.pageNumber);
+        this.apiCallService.getUserNotification(1);
       }
       this.apiService.ResetSaveResponce();
     }
-    if (saveFromDataRsponce.error && saveFromDataRsponce.error != '' && this.updateGridData) {
+    if (saveFromDataRsponce && saveFromDataRsponce.error && saveFromDataRsponce.error != '' && this.updateGridData) {
       this.notificationService.notify("bg-danger", saveFromDataRsponce.error);
       this.updateGridData = false;
       this.apiService.ResetSaveResponce();
@@ -851,7 +852,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
   editedRowData(id,formName) {
-    if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
+        if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
       this.selectedRowIndex = id;      
       if(formName == 'UPDATE'){   
         if(this.checkUpdatePermission(this.elements[id])){
@@ -1070,9 +1071,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         break;
       case "redirect":
         if (value && value != '') {
-          if(object && object.url){
-            this.router.navigate([object.url])
-         }
+          this.readNotification(object);
         };
         break;
       case "file":
@@ -1100,8 +1099,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   }
 
-  readNotification(data,type?:any){
+  readNotification(data){
     if (data.notificationStatus === 'UNREAD') {
+        this.updateGridData = true;
         data.notificationStatus = 'READ';
         const payload = {
             curTemp: 'user_notification_master',
@@ -1109,6 +1109,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         };
         this.apiService.SaveFormData(payload);
         this.saveCallSubscribe();
+    }
+    if(data && data.url){
+      this.router.navigate([data.url])
     }
   }
 

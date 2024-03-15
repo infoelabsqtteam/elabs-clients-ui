@@ -22,12 +22,11 @@
   
   <button mat-button [matMenuTriggerFor]="notify" #notifyMenuTrigger="matMenuTrigger" (click)="getNotification()"><mat-icon [matBadge]="noOfNotification==0?'':noOfNotification" matBadgeColor="warn" matBadgeSize="small">notifications</mat-icon></button>
   <mat-menu #notify="matMenu" xPosition="before" class="notificationMenu" (click)="$event.stopPropagation()">
-          <!-- <app-notification-list [menuView]="iconOpen" [notifyMenuTrigger]="notifyMenuTrigger"></app-notification-list>  -->
         <div class="bg-white rounded box-shadow notificationdetailsMenu">
           <div class="cursor-pointer py-2 notification-item text-center notificationMenuHeader showMoreBtn" >
             Notifications
            </div>
-           <ng-template *ngIf="notificationlist && notificationlist.length>0">
+           <div *ngIf="notificationlist && notificationlist.length>0">
              <div class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" *ngFor="let data of notificationlist ; let i = index" (click)="readNotification(data)">
               <div class="d-flex justify-content-between align-items-center">
                 <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1" style="width: 10px;height: 10px;"></div>
@@ -40,21 +39,17 @@
                 </div>
                 <div class="d-flex justify-content-between">
                   <span>{{data.message | titlecase}}</span>
-                  <span  ></span>
+                  <span style="text-wrap: nowrap" [innerHtml]="getDay(data)"></span>
                 </div>
               </div>
             </div>
-           
-          </ng-template>
+          </div>
+          <div *ngIf="notificationlist && notificationlist.length==0" class="py-2 notification-item text-center showMoreBtn">
+            No Unread Notifications!!
+          </div>
           <div *ngIf="notificationlist" class="cursor-pointer py-2 notification-item text-center showMoreBtn" (click)="showMore()">
             {{notificationlist.length>0 ? "Show More":"All Notification"}}
-         </div>
-          <!-- <ng-template *ngIf="notificationlist && notificationlist.length==0">
-            <div class="cursor-pointer py-2 notification-item text-center showMoreBtn" (click)="showMore()">
-              All Notification
-            </div>
-          </ng-template> -->
-        
+          </div>
       </div>
         </mat-menu>
   <button class="role-button" mat-button [matMenuTriggerFor]="role" [title]="activeRole">{{activeRole}}</button>

@@ -5,7 +5,6 @@ import { StorageService,DataShareService,ApiCallService,NotificationService,Core
 import {
   MatDialog
 } from '@angular/material/dialog';
-// import {MatButtonModule} from '@angular/material/button';
 import { NotificationModelComponent } from '../notification-model/notification-model.component';
 import { Subscription } from 'rxjs';
 
@@ -17,7 +16,6 @@ import { Subscription } from 'rxjs';
 export class NotificationSettingComponent implements OnInit,OnDestroy {
 
   AllModuleList:any=[];
-  // nofifyIcon='fa-bell-slash'
   userNotificationSubsription:Subscription;
   saveResponceSubscription:Subscription;
   notificationData:any;
@@ -44,15 +42,13 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
         }
       }   
   })
-
   }
 
   ngOnInit(): void {
   }
   ngOnDestroy(): void {
-    if(this.userNotificationSubsription){
-      this.userNotificationSubsription.unsubscribe();
-    }
+    this.unsubscribe(this.userNotificationSubsription);
+    this.unsubscribe(this.saveResponceSubscription);
   }
 
   openDialog(menu:any,module:any) {
@@ -84,7 +80,6 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
 
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
-      console.log(responce)
       if (responce) {
         if (responce.success && responce.success != '') {
             if (responce.success == 'success') {
@@ -103,70 +98,6 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
     }
   }
 
-  getMenuDetails(module:any){
-    let obj={};
-    if(module){
-     module.forEach((menu:any)=>{
-      if(menu && menu.templateTabs){
-        let menuName=menu.keyName;
-        let menuDetails={
-          reference:{
-            name:menu.name,
-            _id:menu._id
-          },
-          templateTabs:this.getTempDetails(menu.templateTabs)
-        }
-        obj[menuName]=menuDetails;
-      }
-      else if(menu.submenu){
-        let menuName=menu.name;
-        let menuDetails={
-          reference:{
-            name:menu.name,
-            _id:menu._id
-          },
-          submenus:this.getMenuDetails(menu.submenu)
-        }
-        obj[menuName]=menuDetails;
-      }
-    })
-  }
-    return obj;
-
-  }
-
-  getTempDetails(tabs:any){
-    let obj={};
-    tabs.forEach((tab:any)=>{
-      if(tab){
-        let tabName=tab.keyName;
-        let tabDetails={
-          reference:{
-            name:tab.name,
-            _id:tab._id
-          },
-          activeAlerts:this.getActiveAlerts(tab)
-        }
-        obj[tabName]=tabDetails;
-      }
-    })
-    return obj;
-  }
-
-  getActiveAlerts(tab:any){
-    let arr=[];
-    if(tab?.email){
-      arr.push('EMAIL');
-    }
-    if(tab?.whatsapp){
-      arr.push('WHATSAPP');
-    }
-    if(tab?.sms){
-      arr.push('SMS');
-    }
-    return arr;
-  }
-
   hasMenu(item) {
     if(item.menu_list != undefined && item.menu_list != null){
       if(item.menu_list.length > 0){
@@ -178,64 +109,11 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
       return false;
     }
   }
-  // hasSubMenu(item){
-  //   if(item.submenu != undefined && item.submenu != null){
-  //     if(item.submenu.length > 0){
-  //       return true;
-  //     }else{
-  //       return false;
-  //     }
-  //   }else{
-  //     return false;
-  //   }
-  // }
-
-  notificationFunction(e:any,i){
-    e.stopPropagation();
-    this.AllModuleList[i].notify=this.AllModuleList[i].notify=='notifications_off'? 'notifications_active' : 'notifications_off'
-  
-    // this.nofifyIcon=this.nofifyIcon=='fa-bell-slash'? 'fa-bell' : 'fa-bell-slash'
-  }
 
   menuNotification(e:any,m,item,ind?){
     item.notification=e.checked;
     this.AllModuleList[ind].notification=item.notification;
     // this.setOnAll(item,item.notification)
   }
-
-  setOnAll(obj,value){
-    if(obj.menu_list){
-      obj.menu_list.forEach((menu:any)=>{
-        // menu.notification=value;
-        if(menu.templateTabs){
-          this.setEmailOn(menu.templateTabs,value)
-        }
-        if(menu.submenu){
-          menu.submenu.forEach((sub:any)=>{
-            if(sub.templateTabs){
-              this.setEmailOn(sub.templateTabs,value)
-            }
-          })
-        }
-      })
-    }else if(obj.templateTabs){
-      this.setEmailOn(obj.templateTabs,value)
-    }
-  }
-
-  setEmailOn(arr,value){
-      arr.forEach((ele,i)=>{
-        ele.email=value;
-      })
-  }
-
-  // checkfun(tabs,type){
-  //   tabs[type] = !tabs.type;
-  // }
-
-  // saveNotification(data){
-  //   this.createPayload();
-  //   console.log(data);
-  // }
 }
 

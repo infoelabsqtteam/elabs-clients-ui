@@ -3,7 +3,7 @@ import { Component, Inject, Input, OnInit,OnDestroy, ViewChild, ElementRef } fro
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { AuthService,MenuOrModuleCommonService, StorageService ,ApiCallService,DataShareService} from '@core/web-core';
+import { AuthService,MenuOrModuleCommonService, StorageService,CommonFunctionService ,ApiCallService,ApiService,DataShareService} from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,6 +20,7 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   showsearchmenu = false;
   AllModuleList: any = [];
   userNotificationSubscription:Subscription;
+  saveResponceSubscription:Subscription;
   noOfNotification:any=0;
   notificationlist=[];
   @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
@@ -31,15 +32,20 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private apiCallService:ApiCallService,
     private dataShareService:DataShareService,
-    private router:Router,
+    private apiService:ApiService,
+    private commonFunctionService:CommonFunctionService,
+    private router:Router
   ) { 
     this.pageload();
     this.apiCallService.getUserNotification(1);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
-      console.log(data);
-        if (data && data.data && data.data.length > 0 && data.type && data.type=="Unread") {
+        if (data && data.data && data.data.length > 0) {
             this.notificationlist=data.data.slice(0,5);
             this.noOfNotification=data.data.filter((ele)=>ele.notificationStatus== "UNREAD").length;
+        }
+        else{
+          this.notificationlist=[];
+          this.noOfNotification=0;
         }
     });
   }
@@ -47,9 +53,8 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   ngOnInit() {
   }
   ngOnDestroy(): void {
-    if(this.userNotificationSubscription){
-      this.userNotificationSubscription.unsubscribe();
-    }
+    this.unsubscribe(this.userNotificationSubscription);
+    this.unsubscribe(this.saveResponceSubscription);
   }
   pageload(){
     this.AllModuleList = this.storageService.GetModules();
@@ -123,11 +128,61 @@ export class UserAccountComponent implements OnInit,OnDestroy {
       if(this.notifyMenuTrigger?.menuOpen){
         this.notifyMenuTrigger.closeMenu();
       }
-      this.apiCallService.getUserNotification(1);
-      this.router.navigate(["notification-list"]);
+      this.router.navigate(["browse/DEVLP/notification_settings/user_notification_master"]);  
   }
   readNotification(data:any){
-    // this.notificationComponent.readNotification(data);
+      if (this.notifyMenuTrigger?.menuOpen) {
+         this.notifyMenuTrigger.closeMenu();
+       }
+      if (data.notificationStatus === 'UNREAD') {
+          data.notificationStatus = 'READ';
+          const payload = {
+              curTemp: 'user_notification_master',
+              data: data
+          };
+          this.apiService.SaveFormData(payload);
+          this.saveCallSubscribe();
+      }
+      if(data && data.url){
+        this.router.navigate([data.url])
+      }      
+  }
+
+  saveCallSubscribe(){
+    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
+      this.setSaveResponce(responce);
+    })
+  }
+
+  setSaveResponce(saveFromDataRsponce){
+    if (saveFromDataRsponce && saveFromDataRsponce.success != '') {
+      if (saveFromDataRsponce.success == 'success') {
+        this.apiCallService.getUserNotification(1);
+      }
+    }
+    this.unsubscribe(this.saveResponceSubscription);
+  }
+
+  getDay(data){
+    let createdDate = data.createdDate;
+    if(createdDate){
+      let obj = this.commonFunctionService.dateDiff(createdDate);
+      if(obj && obj['days'] == 0){
+        if(obj['hours'] == 0){
+          return obj['minutes']+" Minutes ago";
+        }else{        
+          return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
+        }      
+      }else{
+        return obj['days'] +" days ago";
+      }
+    }
+  }
+
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
 }

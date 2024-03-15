@@ -6,81 +6,6 @@
 .notifybadge {position:absolute;top:0;right:0;background:red;color:#fff;width:18px;height:18px;border-radius:100%;line-height:18px;font-size:10px;}
 .mat-menu-panel.notificationdrowdown {min-width:230px;}
 
-.notificationdetails{
-    .card{
-        position: relative;
-        // height: 440px;
-    }
-    .mat-tab-group {
-        position: sticky;
-        top: 0;
-        background-color: white; /* Adjust as needed */
-        z-index: 1; /* Ensure the tabs are above the content */
-      }
-      
-      .mat-tab-body-wrapper {
-        overflow-y: auto; 
-        max-height: 63vh; 
-      }
-      
-}
-
-.notificationSetting {
-    .mat-expansion-panel-spacing {margin:0;}
-    small {font-size:90%;}
-    mat-icon {color:#999;font-size:14px;width:auto;height:auto;}
-    .notificationmenu {
-        .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;}
-        .mat-expansion-panel-header {padding:0 20px 0 0;height:40px;border-radius:0;}
-        .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
-        .mat-expansion-panel-body {padding:0 0px 16px;}
-    }
-   .mat-expanded.mat-expansion-panel-spacing {border-radius:0;}
-}
-
-.unread-indicator {
-    width: 10px;
-    height: 10px;
-    background-color: blue;
-    border-radius: 50%;
-  }
-
-.notificationdetails {
-    mat-checkbox {margin:10px;display:block;}
-    .mat-checkbox .mat-checkbox-layout {margin:0;}
-    .table td {padding:2px 10px;}
-    // span {font-size:12px;display:block;color:#999}
-    .mat-tab-label-active {
-        background-color: var(--themecolor) !important;
-    }
-
-    .mat-list-base{
-        background-color:var(--themecolor) !important;
-        font-size: 14px !important;
-        font-weight: 400 !important;
-        font-family: "Roboto Condensed", sans-serif !important;
-        &:hover{
-            background-color: var(--activebg) !important;
-        }
-    }
-    
-      .mat-list-item-content{
-        display: flex;
-        width: 100%;
-        padding: 0px 11px !important;
-        font-size: 14px !important;
-        .div1{width: 5%;}
-        .div2{width: 70%;}
-        .div3{width: 10%;}
-        .div4{width: 5%;}
-        .div5{width: 10%;}
-      }
-    
-}
-.notificationdetails::-webkit-scrollbar {
-    display: none !important; /* Hide the scrollbar in Chrome, Safari, and Opera */
-  }
-
 .gridFilterDropdown {
     .mat-checkbox-inner-container{    
         height: 12px;
@@ -95,193 +20,83 @@
     }
 }
 
-.notificationdetails{
-    min-width: 450px;
-    .mat-tab-label {
-        min-width: 50% !important;
-        height: 48px !important;
-        padding: 0 24px !important;
-    }
-
-  .notification-item{
-    &:hover{
-        background-color: $row-hover-color;
-    }
-    &:nth-of-type(odd) { background-color: #fff;}
-    &:nth-of-type(even) { background-color: #fafafa;}
-  }
-}
-.notificationdetailsMenu{
-    width: 400px;
-    .notificationMenuHeader{
-        background-color: var(--popupHeaderBg);
-    }
-}
 
 .notificationMenu{  max-width: none !important; } 
-.notificationdetailsMenu{width: 400px !important;.mat-tab-label {
-    min-width: 50% !important;
-    height: 36px !important;
-    padding: 12px !important;
-    }
-    .mat-tab-label-active {
-        background-color: var(--themecolor) !important;
-    }
-    .mat-list-base{
-        background-color: var(--themecolor) !important;
-        padding-top: 0 !important;
-        font-size: 14px;
-        font-weight: 400;
-        // height: 36px !important;
-        font-family: "Roboto Condensed", sans-serif;
-        
-    }
-    .mat-list-item-content{
-        display: inline-block !important;
-        font-size: 14px !important;
-        background-color: var(--themecolor) !important;
-        width: 100% !important;
-        &:hover{
-            background-color: var(--activebg) !important;
-        }
-    }
-    .mat-list-item{
-        height: 36px !important;
-    }
+.notificationdetailsMenu{width: 450px !important;
+    .notificationMenuHeader{ background-color: var(--popupHeaderBg);}
+    .mat-tab-label {min-width: 50% !important;height: 36px !important;padding: 12px !important;}
+    .mat-tab-label-active {background-color: var(--themecolor) !important;}
+    .mat-list-base{background-color: var(--themecolor) !important;padding-top: 0 !important;font-size: 14px;font-weight: 400;font-family: "Roboto Condensed", sans-serif;}
+    .mat-list-item-content{display: inline-block !important;font-size: 14px !important;background-color: var(--themecolor) !important;width: 100% !important;
+        &:hover{background-color: var(--activebg) !important;}}
+    .mat-list-item{height: 36px !important;}
+    .showMoreBtn{font-size: 15px;font-weight: 500;}
+    .unread-indicator {width: 10px;height: 10px;background-color: blue;border-radius: 50%;}
  }
+ .notificationSetting {
+    .mat-expansion-panel-spacing {margin:0;}
+    small {font-size:90%;}
+    mat-icon {color:#999;font-size:14px;width:auto;height:auto;}
+    .notificationmenu {
+        .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;}
+        .mat-expansion-panel-header {padding:0 20px 0 0;height:40px;border-radius:0;}
+        .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
+        .mat-expansion-panel-body {padding:0 0px 16px;}
+    }
+   .mat-expanded.mat-expansion-panel-spacing {border-radius:0;}
+}
 
- .showMoreBtn{
-    font-size: 15px;
-    font-weight: 500;
- }
-
-.mat-badge-content { padding-left: 1px !important;}
+.settingmenu{.mat-badge-content { padding-left: 1px !important;}}
 
 .notification-model {
     min-width: 500px;
-
     .btn-group {
-        .select {
-            position: relative;
-
-            .btn-warning {
-                color: #212529;
-                background-color: none;
-                border: none;
-            }
-      
-            input:checked + label {
-                background-color: #cdcedb;
-                
+        .select {position: relative;
+            .btn-warning {color: #212529;background-color: none;border: none;}
+            input:checked + label {background-color: #cdcedb;
                 &:hover,
                 &:focus,
-                &:active {
-                    background-color: #cdcedb;
-                }
-
-                .btnn {
-                    padding: 12px 6px !important;
-                }
+                &:active {background-color: #cdcedb;}
+                .btnn {padding: 12px 6px !important;border-radius: 4px !important;}
             }
-
-            .ng-touched {
-                opacity: 0 !important;
+            .ng-touched {opacity: 0 !important;}
+            input {opacity: 0;position: absolute;width: 40px;height: 30px;
+                &:hover {cursor: pointer;}
+                &[disabled] {cursor: not-allowed !important;}
             }
-
-            input {
-                opacity: 0;
-                position: absolute;
-                width: 40px;
-                height: 30px;
-
-                &:hover {
-                    cursor: pointer;
-                }
-
-                &[disabled] {
-                    cursor: not-allowed !important;
-                }
-            }
-
-            .button_select {
-                margin: 0 10px 10px 0;
-                display: flex;
-                background-color: transparent;
-
+            .button_select {margin: 0 10px 10px 0;display: flex;background-color: transparent;
                 &:hover,
                 &:focus,
-                &:active {
-                    background-color: transparent;
-                }
+                &:active {background-color: transparent;}
             }
         }
     }
-
+    .btnn {padding: 6px 12px !important;border-radius: 4px !important;}
     .header{background-color: var(--popupHeaderBg) !important;padding-block: 7px;position:relative;
-    .closebutton{position: absolute;width: 28px;border-radius: 50%;right: 0px;
-        height: 28px;
-        background: var(--white);
-        color: black !important;
-        font-size: 22px;
-        line-height: 0px;
+        .closebutton{position: absolute;width: 28px;border-radius: 50%;right: 0px;height: 28px;background: var(--white);color: black !important;font-size: 22px;line-height: 0px;
         }}
-
-}
-
-.mat-dialog-container {
-    height: auto !important;
-    padding: 18px !important;
-}
-
-.option {
-    position: relative;
-
-    input {
-        opacity: 0;
-        position: absolute;
-    }
-
-    input:checked + span {
-        background-color: #8da3a5;
-
-        &:hover,
-        &:focus,
-        &:active {
-            background-color: #8da3a5;
+    .option {position: relative;
+        input {opacity: 0;position: absolute;}
+        input:checked + span {background-color: #8da3a5;
+            &:hover,
+            &:focus,
+            &:active {background-color: #8da3a5;}
+        } 
+        .btn-option {margin: 0 10px 10px 0;display: flex;background-color: transparent;
+            &:hover,
+            &:focus,
+            &:active {background-color: transparent;}
         }
-    }
-
-    .btn-option {
-        margin: 0 10px 10px 0;
-        display: flex;
-        background-color: transparent;
-
-        &:hover,
-        &:focus,
-        &:active {
-            background-color: transparent;
-        }
-    }
+    }    
 }
 
-.btnn {
-    padding: 6px 12px !important;
-    border-radius: 4px !important;
-}
-
-.notifyMoreBtn{
-    width: 36px;
-    text-align: center;
-    padding: 10px;
-    border-radius: 50%;
-    &:hover{
-        background-color: var(--popupHeaderBg);
-    }
-}
-
-
-
-
+.mat-dialog-container {height: auto !important;padding: 16px !important;}
+.notification-list {.mat-expansion-panel:not([class*=mat-elevation-z]){box-shadow: none !important;}.gray{color: gray;}
+.mat-expansion-panel-body{padding: 0 24px 5px !important;}
+.mat-expansion-panel-header {height: 48px !important;}
+.mat-list-base{ padding-top: 0 !important;}
+.list{&:hover{cursor: pointer;background: rgba(0,0,0,.04) !important;}}}
+.NotificationsubMenu{.mat-list-base:hover{background:transparent !important;}}
 
 
 
