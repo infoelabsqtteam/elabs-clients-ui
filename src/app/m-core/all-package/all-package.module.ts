@@ -14,6 +14,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { PipesModule } from '../../pipes/pipes.module';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AngJsoneditorModule } from '@maaxgr/ang-jsoneditor';
 
 const packages = [
   CommonModule,
@@ -30,7 +31,8 @@ const packages = [
   CarouselModule,
   // NgxDiff2htmlModule,
   // PerfectScrollbarModule,
-  NgScrollbarModule
+  NgScrollbarModule,
+  AngJsoneditorModule
 ]
 
 @NgModule({
