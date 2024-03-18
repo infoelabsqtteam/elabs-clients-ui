@@ -66,7 +66,7 @@ export class PermissionTreeViewComponent implements OnInit {
     );
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-        
+    
     // Initialize form group.
     // this.searchForm = this.fb.group({
     //   searchText: ['', Validators.required],
@@ -112,7 +112,7 @@ export class PermissionTreeViewComponent implements OnInit {
     })
   }
   setStaticData(staticDatas){
-        if(staticDatas && Object.keys(staticDatas).length > 0 && staticDatas[this.ddnfieldName]) {
+    if(staticDatas && Object.keys(staticDatas).length > 0 && staticDatas[this.ddnfieldName]) {
       Object.keys(staticDatas).forEach(key => {  
         let staticData = {};
         staticData[key] = staticDatas[key]; 

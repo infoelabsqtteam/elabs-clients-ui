@@ -376,6 +376,22 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     } 
     if(routers.snapshot.params["rowId"]){      
       this.rowId = routers.snapshot.params["rowId"];
+    }
+    if(routers.snapshot.params["tabid"]){
+      const tabid = routers.snapshot.params["tabid"]; 
+      let index = tabid.indexOf('?');
+      if(index != -1){
+        let list = tabid.split('?');
+        if(list && list.length > 0){
+          let serialId = list[1];
+          if(serialId.indexOf('=') != -1){
+            let serialList = serialId.split('=');
+            if(serialList && serialList.length > 0){
+              this.rowId = serialList[1];
+            }            
+          }
+        }
+      }
     } 
     this.routers.queryParams.subscribe(params => {
       this.queryParams = params;
@@ -530,7 +546,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           let keys = Object.keys(this.queryParams); 
           index = this.commonFunctionService.getIndexInArrayById(this.elements,this.queryParams,keys);
         }
-        if(index != -1){
+        if(index != -1 && gridData.data.length==1){
           this.editedRowData(index,"UPDATE");
         }
       } else {
@@ -540,7 +556,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         this.rowId = "";
       }
     }else{
-      this.rowId = "";
+      // this.rowId = "";
     }
   }
   setStaticData(staticData){
@@ -594,8 +610,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(grid.gridColumns == undefined && grid.gridColumns == null){
           this.headElements = [];
         } 
-        if(grid.action_buttons && grid.action_buttons != null){
+        if(grid.action_buttons && grid.action_buttons != null ){
           this.gridButtons = grid.action_buttons;
+        }
+        else{
+          this.gridButtons=[];
         }
         if(grid.details && grid.details != null){
           this.details = grid.details;
@@ -729,8 +748,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       if (saveFromDataRsponce.success == 'success') {
         this.updateGridData = false;
         this.notificationService.notify("bg-success", " Grid Data Update successfull !!!");
-        this.getPage(this.pageNumber);
         this.apiCallService.getUserNotification(1);
+        this.getPage(this.pageNumber);
       }
       this.apiService.ResetSaveResponce();
     }
@@ -739,7 +758,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.updateGridData = false;
       this.apiService.ResetSaveResponce();
     }
-    this.unsubscribe(this.saveResponceSubscription);
+    // this.unsubscribe(this.saveResponceSubscription);
   }
   setFileData(getfileData){
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
@@ -852,7 +871,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
   editedRowData(id,formName) {
-        if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
+    if (this.permissionService.checkPermission(this.currentMenu.name, 'edit')) {
       this.selectedRowIndex = id;      
       if(formName == 'UPDATE'){   
         if(this.checkUpdatePermission(this.elements[id])){
@@ -1034,7 +1053,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   clickOnGridElement(field, i) {
     let value={};
     let object = this.elements[i];
-    console.log(object);
     value['data'] = this.commonFunctionService.getObjectValue(field.field_name, object)
     if(field.gridColumns && field.gridColumns.length > 0){
       value['gridColumns'] = field.gridColumns;

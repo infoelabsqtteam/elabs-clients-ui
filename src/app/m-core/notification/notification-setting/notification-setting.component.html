@@ -1,12 +1,12 @@
-<section class="notificationSetting card my-3 mx-4 ">
-    <div class="card-header d-flex align-items-center" >
+<section class="notificationSetting card my-3 mx-4">
+    <div class="card-header d-flex align-items-center">
         <mat-icon class="mr-2">settings</mat-icon>
         <strong class="h6 m-0 text-muted">Notificatoin Setting</strong>
         <button mat-button color="primary" class="ml-auto mr-2" (click)="saveNotification()">Save</button>
     </div>
     <div class="notification-list">
         <mat-accordion>
-            <mat-expansion-panel *ngFor="let module of AllModuleList;let i=index">
+          <mat-expansion-panel *ngFor="let module of AllModuleList;let i=index">
               <mat-expansion-panel-header>
                 {{ module.name }}
                 <mat-slide-toggle class="ml-auto mr-3"  color="primary" #menukey  value="module.name" (change)="menuNotification($event,menukey,module,i)" (click)="$event.stopPropagation()" [checked]="module.notification"></mat-slide-toggle>
@@ -17,23 +17,23 @@
                     <span style="font-size: 15px;font-weight: 400;">{{ menu.name | titlecase }}</span>
                     <span class="ml-auto"><i class="fa-solid fa-arrow-right gray"></i></span>
                 </mat-list-item>
-             </mat-list>    
-                 <ng-container *ngIf="menu.submenu!=null">
-                        <mat-expansion-panel class="NotificationsubMenu">
-                          <mat-expansion-panel-header class="px-3 list">
-                            {{ menu.name | titlecase }}
-                          </mat-expansion-panel-header>
-                          <mat-list>
-                            <mat-list-item *ngFor="let submenu of menu.submenu" (click)="openDialog(submenu,module)" class="list">
-                                <span style="font-size: 15px;font-weight: 400;">{{ submenu.name }}</span>
-                                <span class="ml-auto"><i class="fa-solid fa-arrow-right gray" ></i></span>
-                            </mat-list-item>
-                           </mat-list>
-                        </mat-expansion-panel>
-                    </ng-container>
+              </mat-list>    
+                  <ng-container *ngIf="menu.submenu!=null">
+                    <mat-expansion-panel class="NotificationsubMenu">
+                      <mat-expansion-panel-header class="px-3 list">
+                        {{ menu.name | titlecase }}
+                      </mat-expansion-panel-header>
+                      <mat-list>
+                        <mat-list-item *ngFor="let submenu of menu.submenu" (click)="openDialog(submenu,module)" class="list">
+                            <span style="font-size: 15px;font-weight: 400;">{{ submenu.name }}</span>
+                            <span class="ml-auto"><i class="fa-solid fa-arrow-right gray" ></i></span>
+                        </mat-list-item>
+                      </mat-list>
+                    </mat-expansion-panel>
+                  </ng-container>
             </ng-container>
-            </mat-expansion-panel>
-          </mat-accordion>       
+          </mat-expansion-panel>
+        </mat-accordion>       
     </div>
 </section>
 <div class="loader-overlay" *ngIf="isPageLoading">

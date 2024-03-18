@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnInit,OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { Component, Inject, Input, OnInit,OnDestroy, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { AuthService,MenuOrModuleCommonService, StorageService,CommonFunctionService ,ApiCallService,ApiService,DataShareService} from '@core/web-core';
@@ -24,7 +24,6 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   noOfNotification:any=0;
   notificationlist=[];
   @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
-  @ViewChild('notify') notify:MatMenu;
   constructor(    
     @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
@@ -98,9 +97,7 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     }
     this.activeRole = role.name;
   }
-  iconOpen = false;
   getNotification(){
-    this.iconOpen = true
     this.apiCallService.getUserNotification(1);
   }
   searchmodel(data:string) {

@@ -1,6 +1,5 @@
 import { Component, OnInit,Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogContent ,MatDialogActions, MatDialogClose} from '@angular/material/dialog';
-import {MatListModule} from '@angular/material/list';
 import { StorageService } from '@core/web-core';
 
 @Component({
@@ -16,10 +15,6 @@ constructor(@Inject(MAT_DIALOG_DATA) public data:any,private storageService:Stor
   if(applicationSetting.notificationTypeCategories){
     this.notificationTypeCategories=applicationSetting.notificationTypeCategories;
   }
-  // this.notificationTypeCategories=["EMAIL","WHATSAPP"];
-  // this.notificationTypeCategories=["SMS"];
-  // console.log(data);
-  // console.log(this.notificationTypeCategories);
 }
 
 ngOnInit(): void {
@@ -53,14 +48,11 @@ checkAllTabAlerts(){
     return flag;
 }
 
-saveNotification(data){
-    console.log(data);
-}
 checkfun(item:any,type,e:any) {
-    if(e.target.checked){
+  if(e.target.checked){
       this.data.module.notification=true;
     }else{
       this.data.module.notification=this.checkAllTabAlerts();
     }
-    }
+  }
 }

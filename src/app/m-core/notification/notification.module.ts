@@ -5,8 +5,6 @@ import { AngularMaterialModule } from '../angular-material-module/angular-materi
 import { AllPackageModule } from '../all-package/all-package.module';
 import { NotificationModelComponent } from './notification-model/notification-model.component';
 import { FormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { GridTableViewComponent } from '../builder/grid-table-view/grid-table-view.component';
 
 let components = [
   NotificationSettingComponent,
@@ -17,8 +15,7 @@ let components = [
     CommonModule,
     AngularMaterialModule,
     AllPackageModule,
-    FormsModule,
-    NgxPaginationModule
+    FormsModule
   ],
   declarations: components,
   exports : components

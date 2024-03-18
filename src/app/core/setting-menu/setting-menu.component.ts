@@ -138,7 +138,6 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
                 }
             }     
         })
-
         
 
 
@@ -246,7 +245,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         if (saveFromDataRsponce) {
             if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
                 if (saveFromDataRsponce.success == 'success') {
-                    // this.apiCallService.getUserNotification(1);
+                    this.apiCallService.getUserNotification(1);
                 }
             }
         }
@@ -467,8 +466,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
                 'curTemp' : 'user_notification',
                 'data' : notification
             }
-            // this.apiService.SaveFormData(payload);
-            // this.saveCallSubscribe();
+            this.apiService.SaveFormData(payload);
+            this.saveCallSubscribe();
         }
         
     }

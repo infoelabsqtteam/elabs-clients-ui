@@ -1,7 +1,5 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import { StorageService,DataShareService,ApiCallService,NotificationService,CoreFunctionService ,ModelService,CommonFunctionService,ApiService} from '@core/web-core';
-// import {MatButtonToggleModule} from '@angular/material/button-toggle';
-// import {MatListModule} from '@angular/material/list';
 import {
   MatDialog
 } from '@angular/material/dialog';
@@ -11,43 +9,59 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-notification-setting',
   templateUrl: './notification-setting.component.html',
-  styleUrls: ['./notification-setting_styles.css'],
+  styles: [
+  ]
 })
 export class NotificationSettingComponent implements OnInit,OnDestroy {
 
   AllModuleList:any=[];
-  userNotificationSubsription:Subscription;
+  userNotificationSettingSubsription:Subscription;
   saveResponceSubscription:Subscription;
-  notificationData:any;
-  notificationSetting:any={}
-  currentData:any="";
   isPageLoading=false;
   constructor(
     private storageService:StorageService,
     private dataShareService:DataShareService,
-    private modalService: ModelService,
     private commonFunctionService: CommonFunctionService,
     private apiService: ApiService,
-    private apiCallService: ApiCallService,
-    private coreFunctionService: CoreFunctionService,
     private notificationService: NotificationService,
     public dialog: MatDialog
   )
   { 
-    this.userNotificationSubsription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
+    this.userNotificationSettingSubsription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
       if(res){
-        this.notificationSetting =this.notificationService.getModulesFromNotificationObject(res);
-        if(this.notificationSetting.modules){
-          this.AllModuleList=this.notificationSetting.modules;
-        }
+        this.AllModuleList =this.notificationService.getNotificationSettingModules(res);
       }   
   })
   }
 
   ngOnInit(): void {
   }
+
+
+  hasMenu(item) {
+    if(item.menu_list != undefined && item.menu_list != null){
+      if(item.menu_list.length > 0){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
+  hasSubMenu(item){
+    if(item.submenu != undefined && item.submenu != null){
+      if(item.submenu.length > 0){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
   ngOnDestroy(): void {
-    this.unsubscribe(this.userNotificationSubsription);
+    this.unsubscribe(this.userNotificationSettingSubsription);
     this.unsubscribe(this.saveResponceSubscription);
   }
 
@@ -95,18 +109,6 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
   unsubscribe(variable){
     if(variable){
       variable.unsubscribe();
-    }
-  }
-
-  hasMenu(item) {
-    if(item.menu_list != undefined && item.menu_list != null){
-      if(item.menu_list.length > 0){
-        return true;
-      }else{
-        return false;
-      }
-    }else{
-      return false;
     }
   }
 

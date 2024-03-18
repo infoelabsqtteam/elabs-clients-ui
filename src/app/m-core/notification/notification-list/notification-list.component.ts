@@ -20,7 +20,7 @@ export class NotificationListComponent implements OnInit {
   itemNumOfGrid = Common.ITEM_NUM_OF_GRID;
   total:number;
   field:any;
-  
+
   constructor(
     private storageService:StorageService,
     private dataShareService:DataShareService,
@@ -35,8 +35,8 @@ export class NotificationListComponent implements OnInit {
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
         if (data && data.data && data.data.length > 0) {
           this.setUserNotification(data.data);
-              this.total = data.data_size;
-                    }else{
+          this.total = data.data_size;
+      }else{
           this.notificationlist = [];
           this.total = 0;
         }
@@ -63,10 +63,10 @@ export class NotificationListComponent implements OnInit {
       this.userNotificationSubscription.unsubscribe();
     }
   }
-    setUserNotification(data){
+  setUserNotification(data){
       this.notificationlist = this.setKeyValueInObjectList(data,'selected',false);
   }
-    setKeyValueInObjectList(list,key,value){
+  setKeyValueInObjectList(list,key,value){
     let newList = [];
     list.forEach(element => {
       let obj = JSON.parse(JSON.stringify(element));
@@ -78,17 +78,17 @@ export class NotificationListComponent implements OnInit {
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
-            if (saveFromDataRsponce.success == 'success') {
-                              this.apiCallService.getUserNotification(this.pageNumber);
-                          }
+          if (saveFromDataRsponce.success == 'success') {
+            this.apiCallService.getUserNotification(this.pageNumber);
+        }
         }
     }
     this.unsubscribe(this.saveResponceSubscription);
 }
   getUserNotification(pageNo){
-        this.pageNumber = pageNo;
-          this.apiCallService.getUserNotification(pageNo);
-      }
+    this.pageNumber = pageNo;
+    this.apiCallService.getUserNotification(pageNo);
+  }
   isIndeterminate() {
     let check = 0;
     if (this.notificationlist.length > 0) {
@@ -190,7 +190,7 @@ export class NotificationListComponent implements OnInit {
   
   readNotification(index){
     let notification = JSON.parse(JSON.stringify(this.notificationlist[index]));
-        //let rout = "notification/5f8a7df93fead0865fab7356/5f8e8c63efa14277b0ec62e8/605e10135234aa12be92ec4b/5fa51e62eb4a3c2940eb9d1b/default/62e22131b74b6a45e713d14a";
+    //let rout = "notification/5f8a7df93fead0865fab7356/5f8e8c63efa14277b0ec62e8/605e10135234aa12be92ec4b/5fa51e62eb4a3c2940eb9d1b/default/62e22131b74b6a45e713d14a";
     let url = notification.url;
     let rout = "notification/"+url;
     let list = rout.split("/");
@@ -200,40 +200,39 @@ export class NotificationListComponent implements OnInit {
     let moduleIndex = this.menuOrModuleCommounService.getModuleIndexById(moduleId);
     //this.dataShareService.setModuleIndex(moduleIndex);
     if(moduleIndex != undefined){
-    let moduleList = this.storageService.GetModules();
-    let module = moduleList[moduleIndex];
-    let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
-    let menu = {
-    "name" : menuName
-    }
+      let moduleList = this.storageService.GetModules();
+      let module = moduleList[moduleIndex];
+      let menuName = this.menuOrModuleCommounService.getMenuNameById(module,menuId,submenuId);
+      let menu = {
+        "name" : menuName
+      }
       this.storageService.SetActiveMenu(menu);
-    this.router.navigate([rout]); 
+      this.router.navigate([rout]); 
     }
     
     if(notification.notificationStatus == 'UNREAD'){
         notification['notificationStatus'] = 'READ';
-    const payload = {
-    'curTemp' : 'user_notification',
+        const payload = {
+          'curTemp' : 'user_notification',
           'data' : notification
       }
       this.apiService.SaveFormData(payload);
-    this.saveCallSubscribe();
+      this.saveCallSubscribe();
     }    
   }
   getDay(index){
     let notification = this.notificationlist[index];
     let createdDate = notification.createdDate;
-      let obj = this.CommonFunctionService.dateDiff(createdDate);
-      if(obj && obj['days'] == 0){
-        if(obj['hours'] == 0){
-          return obj['minutes']+" Minutes ago";
-        }else{        
-          return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
-        }      
-      }else{
-        return obj['days'] +" days ago";
+    let obj = this.CommonFunctionService.dateDiff(createdDate);
+    if(obj && obj['days'] == 0){
+      if(obj['hours'] == 0){
+        return obj['minutes']+" Minutes ago";
+      }else{        
+        return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
+      }      
+    }else{
+      return obj['days'] +" days ago";
       }
     }
     
-
 }

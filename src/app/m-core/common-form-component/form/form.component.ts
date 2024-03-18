@@ -817,7 +817,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }
   }
   updateRunningData(data:any){
-        if (this.editedRowIndex >= 0) {
+    if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
       if(this.elements.length > 0){
         if(data && data.data){
