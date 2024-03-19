@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
-import { StorageService,DataShareService,ApiCallService,NotificationService,CoreFunctionService ,ModelService,CommonFunctionService,ApiService} from '@core/web-core';
+import { StorageService,DataShareService,ApiCallService,NotificationService,CoreFunctionService ,ModelService,CommonFunctionService,ApiService,MenuOrModuleCommonService} from '@core/web-core';
 import {
   MatDialog
 } from '@angular/material/dialog';
@@ -24,12 +24,13 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
     private commonFunctionService: CommonFunctionService,
     private apiService: ApiService,
     private notificationService: NotificationService,
+    private menuOrModuleCommonService: MenuOrModuleCommonService,
     public dialog: MatDialog
   )
   { 
     this.userNotificationSettingSubsription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
       if(res){
-        this.AllModuleList =this.notificationService.getNotificationSettingModules(res);
+        this.AllModuleList =this.menuOrModuleCommonService.getModulesFromObject(res);
       }   
   })
   }
