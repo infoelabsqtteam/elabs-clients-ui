@@ -853,7 +853,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         if(this.rightsidenav.opened){
             this.rightsidenav.toggle();
         }
-        this.router.navigate(["browse/DEVLP/notification_settings/user_notification_master"]);  
+        this.router.navigate(["browse/NOTIFY/notification_settings/user_notification_master"]);  
     }
 
 }

@@ -45,6 +45,7 @@
 //  notification style classes
 .notificationMenu{  max-width: none !important; } 
 .notificationdetailsMenu{width: 450px !important;
+    .notification-item{&:hover{background-color: var(--themecolor);}}
     .notificationMenuHeader{ background-color: var(--popupHeaderBg);}
     .mat-tab-label {min-width: 50% !important;height: 36px !important;padding: 12px !important;}
     .mat-tab-label-active {background-color: var(--themecolor) !important;}
@@ -109,7 +110,7 @@
             &:focus,
             &:active {background-color: transparent;}
         }
-    }    
+    }  
 }
 
 .mat-dialog-container {height: auto !important;padding: 16px !important;}

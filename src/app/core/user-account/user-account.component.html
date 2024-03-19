@@ -19,7 +19,6 @@
     </div>
   </mat-menu>
   <button mat-icon-button class="headsearchicon" [matMenuTriggerFor]="menu"><mat-icon>search</mat-icon></button>
-  
   <button mat-button [matMenuTriggerFor]="notify" #notifyMenuTrigger="matMenuTrigger" (click)="getNotification()"><mat-icon [matBadge]="noOfNotification==0?'':noOfNotification" matBadgeColor="warn" matBadgeSize="small">notifications</mat-icon></button>
   <button class="role-button" mat-button [matMenuTriggerFor]="role" [title]="activeRole">{{activeRole}}</button>
   <mat-menu #role="matMenu" xPosition="before">
@@ -48,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="notificationlist && notificationlist.length==0" class="py-2 notification-item text-center showMoreBtn">
+    <div *ngIf="notificationlist && notificationlist.length==0" class="py-2 text-center showMoreBtn">
       No Unread Notifications!!
     </div>
     <div *ngIf="notificationlist" class="cursor-pointer py-2 notification-item text-center showMoreBtn" (click)="showMore()">

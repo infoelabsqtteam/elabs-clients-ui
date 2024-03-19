@@ -125,7 +125,7 @@ export class UserAccountComponent implements OnInit,OnDestroy {
       if(this.notifyMenuTrigger?.menuOpen){
         this.notifyMenuTrigger.closeMenu();
       }
-      this.router.navigate(["browse/DEVLP/notification_settings/user_notification_master"]);  
+      this.router.navigate(["browse/NOTIFY/notification_settings/user_notification_master"]);  
   }
   readNotification(data:any){
       if (this.notifyMenuTrigger?.menuOpen) {

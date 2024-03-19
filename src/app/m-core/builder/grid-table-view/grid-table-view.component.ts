@@ -758,7 +758,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.updateGridData = false;
       this.apiService.ResetSaveResponce();
     }
-    // this.unsubscribe(this.saveResponceSubscription);
+    this.unsubscribe(this.saveResponceSubscription);
   }
   setFileData(getfileData){
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {

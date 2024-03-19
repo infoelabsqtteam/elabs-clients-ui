@@ -218,7 +218,7 @@ table,table td{
 .firstCol{left: 0;}
 .editedColumneIcon{position: absolute;right: 0;top: 5px;cursor: pointer;z-index: 1;}
 
-td{.copyicon {position: absolute;right: 0;cursor: pointer;margin-inline: 5px;border-radius: 100%;box-shadow: none;vertical-align: middle;padding: 0;font-size: 13px;text-align: center;opacity: 0;;transition: opacity 0.5s ;transform: translateY(-50%);top:50%;}
+td{.copyicon {position: absolute;right: 0;cursor: pointer;margin-inline: 5px;border-radius: 100%;box-shadow: none;vertical-align: middle;padding: 0;font-size: 13px;text-align: center;opacity: 0;;transition: opacity 0.5s ;transform: translateY(-50%);top:50%}
      &:hover .copyicon { opacity: 1;}	
 }
 
