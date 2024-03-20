@@ -34,9 +34,8 @@ export class AppComponent implements OnInit {
     private envService: EnvService,
     private authDataShareService: AuthDataShareService,
     private apiCallService:ApiCallService,
-    private awsSecretManagerService : AwsSecretManagerService
   ) {
-    this.getAppSettingAsync()
+    this.envService.getAppSettingAsync();
     
     //this.localSetting();
     // this.apiCallService.getApplicationAllSettings();
@@ -80,23 +79,6 @@ export class AppComponent implements OnInit {
     })
    }
 
-   async getAppSettingAsync (){
-
-    let hostname:any ="";
-    if(this.storageService.checkPlatForm() == 'mobile'){
-      hostname = this.storageService.getClientName();
-    }else{
-      hostname = this.envService.getHostName('hostname');
-    }
-    if(hostname == 'localhost'){
-      hostname = this.storageService.getClientCodeEnviorment().serverhost;
-      this.storageService.setHostNameDinamically(hostname+"/rest/");
-    }else{
-      await this.awsSecretManagerService.getSecret(hostname);
-    }
-    this.apiCallService.getApplicationAllSettings();
-    
-   }
    
   ngOnInit() {     
     this.router.events.subscribe(event =>{

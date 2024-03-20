@@ -38,7 +38,7 @@ export class SettingModalComponent implements OnInit {
         this.hostName = '';
         this.storageService.setHostNameDinamically('');
         // this.getHostData()
-        this.envService.setDinamicallyHost();
+        // this.envService.setDinamicallyHost();
       }
     })
     this.hostDataSubscription = this.dataShareService.hostData.subscribe(data =>{
