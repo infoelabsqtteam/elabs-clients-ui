@@ -32,8 +32,8 @@
     <div *ngIf="notificationlist && notificationlist.length>0">
        <div class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" *ngFor="let data of notificationlist ; let i = index" (click)="readNotification(data)">
         <div class="d-flex justify-content-between align-items-center">
-          <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1" style="width: 10px;height: 10px;"></div>
-          <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded" width="40" height="40">
+          <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1 unreadDot"></div>
+          <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded image">
         </div>
         <div class="media-body mb-0 lh-125">
           <div class="d-flex justify-content-between">
