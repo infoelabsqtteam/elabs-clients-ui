@@ -25,7 +25,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   list_of_fields:any =[
     {"field_name":"fName","label":"Field Name"},
     {"field_name":"operator","label":"Operator"},
-    {"field_name":"fValue","label":"Field Value"}
+    {"field_name":"fValue.value","label":"Field Value"}
   ]
   staticDataSubscription:Subscription;
   staticData:any={};
@@ -156,11 +156,20 @@ export class AddPermissionTreeControlsComponent implements OnInit {
         value[key] = this.custMizedFormValue[key];
       })
     }
+    if(value && value['crList'] && !this.commonFunctionService.isArray(value['crList'])){
+      value['crList'] = [];
+    }
+    if(value && value['userCrList'] && !this.commonFunctionService.isArray(value['userCrList'])){
+      value['userCrList'] = [];
+    }
     this.permissionControlResponce.next(value);
     this.close();
   }
   addCrList(key){
     let crList = JSON.parse(JSON.stringify(this.criteria.value[key]));
+    let fValue = crList.fValue;
+    let object = {'value':fValue};
+    crList['fValue'] = object;
     // if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
     //   crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
     // }else if(crList && crList.fValue && typeof crList.fValue == 'object'){
@@ -187,6 +196,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     this.updateIndex[key]=i;
     this.listOfFieldUpdateMode[key] = true;
     let data = this.custMizedFormValue[key][i];
+    data.fValue = data.fValue.value;
     if(key == 'userCrList'){
       data.fValue = this.convertColonStringToList(data.fValue);
     }
@@ -306,27 +316,45 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   getGridValue(data:any,field:any){
     let fieldName = field.field_name;
+    let value = this.commonFunctionService.getObjectValue(fieldName,data);
     switch(fieldName){
       case 'fName':
-        return data[fieldName].label;
-      case 'fValue':
+        return value.label;
+      case 'fValue.value':
         let type = data['fName'].type;
         let operator = data['operator'];
         if(type == 'date' && operator != 'IN'){
-          return this.commonFunctionService.dateFormat(data[fieldName]);
+          return this.commonFunctionService.dateFormat(value);
         }else if(type == 'date' && operator == 'IN'){
-          const value = data[fieldName];
           const startData = this.commonFunctionService.dateFormat(value.start);
           const endData = this.commonFunctionService.dateFormat(value.end);
           return ''+startData+"-"+endData;
-        }else if(data[fieldName] && typeof data[fieldName] == 'object'){
-          return data[fieldName].label?data[fieldName].label:data[fieldName].name;
+        }else if(this.commonFunctionService.isArray(value)){
+          return this.getValueFromListWithComma(value);
+        }else if(typeof value === "object"){
+          return value.label?value.label:value.name;
         }else{
-          return data[fieldName]
+          return value
         }
       default:
-        return data[fieldName];
+        return value;
     }
+  }
+  getValueFromListWithComma(list:any){
+    let value = "";
+    if(this.commonFunctionService.isArray(list)){
+      list.forEach((object:any,i:number) => {
+        if(object && object.label || object.name){
+          let val = object.label?object.label : object.name;
+          if(i == 0){
+            value = value + val;
+          }else{
+            value = value +", "+ val;
+          }
+        }
+      });
+    }
+    return value;
   }
 
   
