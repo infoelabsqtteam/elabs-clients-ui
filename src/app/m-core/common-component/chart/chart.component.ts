@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, OnDestroy, ViewChild, ElementRef, NgZone, HostListener } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { ModelService, DataShareService, CommonFunctionService, ApiService, ApiCallService} from '@core/web-core';
@@ -97,7 +97,7 @@ testOption = {
   showfilter:boolean = false;
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,

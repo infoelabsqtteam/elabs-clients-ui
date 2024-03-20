@@ -1,17 +1,17 @@
-<nav class="mx-3 position-relative">
-    <div class="headermenu">
-      <ng-container *ngIf="menuBoxDashboard || showUserAccount">
-        <mat-tab-group animationDuration="0ms" *ngIf="menuBoxDashboard" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+<nav class="mx-2 position-relative headermenu">
+    <div class="d-flex align-items-center">
+      <ng-container>
+        <mat-tab-group  animationDuration="0ms" *ngIf="menuBoxDashboard" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
           <mat-tab>
-            <ng-template mat-tab-label><a class="px-2" [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'"
+            <ng-template mat-tab-label><a class="p-2" [matTooltip]="'Selected Home Menu (ALT + H)'" [matTooltipPosition]="'above'"
                 [ngClass]="activeclass ? 'selectedclass' : ''" (click)="goToMOdule()" *ngIf="menuBoxDashboard"
                 #tooltip="matTooltip" matTooltip="Press B">Home</a></ng-template>
           </mat-tab>
           <mat-tab *ngFor="let menu of menuData;let i = index" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
             <ng-template mat-tab-label>
-              <a class="px-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
+              <a class="p-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
                 #tooltip="matTooltip" matTooltip="Press Ctrl + c" [ngClass]="{}">{{ menu.label }}</a>
-              <a class="px-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
+              <a class="p-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
                 (click)="activeLinkD(menu.label,false)" [ngClass]="{}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
                 <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" [ngClass]="{}">{{
@@ -23,27 +23,7 @@
       </ng-container>
     </div>
 
-    <ul class="d-flex align-items-center rightheader m-0">
-      <li class="nav-item avatar">
-        <div class="searchbox">
-          <input [(ngModel)]="filterdata" class="form-control rounded-pill" (keyup)="searchmodel()" placeholder="Search items..." autocomplete="off">
-          <div class="searchicon"><mat-icon>search</mat-icon></div>
-          <div class="moduleitems" *ngIf="showsearchmenu">
-            <div class="modulesdata">
-              <div *ngFor="let item of AllModuleList |filter:filterdata; let i = index">
-                <button mat-button *ngIf="item.title" class="text-left w-100" (click)="GoToSelectedModule(item)">{{ item.title }}</button>
-                <div *ngFor="let subitem of item.menu_list |filter:filterdata">
-                  <button mat-button class="text-left w-100" (click)="getTemplateData(item,subitem,$event)"><small>{{ item.title }} > {{ subitem.label }}</small></button>
-                  <div class="px-2" *ngFor="let subSubitem of subitem.submenu |filter:filterdata">
-                    <button mat-button class="text-left w-100" (click)="getTemplateData(item,subSubitem,$event)"><small>{{ item.title }} > {{ subitem.label }} > {{ subSubitem.label }}</small></button>
-                  </div>
-                </div>
-              </div>
-              <p class="text-center p-3 pt-4" *ngIf="(AllModuleList | filter: filterdata).length === 0"><small>No Data Match</small></p>
-            </div>
-          </div>
-        </div>
-      </li>
+  
 
       <!-- <li class="nav-item avatar position-relative">
         <div class="searchinput position-relative d-flex justify-content-end">
@@ -65,6 +45,4 @@
           </div>
         </div>
       </li> -->
-
-    </ul>
 </nav>

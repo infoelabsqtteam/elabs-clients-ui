@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ApiService, DocApiService, CommonFunctionService, DataShareService, NotificationService, ModelService, FormCreationService, ApiCallService, GridCommonFunctionService, CheckIfService } from '@core/web-core';
 
@@ -17,7 +17,7 @@ export class PermissionComponent implements OnInit {
   @Input() pathList;
   @Input() folder: any;
 
-  permissionForm: FormGroup;
+  permissionForm: UntypedFormGroup;
   typeaheadDataSubscription;
   typeAheadData: string[] = [];
   elements: any = [];
@@ -50,7 +50,7 @@ export class PermissionComponent implements OnInit {
 
   constructor(
     private modelService: ModelService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private commonFunctionService: CommonFunctionService,
     private apiService: ApiService,
     private dataShareService: DataShareService,

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgForm,FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgForm, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, EnvService, StorageService, DataShareService, AuthDataShareService, NotificationService } from '@core/web-core';
@@ -14,7 +14,7 @@ export class SigninComponent implements OnInit,OnDestroy {
   loading = false;
   @Input() public pageName;
   appName: string;
-  signInForm:FormGroup;
+  signInForm:UntypedFormGroup;
   checkShowPassword = false;
   template:string = "temp1";
   logoPath = '';
@@ -75,6 +75,13 @@ export class SigninComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.loading = false;
     this.signInForm.reset();
+    this.unsubscribeSubscription();
+  }
+
+  unsubscribeSubscription(){
+    this.unsubscribe(this.applicationSettingSubscription)
+    this.unsubscribe(this.loginInfoSubscribe)
+    this.unsubscribe(this.sessionSubscribe)
   }
 
   ngOnInit() {
@@ -82,10 +89,10 @@ export class SigninComponent implements OnInit,OnDestroy {
     this.pageloded();
   }
   initForm() {
-    this.signInForm = new FormGroup({
+    this.signInForm = new UntypedFormGroup({
       //'email': new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$')]),
-      'userId': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required])
+      'userId': new UntypedFormControl('', [Validators.required]),
+      'password': new UntypedFormControl('', [Validators.required])
     });
   }
 
@@ -117,6 +124,12 @@ export class SigninComponent implements OnInit,OnDestroy {
 
   showPassword() {
     this.checkShowPassword = !this.checkShowPassword;
+  }
+
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
   }
 
 }

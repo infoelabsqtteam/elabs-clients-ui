@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit, ElementRef,NgZone, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common'; 
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -9,6 +9,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
 import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService } from '@core/web-core';
 
 declare var tinymce: any;
@@ -19,15 +20,16 @@ declare var tinymce: any;
   styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
-
+  
+  editorOptions: JsonEditorOptions;
   //https://www.npmjs.com/package/@kolkov/angular-editor
   editorConfig:AngularEditorConfig = editorConfig as AngularEditorConfig;
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
   htmlViewConfig:AngularEditorConfig = htmlViewConfig as AngularEditorConfig;
   tinymceConfig = {} 
-
-  templateForm: FormGroup;
-
+  tinymceapikey = Common.TINYMICAPIKEY;
+  templateForm: UntypedFormGroup;
+  showSearchLength = 6;
   //@Output() filledFormData = new EventEmitter();
   @Output() addAndUpdateResponce = new EventEmitter();
   @Output() formDetails = new EventEmitter();
@@ -210,7 +212,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   // }
 
   constructor(
-    private formBuilder: FormBuilder, 
+    private formBuilder: UntypedFormBuilder, 
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private modalService: ModelService, 
@@ -238,6 +240,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private multipleFormService:MultipleFormService,
     private downloadService:DownloadService
 ) {
+    this.editorOptions = new JsonEditorOptions();
+    this.editorOptions.mode = "text";
+    let tinymicEditorKey = this.storageService.getApplicationSetting()?.tinyMicCapikey;
+    if(tinymicEditorKey && tinymicEditorKey != '') this.tinymceapikey = tinymicEditorKey;
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
     //   this.getLevel,
@@ -246,7 +252,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // );
     //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
     this.tinymceConfig = {
       height: 500,
       menubar: false,
@@ -1287,7 +1292,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         const gridModalData = {
           "field": this.curTreeViewField,
           "selectedData":selectedData,
-          "object": formValueWithCustomData
+          "object": formValueWithCustomData,
+          "currentForm":this.form
         }
         this.modalService.open('grid-selection-modal', gridModalData);
         break;
@@ -2643,7 +2649,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   getFormValue(check){
     let formValue = this.templateForm.getRawValue();
-    formValue = this.coreFunctionService.checkBlankProperties(formValue);
     let routersParams = {};
     if(this.routers.snapshot.params["key1"]){
       routersParams = this.routers.snapshot.params;
@@ -3175,14 +3180,12 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.deletefieldName = {};
     //this.alertData = {};
   }
-  // Grid hide column icon click function
-  hideColumn(columns,index: number) {
-    columns[index].display = !columns[index].display;
+
+//copy icon on grid cell
+copyText(value:any){       
+  this.commonFunctionService.copyGridCellText(value);
 }
-  // show all columns icon click function 
-updateColumnList(columns?){
-  if(columns) columns.forEach(column=>column.display =true)
-}
+
   //Child Form Responce dependency
   //Dipendency Functions End----------------------
 

@@ -5,7 +5,7 @@ import { COMMA, ENTER, I, SPACE } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import {Sort} from '@angular/material/sort';
-import { CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
+import { StorageService,CommonFunctionService, DataShareService, NotificationService, CoreFunctionService, ModelService, ApiService, GridCommonFunctionService, LimsCalculationsService, CheckIfService, ApiCallService, minieditorConfig } from '@core/web-core';
 import { FilterPipe } from '../../../pipes/filter.pipe';
 import { Subscription } from 'rxjs';
 
@@ -50,7 +50,7 @@ export class GridSelectionModalComponent implements OnInit {
   editEnable:boolean=false;
   selectedDataLength:number=0;
   buttonlabel:any;
-
+  currentForm:any;
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
@@ -82,7 +82,8 @@ export class GridSelectionModalComponent implements OnInit {
     private limsCalculationsService: LimsCalculationsService,
     private filterPipe:FilterPipe,
     private checkIfService:CheckIfService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private storageService:StorageService,
   ) {
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data => {
       this.isGridSelectionOpen = data;
@@ -194,10 +195,6 @@ export class GridSelectionModalComponent implements OnInit {
   //   }
   // }
 
-  //Hide Icon Click Function 
-  hideColumn(columns,index: number) {
-    columns[index].display = !columns[index].display;
-}
   add(event: MatChipInputEvent, field, index,chipsInput,data){
     let selectedData = "";
     if(event && event.value){
@@ -453,6 +450,9 @@ export class GridSelectionModalComponent implements OnInit {
     if (alert.object) {
       this.parentObject = alert.object;
     }
+    if(alert.currentForm){
+      this.currentForm=alert.currentForm
+    }
     if(this.field && this.field.grid_selection_button_label != null && this.field.grid_selection_button_label != ''){
       this.buttonlabel = this.field.grid_selection_button_label;
     }else {
@@ -496,9 +496,6 @@ export class GridSelectionModalComponent implements OnInit {
     //For dropdown data in grid selection
     this.getStaticDataWithDependentData()
 
-  }
-  updateColumnList(columns?){
-    if(columns) columns.forEach(column=>column.display =true)
   }
   selectGridData() {    
     this.selectedData = this.gridCommonFunctionService.updateGridDataToModifiedData(this.grid_row_selection,this.gridData,this.modifiedGridData,this.listOfGridFieldName,);
@@ -802,7 +799,7 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected || !this.grid_row_selection){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
-            data[column.field_name] = responce[column.field_name];
+            // data[column.field_name] = responce[column.field_name];
             this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
             if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
               data[column.field_name] = responce[column.field_name];
@@ -895,6 +892,11 @@ export class GridSelectionModalComponent implements OnInit {
         this.modifiedGridData[this.fileuploadedindex][this.uploadField.field_name]= response;
       }
     }
+    //copy icon on grid cell
+    copyText(value:any){    
+      this.CommonFunctionService.copyGridCellText(value);
+    }
+
   
 }
 

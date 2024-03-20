@@ -32,7 +32,7 @@ input.mat-input-element {font-size:$size13;}
 .modal.fade.in .modal-dialog {transform: inherit!important;}
 
 .cdk-overlay-container {z-index:9999 !important;}
-
+.wdth-150 {width:150px;}
 // Module Popup
 // .cdk-global-overlay-wrapper{z-index:$zindex1000!important}
 // .modal.fade{background:rgba($black,0.5)}
@@ -69,7 +69,11 @@ body.modal-open .modal-backdrop {display:none !important;}
     }
     .mat-error {margin-top:$size12;}
     .icon-button {padding:$zero!important;height:$size25;width:$size25;display:block;border-radius:100%;background:#274058;display:inline-block;}
-    .list-of-string-button {position:absolute;top:2px;right:2px;}
+    .list-of-string-button {position:absolute;top:2px;right:2px;
+        .fas {vertical-align:middle;}
+        i {font-size:14px;vertical-align:middle;}
+        .countno {margin-left:5px;}
+    }
     .input-field-icon {position:absolute;top:6px;right:6px;} 
     .mat-checkbox-layout {display:inherit!important;line-height:2.2!important;}
     .mat-checkbox-layout .mat-checkbox-label {font-size:12px!important;line-height:13px!important;white-space:pre-line!important;}

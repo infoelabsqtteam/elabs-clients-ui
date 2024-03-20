@@ -157,6 +157,9 @@ export class PermissionTreeViewComponent implements OnInit {
         let id = node._id;
         let index = this.commonfunctionService.getIndexInArrayById(this.treeControl.dataNodes,id,'_id');
         let treeNode = this.treeControl.dataNodes[index];
+        if(node && node.criteria){
+          treeNode['criteria'] = node.criteria;
+        }
         if(node && node.reference && node.reference.select){   
           let lastKey = this.keys[(this.keys.length - 1)];
           if(treeNode && treeNode.type == lastKey){

@@ -1,7 +1,8 @@
 import { Component, OnInit,OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { CommonFunctionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService, GridCommonFunctionService } from '@core/web-core';
 
 
@@ -11,7 +12,7 @@ import { CommonFunctionService, ApiService, DataShareService, NotificationServic
   styleUrls: ['./modals.component.css']
 })
 export class ModalsComponent implements OnInit,OnDestroy {
-  rateForm: FormGroup;
+  rateForm: UntypedFormGroup;
   public coloumName:any = '';
   public data=[];
   public selectedData:any=[];
@@ -31,14 +32,14 @@ export class ModalsComponent implements OnInit,OnDestroy {
   private element: any;
   staticDataSubscriber;
   pdfFileSubscription;
-  
+  editorOptions: JsonEditorOptions;
   @Output() responceData = new EventEmitter();
   @ViewChild('basicTableModal') basicTableModal: ModalDirective;
   
   constructor(
     private modalService: ModelService, 
     private el: ElementRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private commonFunctionService:CommonFunctionService,
     private apiService:ApiService,
     private dataShareService:DataShareService,
@@ -53,6 +54,8 @@ export class ModalsComponent implements OnInit,OnDestroy {
       this.setDownloadPdfData(data);
     })
     this.element = el.nativeElement;
+    this.editorOptions = new JsonEditorOptions();
+    this.editorOptions.mode = "text";
   }
   resetFlags(){
     this.field = {};
@@ -196,9 +199,9 @@ export class ModalsComponent implements OnInit,OnDestroy {
     switch (type) {
       case "text":
         if(mandatory){
-          forControl[fieldName] = new FormControl(object, Validators.required)
+          forControl[fieldName] = new UntypedFormControl(object, Validators.required)
         }else{
-          forControl[fieldName] = new FormControl(object)
+          forControl[fieldName] = new UntypedFormControl(object)
         }
       default:
         break;

@@ -1,5 +1,5 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-bis-form',
@@ -8,7 +8,7 @@ import { FormGroup, FormControl} from '@angular/forms'
 })
 export class BisFormComponent implements OnInit {
 
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   listOfData:any;
   editable:boolean = false;
   update:boolean = true;
@@ -113,37 +113,37 @@ export class BisFormComponent implements OnInit {
   }
 
   onInitialise(){
-    this.reportForm = new FormGroup({
-      'issued_to': new FormControl(this.listOfData.issued_to),
-      'reg_no': new FormControl(this.listOfData.reg_no),
-      'reg_date': new FormControl(this.listOfData.reg_date),
-      'report_date': new FormControl(this.listOfData.report_date),
-      'report_no': new FormControl(this.listOfData.report_no),
-      'customer_ref_no': new FormControl(this.listOfData.customer_ref_no),
-      'letter_dated': new FormControl(this.listOfData.letter_dated),
-      'nature_of_sample': new FormControl(this.listOfData.nature_of_sample),
-      'grade': new FormControl(this.listOfData.grade),
-      'brand_name': new FormControl(this.listOfData.brand_name),
-      'declared_values': new FormControl(this.listOfData.declared_values),
-      'code_no': new FormControl(this.listOfData.code_no),
-      'batch_no': new FormControl(this.listOfData.batch_no),
-      'dom': new FormControl(this.listOfData.dom),
-      'date_of_expiry': new FormControl(this.listOfData.date_of_expiry),
-      'sample_quantity': new FormControl(this.listOfData.sample_quantity),
-      'batch_size': new FormControl(this.listOfData.batch_size),
-      'mode_of_packing': new FormControl(this.listOfData.mode_of_packing),
-      'date_of_receipt': new FormControl(this.listOfData.date_of_receipt),
-      'date_of_start': new FormControl(this.listOfData.date_of_start),
-      'date_of_completion': new FormControl(this.listOfData.date_of_completion),
-      'bis_seal': new FormControl(this.listOfData.bis_seal),
-      'signature': new FormControl(this.listOfData.signature),
-      'other_info': new FormControl(this.listOfData.other_info),
-      'req_submitted_by': new FormControl(this.listOfData.req_submitted_by),
-      'manufactured_by': new FormControl(this.listOfData.manufactured_by),
-      'supplied_by': new FormControl(this.listOfData.supplied_by),
-      'reference': new FormControl(this.listOfData.reference),
-      'supporting_doc': new FormControl(this.listOfData.supporting_doc),
-      'deviation': new FormControl(this.listOfData.deviation),
+    this.reportForm = new UntypedFormGroup({
+      'issued_to': new UntypedFormControl(this.listOfData.issued_to),
+      'reg_no': new UntypedFormControl(this.listOfData.reg_no),
+      'reg_date': new UntypedFormControl(this.listOfData.reg_date),
+      'report_date': new UntypedFormControl(this.listOfData.report_date),
+      'report_no': new UntypedFormControl(this.listOfData.report_no),
+      'customer_ref_no': new UntypedFormControl(this.listOfData.customer_ref_no),
+      'letter_dated': new UntypedFormControl(this.listOfData.letter_dated),
+      'nature_of_sample': new UntypedFormControl(this.listOfData.nature_of_sample),
+      'grade': new UntypedFormControl(this.listOfData.grade),
+      'brand_name': new UntypedFormControl(this.listOfData.brand_name),
+      'declared_values': new UntypedFormControl(this.listOfData.declared_values),
+      'code_no': new UntypedFormControl(this.listOfData.code_no),
+      'batch_no': new UntypedFormControl(this.listOfData.batch_no),
+      'dom': new UntypedFormControl(this.listOfData.dom),
+      'date_of_expiry': new UntypedFormControl(this.listOfData.date_of_expiry),
+      'sample_quantity': new UntypedFormControl(this.listOfData.sample_quantity),
+      'batch_size': new UntypedFormControl(this.listOfData.batch_size),
+      'mode_of_packing': new UntypedFormControl(this.listOfData.mode_of_packing),
+      'date_of_receipt': new UntypedFormControl(this.listOfData.date_of_receipt),
+      'date_of_start': new UntypedFormControl(this.listOfData.date_of_start),
+      'date_of_completion': new UntypedFormControl(this.listOfData.date_of_completion),
+      'bis_seal': new UntypedFormControl(this.listOfData.bis_seal),
+      'signature': new UntypedFormControl(this.listOfData.signature),
+      'other_info': new UntypedFormControl(this.listOfData.other_info),
+      'req_submitted_by': new UntypedFormControl(this.listOfData.req_submitted_by),
+      'manufactured_by': new UntypedFormControl(this.listOfData.manufactured_by),
+      'supplied_by': new UntypedFormControl(this.listOfData.supplied_by),
+      'reference': new UntypedFormControl(this.listOfData.reference),
+      'supporting_doc': new UntypedFormControl(this.listOfData.supporting_doc),
+      'deviation': new UntypedFormControl(this.listOfData.deviation),
     })
 
 }
