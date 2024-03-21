@@ -255,11 +255,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.tinymceConfig = {
       height: 500,
       branding: false,
-      // plugins: [
-      //   'advlist autolink lists link image charmap print preview anchor',
-      //   'searchreplace visualblocks code fullscreen',
-      //   'insertdatetime media table paste code help wordcount'
-      // ],
       menubar: 'file edit view insert format tc help',
       plugins: 'print preview powerpaste paste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks code visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap mentions quickbars linkchecker emoticons advtable export',
       toolbar:
