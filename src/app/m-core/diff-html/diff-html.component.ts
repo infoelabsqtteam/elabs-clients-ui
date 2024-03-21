@@ -1,7 +1,7 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import * as Diff2Html from 'diff2html';
 import * as Diff from 'diff';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ApiService, DataShareService, ApiCallService} from '@core/web-core';
 
 @Component({
@@ -11,7 +11,7 @@ import { ApiService, DataShareService, ApiCallService} from '@core/web-core';
 })
 export class DiffHtmlComponent implements OnInit,OnDestroy {
 
-  compareForm: FormGroup;
+  compareForm: UntypedFormGroup;
 
   outputHtml: string='';
   staticData:any={};
@@ -50,14 +50,14 @@ export class DiffHtmlComponent implements OnInit,OnDestroy {
 
    }
   initform(){
-    this.compareForm = new FormGroup({
-      compare_dinamically : new FormControl(''),
-      server1: new FormControl('https://serverqualiteklab.e-labs.ai',Validators.required),
-      server2: new FormControl('https://serverqualiteklab.qualiteklab.com',Validators.required),
-      api1: new FormControl('/rest/mig/send_menu_by_module/TMGMT',Validators.required),
-      api2: new FormControl('/rest/mig/send_menu_by_module/TMGMT',Validators.required),
-      account: new FormControl('',Validators.required),
-      account2: new FormControl('',Validators.required)
+    this.compareForm = new UntypedFormGroup({
+      compare_dinamically : new UntypedFormControl(''),
+      server1: new UntypedFormControl('https://serverqualiteklab.e-labs.ai',Validators.required),
+      server2: new UntypedFormControl('https://serverqualiteklab.qualiteklab.com',Validators.required),
+      api1: new UntypedFormControl('/rest/mig/send_menu_by_module/TMGMT',Validators.required),
+      api2: new UntypedFormControl('/rest/mig/send_menu_by_module/TMGMT',Validators.required),
+      account: new UntypedFormControl('',Validators.required),
+      account2: new UntypedFormControl('',Validators.required)
     });
   }
   ngOnDestroy() {    

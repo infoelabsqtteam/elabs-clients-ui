@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 
 import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService, StorageTokenStatus, ApiCallService } from '@core/web-core';
 
@@ -15,7 +15,7 @@ import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthServi
 
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {    
     
-    selected = new FormControl(0);
+    selected = new UntypedFormControl(0);
     subscription: any;    
     active_menu_d: any = 'custom-template';
     moduleIndex:any=-1;

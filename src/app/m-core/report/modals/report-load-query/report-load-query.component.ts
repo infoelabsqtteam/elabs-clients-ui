@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { ModelService, CommonFunctionService, DataShareService, ApiService, GridCommonFunctionService } from '@core/web-core';
 
@@ -23,7 +23,7 @@ export class ReportLoadQueryComponent implements OnInit {
     {"label": "Query", "type": "chips_list", "field_name": "query.crList"}
   ]
   
-  loadQueryForm: FormGroup;
+  loadQueryForm: UntypedFormGroup;
   gridData :any = [];
   gridDataSubscription;
 
@@ -31,7 +31,7 @@ export class ReportLoadQueryComponent implements OnInit {
     private modalService: ModelService,
     private commonFunctionService:CommonFunctionService,
     private dataShareServices :DataShareService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private apiService:ApiService,
     private gridCommonFunctionService:GridCommonFunctionService
   ) {
@@ -57,7 +57,7 @@ export class ReportLoadQueryComponent implements OnInit {
 
   initForm(){
     this.loadQueryForm = this.formBuilder.group({
-      "filter" : new FormControl('',Validators.required),
+      "filter" : new UntypedFormControl('',Validators.required),
     })
 
   }

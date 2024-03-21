@@ -2,7 +2,7 @@
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService} from '@core/web-core';
@@ -34,7 +34,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   gridDataCountSubscription:any;
   saveResponceSubscription:Subscription;
   userPreferenceSubscription:Subscription;
-  selected = new FormControl(0);
+  selected = new UntypedFormControl(0);
   getTempData:boolean = true;
   currentUrl :String = "";
   isPageLoading: boolean = false;
@@ -122,7 +122,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTempData = false;
       this.selectContact = '';
       this.selectTabIndex = 0;
-      this.selected = new FormControl(0);   
+      this.selected = new UntypedFormControl(0);   
       this.currentMenu = this.storageService.GetActiveMenu();
       if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
         const payload = this.apiCallService.getTemData(this.currentMenu.name); 
@@ -317,7 +317,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
             }
           }          
         } 
-        this.selected = new FormControl(this.selectTabIndex);    
+        this.selected = new UntypedFormControl(this.selectTabIndex);    
         this.getViewMode(); 
       }else{
         this.grid_view_mode = '';
@@ -367,7 +367,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     }
     this.selectTabIndex = i;  
     this.getViewMode(); 
-    this.selected = new FormControl(i);
+    this.selected = new UntypedFormControl(i);
   } 
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){

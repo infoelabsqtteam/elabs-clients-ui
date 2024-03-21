@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, OnDestroy, SimpleChanges, ViewChild, Inject, AfterViewInit, ElementRef,NgZone, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common'; 
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -26,7 +26,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   htmlViewConfig:AngularEditorConfig = htmlViewConfig as AngularEditorConfig;
   tinymceConfig = {} 
   tinymceapikey = Common.TINYMICAPIKEY; 
-  templateForm: FormGroup;
+  templateForm: UntypedFormGroup;
 
   //@Output() filledFormData = new EventEmitter();
   @Output() addAndUpdateResponce = new EventEmitter();
@@ -210,7 +210,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   // }
 
   constructor(
-    private formBuilder: FormBuilder, 
+    private formBuilder: UntypedFormBuilder, 
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private modalService: ModelService, 
@@ -238,6 +238,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private multipleFormService:MultipleFormService,
     private downloadService:DownloadService
 ) {
+    let tinymicEditorKey = this.storageService.getApplicationSetting()?.tinyMicCapikey;
+    if(tinymicEditorKey && tinymicEditorKey != '') this.tinymceapikey = tinymicEditorKey;
     // this.treeFlattener = new MatTreeFlattener(
     //   this.transformer,
     //   this.getLevel,

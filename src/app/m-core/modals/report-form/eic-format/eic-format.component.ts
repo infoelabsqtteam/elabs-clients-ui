@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-eic-format',
@@ -8,7 +8,7 @@ import { FormGroup, FormControl} from '@angular/forms'
 })
 export class EicFormatComponent implements OnInit {
 
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   listOfData:any;
   editable:boolean = false;
   update:boolean = true;
@@ -77,40 +77,40 @@ export class EicFormatComponent implements OnInit {
   }
 
   onInitialise(){
-    this.reportForm = new FormGroup({
-      'issued_to': new FormControl(this.listOfData.issued_to),
-      'reg_no': new FormControl(this.listOfData.reg_no),
-      'name_of_processor': new FormControl(this.listOfData.name_of_processor),
-      'name_of_exporter': new FormControl(this.listOfData.name_of_exporter),
-      'approval_no': new FormControl(this.listOfData.approval_no),
-      'customer_ref': new FormControl(this.listOfData.customer_ref),
-      'invoice_no': new FormControl(this.listOfData.invoice_no),
-      'smapling_date': new FormControl(this.listOfData.smapling_date),
-      'date_of_sample_receipt': new FormControl(this.listOfData.date_of_sample_receipt),
-      'condition': new FormControl(this.listOfData.condition),
-      'nature': new FormControl(this.listOfData.nature),
-      'species_name': new FormControl(this.listOfData.species_name),
-      'packing': new FormControl(this.listOfData.packing),
-      'quantity': new FormControl(this.listOfData.quantity),
-      'type': new FormControl(this.listOfData.type),
-      'quantity_sample_drawn': new FormControl(this.listOfData.quantity_sample_drawn),
-      'no_of_mc': new FormControl(this.listOfData.no_of_mc),
-      'code': new FormControl(this.listOfData.code),
-      'grade': new FormControl(this.listOfData.grade),
-      'place': new FormControl(this.listOfData.place),
-      'traceability_code': new FormControl(this.listOfData.traceability_code),
-      'reg_of_pond': new FormControl(this.listOfData.reg_of_pond),
-      'no_of_selected_case': new FormControl(this.listOfData.no_of_selected_case),
-      'sampled_case_seal_no': new FormControl(this.listOfData.sampled_case_seal_no),
-      'seal_no_for_test_sample': new FormControl(this.listOfData.seal_no_for_test_sample),
-      'seal_no_for_ref_sample': new FormControl(this.listOfData.seal_no_for_ref_sample),
-      'consignment_intended': new FormControl(this.listOfData.consignment_intended),
-      'consignee': new FormControl(this.listOfData.consignee),
-      'sample_by': new FormControl(this.listOfData.sample_by),
-      'analysis_start_date': new FormControl(this.listOfData.analysis_start_date),
-      'analysis_completion_date': new FormControl(this.listOfData.analysis_completion_date),
-      'discipline': new FormControl(this.listOfData.discipline),
-      'group': new FormControl(this.listOfData.group),
+    this.reportForm = new UntypedFormGroup({
+      'issued_to': new UntypedFormControl(this.listOfData.issued_to),
+      'reg_no': new UntypedFormControl(this.listOfData.reg_no),
+      'name_of_processor': new UntypedFormControl(this.listOfData.name_of_processor),
+      'name_of_exporter': new UntypedFormControl(this.listOfData.name_of_exporter),
+      'approval_no': new UntypedFormControl(this.listOfData.approval_no),
+      'customer_ref': new UntypedFormControl(this.listOfData.customer_ref),
+      'invoice_no': new UntypedFormControl(this.listOfData.invoice_no),
+      'smapling_date': new UntypedFormControl(this.listOfData.smapling_date),
+      'date_of_sample_receipt': new UntypedFormControl(this.listOfData.date_of_sample_receipt),
+      'condition': new UntypedFormControl(this.listOfData.condition),
+      'nature': new UntypedFormControl(this.listOfData.nature),
+      'species_name': new UntypedFormControl(this.listOfData.species_name),
+      'packing': new UntypedFormControl(this.listOfData.packing),
+      'quantity': new UntypedFormControl(this.listOfData.quantity),
+      'type': new UntypedFormControl(this.listOfData.type),
+      'quantity_sample_drawn': new UntypedFormControl(this.listOfData.quantity_sample_drawn),
+      'no_of_mc': new UntypedFormControl(this.listOfData.no_of_mc),
+      'code': new UntypedFormControl(this.listOfData.code),
+      'grade': new UntypedFormControl(this.listOfData.grade),
+      'place': new UntypedFormControl(this.listOfData.place),
+      'traceability_code': new UntypedFormControl(this.listOfData.traceability_code),
+      'reg_of_pond': new UntypedFormControl(this.listOfData.reg_of_pond),
+      'no_of_selected_case': new UntypedFormControl(this.listOfData.no_of_selected_case),
+      'sampled_case_seal_no': new UntypedFormControl(this.listOfData.sampled_case_seal_no),
+      'seal_no_for_test_sample': new UntypedFormControl(this.listOfData.seal_no_for_test_sample),
+      'seal_no_for_ref_sample': new UntypedFormControl(this.listOfData.seal_no_for_ref_sample),
+      'consignment_intended': new UntypedFormControl(this.listOfData.consignment_intended),
+      'consignee': new UntypedFormControl(this.listOfData.consignee),
+      'sample_by': new UntypedFormControl(this.listOfData.sample_by),
+      'analysis_start_date': new UntypedFormControl(this.listOfData.analysis_start_date),
+      'analysis_completion_date': new UntypedFormControl(this.listOfData.analysis_completion_date),
+      'discipline': new UntypedFormControl(this.listOfData.discipline),
+      'group': new UntypedFormControl(this.listOfData.group),
 
     })
 

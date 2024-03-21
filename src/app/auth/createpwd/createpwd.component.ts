@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators,FormBuilder, NgForm } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators,FormBuilder, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { StorageService, AuthService, NotificationService, EnvService, AuthDataShareService, CustomvalidationService } from '@core/web-core';
@@ -16,7 +16,7 @@ export class CreatepwdComponent implements OnInit
 {
   loading = false;
   hide = true;
-  resetPsswordForm: FormGroup;
+  resetPsswordForm: UntypedFormGroup;
   checkShowPassword = false;
   checkOldPassword = false;
   appName: string;
@@ -59,10 +59,10 @@ export class CreatepwdComponent implements OnInit
    this.initForm();
   }
   initForm() {
-    this.resetPsswordForm = new FormGroup({
-      'oldpwd': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required, this.customValidationService.patternValidator()]),
-      'confirmPassword': new FormControl("", Validators.required),
+    this.resetPsswordForm = new UntypedFormGroup({
+      'oldpwd': new UntypedFormControl('', [Validators.required]),
+      'password': new UntypedFormControl('', [Validators.required, this.customValidationService.patternValidator()]),
+      'confirmPassword': new UntypedFormControl("", Validators.required),
     },{ validators: this.customValidationService.MatchPassword('password','confirmPassword') }
     );
   }

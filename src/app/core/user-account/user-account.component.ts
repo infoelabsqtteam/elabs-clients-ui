@@ -25,9 +25,10 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   notificationlist=[];
   @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
   constructor(    
-    @Inject(DOCUMENT) private document: Document,
+    // @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
     private authApiService:AuthService,
+    private dataShareService:DataShareService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private apiCallService:ApiCallService,
     private dataShareService:DataShareService,
@@ -59,7 +60,7 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     this.AllModuleList = this.storageService.GetModules();
     let roleList = this.storageService.GetRoleList();  
     let activeRole = this.storageService.getActiveRole();  
-    if(this.roleList && this.roleList.length == 1){
+    if(roleList && roleList.length == 1){
       this.roleList = roleList;
       if(activeRole && typeof activeRole == 'object' && activeRole?.name){
         this.activeRole = activeRole.name;
@@ -97,9 +98,7 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     }
     this.activeRole = role.name;
   }
-  getNotification(){
-    this.apiCallService.getUserNotification(1);
-  }
+
   searchmodel(data:string) {
     this.filterdata = data;
     this.showsearchmenu = true;
