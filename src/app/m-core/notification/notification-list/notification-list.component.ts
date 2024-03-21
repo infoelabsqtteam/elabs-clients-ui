@@ -34,9 +34,9 @@ export class NotificationListComponent implements OnInit {
   { 
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
         if (data && data.data && data.data.length > 0) {
-          this.setUserNotification(data.data);
-          this.total = data.data_size;
-      }else{
+            this.setUserNotification(data.data);
+            this.total = data.data_size;
+        }else{
           this.notificationlist = [];
           this.total = 0;
         }
@@ -78,9 +78,9 @@ export class NotificationListComponent implements OnInit {
   setSaveResponce(saveFromDataRsponce){
     if (saveFromDataRsponce) {
         if (saveFromDataRsponce.success && saveFromDataRsponce.success != '') {
-          if (saveFromDataRsponce.success == 'success') {
-            this.apiCallService.getUserNotification(this.pageNumber);
-        }
+            if (saveFromDataRsponce.success == 'success') {
+                this.apiCallService.getUserNotification(this.pageNumber);
+            }
         }
     }
     this.unsubscribe(this.saveResponceSubscription);

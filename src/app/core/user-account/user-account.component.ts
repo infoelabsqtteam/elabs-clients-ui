@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnInit,OnDestroy, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSidenav } from '@angular/material/sidenav';
+// import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService,MenuOrModuleCommonService, StorageService,CommonFunctionService ,ApiCallService,ApiService,DataShareService} from '@core/web-core';
 import { Subscription } from 'rxjs';
