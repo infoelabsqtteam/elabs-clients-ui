@@ -12,6 +12,8 @@ export class PrivacyPolicyComponent implements OnInit {
    gridData :any = [];
    gridDataSubscription;
    privacyPolicy: any={};
+   serverHostnameSubscription
+   serverHostName = ''
 
   constructor(
     private router: Router,
@@ -21,11 +23,16 @@ export class PrivacyPolicyComponent implements OnInit {
     private envService : EnvService,
     private apiCallService:ApiCallService
     ) { 
+      this.serverHostnameSubscription = this.dataShareServices.serverHostname.subscribe(data=>{
+        if(data && data != ''){
+          this.serverHostName = data;
+        }
+      })
       this. getPrivacyPolicy()
       this.gridDataSubscription = this.dataShareServices.tempData.subscribe(data =>{
         if(data && data.length > 0){
           this.gridData= data;
-          const domainName = this.envService.getHostKeyValue('clientEndpoint');
+          const domainName = this.serverHostName;
           let index = this.commonFunctionService.getIndexInArrayById(this.gridData,domainName,"domainName")
           this.privacyPolicy =this.gridData[index]
         } else {

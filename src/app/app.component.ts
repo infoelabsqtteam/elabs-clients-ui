@@ -34,9 +34,10 @@ export class AppComponent implements OnInit {
     private envService: EnvService,
     private authDataShareService: AuthDataShareService,
     private apiCallService:ApiCallService,
+    private awsSecretManagerService : AwsSecretManagerService
   ) {
-    this.envService.getAppSettingAsync();
     
+    this.awsSecretManagerService.getServerAndAppSetting();
     //this.localSetting();
     // this.apiCallService.getApplicationAllSettings();
     if(this.dataShareService.themeSetting != undefined){
@@ -110,7 +111,8 @@ export class AppComponent implements OnInit {
   }
   redirectToHomePageWithStorage(){
     if(!this.authService.checkApplicationSetting()){
-      this.apiCallService.getApplicationAllSettings();
+      // this.apiCallService.getApplicationAllSettings();
+      this.awsSecretManagerService.getServerAndAppSetting();
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
