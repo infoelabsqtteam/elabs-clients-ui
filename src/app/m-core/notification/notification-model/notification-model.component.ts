@@ -48,7 +48,7 @@ checkAllTabAlerts(){
     return flag;
 }
 
-checkfun(item:any,type,e:any) {
+toggleModuleNotification(item:any,type,e:any) {
   if(e.target.checked){
       this.data.module.notification=true;
     }else{
