@@ -254,13 +254,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
     this.tinymceConfig = {
       height: 500,
-      menubar: false,
       branding: false,
-      plugins: [
-        'advlist autolink lists link image charmap print preview anchor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime media table paste code help wordcount'
-      ],
+      // plugins: [
+      //   'advlist autolink lists link image charmap print preview anchor',
+      //   'searchreplace visualblocks code fullscreen',
+      //   'insertdatetime media table paste code help wordcount'
+      // ],
+      menubar: 'file edit view insert format tc help',
+      plugins: 'print preview powerpaste paste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks code visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap mentions quickbars linkchecker emoticons advtable export',
       toolbar:
         'undo redo | formatselect | bold italic backcolor | \
         alignleft aligncenter alignright alignjustify | \
@@ -305,7 +306,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
         input.click();
       },
-      content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+      content_style: ' body > * {line-height:18px !important; text-transform:capitalize;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
     }
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
