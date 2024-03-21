@@ -28,7 +28,6 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     // @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
     private authApiService:AuthService,
-    private dataShareService:DataShareService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private apiCallService:ApiCallService,
     private dataShareService:DataShareService,
@@ -83,20 +82,27 @@ export class UserAccountComponent implements OnInit,OnDestroy {
     }
   }
   setRole(role){
-    let mydocument:any = this.document;
-    this.storageService.setRedirectUrl(mydocument.location['pathname']);
-    if(role.name != 'All'){
-      this.storageService.setActiveRole(role);
-      let payload = {
-        token : this.storageService.GetIdToken(),
-        roleName : role.name
+    // let mydocument:any = this.document;
+    // this.storageService.setRedirectUrl(mydocument.location['pathname']);
+    if(this.roleList && this.roleList.length > 1){
+      this.dataShareService.setModuleIndex(-1);
+      if(role.name != 'All'){
+        this.storageService.setActiveRole(role);
+        let payload = {
+          token : this.storageService.GetIdToken(),
+          roleName : role.name
+        }
+        this.authApiService.GetUserInfoFromToken(payload);
+      }else{
+        this.storageService.setActiveRole({});
+        this.authApiService.GetUserInfoFromToken(this.storageService.GetIdToken());
       }
-      this.authApiService.GetUserInfoFromToken(payload);
-    }else{
-      this.storageService.setActiveRole({});
-      this.authApiService.GetUserInfoFromToken(this.storageService.GetIdToken());
+      this.activeRole = role.name;
     }
-    this.activeRole = role.name;
+  }
+
+  getNotification(){
+    this.apiCallService.getUserNotification(1);
   }
 
   searchmodel(data:string) {
