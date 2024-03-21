@@ -233,6 +233,5 @@ export class NotificationListComponent implements OnInit {
     }else{
       return obj['days'] +" days ago";
       }
-    }
-    
+    }    
 }
