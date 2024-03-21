@@ -1,5 +1,5 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
-import { StorageService,DataShareService,ApiCallService,NotificationService,CoreFunctionService ,ModelService,CommonFunctionService,ApiService,MenuOrModuleCommonService} from '@core/web-core';
+import { StorageService,DataShareService,ApiCallService,NotificationService,FormValueService,CoreFunctionService ,ModelService,CommonFunctionService,ApiService,MenuOrModuleCommonService} from '@core/web-core';
 import {
   MatDialog
 } from '@angular/material/dialog';
@@ -25,6 +25,7 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
     private apiService: ApiService,
     private notificationService: NotificationService,
     private menuOrModuleCommonService: MenuOrModuleCommonService,
+    private formValueService: FormValueService,
     public dialog: MatDialog
   )
   { 
@@ -72,19 +73,14 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
   }
 
   saveNotification(){
-    let data=this.notificationService.saveNotification(this.AllModuleList);
+    let data=this.formValueService.transformArrayToObject(this.AllModuleList);
     this.updateUserNotification(data,"user_notification")
   }
 
   updateUserNotification(data: object, fieldName: string){
       this.isPageLoading=true;
-      let userRef = this.commonFunctionService.getReferenceObject(
-        this.storageService.GetUserInfo()
-      );
-      let payloadData={
-        notifications : data,
-        userId: userRef
-      }
+      let userRef = this.commonFunctionService.getReferenceObject(this.storageService.GetUserInfo());
+      let payloadData={notifications : data,userId: userRef}
       const payload = {
           curTemp: 'user_notification',
           data: payloadData,
