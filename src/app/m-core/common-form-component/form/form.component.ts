@@ -893,7 +893,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         this.router.navigate([result.public.url]);
       }
-      
+      this.apiCallService.getUserNotification(1);
       if(result.resetResponce) this.apiService.ResetSaveResponce();
       if(result.successAction) this.checkOnSuccessAction();
       if(result.message && result.message.msg && result.message.msg != ''){

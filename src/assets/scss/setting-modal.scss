@@ -42,6 +42,88 @@
     }
 }
 
+//  notification style classes
+.notificationMenu{  max-width: none !important; } 
+.notificationdetailsMenu{width: 450px !important;
+    .notification-item{&:hover{background-color: var(--themecolor);}}
+    .notificationMenuHeader{ background-color: var(--popupHeaderBg);}
+    .mat-tab-label {min-width: 50% !important;height: 36px !important;padding: 12px !important;}
+    .mat-tab-label-active {background-color: var(--themecolor) !important;}
+    .mat-list-base{background-color: var(--themecolor) !important;padding-top: 0 !important;font-size: 14px;font-weight: 400;font-family: "Roboto Condensed", sans-serif;}
+    .mat-list-item-content{display: inline-block !important;font-size: 14px !important;background-color: var(--themecolor) !important;width: 100% !important;
+        &:hover{background-color: var(--activebg) !important;}}
+    .mat-list-item{height: 36px !important;}
+    .showMoreBtn{font-size: 15px;font-weight: 500;}
+    .unread-indicator {width: 10px;height: 10px;background-color: blue;border-radius: 50%;}
+    .image{width: 40px;height: 40px;}
+    .unreadDot{width: 10px;height: 10px;}
+ }
+ .notificationSetting {
+    .mat-expansion-panel-spacing {margin:0;}
+    small {font-size:90%;}
+    mat-icon {color:#999;font-size:14px;width:auto;height:auto;}
+    .notificationmenu {
+        .mat-expansion-panel:not([class*=mat-elevation-z]) {box-shadow:none;}
+        .mat-expansion-panel-header {padding:0 20px 0 0;height:40px;border-radius:0;}
+        .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
+        .mat-expansion-panel-body {padding:0 0px 16px;}
+    }
+   .mat-expanded.mat-expansion-panel-spacing {border-radius:0;}
+}
+
+.settingmenu{.mat-badge-content { padding-left: 1px !important;}}
+
+.notification-model {
+    min-width: 500px;
+    .btn-group {
+        .select {position: relative;
+            .btn-warning {color: #212529;background-color: none;border: none;}
+            input:checked + label {background-color: #cdcedb;
+                &:hover,
+                &:focus,
+                &:active {background-color: #cdcedb;}
+                .btnn {padding: 12px 6px !important;border-radius: 4px !important;}
+            }
+            .ng-touched {opacity: 0 !important;}
+            input {opacity: 0;position: absolute;width: 40px;height: 30px;
+                &:hover {cursor: pointer;}
+                &[disabled] {cursor: not-allowed !important;}
+            }
+            .button_select {margin: 0 10px 10px 0;display: flex;background-color: transparent;
+                &:hover,
+                &:focus,
+                &:active {background-color: transparent;}
+            }
+        }
+    }
+    .btnn {padding: 6px 12px !important;border-radius: 4px !important;}
+    .header{background-color: var(--popupHeaderBg) !important;padding-block: 7px;position:relative;
+        .closebutton{position: absolute;width: 28px;border-radius: 50%;right: 0px;height: 28px;background: var(--white);color: black !important;font-size: 22px;line-height: 0px;
+        }}
+    .option {position: relative;
+        input {opacity: 0;position: absolute;}
+        input:checked + span {background-color: #8da3a5;
+            &:hover,
+            &:focus,
+            &:active {background-color: #8da3a5;}
+        } 
+        .btn-option {margin: 0 10px 10px 0;display: flex;background-color: transparent;
+            &:hover,
+            &:focus,
+            &:active {background-color: transparent;}
+        }
+    }  
+}
+
+.mat-dialog-container {height: auto !important;padding: 16px !important;}
+.notification-list {.mat-expansion-panel:not([class*=mat-elevation-z]){box-shadow: none !important;}.gray{color: gray;}
+.mat-expansion-panel-body{padding: 0 24px 5px !important;}
+.mat-expansion-panel-header {height: 48px !important;}
+.mat-list-base{ padding-top: 0 !important;}
+.list{&:hover{cursor: pointer;background: rgba(0,0,0,.04) !important;}}}
+.NotificationsubMenu{.mat-list-base:hover{background:transparent !important;}}
+
+
 
 
 

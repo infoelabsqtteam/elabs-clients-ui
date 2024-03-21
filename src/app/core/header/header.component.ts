@@ -238,7 +238,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }
 
     ngOnChanges(changes: SimpleChanges) {        
-        this.apiCallService.getUserNotification(1);
+        // this.apiCallService.getUserNotification(1);
     }    
     getMenuByModuleIndex(moduleIndex:any){
         if (moduleIndex != -1) {

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges, Inject } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
-
 import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
 import { MatSidenav } from "@angular/material/sidenav";
 
@@ -27,7 +26,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
     notificationlist = []
 
     gitVersionSubscription: Subscription;
-    userNotificationSubscription:Subscription;
+    userNotificationSettingSubscription:Subscription;
     saveResponceSubscription:Subscription;
     // subscription: Subscription;
     // menuDataSubscription:Subscription;
@@ -131,11 +130,14 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
                 this.gitVersion = data['git.build.version'];
             }
         });
-        this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
-            if (data && data.data && data.data.length > 0) {
-                this.setUserNotification(data.data);
-            }
-        });
+        this.userNotificationSettingSubscription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
+            if(res){
+                this.isPageLoading =false;
+                if(this.rightsidenav.opened){
+                    this.rightsidenav.toggle();
+                }
+            }     
+        })
         
 
 
@@ -237,13 +239,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
     
 
     ngOnDestroy() {
-        // this.subscription.unsubscribe();
-        // if (this.menuDataSubscription) {
-        //     this.menuDataSubscription.unsubscribe();
-        // }
-        if(this.userNotificationSubscription){
-            this.userNotificationSubscription.unsubscribe();
-        }
+        this.unsubscribe(this.userNotificationSettingSubscription);
     }
     setSaveResponce(saveFromDataRsponce){
         if (saveFromDataRsponce) {
@@ -847,5 +843,17 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         })
     }
 
+    notificationSetting(){
+        this.isPageLoading = true;
+        this.apiCallService.getUserNotificationSetting();
+        this.router.navigate(["notification-setting"]);     
+    }
+
+    gotoNotificationPage(){
+        if(this.rightsidenav.opened){
+            this.rightsidenav.toggle();
+        }
+        this.router.navigate(["browse/NOTIFY/notification_settings/user_notification_master"]);  
+    }
 
 }
