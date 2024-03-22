@@ -477,7 +477,7 @@
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype == 'object'">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory && tableField.type == 'list_of_fields'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                             <mat-select [compareWith]="compareObjects" [formControlName]="fields.field_name" (selectionChange)="setValue(tableField,fields,false)" [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
-                                                <div *ngIf="staticData[fields.ddn_field] && staticData[fields.ddn_field] > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                                <div *ngIf="staticData[fields.ddn_field] && staticData[fields.ddn_field].length > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
                                                 <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term[tableField.field_name+'_'+fields.field_name]" [value]="staticValue">
                                                     {{ staticValue.name ? staticValue.name : staticValue }}
@@ -490,7 +490,7 @@
                                         <mat-form-field appearance="outline" class="w-100" *ngIf="fields.datatype != 'object' && fields.datatype != 'key_value'">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory && tableField.type == 'list_of_fields'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                             <mat-select [formControlName]="fields.field_name" (selectionChange)="setValue(tableField,fields,false)"  [id]="fields._id+'_'+fields.field_name" disableOptionCentering panelClass="optiondropdown">
-                                                <div *ngIf="staticData[fields.ddn_field] && staticData[fields.ddn_field] > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
+                                                <div *ngIf="staticData[fields.ddn_field] && staticData[fields.ddn_field].length > showSearchLength" class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term[tableField.field_name+'_'+fields.field_name]" [ngModelOptions]="{standalone: true}"></div>
                                                 <mat-option></mat-option>
                                                 <mat-option *ngFor="let staticValue of staticData[fields.ddn_field] | filter:term[tableField.field_name+'_'+fields.field_name]" [value]="staticValue">
                                                     {{ staticValue.name ? staticValue.name : staticValue }}
