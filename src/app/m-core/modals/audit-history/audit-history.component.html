@@ -6,19 +6,24 @@
         <button class="closebtb" (click)="close()"><span>&times;</span></button>
       </div>
 
-      <div class="d-flex align-items-center justify-content-center bg-light px-3 py-2">
-        <h4 class="m-0" *ngIf="selectedTab">{{selectedTab.label}}</h4>
-        <div class="d-flex align-items-center mx-3" *ngIf="allVersionList && allVersionList.length > 0">
-          <select (change)="changeAuditVersion($event.target.value)" [(ngModel)] ="lastEdit">
-            <option *ngFor="let data of allVersionList; let i = index" [value]="data">{{data}}
-            </option>
-          </select>
+      <div class="position-relative">
+        <div class="d-flex align-items-center justify-content-center bg-light px-3 py-2 ">
+            <button mat-icon-button (click)="viewModeChange()"><mat-icon>{{isJsonView? 'visibility': 'table_view'}}</mat-icon></button>
+            <h4 class="m-0" *ngIf="selectedTab">{{selectedTab.label}}</h4>
+            <div class="d-flex align-items-center mx-3" *ngIf="allVersionList && allVersionList.length > 0">
+              <select (change)="changeAuditVersion($event.target.value)" [(ngModel)] ="lastEdit">
+                <option *ngFor="let data of allVersionList; let i = index" [value]="data">{{data}}
+                </option>
+              </select>
+            </div>
+          </div>
+        <div  *ngIf="isJsonView" class="jsonviewbtn">
+          <label (click)="jsonViewMode()">{{isJsonMode? 'Line By Line': 'Side By Side'}}</label>
         </div>
-        <!-- <div class="mt-2"><mat-checkbox color="primary">Show Difference</mat-checkbox></div> -->
       </div>
 
       <div class="modal-body auditdetails">
-        <table class="table" *ngIf="formFields && formFields.length > 0">
+        <table class="table" *ngIf="!isJsonView && formFields && formFields.length > 0">
           <thead class="thead-light">
             <tr>
               <th scope="col">Form Fields</th>
@@ -74,6 +79,9 @@
             </tr>
           </tbody>
         </table>
+        <div class="jsonview" *ngIf="isJsonView">
+          <ngx-diff2html [format]="isJsonMode? 'line-by-line': 'side-by-side'" left="{{previousObject | json}}" right="{{currentObject | json}}"></ngx-diff2html>
+        </div>
       </div>
     </div>
   </div>
