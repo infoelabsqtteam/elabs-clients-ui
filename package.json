@@ -30,7 +30,7 @@
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/platform-server": "^14.3.0",
     "@angular/router": "^14.3.0",
-    "@core/web-core": "^1.1.170",
+    "@core/web-core": "^1.1.173",
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@kolkov/angular-editor": "^1.1.2",
     "@maaxgr/ang-jsoneditor": "^13.0.5",

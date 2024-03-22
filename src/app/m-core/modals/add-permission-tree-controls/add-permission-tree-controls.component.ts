@@ -192,20 +192,37 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     crList:-1,
     userCrList:-1
   };
-  editListOfFiedls(i,key){
+  editListOfFields(i,key){
     this.updateIndex[key]=i;
     this.listOfFieldUpdateMode[key] = true;
     let data = this.custMizedFormValue[key][i];
-    data.fValue = data.fValue.value;
-    if(key == 'userCrList'){
-      data.fValue = this.convertColonStringToList(data.fValue);
+    let modifyData = JSON.parse(JSON.stringify(data));
+    modifyData['fValue'] = data.fValue.value;
+    this.criteria.get(key).reset();
+    this.checkMultiple = false;
+    this.criteria.get(key).get('fName').setValue(modifyData['fName']);
+    this.criteria.get(key).get('operator').setValue(modifyData['operator']);  
+    //this.criteria.get(key).setValue(modifyData);
+    this.getDependencyData(key); 
+    if(this.commonFunctionService.isArray(modifyData['fValue'])){
+      if(!this.checkMultiple){
+        this.checkMultiple = true;        
+      }
+      this.criteria.get(key).get('fValue').setValue(modifyData['fValue']);
+    }else{
+      setTimeout(() => {
+        this.criteria.get(key).get('fValue').setValue(modifyData['fValue']);
+      }, 100);      
     }
-    this.criteria.get(key).setValue(data);
+       
+  }
+  getDependencyData(key:any){
     if(key == 'userCrList'){
       this.setValue('fName','userOperators','userCrList','user_filter_field_list')
     }else{
       this.setValue('fName','operators','crList','grid_field_list')
     }
+    this.changeOperator(key);
   }
   convertColonStringToList(value:string){
     let list = [];
@@ -230,7 +247,11 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   compareObjects(o1: any, o2: any): boolean {
     if(o1 != null && o2 != null){
-      return o1._id === o2._id;
+      if(o1 && o1._id){
+        return o1._id === o2._id;
+      }else{
+        return o1.field_name === o2.field_name;
+      }      
     }else{
       return false;
     }    
@@ -264,9 +285,11 @@ export class AddPermissionTreeControlsComponent implements OnInit {
             break;
         }
       }
-      this.criteria.get(key).get('operator').reset();
-      this.criteria.get(key).get('fValue').reset();
-      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType);
+      if(this.updateIndex[key] && this.updateIndex[key] == -1){
+        this.criteria.get(key).get('operator').reset();
+        this.criteria.get(key).get('fValue').reset();
+      }      
+      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType,'list');
       if(dataKey == 'user_filter_field_list' && field.onchange_api_params && field.onchange_api_params != ''){
         this.subscribeStaticData();
         let payload = this.apiCallService.getPaylodWithCriteria(field.onchange_api_params,"user_value_list",[],{});
