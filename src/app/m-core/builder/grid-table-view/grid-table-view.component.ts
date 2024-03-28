@@ -1145,51 +1145,59 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   public downloadClick = '';
 
-  exportExcel() { 
-    this.modalService.open('download-progress-modal', {}); 
-    let tempNme = this.currentMenu.name;
-    if(this.permissionService.checkPermission(tempNme,'export')){  
-      let gridName = '';
-      let grid_api_params_criteria = [];
-      if(this.checkIfService.isGridFieldExist(this.tab,"api_params_criteria")){
-        grid_api_params_criteria = this.tab.grid.api_params_criteria;
-      }
-      const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
-      if(this.tab && this.tab.grid){
-        if(this.tab.grid.export_template && this.tab.grid.export_template != null){
-          gridName = this.tab.grid.export_template;
-        }else{
-          gridName = this.tab.grid._id;
-        }
-      }
-      delete data.log;
-      delete data.key;
-      data['key'] = this.userInfo.refCode;
-      data['key3']=gridName;
-      const value = this.filterForm.getRawValue();
-      const filtewCrlist = this.apiCallService.getfilterCrlist(this.headElements,value);
-      if(filtewCrlist.length > 0){
-        filtewCrlist.forEach(element => {
-          data.crList.push(element);
-        });
-      }
-      const getExportData = {
-        data: {
-          refCode: this.userInfo.refCode,
-          log: this.storageService.getUserLog(),
-          kvp: data
-        },
-        responce: { responseType: "arraybuffer" },
-        path: tempNme
-      }
-      var fileName = tempNme;
-      fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
-      this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
-      this.apiService.GetExportExclLink(getExportData);
-    }else{
-      this.permissionService.checkTokenStatusForPermission();
-      //this.notificationService.notify("bg-danger", "Permission denied !!!");
+  exportExcel() {
+    let totalGridData = this.storageService.getApplicationSetting()?.totalGridData;
+    if(totalGridData == undefined) {
+      totalGridData = 50000
     }
+    if(this.total && this.total != undefined && totalGridData != undefined && this.total < totalGridData) {
+      this.modalService.open('download-progress-modal', {}); 
+      let tempNme = this.currentMenu.name;
+      if(this.permissionService.checkPermission(tempNme,'export')){  
+        let gridName = '';
+        let grid_api_params_criteria = [];
+        if(this.checkIfService.isGridFieldExist(this.tab,"api_params_criteria")){
+          grid_api_params_criteria = this.tab.grid.api_params_criteria;
+        }
+        const data = this.apiCallService.getPaylodWithCriteria(this.currentMenu.name,'',grid_api_params_criteria,'');
+        if(this.tab && this.tab.grid){
+          if(this.tab.grid.export_template && this.tab.grid.export_template != null){
+            gridName = this.tab.grid.export_template;
+          }else{
+            gridName = this.tab.grid._id;
+          }
+        }
+        delete data.log;
+        delete data.key;
+        data['key'] = this.userInfo.refCode;
+        data['key3']=gridName;
+        const value = this.filterForm.getRawValue();
+        const filtewCrlist = this.apiCallService.getfilterCrlist(this.headElements,value);
+        if(filtewCrlist.length > 0){
+          filtewCrlist.forEach(element => {
+            data.crList.push(element);
+          });
+        }
+        const getExportData = {
+          data: {
+            refCode: this.userInfo.refCode,
+            log: this.storageService.getUserLog(),
+            kvp: data
+          },
+          responce: { responseType: "arraybuffer" },
+          path: tempNme
+        }
+        var fileName = tempNme;
+        fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
+        this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
+        this.apiService.GetExportExclLink(getExportData);
+      }else{
+        this.permissionService.checkTokenStatusForPermission();
+        //this.notificationService.notify("bg-danger", "Permission denied !!!");
+      }
+    }else {
+      this.notificationService.notify("bg-danger", `Maximum ${totalGridData} Record Not Allow to Downloading`);
+    }   
   }
 
   onSort(columnObject) {
