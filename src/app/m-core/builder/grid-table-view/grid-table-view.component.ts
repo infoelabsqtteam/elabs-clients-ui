@@ -1146,11 +1146,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   public downloadClick = '';
 
   exportExcel() {
-    let totalGridData = this.storageService.getApplicationSetting()?.totalGridData;
-    if(totalGridData == undefined) {
-      totalGridData = 50000
+    let totalGridData:number = this.storageService.getApplicationSetting()?.totalGridData;
+    if(!totalGridData) {
+      totalGridData = 50000;
     }
-    if(this.total && this.total != undefined && totalGridData != undefined && this.total < totalGridData) {
+    if(this.total && totalGridData > 0 && this.total < totalGridData) {
       this.modalService.open('download-progress-modal', {}); 
       let tempNme = this.currentMenu.name;
       if(this.permissionService.checkPermission(tempNme,'export')){  
@@ -1196,7 +1196,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         //this.notificationService.notify("bg-danger", "Permission denied !!!");
       }
     }else {
-      this.notificationService.notify("bg-danger", `Maximum ${totalGridData} Record Not Allow to Downloading`);
+      this.notificationService.notify("bg-danger", `Kindly filter data as download record size is : ${totalGridData} not ${this.total}`);
     }   
   }
 
