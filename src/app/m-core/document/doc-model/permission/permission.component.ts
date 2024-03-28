@@ -72,7 +72,7 @@ export class PermissionComponent implements OnInit {
       this.permissionData();
       this.updateMode = false;
       this.selectedRow = {};
-      this.permissionForm.reset();
+      this.permissionForm?.reset();
     })
   }
 
@@ -111,7 +111,7 @@ export class PermissionComponent implements OnInit {
 
 
   setTypeaheadData(typeAheadData) {
-    if (typeAheadData.length > 0) {
+    if (typeAheadData && typeAheadData.length > 0) {
       this.typeAheadData = typeAheadData;
     } else {
       this.typeAheadData = [];
@@ -254,7 +254,7 @@ export class PermissionComponent implements OnInit {
     this.permissionData();
   }
   permissionData(){
-    let currentFolderId = this.folder._id;
+    let currentFolderId = this.folder?._id;
     let criteria = []
     if(currentFolderId && currentFolderId != ''){
       const cr = "folderId;eq;"+ currentFolderId + ";STATIC";
