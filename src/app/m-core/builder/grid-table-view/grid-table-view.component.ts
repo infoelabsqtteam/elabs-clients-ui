@@ -1193,7 +1193,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         this.apiService.GetExportExclLink(getExportData);
       }else{
         this.permissionService.checkTokenStatusForPermission();
-        //this.notificationService.notify("bg-danger", "Permission denied !!!");
       }
     }else {
       this.notificationService.notify("bg-danger", `Kindly filter data as download record size is : ${totalGridData} not ${this.total}`);
