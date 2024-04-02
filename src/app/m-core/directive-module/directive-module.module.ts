@@ -7,6 +7,7 @@ import { IsDecimalDirective } from 'src/app/directives/IsDecimalDirective.direct
 import { StickyTableDirective } from 'src/app/directives/sticky-table/StickyTable.directive';
 import { StickyDirective, StickyHeadDirective } from 'src/app/directives/sticky/sticky.directive';
 import { ResizeColumnDirective } from 'src/app/directives/resizable-column/resize-column.directive';
+import { NoSpaceDirective } from 'src/app/directives/no-space-directive.directive';
 
 
 const directives = [
@@ -17,7 +18,8 @@ const directives = [
     StickyTableDirective,
     StickyDirective,
     StickyHeadDirective,
-    ResizeColumnDirective
+    ResizeColumnDirective,
+    NoSpaceDirective
 ]
 
 @NgModule({
