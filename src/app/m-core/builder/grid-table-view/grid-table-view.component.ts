@@ -542,6 +542,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }else{
       this.rowId = "";
     }
+    this.pageLoading=false;
   }
   setStaticData(staticData){
     if (staticData) {

@@ -212,14 +212,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <ng-container *ngIf="elements.length == 0 && headElements.length != 0 && !gridDisable">
+                            <ng-container *ngIf="!pageLoading && elements.length == 0 && headElements.length != 0 && !gridDisable">
                                 <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">No Records Found !!!</div>
                             </ng-container>
-                            <ng-container *ngIf="elements.length == 0 && headElements.length != 0 && gridDisable">
+                            <ng-container *ngIf="!pageLoading && elements.length == 0 && headElements.length != 0 && gridDisable">
                                 <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">Search Grid Fields</div>
                             </ng-container>
                             
-                            <ng-container *ngIf="elements.length == 0 && headElements.length == 0">
+                            <ng-container *ngIf="!pageLoading && elements.length == 0 && headElements.length == 0">
                                 <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">Permission denied !!!</div>
                             </ng-container>
                         </div>
@@ -266,7 +266,9 @@
     <app-form class="w-100" [tabIndex]="selectTabIndex" [isBulkUpdate]="isBulkUpdate" [bulkDataList]="bulkuploadList" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName' [selectContact]='selectContactAdd'></app-form> 
 </div> -->
 
-
+<div class="loader-overlay" *ngIf="pageLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+</div>
 
 
 <app-modals id="basic-modal" (responceData)="responceData($event)"></app-modals>
