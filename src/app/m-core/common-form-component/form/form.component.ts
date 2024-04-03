@@ -2676,7 +2676,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   updateDataOnFormField(formValue){
     const checkDataType = typeof formValue;
     if(checkDataType == 'object' && !Array.isArray(formValue) && this.tableFields && this.tableFields.length > 0){
-      let result = this.formControlService.updateDataOnForm(this.templateForm,this.tableFields,formValue,this.formFieldButtons,this.custmizedFormValue,this.modifyCustmizedFormValue,this.selectedRow,this.dataListForUpload,this.treeViewData,this.staticData,this.longitude,this.latitude,this.zoom);
+      let result:any = this.formControlService.updateDataOnForm(this.templateForm,this.tableFields,formValue,this.formFieldButtons,this.custmizedFormValue,this.modifyCustmizedFormValue,this.selectedRow,this.dataListForUpload,this.treeViewData,this.staticData,this.longitude,this.latitude,this.zoom);
       this.templateForm = result.templateForm;
       this.tableFields = result.tableFields;
       this.custmizedFormValue = result.custmizedFormValue;
@@ -2687,7 +2687,20 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.staticData = result.staticData;
       this.latitude = result.latitude;
       this.longitude = result.longitude;
-      this.zoom = result.zoom;
+      if(result?.zoom >= 10 ){
+        this.zoom = 17;
+      }else{
+        this.zoom = result.zoom;
+      }
+      
+      if(result?.address){
+        this.address = result?.address;
+      }
+      this.center= {
+        'lat': this.latitude,
+        'lng': this.longitude
+      }
+      
       if(result.getAddress){
         this.getAddress(this.latitude,this.longitude);
       }
