@@ -210,7 +210,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       this.resetGroup(key);
     }else{
       if(!this.custMizedFormValue[key]) this.custMizedFormValue[key]=[];
-      let check = this.checkIfService.checkDataAlreadyAddedInListOrNot({"field_name":"fName","label":"Field Name"},fName,this.custMizedFormValue[key]);
+      let check = this.checkDataAddInCrListOrNot(fName,this.custMizedFormValue[key]);
       if(!check.status){
         this.custMizedFormValue[key].push(crList);
         this.resetGroup(key);
@@ -219,6 +219,23 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       }      
     }    
     
+  }
+  checkDataAddInCrListOrNot(incomingData,list){
+    let checkStatus = {
+      status : false,
+      msg : ""
+    };
+    if(typeof incomingData == "object"){
+      if(list && list.length > 0){
+        list.forEach((element:any) => {
+          if(element['fName']["field_name"] == incomingData["field_name"]){
+            checkStatus.status =  true;
+            checkStatus.msg = "Entered value for Field Name is already added. !!!";
+          }
+        });
+      }
+    }
+    return checkStatus;
   }
   resetGroup(key){
     this.criteria.get(key).reset();
