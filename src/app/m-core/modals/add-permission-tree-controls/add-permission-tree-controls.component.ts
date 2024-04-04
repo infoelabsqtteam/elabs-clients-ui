@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService, CheckIfService, NotificationService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -42,7 +42,9 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     private coreFunctionService:CoreFunctionService,
     private dataShareServices:DataShareService,
     private apiCallService:ApiCallService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private checkIfService:CheckIfService,
+    private notificationService:NotificationService
   ) { }
 
   ngOnInit() {
@@ -165,10 +167,34 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     this.permissionControlResponce.next(value);
     this.close();
   }
+  getTypeFromFieldValue(fValue,fieldType){
+    let type:any = typeof fValue;
+    switch (type) {
+      case "object":
+        if(this.commonFunctionService.isArray(fValue)){
+          type = "List";
+        }else if(fieldType && fieldType == "date"){
+          type = "daterange";
+        }        
+        break;
+      case "string":
+        if(fieldType && fieldType == "date"){
+          type = "date";
+        }
+        break;
+      default:
+        break;
+    }
+    return type;
+  }
   addCrList(key){
     let crList = JSON.parse(JSON.stringify(this.criteria.value[key]));
     let fValue = crList.fValue;
-    let object = {'value':fValue};
+    let fName = crList.fName;
+    let fieldType = fName?.type;
+    let object = {};
+    object['value'] = fValue;    
+    object['type'] = this.getTypeFromFieldValue(fValue,fieldType);
     crList['fValue'] = object;
     // if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
     //   crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
@@ -181,31 +207,75 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       this.custMizedFormValue[key][index]=crList;
       this.updateIndex[key]=-1;
       this.listOfFieldUpdateMode[key] = false;
+      this.resetGroup(key);
     }else{
       if(!this.custMizedFormValue[key]) this.custMizedFormValue[key]=[];
-      this.custMizedFormValue[key].push(crList);
+      let check = this.checkDataAddInCrListOrNot(fName,this.custMizedFormValue[key]);
+      if(!check.status){
+        this.custMizedFormValue[key].push(crList);
+        this.resetGroup(key);
+      }else{
+        this.notificationService.notify("bg-danger","Entered value for Field Name is already added. !!!");
+      }      
     }    
+    
+  }
+  checkDataAddInCrListOrNot(incomingData,list){
+    let checkStatus = {
+      status : false,
+      msg : ""
+    };
+    if(typeof incomingData == "object"){
+      if(list && list.length > 0){
+        list.forEach((element:any) => {
+          if(element['fName']["field_name"] == incomingData["field_name"]){
+            checkStatus.status =  true;
+            checkStatus.msg = "Entered value for Field Name is already added. !!!";
+          }
+        });
+      }
+    }
+    return checkStatus;
+  }
+  resetGroup(key){
     this.criteria.get(key).reset();
     this.crListFieldType = '';
   }
-  updateIndex={
+  updateIndex:any={
     crList:-1,
     userCrList:-1
   };
-  editListOfFiedls(i,key){
+  editListOfFields(i,key){
     this.updateIndex[key]=i;
     this.listOfFieldUpdateMode[key] = true;
     let data = this.custMizedFormValue[key][i];
-    data.fValue = data.fValue.value;
-    if(key == 'userCrList'){
-      data.fValue = this.convertColonStringToList(data.fValue);
+    let modifyData = JSON.parse(JSON.stringify(data));
+    modifyData['fValue'] = data.fValue.value;
+    this.criteria.get(key).reset();
+    this.checkMultiple = false;
+    this.criteria.get(key).get('fName').setValue(modifyData['fName']);
+    this.criteria.get(key).get('operator').setValue(modifyData['operator']);  
+    //this.criteria.get(key).setValue(modifyData);
+    this.getDependencyData(key); 
+    if(this.commonFunctionService.isArray(modifyData['fValue'])){
+      if(!this.checkMultiple){
+        this.checkMultiple = true;        
+      }
+      this.criteria.get(key).get('fValue').setValue(modifyData['fValue']);
+    }else{
+      setTimeout(() => {
+        this.criteria.get(key).get('fValue').setValue(modifyData['fValue']);
+      }, 100);      
     }
-    this.criteria.get(key).setValue(data);
+       
+  }
+  getDependencyData(key:any){
     if(key == 'userCrList'){
       this.setValue('fName','userOperators','userCrList','user_filter_field_list')
     }else{
       this.setValue('fName','operators','crList','grid_field_list')
     }
+    this.changeOperator(key);
   }
   convertColonStringToList(value:string){
     let list = [];
@@ -230,7 +300,11 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   }
   compareObjects(o1: any, o2: any): boolean {
     if(o1 != null && o2 != null){
-      return o1._id === o2._id;
+      if(o1 && o1._id){
+        return o1._id === o2._id;
+      }else{
+        return o1.field_name === o2.field_name;
+      }      
     }else{
       return false;
     }    
@@ -264,9 +338,11 @@ export class AddPermissionTreeControlsComponent implements OnInit {
             break;
         }
       }
-      this.criteria.get(key).get('operator').reset();
-      this.criteria.get(key).get('fValue').reset();
-      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType);
+      if(this.updateIndex[key] && this.updateIndex[key] == -1){
+        this.criteria.get(key).get('operator').reset();
+        this.criteria.get(key).get('fValue').reset();
+      }      
+      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType,'list');
       if(dataKey == 'user_filter_field_list' && field.onchange_api_params && field.onchange_api_params != ''){
         this.subscribeStaticData();
         let payload = this.apiCallService.getPaylodWithCriteria(field.onchange_api_params,"user_value_list",[],{});

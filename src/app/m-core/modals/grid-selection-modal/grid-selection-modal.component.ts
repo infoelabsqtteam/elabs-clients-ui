@@ -801,7 +801,7 @@ export class GridSelectionModalComponent implements OnInit {
             const column = this.editableGridColumns[j];
             // data[column.field_name] = responce[column.field_name];
             this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
-            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
+            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] != null && column.display){
               data[column.field_name] = responce[column.field_name];
               switch (column.type.toLowerCase()) {
                 case 'text':
