@@ -1,0 +1,29 @@
+<div mdbModal #fullScreenMap="mdbModal" class="modal fade">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center m-0">
+          <h4 class="modal-title font-weight-bold m-0">Full Screen Map</h4>
+          <button class="closebtb" (click)="close()"><span>&times;</span></button>
+        </div>
+
+
+        <div class="modal-body">
+            <div class=""  *ngIf="tableField && tableField.type == 'gmapview'">
+              <mat-form-field appearance="outline" class="w-100 mb-3">
+                <mat-label>{{ tableField.label | titlecase}}</mat-label>
+                <input matInput [(ngModel)]="address" (keyup)="gmapSearchPlaces($event,tableField)" [placeholder]="tableField.placeholder | titlecase" spellcheck="off" type="text" #search (keydown.enter)="$event.preventDefault()">
+            </mat-form-field>
+            <google-map #GoogleMap height="380px" width="100%" [center]="center" [zoom]="zoom" (mapClick)="mapClick($event,tableField)">
+              <map-marker #marker="mapMarker" *ngIf="center" [position]="center" (mapClick)="openInfoWindow(marker)"> </map-marker>
+              <map-info-window>{{address}}</map-info-window>
+          </google-map>
+            </div>
+
+        </div>
+
+        <div class="modal-footer py-0 row m-0 w-100">
+          <button (click)="saveData()" type="button" size="sm" class="noshadow rounded bg-cerulean text-white btn-sm btn">Save</button>     
+         </div>
+      </div>
+    </div>
+  </div>

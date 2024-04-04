@@ -2559,6 +2559,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.templateForm.get('address').setValue(this.address);
     }
   }
+  fullScreenMap(tableField:any){
+    this.modalService.open('fullScreenMap', {
+      "address": this.searchElementRef.nativeElement.value,
+      "center": this.center,
+      "zoom": this.zoom,
+      "lat": this.latitude,
+      "lng": this.longitude,
+      "tableField": tableField
+    });
+  }
+  mapResponse(response) {
+    if(response){
+      this.searchElementRef.nativeElement.value = response?.address;
+      this.center = response?.center;
+      this.latitude = response.latitude;
+      this.longitude = response.longitude;
+    }
+  }
   //Map Related Functions
   
   setForm(){
