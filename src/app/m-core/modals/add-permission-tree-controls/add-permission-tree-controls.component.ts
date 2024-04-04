@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService, CheckIfService, NotificationService } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -42,7 +42,9 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     private coreFunctionService:CoreFunctionService,
     private dataShareServices:DataShareService,
     private apiCallService:ApiCallService,
-    private apiService:ApiService
+    private apiService:ApiService,
+    private checkIfService:CheckIfService,
+    private notificationService:NotificationService
   ) { }
 
   ngOnInit() {
@@ -165,10 +167,34 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     this.permissionControlResponce.next(value);
     this.close();
   }
+  getTypeFromFieldValue(fValue,fieldType){
+    let type:any = typeof fValue;
+    switch (type) {
+      case "object":
+        if(this.commonFunctionService.isArray(fValue)){
+          type = "List";
+        }else if(fieldType && fieldType == "date"){
+          type = "daterange";
+        }        
+        break;
+      case "string":
+        if(fieldType && fieldType == "date"){
+          type = "date";
+        }
+        break;
+      default:
+        break;
+    }
+    return type;
+  }
   addCrList(key){
     let crList = JSON.parse(JSON.stringify(this.criteria.value[key]));
     let fValue = crList.fValue;
-    let object = {'value':fValue};
+    let fName = crList.fName;
+    let fieldType = fName?.type;
+    let object = {};
+    object['value'] = fValue;    
+    object['type'] = this.getTypeFromFieldValue(fValue,fieldType);
     crList['fValue'] = object;
     // if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
     //   crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
@@ -181,14 +207,24 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       this.custMizedFormValue[key][index]=crList;
       this.updateIndex[key]=-1;
       this.listOfFieldUpdateMode[key] = false;
+      this.resetGroup(key);
     }else{
       if(!this.custMizedFormValue[key]) this.custMizedFormValue[key]=[];
-      this.custMizedFormValue[key].push(crList);
+      let check = this.checkIfService.checkDataAlreadyAddedInListOrNot({"field_name":"fName","label":"Field Name"},fName,this.custMizedFormValue[key]);
+      if(!check.status){
+        this.custMizedFormValue[key].push(crList);
+        this.resetGroup(key);
+      }else{
+        this.notificationService.notify("bg-danger","Entered value for Field Name is already added. !!!");
+      }      
     }    
+    
+  }
+  resetGroup(key){
     this.criteria.get(key).reset();
     this.crListFieldType = '';
   }
-  updateIndex={
+  updateIndex:any={
     crList:-1,
     userCrList:-1
   };
