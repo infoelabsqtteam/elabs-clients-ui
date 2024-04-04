@@ -36,8 +36,9 @@ export class AppComponent implements OnInit {
     private apiCallService:ApiCallService,
     private awsSecretManagerService : AwsSecretManagerService
   ) {
-    
-    this.awsSecretManagerService.getServerAndAppSetting();
+    if(!this.storageService.getHostNameDinamically()){
+      this.awsSecretManagerService.getServerAndAppSetting();
+    }
     //this.localSetting();
     // this.apiCallService.getApplicationAllSettings();
     if(this.dataShareService.themeSetting != undefined){
@@ -112,7 +113,10 @@ export class AppComponent implements OnInit {
   redirectToHomePageWithStorage(){
     if(!this.authService.checkApplicationSetting()){
       // this.apiCallService.getApplicationAllSettings();
-      this.awsSecretManagerService.getServerAndAppSetting();
+      const serverHost = this.storageService.getHostNameDinamically();
+      if(!serverHost){
+        this.awsSecretManagerService.getServerAndAppSetting();
+      }
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
