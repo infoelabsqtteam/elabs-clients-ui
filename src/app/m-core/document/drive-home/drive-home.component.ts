@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ContextMenuComponent } from 'ngx-contextmenu';
+// import { ContextMenuComponent } from 'ngx-contextmenu';
 import {CommonFunctionService, ApiService, NotificationService, EnvService, ModelService, DocDataShareService, DocApiService, StorageService, ApiCallService} from '@core/web-core';
+import { ContextMenuComponent } from '@argentumcode/ngx-contextmenu';
 
 @Component({
   selector: 'lib-drive-home',
@@ -92,7 +93,8 @@ export class DriveHomeComponent implements OnInit {
 	storeFolderData:any = {};
 	
 
-	@ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+	// @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+	@ViewChild(ContextMenuComponent, { static: true }) public basicMenu?: ContextMenuComponent;
 	
 
 	constructor(
@@ -233,7 +235,7 @@ export class DriveHomeComponent implements OnInit {
         }
     }
     setMoveFolderChildData(moveFolderChild){
-        if (moveFolderChild.length > 0 && !this.firstTimeOpenMoveModel) {
+        if (moveFolderChild && moveFolderChild.length > 0 && !this.firstTimeOpenMoveModel) {
             this.moveFolderChildren = [];
             var data = moveFolderChild
             data.forEach(element => {
@@ -483,16 +485,20 @@ export class DriveHomeComponent implements OnInit {
 
 
 
-	showMessage(message: any) {
-		console.log(message);
-		this.DocIndex = message.item[1];
-		//   this.deleteDoc();
+	showMessage(message: any,data?: any) {
+		console.log(message, data);
+		if(message && message?.eventType == 'cancel'){
+			this.DocIndex = 0;
+		}else{
+			this.DocIndex = message?.item?.[1];
+			//   this.deleteDoc();
+		}
 	}
-	viewDetails(details: any) {
+	viewDetails(details: any,item?:any) {
 		this.docDetailActivity = true;
 		this.setClickedRow(details.item[1], true, details.item[0])
 	}
-	renameFromMenu(details: any) {
+	renameFromMenu(details: any,item?:any) {
 		this.setClickedRow(details.item[1], true, details.item[0])
 		if (!details.item[0].folder) {
 			if (this.selectedRowFile) {
