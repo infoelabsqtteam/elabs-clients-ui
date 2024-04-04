@@ -603,6 +603,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems(grid, this.itemNumOfGrid);
           if(this.details && this.details.disableGrid) {
             this.gridDisable = true;
+            this.pageLoading = false;
           }else {
             this.gridDisable = false;
           }
