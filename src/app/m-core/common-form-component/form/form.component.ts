@@ -2687,6 +2687,10 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.staticData = result.staticData;
       this.latitude = result.latitude;
       this.longitude = result.longitude;
+      this.center = {
+        "lat":result.latitude,
+        "lng": result.longitude
+      };
       this.zoom = result.zoom;
       if(result.getAddress){
         this.getAddress(this.latitude,this.longitude);
