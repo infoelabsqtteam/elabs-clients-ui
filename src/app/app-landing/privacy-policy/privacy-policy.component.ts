@@ -25,7 +25,7 @@ export class PrivacyPolicyComponent implements OnInit {
       this.gridDataSubscription = this.dataShareServices.tempData.subscribe(data =>{
         if(data && data.length > 0){
           this.gridData= data;
-          const domainName = this.envService.getHostKeyValue('clientEndpoint');
+          const domainName = this.envService.getServerHostname();
           let index = this.commonFunctionService.getIndexInArrayById(this.gridData,domainName,"domainName")
           this.privacyPolicy =this.gridData[index]
         } else {

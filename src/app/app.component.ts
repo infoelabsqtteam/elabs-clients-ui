@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
-import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService, ApiCallService } from '@core/web-core';
+import { StorageService, DataShareService, ModelService, LoaderService, EnvService, AuthService, AuthDataShareService, AwsSecretManagerService, CookiesService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   showHideSetting:boolean = false;
   themeSettingSubscription:Subscription;
   applicationSettingSubscription:Subscription;
+  settingLoding = false;
 
   favIcon: HTMLLinkElement = document.querySelector('#favIcon');
   themeName:any = '';
@@ -30,15 +31,17 @@ export class AppComponent implements OnInit {
     private modelService:ModelService,
     public loaderService:LoaderService,
     private authService: AuthService,
-    private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
     private authDataShareService: AuthDataShareService,
-    private apiCallService:ApiCallService
-
+    private apiCallService:ApiCallService,
+    private awsSecretManagerService : AwsSecretManagerService,
+    private cookieService: CookiesService
   ) {
-    
     //this.localSetting();
-    this.apiCallService.getApplicationAllSettings();
+    // this.apiCallService.getApplicationAllSettings();
+    if(!this.settingLoding){
+      this.getApplicationSettings();
+    }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
@@ -77,8 +80,15 @@ export class AppComponent implements OnInit {
       }
 
     })
+
+    this.dataShareService.getServerEndPoint.subscribe(data=>{
+      if(data){
+        this.awsSecretManagerService.getServerAndAppSetting();
+      }
+    })
    }
 
+   
   ngOnInit() {     
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
@@ -109,7 +119,10 @@ export class AppComponent implements OnInit {
   }
   redirectToHomePageWithStorage(){
     if(!this.authService.checkApplicationSetting()){
-      this.apiCallService.getApplicationAllSettings();
+      // this.apiCallService.getApplicationAllSettings();
+      if(!this.settingLoding){
+        this.getApplicationSettings();
+      }
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
@@ -140,4 +153,42 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.storageService.getPageTitle());
     this.themeName = this.storageService.getPageThmem();
   }
+
+  getApplicationSettings() {
+    if(this.settingLoding){
+      return;
+    }
+    const domainName = document.location.hostname;
+    const hostNameInLocal = this.storageService.getHostNameDinamically();
+    const hostNameInCookies = this.cookieService.getCookieByName(domainName);
+    if(!this.settingLoding){
+    if(domainName != 'localhost'){
+      if (!!hostNameInCookies && !hostNameInLocal) {
+          let serverHost = new URL(hostNameInCookies)?.origin;
+          this.dataShareService.shareServerHostName(serverHost);
+          this.storageService.setHostNameDinamically(hostNameInCookies);
+      } else {
+        this.settingLoding = true;
+          if (!hostNameInLocal || !this.authService.checkApplicationSetting()) {
+            if(!this.authService.checkApplicationSetting() && hostNameInLocal){
+              this.apiCallService.getApplicationAllSettings();
+            } else{
+              this.awsSecretManagerService.getServerAndAppSetting();
+            }
+
+          } else {
+              let serverHost = new URL(hostNameInLocal)?.origin;
+              this.dataShareService.shareServerHostName(serverHost);
+              this.storageService.setHostNameDinamically(hostNameInLocal);
+          }
+      }
+    } else {
+      this.awsSecretManagerService.getServerAndAppSetting();
+    }
+    }
+    if(this.storageService.getHostNameDinamically()){
+      this.settingLoding = false;
+    }
+  }
+  
 }

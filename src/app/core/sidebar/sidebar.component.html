@@ -1,6 +1,7 @@
 <section class="vertical-menu sidenav">
   <div class="sidefilter px-3 mb-4"><input type="text" [(ngModel)]="modal" [placeholder]="'Search Modules...'"/></div>
-  <perfect-scrollbar>
+  <!-- <perfect-scrollbar> -->
+  <ng-scrollbar #scrollable visibility="hover" appearance="standard" pointerEventsMethod="scrollbar">
     <div class="metismenu list-unstyled mb-5" #sideMenu>
       <mat-accordion>
         <mat-expansion-panel *ngFor="let item of AllModuleList|filter:modal; let i = index" [ngClass]="{}" [expanded]="i == moduleIndex">
@@ -34,7 +35,8 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-  </perfect-scrollbar>
+  </ng-scrollbar>
+  <!-- </perfect-scrollbar> -->
 </section>
 
 <div class="loader-overlay" *ngIf="isPageLoading">

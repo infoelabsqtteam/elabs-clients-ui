@@ -51,7 +51,6 @@ export class GridSelectionModalComponent implements OnInit {
   selectedDataLength:number=0;
   buttonlabel:any;
   currentForm:any;
-  currencyRate:any;
   @Input() id: string;
   @Output() gridSelectionResponce = new EventEmitter();
   @ViewChild('gridViewModalSelection') public gridViewModalSelection: ModalDirective;
@@ -450,9 +449,6 @@ export class GridSelectionModalComponent implements OnInit {
     this.field = alert.field;
     if (alert.object) {
       this.parentObject = alert.object;
-      if(alert.object.currencyRate){
-        this.currencyRate=alert.object.currencyRate;
-      }
     }
     if(alert.currentForm){
       this.currentForm=alert.currentForm
@@ -736,7 +732,7 @@ export class GridSelectionModalComponent implements OnInit {
       data = this.modifiedGridData[index];
     }
     if(fieldName["grid_cell_function"] && fieldName["grid_cell_function"] != ''){
-      this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"],this.currencyRate);
+      this.limsCalculationsService.calculateNetAmount(data, fieldName, fieldName["grid_cell_function"]);
     }    
     this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
   } 
@@ -805,7 +801,7 @@ export class GridSelectionModalComponent implements OnInit {
             const column = this.editableGridColumns[j];
             // data[column.field_name] = responce[column.field_name];
             this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
-            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
+            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] != null && responce[column.field_name] != undefined && column.display){
               data[column.field_name] = responce[column.field_name];
               switch (column.type.toLowerCase()) {
                 case 'text':
