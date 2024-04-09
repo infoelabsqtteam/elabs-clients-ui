@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostListener, AfterViewInit, OnCha
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 
-import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService } from '@core/web-core';
+import { StorageService, PermissionService, DataShareService, ApiService, ModelService, AuthService, NotificationService, EnvService, MenuOrModuleCommonService,StorageTokenStatus,Common, ApiCallService, AuthDataShareService, CookiesService } from '@core/web-core';
 import { MatSidenav } from "@angular/material/sidenav";
 
 
@@ -121,7 +121,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         public envService: EnvService,
         private menuOrModuleCommounService:MenuOrModuleCommonService,
         private apiCallService:ApiCallService,
-        private authDataService:AuthDataShareService
+        private authDataService:AuthDataShareService,
+        private cookiesService:CookiesService
     ) {
 
         // this.logoPath = this.storageService.getLogoPath() + "logo.png";
@@ -847,5 +848,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         })
     }
 
+    refreshEndpoint(){
+        this.dataShareService.getServerEndPoint.next(true);
+    }
 
 }
