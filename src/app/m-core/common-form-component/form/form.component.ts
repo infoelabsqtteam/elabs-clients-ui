@@ -2561,21 +2561,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   fullScreenMap(tableField:any){
     this.modalService.open('fullScreenMap', {
-      // "address": this.searchElementRef.nativeElement.value,
+      "address": this.address,
       "center": this.center,
       "zoom": this.zoom,
       "lat": this.latitude,
       "lng": this.longitude,
       "tableField": tableField
     });
-  }
-  mapResponse(response) {
-    if(response){
-      // this.searchElementRef.nativeElement.value = response?.address;
-      this.center = response?.center;
-      this.latitude = response.latitude;
-      this.longitude = response.longitude;
-    }
   }
   //Map Related Functions
   
