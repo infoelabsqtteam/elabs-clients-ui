@@ -59,9 +59,9 @@ export class GridAdvanceFilterComponent implements OnInit {
 
 // Getting operator List for adfilter
   getOperatorsList(){
-    this.filterTypeNumber = this.removeKeys(this.coreFunctionService.getOperators('number'),["in","cntsic"]);
-    this.filterTypeString = this.removeKeys(this.coreFunctionService.getOperators('string'),["in"]);
-    this.filterTypeDate = this.removeKeys(this.coreFunctionService.getOperators('date'),["in","lt","gt","cntsic","cnts"]);
+    this.filterTypeNumber = this.removeOrAddKeys(this.coreFunctionService.getOperators('number'),["in", "cntsic", "gte", "lte"]);
+    this.filterTypeString = this.removeOrAddKeys(this.coreFunctionService.getOperators('string'),["in","gte", "lte"]);
+    this.filterTypeDate = this.removeOrAddKeys(this.coreFunctionService.getOperators('date'),["in","lt","gt","cntsic","cnts"],[{"drng":"Date Range"}]);
   }
 
 // Apply Advance filter payload preparation
@@ -272,10 +272,16 @@ export class GridAdvanceFilterComponent implements OnInit {
   // }
 
 // Remove unwanted operators using romoveKeys function.
-  removeKeys(obj:Object, keysToRemove:string[]) {
+  removeOrAddKeys(obj:Object, keysToRemove:string[],keysToAdd?: { [key: string]: any }[]) {
     if(obj && keysToRemove.length>0 ){
       keysToRemove.forEach(key => {
           delete obj[key];
+      });
+    }
+
+    if (keysToAdd && keysToAdd.length > 0) {
+      keysToAdd.forEach(keysObj => {
+        Object.assign(obj, keysObj);
       });
     }
     return this.coreFunctionService.sortOperators(obj);
@@ -291,16 +297,5 @@ export class GridAdvanceFilterComponent implements OnInit {
     return this.defaultOperator;
   }
 
-
-// FormatDate function for get date format "DD/MM/YYYY"
-  formatDate(fValue: string): string {
-    const date = new Date(fValue);
-
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear().toString();
-    
-    return `${day}/${month}/${year}`;
-  }
 
 }
