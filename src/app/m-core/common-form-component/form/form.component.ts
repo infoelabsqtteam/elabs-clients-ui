@@ -106,7 +106,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   public deleteIndex:any = '';
   public deletefieldName = {};
   //public alertData = {};
-
+  serialId:any = "";
   public curTreeViewField: any = {};
   curFormField:any={};
   curParentFormField:any={};
@@ -200,7 +200,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   
-  headerFiledsData = [];
+  headerFiledsData:any = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
   // treeControl:any={};
@@ -2682,11 +2682,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.custmizedFormValue = result.custmizedFormValue;
       this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
       this.selectedRow = result.selectedRow;
+      this.serialId = this.selectedRow?.serialId;
       this.dataListForUpload = result.dataListForUpload;
       this.treeViewData = result.treeViewData;
       this.staticData = result.staticData;
       this.latitude = result.latitude;
       this.longitude = result.longitude;
+      this.center = {
+        "lat":result.latitude,
+        "lng": result.longitude
+      };
       this.zoom = result.zoom;
       if(result.getAddress){
         this.getAddress(this.latitude,this.longitude);
