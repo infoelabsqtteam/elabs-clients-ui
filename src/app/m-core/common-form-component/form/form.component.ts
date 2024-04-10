@@ -2561,7 +2561,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   fullScreenMap(tableField:any){
     this.modalService.open('fullScreenMap', {
-      "address": this.address,
       "center": this.center,
       "zoom": this.zoom,
       "lat": this.latitude,
