@@ -14,10 +14,17 @@
                .autosuggestion {display:block;}  
             }
         }
+        .fullscreenMap {position:relative;
+            .mapFullScreen {position:absolute;right:0;top:7px;background:#efefef;height:34px;width:35px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+        }
         .addrefreshiconbtn {position:absolute;top:10px;right:0;width:auto;}  
         //// Model Button Background and color Set
         .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {background:var(--buttonColor) !important;}
         .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {color:var(--buttonColor) !important;}
         .fileuploadicon {width:auto;height:auto;vertical-align:middle;}
+
+        .fullscreenMap {
+            .mat-form-field-appearance-outline .mat-form-field-infix {padding-right:40px !important;}
+        }
     }
 }

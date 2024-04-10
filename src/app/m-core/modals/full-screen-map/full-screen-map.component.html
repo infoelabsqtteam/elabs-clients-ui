@@ -1,0 +1,21 @@
+<div mdbModal #fullScreenMap="mdbModal" class="modal fade">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-full-width" role="document">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center m-0">
+        <h4 class="modal-title font-weight-bold m-0">Full Screen Map</h4>
+        <button class="closebtb" (click)="close()"><span>&times;</span></button>
+      </div>
+
+      <div class="modal-body pb-2 mb-3">
+        <div *ngIf="tableField && tableField.type == 'gmapview'">
+          <google-map #GoogleMap height="380px" width="100%" [center]="center" [zoom]="zoom">
+            <map-marker #marker="mapMarker" *ngIf="center" [position]="center">
+            </map-marker>
+            <map-info-window>{{address}}</map-info-window>
+          </google-map>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
