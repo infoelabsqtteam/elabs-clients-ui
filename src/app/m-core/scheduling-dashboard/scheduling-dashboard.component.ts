@@ -1,6 +1,6 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import { chardData,tableData,progressReportData,reportData } from './chartJson';
-import { CountdownTimerService } from 'ngx-timer';
+// import { CountdownTimerService } from 'ngx-timer';
 import { CommonFunctionService, StorageService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, ApiCallService } from '@core/web-core';
 
 
@@ -33,7 +33,7 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
   saveResponceSubscription;
 
   constructor(
-    private countDownService:CountdownTimerService,
+    // private countDownService:CountdownTimerService,
     private commonFunctionService:CommonFunctionService,
     private ModalService:ModelService,
     private storageService: StorageService, 
@@ -143,7 +143,7 @@ export class SchedulingDashboardComponent implements OnInit,OnDestroy {
   startJobs(){
     let cdate = new Date();
     cdate.setHours(cdate.getHours() + 3);
-    this.countDownService.startTimer(cdate);
+    // this.countDownService.startTimer(cdate);
   }
   progressWidth(parameterLimit,parametter){
     if(parametter != null && parametter.length > 0){

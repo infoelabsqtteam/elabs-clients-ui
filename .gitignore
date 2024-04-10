@@ -2,4 +2,3 @@
 node_modules/
 dist/
 .scannerwork/
-package-lock.json
