@@ -22,5 +22,9 @@
         .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {background:var(--buttonColor) !important;}
         .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {color:var(--buttonColor) !important;}
         .fileuploadicon {width:auto;height:auto;vertical-align:middle;}
+
+        .fullscreenMap {
+            .mat-form-field-appearance-outline .mat-form-field-infix {padding-right:40px !important;}
+        }
     }
 }

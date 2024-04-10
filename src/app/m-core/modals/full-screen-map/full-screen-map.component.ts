@@ -49,13 +49,17 @@ export class FullScreenMapComponent implements OnInit  {
   }
   async showModal(object) {
     this.address = object.address;
-    this.latitude = object.lat;
-    this.longitude = object.lng;
+    // this.latitude = object.lat;
+    // this.longitude = object.lng;
     if(this.latitude != 0 && this.longitude != 0) {
-      this.center = object.center
+      this.center = {
+        "lat":object.lat,
+        "lng": object.lng
+      };
     }
     this.zoom = 10;
     this.tableField = object.tableField;
+    this.getAddress(this.center.lat, this.center.lng)
     this.fullScreenMap.show();
   }
 

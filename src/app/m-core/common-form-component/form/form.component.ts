@@ -2561,7 +2561,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   fullScreenMap(tableField:any){
     this.modalService.open('fullScreenMap', {
-      "address": this.searchElementRef.nativeElement.value,
+      // "address": this.searchElementRef.nativeElement.value,
       "center": this.center,
       "zoom": this.zoom,
       "lat": this.latitude,
@@ -2571,7 +2571,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   mapResponse(response) {
     if(response){
-      this.searchElementRef.nativeElement.value = response?.address;
+      // this.searchElementRef.nativeElement.value = response?.address;
       this.center = response?.center;
       this.latitude = response.latitude;
       this.longitude = response.longitude;

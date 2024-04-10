@@ -1143,7 +1143,7 @@
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <input matInput (keyup)="gmapSearchPlaces($event,tableField)" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" spellcheck="off" type="text" #search [formControlName]="tableField.field_name" (keydown.enter)="$event.preventDefault()">
                             </mat-form-field>
-                            <div class="mapFullScreen" (click)="fullScreenMap(tableField)"><mat-icon>fullscreen</mat-icon>
+                            <div class="mapFullScreen" (click)="fullScreenMap(tableField)"><mat-icon>my_location</mat-icon>
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'step_progress_bar'">
@@ -1359,7 +1359,7 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="" *ngIf="tableField.type == 'monthdropdown'">
+                        <div *ngIf="tableField.type == 'monthdropdown'">
                             <div class="labelfiled">
                                 <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'object'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>

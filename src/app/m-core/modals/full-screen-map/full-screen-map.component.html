@@ -11,7 +11,7 @@
             <div class=""  *ngIf="tableField && tableField.type == 'gmapview'">
               <mat-form-field appearance="outline" class="w-100 mb-3">
                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                <input matInput [(ngModel)]="address" (keyup)="gmapSearchPlaces($event,tableField)" [placeholder]="tableField.placeholder | titlecase" spellcheck="off" type="text" #search (keydown.enter)="$event.preventDefault()">
+                <input matInput (keyup)="gmapSearchPlaces($event,tableField)" [placeholder]="tableField.placeholder | titlecase" spellcheck="off" type="text" #search (keydown.enter)="$event.preventDefault()">
             </mat-form-field>
             <google-map #GoogleMap height="380px" width="100%" [center]="center" [zoom]="zoom" (mapClick)="mapClick($event,tableField)">
               <map-marker #marker="mapMarker" *ngIf="center" [position]="center" (mapClick)="openInfoWindow(marker)"> </map-marker>
