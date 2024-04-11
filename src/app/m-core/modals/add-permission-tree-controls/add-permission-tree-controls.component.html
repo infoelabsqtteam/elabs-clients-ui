@@ -34,7 +34,7 @@
                     <mat-label>Operator</mat-label>
                     <mat-select  [formControlName]="'operator'" (selectionChange)="changeOperator('crList')">                      
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let staticValue of staticData['operators']"  [value]="staticValue" [innerHtml]="staticValue">
+                      <mat-option *ngFor="let staticValue of staticData['operators'] | keyvalue"  [value]="staticValue.key" [innerHtml]="staticValue.value">
                       </mat-option>
                     </mat-select>
                     <!-- <input matInput type="text" [placeholder]="'eq'"  [formControlName]="'operator'"  autocomplete="off">   -->
@@ -110,7 +110,7 @@
                     <mat-label>Operator</mat-label>
                     <mat-select   [formControlName]="'operator'" (selectionChange)="changeOperator('userCrList')">                      
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let staticValue of staticData['userOperators']"  [value]="staticValue" [innerHtml]="staticValue">
+                      <mat-option *ngFor="let staticValue of staticData['userOperators'] | keyvalue"  [value]="staticValue" [innerHtml]="staticValue.value">
                       </mat-option>
                     </mat-select>
                     <!-- <input matInput type="text" [placeholder]="'eq'"  [formControlName]="'operator'"  autocomplete="off">   -->

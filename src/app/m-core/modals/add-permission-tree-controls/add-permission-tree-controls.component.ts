@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService, CheckIfService, NotificationService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, CoreFunctionService, DataShareService, ModelService, CheckIfService, NotificationService, OperatorType,OperatorKey } from '@core/web-core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -33,6 +33,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
   crListFieldType:string='text';
   userCrListOperatorType:string = 'text';
   checkMultiple:boolean=false;
+  operators:any;
 
 
   constructor(
@@ -71,6 +72,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
         "fValue": new FormControl("",Validators.required),
       })
     })
+    this.operators = this.coreFunctionService.getOperators(null,OperatorKey.NAME);
   }
   get crListContral(){
     return this.criteria.controls['crList'];
@@ -196,12 +198,6 @@ export class AddPermissionTreeControlsComponent implements OnInit {
     object['value'] = fValue;    
     object['type'] = this.getTypeFromFieldValue(fValue,fieldType);
     crList['fValue'] = object;
-    // if(crList && crList.fValue && this.commonFunctionService.isArray(crList.fValue) && crList.fValue.length > 0){
-    //   crList.fValue = this.coreFunctionService.convertListToColonString(crList.fValue,'text');
-    // }else if(crList && crList.fValue && typeof crList.fValue == 'object'){
-    //   let value = ''; 
-    //   crList.fValue = crList.fValue;
-    // }
     if(this.listOfFieldUpdateMode[key]){
       let index = this.updateIndex[key];
       this.custMizedFormValue[key][index]=crList;
@@ -316,7 +312,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       //let index = this.commonFunctionService.getIndexInArrayById(list,value,'field_name');
       let field = this.criteria.value[key].fName;
       let type = field.type;
-      let operatorType = '';
+      let operatorType:OperatorType;
       if(type && type != ''){
         if(key == 'crList'){
           this.crListFieldType = '';
@@ -327,13 +323,14 @@ export class AddPermissionTreeControlsComponent implements OnInit {
         }       
         switch (type.toLowerCase()) {
           case 'text':
-            operatorType = 'string';
+            // operatorType = 'string';
+            operatorType = OperatorType.STRING;
             break;
           case 'date' :
-            operatorType = 'date';   
+            operatorType = OperatorType.DATE;   
             break;
           case 'number' :
-            operatorType = 'number';  
+            operatorType = OperatorType.NUMBER;  
           default:
             break;
         }
@@ -342,7 +339,8 @@ export class AddPermissionTreeControlsComponent implements OnInit {
         this.criteria.get(key).get('operator').reset();
         this.criteria.get(key).get('fValue').reset();
       }      
-      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType,'list');
+      this.operators=
+      this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType,OperatorKey.NAME);
       if(dataKey == 'user_filter_field_list' && field.onchange_api_params && field.onchange_api_params != ''){
         this.subscribeStaticData();
         let payload = this.apiCallService.getPaylodWithCriteria(field.onchange_api_params,"user_value_list",[],{});
@@ -412,8 +410,15 @@ export class AddPermissionTreeControlsComponent implements OnInit {
         }else{
           return value
         }
+      case 'operator':
+        if(this.operators && Object.keys(this.operators).length > 0){
+          return this.operators[value];
+        }else{
+          let operators = this.coreFunctionService.getOperators(null,OperatorKey.NAME);
+          return operators[value];
+        }
       default:
-        return value;
+        return;
     }
   }
   getValueFromListWithComma(list:any){
