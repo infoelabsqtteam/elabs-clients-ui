@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { ApiCallService, CommonFunctionService, CoreFunctionService, StorageService } from '@core/web-core';
+import { ApiCallService, CommonFunctionService, CoreFunctionService, StorageService, OperatorKey, OperatorType } from '@core/web-core';
 
 @Component({
   selector: 'app-grid-advance-filter',
@@ -59,9 +59,9 @@ export class GridAdvanceFilterComponent implements OnInit {
 
 // Getting operator List for adfilter
   getOperatorsList(){
-    this.filterTypeNumber = this.removeOrAddKeys(this.coreFunctionService.getOperators('number'),["in", "cntsic", "gte", "lte"]);
-    this.filterTypeString = this.removeOrAddKeys(this.coreFunctionService.getOperators('string'),["in","gte", "lte"]);
-    this.filterTypeDate = this.removeOrAddKeys(this.coreFunctionService.getOperators('date'),["in","lt","gt","cntsic","cnts"],[{"drng":"Date Range"}]);
+    this.filterTypeNumber = this.removeOrAddKeys(this.coreFunctionService.getOperators(OperatorType.NUMBER,OperatorKey.SHORTNAME),["in", "cntsic", "gte", "lte"]);
+    this.filterTypeString = this.removeOrAddKeys(this.coreFunctionService.getOperators(OperatorType.STRING,OperatorKey.SHORTNAME),["in","gte", "lte"]);
+    this.filterTypeDate = this.removeOrAddKeys(this.coreFunctionService.getOperators(OperatorType.DATE,OperatorKey.SHORTNAME),["in","lt","gt","cntsic","cnts"],[{"drng":"Date Range"}]);
   }
 
 // Apply Advance filter payload preparation
