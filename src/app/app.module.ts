@@ -35,7 +35,7 @@ import { AppRoutingModule } from './app-routing.module';
     McoreModule,        
     ModelModule,
     AngularMaterialModule,
-    MyLibModule.forRoot(environment),
+    MyLibModule.forRoot(environment)
   ],
   providers: [
     DatePipe,
