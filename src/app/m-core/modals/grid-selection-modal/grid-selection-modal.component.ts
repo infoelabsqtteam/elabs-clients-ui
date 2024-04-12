@@ -799,9 +799,9 @@ export class GridSelectionModalComponent implements OnInit {
         if(data.selected || !this.grid_row_selection){
           for (let j = 0; j < this.editableGridColumns.length; j++) {
             const column = this.editableGridColumns[j];
-            data[column.field_name] = responce[column.field_name];
+            // data[column.field_name] = responce[column.field_name];
             this.checkIfService.checkDisableInRow(this.editableGridColumns,data);
-            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] && column.display){
+            if(data && !data[column.field_name+"_disabled"] && responce[column.field_name] != null && responce[column.field_name] != undefined && column.display){
               data[column.field_name] = responce[column.field_name];
               switch (column.type.toLowerCase()) {
                 case 'text':

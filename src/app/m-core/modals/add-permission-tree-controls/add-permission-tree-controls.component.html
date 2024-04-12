@@ -25,7 +25,7 @@
                   <mat-label>Field Name</mat-label>
                   <mat-select  [compareWith]="compareObjects" [formControlName]="'fName'" (selectionChange)="setValue('fName','operators','crList','grid_field_list')">                      
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let staticValue of staticData['grid_field_list']" [ngClass]="{'d-none':staticValue.type == 'info'}"  [value]="staticValue.field_name">{{ staticValue?.label ? staticValue.label : staticValue }}</mat-option>
+                      <mat-option *ngFor="let staticValue of staticData['grid_field_list']" [ngClass]="{'d-none':staticValue.type == 'info'}"  [value]="staticValue">{{ staticValue?.label ? staticValue.label : staticValue }}</mat-option>
                   </mat-select>   
                 </mat-form-field>              
               </div>
@@ -82,10 +82,10 @@
                       <tbody>
                           <tr *ngFor="let data of custMizedFormValue['crList']; let i = index" class="border">
                               <td class="px-1" style="text-align: center">                                  
-                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFiedls(i,'crList')" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFields(i,'crList')" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                   <a mdbBtn floating="true" size="sm" (click)="openModal(i,'crList')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                               </td>
-                              <td *ngFor="let item of list_of_fields">{{data[item.field_name]}}<td>                                                
+                              <td *ngFor="let item of list_of_fields" [innerHtml]="getGridValue(data,item)"><td>                                                
                           </tr>
                       </tbody>
                   </table>
@@ -100,7 +100,7 @@
                   <mat-label>Field Name</mat-label>
                   <mat-select  [compareWith]="compareObjects" [formControlName]="'fName'" (selectionChange)="setValue('fName','userOperators','userCrList','user_filter_field_list')">                      
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let staticValue of staticData['user_filter_field_list']"   [value]="staticValue.field_name" [innerHtml]="staticValue && staticValue.lable ? staticValue.lable : staticValue">
+                      <mat-option *ngFor="let staticValue of staticData['user_filter_field_list']"   [value]="staticValue" [innerHtml]="staticValue && staticValue.label ? staticValue.label : staticValue">
                       </mat-option>
                   </mat-select>   
                 </mat-form-field>              
@@ -110,7 +110,7 @@
                     <mat-label>Operator</mat-label>
                     <mat-select   [formControlName]="'operator'" (selectionChange)="changeOperator('userCrList')">                      
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let staticValue of staticData['userOperators'] | keyvalue"  [value]="staticValue.key" [innerHtml]="staticValue.value">
+                      <mat-option *ngFor="let staticValue of staticData['userOperators'] | keyvalue"  [value]="staticValue" [innerHtml]="staticValue.value">
                       </mat-option>
                     </mat-select>
                     <!-- <input matInput type="text" [placeholder]="'eq'"  [formControlName]="'operator'"  autocomplete="off">   -->
@@ -120,17 +120,17 @@
                 <mat-form-field appearance="outline" class="example-full-width w-100">
                   <mat-label>Field Value</mat-label>
                    
-                  <mat-select  [formControlName]="'fValue'" *ngIf="!checkMultiple">
+                  <mat-select [compareWith]="compareObjects"  [formControlName]="'fValue'" *ngIf="!checkMultiple">
                       <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term['fValue']" [ngModelOptions]="{standalone: true}"></div>
                       
                       <!-- <mat-select-trigger> {{userCrListContral['fValue']?.value ? userCrListContral['fValue']?.value[0]?.name : ''}} <span *ngIf="userCrListContral['fValue']?.value?.length > 1"> (+{{userCrListContral['fValue']?.value.length - 1}} others)</span></mat-select-trigger> -->
-                      <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue._id" ><span [innerHtml]="staticValue.name"></span>
+                      <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
                       </mat-option>
                   </mat-select>
-                  <mat-select  [formControlName]="'fValue'" multiple *ngIf="checkMultiple">
+                  <mat-select  [compareWith]="compareObjects" [formControlName]="'fValue'" multiple *ngIf="checkMultiple">
                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term['fValue']" [ngModelOptions]="{standalone: true}"></div>                
                     
-                    <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue._id" ><span [innerHtml]="staticValue.name"></span>
+                    <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
                     </mat-option>
                 </mat-select>
 
@@ -154,10 +154,10 @@
                       <tbody>
                           <tr *ngFor="let data of custMizedFormValue['userCrList']; let i = index" class="border">
                               <td class="px-1" style="text-align: center">                                  
-                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFiedls(i,'userCrList')" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
+                                  <a mdbBtn floating="true" size="sm"  (click)="editListOfFields(i,'userCrList')" mdbWavesEffect class="grid-button" [matTooltip]="'Update'"  [matTooltipPosition]="'above'" ><span class="material-icons" >edit</span></a>
                                   <a mdbBtn floating="true" size="sm" (click)="openModal(i,'userCrList')" mdbWavesEffect class="grid-button removebtn" [matTooltip]="'Delete'" [matTooltipPosition]="'above'"><span class="material-icons">close</span></a>                        
                               </td>
-                              <td *ngFor="let item of list_of_fields">{{data[item.field_name]}}<td>                                                
+                              <td *ngFor="let item of list_of_fields" [innerHtml]="getGridValue(data,item)"><td>                                                
                           </tr>
                       </tbody>
                   </table>

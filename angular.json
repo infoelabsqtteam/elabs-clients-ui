@@ -19,7 +19,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3","moment","diff-match-patch","luxon","json-2-csv"],
+            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3","moment","diff-match-patch","luxon","json-2-csv","bezier-easing"],
             "aot": false,
             "assets": [
               "src/favicon.ico",
@@ -29,7 +29,7 @@
               "src/styles.scss"             
             ],
             "scripts": [
-              "./node_modules/chart.js/dist/Chart.js"
+              
             ],
             "vendorChunk": true,
             "extractLicenses": false,

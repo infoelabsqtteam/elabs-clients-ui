@@ -11,7 +11,7 @@
       </div>
       <!--Body-->
       <div class="modal-body py-1 table without-filter">
-        <table class="table-hover table-bordered table-striped" *ngIf="gridColumns.length == 0">
+        <table class="table-hover table-bordered table-striped" *ngIf="field.field_name != 'jsonSchema' && gridColumns.length == 0">
           <thead>
             <tr>
               <th class="p-1">#</th>
@@ -35,7 +35,7 @@
           </tbody>
         </table>
         <div class="table-responsive table without-filter">
-          <table class="table-hover table-bordered table-striped" *ngIf="gridColumns.length > 0">
+          <table class="table-hover table-bordered table-striped" *ngIf="field.field_name != 'jsonSchema' && gridColumns.length > 0">
             <thead>
               <tr>
                 <th class="p-1" *ngIf="!bulkDownload">#</th>
@@ -104,7 +104,9 @@
             </tbody>
           </table>
         </div>
-        
+        <div *ngIf="field.field_name == 'jsonSchema'">
+          <json-editor [options]="editorOptions" [(ngModel)]="data"></json-editor>
+        </div>
 
       </div>
       <!--Footer-->
