@@ -59,10 +59,10 @@ export class FullScreenMapComponent implements OnInit  {
   }
 
   //Map Click
-  async mapClick(event: google.maps.MapMouseEvent,field?:any) {
+  mapClick(event: google.maps.MapMouseEvent,field?:any) {
     this.zoom = 17;
     this.center = (event.latLng.toJSON());
-    await this.getAddress(this.center.lat, this.center.lng);
+    this.getAddress(this.center.lat, this.center.lng);
   }
   openInfoWindow(marker: MapMarker) {
     this.infoWindow.open(marker);
@@ -84,8 +84,8 @@ export class FullScreenMapComponent implements OnInit  {
 
 
   
-  async getAddress(latitude, longitude)  {
-    await new Promise((resolve, reject) => { 
+  getAddress(latitude, longitude)  {
+    new Promise((resolve, reject) => { 
       this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
         if (status === google.maps.GeocoderStatus.OK) {
           if (results[0]) {
