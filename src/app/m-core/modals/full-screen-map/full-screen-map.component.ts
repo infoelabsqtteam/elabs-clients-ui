@@ -42,7 +42,7 @@ export class FullScreenMapComponent implements OnInit  {
   close() {
     this.fullScreenMap.hide();
   }
-  async showModal(object) {
+  showModal(object) {
     this.address = object.address;
     this.latitude = object.center.lat;
     this.longitude = object.center.lng;
