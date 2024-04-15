@@ -134,7 +134,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   @Input() selectContact:string;
 
   showColumnList:any={};
-
+  sortingColumnName:any = null;
 
 
   @HostListener('window:keyup', ['$event'])
@@ -581,6 +581,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getTabData(index,formName) {
     this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
+      this.sortingColumnName = null;
       if(this.tab.tab_name && this.tab.tab_name != null && this.tab.tab_name != undefined && this.tab.tab_name != ''){
         const menu = {"name":this.tab.tab_name};
         this.storageService.SetActiveMenu(menu);
@@ -1120,6 +1121,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
     }
     const pagePayload = this.apiCallService.getPage(page,this.tab,this.currentMenu,this.headElements,this.filterForm.getRawValue(),leadId)
+    if(this.sortingColumnName && this.sortingColumnName != undefined){
+      pagePayload["path"] = this.sortingColumnName;
+    }
     let crList = pagePayload.data.crList;
     let criteriaList = [];
     if(this.recordId){      
@@ -1203,7 +1207,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
   onSort(columnObject) {
-    const columnName = this.orderBy + columnObject.field_name;
+    this.sortingColumnName = this.orderBy + columnObject.field_name;
     const value = this.filterForm.getRawValue();
     const getSortData = {
       data: {
@@ -1215,7 +1219,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         pageNo: this.pageNumber - 1,
         pageSize: this.itemNumOfGrid
       },
-      path: columnName
+      path: this.sortingColumnName
     }
     //this.store.dispatch(new CusTemGenAction.GetGridData(getSortData))
     this.getGridPayloadData(getSortData);
