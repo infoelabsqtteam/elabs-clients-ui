@@ -35,6 +35,7 @@ export class FullScreenMapComponent implements OnInit  {
   ) {}
 
   ngOnInit(): void {
+    this.geoCoder = new google.maps.Geocoder;
     this.modalService.remove(this.id);
     this.modalService.add(this);
   }
@@ -43,17 +44,18 @@ export class FullScreenMapComponent implements OnInit  {
   }
   async showModal(object) {
     this.address = object.address;
-    this.latitude = object.lat;
-    this.longitude = object.lng;
+    this.latitude = object.center.lat;
+    this.longitude = object.center.lng;
     if(this.latitude != 0 && this.longitude != 0) {
       this.center = {
         "lat":object.lat,
         "lng": object.lng
       };
     }
-    this.zoom = 15;
+    this.zoom = 10;
     this.tableField = object.tableField;
     this.fullScreenMap.show();
+    this.getAddress(this.latitude, this.longitude);
   }
 
   // async gmapSearchPlaces(inputData?:any){
@@ -111,48 +113,55 @@ export class FullScreenMapComponent implements OnInit  {
   async mapClick(event: google.maps.MapMouseEvent,field?:any) {
     this.zoom = 17;
     this.center = (event.latLng.toJSON());
-    // await this.getAddress(this.center.lat, this.center.lng);
+    await this.getAddress(this.center.lat, this.center.lng);
   }
   openInfoWindow(marker: MapMarker) {
     this.infoWindow.open(marker);
   }
-  // private setCurrentLocation() {
-  //   if ('geolocation' in navigator) {
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //       this.latitude = position.coords.latitude;
-  //       this.longitude = position.coords.longitude;
-  //       this.zoom = 8;
-  //       this.getAddress(this.latitude, this.longitude);
-  //     });
-  //   }
-  // }
-  // async getAddress(latitude, longitude)  {
-  //   await new Promise((resolve, reject) => { 
-  //     this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
-  //       if (status === google.maps.GeocoderStatus.OK) {
-  //         if (results[0]) {
-  //           resolve (this.address = results[0].formatted_address);
-  //         } else {
-  //           console.log("Geocoder status error: ", status);
-  //           reject()
-  //           window.alert('No results found');
-  //         }
-  //       } else {
-  //         window.alert('Geocoder failed due to: ' + status);
-  //       }  
-  //     });
-  //   })
-  // }
+  private setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 8;
+        this.getAddress(this.latitude, this.longitude);
+      });
+    }
+  }
+
+
+
   
-  // saveData() {
-  //   let locationData = {
-  //     "center": this.center,
-  //     "address": this.address,
-  //     "lat": this.latitude,
-  //     "lng": this.longitude,
-  //   }
-  //   this.mapResponse.emit(locationData);
-  //   this.close();
-  // }
+
+
+  
+  async getAddress(latitude, longitude)  {
+    await new Promise((resolve, reject) => { 
+      this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            resolve (this.address = results[0].formatted_address);
+          } else {
+            console.log("Geocoder status error: ", status);
+            reject()
+            window.alert('No results found');
+          }
+        } else {
+          window.alert('Geocoder failed due to: ' + status);
+        }  
+      });
+    })
+  }
+  
+  saveData() {
+    let locationData = {
+      "center": this.center,
+      "address": this.address,
+      "lat": this.latitude,
+      "lng": this.longitude,
+    }
+    this.mapResponse.emit(locationData);
+    this.close();
+  }
 
 }
