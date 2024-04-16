@@ -1119,29 +1119,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   readNotification(data){
     if (data.notificationStatus === 'UNREAD') {
-        this.updateGridData = true;
-        data.notificationStatus = 'READ';
-        const payload = {
-            curTemp: 'user_notification_master',
-            data: data
-        };
-        this.apiService.SaveFormData(payload);
-        this.saveCallSubscribe();
+      this.notificationService.markUsRead(data);
+      this.saveCallSubscribe();
     }
     if(data && data.url){
       this.router.navigate([data.url])
-    }
+    }      
   }
 
-  pageSizes =[25, 50, 75, 100, 200];
-  PageSizeChange(event: any): void {
-    if(event.target.value && event.target.value != "") {
-      this.itemNumOfGrid = event.target.value;
-    }else {
-      this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
-    }
-    this.applyFilter();
-  }
 
   getPage(page: number) {
     //this.apiService.resetGridData();
