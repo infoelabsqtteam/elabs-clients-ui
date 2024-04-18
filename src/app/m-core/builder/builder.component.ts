@@ -53,6 +53,11 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTab(this.selectTabIndex,tab["tab_name"],"")
     }
 }
+
+  @HostListener('window:resize', ['$event']) onResize(event) {
+    this.updateTabsDynamically(this.tabs);
+  }
+
   constructor(
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
