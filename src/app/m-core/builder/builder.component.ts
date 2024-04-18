@@ -46,8 +46,7 @@ export class BuilderComponent implements OnInit, OnDestroy  {
   
   // when screen size changes call the updateTabsDynamically Fn
   @HostListener('window:resize', ['$event']) onResize(event) {
-    console.log("Resizing");
-    // this.updateTabsDynamically(this.tabs);
+    this.updateTabsDynamically(this.tabs);
   }
 
   @HostListener('window:keyup.alt.t') onCtrlT(){

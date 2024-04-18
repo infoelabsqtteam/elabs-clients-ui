@@ -210,7 +210,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
         this.subscription.unsubscribe();
     }
     ngAfterViewInit():void{
-        console.log("afterviewInit");
         this.updateMenuItems(this.menuData);
     }
     setpage(res) {
