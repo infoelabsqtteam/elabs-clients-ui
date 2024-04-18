@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewChecked, ViewChildren, QueryList } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { UntypedFormControl } from "@angular/forms";
 
 import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthService, ModelService, DataShareService, StorageService, StorageTokenStatus, ApiCallService } from '@core/web-core';
+import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 
 
 
@@ -13,7 +14,7 @@ import { MenuOrModuleCommonService, CommonFunctionService, EnvService, AuthServi
     styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {    
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {    
     
     selected = new UntypedFormControl(0);
     subscription: any;    
@@ -52,6 +53,17 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     public teamname: any;
     teamNameMenu = '';
     showsearchmenu = false;
+
+    //For Responsive HeaderMenu
+    hasOverflow: boolean = false;
+    menuSliceCount:number
+    @ViewChild('navTabGroup') navTabGroup: ElementRef;
+    @ViewChildren(MatMenuTrigger) menuTriggers: QueryList<MatMenuTrigger>;
+    @ViewChildren(MatMenu) menus: QueryList<MatMenu>;
+
+    @HostListener('window:resize', ['$event']) onResize(event) {
+        this.updateMenuItems(this.menuData);
+      }
 
     @HostListener('window:keyup.alt.r') onAnyKey() {
         this.activeclass = false;
@@ -113,6 +125,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
                 let module = this.AllModuleList[this.moduleIndex]; 
                 this.menuData = module.menu_list;
                 //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
+                this.updateMenuItems(this.menuData);
             }               
             const menuIndex = indexs.menuIndex;
             if(menuIndex != -1){
@@ -194,10 +207,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
-    ngAfterViewInit(): void {
-        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-        //Add 'implements AfterViewInit' to the class.
-
+    ngAfterViewChecked():void{
+        this.updateMenuItems(this.menuData);
     }
     setpage(res) {
         switch (res) {                         
@@ -277,6 +288,42 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.menuBoxDashboard = false;
         }
     }  
+    updateMenuItems(tabs) {
+        if(this.navTabGroup){
+            let menuWidth=40;
+            let sliceCount = 0;
+            const tabGroupWidth = this.navTabGroup.nativeElement.offsetWidth+40;
+
+            for (let i = 0; i < tabs.length; i++) {
+                if(!tabs[i].submenu){
+                    menuWidth += Math.ceil(tabs[i]["label"].length*7 + 16);
+                }else{
+                    menuWidth += Math.ceil(tabs[i]["label"].length*7+24)+16;
+                }
+                if(menuWidth<tabGroupWidth){
+                    sliceCount ++;
+                } else break
+            }
+            if (menuWidth > tabGroupWidth) {    
+                this.menuSliceCount = sliceCount;
+                this.hasOverflow = true;
+            } 
+            else {
+                this.hasOverflow = false;
+            }
+        }
+      } 
+
+    isMenuActive(subMenuList){
+        const currentMenu = this.storageService.GetActiveMenu();
+        return subMenuList.find((menu)=>currentMenu.name == menu.name);
+    }
+    closeMatMenus(item: any): void {
+        this.menuTriggers.forEach(trigger => {
+            trigger.closeMenu();
+        });
+      }
+    
      
     getMenuByActiveMenu(activeMenu){
         let menu = {};
@@ -329,6 +376,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.menuOrModuleCommounService.shareMenuIndex(menuIndex,subMenuIndex);
             this.menuOrModuleCommounService.getTemplateData(module,submenu);
         }
+        this.closeMatMenus(submenu);
     }
         
     goToMOdule() {
