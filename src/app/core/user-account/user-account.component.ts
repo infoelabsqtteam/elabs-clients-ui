@@ -53,7 +53,6 @@ export class UserAccountComponent implements OnInit,OnDestroy {
   }
   ngOnDestroy(): void {
     this.unsubscribe(this.userNotificationSubscription);
-    this.unsubscribe(this.saveResponceSubscription);
   }
   pageload(){
     this.AllModuleList = this.storageService.GetModules();
@@ -126,60 +125,6 @@ export class UserAccountComponent implements OnInit,OnDestroy {
             this.menuOrModuleCommounService.getTemplateData(module,menu)
         }
     }
-  showMore(){
-      if(this.notifyMenuTrigger?.menuOpen){
-        this.notifyMenuTrigger.closeMenu();
-      }
-      this.router.navigate(["browse/NOTIFY/notification_settings/user_notification_master"]);  
-  }
-  readNotification(data:any){
-      if (this.notifyMenuTrigger?.menuOpen) {
-         this.notifyMenuTrigger.closeMenu();
-       }
-      if (data.notificationStatus === 'UNREAD') {
-          data.notificationStatus = 'READ';
-          const payload = {
-              curTemp: 'user_notification_master',
-              data: data
-          };
-          this.apiService.SaveFormData(payload);
-          this.saveCallSubscribe();
-      }
-      if(data && data.url){
-        this.router.navigate([data.url])
-      }      
-  }
-
-  saveCallSubscribe(){
-    this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce => {
-      this.setSaveResponce(responce);
-    })
-  }
-
-  setSaveResponce(saveFromDataRsponce){
-    if (saveFromDataRsponce && saveFromDataRsponce.success != '') {
-      if (saveFromDataRsponce.success == 'success') {
-        this.apiCallService.getUserNotification(1);
-      }
-    }
-    this.unsubscribe(this.saveResponceSubscription);
-  }
-
-  getDay(data){
-    let createdDate = data.createdDate;
-    if(createdDate){
-      let obj = this.commonFunctionService.dateDiff(createdDate);
-      if(obj && obj['days'] == 0){
-        if(obj['hours'] == 0){
-          return obj['minutes']+" Minutes ago";
-        }else{        
-          return obj['hours'] +" hours "+obj['minutes']+" Minutes ago";
-        }      
-      }else{
-        return obj['days'] +" days ago";
-      }
-    }
-  }
 
   unsubscribe(variable){
     if(variable){

@@ -21,7 +21,7 @@ import { VerifyFailedComponent } from './error/verify-failed.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { SettingMenuComponent } from './setting-menu/setting-menu.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-
+import { NotificationMenuComponent } from '../m-core/notification/notification-menu/notification-menu.component';
 
 @NgModule({
     declarations : [
@@ -33,7 +33,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         VerifyFailedComponent,
         UserAccountComponent,
         SettingMenuComponent,
-        SidebarComponent
+        SidebarComponent,
+        NotificationMenuComponent
         ],
         imports :[
             // AppRoutingModule,

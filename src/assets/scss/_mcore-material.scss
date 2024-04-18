@@ -143,4 +143,16 @@ body {font-family:$roboto;font-size:13px;}
 
 #chart_resize.monogdbChartResize{min-width:31%;min-height:20rem;resize:both;overflow:auto;}
 .sidechartfilter {width:400px;background:#fbfbfb;} 
-
+// Start ngx-Scrollbar
+.ng-scrollbar{
+    --scrollbar-transition-delay: 800ms;
+    --scrollbar-transition-duration: 400ms;
+    
+    .ng-scrollbar-wrapper {
+        .ng-scroll-content{display: inherit;}
+    }
+    &:hover{    
+        --scrollbar-hover-size: 13px;
+    }
+}
+// Start ngx-Scrollbar

@@ -4,7 +4,8 @@
         <h3 class="m-0">{{userName}}</h3>
         <h5 class="m-0">{{userEmail}}</h5>
     </div>
-    <perfect-scrollbar>
+    <!-- <perfect-scrollbar> -->
+    <ng-scrollbar #scrollable visibility="hover" appearance="standard" pointerEventsMethod="scrollbar">
         <mat-list class="pt-0" style="padding-bottom:120px;">
             <mat-list-item matRipple (click)="chartModel()"><mat-icon>bar_chart</mat-icon><div mat-subheader>Chart Bar</div></mat-list-item>
             <mat-divider></mat-divider>
@@ -12,7 +13,7 @@
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="gotoNotificationPage()"><mat-icon>settings</mat-icon><div mat-subheader>Notifications</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="notificationSetting()"><mat-icon>notifications</mat-icon><div mat-subheader>Notificatoin Setting</div></mat-list-item>
+            <mat-list-item matRipple (click)="notificationSetting()"><mat-icon>notifications</mat-icon><div mat-subheader>Notification Setting</div></mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item matRipple (click)="gitInfo()"><mat-icon>info</mat-icon><div mat-subheader>Version: {{gitVersion}}</div></mat-list-item>
             <mat-divider></mat-divider>
@@ -36,7 +37,8 @@
             <mat-list-item matRipple (click)="logOut()"><mat-icon>power_settings_new</mat-icon><div mat-subheader>Log out</div></mat-list-item>
             <mat-divider></mat-divider>
         </mat-list>
-    </perfect-scrollbar>
+    </ng-scrollbar>
+    <!-- </perfect-scrollbar> -->
 
     <!-- <div *ngIf="teamNameMenu == 'true'">
         <div *ngIf="teamname && teamname != null">

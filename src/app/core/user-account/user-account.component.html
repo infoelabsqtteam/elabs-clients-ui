@@ -27,31 +27,5 @@
   <button mat-icon-button (click)="rightsidenav.toggle()"><mat-icon>account_circle</mat-icon></button>
 </div>
 <mat-menu #notify="matMenu" xPosition="before" class="notificationMenu" (click)="$event.stopPropagation()">
-  <div class="bg-white rounded box-shadow notificationdetailsMenu">
-    <div class="cursor-pointer py-2 notification-item text-center notificationMenuHeader showMoreBtn" >Notifications</div>
-    <div *ngIf="notificationlist && notificationlist.length>0">
-       <div class="media  cursor-pointer px-3 py-2 notification-item border-bottom border-gray d-flex align-items-center" *ngFor="let data of notificationlist ; let i = index" (click)="readNotification(data)">
-        <div class="d-flex justify-content-between align-items-center">
-          <div mat-list-avatar [ngClass]="{'unread-indicator': data.notificationStatus=='UNREAD'}" class="mr-1 unreadDot"></div>
-          <img src="assets/img/profile.jpg" alt="image" class="mr-2 rounded image">
-        </div>
-        <div class="media-body mb-0 lh-125">
-          <div class="d-flex justify-content-between">
-            <div class="d-block text-dark" style="font-weight: 500;">{{data.userId.name}}</div>
-            <span class="text-body">{{data.notificationType | titlecase}}</span>
-          </div>
-          <div class="d-flex justify-content-between">
-            <span>{{data.message | titlecase}}</span>
-            <span style="text-wrap: nowrap" [innerHtml]="getDay(data)"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="notificationlist && notificationlist.length==0" class="py-2 text-center showMoreBtn">
-      No Unread Notifications!!
-    </div>
-    <div *ngIf="notificationlist" class="cursor-pointer py-2 notification-item text-center showMoreBtn" (click)="showMore()">
-      {{notificationlist.length>0 ? "Show More":"All Notification"}}
-    </div>
-</div>
+  <app-notification-menu [notificationlist]="notificationlist" [notifyMenuTrigger]="notifyMenuTrigger"></app-notification-menu>
 </mat-menu>
