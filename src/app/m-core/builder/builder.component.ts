@@ -1,6 +1,6 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -13,7 +13,7 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent implements OnInit, OnDestroy  {
+export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
 
   grid_view_mode:any = '';  
   navigationSubscription;  
@@ -98,6 +98,9 @@ export class BuilderComponent implements OnInit, OnDestroy  {
     this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
       this.setGridCountData(counts);
     })
+  }
+  ngAfterViewChecked(): void {
+    this.updateTabsDynamically(this.tabs);
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
