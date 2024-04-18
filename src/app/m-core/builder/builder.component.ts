@@ -413,9 +413,6 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
-    this.selectTabIndex = i;  
-    this.getViewMode(); 
-    this.selected = new UntypedFormControl(i);
   } 
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
