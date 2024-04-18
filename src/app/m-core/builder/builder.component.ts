@@ -349,7 +349,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     const data = this.dataShareService.getTempData();
     this.setTempData(data);
   }
-  getTab(i, tabName,event) {
+  getTab(i, tabName,event,sliceCount?) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
       if(event != "" && event.ctrlKey){
         const url = this.currentUrl+"/"+tabName;
@@ -360,7 +360,13 @@ export class BuilderComponent implements OnInit,OnDestroy {
           this.apiService.resetGridData();
         }  
         
-      }       
+      } 
+      if(sliceCount){
+        i = i+sliceCount;  
+      }
+      this.selectTabIndex = i;
+      this.getViewMode(); 
+      this.selected = new UntypedFormControl(i);  
     } else {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
