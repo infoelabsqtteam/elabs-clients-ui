@@ -54,11 +54,11 @@
 
 <mat-menu #moreMenu="matMenu" xPosition="after" class="headerMoreMenu">
   <ng-container *ngFor="let menu of menuData | slice:menuSliceCount;let i = index">
-    <button mat-menu-item [ngClass]="getCurrentMenu() == menu.name ? 'activetxt active' : ''" *ngIf="menu.submenu == undefined && menu.submenu == null">
-      <a (click)="getTemplateMenuData(menu,i,-1,$event)">{{ menu.label }}</a>
+    <button mat-menu-item [ngClass]="getCurrentMenu() == menu.name ? 'activetxt active' : ''" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)">
+      <a>{{ menu.label }}</a>
     </button>
     <ng-container *ngIf="menu.submenu && menu.submenu != null">
-      <button mat-menu-item (click)="activeLinkD(menu.label,false)" [matMenuTriggerFor]="exSubMenu"[ngClass]="isMenuActive(menu.submenu) ? 'activetxt active' : ''">{{ menu.label }} </button>
+      <button mat-menu-item (click)="activeLinkD(menu.label,false)" [matMenuTriggerFor]="exSubMenu" [ngClass]="isMenuActive(menu.submenu) ? 'activetxt active' : ''">{{ menu.label }} </button>
         <mat-menu #exSubMenu="matMenu">
           <button  mat-menu-item [ngClass]="getCurrentMenu() == submenu.name ? 'activetxt active' : ''" *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" >
             {{submenu.label}}
