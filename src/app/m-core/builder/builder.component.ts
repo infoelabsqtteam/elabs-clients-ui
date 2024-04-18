@@ -1,6 +1,6 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -13,7 +13,7 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
+export class BuilderComponent implements OnInit, OnDestroy  {
 
   grid_view_mode:any = '';  
   navigationSubscription;  
@@ -38,9 +38,17 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   getTempData:boolean = true;
   currentUrl :String = "";
   isPageLoading: boolean = false;
+  
+  // For Responsive Tabs
   tabSliceCount : number;
   hasOverflow=false;
   @ViewChild('tabsGroup') tabsGroup: ElementRef;
+  
+  // when screen size changes call the updateTabsDynamically Fn
+  @HostListener('window:resize', ['$event']) onResize(event) {
+    console.log("Resizing");
+    // this.updateTabsDynamically(this.tabs);
+  }
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
     let tab = {};
@@ -56,9 +64,6 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
     }
 }
 
-  @HostListener('window:resize', ['$event']) onResize(event) {
-    this.updateTabsDynamically(this.tabs);
-  }
 
   constructor(
     private storageService: StorageService,
@@ -94,9 +99,6 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
     this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
       this.setGridCountData(counts);
     })
-  }
-  ngAfterViewChecked(): void {
-    this.updateTabsDynamically(this.tabs);
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
@@ -302,7 +304,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
           for (let i = 0; i < tabs.length; i++) {
             const tabWidth = this.calculateTabWidth(tabs[i]);
             accumulatedWidth += tabWidth;
-            if (accumulatedWidth < tabGroupWidth) {
+            if (accumulatedWidth <= tabGroupWidth) {
               sliceCount = i+1;
             } else break;
           }
@@ -312,6 +314,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
     }
   }
 
+  // Calculating tab width as per label, count & fav star icon width
   calculateTabWidth(tab){
     let tabLabel = `${this.gateTabName(tab)}(${this.gridCountByTab[tab.tab_name+'_'+tab.name]})`
     return Math.ceil(tabLabel.length * 5.5+40);
@@ -364,6 +367,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       }else{
         this.grid_view_mode = '';
       }  
+      this.updateTabsDynamically(this.tabs);
     }
   }
   setGridData(gridData){

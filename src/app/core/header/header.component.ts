@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewChecked, ViewChildren, QueryList } from "@angular/core";
+import { Component, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ElementRef, ViewChild, ViewChildren, QueryList, AfterViewInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { UntypedFormControl } from "@angular/forms";
@@ -14,7 +14,7 @@ import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
     styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {    
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {    
     
     selected = new UntypedFormControl(0);
     subscription: any;    
@@ -54,13 +54,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
     teamNameMenu = '';
     showsearchmenu = false;
 
-    //For Responsive HeaderMenu
+    // For Responsive HeaderMenu
     hasOverflow: boolean = false;
     menuSliceCount:number
     @ViewChild('navTabGroup') navTabGroup: ElementRef;
     @ViewChildren(MatMenuTrigger) menuTriggers: QueryList<MatMenuTrigger>;
     @ViewChildren(MatMenu) menus: QueryList<MatMenu>;
 
+    // when screen size changes call the updateMenuItems Fn
     @HostListener('window:resize', ['$event']) onResize(event) {
         this.updateMenuItems(this.menuData);
       }
@@ -125,7 +126,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
                 let module = this.AllModuleList[this.moduleIndex]; 
                 this.menuData = module.menu_list;
                 //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
-                // this.updateMenuItems(this.menuData);
+                this.updateMenuItems(this.menuData);
             }               
             const menuIndex = indexs.menuIndex;
             if(menuIndex != -1){
@@ -138,6 +139,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
         })
         this.headerMenuSubscription = this.dataShareService.headerMenu.subscribe(data =>{
             this.menuData=data;
+            this.updateMenuItems(this.menuData);
         })
         
 
@@ -207,7 +209,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
-    ngAfterViewChecked():void{
+    ngAfterViewInit():void{
+        console.log("afterviewInit");
         this.updateMenuItems(this.menuData);
     }
     setpage(res) {
@@ -287,37 +290,38 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
             this.menuData = [];
             this.menuBoxDashboard = false;
         }
+        this.updateMenuItems(this.menuData);
     }  
     updateMenuItems(tabs) {
-        if(this.navTabGroup){
-            let menuWidth=40;
+        if (this.navTabGroup) {
+            let menuWidth=40; // addind 40 for default Home menu width
             let sliceCount = 0;
             const tabGroupWidth = this.navTabGroup.nativeElement.offsetWidth+40;
 
             for (let i = 0; i < tabs.length; i++) {
-                if(!tabs[i].submenu){
+                if (!tabs[i].submenu) {
+                    //setting width for menu labels as per content: 16 for padding of label
                     menuWidth += Math.ceil(tabs[i]["label"].length*7 + 16);
-                }else{
+                } else {
+                    //setting width for menu labels as per content: 16 for padding of label & 24 for arrow icon
                     menuWidth += Math.ceil(tabs[i]["label"].length*7+24)+16;
                 }
-                if(menuWidth<tabGroupWidth){
+                if (menuWidth<=tabGroupWidth) {
                     sliceCount ++;
-                } else break
+                } else break;
             }
-            if (menuWidth > tabGroupWidth) {    
+            if (menuWidth >= tabGroupWidth) {    
                 this.menuSliceCount = sliceCount;
                 this.hasOverflow = true;
-            } 
-            else {
-                this.hasOverflow = false;
-            }
+            } else this.hasOverflow = false;
         }
       } 
 
-    isMenuActive(subMenuList){
+    isMenuActive (subMenuList) {
         const currentMenu = this.storageService.GetActiveMenu();
         return subMenuList.find((menu)=>currentMenu.name == menu.name);
     }
+    // after clicking the more menu close all opened menus
     closeMatMenus(item: any): void {
         this.menuTriggers.forEach(trigger => {
             trigger.closeMenu();
