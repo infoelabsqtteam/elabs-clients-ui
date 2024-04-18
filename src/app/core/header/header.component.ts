@@ -125,7 +125,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
                 let module = this.AllModuleList[this.moduleIndex]; 
                 this.menuData = module.menu_list;
                 //this.menuData = this.menuOrModuleCommounService.setDisplayInMenuWithPermission(menuList);
-                this.updateMenuItems(this.menuData);
+                // this.updateMenuItems(this.menuData);
             }               
             const menuIndex = indexs.menuIndex;
             if(menuIndex != -1){

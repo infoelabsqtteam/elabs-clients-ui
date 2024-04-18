@@ -14,7 +14,7 @@
               <a class="p-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
                 (click)="activeLinkD(menu.label,false)" [ngClass]="{}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
-                <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" [ngClass]="{}">{{
+                <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" [ngClass]="getCurrentMenu() == submenu.name ? 'activetxt active' : ''">{{
                   submenu.label }}</button>
               </mat-menu>
             </ng-template>
