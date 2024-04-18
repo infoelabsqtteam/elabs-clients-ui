@@ -1128,7 +1128,16 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.router.navigate([data.url])
     }      
   }
-
+  
+  pageSizes =[25, 50, 75, 100, 200];
+  PageSizeChange(event: any): void {
+    if(event.target.value && event.target.value != "") {
+      this.itemNumOfGrid = event.target.value;
+    }else {
+      this.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
+    }
+    this.applyFilter();
+  }
 
   getPage(page: number) {
     //this.apiService.resetGridData();
