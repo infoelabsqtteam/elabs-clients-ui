@@ -198,7 +198,7 @@
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'json_data'">
-                            <json-editor [options]="editorOptions" [formControlName]="tableField.field_name"></json-editor>
+                            <!-- <json-editor [options]="editorOptions" [formControlName]="tableField.field_name"></json-editor> -->
                         </div>
                         <div *ngIf="tableField.type == 'dropdown'">
                             <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
