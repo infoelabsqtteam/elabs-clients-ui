@@ -1,6 +1,6 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -13,7 +13,7 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent implements OnInit,OnDestroy {
+export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
 
   grid_view_mode:any = '';  
   navigationSubscription;  
@@ -38,7 +38,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
   getTempData:boolean = true;
   currentUrl :String = "";
   isPageLoading: boolean = false;
-  
+  tabSliceCount : number;
+  hasOverflow=false;
+  @ViewChild('tabsGroup') tabsGroup: ElementRef;
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
     let tab = {};
@@ -92,6 +94,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
       this.setGridCountData(counts);
     })
+  }
+  ngAfterViewChecked(): void {
+    this.updateTabsDynamically(this.tabs);
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
@@ -284,6 +289,38 @@ export class BuilderComponent implements OnInit,OnDestroy {
       })
     }
   }
+  updateTabsDynamically(tabs:[]) {
+    if(this.tabsGroup && tabs && tabs.length>0){
+      const tabGroupWidth = this.tabsGroup.nativeElement.offsetWidth-100;
+      let tabsWidth: number = 0;
+        tabs.forEach((tab: HTMLElement) => {
+          tabsWidth += this.calculateTabWidth(tab);
+        });
+        if (tabsWidth > tabGroupWidth) {
+          let accumulatedWidth = 0;
+          let sliceCount = -1;
+          for (let i = 0; i < tabs.length; i++) {
+            const tabWidth = this.calculateTabWidth(tabs[i]);
+            accumulatedWidth += tabWidth;
+            if (accumulatedWidth < tabGroupWidth) {
+              sliceCount = i+1;
+            } else break;
+          }
+          this.tabSliceCount = sliceCount;
+          this.hasOverflow = true;
+        } else this.hasOverflow = false;
+    }
+  }
+
+  calculateTabWidth(tab){
+    let tabLabel = `${this.gateTabName(tab)}(${this.gridCountByTab[tab.tab_name+'_'+tab.name]})`
+    return Math.ceil(tabLabel.length * 5.5+40);
+  }
+
+  isTabActive(tab){
+    const currentMenu = this.storageService.GetActiveMenu();
+    return tab?.tab_name== currentMenu?.name;
+}
   
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
