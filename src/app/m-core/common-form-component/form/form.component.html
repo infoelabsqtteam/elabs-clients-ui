@@ -198,7 +198,7 @@
                             </mat-form-field>
                         </div>
                         <div *ngIf="tableField.type == 'json_data'">
-                            <json-editor [options]="editorOptions" [formControlName]="tableField.field_name"></json-editor>
+                            <!-- <json-editor [options]="editorOptions" [formControlName]="tableField.field_name"></json-editor> -->
                         </div>
                         <div *ngIf="tableField.type == 'dropdown'">
                             <mat-form-field appearance="outline" class="w-100" *ngIf="tableField.datatype == 'object'">
@@ -296,11 +296,11 @@
                             <div class="w-100 position-relative" *ngIf="tableField.datatype == 'chips'">
                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="tableField.datatype != 'list_of_object' ? 'w-100' : ''">
                                     <mat-label>{{tableField.label}} <span *ngIf="tableField.is_mandatory && tableField.datatype == 'chips'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                    <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                    <mat-chip-grid #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                         <span *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">
-                                            <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
+                                            <mat-chip-row *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
                                                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                            </mat-chip>
+                                            </mat-chip-row>
                                         </span>
                                         <input type="text" #chipsInput [placeholder]="tableField.label | titlecase" [required]="tableField.is_mandatory && tableField.datatype != 'chips'" aria-label="Number" matInput [formControlName]="tableField.field_name"
                                             [matAutocomplete]="first" [matChipInputFor]="chipList"
@@ -309,7 +309,7 @@
                                             <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                             <mat-option *ngIf="tableField.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                         </mat-autocomplete>
-                                    </mat-chip-list>
+                                    </mat-chip-grid>
                                     <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
                                         {{ tableField.label | titlecase}} is <strong>required</strong>
                                     </mat-error>
@@ -337,17 +337,17 @@
                         <div *ngIf="tableField.type == 'list_of_string'">
                             <mat-form-field appearance="outline" class="example-full-width w-100"  *ngIf="tableField.datatype == 'chips' || tableField.datatype == 'chips_with_mask'">
                                 <mat-label>{{ tableField.label | titlecase}}<span *ngIf="tableField.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
+                                <mat-chip-grid #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                     <span *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">
-                                        <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag [selectable]="selectable"
+                                        <mat-chip-row *ngFor="let item of custmizedFormValue[tableField.field_name]; let i = index" cdkDrag
                                                 [removable]="removable" (removed)="openModal('confirm-modal',i,'',tableField,item,'delete')">
                                                 {{ item.name ? item.name : item }}
                                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                        </mat-chip>
+                                        </mat-chip-row>
                                     </span>
                                     <input matInput type="text" [placeholder]="tableField.placeholder | titlecase" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" *ngIf="tableField.datatype == 'chips'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
                                     <input matInput type="tel" [placeholder]="tableField.placeholder | titlecase" [formControlName]="tableField.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue('',tableField,true,$event)" NumberOnly="true" [mask]="tableField.mask" *ngIf="tableField.datatype == 'chips_with_mask'" [id]="tableField._id+'_'+tableField.field_name" autocomplete="off">
-                                </mat-chip-list >
+                                </mat-chip-grid >
                             </mat-form-field>
 
                             <div class="dropdowndata w-100 position-relative d-flex" *ngIf="tableField.datatype != 'chips' && tableField.datatype != 'chips_with_mask'">
@@ -517,11 +517,11 @@
                                         <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
                                                 <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <mat-chip-grid #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <span *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
-                                                        <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
+                                                        <mat-chip-row *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
                                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                        </mat-chip>
+                                                        </mat-chip-row>
                                                     </span>
                                                     <input type="text" #chipsInput [placeholder]="fields.label" [required]="fields.is_mandatory && fields.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="fields.field_name"
                                                         [matAutocomplete]="first" [matChipInputFor]="chipList"
@@ -530,7 +530,7 @@
                                                         <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option.name ? option.name : option"></mat-option>
                                                         <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                     </mat-autocomplete>
-                                                </mat-chip-list>
+                                                </mat-chip-grid>
                                             </mat-form-field>                                
                                         </div>
                                         <div class="w-100 position-relative d-flex dropdowndata" *ngIf="fields.datatype != 'chips'">
@@ -582,17 +582,17 @@
                                         <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips' || fields.datatype == 'chips_with_mask'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100"  >
                                                 <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory && tableField.type == 'list_of_fields'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                <mat-chip-grid #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <span *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
-                                                        <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag [selectable]="selectable"
+                                                        <mat-chip-row *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag
                                                                 [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')">
                                                                 {{ item.name ? item.name : item }}
                                                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                        </mat-chip>
+                                                        </mat-chip-row>
                                                     </span>
                                                     <input matInput type="text" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
                                                     <input matInput type="tel" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(tableField,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
-                                                </mat-chip-list>
+                                                </mat-chip-grid>
                                             </mat-form-field>   
                                         </div>
 
@@ -1533,11 +1533,11 @@
                                             <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="fields.datatype != 'list_of_object' ? 'w-100' : ''">
                                                     <mat-label>{{fields.label}} <span *ngIf="fields.is_mandatory && fields.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                    <mat-chip-list #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
+                                                    <mat-chip-grid #chipList aria-label="Item selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                         <span *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">
-                                                            <mat-chip *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" [selectable]="selectable" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
+                                                            <mat-chip-row *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" [removable]="removable" (removed)="openModal('confirm-modal',i,tableField,fields,item,'delete')" cdkDrag>{{ item && item.name ? item.name : item }}
                                                                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                            </mat-chip>
+                                                            </mat-chip-row>
                                                         </span>
                                                         <input type="text" #chipsInput [placeholder]="fields.label" [required]="fields.is_mandatory && fields.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="fields.field_name"
                                                             [matAutocomplete]="first" [matChipInputFor]="chipList"
@@ -1546,7 +1546,7 @@
                                                             <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option && option.name ? option.name : option"></mat-option>
                                                             <mat-option *ngIf="fields.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option>
                                                         </mat-autocomplete>
-                                                    </mat-chip-list>
+                                                    </mat-chip-grid>
                                                 </mat-form-field>                                
                                             </div>
 
@@ -1578,17 +1578,17 @@
                                             <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips' || fields.datatype == 'chips_with_mask'">
                                                 <mat-form-field appearance="outline" class="example-full-width w-100"  >
                                                     <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
-                                                    <mat-chip-list #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,step,fields)">
+                                                    <mat-chip-grid #chipList aria-label="Fruit selection" cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,step,fields)">
                                                         <span *ngIf ="custmizedFormValue[fields.field_name] && custmizedFormValue[fields.field_name].length > 0">
-                                                            <mat-chip *ngFor="let item of custmizedFormValue[fields.field_name]; let i = index" cdkDrag [selectable]="selectable"
+                                                            <mat-chip-row *ngFor="let item of custmizedFormValue[fields.field_name]; let i = index" cdkDrag
                                                                     [removable]="removable" (removed)="openModal('confirm-modal',i,step,fields,item,'delete')">
                                                                     {{ item.name ? item.name : item }}
                                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                            </mat-chip>
+                                                            </mat-chip-row>
                                                         </span>
                                                         <input matInput type="text" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" *ngIf="fields.datatype == 'chips'">
                                                         <input matInput type="tel" [placeholder]="fields.placeholder | titlecase" [formControlName]="fields.field_name" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="setValue(step,fields,true,$event)" NumberOnly="true" [mask]="fields.mask" *ngIf="fields.datatype == 'chips_with_mask'">
-                                                    </mat-chip-list>
+                                                    </mat-chip-grid>
                                                 </mat-form-field>   
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
