@@ -41,7 +41,7 @@
     "@types/chart.js": "^2.9.37",
     "@types/diff": "^5.0.1",
     "angular-bootstrap-md": "^15.0.0",
-    "angular-svg-icon": "^14.0.0",
+    "angular-svg-icon": "^15.0.0",
     "animate.css": "~3.7.2",
     "aws-sdk": "^2.1362.0",
     "bootstrap": "^5.1.0",
