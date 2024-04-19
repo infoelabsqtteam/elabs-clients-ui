@@ -310,6 +310,7 @@ export class GridSelectionModalComponent implements OnInit {
           this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
     
           }else{
+            this.setErrorMsg("delete");
             this.typeAheadData = [];
             this.rowIndex = -1;
             this.colIndex = -1;
