@@ -9,6 +9,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
 import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService } from '@core/web-core';
 
 declare var tinymce: any;
@@ -19,7 +20,8 @@ declare var tinymce: any;
   styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
-
+  
+  editorOptions: JsonEditorOptions;
   //https://www.npmjs.com/package/@kolkov/angular-editor
   editorConfig:AngularEditorConfig = editorConfig as AngularEditorConfig;
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
@@ -27,7 +29,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   tinymceConfig = {} 
   tinymceapikey = Common.TINYMICAPIKEY;
   templateForm: UntypedFormGroup;
-
+  showSearchLength = 6;
   //@Output() filledFormData = new EventEmitter();
   @Output() addAndUpdateResponce = new EventEmitter();
   @Output() formDetails = new EventEmitter();
@@ -238,6 +240,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private multipleFormService:MultipleFormService,
     private downloadService:DownloadService
 ) {
+    this.editorOptions = new JsonEditorOptions();
+    this.editorOptions.mode = "text";
     let tinymicEditorKey = this.storageService.getApplicationSetting()?.tinyMicCapikey;
     if(tinymicEditorKey && tinymicEditorKey != '') this.tinymceapikey = tinymicEditorKey;
     // this.treeFlattener = new MatTreeFlattener(
@@ -248,16 +252,11 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // );
     //this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     //this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
     this.tinymceConfig = {
       height: 500,
-      menubar: false,
       branding: false,
-      plugins: [
-        'advlist autolink lists link image charmap print preview anchor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime media table paste code help wordcount'
-      ],
+      menubar: 'file edit view insert format tc help',
+      plugins: 'print preview powerpaste paste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks code visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap mentions quickbars linkchecker emoticons advtable export',
       toolbar:
         'undo redo | formatselect | bold italic backcolor | \
         alignleft aligncenter alignright alignjustify | \
@@ -302,7 +301,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
         input.click();
       },
-      content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+      content_style: ' body > * {line-height:18px !important; text-transform:capitalize;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
     }
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
