@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
 
     })
 
-    this.dataShareService.getServerEndPoint.subscribe(data=>{
+    this.dataShareService.serverEndPoint.subscribe(data=>{
       if(data){
         this.awsSecretManagerService.getServerAndAppSetting();
       }
