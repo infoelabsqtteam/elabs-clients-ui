@@ -850,7 +850,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
 
     refreshEndpoint(){
         this.cookiesService.deleteCookieByName(this.envService.getHostName('hostname'))
-        this.dataShareService.getServerEndPoint();
+        this.dataShareService.getServerEndPoint(true);
     }
 
 }
