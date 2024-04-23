@@ -1,6 +1,9 @@
-.downloadbtn {position:absolute;right:15px;top:-5px;z-index:1;
-    .mat-icon-button {width:35px;height:35px;line-height:30px;margin:0;
-        mat-icon {font-size:18px;opacity:0.5;}
+.downloadbtn {position:absolute;right:15px;top:5px;z-index:1;
+    .btn {box-shadow:none;border:1px solid #ccc;background:#f8f8f8;
+        &:hover, &:focus, &:active {box-shadow:none !important;}
+      }
+    .mat-icon-button{width:35px;height:35px;line-height:30px;margin:0;
+        mat-icon {font-size:18px;}
     }
 }
 .paginationnumber { position:absolute;right:20px;top:15px;
@@ -73,9 +76,9 @@ table,table td{
 }
 
 
-// .mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
-//     mat-icon {font-size:16px;}
-// }
+.filterbtn.mat-icon-button {width:30px;height:30px;line-height:30px;margin-top:-3px;
+    mat-icon {font-size:16px;}
+}
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
     li {font-size:12px;}
     .mat-menu-item {font-size:13px;
