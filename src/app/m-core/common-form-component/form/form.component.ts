@@ -131,7 +131,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
-  
+
 
   //Google map variables
   latitude: number = 0;
@@ -212,7 +212,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   // }
 
   constructor(
-    private formBuilder: UntypedFormBuilder, 
+    private formBuilder: UntypedFormBuilder,
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private modalService: ModelService, 
@@ -965,7 +965,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']>=0){
                   index = this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']
                 }
-                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, index, value);                
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, index, value);
                 this.custmizedFormValue[custmizedKey][field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
                 this.addOrUpdateIconShowHideList = {};
               }
@@ -989,7 +989,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[field.field_name+'_index']>=0){
                   index = this.addOrUpdateIconShowHideList[field.field_name+'_index']
                 }
-                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, index, value); 
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, index, value);
                 this.custmizedFormValue[field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
                 this.addOrUpdateIconShowHideList = {};
               }
@@ -1007,7 +1007,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }else{
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
               this.addOrUpdateIconShowHideList = {};
-            }            
+            }
           }else{
             if(formValue && formValue[field.field_name] && formValue[field.field_name].length > 0){
               this.tempVal[field.field_name + "_add_button"] = false;
@@ -1371,7 +1371,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.checkFormFieldIfCondition();
   } 
   editListOfString(parentfield,field,index){
-    let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);    
+    let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);
     this.templateForm = response.templateForm;
     if(parentfield != ''){
       this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index'] = index;
@@ -1450,6 +1450,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.field_name && field.field_name != "") {
       field['parentIndex'] = parentIndex;
       field['curIndex'] = curIndex;
+      if(field.type == 'file_for_s3'){
+        field['tableFields'] = this.tableFields;
+        const formValue = this.templateForm.getRawValue();
+        if(formValue.defaultBucket != undefined && formValue.defaultS3Key != undefined){
+          field['defaultBucket'] = formValue.defaultBucket;
+          field['defaultS3Key'] = formValue.defaultS3Key;
+        }
+      }
       this.curFileUploadField = field;
       this.curFileUploadFieldparentfield = parent;
       let selectedFileList = [];
@@ -1568,7 +1576,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     };
     //for gsd call*************************
     if(feilds.action_name == 'GSD_CALL'){
-      this.envService.setRequestType("PUBLIC");
+      if(!this.storageService.GetIdToken()) this.envService.setRequestType("PUBLIC");
       if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
         payload['path'] = feilds.api;
       }
@@ -2194,17 +2202,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
     if(chield.draggable){
       if(parent != '' && parent != undefined && parent != null){
-        const parentKey = this.commonFunctionService.custmizedKey(parent); 
+        const parentKey = this.commonFunctionService.custmizedKey(parent);
         if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
-          moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-          moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-        }       
+          moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex);
+          moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex);
+        }
       }else {
         if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
           moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
           moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-        }      
-      }    
+        }
+      }
     }
   }
   compareObjects(o1: any, o2: any): boolean {
@@ -2229,7 +2237,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   //Child Form Responce Handling Start ------------------
   alertResponce(responce) {
     if (responce) {
-      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
+      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file_for_s3')){
         this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex,this.dataListForUpload);
       }else{
         this.deleteitem()
@@ -3178,7 +3186,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
 //copy icon on grid cell
-copyText(value:any){       
+copyText(value:any){
   this.commonFunctionService.copyGridCellText(value);
 }
 
