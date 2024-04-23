@@ -181,7 +181,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           } 
           break;
 
-
         case KeyCode.DOWN_ARROW:
           this.columnSelectionIndex = -1
           if(this.rowSelectionIndex == (this.elements.length - 1) ){
