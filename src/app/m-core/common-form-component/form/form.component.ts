@@ -258,9 +258,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       menubar: 'file edit view insert format tc help',
       plugins: 'print preview powerpaste paste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks code visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap mentions quickbars linkchecker emoticons advtable export',
       toolbar:
-        'undo redo | formatselect | bold italic backcolor | \
-        alignleft aligncenter alignright alignjustify | \
-        bullist numlist outdent indent | \ table tabledelete | image | code | removeformat | help',
+      "undo redo | revisionhistory | aidialog aishortcuts | blocks fontsizeinput fontfamily bold italic underline forecolor backcolor align numlist bullist table image link media pageembed | lineheight outdent indent | strikethrough formatpainter removeformat | charmap emoticons checklist | code fullscreen preview | save print | pagebreak anchor codesample footnotes mergetags | addtemplate inserttemplate | addcomment showcomments | ltr rtl casechange | spellcheckdialog a11ycheck typography help",
       image_title: true,
       automatic_uploads: true,
       file_picker_types: 'image',
@@ -301,7 +299,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
         input.click();
       },
-      content_style: ' body > * {line-height:18px !important; text-transform:capitalize;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
+      content_style: ' body > * {line-height:18px !important;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
     }
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
