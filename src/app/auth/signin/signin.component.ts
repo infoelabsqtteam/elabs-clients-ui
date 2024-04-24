@@ -74,7 +74,9 @@ export class SigninComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     this.loading = false;
-    this.signInForm.reset();
+    if(this.signInForm){
+      this.signInForm.reset();
+    }
     this.unsubscribeSubscription();
   }
 
