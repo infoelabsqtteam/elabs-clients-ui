@@ -14,6 +14,9 @@
                     </ng-container>
                 </span>
             </ng-container>
+            <ng-container *ngIf="serialId && headerFiledsData == ''">
+                <h3 class="modal-title m-0 mx-1 text-uppercase">: {{serialId}}</h3>
+            </ng-container>
             <span *ngIf="multipleFormCollection.length > '0'">          
                 <h4 class="modal-title m-0" [ngClass]="{'active': true}" >{{form.label}}</h4>
             </span>  
@@ -1159,28 +1162,13 @@
                                 </div> 
                             </div>                          
                         </div>
-                        <div *ngIf="tableField.type == 'gmap' || tableField.type == 'gmapview'">
-                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                        <div class="fullscreenMap" *ngIf="tableField.type == 'gmap' || tableField.type == 'gmapview'">
+                            <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <input matInput (keyup)="gmapSearchPlaces($event,tableField)" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" spellcheck="off" type="text" #search [formControlName]="tableField.field_name" (keydown.enter)="$event.preventDefault()">
                             </mat-form-field>
-                            <div *ngIf="tableField.type == 'gmapview'">
-                                <google-map #GoogleMap style="min-height: 250px;max-height: 350px;width: 100%" height="250px" width="100%" [center]="center" [zoom]="zoom" (mapClick)="mapClick($event,tableField)">
-                                    <map-marker #marker="mapMarker"
-                                        *ngIf="center"
-                                        [position]="center"
-                                        (mapClick)="openInfoWindow(marker)">
-                                    </map-marker>
-                                    <map-info-window>{{address}}</map-info-window>
-                                </google-map>
+                            <div class="mapFullScreen" (click)="fullScreenMap(tableField)"><mat-icon>my_location</mat-icon>
                             </div>
-                            <!-- <div class="form-group">
-                                <input type="text" class="form-control form-control-sm" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" #search [formControlName]="tableField.field_name">
-                              </div> -->
-                            <!-- <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" *ngIf="tableField.datatype == 'with_map'">
-                                <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
-                                  ></agm-marker>
-                            </agm-map> -->
                         </div>
                         <div *ngIf="tableField.type == 'step_progress_bar'">
                             <div class="row">
@@ -1395,7 +1383,7 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="" *ngIf="tableField.type == 'monthdropdown'">
+                        <div *ngIf="tableField.type == 'monthdropdown'">
                             <div class="labelfiled">
                                 <mat-form-field appearance="fill" class="w-100 m-0" *ngIf="tableField.datatype == 'object'">
                                     <mat-label>{{ tableField.label | titlecase}}</mat-label>
@@ -1832,3 +1820,4 @@
 <app-modals id="form_basic-modal" (responceData)="responceData($event)"></app-modals>
 <app-file-upload-modal *ngIf="isGridSelectionOpen" id="file-upload-modal" (fileUpload)="fileUploadResponce($event)"></app-file-upload-modal>
 <app-preview-modal id="form-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>
+<app-full-screen-map id="fullScreenMap" (mapResponse)="mapResponse($event)"></app-full-screen-map>
