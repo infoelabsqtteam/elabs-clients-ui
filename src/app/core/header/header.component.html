@@ -21,7 +21,8 @@
           </mat-tab>
           <mat-tab *ngIf="hasOverflow">
             <ng-template mat-tab-label >
-                <button mat-icon-button [matMenuTriggerFor]="moreMenu"><mat-icon>more_vert</mat-icon></button>
+                <div [matMenuTriggerFor]="moreMenu" class="px-1">
+                  <span>{{selectedMenu}}</span><mat-icon>more_vert</mat-icon></div>
             </ng-template>
           </mat-tab>
         </mat-tab-group>
@@ -54,13 +55,13 @@
 
 <mat-menu #moreMenu="matMenu" xPosition="after" class="headerMoreMenu">
   <ng-container *ngFor="let menu of menuData | slice:menuSliceCount;let i = index">
-    <button mat-menu-item [ngClass]="getCurrentMenu() == menu.name ? 'activetxt active' : ''" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)">
+    <button mat-menu-item [ngClass]="getCurrentMenu() == menu.name ? 'activetxt active' : ''" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event,menuSliceCount)">
       <a>{{ menu.label }}</a>
     </button>
     <ng-container *ngIf="menu.submenu && menu.submenu != null">
       <button mat-menu-item (click)="activeLinkD(menu.label,false)" [matMenuTriggerFor]="exSubMenu" [ngClass]="isMenuActive(menu.submenu) ? 'activetxt active' : ''">{{ menu.label }} </button>
         <mat-menu #exSubMenu="matMenu">
-          <button  mat-menu-item [ngClass]="getCurrentMenu() == submenu.name ? 'activetxt active' : ''" *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" >
+          <button  mat-menu-item [ngClass]="getCurrentMenu() == submenu.name ? 'activetxt active' : ''" *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event,menuSliceCount)" >
             {{submenu.label}}
           </button>
         </mat-menu>
