@@ -294,7 +294,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
     }  
     updateMenuItems(tabs) {
         if (this.navTabGroup) {
-            let menuWidth=this.selectedMenu.length * 7 + 64; // addind 40 for default Home menu width
+            let menuWidth=this.selectedMenu.length * 7 + 64; // adding width for selected menu
             let sliceCount = 0;
             const tabGroupWidth = this.navTabGroup.nativeElement.offsetWidth+40;
 
