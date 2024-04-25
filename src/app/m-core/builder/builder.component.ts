@@ -40,6 +40,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   isPageLoading: boolean = false;
   
   // For Responsive Tabs
+  selectedMoreMenu = "More";
   tabSliceCount : number;
   hasOverflow=false;
   @ViewChild('tabsGroup') tabsGroup: ElementRef;
@@ -295,16 +296,17 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   }
   updateTabsDynamically(tabs:[]) {
     if(this.tabsGroup && tabs && tabs.length>0){
-      const tabGroupWidth = this.tabsGroup.nativeElement.offsetWidth-100;
+      let moreMenuWidth = Math.ceil((this.selectedMoreMenu.length * 6)+35);
+      const tabGroupWidth = this.tabsGroup.nativeElement.offsetWidth-moreMenuWidth;
       let tabsWidth: number = 0;
         tabs.forEach((tab: HTMLElement) => {
-          tabsWidth += this.calculateTabWidth(tab);
+          tabsWidth += this.calculateTabWidth(tab).width;
         });
-        if (tabsWidth > tabGroupWidth) {
-          let accumulatedWidth = 0;
+        if (tabsWidth >= tabGroupWidth) {
+          let accumulatedWidth = moreMenuWidth;
           let sliceCount = -1;
           for (let i = 0; i < tabs.length; i++) {
-            const tabWidth = this.calculateTabWidth(tabs[i]);
+            const tabWidth = this.calculateTabWidth(tabs[i]).width;
             accumulatedWidth += tabWidth;
             if (accumulatedWidth <= tabGroupWidth) {
               sliceCount = i+1;
@@ -317,9 +319,11 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   }
 
   // Calculating tab width as per label, count & fav star icon width
-  calculateTabWidth(tab){
-    let tabLabel = `${this.gateTabName(tab)}(${this.gridCountByTab[tab.tab_name+'_'+tab.name]})`
-    return Math.ceil(tabLabel.length * 5.5+40);
+  calculateTabWidth(tab:any){
+    let label = this.gateTabName(tab);
+    let count = this.gridCountByTab[tab.tab_name+'_'+tab.name] ? this.gridCountByTab[tab.tab_name+'_'+tab.name] : '';
+    let tabLabel = `${label}(${count})`;
+    return {label:tabLabel,width:Math.ceil(tabLabel.length * 5.5+35)};
   }
 
   isTabActive(tab){
@@ -411,6 +415,9 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       } 
       if(sliceCount){
         i = i+sliceCount;  
+        this.selectedMoreMenu = this.calculateTabWidth(this.tabs[i]).label;
+      } else{
+        this.selectedMoreMenu = "More"
       }
       this.selectTabIndex = i;
       this.getViewMode(); 
@@ -419,6 +426,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
+    this.updateTabsDynamically(this.tabs);
   } 
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){

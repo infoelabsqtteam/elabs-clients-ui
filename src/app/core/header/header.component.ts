@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ElementRef, ViewChild, ViewChildren, QueryList, AfterViewInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ElementRef, ViewChild, ViewChildren, QueryList, AfterViewInit, AfterViewChecked } from "@angular/core";
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { UntypedFormControl } from "@angular/forms";
@@ -14,7 +14,7 @@ import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
     styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {    
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {    
     
     selected = new UntypedFormControl(0);
     subscription: any;    
@@ -55,6 +55,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     showsearchmenu = false;
 
     // For Responsive HeaderMenu
+    selectedMenu="More";
     hasOverflow: boolean = false;
     menuSliceCount:number
     @ViewChild('navTabGroup') navTabGroup: ElementRef;
@@ -179,6 +180,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.isShow = data;
         });
     }
+    ngAfterViewChecked(): void {
+        this.updateMenuItems(this.menuData);
+    }
 
     GoToSelectedModule(module){
         this.menuOrModuleCommounService.GoToSelectedModule(module);
@@ -208,9 +212,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
-    }
-    ngAfterViewInit():void{
-        this.updateMenuItems(this.menuData);
     }
     setpage(res) {
         switch (res) {                         
@@ -293,7 +294,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
     }  
     updateMenuItems(tabs) {
         if (this.navTabGroup) {
-            let menuWidth=40; // addind 40 for default Home menu width
+            let menuWidth=this.selectedMenu.length * 7 + 64; // adding width for selected menu
             let sliceCount = 0;
             const tabGroupWidth = this.navTabGroup.nativeElement.offsetWidth+40;
 
@@ -312,7 +313,17 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             if (menuWidth >= tabGroupWidth) {    
                 this.menuSliceCount = sliceCount;
                 this.hasOverflow = true;
-            } else this.hasOverflow = false;
+            } else {
+                this.hasOverflow = false;
+                this.menuSliceCount = null;
+            }
+
+            let moreMenuList = this.menuData.slice(0,this.menuSliceCount);
+            moreMenuList.forEach(element => {
+                if(element.label == this.selectedMenu){
+                    this.selectedMenu = "More";
+                }
+            });
         }
       } 
 
@@ -366,7 +377,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
 
     }
     
-    getTemplateMenuData(submenu,menuIndex,subMenuIndex,event) {
+    getTemplateMenuData(submenu,menuIndex,subMenuIndex,event,menuSliceCount?) {
         let module:any = {};
         if(this.moduleIndex != -1){
             module = this.AllModuleList[this.moduleIndex];
@@ -379,7 +390,13 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit, OnChan
             this.menuOrModuleCommounService.shareMenuIndex(menuIndex,subMenuIndex);
             this.menuOrModuleCommounService.getTemplateData(module,submenu);
         }
-        this.closeMatMenus(submenu);
+        if(menuSliceCount){
+            this.selectedMenu = submenu.label;
+            this.closeMatMenus(submenu);
+        } else {
+            this.selectedMenu = "More";
+            this.updateMenuItems(this.menuData);
+        }
     }
         
     goToMOdule() {

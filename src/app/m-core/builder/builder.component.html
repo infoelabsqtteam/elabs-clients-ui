@@ -3,7 +3,7 @@
         <app-sidebar-search (sidebarSearch)="sidebarSearchResponce($event)"></app-sidebar-search>
     </div>
     <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
-        <div class="tablist position-relative d-flex col-lg-9 col-md-8" #tabsGroup>
+        <div class="tablist position-relative d-flex col-lg-9 col-md-8 col-sm-12 col-9 px-0" #tabsGroup>
           <mat-tab-group [disablePagination]="true" animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
             <mat-tab *ngFor="let tab of (!!tabSliceCount ? (tabs| slice:0:tabSliceCount) : tabs); let i = index" >
               <ng-template mat-tab-label>
@@ -13,9 +13,9 @@
             </mat-tab>
             <mat-tab *ngIf="hasOverflow">
               <ng-template mat-tab-label>
-                <button mat-icon-button [matMenuTriggerFor]="tabExtraMenu" [title]="'More Tabs'">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
+                <div class="mat-tab-label-content moreBtn pl-1 py-2" [matMenuTriggerFor]="tabExtraMenu" [title]="selectedMoreMenu">
+                  <span>{{selectedMoreMenu}}</span><mat-icon>more_vert</mat-icon>
+                </div>
               </ng-template>
             </mat-tab>
           </mat-tab-group>
