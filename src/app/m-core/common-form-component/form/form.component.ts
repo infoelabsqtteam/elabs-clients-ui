@@ -299,7 +299,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
         input.click();
       },
-      content_style: ' body > * {line-height:18px !important;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
+      content_style: ' body > * {line-height:18px !important;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;} table {max-width:100% !important} img{max-width:100% !important}'
     }
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
