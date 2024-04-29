@@ -1,7 +1,10 @@
 .downloadbtn {position:absolute;right:15px;top:5px;z-index:1;
-  .btn {box-shadow:none;border:1px solid #ccc;background:#f8f8f8;
-    &:hover, &:focus, &:active {box-shadow:none !important;}
-  }
+    .mat-icon-button{width:35px;height:35px;line-height:30px;margin:0;
+        mat-icon {font-size:18px;}
+    }
+    .btn {box-shadow:none;border:1px solid #ccc;background:#f8f8f8;
+        &:hover, &:focus, &:active {box-shadow:none !important;}
+    }
 }
 .paginationnumber { position:absolute;right:20px;top:15px;
     .paginationsize {border:none;border-bottom:1px solid #ccc;background:transparent;}
@@ -73,11 +76,14 @@ table,table td{
 }
 
 
-.mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
+.filterbtn.mat-icon-button {width:30px;height:30px;line-height:30px;margin-top:-3px;
     mat-icon {font-size:16px;}
 }
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
     li {font-size:12px;}
+    .mat-menu-item {font-size:13px;
+        mat-icon {font-size:18px;opacity:0.5;vertical-align:middle;width:auto;height:auto;}
+    }
 }
 .tabExtraMenu {
     font-weight: normal !important;
@@ -90,7 +96,7 @@ table,table td{
         color: $txtColor;
     }
 }
-.tablist {padding-right:260px;
+.tablist {
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
 
