@@ -2315,7 +2315,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         case "calculateQuotationNumberOfHours":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
             this.limsCalculationsService.calculateNetAmount(element, {field_name: "hrs"},"calculateQuotationParameterAmountForAutomotiveLims");
-          });
+          }); 
           this.updateDataOnFormField(this.limsCalculationsService.calculate_quotation(formValueWithCustomData,"automotive" ,{field_name:"parameter_array"}));
           break;
 
