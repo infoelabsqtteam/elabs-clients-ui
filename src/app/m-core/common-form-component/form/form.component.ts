@@ -106,7 +106,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   public deleteIndex:any = '';
   public deletefieldName = {};
   //public alertData = {};
-
+  serialId:any = "";
   public curTreeViewField: any = {};
   curFormField:any={};
   curParentFormField:any={};
@@ -131,7 +131,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
-  
+
 
   //Google map variables
   latitude: number = 0;
@@ -200,7 +200,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   serverReq:boolean = false;
   actionButtonNameList:any=["save","update","updateandnext","send_email"];
   
-  headerFiledsData = [];
+  headerFiledsData:any = [];
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   // nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
   // treeControl:any={};
@@ -212,7 +212,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   // }
 
   constructor(
-    private formBuilder: UntypedFormBuilder, 
+    private formBuilder: UntypedFormBuilder,
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private modalService: ModelService, 
@@ -258,9 +258,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       menubar: 'file edit view insert format tc help',
       plugins: 'print preview powerpaste paste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks code visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap mentions quickbars linkchecker emoticons advtable export',
       toolbar:
-        'undo redo | formatselect | bold italic backcolor | \
-        alignleft aligncenter alignright alignjustify | \
-        bullist numlist outdent indent | \ table tabledelete | image | code | removeformat | help',
+      "undo redo | revisionhistory | aidialog aishortcuts | blocks fontsizeinput fontfamily bold italic underline forecolor backcolor align numlist bullist table image link media pageembed | lineheight outdent indent | strikethrough formatpainter removeformat | charmap emoticons checklist | code fullscreen preview | save print | pagebreak anchor codesample footnotes mergetags | addtemplate inserttemplate | addcomment showcomments | ltr rtl casechange | spellcheckdialog a11ycheck typography help",
       image_title: true,
       automatic_uploads: true,
       file_picker_types: 'image',
@@ -301,7 +299,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     
         input.click();
       },
-      content_style: ' body > * {line-height:18px !important; text-transform:capitalize;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
+      content_style: ' body > * {line-height:18px !important;} table:not([cellpadding]) td, table:not([cellpadding]) th {padding:0 0.4rem;}'
     }
     this.staticDataSubscriber = this.dataShareService.staticData.subscribe(data =>{
       this.setStaticData(data);
@@ -965,7 +963,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']>=0){
                   index = this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index']
                 }
-                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, index, value);                
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValueParant, index, value);
                 this.custmizedFormValue[custmizedKey][field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
                 this.addOrUpdateIconShowHideList = {};
               }
@@ -989,7 +987,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
                 if(this.addOrUpdateIconShowHideList && this.addOrUpdateIconShowHideList[field.field_name+'_index']>=0){
                   index = this.addOrUpdateIconShowHideList[field.field_name+'_index']
                 }
-                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, index, value); 
+                let updateCustomizedValueResponse = this.formControlService.updateCustomizedValue(custmizedFormValue, index, value);
                 this.custmizedFormValue[field.field_name] = updateCustomizedValueResponse.custmizedFormValue;
                 this.addOrUpdateIconShowHideList = {};
               }
@@ -1007,7 +1005,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
             }else{
               this.tempVal[parentfield.field_name + '_' + field.field_name + "_add_button"] = true;
               this.addOrUpdateIconShowHideList = {};
-            }            
+            }
           }else{
             if(formValue && formValue[field.field_name] && formValue[field.field_name].length > 0){
               this.tempVal[field.field_name + "_add_button"] = false;
@@ -1371,7 +1369,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.checkFormFieldIfCondition();
   } 
   editListOfString(parentfield,field,index){
-    let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);    
+    let response = this.formControlService.editListOfString(parentfield,field,index,this.custmizedFormValue,this.templateForm);
     this.templateForm = response.templateForm;
     if(parentfield != ''){
       this.addOrUpdateIconShowHideList[parentfield.field_name+'_'+field.field_name+'_index'] = index;
@@ -1450,6 +1448,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (field.field_name && field.field_name != "") {
       field['parentIndex'] = parentIndex;
       field['curIndex'] = curIndex;
+      if(field.type == 'file_for_s3'){
+        field['tableFields'] = this.tableFields;
+        const formValue = this.templateForm.getRawValue();
+        if(formValue.defaultBucket != undefined && formValue.defaultS3Key != undefined){
+          field['defaultBucket'] = formValue.defaultBucket;
+          field['defaultS3Key'] = formValue.defaultS3Key;
+        }
+      }
       this.curFileUploadField = field;
       this.curFileUploadFieldparentfield = parent;
       let selectedFileList = [];
@@ -1568,7 +1574,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     };
     //for gsd call*************************
     if(feilds.action_name == 'GSD_CALL'){
-      this.envService.setRequestType("PUBLIC");
+      if(!this.storageService.GetIdToken()) this.envService.setRequestType("PUBLIC");
       if(feilds.api != undefined && feilds.api != null && feilds.api != ''){
         payload['path'] = feilds.api;
       }
@@ -2194,17 +2200,17 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   typeaheadDragDrop(event: CdkDragDrop<string[]>,parent,chield) {
     if(chield.draggable){
       if(parent != '' && parent != undefined && parent != null){
-        const parentKey = this.commonFunctionService.custmizedKey(parent); 
+        const parentKey = this.commonFunctionService.custmizedKey(parent);
         if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,parent,chield)){
-          moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-          moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex); 
-        }       
+          moveItemInArray(this.custmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex);
+          moveItemInArray(this.modifyCustmizedFormValue[parentKey][chield.field_name], event.previousIndex, event.currentIndex);
+        }
       }else {
         if(this.commonFunctionService.checkStorageValue(this.custmizedFormValue,'',chield)){
           moveItemInArray(this.custmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
           moveItemInArray(this.modifyCustmizedFormValue[chield.field_name], event.previousIndex, event.currentIndex);
-        }      
-      }    
+        }
+      }
     }
   }
   compareObjects(o1: any, o2: any): boolean {
@@ -2229,7 +2235,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   //Child Form Responce Handling Start ------------------
   alertResponce(responce) {
     if (responce) {
-      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file')){
+      if(this.deletefieldName['child'] && (this.deletefieldName['child'].type == 'file' || this.deletefieldName['child'].type == 'file_for_s3')){
         this.dataListForUpload = this.fileHandlerService.removeAttachedDataFromList(this.deletefieldName['parent'],this.deletefieldName['child'],this.deleteIndex,this.dataListForUpload);
       }else{
         this.deleteitem()
@@ -2559,6 +2565,24 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.templateForm.get('address').setValue(this.address);
     }
   }
+  fullScreenMap(tableField:any){
+    this.modalService.open('fullScreenMap', {
+      "address": this.address,
+      "center": this.center,
+      "zoom": this.zoom,
+      "lat": this.latitude,
+      "lng": this.longitude,
+      "tableField": tableField
+    });
+  }
+  mapResponse(response) {
+    if(response){
+      this.searchElementRef.nativeElement.value = response?.address;
+      this.center = response?.center;
+      this.latitude = response?.center?.lat;
+      this.longitude = response?.center?.lng;
+    }
+  }
   //Map Related Functions
   
   setForm(){
@@ -2682,11 +2706,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.custmizedFormValue = result.custmizedFormValue;
       this.modifyCustmizedFormValue = result.modifyCustmizedFormValue;
       this.selectedRow = result.selectedRow;
+      this.serialId = this.selectedRow?.serialId;
       this.dataListForUpload = result.dataListForUpload;
       this.treeViewData = result.treeViewData;
       this.staticData = result.staticData;
       this.latitude = result.latitude;
       this.longitude = result.longitude;
+      this.center = {
+        "lat":result.latitude,
+        "lng": result.longitude
+      };
       this.zoom = result.zoom;
       if(result.getAddress){
         this.getAddress(this.latitude,this.longitude);
@@ -3178,7 +3207,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
 
 //copy icon on grid cell
-copyText(value:any){       
+copyText(value:any){
   this.commonFunctionService.copyGridCellText(value);
 }
 
