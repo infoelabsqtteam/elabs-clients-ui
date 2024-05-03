@@ -326,7 +326,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   }
   setGridData(gridData){
     if (gridData) {
-      if (gridData.data && gridData.data.length > 0) {
+      if (gridData.data && gridData.data.length >= 0) {
         this.total = gridData.data_size;                
         const tab = this.tabs[this.selectTabIndex];
         if(tab && tab.name){
@@ -334,8 +334,6 @@ export class BuilderComponent implements OnInit,OnDestroy {
           const key = currentTabName+"_"+tab.name;
           this.gridCountByTab[key] = gridData.data_size;
         }        
-      } else {
-        this.total = 0;
       }
     }
   }
