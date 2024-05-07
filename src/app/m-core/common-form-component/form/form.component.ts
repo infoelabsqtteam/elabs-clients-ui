@@ -2312,13 +2312,6 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           // this.updateDataOnFormField(this.commonFunctionService[this.curTreeViewField.onchange_function_param](formValueWithCustomData, this.curTreeViewField)); 
           this.updateDataOnFormField(this.limsCalculationsService.calculate_quotation(formValueWithCustomData,"automotive" ,{field_name:"parameter_array"}));
           break;
-        case "calculateQuotationNumberOfHours":
-          this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
-            this.limsCalculationsService.calculateNetAmount(element, {field_name: "hrs"},"calculateQuotationParameterAmountForAutomotiveLims"); 
-          }); 
-          this.updateDataOnFormField(this.limsCalculationsService.calculate_quotation(formValueWithCustomData,"automotive" ,{field_name:"parameter_array"}));
-          break;
-
         case "calculateLimsQuotation":
           this.custmizedFormValue[this.curTreeViewField.field_name].forEach(element => {
             element["qty"] = formValueWithCustomData["qty"];
