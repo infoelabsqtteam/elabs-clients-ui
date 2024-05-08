@@ -8,14 +8,14 @@
           <form class="registration-form" [formGroup]="signInForm">
             <div class="form-group mb-4">
               <label class="font-15">Your UserId*</label>
-              <input type="text" class="form-control" formControlName="userId" placeholder="">
+              <input type="text" class="form-control" formControlName="userId" placeholder="E-mail">
             </div>
             <div class="form-group password mb-3">
               <label class="font-15">Password*</label>
               <input [type]="checkShowPassword ? 'text' : 'password'" class="form-control" formControlName="password" placeholder="" (keyup.enter)="onSignIn()">
-              <button mat-icon-button  tabindex="-1">
-                <mat-icon (click)="showPassword()" *ngIf="!checkShowPassword">visibility</mat-icon>
-                <mat-icon (click)="showPassword()" *ngIf="checkShowPassword">visibility_off</mat-icon>
+              <button mat-icon-button tabindex="-1" class="smbtn-circle" (click)="showPassword()" [matTooltip]="checkShowPassword ? 'Hide' : 'Show'">
+                <mat-icon *ngIf="!checkShowPassword">visibility</mat-icon>
+                <mat-icon *ngIf="checkShowPassword">visibility_off</mat-icon>
               </button>
             </div>
             <button type="button" class="btn btn-primary btn-block btn-sm" (click)="onSignIn()" [disabled]="!signInForm.valid || loading" >Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
@@ -52,16 +52,16 @@
               <mat-form-field appearance="outline" class="w-100 mb-3 password">
                 <mat-label>PASSWORD</mat-label>
                 <input matInput [type]="checkShowPassword ? 'text' : 'password'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
-                <button mat-icon-button  tabindex="-1">
-                  <mat-icon (click)="showPassword()" *ngIf="!checkShowPassword">visibility</mat-icon>
-                  <mat-icon (click)="showPassword()" *ngIf="checkShowPassword">visibility_off</mat-icon>
+                <button mat-icon-button tabindex="-1" class="smbtn-circle" (click)="showPassword()" [matTooltip]="checkShowPassword ? 'Hide' : 'Show'">
+                  <mat-icon *ngIf="!checkShowPassword">visibility</mat-icon>
+                  <mat-icon *ngIf="checkShowPassword">visibility_off</mat-icon>
                 </button>
               </mat-form-field>
               <div><mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint></div>
             </form>
           </mat-card-content>
-          <mat-card-actions class="justify-content-center mb-3">
-            <button mat-raised-button color="primary" style="width:35%!important" type="submit" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
+          <mat-card-actions class="justify-content-center">
+            <div class="row mb-3"><button mat-fab extended color="primary" type="submit" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">Log In <mat-icon>login</mat-icon><span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button></div>
           </mat-card-actions>
         </mat-card>
         <div class="row my-3"><div class="col-12 text-center"><p class="text-dark">Don't have an account <a [routerLink]="['/signup']" class="text-dark ml-1"><b>Create New Account</b></a></p></div></div>
@@ -84,24 +84,20 @@
                           <form class="example-form" [formGroup]="signInForm">
                               <mat-form-field appearance="outline" class="w-100 mb-3">
                                   <mat-label>UserId</mat-label>
-                                  <input matInput placeholder="E-Mail" formControlName="userId">
+                                  <input matInput placeholder="E-mail" formControlName="userId">
                               </mat-form-field>
                               <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                   <mat-label>PASSWORD</mat-label>
                                   <input matInput [type]="checkShowPassword ? 'text' : 'password'" placeholder="Password" formControlName="password" (keyup.enter)="onSignIn()">
-                                  <button mat-icon-button  tabindex="-1">
-                                    <mat-icon (click)="showPassword()" *ngIf="!checkShowPassword">visibility</mat-icon>
-                                    <mat-icon (click)="showPassword()" *ngIf="checkShowPassword">visibility_off</mat-icon>
+                                  <button mat-icon-button tabindex="-1" class="smbtn-circle" (click)="showPassword()" [matTooltip]="checkShowPassword ? 'Hide' : 'Show'">
+                                    <mat-icon *ngIf="!checkShowPassword">visibility</mat-icon>
+                                    <mat-icon *ngIf="checkShowPassword">visibility_off</mat-icon>
                                   </button>
                               </mat-form-field>
                               <div><mat-hint><a class="text-muted" [routerLink]="['/fpwd']">Forgotten Password?</a></mat-hint></div>
                           </form>
                       </mat-card-content>
-                      <mat-card-actions class="justify-content-center mb-3">
-                        <!-- <div class="row justify-content-center mb-3"> -->
-                        <button mat-raised-button color="primary" style="width:35%!important" type="button" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">Log In <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
-                    <!-- </div> -->
-                  </mat-card-actions>
+                      <mat-card-actions class="justify-content-center"><div class="row mb-3"><button mat-fab extended color="primary" type="submit" [disabled]="!signInForm.valid || loading" (click)="onSignIn()" class="hover1">Log In <mat-icon>login</mat-icon><span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button></div></mat-card-actions>
                   </mat-card>
                   <div class="row mt-3"><div class="col-12 text-center"><p class="text-dark">Don't have an account <a [routerLink]="['/signup']" class="text-dark ml-1"><b>Create New Account</b></a></p></div></div>
               </div>

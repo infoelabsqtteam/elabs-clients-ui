@@ -1,0 +1,270 @@
+// Top header
+ul,ol,li {list-style:none;margin:0;padding:0;}
+a {color:#333;text-decoration:none;}
+a:hover {text-decoration:none;}
+// NOtification Alert of snackbar
+.mat-mdc-snack-bar-container { border-radius: 10px;
+    .mdc-snackbar__surface{background: inherit !important;
+        .mdc-snackbar__label{padding-top: 10px;padding-bottom: 10px;}
+    }
+    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled){color: #0a0a0ac9 !important;}
+}
+//sm button
+.mdc-button.smbtn {height:28px;padding:0px 7px;font-size:11px;letter-spacing:normal;min-width:auto;
+    .mat-icon {font-size:12px;margin:0;width:auto;height:auto;}
+}
+.mat-mdc-icon-button.smbtn-circle {width:24px;height:24px;padding:0px;
+    .mat-icon {font-size:15px;margin:0;width:auto;height:auto;}
+}
+.mat-mdc-icon-button.plusicon {width:30px;height:30px;padding:0px;
+    .mat-icon {font-size:22px;margin:0;width:auto;height:auto;}
+}
+//checkbox
+.mat-mdc-checkbox label {margin:0px;font-size:12px;padding:0px;}
+// leftSideBarMenu scroll
+.metismenu{height: 100%;overflow-y: auto;padding-bottom: 50px;}
+
+/// Set Font Size for all Fields
+.mat-mdc-select, .mat-mdc-input-element, .mat-mdc-floating-label {font-size:$size13!important;}
+
+///// Input Fields
+// .mdc-text-field .mdc-floating-label {transform:translateY(-100%) !important;letter-spacing:normal !important;}
+.mat-mdc-text-field-wrapper {height:40px !important;padding:0px 8px !important;
+    .mat-mdc-floating-label {top:18px !important;}
+    .mat-mdc-form-field-infix {padding:7px !important;}
+    .mdc-floating-label--float-above {transform: translateY( -23px) scale( 0.75 ) !important;font-size:11px !important;}
+}
+/// input foucs and hover border color
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__trailing {border-color: rgb(139 139 139 / 38%);}
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {border-color: #7ab3d6 !important;}
+///// Select Option Dropdown Fields
+.mat-mdc-select-panel {
+    .mdc-list-item {line-height:34px;min-height: 30px;}
+}
+.mdc-menu-surface.mat-mdc-select-panel {padding:0 !important;}
+///// Datepicker
+.mat-mdc-form-field-infix {min-height:auto !important;}
+.mat-datepicker-toggle {
+    .mat-mdc-icon-button.mat-mdc-button-base {width:30px;height:30px;padding:0;}
+    .mat-mdc-icon-button svg, .mat-mdc-icon-button img {width:20px;height:20px;}
+}
+///chips
+.mdc-evolution-chip-set .mdc-evolution-chip{margin:2px !important}
+.mat-mdc-standard-chip {font-size:12px !important;height:28px !important;}
+.mat-mdc-form-field-type-mat-chip-grid {
+    .mat-mdc-text-field-wrapper {height:auto !important;}
+}
+///Textarea 
+.textarea {
+    .mat-mdc-text-field-wrapper {height:auto !important;}
+}
+///Close btn on File Modal
+.mat-icon.Icon-scale-1x{transform: scale(1.5);}
+.mat-icon.icon-scale-2x{transform: scale(2);}
+.mat-icon.icon-scale-3x{transform: scale(3);}
+// Dashboard label
+.chartfilter mat-label.filterlabel{line-height: 24px;}
+/* For every Mat form Fields */
+.mat-mdc-form-field {
+    .mat-mdc-form-field-subscript-wrapper{font-size: 75%;
+        .mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper{padding: 0 13px;}
+        .mat-mdc-form-field-hint, .mat-mdc-form-field-error{margin-top: -7px;}
+    }
+}
+// Custom Error msg position
+.errorMsg{font-size:9px;bottom:-20px;}
+// Dropdown Panel
+.mdc-menu-surface.mat-mdc-autocomplete-panel{padding: 0 !important;
+    .mat-mdc-option{min-height: 32px;line-height: 22px;font-size: 14px;}
+}
+.mdc-menu-surface.mat-mdc-select-panel{margin-top: -22px !important;}
+
+// Date Picker
+// .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;padding:$zero !important;}
+// .mat-form-field-appearance-outline .mat-form-field-infix {border:$no;padding:.68em $zero !important;}
+// .mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {top:$size5 !important;font-size:$size11;}
+// .mat-form-field-appearance-outline .mat-form-field-flex {padding-right:$size2 !important;}
+// .mat-form-field-appearance-outline .mat-form-field-outline, .mat-form-field-appearance-outline .mat-form-field-outline-thick{color:$inputbordercolor !important;}
+// .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end, .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {border-width:$size1 !important;}
+// .mat-form-field.mat-focused .mat-form-field-label {color:inherit !important;}
+// .mat-form-field-appearance-outline .mat-select-arrow-wrapper {transform:translateY(0%) !important;}
+.filter-clear-button{position:$absolute;top:$size8;cursor:$pointer;color:$colorred;border:1px solid $colorred;width:$size15;height:$size15;border-radius:$per50;line-height:$size14;text-align:$center;right:$size5;opacity:0.6;}
+
+
+// .mat-icon-button:focus {outline:$zero;}
+// input.mat-input-element {font-size:$size13;}
+// .theme1 {
+//     .grid-selection-modal{
+//         input.mat-input-element{
+//             font-size:$size12;
+//         }
+//         .mat-form-field{
+//             margin-bottom: inherit!important;
+//         }
+//         .mat-form-field-appearance-outline .mat-form-field-infix{
+//             padding: 0.7em 0 !important;
+//         }
+//     }
+// }
+
+
+// .login2 .mat-form-field-appearance-outline .mat-form-field-label {margin-top:6px;font-size:11px;}
+
+.modal.fade.in .modal-dialog {transform: inherit!important;}
+
+.cdk-overlay-container {z-index:9999 !important;}
+
+// Module Popup
+// .cdk-global-overlay-wrapper{z-index:$zindex1000!important}
+// .modal.fade{background:rgba($black,0.5)}
+// .cdk-overlay-container{z-index:$zindex2000!important}
+// .modal-backdrop{z-index:$zindex998!important}
+// .modal{z-index:$zindex999!important}
+// .modal.fade.in .modal-dialog {transform:inherit !important;}
+body.modal-open .modal-backdrop {display:none !important;}
+.mat-drawer-content {z-index:auto !important;}
+.modal.fade{background:rgba($black,0.5)}
+
+.modal-dialog-full-width {max-width: 98%!important;}
+.modal-dialog {border-radius:10px;pointer-events:all;
+    // .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$size5 $zero !important;}
+    // .card-header .mat-form-field-appearance-outline .mat-form-field-wrapper {margin:$zero !important;}
+    // .mat-form-field-label {color:$txtColor !important ;font-size:11px;transform:translateY(6px);}
+    .mat-form-field-label .filterlabel {font-size:13px;position:relative;top:2px;}
+    // .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {transform:translateY(-1em) scale(0.75);font-size:$size14;}
+    // .mat-form-field-label > * {background:$white;padding-right:$size8;}
+
+    .modal-content {
+        .grid-button {width:$size25;height:$size25;line-height:$size25;margin:$size3 $zero;color:#555;}
+        .removebtn {
+            span {font-weight:bold;}
+        }
+    }
+
+    .modal-header {background:$popupheadingbg;margin-bottom:$size20;min-height:$size55;}
+    .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;cursor: pointer;
+        &:focus {outline:none;border:none;}
+    }
+    .fileuploadbtn {position:$absolute !important;right:$size8;top:$size8;color:$color999 !important;width:auto;height:auto;line-height:20px;
+        &:hover, &:focus {outline:$no !important;}
+    }
+    .mat-error {margin-top:$size12;}
+    .icon-button {padding:$zero!important;height:$size25;width:$size25;display:block;border-radius:100%;background:#274058;display:inline-block;}
+    .list-of-string-button {position:absolute;top:2px;right:2px;}
+    .input-field-icon {position:absolute;top:6px;right:6px;} 
+    // .mat-checkbox-layout {display:inherit!important;line-height:2.2!important;}
+    // .mat-checkbox-layout .mat-checkbox-label {font-size:12px!important;line-height:13px!important;white-space:pre-line!important;}
+    .form-label {display:block;background:#efefef;padding:10px 10px;border:none;font-size:16px;border-radius:5px;margin:10px 0;}
+
+    .tree_view_class {position:absolute;white-space:nowrap;font-size:11px;border-radius:5px;top:-17px;right:5px;}
+}
+.colorplate {width:$size100;margin: 5px 5px 0px;
+  input {border:none; width:100%;}
+}
+
+// .mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option, .mat-option {font-weight:400;height:auto !important;white-space:normal !important;line-height:22px !important;padding-top:5px !important;padding-bottom:5px !important;font-size: 14px!important;}
+
+
+.nobg .form-label {background:$no !important;font-size:$size14;}
+
+
+.example-tree {
+    // .mat-tree-node {position:relative;}
+    // .mat-icon-button {width:30px;height:30px;line-height:30px;margin:0 10px;}
+    li {
+        background:#efefef;border-radius:5px;margin-bottom:10px !important;
+    }
+}
+.fileNameTooltip {white-space: pre-line;}
+// For Cursor
+.cursor-pointer{cursor: pointer;}
+.cursor-move{cursor: move;}
+
+
+// .mat-focused {
+//     .mat-form-field-outline-start, .mat-form-field-outline-gap, .mat-form-field-outline-end {border-color:#7ab3d6 !important;}
+// }
+.mat-mdc-progress-spinner circle, .mat-mdc-spinner circle{   
+    stroke: $buttoncolor!important;
+}
+// .tree-view{
+//     .mat-tree-node{
+//         min-height: 40px!important;
+//         .mat-icon-button{
+//             width: 25px;
+//             height: 25px;
+//             flex-shrink: 0;
+//             line-height: 25px;
+//         }
+//         .mat-checkbox .mat-checkbox-layout{
+//             line-height: inherit !important;
+//             margin-bottom: 0px!important;
+//             padding-top: 2px!important;
+//           }
+//         .all-sign{
+//             line-height: 0.1;
+//             .mat-icon{
+//                 font-size: 15px;
+//                 line-height: 25px;
+//             }
+//         }
+//         .active{
+//             color: #0082d5;
+//         }
+//     }
+// }
+
+.mat-mdc-expansion-panel-header-title,
+.mat-mdc-expansion-panel,
+.mat-mdc-list-base .mat-mdc-subheader,
+.ngx-pagination a,
+.mat-mdc-drawer-container,
+.mat-mdc-button-wrapper,
+.mat-mdc-select-value,
+.mat-mdc-menu-item,
+.mat-mdc-drawer,
+.text-center,
+.chartbody,
+.mat-mdc-option {
+  color: $txtColor !important;
+}
+.mdc-tab.mat-mdc-tab{ .mdc-tab__content{
+        .mdc-tab__text-label,.ng-touched{
+        color: $txtColor !important;
+        }
+    }
+}
+::placeholder,:not(.ng-touched)::-webkit-input-placeholder,
+.mat-mdc-form-field-infix {
+    opacity: 0.8 !important;
+}
+// Hide label when input have placeholder
+::placeholder{
+    .mat-mdc-form-field .mat-form-field-hide-placeholder .mdc-floating-label {
+        display: none;
+    }
+  }
+  .mat-mdc-form-field .mdc-floating-label{
+    opacity: 0.75 !important;
+    color: $txtColor !important;
+}
+
+.columnActionMenu{
+    overflow: hidden;
+    .mdc-button{
+        .mdc-button__label{
+            width: 100%;
+        }
+    }
+}
+.grid-filter-menu{
+    .mdc-icon-button.filterbtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .mat-mdc-icon{
+            height: inherit;
+            overflow:visible;
+        }
+    }
+}

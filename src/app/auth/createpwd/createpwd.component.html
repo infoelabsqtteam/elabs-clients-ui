@@ -58,22 +58,23 @@
                                 </button>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="w-100 mb-3 password">
+                            <mat-form-field appearance="outline" class="w-100 mb-4 password">
                                 <mat-label>New Password</mat-label>
                                 <input matInput placeholder="Enter new password" [type]="checkShowPassword ? 'text' : 'password'" formControlName="password">
-                                <button mat-icon-button  tabindex="-1"><mat-icon (click)="showPassword()">{{checkShowPassword? 'visibility_off': 'visibility'}}</mat-icon></button>
+                                <button mat-icon-button tabindex="-1" class="smbtn-circle" (click)="showPassword()" [matTooltip]="checkShowPassword ? 'Hide' : 'Show'"><mat-icon>{{checkShowPassword? 'visibility_off': 'visibility'}}</mat-icon></button>
+                                <small class="text-danger text-left d-block" *ngIf="resetPsswordForm.controls['password'].touched && resetPsswordForm.controls['password'].dirty && resetPsswordForm.controls['password'].errors?.invalidPassword">{{ resetPsswordForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                             </mat-form-field>
-                            <small class="text-danger text-left d-block mb-3" *ngIf="resetPsswordForm.controls['password'].touched && resetPsswordForm.controls['password'].dirty && resetPsswordForm.controls['password'].errors?.invalidPassword">{{ resetPsswordForm.controls['password'].errors.invalidPassword | titlecase}}</small>
 
-                            <mat-form-field appearance="outline" class="w-100 mb-0">
+                            <mat-form-field appearance="outline" class="w-100 mb-4 password">
                                 <mat-label>Confirm Password</mat-label>
                                 <input matInput placeholder="Confirm your password" type="password" formControlName="confirmPassword">
+                                <small class="text-danger text-left d-block" *ngIf="resetPsswordForm.get('confirmPassword').touched && resetPsswordForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                             </mat-form-field>
                            
                             <small class="text-danger text-left d-block mb-3" *ngIf="resetPsswordForm.get('confirmPassword').touched && resetPsswordForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
 
                             <div class="row justify-content-center my-3">
-                                <button class="hover1 mr-3" mat-raised-button color="primary" type="submit" style="width:35%;" [disabled]="!resetPsswordForm.valid || loading" (click)="onChangePwd()">Change Password <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
+                                <button class="hover1 mr-3" mat-raised-button color="primary" type="submit" [disabled]="!resetPsswordForm.valid || loading" (click)="onChangePwd()">Change Password <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
                                 <button class="hover1" mat-raised-button color="primary" type="submit" style="width:25%;" (click)="onBack()">Back</button>
                             </div>
                         </form>
@@ -107,22 +108,21 @@
                                 </button>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="w-100 mb-3 password">
+                            <mat-form-field appearance="outline" class="w-100 mb-4 password">
                                 <mat-label>New Password</mat-label>
                                 <input matInput placeholder="Enter new password" [type]="checkShowPassword ? 'text' : 'password'" formControlName="password">
-                                <button mat-icon-button  tabindex="-1"><mat-icon (click)="showPassword()">{{checkShowPassword? 'visibility_off': 'visibility'}}</mat-icon></button>
+                                <button mat-icon-button  tabindex="-1" class="smbtn-circle" (click)="showPassword()" [matTooltip]="checkShowPassword ? 'Hide' : 'Show'"><mat-icon>{{checkShowPassword? 'visibility_off': 'visibility'}}</mat-icon></button>
+                                <small class="text-danger text-left d-block" *ngIf="resetPsswordForm.controls['password'].touched && resetPsswordForm.controls['password'].dirty && resetPsswordForm.controls['password'].errors?.invalidPassword">{{ resetPsswordForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                             </mat-form-field>
-
-                            <small class="text-danger text-left d-block mb-3" *ngIf="resetPsswordForm.controls['password'].touched && resetPsswordForm.controls['password'].dirty && resetPsswordForm.controls['password'].errors?.invalidPassword">{{ resetPsswordForm.controls['password'].errors.invalidPassword | titlecase}}</small>
-                            <mat-form-field appearance="outline" class="w-100 mb-0">
+                            
+                            <mat-form-field appearance="outline" class="w-100 mb-0 mb-4 password">
                                 <mat-label>Confirm Password</mat-label>
                                 <input matInput placeholder="Confirm your password" type="password" formControlName="confirmPassword">
-                            </mat-form-field>
-
-                            <small class="text-danger text-left d-block mb-3" *ngIf="resetPsswordForm.get('confirmPassword').touched && resetPsswordForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                <small class="text-danger text-left d-block" *ngIf="resetPsswordForm.get('confirmPassword').touched && resetPsswordForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                            </mat-form-field>                            
                             
                             <div class="row justify-content-center my-3">
-                                <button class="hover1 mr-3" mat-raised-button color="primary" type="submit" style="width:35%;" [disabled]="!resetPsswordForm.valid || loading" (click)="onChangePwd()">Change Password <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
+                                <button class="hover1 mr-3" mat-raised-button color="primary" type="submit" [disabled]="!resetPsswordForm.valid || loading" (click)="onChangePwd()">Change Password <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span></button>
                                 <button class="hover1" mat-raised-button color="primary" type="submit" style="width:25%;" (click)="onBack()">Back</button>
                             </div>
 
