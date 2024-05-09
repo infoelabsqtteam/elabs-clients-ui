@@ -60,7 +60,7 @@ body.modal-open .modal-backdrop {display:none !important;}
         }
     }
 
-    .modal-header {background:var(--popupHeaderBg);margin-bottom:$size20;min-height:$size55;}
+    .modal-header {background:$popupheadingbg;margin-bottom:$size20;min-height:$size55;}
     .closebtb {position:$absolute;right:$size10;top:$size10;height:$size40;width:$size40;border-radius:$per50;font-size:$size25;background: rgba(0,0,0,0.1);text-align:$center;line-height:$size40;border:none;
         &:focus {outline:none;border:none;}
     }
@@ -77,7 +77,7 @@ body.modal-open .modal-backdrop {display:none !important;}
     .input-field-icon {position:absolute;top:6px;right:6px;} 
     .mat-checkbox-layout {display:inherit!important;line-height:2.2!important;}
     .mat-checkbox-layout .mat-checkbox-label {font-size:12px!important;line-height:13px!important;white-space:pre-line!important;}
-    .form-label {display:block;background:var(--formLabelBg);padding:8px 10px;border:none;font-size:16px;border-radius:5px;margin:10px 0;}
+    .form-label {display:block;background:#efefef;padding:8px 10px;border:none;font-size:16px;border-radius:5px;margin:10px 0;}
 
     .tree_view_class {position:absolute;white-space:nowrap;font-size:11px;border-radius:5px;top:-7px;right:5px;}
 }
