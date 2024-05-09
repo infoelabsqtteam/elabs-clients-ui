@@ -127,6 +127,8 @@ export class AppComponent implements OnInit {
       }else {
         this.loadApplicationSetting();
       }
+    }else {
+      this.loadApplicationSetting();
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
@@ -205,6 +207,8 @@ export class AppComponent implements OnInit {
       if(themeSettings){
         this.envService.setThemeSetting(themeSettings);
       }
+      console.log(themeSettings)
+      console.log("Main If Conditions")
   }
   
 }
