@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
     // this.apiCallService.getApplicationAllSettings();
     if(!this.settingLoding){
       this.getApplicationSettings();
+    }else {
+      this.loadApplicationSetting();
     }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
@@ -122,6 +124,8 @@ export class AppComponent implements OnInit {
       // this.apiCallService.getApplicationAllSettings();
       if(!this.settingLoding){
         this.getApplicationSettings();
+      }else {
+        this.loadApplicationSetting();
       }
     }
     if(this.authService.checkIdTokenStatus().status){
@@ -161,12 +165,12 @@ export class AppComponent implements OnInit {
     const domainName = document.location.hostname;
     const hostNameInLocal = this.storageService.getHostNameDinamically();
     const hostNameInCookies = this.cookieService.getCookieByName(domainName);
-    if(!this.settingLoding){
     if(domainName != 'localhost'){
       if (!!hostNameInCookies && !hostNameInLocal) {
           let serverHost = new URL(hostNameInCookies)?.origin;
           this.dataShareService.shareServerHostName(serverHost);
           this.storageService.setHostNameDinamically(hostNameInCookies);
+          console.log("first If Conditions")
       } else {
         this.settingLoding = true;
           if (!hostNameInLocal || !this.authService.checkApplicationSetting()) {
@@ -180,15 +184,27 @@ export class AppComponent implements OnInit {
               let serverHost = new URL(hostNameInLocal)?.origin;
               this.dataShareService.shareServerHostName(serverHost);
               this.storageService.setHostNameDinamically(hostNameInLocal);
+              console.log("2nd If Conditions")
           }
       }
     } else {
       this.awsSecretManagerService.getServerAndAppSetting();
     }
-    }
+    
     if(this.storageService.getHostNameDinamically()){
       this.settingLoding = false;
     }
+  }
+
+
+  loadApplicationSetting(){
+    this.envService.setApplicationSetting();
+    this.loadPage();
+    this.dataShareService.subscribeTemeSetting("setting");
+    let themeSettings =  this.storageService.getThemeSetting();
+      if(themeSettings){
+        this.envService.setThemeSetting(themeSettings);
+      }
   }
   
 }
