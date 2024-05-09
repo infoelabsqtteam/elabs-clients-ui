@@ -208,7 +208,7 @@ export class AppComponent implements OnInit {
         this.envService.setThemeSetting(themeSettings);
       }
       console.log("Main If Conditions")
-      console.log(commingPlace);
+      console.log(commingPlace); 
   }
   
 }
