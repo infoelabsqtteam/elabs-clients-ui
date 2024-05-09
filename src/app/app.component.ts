@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     if(!this.settingLoding){
       this.getApplicationSettings();
     }else {
-      this.loadApplicationSetting();
+      this.loadApplicationSetting('constructure');
     }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
@@ -125,10 +125,10 @@ export class AppComponent implements OnInit {
       if(!this.settingLoding){
         this.getApplicationSettings();
       }else {
-        this.loadApplicationSetting();
+        this.loadApplicationSetting("first redirect home page");
       }
     }else {
-      this.loadApplicationSetting();
+      this.loadApplicationSetting("second redirect home page");
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
@@ -199,7 +199,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  loadApplicationSetting(){
+  loadApplicationSetting(commingPlace){
     this.envService.setApplicationSetting();
     this.loadPage();
     this.dataShareService.subscribeTemeSetting("setting");
@@ -207,8 +207,8 @@ export class AppComponent implements OnInit {
       if(themeSettings){
         this.envService.setThemeSetting(themeSettings);
       }
-      console.log(themeSettings)
       console.log("Main If Conditions")
+      console.log(commingPlace);
   }
   
 }
