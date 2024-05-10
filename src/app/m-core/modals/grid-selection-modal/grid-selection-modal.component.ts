@@ -859,7 +859,8 @@ export class GridSelectionModalComponent implements OnInit {
   deleteitem() {
     this.parentObj[this.fieldNameForDeletion.field_name].splice(this.deleteIndex, 1)
   }
-  showGriddData(index,column){
+  showGriddData(data,indx,column){
+    let index = this.CommonFunctionService.getCorrectIndex(data,indx,this.field,this.gridData,this.filterData);
     let value={};
     let rowData = this.gridData[index];
     let columnData = rowData[column.field_name];
