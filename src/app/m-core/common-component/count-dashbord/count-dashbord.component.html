@@ -1,3 +1,28 @@
-<p>
-  count-dashbord works!
-</p>
+<div class="d-flex flex-wrap m-0 w-100 py-2" *ngIf="tabList && tabList.length > 0">
+  <div class="col-4 px-1" *ngFor="let tab of tabList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
+    <div class="card monogdbChart monogdbChartResize m-2" id="chart_resize">
+      <div class="card-header py-1 pr-2">
+        <div class="d-flex align-items-center justify-content-between" *ngIf="tab.breadCrum">
+          <h4 class="m-0 charttitle"><small>{{tab.breadCrum}}</small></h4>
+          
+          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
+          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
+          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button>
+        </div>
+      </div>
+      <div class="chartbody p-1">
+        <div [id]="tabList.chartId">
+          <p>{{gridCountByTab[tab.tab_name+'_'+tab.name]}}</p>
+          <p class="pointer" (click)="redirectToTab(tab.router)">{{ tab.tab_name }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="tabList.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
+
+<section *ngIf="tabList && tabList.length > 0">
+  <mat-card-content class="m-0 pt-4 text-center">
+    <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
+  </mat-card-content>
+</section>
