@@ -340,7 +340,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         this.isGridSelectionOpen= data;
     })
     this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
-      this.updateRunningData(data.data);
+      this.updateRunningData(data.data); 
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
