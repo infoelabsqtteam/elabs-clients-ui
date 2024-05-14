@@ -5,15 +5,15 @@
         <div class="d-flex align-items-center justify-content-between" *ngIf="tab.breadCrum">
           <h4 class="m-0 charttitle"><small>{{tab.breadCrum}}</small></h4>
           
-          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
+          <!-- <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
           <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
-          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button>
+          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button> -->
         </div>
       </div>
       <div class="chartbody p-1">
         <div [id]="tabList.chartId">
           <p>{{gridCountByTab[tab.tab_name+'_'+tab.name]}}</p>
-          <p class="pointer" (click)="redirectToTab(tab.router)">{{ tab.tab_name }}</p>
+          <p class="pointer" (click)="redirectToTab(tab.router)">{{ tab.name }}</p>
         </div>
       </div>
     </div>

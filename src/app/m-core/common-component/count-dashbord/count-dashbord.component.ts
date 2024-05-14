@@ -27,6 +27,7 @@ export class CountDashbordComponent implements OnInit {
     private apiCallService:ApiCallService
   ) { 
     this.modules = this.storageService.GetModules();
+    this.gridCountByTab = this.storageService.GetTabCounts();
     this.prepareTabList(this.modules);
     this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
       this.setGridCountData(counts);
@@ -69,21 +70,32 @@ export class CountDashbordComponent implements OnInit {
     this.getTabsCount(this.tabList);
   }
   getTabsCount(tabs){
-    this.apiCallService.getTabsCountPyload(tabs);    
+    const tabList = [];
+    if(tabs && tabs.length > 0){
+      tabs.forEach(tab => {
+        const key = tab.tab_name+"_"+tab.name;
+        if(!this.gridCountByTab.hasOwnProperty(key)){
+          tabList.push(tab);
+        }
+      });
+    }
+    this.apiCallService.getTabsCountPyload(tabList);    
   }
   prepareTab(module,menu,parent){
     if(menu && menu.tabList && menu.tabList.length > 0){
       menu.tabList.forEach(tab => {
+        let field_name = tab?.field_name;
+        let label = tab?.label;
         let tabObj:any={};
-        let breadCrum = module.title+">"+menu.label+">"+tab;
+        let breadCrum = module.title+">"+menu.label+">"+label;
         if(parent != ''){
-          breadCrum = module.title+">"+parent+">"+menu.label+">"+tab;
+          breadCrum = module.title+">"+parent+">"+menu.label+">"+label;
         }        
-        const router = "/browse/"+module.name+"/"+menu.name+"/"+tab
+        const router = "/browse/"+module.name+"/"+menu.name+"/"+field_name
         tabObj['breadCrum'] = breadCrum;
-        tabObj['tab_name'] = tab;
-        tabObj['name'] = tab;
-        tabObj['grid'] = null;
+        tabObj['tab_name'] = field_name;
+        tabObj['name'] = label;
+        tabObj['grid'] = tab?.grid;
         tabObj['router'] = router;
         this.tabList.push(tabObj);
       });
