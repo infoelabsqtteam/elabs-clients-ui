@@ -1,13 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiCallService, ApiService, DataShareService, StorageService } from '@core/web-core';
-import { privateDecrypt } from 'crypto';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-count-dashbord',
   templateUrl: './count-dashbord.component.html',
-  styleUrls: ['./count-dashbord.component.css']
+  styleUrls: ['./count-dashbord.component.scss']
 })
 export class CountDashbordComponent implements OnInit {
 
@@ -17,7 +16,10 @@ export class CountDashbordComponent implements OnInit {
   total:number;
   modules:any;
   gridCountByTab:any={};
-  gridDataCountSubscription:Subscription
+  gridDataCountSubscription:Subscription;
+  moduleWiseTabListMap:any={};
+  modal:string="";
+  dateRange:any={};
 
   constructor(
     private router: Router, 
@@ -31,6 +33,10 @@ export class CountDashbordComponent implements OnInit {
     this.prepareTabList(this.modules);
     this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
       this.setGridCountData(counts);
+    })
+    this.dataShareService.dashbordSerchKey.subscribe(key =>{
+      this.modal = key;
+      console.log(this.modal);
     })
   }
 
@@ -50,6 +56,7 @@ export class CountDashbordComponent implements OnInit {
   }
   prepareTabList(modules:any){
     this.tabList = [];
+    this.moduleWiseTabListMap = {};
     if(modules && modules.length > 0){
       modules.forEach(module => {
         if(module && module.menu_list && module.menu_list.length > 0){          
@@ -66,6 +73,7 @@ export class CountDashbordComponent implements OnInit {
         }
       });      
     }
+    // this.addColorCodeInTab(this.moduleWiseTabListMap);
     this.apiService.resetGridCountAllData();
     this.getTabsCount(this.tabList);
   }
@@ -78,12 +86,13 @@ export class CountDashbordComponent implements OnInit {
           tabList.push(tab);
         }
       });
-    }
+    }    
     this.apiCallService.getTabsCountPyload(tabList);    
   }
   prepareTab(module,menu,parent){
     if(menu && menu.tabList && menu.tabList.length > 0){
-      menu.tabList.forEach(tab => {
+      let list=[];
+      menu.tabList.forEach((tab,i) => {
         let field_name = tab?.field_name;
         let label = tab?.label;
         let tabObj:any={};
@@ -97,8 +106,26 @@ export class CountDashbordComponent implements OnInit {
         tabObj['name'] = label;
         tabObj['grid'] = tab?.grid;
         tabObj['router'] = router;
+        tabObj['module'] = module.title;        
+        if(parent != ''){
+          tabObj['menu'] = parent;
+          tabObj['submenu'] = menu.label;
+        }else{
+          tabObj['menu'] = menu.label;
+          tabObj['submenu'] = null;
+        }      
         this.tabList.push(tabObj);
+        list.push(tabObj);
       });
+      if(this.moduleWiseTabListMap[module.name] && this.moduleWiseTabListMap[module.name].length > 0){
+        let existList = this.moduleWiseTabListMap[module.name];
+        list.forEach(tab =>{
+          existList.push(tab);
+        })
+        this.moduleWiseTabListMap[module.name] = existList;
+      }else{
+        this.moduleWiseTabListMap[module.name] = list;
+      }       
     }
   }
   redirectToTab(link:any){
@@ -112,6 +139,30 @@ export class CountDashbordComponent implements OnInit {
         }     
       })
     }
+  }
+  // colorList = ["#be2596","#2596be","#be4d25","#9925be"];
+  colorList = ["#fff"];
+
+  getColorForIndex(index: number): string {
+    const colorIndex = Math.floor(index / 6) % this.colorList.length;
+    return this.colorList[colorIndex];
+  }
+  addColorCodeInTab(tabs:any){
+    if(tabs && Object.keys(tabs).length > 0){
+      Object.keys(tabs).forEach(key => {
+        if(tabs[key] && tabs[key].length > 0){
+          tabs[key].forEach((tab,i) => {
+            tab["bg-color"] = this.getColorForIndex(i);
+          });
+        }
+      });
+    }
+  }
+  refresh(){
+
+  }
+  filterchart(){
+    console.log(this.dateRange);
   }
 
 }

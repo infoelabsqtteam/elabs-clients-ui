@@ -20,11 +20,12 @@ export class AdminDashboardComponent implements OnInit,OnDestroy {
   settingModelRestSubscription:Subscription;
 
   components = [
+    { label: 'Dashbord Count', selector:'app-count-dashbord' },
     { label: 'Chart', selector:'app-mongodb-chart' },
     { label: 'Old Chart', selector:'app-chart' },
     { label: 'Dashboard', selector:'app-dashboard-chart' },
-    { label: 'In Progress Records', selector:'app-grid' },
-    { label: 'Dashbord Count', selector:'app-count-dashbord' }
+    { label: 'In Progress Records', selector:'app-grid' }
+    
   ];
   
   

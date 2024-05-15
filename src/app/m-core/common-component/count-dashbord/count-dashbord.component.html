@@ -1,28 +1,74 @@
-<div class="d-flex flex-wrap m-0 w-100 py-2" *ngIf="tabList && tabList.length > 0">
-  <div class="col-4 px-1" *ngFor="let tab of tabList| paginate: { id: 'server', itemsPerPage: itemNumOfGrid, currentPage: pageNumber, totalItems: total };let i = index">
-    <div class="card monogdbChart monogdbChartResize m-2" id="chart_resize">
-      <div class="card-header py-1 pr-2">
-        <div class="d-flex align-items-center justify-content-between" *ngIf="tab.breadCrum">
-          <h4 class="m-0 charttitle"><small>{{tab.breadCrum}}</small></h4>
-          
-          <!-- <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">download</mat-icon></button>
-          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">fullscreen</mat-icon></button>
-          <button mat-icon-button class="chartboardbtn" ><mat-icon style="font-size:20px;opacity:0.7;">filter_alt</mat-icon></button> -->
-        </div>
+<div >
+  <div class="row mt-3 m-0">
+    <div class="col-sm-3">
+      <div class="d-flex form-inputs">
+        <input class="form-control" [(ngModel)]="modal" type="text" placeholder="Search ...">
+        <i class="bx bx-search"></i>
       </div>
-      <div class="chartbody p-1">
-        <div [id]="tabList.chartId">
-          <p>{{gridCountByTab[tab.tab_name+'_'+tab.name]}}</p>
-          <p class="pointer" (click)="redirectToTab(tab.router)">{{ tab.name }}</p>
+    </div>
+    <div class="col-md-5">
+      
+    </div>
+    <div class="col-lg-4">
+      <div class="row m-0">
+        <div class="col-lg-8">
+          <mat-form-field appearance="outline" >
+            <!-- <mat-label>Date Range</mat-label> -->
+            <mat-date-range-input [rangePicker]="picker" >
+                <input matStartDate  [(ngModel)]="dateRange.start"  placeholder="Start date" >
+                <input matEndDate  [(ngModel)]="dateRange.end" placeholder="End date" >
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>  
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <button mat-flat-button style="background-color: #2596be;color: #fff !important;" class="filterbtn "  (click)="filterchart()">Filter</button>
+        </div>
+      </div>            
+    </div>
+  </div>
+</div>
+
+<div *ngIf="modules && modules.length > 0">
+  <div *ngFor="let module of modules | filter:modal;let i = index" >
+    <div class="row m-0">
+      <div class="col-lg-12"><div class="form-label" >{{ module.title}}</div></div>
+    </div>
+    <div class="d-flex flex-wrap m-0 w-100 py-2" *ngIf="moduleWiseTabListMap && moduleWiseTabListMap[module.name] &&  moduleWiseTabListMap[module.name].length > 0">
+      <div class="col-2 px-1" *ngFor="let tab of moduleWiseTabListMap[module.name] | filter:modal;let i = index">
+        <div class="card m-2 countCard" >            
+          <div class="card-header  py-1 px-1">
+            
+            <div class="align-items-center justify-content-between" style="width:70%;display: inline-block;" *ngIf="tab.name">
+              <h4 class="m-0 overflow-ellipsis" style="font-size:12px">{{ tab.name }}</h4>
+            </div>
+            <span class="float-right">
+              <a class=""><mat-icon style="font-size: 18px;">refresh</mat-icon></a>
+              <a  (click)="redirectToTab(tab.router)"><mat-icon style="font-size: 18px;">arrow_right_alt</mat-icon></a>
+            </span>
+            
+          </div>
+          <div class="p-1">
+            <div class="text-right px-2 py-1">
+              <p class="dataCount" >{{gridCountByTab[tab.tab_name+'_'+tab.name] ? gridCountByTab[tab.tab_name+'_'+tab.name] : 0 }}</p>
+              <!-- <i><small class="text-white">{{tab.breadCrum}}</small></i> -->
+            </div>
+          </div>
+          <!--div-- class="card-footer  px-2 py-1">
+            <a class=""><mat-icon>refresh</mat-icon></a>
+            <a class="float-right" (click)="redirectToTab(tab.router)"><mat-icon>arrow_right_alt</mat-icon></a>
+          </div-->
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <div *ngIf="tabList.length == 0"><p class="text-center"><span>Dashlet Master not available in this application.</span></p></div>
 
-<section *ngIf="tabList && tabList.length > 0">
+<!-- <section *ngIf="tabList && tabList.length > 0">
   <mat-card-content class="m-0 pt-4 text-center">
     <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
   </mat-card-content>
-</section>
+</section> -->

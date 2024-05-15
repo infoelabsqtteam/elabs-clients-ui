@@ -1,0 +1,22 @@
+.dataCount{
+    margin: 10px 0px;
+    font-size: 50px;
+    font-weight: normal;
+    line-height: 1.0;
+    color:#000;
+}
+.overflow-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.countCard{
+    background-color: #fff;
+
+}
+.countCard:hover{
+    background-color: var(--themecolor);
+    p ,a,h4{
+        color:#fff;
+    }
+}
