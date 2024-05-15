@@ -135,7 +135,7 @@ body.modal-open .modal-backdrop {display:none !important;}
     // .mat-form-field-label > * {background:$white;padding-right:$size8;}
 
     .modal-content {
-        .grid-button {width:$size25;height:$size25;line-height:$size25;margin:$size3 $zero;color:#555;}
+        .grid-button {width:$size25;height:$size25;line-height:$size25;margin:$size3 $zero;color:#555;cursor: pointer;}
         .removebtn {
             span {font-weight:bold;}
         }
