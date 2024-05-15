@@ -44,7 +44,7 @@
 <section>
     <div class="row w-100 m-0">
         <div class="col-lg-12 mt-0 px-0">
-            <mat-card>
+            <mat-card class="m-0 p-0">
                <mat-card-content class="m-0 p-0 bg-aluminium">
                     <div class="row mx-0">
                         <div [ngClass]="treeView ? 'col-lg-3 pl-0' : 'd-none'"><app-tree-view></app-tree-view></div>
@@ -101,7 +101,7 @@
                                                         <input type="text" [placeholder]="head.label" aria-label="Number" matInput [formControlName]="head.field_name"
                                                             [matAutocomplete]="first" (keyup)="updateData($event,head)" [id]="head._id+'_'+head.field_name" autocomplete="off">
                                                         <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="applyFilter()" [displayWith]="getOptionText">
-                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]=" option && option.name ? option.name : option "></mat-option>
+                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option">{{option && option.name ? option.name : option}}</mat-option>
                                                             <!-- <mat-option *ngIf="head.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option> -->
                                                         </mat-autocomplete> 
                                                     </mat-form-field>
@@ -252,7 +252,7 @@
 </section>
 
 <section *ngIf="elements.length > 0">
-    <mat-card-content class="m-0 pt-4 text-center position-relative">
+    <mat-card-content class="m-0 p-0 pt-4 text-center position-relative">
         <pagination-controls (pageChange)="getPage($event)" id="server5"></pagination-controls>
         <div class="paginationnumber">
             <small>Items Per Page:</small>

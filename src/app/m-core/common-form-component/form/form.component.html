@@ -192,7 +192,7 @@
                             </div>
                         </div>
                         <div *ngIf="tableField.type == 'textarea'">
-                            <mat-form-field appearance="outline" class="example-full-width w-100">
+                            <mat-form-field appearance="outline" class="textarea w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
                                 <textarea matInput [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory" [formControlName]="tableField.field_name"></textarea>
                                 <mat-error class="text-danger" *ngIf="templateFormControl[tableField.field_name].touched && templateFormControl[tableField.field_name].errors?.required">
@@ -278,11 +278,11 @@
                                 </mat-form-field>
                                 
                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.datatype == 'list_of_object'" (click)="setValue('',tableField,true)" [disabled]="tempVal[tableField.field_name+'_add_button']">
-                                    <mdb-icon fas icon="plus"></mdb-icon>
+                                    <mat-icon>add</mat-icon>
                                     <span class="countno" *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0">{{custmizedFormValue[tableField.field_name].length}}</span>
                                 </button>
                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="tableField.add_new_enabled && templateForm.get(tableField.field_name).value != '' && !tempVal[tableField.field_name+'_add_button']"  (click)="updateAddNewField('',tableField)" >
-                                    <mdb-icon fas icon="edit"></mdb-icon>
+                                    <mat-icon>edit</mat-icon>
                                 </button>
                                 <div *ngIf="tableField.datatype == 'list_of_object'">
                                     <div *ngIf="custmizedFormValue[tableField.field_name] && custmizedFormValue[tableField.field_name].length > 0" cdkDropList  [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
@@ -292,7 +292,7 @@
                                             <p class="m-0"><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> 
-                                            {{ item.name ? item.name : item }}  <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                            {{ item.name ? item.name : item }}  <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><mat-icon>close</mat-icon></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> {{item}} 
                                                 <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString('',tableField,i)" ><i class="fas fa-pen"></i></a>
-                                                <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
+                                                <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><mat-icon>close</mat-icon></a>
                                             </p>
                                         </div>
                                     </div>
@@ -549,11 +549,11 @@
                                             </mat-form-field>
                                             
                                             <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
-                                                <mdb-icon fas icon="plus"></mdb-icon>
+                                                <mat-icon>add</mat-icon>
                                                 <span class="countno" *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0">{{custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length}}</span>
                                             </button>
                                             <button mdbBtn type="button" size="sm" outline="true" class="icon-button  text-white list-of-string-button modelplusbtn"  *ngIf="(fields.add_new_enabled || fields.onchange_get_next_form) && templateForm.get(tableField.field_name).get(fields.field_name).value != '' && !tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']"  (click)="updateAddNewField(tableField,fields)">
-                                                <mdb-icon fas icon="edit"></mdb-icon>
+                                                <mat-icon>edit</mat-icon>
                                             </button>
                                         <div *ngIf="fields.datatype == 'list_of_object'">
                                             <div *ngIf="custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList [ngClass]="tableField.itemListHover ? 'nohover': 'autosuggestion'" class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
@@ -561,7 +561,7 @@
                                                 <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] | filter:term[tableField.field_name]; let i = index" cdkDrag>
                                                     <p><span *ngIf="tableField.draggable"><svg width="16px" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                                         <path d="M0 0h24v24H0z" fill="none"></path>
-                                                      </svg></span> {{ item.name ? item.name : item }} <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                      </svg></span> {{ item.name ? item.name : item }} <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><mat-icon>close</mat-icon></a></p>
                                                 </div>                                                
                                             </div>
                                         </div>
@@ -620,7 +620,7 @@
                                                             <path d="M0 0h24v24H0z" fill="none"></path>
                                                           </svg></span>{{item}} 
                                                             <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString(tableField,fields,i)" ><i class="fas fa-pen"></i></a>
-                                                            <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                            <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><mat-icon>close</mat-icon></a></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -668,7 +668,7 @@
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="fields.type == 'textarea'">
-                                        <mat-form-field appearance="outline" class="example-full-width w-100">
+                                        <mat-form-field appearance="outline" class="textarea w-100">
                                             <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory && tableField.type == 'list_of_fields'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                             <textarea matInput [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" [id]="fields._id+'_'+fields.field_name"></textarea>                
                                         </mat-form-field>
@@ -1542,7 +1542,7 @@
                                                     </mat-autocomplete>
                                                 </mat-form-field>
                                                 <button mdbBtn type="button" size="sm" outline="true" class="icon-button text-white list-of-string-button modelplusbtn" *ngIf="fields.datatype == 'list_of_object'" (click)="setValue(tableField,fields,true)" [disabled]="tempVal[tableField.field_name+'_'+fields.field_name+'_add_button']">
-                                                    <mdb-icon fas icon="plus"></mdb-icon>
+                                                    <mat-icon>add</mat-icon>
                                                 </button>
                                             </div>
                                             <div class="w-100 position-relative" *ngIf="fields.datatype == 'chips'">
@@ -1568,7 +1568,7 @@
                                             <div *ngIf="fields.datatype == 'list_of_object'">
                                                 <div *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
                                                     <div class="typeahead-example-box" *ngFor="let item of custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name]; let i = index" cdkDrag>
-                                                        <p class="m-0 small">{{ item && item.name ? item.name : item }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
+                                                        <p class="m-0 small">{{ item && item.name ? item.name : item }} <a (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><mat-icon>close</mat-icon></a></p>
                                                     </div>                                                
                                                 </div>
                                             </div>
@@ -1611,7 +1611,7 @@
                                                     <mat-label>{{ fields.label | titlecase}}<span *ngIf="fields.is_mandatory" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                                                     <input matInput type="text" [placeholder]="fields.placeholder | titlecase"  [formControlName]="fields.field_name" (keyup)="setValue(step,fields,false)">
                                                 </mat-form-field>
-                                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="tempVal[step.field_name+'_'+fields.field_name+'_add_button']"><mdb-icon fas icon="plus"></mdb-icon></button>
+                                                <button mdbBtn type="button" size="sm" class="icon-button text-white list-of-string-button modelplusbtn"  *ngIf="fields.type == 'list_of_string'" (click)="setValue(step,fields,true)" [disabled]="tempVal[step.field_name+'_'+fields.field_name+'_add_button']"><mat-icon>add</mat-icon></button>
                                             </div>
                                             <!-- <div *ngIf="fields.type == 'list_of_string' && fields.datatype != 'chips' && fields.datatype != 'chips_with_mask'">
                                                 <div *ngIf="custmizedFormValue && custmizedFormValue[tableField.field_name+'_'+tableField.type] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name] && custmizedFormValue[tableField.field_name+'_'+tableField.type][fields.field_name].length > 0" cdkDropList class="example-list" (cdkDropListDropped)="typeaheadDragDrop($event,tableField,fields)">
@@ -1620,7 +1620,7 @@
                                                             <p class="m-0 small">{{item}}</p>
                                                         </div>
                                                         <div class="col-lg-3 text-right pr-0 pl-0">                        
-                                                            <a class="btn-sm btn-danger m-0 small text-white" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a>
+                                                            <a class="btn-sm btn-danger m-0 small text-white" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><mat-icon>close</mat-icon></a>
                                                         </div>
                                                     </div>
                                                 </div>

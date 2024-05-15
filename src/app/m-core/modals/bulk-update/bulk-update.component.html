@@ -94,7 +94,7 @@
                                                 <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
                                                     [matAutocomplete]="first" [matChipInputFor]="chipList"                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name" >
                                                 <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,chipsInput,data)" [displayWith]="getOptionText">
-                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option">{{getddnDisplayVal(option)}}</mat-option>
                                                 </mat-autocomplete>
                                             </mat-chip-grid>
                                         </mat-form-field> 
@@ -118,7 +118,7 @@
                                                 <input type="text" #chipsInput [placeholder]="fieldName.label" aria-label="Number" matInput
                                                     [matAutocomplete]="first" [matChipInputFor]="chipList"                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event,fieldName,chipsInput,data)" (keyup)="searchTypeaheadData(fieldName,data,chipsInput.value)" [id]="fieldName._id+'_'+fieldName.field_name" >
                                                 <mat-autocomplete  #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,chipsInput,data)" [displayWith]="getOptionText">
-                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option">{{getddnDisplayVal(option)}}</mat-option>
                                                 </mat-autocomplete>
                                             </mat-chip-grid>
                                         </mat-form-field>
@@ -139,7 +139,7 @@
                                                 <input type="text" [placeholder]="fieldName.label" matInput #typeheadInput
                                                     [matAutocomplete]="first" [(ngModel)]="data[fieldName.field_name]" (keyup)="searchTypeaheadData(fieldName,data,typeheadInput.value)" autocomplete="off" >
                                                 <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,typeheadInput,data)"  [displayWith]="getOptionText">
-                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                    <mat-option *ngFor="let option of typeAheadData" [value]="option">{{getddnDisplayVal(option)}}</mat-option>
                                                 </mat-autocomplete>                                  
                                             </mat-form-field>
                                             <small class="typeheaderrormsg" *ngIf="fieldName['errorMsg']">{{typeheaderrormsg}}</small>
@@ -153,7 +153,7 @@
                                                     <input type="text" #typeheadchips [placeholder]="fieldName.label" aria-label="Number" matInput
                                                         [matAutocomplete]="first" [matChipInputFor]="chipList"                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  (keyup)="searchTypeaheadData(fieldName,data,typeheadchips.value)" [id]="fieldName._id+'_'+fieldName.field_name" >
                                                     <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" (optionSelected)="setValue($event,fieldName,typeheadchips,data)" [displayWith]="getOptionText">
-                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                                        <mat-option *ngFor="let option of typeAheadData" [value]="option">{{getddnDisplayVal(option)}}</mat-option>
                                                     </mat-autocomplete>
                                                 </mat-chip-grid>
                                             </mat-form-field>                                
