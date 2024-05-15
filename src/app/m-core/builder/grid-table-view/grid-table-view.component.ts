@@ -987,7 +987,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.updateRouteUrl();
       this.modalService.open('form-modal',formData)
     }else{
-      this.notificationService.notify('text-danger','Action not allowed!!!')
+      this.notificationService.notify('bg-danger','Action not allowed!!!')
     }
         
     // if(staticModalGroup.length > 0){
