@@ -333,6 +333,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
           const currentTabName = this.storageService.GetActiveMenu()['name'];
           const key = currentTabName+"_"+tab.name;
           this.gridCountByTab[key] = gridData.data_size;
+          let dashbordCountList = this.storageService.GetTabCounts();
+          const dashbordCountKey = currentTabName+"_"+tab.label;
+          dashbordCountList[dashbordCountKey] = gridData.data_size;
+          this.storageService.SetTabCounts(dashbordCountList);
         }        
       } else {
         this.total = 0;

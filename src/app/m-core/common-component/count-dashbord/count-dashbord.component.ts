@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiCallService, ApiService, DataShareService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -26,7 +26,8 @@ export class CountDashbordComponent implements OnInit {
     private storageService:StorageService,
     private dataShareService:DataShareService,
     private apiService:ApiService,
-    private apiCallService:ApiCallService
+    private apiCallService:ApiCallService,
+    private commonFunctionService:CommonFunctionService
   ) { 
     this.modules = this.storageService.GetModules();
     this.gridCountByTab = this.storageService.GetTabCounts();
@@ -36,7 +37,6 @@ export class CountDashbordComponent implements OnInit {
     })
     this.dataShareService.dashbordSerchKey.subscribe(key =>{
       this.modal = key;
-      console.log(this.modal);
     })
   }
 
@@ -134,7 +134,7 @@ export class CountDashbordComponent implements OnInit {
   setGridCountData(counts){
     if(counts && Object.keys(counts).length > 0){
       Object.keys(counts).forEach(key => { 
-        if(counts[key]){
+        if(counts[key] != undefined && counts[key] != null){
           this.gridCountByTab[key] = JSON.parse(JSON.stringify(counts[key]));
         }     
       })
@@ -158,11 +158,47 @@ export class CountDashbordComponent implements OnInit {
       });
     }
   }
-  refresh(){
-
+  refresh(route){    
+    let index = this.commonFunctionService.getIndexInArrayById(this.tabList,route,'router');
+    let obj = {...this.tabList[index]};
+    let crList = this.getDateRange();
+    if(crList && crList.length > 0){
+      obj.grid = {'api_params_criteria' : crList};
+    }
+    this.apiCallService.getTabsCountPyload([obj]);    
   }
   filterchart(){
-    console.log(this.dateRange);
+    let list = [];
+    let crList = this.getDateRange();
+    if(crList && crList.length > 0){      
+      if(this.tabList && this.tabList.length > 0){
+        this.tabList.forEach((tempTab:any) => {
+          let tab = {...tempTab};
+          if(tab && tab.grid && tab.grid.api_params_criteria && tab.grid.api_params_criteria.length > 0){
+            crList.forEach(cr =>{
+              tab.grid.api_params_criteria.push(cr);
+            })
+          }else{
+            tab.grid = {"api_params_criteria":crList};
+          }
+          list.push(tab);
+        });
+      }
+    }else{
+      list = this.tabList;
+    }    
+    this.apiCallService.getTabsCountPyload(list);
+  }
+  getDateRange(){
+    let crList = [];
+    if(this.dateRange && this.dateRange.start && this.dateRange.end){
+      const start = this.commonFunctionService.dateFormat(this.dateRange.start);
+      const end = this.commonFunctionService.dateFormat(this.dateRange.end);
+      console.log("Start = " + start);
+      console.log("End = " + end);
+      crList = ["createdDate;gte;"+start+";STATIC","createdDate;lte;"+end+";STATIC"]; 
+    }
+    return crList;
   }
 
 }
