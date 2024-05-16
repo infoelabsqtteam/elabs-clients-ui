@@ -377,7 +377,7 @@
                                                 <path d="M0 0h24v24H0z" fill="none"></path>
                                               </svg></span> {{item}} 
                                                 <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString('',tableField,i)" ><i class="fas fa-pen"></i></a>
-                                                <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><mat-icon>close</mat-icon></a>
+                                                <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,'',tableField,item,'delete')"><i class="fas fa-times"></i></a>
                                             </p>
                                         </div>
                                     </div>
@@ -620,7 +620,7 @@
                                                             <path d="M0 0h24v24H0z" fill="none"></path>
                                                           </svg></span>{{item}} 
                                                             <a class="mr-4" [matTooltip]="'Edit'" [matTooltipPosition]="'above'" (click)="editListOfString(tableField,fields,i)" ><i class="fas fa-pen"></i></a>
-                                                            <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><mat-icon>close</mat-icon></a></p>
+                                                            <a [ngClass]="tableField.hideDeleteInList ? 'd-none': ''" [matTooltip]="'Delete'" [matTooltipPosition]="'above'" (click)="openModal('confirm-modal',i,tableField,fields,item,'delete')"><i class="fas fa-times"></i></a></p>
                                                     </div>
                                                 </div>
                                             </div>
