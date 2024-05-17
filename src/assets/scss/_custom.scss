@@ -20,7 +20,7 @@ a:hover {text-decoration:none;}
     .mat-icon {font-size:22px;margin:0;width:auto;height:auto;}
 }
 //checkbox
-.mat-mdc-checkbox label {margin:0px;font-size:12px;padding:0px;}
+.mat-mdc-checkbox label {margin:0px;font-size:12px;padding:0px; color: $txtColor;}
 // leftSideBarMenu scroll
 .metismenu{height: 100%;overflow-y: auto;padding-bottom: 50px;}
 
