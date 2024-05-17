@@ -3,27 +3,30 @@
         <app-sidebar-search (sidebarSearch)="sidebarSearchResponce($event)"></app-sidebar-search>
     </div>
     <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
-
-        <div class="tablist position-relative d-flex">
-          <mat-tab-group animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
-            <mat-tab *ngFor="let tab of tabs; let i = index" >
+        <div class="tablist position-relative d-flex col-lg-9 col-md-8 col-sm-12 col-9 px-0" #tabsGroup>
+          <mat-tab-group [disablePagination]="true" animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+            <mat-tab *ngFor="let tab of (!!tabSliceCount ? (tabs| slice:0:tabSliceCount) : tabs); let i = index" >
               <ng-template mat-tab-label>
-                <div class="mat-tab-label-content pl-3 pr-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
+                <div class="mat-tab-label-content px-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
                 <span class="favibtn" [ngClass]="{'active':tab.favourite,'d-none': !tab.display}" (click)="addFebTab(tab,'')"><mat-icon>grade</mat-icon></span>
               </ng-template>
             </mat-tab>
+            <mat-tab *ngIf="hasOverflow">
+              <ng-template mat-tab-label>
+                <div class="mat-tab-label-content d-flex pl-1 py-2" [matMenuTriggerFor]="tabExtraMenu" [title]="selectedMoreMenu">
+                  <span>{{selectedMoreMenu}}</span><mat-icon>more_vert</mat-icon>
+                </div>
+              </ng-template>
+            </mat-tab>
           </mat-tab-group>
-        <button *ngIf="tabs.length>5" mat-icon-button [matMenuTriggerFor]="tabExtraMenu" [title]="'More Tabs'">
-          <mat-icon>more_vert</mat-icon>
-        </button>
     </div>
 
 
     <mat-menu #tabExtraMenu="matMenu">
-      <ng-container *ngFor="let tab of tabs; let i = index">
-        <div class="tabExtraMenu">
-          <div class="pl-3 pr-1 py-2 d-flex align-items-center tab" [ngClass]="{ 'd-none': !tab.display }"
-            (click)="getTab(i, tab.tab_name, $event)">
+      <ng-container *ngFor="let tab of tabs | slice : tabSliceCount ; let i = index">
+        <div class="tabExtraMenu" *ngIf="tab" [ngClass]="isTabActive(tab) ? 'activetxt' : ''">
+          <div class="pl-3 pr-1 py-2 d-flex align-items-center justify-content-between tab" [ngClass]="{ 'd-none': !tab.display }"
+            (click)="getTab(i, tab.tab_name, $event,tabSliceCount)">
             <div class="tab-content">
               <span>{{ gateTabName(tab) }}</span>
               <span>({{ gridCountByTab[tab.tab_name + "_" + tab.name] }})</span>

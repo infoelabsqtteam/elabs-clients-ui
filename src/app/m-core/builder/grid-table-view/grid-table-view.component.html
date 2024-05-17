@@ -26,7 +26,8 @@
 
 <section>
     <div class="downloadbtn">
-        <button *ngIf="elements.length > 0" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
+        <button *ngIf="elements.length && !heavyDownload" mdbBtn type="button" size="sm" (click)="exportExcel()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
+        <button *ngIf="elements.length && heavyDownload" mdbBtn type="button" size="sm" (click)="exportCSV()" mdbWavesEffect class="m-0 ml-2 px-2 py-1 grid-button float-right" [matTooltip]="'Export (ALT + CTRL + D)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">file_download</span> Download</button>
         <button *ngIf="forms['default'] && tab.addForm" mdbBtn type="button" size="sm" (click)="addNewForm('NEW')" mdbWavesEffect class="m-0 px-2 py-1 grid-button float-right" [matTooltip]="'Add New Form (ALT + A)'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">add</span> Add</button>
         <ng-container *ngIf="forms['default'] && tab && tab.grid && tab.grid.copyRequired">
             <button mdbBtn type="button" size="sm" (click)="cloneData()" mdbWavesEffect class="m-0 px-2 mr-2 py-1 grid-button float-right" [matTooltip]="'Copy Selected Row'" [matTooltipPosition]="'above'" [matTooltipClass]="'text-white'"><span class="material-icons" style="font-size:12px!important;vertical-align:middle;">content_copy</span> Copy</button>
@@ -36,15 +37,15 @@
                 <span class="material-icons" [ngClass]="btn.field_name == 'cancel' || btn.field_name == 'delete'?'text-danger':''">{{ btn.field_class }}</span>
             </a>
         </span>
-        <app-grid-filter-menu [extraClass]="'filterbtn float-right'" [columns]="headElements"></app-grid-filter-menu>
+        <app-grid-filter-menu class="grid-filter-menu" [extraClass]="'filterbtn float-right'" [columns]="headElements"></app-grid-filter-menu>
     </div>
 </section>
 
 <section>
     <div class="row w-100 m-0">
         <div class="col-lg-12 mt-0 px-0">
-            <mat-card class="m-0 p-0 bg-aluminium">
-               <mat-card-content>
+            <mat-card class="m-0 p-0">
+               <mat-card-content class="m-0 p-0 bg-aluminium">
                     <div class="row mx-0">
                         <div [ngClass]="treeView ? 'col-lg-3 pl-0' : 'd-none'"><app-tree-view></app-tree-view></div>
                         <div class="table-responsive table tableFixHead mb-0 pb-0" [ngClass]="treeView || isShowDiv ? 'col-lg-9 pl-0' : 'col-lg-12 px-0'">
@@ -55,13 +56,13 @@
                                         <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                             <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
                                                 <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
-                                                <span class="show-on-hover mr-1">
+                                                <span class="show-on-hover">
                                                     <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
                                                     <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                                 </span>
                                                 <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                                     <app-grid-column-action-menu [elements]="elements" [sortIcon]="sortIcon" [headElements]="headElements" [data]="modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
-                                                </mat-menu>  
+                                                </mat-menu>
                                             </div>
                                         </th>                                        
                                     </tr>
@@ -100,7 +101,7 @@
                                                         <input type="text" [placeholder]="head.label" aria-label="Number" matInput [formControlName]="head.field_name"
                                                             [matAutocomplete]="first" (keyup)="updateData($event,head)" [id]="head._id+'_'+head.field_name" autocomplete="off">
                                                         <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="applyFilter()" [displayWith]="getOptionText">
-                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]=" option && option.name ? option.name : option "></mat-option>
+                                                            <mat-option *ngFor="let option of typeAheadData" [value]="option">{{option && option.name ? option.name : option}}</mat-option>
                                                             <!-- <mat-option *ngIf="head.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option> -->
                                                         </mat-autocomplete> 
                                                     </mat-form-field>
@@ -251,7 +252,7 @@
 </section>
 
 <section *ngIf="elements.length > 0">
-    <mat-card-content class="m-0 pt-4 text-center position-relative">
+    <mat-card-content class="m-0 p-0 pt-4 text-center position-relative">
         <pagination-controls (pageChange)="getPage($event)" id="server5"></pagination-controls>
         <div class="paginationnumber">
             <small>Items Per Page:</small>
