@@ -79,7 +79,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
         tab = tabs[index];
       }
       if(tab && tab._id){
-        console.log(tab);
+        // console.log(tab);
         let gridColums = tab?.grid?.gridColumns;
         if(this.selectedTabAction == "download"){
           let responce:any = this.downloadService.exportExcel(this.gridCountByTab[this.selectedTabCard.tab_name+'_'+this.selectedTabCard.name],gridColums,{},tab,this.storageService.GetActiveMenu().name);
@@ -250,8 +250,8 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     if(this.dateRange && this.dateRange.start && this.dateRange.end){
       const start = this.commonFunctionService.dateFormat(this.dateRange.start);
       const end = this.commonFunctionService.dateFormat(this.dateRange.end);
-      console.log("Start = " + start);
-      console.log("End = " + end);
+      // console.log("Start = " + start);
+      // console.log("End = " + end);
       crList = ["createdDate;gte;"+start+";STATIC","createdDate;lte;"+end+";STATIC"]; 
     }
     return crList;
