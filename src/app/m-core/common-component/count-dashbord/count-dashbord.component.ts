@@ -266,7 +266,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
       tampName = tab.menu;
     }
     const menu = { 
-      "name" : tampName
+      "name" : tab.tab_name
     }
     this.storageService.SetActiveMenu(menu);
     if(tab && tab.module) this.storageService.setModule(tab.module);
