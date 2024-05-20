@@ -55,10 +55,10 @@
               <!-- <i><small class="text-white">{{tab.breadCrum}}</small></i> -->
             </div>
           </div>
-          <!--div-- class="card-footer  px-2 py-1">
-            <a class=""><mat-icon>refresh</mat-icon></a>
-            <a class="float-right" (click)="redirectToTab(tab.router)"><mat-icon>arrow_right_alt</mat-icon></a>
-          </div-->
+          <div class="card-footer  px-2 py-1">
+            <a class=""><mat-icon style="font-size: 18px;line-height: 1.4;">refresh</mat-icon></a>
+            <a class="float-right" *ngIf="gridCountByTab[tab.tab_name+'_'+tab.name] && gridCountByTab[tab.tab_name+'_'+tab.name] > 0"  (click)="downloadTabData(tab)"><mat-icon style="font-size: 18px;line-height: 1.4;">download</mat-icon></a>
+          </div>
         </div>
       </div>
     </div>

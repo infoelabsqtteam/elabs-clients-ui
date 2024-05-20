@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiCallService, ApiService, CommonFunctionService, DataShareService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, MenuOrModuleCommonService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './count-dashbord.component.html',
   styleUrls: ['./count-dashbord.component.scss']
 })
-export class CountDashbordComponent implements OnInit {
+export class CountDashbordComponent implements OnInit,OnDestroy {
 
   tabList:any = [];
   pageNumber:any=1;
@@ -17,9 +17,14 @@ export class CountDashbordComponent implements OnInit {
   modules:any;
   gridCountByTab:any={};
   gridDataCountSubscription:Subscription;
+  tempDataSubscription:Subscription;
+  exportExcelSubscription:Subscription;
   moduleWiseTabListMap:any={};
   modal:string="";
   dateRange:any={};
+  selectedTabCard:any;
+  selectedTabAction:any;
+  downloadClick:string='';
 
   constructor(
     private router: Router, 
@@ -27,7 +32,9 @@ export class CountDashbordComponent implements OnInit {
     private dataShareService:DataShareService,
     private apiService:ApiService,
     private apiCallService:ApiCallService,
-    private commonFunctionService:CommonFunctionService
+    private commonFunctionService:CommonFunctionService,
+    private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private downloadService:DownloadService
   ) { 
     this.modules = this.storageService.GetModules();
     this.gridCountByTab = this.storageService.GetTabCounts();
@@ -38,11 +45,56 @@ export class CountDashbordComponent implements OnInit {
     this.dataShareService.dashbordSerchKey.subscribe(key =>{
       this.modal = key;
     })
+    this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {     
+      this.setTempData(temp);      
+    })
+    this.exportExcelSubscription = this.dataShareService.exportExcelLink.subscribe(data =>{
+      this.setExportExcelLink(data);
+    })
   }
 
   ngOnInit() {
   }
+  ngOnDestroy(): void {
+    if(this.tempDataSubscription){
+      this.tempDataSubscription.unsubscribe();
+    }
+    if(this.gridDataCountSubscription){
+      this.gridDataCountSubscription.unsubscribe();
+    }
+    if(this.exportExcelSubscription){
+      this.exportExcelSubscription.unsubscribe();
+    }
+  }
 
+  setTempData(tempData:any){
+    let tabs =[];
+    let tab:any= {};
+    if (tempData && tempData.length > 0) {
+      if(tempData[0] && tempData[0].templateTabs && tempData[0].templateTabs.length > 0){
+        tabs = this.menuOrModuleCommounService.viewPermissionInTabs(tempData[0].templateTabs);
+      }
+      if(tabs && tabs.length > 0 && this.selectedTabCard._id){
+        let index = this.commonFunctionService.getIndexInArrayById(tabs,this.selectedTabCard?._id);
+        tab = tabs[index];
+      }
+      if(tab && tab._id){
+        console.log(tab);
+        let gridColums = tab?.grid?.gridColumns;
+        if(this.selectedTabAction == "download"){
+          let responce:any = this.downloadService.exportExcel(this.gridCountByTab[this.selectedTabCard.tab_name+'_'+this.selectedTabCard.name],gridColums,{},tab,this.storageService.GetActiveMenu().name);
+          if(responce != ''){
+            this.downloadClick = responce;
+          }
+        }
+      }
+    }
+  }
+  setExportExcelLink(exportExcelLink:any){
+    if (exportExcelLink != '' && exportExcelLink != null && this.downloadClick != '') {
+      this.downloadClick = this.downloadService.downloadExcelFromLink(exportExcelLink,this.downloadClick);
+    }
+  }
   getPage(page: number,criteria?:any) {
     let Criteria:any = [];
     let cr=["status;eq;Active;STATIC","package_name;eq;mongodb_chart;STATIC"]
@@ -62,7 +114,7 @@ export class CountDashbordComponent implements OnInit {
         if(module && module.menu_list && module.menu_list.length > 0){          
           module.menu_list.forEach(menu => {            
             if(menu && menu.submenu && menu.submenu.length > 0){
-              const parent = menu.label;
+              const parent = menu.name;
               menu.submenu.forEach(submenu => {                
                 this.prepareTab(module,submenu,parent);                
               });
@@ -87,7 +139,8 @@ export class CountDashbordComponent implements OnInit {
         }
       });
     }    
-    this.apiCallService.getTabsCountPyload(tabList);    
+    let payloads = this.apiCallService.getTabsPayloadForCountList(tabList);   
+    this.apiService.getTabCountData(payloads); 
   }
   prepareTab(module,menu,parent){
     if(menu && menu.tabList && menu.tabList.length > 0){
@@ -96,24 +149,25 @@ export class CountDashbordComponent implements OnInit {
         let field_name = tab?.field_name;
         let label = tab?.label;
         let tabObj:any={};
-        let breadCrum = module.title+">"+menu.label+">"+label;
-        if(parent != ''){
-          breadCrum = module.title+">"+parent+">"+menu.label+">"+label;
-        }        
+        // let breadCrum = module.title+">"+menu.label+">"+label;
+        // if(parent != ''){
+        //   breadCrum = module.title+">"+parent+">"+menu.label+">"+label;
+        // }        
         const router = "/browse/"+module.name+"/"+menu.name+"/"+field_name
-        tabObj['breadCrum'] = breadCrum;
+        // tabObj['breadCrum'] = breadCrum;
         tabObj['tab_name'] = field_name;
         tabObj['name'] = label;
         tabObj['grid'] = tab?.grid;
         tabObj['router'] = router;
-        tabObj['module'] = module.title;        
+        tabObj['module'] = module.name;        
         if(parent != ''){
           tabObj['menu'] = parent;
-          tabObj['submenu'] = menu.label;
+          tabObj['submenu'] = menu.name;
         }else{
-          tabObj['menu'] = menu.label;
+          tabObj['menu'] = menu.name;
           tabObj['submenu'] = null;
-        }      
+        }  
+        tabObj['_id'] = tab?._id;    
         this.tabList.push(tabObj);
         list.push(tabObj);
       });
@@ -165,7 +219,8 @@ export class CountDashbordComponent implements OnInit {
     if(crList && crList.length > 0){
       obj.grid = {'api_params_criteria' : crList};
     }
-    this.apiCallService.getTabsCountPyload([obj]);    
+    let payloads = this.apiCallService.getTabsPayloadForCountList([obj]); 
+    this.apiService.getTabCountData(payloads);   
   }
   filterchart(){
     let list = [];
@@ -187,7 +242,8 @@ export class CountDashbordComponent implements OnInit {
     }else{
       list = this.tabList;
     }    
-    this.apiCallService.getTabsCountPyload(list);
+    let payloads = this.apiCallService.getTabsPayloadForCountList(list);
+    this.apiService.getTabCountData(payloads);
   }
   getDateRange(){
     let crList = [];
@@ -199,6 +255,23 @@ export class CountDashbordComponent implements OnInit {
       crList = ["createdDate;gte;"+start+";STATIC","createdDate;lte;"+end+";STATIC"]; 
     }
     return crList;
+  }
+  downloadTabData(tab:any){
+    this.selectedTabCard = tab;
+    this.selectedTabAction = "download";
+    let tampName = "";
+    if(tab && tab.submenu != null){
+      tampName = tab.submenu;
+    }else{
+      tampName = tab.menu;
+    }
+    const menu = { 
+      "name" : tampName
+    }
+    this.storageService.SetActiveMenu(menu);
+    if(tab && tab.module) this.storageService.setModule(tab.module);
+    const payload = this.apiCallService.getTemData(tampName); 
+    this.apiService.GetTempData(payload);
   }
 
 }
