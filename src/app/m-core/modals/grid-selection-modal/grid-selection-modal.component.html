@@ -85,10 +85,10 @@
                                                 <mat-datepicker #picker></mat-datepicker>
                                             </mat-form-field>
                                         </div> 
-                                        <div *ngIf="fieldName.type == 'time'">
+                                        <div *ngIf="fieldName.type == 'time' || fieldName.type == 'stdTime'">
                                             <mat-form-field appearance="outline" class="w-100">
                                                 <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" [format]="fieldName.type == 'stdTime' ? 24 : 12">
                                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                                             </mat-form-field>
 
