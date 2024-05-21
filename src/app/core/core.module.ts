@@ -14,7 +14,6 @@ import { AllPackageModule } from '../m-core/all-package/all-package.module';
 import { HeaderLandingPageComponent } from './header-landing-page/header-landing-page.component';
 import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
 import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
-import { FormModelModule } from '../m-core/modals/form-model.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
@@ -36,16 +35,13 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         SidebarComponent
         ],
         imports :[
-            // AppRoutingModule,
             MDBBootstrapModule.forRoot(),
             AllPackageModule,
             AngularMaterialModule,
             AngularCommonModule,
-            FormModelModule,
             ModelModule
             ],
         exports :[
-            // AppRoutingModule,
             HeaderComponent,
             HomeComponent,
             FooterComponent,

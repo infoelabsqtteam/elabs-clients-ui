@@ -4,7 +4,6 @@ import { CoreModule } from '../core/core.module';
 import { DocumentModule } from './document/document.module';
 import { AngularMaterialModule } from './angular-material-module/angular-material.module';
 import { DirectiveModuleModule } from './directive-module/directive-module.module';
-import { ModelModule } from './modals/model.module';
 import { CommonComponentModule } from './common-component/common-component.module';
 import { FormModelModule } from './modals/form-model.module';
 import { AllPackageModule } from './all-package/all-package.module';
@@ -33,9 +32,8 @@ import { DiffHtmlComponent } from './diff-html/diff-html.component';
 import { SchedulingDashboardComponent } from './scheduling-dashboard/scheduling-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
-import { AngularCommonModule } from './angular-common/angular-common.module';
+
 import { ReportModule } from './report/report.module';
-// import { CommonFormComponentModule } from './common-form-component/common-form-component.module';
 import { NotificationModule } from './notification/notification.module';
 
 
@@ -77,12 +75,9 @@ const maskConfig: Partial<IConfig> = {
         DocumentModule,
         AngularMaterialModule,
         DirectiveModuleModule,
-        ModelModule,
         CommonComponentModule,
-        // CommonFormComponentModule,
         FormModelModule,
         AllPackageModule,
-        AngularCommonModule,
         ReportModule,
         NotificationModule
     ]
