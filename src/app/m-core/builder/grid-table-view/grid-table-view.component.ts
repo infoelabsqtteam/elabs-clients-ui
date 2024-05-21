@@ -945,26 +945,29 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.selectContactAdd = this.selectContact;
     }    
     this.formName = formName;
-    let form = null;
-    if(formName != 'DINAMIC_FORM' && this.tab && this.tab.forms){
-      form = this.commonFunctionService.getForm(this.tab.forms,this.formName,this.gridButtons);
-    }else if(formName == 'DINAMIC_FORM'){
-      form = this.dinamic_form;
-    }else{
-      form = null
-    }
-    if(form != null){              
-      if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
-        this.tableFields = form['tableFields'];
-      }else{
-        this.tableFields = [];
-      }
-      if(form['tab_list_buttons'] && form['tab_list_buttons'] != undefined && form['tab_list_buttons'] != null){
-        this.actionButtons = form['tab_list_buttons'];
-      }
-    }else{
-      this.tableFields = [];
-    }
+    let fromResponce = this.formCreationService.getFieldsFromForms(this.tab,this.formName,this.dinamic_form,this.gridButtons,this.tableFields,this.actionButtons);
+    this.tableFields = fromResponce.fields;
+    this.actionButtons = fromResponce.buttons;
+    // let form = null;
+    // if(formName != 'DINAMIC_FORM' && this.tab && this.tab.forms){
+    //   form = this.commonFunctionService.getForm(this.tab.forms,this.formName,this.gridButtons);
+    // }else if(formName == 'DINAMIC_FORM'){
+    //   form = this.dinamic_form;
+    // }else{
+    //   form = null
+    // }
+    // if(form != null){              
+    //   if(form['tableFields'] && form['tableFields'] != undefined && form['tableFields'] != null){
+    //     this.tableFields = form['tableFields'];
+    //   }else{
+    //     this.tableFields = [];
+    //   }
+    //   if(form['tab_list_buttons'] && form['tab_list_buttons'] != undefined && form['tab_list_buttons'] != null){
+    //     this.actionButtons = form['tab_list_buttons'];
+    //   }
+    // }else{
+    //   this.tableFields = [];
+    // }
     
     // const staticModalGroup=this.commonFunctionService.commanApiPayload([],this.tableFields,this.actionButtons);
     // if(this.tab.api_params && this.tab.api_params != null && this.tab.api_params != "" && this.tab.api_params != undefined && this.selectedRowIndex == -1){
@@ -984,9 +987,8 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //     staticModalGroup.push(this.commonFunctionService.getPaylodWithCriteria(element.onchange_api_params,element.onchange_call_back_field,element.onchange_api_params_criteria,object))
       //   }
       // });
-      let formData = {}
       this.updateRouteUrl();
-      this.modalService.open('form-modal',formData)
+      this.formCreationService.addNewForm(this.selectTabIndex,this.isBulkUpdate,this.bulkuploadList,this.selectedRowIndex,this.formName,this.selectContactAdd);
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
     }

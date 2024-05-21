@@ -1,7 +1,7 @@
 <div mdbModal #formModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
     <div class="modal-dialog modal-dialog-scrollable" [ngClass]="checkModalClass?formSize:'modal-dialog-full-width'" role="document">
-        <app-form class="w-100" [tabIndex]="tabIndex" [isBulkUpdate]="bulkUpdate" [bulkDataList]="bulkDataList" [editedRowIndex]="editedRowIndex" (formDetails)="formDetail($event)"(addAndUpdateResponce)="formResponce($event)" [formName]='formName' [selectContact]='selectContact'></app-form> 
+        <app-form *ngIf="formShowHide"  class="w-100" [tabIndex]="tabIndex" [isBulkUpdate]="bulkUpdate" [bulkDataList]="bulkDataList" [editedRowIndex]="editedRowIndex" (formDetails)="formDetail($event)"(addAndUpdateResponce)="formResponce($event)" [formName]='formName' [selectContact]='selectContact'></app-form> 
     </div>
 </div>
 

@@ -535,12 +535,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // this.mapsApiLoaded();
     this.gmapSearchPlaces();    
   }
+  
 
-  showModal(object){
-    this.custmizedFormValue = {}    
-    this.modifyCustmizedFormValue = {};
-    this.formModal.show();
-  }  
+  // showModal(object){
+  //   this.custmizedFormValue = {}    
+  //   this.modifyCustmizedFormValue = {};
+  //   this.formModal.show();
+  // }  
   
   //Subsribe Variable Responce Handlin Start ------------------
   setStaticData(staticDatas){   

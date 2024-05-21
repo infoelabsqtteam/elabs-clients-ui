@@ -35,7 +35,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 
 import { AngularCommonModule } from './angular-common/angular-common.module';
 import { ReportModule } from './report/report.module';
-import { CommonFormComponentModule } from './common-form-component/common-form-component.module';
+// import { CommonFormComponentModule } from './common-form-component/common-form-component.module';
 import { NotificationModule } from './notification/notification.module';
 
 
@@ -79,7 +79,7 @@ const maskConfig: Partial<IConfig> = {
         DirectiveModuleModule,
         ModelModule,
         CommonComponentModule,
-        CommonFormComponentModule,
+        // CommonFormComponentModule,
         FormModelModule,
         AllPackageModule,
         AngularCommonModule,

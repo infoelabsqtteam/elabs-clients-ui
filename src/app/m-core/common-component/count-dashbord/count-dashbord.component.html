@@ -56,8 +56,8 @@
             </div>
           </div>
           <div class="card-footer  px-2 py-1">
-            <a class=""><mat-icon style="font-size: 18px;line-height: 1.4;">refresh</mat-icon></a>
-            <a class="float-right" *ngIf="gridCountByTab[tab.tab_name+'_'+tab.name] && gridCountByTab[tab.tab_name+'_'+tab.name] > 0"  (click)="downloadTabData(tab)"><mat-icon style="font-size: 18px;line-height: 1.4;">download</mat-icon></a>
+            <a class="" *ngIf="tab.add_new" (click)="tabAction(tab,'add')"><mat-icon style="font-size: 18px;line-height: 1.4;">add_circle_outline</mat-icon></a>
+            <a class="float-right" *ngIf="gridCountByTab[tab.tab_name+'_'+tab.name] && gridCountByTab[tab.tab_name+'_'+tab.name] > 0"  (click)="tabAction(tab,'download')"><mat-icon style="font-size: 18px;line-height: 1.4;">download</mat-icon></a>
           </div>
         </div>
       </div>
@@ -72,3 +72,4 @@
     <pagination-controls (pageChange)="getPage($event)" id="server"></pagination-controls>
   </mat-card-content>
 </section> -->
+<app-form-modal id="form-modal" [tabIndex]="selectTabIndex" [bulkUpdate]="isBulkUpdate" [bulkDataList]="bulkuploadList" [editedRowIndex]="selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)" [formName]='formName' [selectContact]='selectContactAdd'></app-form-modal>

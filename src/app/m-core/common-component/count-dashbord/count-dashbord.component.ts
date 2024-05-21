@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, MenuOrModuleCommonService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, MenuOrModuleCommonService, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -34,7 +34,11 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     private apiCallService:ApiCallService,
     private commonFunctionService:CommonFunctionService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
-    private downloadService:DownloadService
+    private downloadService:DownloadService,
+    private modalService:ModelService,
+    private formCreationService:FormCreationService,
+    private notificationService:NotificationService,
+    private permissionService:PermissionService
   ) { 
     this.modules = this.storageService.GetModules();
     this.gridCountByTab = this.storageService.GetTabCounts();
@@ -74,21 +78,43 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
       if(tempData[0] && tempData[0].templateTabs && tempData[0].templateTabs.length > 0){
         tabs = this.menuOrModuleCommounService.viewPermissionInTabs(tempData[0].templateTabs);
       }
+      let index = -1;
       if(tabs && tabs.length > 0 && this.selectedTabCard._id){
-        let index = this.commonFunctionService.getIndexInArrayById(tabs,this.selectedTabCard?._id);
-        tab = tabs[index];
-      }
-      if(tab && tab._id){
-        // console.log(tab);
-        let gridColums = tab?.grid?.gridColumns;
-        if(this.selectedTabAction == "download"){
-          let responce:any = this.downloadService.exportExcel(this.gridCountByTab[this.selectedTabCard.tab_name+'_'+this.selectedTabCard.name],gridColums,{},tab,this.storageService.GetActiveMenu().name);
-          if(responce != ''){
-            this.downloadClick = responce;
+        index = this.commonFunctionService.getIndexInArrayById(tabs,this.selectedTabCard?._id);
+        if(index > -1){
+          tab = tabs[index];
+          if(this.selectedTabAction == "download"){
+            this.downloadTabData(tab);
+          }else if(this.selectedTabAction == "add"){
+            let fromResponce = this.formCreationService.getFieldsFromForms(tab,'NEW',null,[],[],[]);
+            let fields = fromResponce.fields;
+            if(fields && fields.length > 0){
+              this.formCreationService.addNewForm(index,false,[],-1,'NEW','');
+            }else{
+              this.notificationService.notify("bg-danger","Add new form not exits in "+tab.label);
+            }            
           }
         }
       }
     }
+  }
+  downloadTabData(tab:any){
+    let gridColums = tab?.grid?.gridColumns;
+    let responce:any = this.downloadService.exportExcel(this.gridCountByTab[this.selectedTabCard.tab_name+'_'+this.selectedTabCard.name],gridColums,{},tab,this.storageService.GetActiveMenu().name);
+    if(responce != ''){
+      this.downloadClick = responce;
+    }
+  }
+  selectTabIndex:number=-1;
+  addNewForm(){
+    let formData = {}
+    formData['tabIndex'] = this.selectTabIndex;
+    formData['bulkUpdate'] = false;
+    formData['bulkDataList'] = [];
+    formData['editedRowIndex'] = -1;
+    formData['formName'] = "NEW";
+    formData['selectContact'] = '';
+    this.modalService.open('form-modal',formData);    
   }
   setExportExcelLink(exportExcelLink:any){
     if (exportExcelLink != '' && exportExcelLink != null && this.downloadClick != '') {
@@ -155,6 +181,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
         // }        
         const router = "/browse/"+module.name+"/"+menu.name+"/"+field_name
         // tabObj['breadCrum'] = breadCrum;
+        tabObj['add_new'] = this.permissionService.checkPermission(field_name,'add');
         tabObj['tab_name'] = field_name;
         tabObj['name'] = label;
         tabObj['grid'] = tab?.grid;
@@ -256,9 +283,9 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     }
     return crList;
   }
-  downloadTabData(tab:any){
+  tabAction(tab:any,action:string){
     this.selectedTabCard = tab;
-    this.selectedTabAction = "download";
+    this.selectedTabAction = action;
     let tampName = "";
     if(tab && tab.submenu != null){
       tampName = tab.submenu;
