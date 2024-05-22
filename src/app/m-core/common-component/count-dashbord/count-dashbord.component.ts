@@ -19,6 +19,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
   gridDataCountSubscription:Subscription;
   tempDataSubscription:Subscription;
   exportExcelSubscription:Subscription;
+  addUpdateFormResponceSubscription:Subscription;
   moduleWiseTabListMap:any={};
   modal:string="";
   dateRange:any={};
@@ -89,6 +90,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
             let fromResponce = this.formCreationService.getFieldsFromForms(tab,'NEW',null,[],[],[]);
             let fields = fromResponce.fields;
             if(fields && fields.length > 0){
+              this.subscribeAddUpdateResponce();
               this.formCreationService.addNewForm(index,false,[],-1,'NEW','');
             }else{
               this.notificationService.notify("bg-danger","Add new form not exits in "+tab.label);
@@ -97,6 +99,18 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
         }
       }
     }
+  }
+  subscribeAddUpdateResponce(){
+    this.addUpdateFormResponceSubscription = this.dataShareService.addAndUpdateResponce.subscribe(data =>{
+      this.addAndUpdateResponce(data);
+    })
+  }
+  addAndUpdateResponce(val:any){
+    this.getCountDataByTab({...this.selectedTabCard}); 
+    if(this.addUpdateFormResponceSubscription){
+      this.addUpdateFormResponceSubscription.unsubscribe();
+    }
+    
   }
   downloadTabData(tab:any){
     let gridColums = tab?.grid?.gridColumns;
@@ -242,12 +256,15 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
   refresh(route){    
     let index = this.commonFunctionService.getIndexInArrayById(this.tabList,route,'router');
     let obj = {...this.tabList[index]};
+    this.getCountDataByTab(obj); 
+  }
+  getCountDataByTab(tab:any){
     let crList = this.getDateRange();
     if(crList && crList.length > 0){
-      obj.grid = {'api_params_criteria' : crList};
+      tab.grid = {'api_params_criteria' : crList};
     }
-    let payloads = this.apiCallService.getTabsPayloadForCountList([obj]); 
-    this.apiService.getTabCountData(payloads);   
+    let payloads = this.apiCallService.getTabsPayloadForCountList([tab]); 
+    this.apiService.getTabCountData(payloads);  
   }
   filterchart(){
     let list = [];

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, ModelService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 
 
@@ -26,13 +27,17 @@ export class FormModalComponent implements OnInit {
   checkModalClass:boolean=false;
   formSize:any = 'modal-dialog-full-width';
   formShowHide:boolean=false;
+  addUpdateFormResponceSubscription:Subscription;
 
   
   @ViewChild('formModal') public formModal: ModalDirective;
   constructor(
     private commonFunctionService:CommonFunctionService, 
-    private modalService: ModelService
-    ) {}
+    private modalService: ModelService,
+    private dataShareService:DataShareService
+    ) {
+      
+    }
 
   ngOnInit(): void {
     let modal = this;
@@ -55,7 +60,9 @@ export class FormModalComponent implements OnInit {
     this.formModal.show();
     this.checkModalClass = true;
   }
+  
   close(){
+    
     this.formModal.hide();
     this.formShowHide = false;
     this.checkModalClass = false;
@@ -64,7 +71,7 @@ export class FormModalComponent implements OnInit {
   formResponce(event){
     if(event == 'close'){
       this.close();
-      // this.addAndUpdateResponce.emit(event);
+      this.dataShareService.shareAddAndUpdateResponce(event);
     }    
   }
 

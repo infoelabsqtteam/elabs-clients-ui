@@ -7,7 +7,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
 import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, DownloadService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { DomSanitizer } from '@angular/platform-browser';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -106,21 +105,22 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   sortIcon="down"
   isHidePrintbtn:boolean = false;
   
-  navigationSubscription;
-  gridDataSubscription;
-  staticDataSubscription;
-  tempDataSubscription;
+  navigationSubscription:Subscription;
+  gridDataSubscription:Subscription;
+  staticDataSubscription:Subscription;
+  tempDataSubscription:Subscription;
   saveResponceSubscription:Subscription;
   printFileSubscription:Subscription;
-  gridFilterDataSubscription;
-  dinamicFormSubscription;
-  fileDataSubscription;
-  exportExcelSubscription;
-  pdfFileSubscription;
-  previewHtmlSubscription;
-  typeaheadDataSubscription;
-  exportCVSLinkSubscribe;
-  roleChangeSubscription;
+  gridFilterDataSubscription:Subscription;
+  dinamicFormSubscription:Subscription;
+  fileDataSubscription:Subscription;
+  exportExcelSubscription:Subscription;
+  pdfFileSubscription:Subscription;
+  previewHtmlSubscription:Subscription;
+  typeaheadDataSubscription:Subscription;
+  exportCVSLinkSubscribe:Subscription;
+  roleChangeSubscription:Subscription;
+  addUpdateFormResponceSubscription:Subscription;
 
   filterdata = '';
   fixedcolwidth = 150;
@@ -369,7 +369,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
     this.exportCVSLinkSubscribe = this.dataShareService.exportCVSLink.subscribe(data =>{
       this.handleExportCsv(data);
-    })
+    })   
 
   }
 
@@ -936,7 +936,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.recordId = "";
     this.queryParams = {};
     this.getPage(this.pageNumber);
-    //this.getTabsCount(this.tabs);   
+    //this.getTabsCount(this.tabs); 
+    if(this.addUpdateFormResponceSubscription){
+      this.addUpdateFormResponceSubscription.unsubscribe();
+    }  
   }
   
   addNewForm(formName){
@@ -988,6 +991,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       //   }
       // });
       this.updateRouteUrl();
+      this.subscribeAddUpdateResponce();
       this.formCreationService.addNewForm(this.selectTabIndex,this.isBulkUpdate,this.bulkuploadList,this.selectedRowIndex,this.formName,this.selectContactAdd);
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
@@ -1003,6 +1007,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(formName == 'DINAMIC_FORM'){
       this.selectedRowIndex = this.currentRowIndex;
     }
+  }
+  subscribeAddUpdateResponce(){
+    this.addUpdateFormResponceSubscription = this.dataShareService.addAndUpdateResponce.subscribe(data =>{
+      this.addAndUpdateResponce(data);
+    })
   }
   getNumberOfGridColumns() {
     if (this.headElements.length > 0) {
