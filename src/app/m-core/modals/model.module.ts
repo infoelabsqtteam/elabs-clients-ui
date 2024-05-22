@@ -77,6 +77,7 @@ const models = [
 ]
 const exportModels =[ 
   models,
+  CommonModule,
   CommonComponentModule,
   AllPackageModule,
   AngularMaterialModule,
