@@ -10,6 +10,10 @@ const models = [
   FranchiseComponent,
   
 ];
+const exportModels = [
+  models,
+  CommonFormComponentModule
+]
 
 @NgModule({
   imports: [
@@ -17,7 +21,7 @@ const models = [
     CommonFormComponentModule,
     MDBBootstrapModule.forRoot()
   ],
-  exports: models,
+  exports: exportModels,
   declarations: models
 })
 export class FormModelModule { }

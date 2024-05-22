@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-// import { AppRoutingModule } from '../app-routing.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { HomeComponent } from './home/home.component';
@@ -10,10 +9,7 @@ import { AuthInterceptor } from '../shared/auth.interceptor';
 import { LoggingInterceptor } from '../shared/logging.interceptor';
 
 import { MDBBootstrapModule  } from 'angular-bootstrap-md';
-import { AllPackageModule } from '../m-core/all-package/all-package.module';
 import { HeaderLandingPageComponent } from './header-landing-page/header-landing-page.component';
-import { AngularCommonModule } from '../m-core/angular-common/angular-common.module';
-import { AngularMaterialModule } from '../m-core/angular-material-module/angular-material.module';
 import { ModelModule } from '../m-core/modals/model.module';
 import { PageNotFoundComponent } from './error/page-not-found.component';
 import { VerifyFailedComponent } from './error/verify-failed.component';
@@ -36,9 +32,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         ],
         imports :[
             MDBBootstrapModule.forRoot(),
-            AllPackageModule,
-            AngularMaterialModule,
-            AngularCommonModule,
             ModelModule
             ],
         exports :[
@@ -48,7 +41,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
             HeaderLandingPageComponent,
             UserAccountComponent,
             SettingMenuComponent,
-            SidebarComponent
+            SidebarComponent,
+            ModelModule,           
             ],
         providers:[
         { provide : HTTP_INTERCEPTORS,useClass : AuthInterceptor, multi: true},

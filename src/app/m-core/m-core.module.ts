@@ -2,11 +2,7 @@ import { NgModule } from '@angular/core';
 import { McoreRoutingModule } from './m-core-routing.module';
 import { CoreModule } from '../core/core.module';
 import { DocumentModule } from './document/document.module';
-import { AngularMaterialModule } from './angular-material-module/angular-material.module';
-import { DirectiveModuleModule } from './directive-module/directive-module.module';
-import { CommonComponentModule } from './common-component/common-component.module';
 import { FormModelModule } from './modals/form-model.module';
-import { AllPackageModule } from './all-package/all-package.module';
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
@@ -73,13 +69,12 @@ const maskConfig: Partial<IConfig> = {
         NgxMaskModule.forRoot(maskConfig),
         CoreModule,           
         DocumentModule,
-        AngularMaterialModule,
-        DirectiveModuleModule,
-        CommonComponentModule,
         FormModelModule,
-        AllPackageModule,
         ReportModule,
         NotificationModule
+    ],
+    exports:[
+        CoreModule
     ]
 
 })

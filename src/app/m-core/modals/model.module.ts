@@ -75,19 +75,29 @@ const models = [
   AddPermissionTreeControlsComponent,
   FullScreenMapComponent
 ]
+const exportModels =[ 
+  models,
+  CommonComponentModule,
+  AllPackageModule,
+  AngularMaterialModule,
+  ReactiveFormsModule,
+  FormsModule,
+  DirectiveModuleModule
+];
+exportModels.push();
 
 @NgModule({
   imports: [
     CommonModule,
-    AngularMaterialModule,
     MDBBootstrapModule.forRoot(),
-    DirectiveModuleModule,
     ReactiveFormsModule,
     FormsModule,
+    DirectiveModuleModule,
+    AngularMaterialModule,
     AllPackageModule,
     CommonComponentModule
   ],
   declarations: models,
-  exports : models
+  exports : exportModels
 })
 export class ModelModule { }
