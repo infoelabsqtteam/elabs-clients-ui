@@ -80,7 +80,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
         tabs = this.menuOrModuleCommounService.viewPermissionInTabs(tempData[0].templateTabs);
       }
       let index = -1;
-      if(tabs && tabs.length > 0 && this.selectedTabCard._id){
+      if(tabs && tabs.length > 0 && this.selectedTabCard && this.selectedTabCard._id){
         index = this.commonFunctionService.getIndexInArrayById(tabs,this.selectedTabCard?._id);
         if(index > -1){
           tab = tabs[index];
