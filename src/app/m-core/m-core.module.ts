@@ -17,7 +17,7 @@ import { InlineFormViewComponent } from './builder/inline-form-view/inline-form-
 import { SidebarSearchComponent } from './builder/sidebar-search/sidebar-search.component';
 import { ChatViewComponent } from './builder/chat-view/chat-view.component';
 import { GmapViewComponent } from './builder/gmap-view/gmap-view.component';
-import { TreeViewComponent } from './builder/tree-view/tree-view.component';
+
 
 import { NavigationComponent } from './navigation/navigation.component';
 import { PermissionsComponent } from './permissions/permissions.component';
@@ -50,8 +50,7 @@ const maskConfig: Partial<IConfig> = {
         NavigationComponent,
         PermissionsComponent,
         QuoteComponent,       
-        AdminComponent,
-        TreeViewComponent,        
+        AdminComponent,        
         SchedulingDashboardComponent,     
         GridTableViewComponent,
         GridCardViewComponent,        

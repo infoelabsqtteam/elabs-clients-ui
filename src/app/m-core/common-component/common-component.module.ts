@@ -15,6 +15,8 @@ import { GridColumnActionMenuComponent } from './grid-column-action-menu/grid-co
 
 import { GridComponent } from './grid/grid.component';
 import { CountDashbordComponent } from './count-dashbord/count-dashbord.component';
+import { CommonGridComponent } from './common-grid/common-grid.component';
+import { TreeViewComponent } from '../builder/tree-view/tree-view.component';
 
 const components = [
   ChartComponent,
@@ -24,7 +26,9 @@ const components = [
   FilterComponent,
   GridComponent,
   GridColumnActionMenuComponent,
-  CountDashbordComponent
+  CountDashbordComponent,
+  CommonGridComponent,
+  TreeViewComponent
 ];
 
 
