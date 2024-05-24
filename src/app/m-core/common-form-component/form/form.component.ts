@@ -307,9 +307,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
     })
-    this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
-      this.setTempData(temp);
-    })   
+    // this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
+    //   this.setTempData(temp);
+    // })   
     this.requestResponceSubscription = this.dataShareService.requestResponce.subscribe(responce =>{      
       this.serverReq = responce;
       this.checkFormFieldIfCondition();

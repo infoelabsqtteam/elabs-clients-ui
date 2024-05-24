@@ -302,9 +302,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private downloadService:DownloadService
   ) {
     this.getUrlParameter();    
-    this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
-      this.setTempData(temp);
-    })
+    // this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
+    //   this.setTempData(temp);
+    // })
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
     })
