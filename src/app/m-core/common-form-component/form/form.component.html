@@ -960,7 +960,7 @@
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                             <tr *ngFor="let data of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name] | paginate
-                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y" class="border">
+                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y" class="border" [style.background-color]="data['background-color']">
 
                                                 <td *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))" class="grid-coloumn-nowrap">
                                                     <div class="example-handle cursor-move" cdkDragHandle *ngIf="!updateMode && tableField.draggable" [ngClass]="{'d-inline-block': tableField.draggable}">
