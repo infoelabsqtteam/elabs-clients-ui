@@ -4,33 +4,32 @@
           <mat-card class="m-0 p-0 bg-aluminium">
              <mat-card-content>
                   <div class="row mx-0">
-                      <div [ngClass]="config.treeView ? 'col-lg-3 pl-0' : 'd-none'"><app-tree-view></app-tree-view></div>
-                      <div class="table-responsive table tableFixHead mb-0 pb-0" [ngClass]="config.treeView || config.isShowDiv ? 'col-lg-9 pl-0' : 'col-lg-12 px-0'">
+                      <div class="table-responsive table tableFixHead mb-0 pb-0" [ngClass]="'col-lg-12 px-0'">
                           <table class="table-bordered table-striped table-hover table-resizable">
                               <thead >
                                   <tr>
-                                      <th [resizeColumn]="true" [index]="-1" *ngIf="config.headElements.length > 0"><div class="heading text-center">Action</div></th>
-                                      <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="config.fixedcolwidth"  *ngFor="let head of config.headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                      <th [resizeColumn]="true" [index]="-1" *ngIf="headElements.length > 0"><div class="heading text-center">Action</div></th>
+                                      <th [resizeColumn]="true" [index]="i" [cellClass]="'resizeGridColunms'" [style.left.px]="config.fixedcolwidth"  *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                           <div class="heading d-flex" [style.width]="head.width" [style.text-align]="head.text_align">
-                                              <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(config.headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
+                                              <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
                                               <span class="show-on-hover mr-1">
-                                                  <mdb-icon fas icon="sort" (click)="onSort(config.headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
+                                                  <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
                                                   <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                               </span>
                                               <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
-                                                  <app-grid-column-action-menu [elements]="config.elements" [sortIcon]="config.sortIcon" [headElements]="config.headElements" [data]="config.modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
+                                                  <app-grid-column-action-menu [elements]="config.elements" [sortIcon]="config.sortIcon" [headElements]="headElements" [data]="config.modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
                                               </mat-menu>
                                           </div>
                                       </th>                                        
                                   </tr>
-                                  <tr [formGroup]="filterForm" *ngIf="config.headElements.length > 0" class="grid-filter">
+                                  <tr [formGroup]="filterForm" *ngIf="headElements.length > 0" class="grid-filter">
                                       <td>
                                           <div class="heading text-center">
                                               <span *ngIf="config.tab.grid && config.tab.grid.details && config.tab.grid.details.bulk_update"><input type="checkbox" id="selectAllCheckbox" (change)="selectAll()"><span class="ml-1 mr-1">All</span></span>
                                               <button mdbBtn type="button" size="sm" (click)="applyFilter()" mdbWavesEffect class="m-0 grid-button px-1 py-0" [matTooltip]="'Filter'" [matTooltipPosition]="'above'"><span class="material-icons">search</span></button>
                                           </div>
                                       </td>
-                                      <td class="px-1 py-2" [style.left.px]="config.fixedcolwidth" *ngFor="let head of config.headElements; let i = index" [ngClass]="{'d-none': !head.display}">
+                                      <td class="px-1 py-2" [style.left.px]="config.fixedcolwidth" *ngFor="let head of headElements; let i = index" [ngClass]="{'d-none': !head.display}">
                                           <div *ngIf="head.type == 'tree_view_selection'" class="position-relative w-100">
                                               <select class="form-control form-control-sm cursor-pointer w-100" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
                                                   <option *ngFor="let data of config.treeViewData[head.field_name]" [value]="data">{{data && data.name ? data.name : data}}</option>
@@ -38,11 +37,6 @@
                                               <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                           </div>
                                           <div *ngIf="head.type == 'dropdown'" class="position-relative">
-                                              <!-- <select class="form-control form-control-sm" [formControlName]="head.field_name" style="min-width:100px;" (change)="applyFilter()">
-                                                  <option *ngFor="let data of copyStaticData[head.ddn_field] | filter:filterdata; index as i" [ngValue]="data">{{data && data.name ? data.name : data}} 2</option>
-                                              </select>
-                                              <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>-->
-
                                               <mat-form-field appearance="outline" class="w-100 position-relative">
                                                   <mat-select [formControlName]="head.field_name" (selectionChange)="applyFilter()" disableOptionCentering panelClass="matdropdown">
                                                       <div class="p-1"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="config.filterdata" [ngModelOptions]="{standalone: true}"></div>
@@ -54,12 +48,10 @@
                                           <div *ngIf="head.type == 'typeahead'">
                                               <div class="w-100 position-relative">
                                                   <mat-form-field appearance="outline" class="example-full-width w-100" [ngClass]="head.datatype != 'list_of_object' ? 'w-100' : ''">
-                                                      <!-- <mat-label>{{head.label}} <span *ngIf="head.is_mandatory && head.datatype == 'list_of_object'" class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label> -->
                                                       <input type="text" [placeholder]="head.label" aria-label="Number" matInput [formControlName]="head.field_name"
                                                           [matAutocomplete]="first" (keyup)="updateData($event,head)" [id]="head._id+'_'+head.field_name" autocomplete="off">
                                                       <mat-autocomplete  autoActiveFirstOption #first="matAutocomplete" (optionSelected)="applyFilter()" [displayWith]="getOptionText">
                                                           <mat-option *ngFor="let option of config.typeAheadData" [value]="option" [innerHtml]=" option && option.name ? option.name : option "></mat-option>
-                                                          <!-- <mat-option *ngIf="head.add_new_enabled && typeAheadData.length == 0 && addNewRecord"  [value]="'add_new'">+ Add New </mat-option> -->
                                                       </mat-autocomplete> 
                                                   </mat-form-field>
                                               </div>
@@ -70,7 +62,6 @@
                                           </div>
                                           <div *ngIf="head.type != null && head.type.toLowerCase() == 'daterange'" >
                                               <mat-form-field appearance="outline" class="example-full-width w-100 m-0 custom">
-                                                  <!-- <mat-label>Enter a date range</mat-label> -->
                                                   <mat-date-range-input [rangePicker]="picker" [formGroupName]="head.field_name">
                                                       <input matStartDate placeholder="Start date" formControlName="start" (dateChange)="applyFilter()">
                                                       <input matEndDate placeholder="End date" formControlName="end" (dateChange)="applyFilter()">
@@ -82,7 +73,6 @@
                                           </div>
                                           <div *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'datetime')">
                                               <mat-form-field appearance="outline" class="example-full-width w-100 m-0">
-                                                  <!-- <mat-label>{{ head.label | titlecase}}</mat-label> -->
                                                   <input matInput [matDatepicker]="picker2"   [formControlName]="head.field_name" (dateChange)="applyFilter()">
                                                   <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                                   <mat-datepicker #picker2 color="primary" ></mat-datepicker>
@@ -93,7 +83,7 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  <tr mdbTableCol class="cursor-pointer" *ngFor="let el of config.modifyGridData | paginate: { id: 'server5', itemsPerPage: config.itemNumOfGrid, currentPage: config.pageNumber, totalItems: config.total }; let i = index" (click)="selectRow(i)" (dblclick)="editedRowData(i,'UPDATE')" [ngClass]="{'bg-gray text-white':config.selectedRowIndex == i,'activetxt':config.rowSelectionIndex == i && config.columnSelectionIndex == -1}" (contextmenu)="onRightClick($event, i)">
+                                  <tr mdbTableCol class="cursor-pointer" *ngFor="let el of config.modifyGridData | paginate: { id: 'server5', itemsPerPage: config.itemNumOfGrid, currentPage: config.pageNumber, totalItems: config.total }; let i = index" (click)="selectRow(i)" (dblclick)="callEditedRowData(i,'UPDATE')" [ngClass]="{'activetxt':config.rowSelectionIndex == i && config.columnSelectionIndex == -1}" (contextmenu)="onRightClick($event, i)">
                                       <td [style.background-color]="el['background-color']">
                                           <span *ngIf="config.editedRowIndex != i" class="text-nowrap">
                                               <span *ngIf="config.tab.grid && config.tab.grid.details && config.tab.grid.details.bulk_update" class="mr-2" style="display: inline-block;margin: 10px;cursor: pointer;">
@@ -117,7 +107,7 @@
                                           </span>                                
 
                                       </td>
-                                      <td [style.left.px]="config.fixedcolwidth" *ngFor="let elId of config.headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':config.rowSelectionIndex == i && config.columnSelectionIndex == j}" [style.background-color]="el['background-color']">
+                                      <td [style.left.px]="config.fixedcolwidth" *ngFor="let elId of headElements; let j = index"  [ngClass]="{'d-none':!elId.display,'activetxt':config.rowSelectionIndex == i && config.columnSelectionIndex == j}" [style.background-color]="el['background-color']">
                                           <div *ngIf="config.editedRowIndex != i" class="grid-data copyIconContainer resizeGridColunms d-flex align-items-center" [style.width]="elId.width" [style.text-align]="elId.text_align" >
                                               <a href="javascript:void(0)" class="grid-coloumn-nowrap" (click)="clickOnGridElement(elId,i)" [innerHtml]="el[elId.field_name]"  [matTooltip]="el[elId.field_name+'_tooltip']" [matTooltipPosition]="'above'" [class.copyField]="!elId.hideCopy" [ngClass]="elId.field_class != ''?elId.field_class:''" *ngIf="elId.type != 'color'" >
                                                   </a>
@@ -159,7 +149,6 @@
                                               </div>
                                               <div *ngIf="elId.type.toLowerCase() == 'date' || elId.type.toLowerCase() == 'datetime'">
                                                   <mat-form-field appearance="outline" class="example-full-width w-100">
-                                                      <!-- <mat-label>{{ head.label | titlecase}}</mat-label> -->
                                                       <input matInput [matDatepicker]="picker2" [(ngModel)]="config.editedRowCopyData[elId.field_name]">
                                                       <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                                       <mat-datepicker #picker2 color="primary" ></mat-datepicker>                                    
@@ -170,36 +159,16 @@
                                   </tr>
                               </tbody>
                           </table>
-                          <ng-container *ngIf="!config.pageLoading && config.elements.length == 0 && config.headElements.length != 0 && !config.gridDisable">
-                              <div [attr.colspan]="config.headElements.length + 1"  class="text-center font-weight-bold py-3">No Records Found !!!</div>
+                          <ng-container *ngIf="!config.pageLoading && config.elements.length == 0 && headElements.length != 0 && !config.gridDisable">
+                              <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">No Records Found !!!</div>
                           </ng-container>
-                          <ng-container *ngIf="!config.pageLoading && config.elements.length == 0 && config.headElements.length != 0 && config.gridDisable">
-                              <div [attr.colspan]="config.headElements.length + 1"  class="text-center font-weight-bold py-3">Search Grid Fields</div>
+                          <ng-container *ngIf="!config.pageLoading && config.elements.length == 0 && headElements.length != 0 && config.gridDisable">
+                              <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">Search Grid Fields</div>
                           </ng-container>
                           
-                          <ng-container *ngIf="!config.pageLoading && config.elements.length == 0 && config.headElements.length == 0">
-                              <div [attr.colspan]="config.headElements.length + 1"  class="text-center font-weight-bold py-3">Permission denied !!!</div>
+                          <ng-container *ngIf="!config.pageLoading && config.elements.length == 0 && headElements.length == 0">
+                              <div [attr.colspan]="headElements.length + 1"  class="text-center font-weight-bold py-3">Permission denied !!!</div>
                           </ng-container>
-                      </div>
-
-                      <div [ngClass]="config.isShowDiv ? 'col-lg-3 pr-0 righttabledata' : 'd-none'">
-                          <div class="table-responsive table tablewhitegray tableFixHead" style="position:relative;">
-                              <div class="text-right tableclose"></div>
-                              <table class="table-bordered table-striped table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th scope="col" width="150px">Field Name</th>
-                                      <th scope="col" class="d-flex justify-content-between align-items-center">Value <a class="h5 m-0 px-2 py-0 grid-button" (click)="tableclose()" [matTooltip]="'Close (CTRL + I)'" [matTooltipPosition]="'above'"><span>×</span></a></th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let elId of config.headElements; let j = index">
-                                      <td scope="row"><span [title]="elId.label">{{ elId.label | titlecase }}</span></td>
-                                      <td><span [innerHtml]="config.selectedRowData[elId.field_name]"></span></td>
-                                    </tr>
-                                  </tbody>
-                              </table>
-                          </div>
                       </div>
                   </div>
               </mat-card-content>
@@ -253,6 +222,5 @@
 <app-preview-modal id="grid-preview-modal" (previewModalResponce)="previewModalResponce($event)"></app-preview-modal>
 <app-template-modal id="template-modal" (temlateModalResponce)="temlateModalResponce($event)"></app-template-modal>
 <app-file-views-modal id="fileview-grid-modal" (fileViewResponceData)="fileViewresponceData($event)"></app-file-views-modal>
-<app-communication-data-modal id="communication-modal" [tabIndex]="selectTabIndex" [editedRowIndex]="config.selectedRowIndex" (addAndUpdateResponce)="addAndUpdateResponce($event)"></app-communication-data-modal>
 <app-audit-history id="audit-history"></app-audit-history>
 <html-view-modal id="grid-html-view-modal"></html-view-modal>
