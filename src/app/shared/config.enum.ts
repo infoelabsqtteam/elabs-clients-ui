@@ -46,5 +46,6 @@ export enum Config {
     QueryParams = 'queryParams',
     TabFilterData = 'tabFilterData',
     TypegrapyCriteriaList = 'typegrapyCriteriaList',
-    PreviewData = 'previewData'    
+    PreviewData = 'previewData',
+    downloadClick = 'downloadClick'    
 }

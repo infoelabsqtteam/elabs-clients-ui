@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { ApiCallService, ApiService, CommonFunctionService, DataShareService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 import { AppConfig, AppConfigInterface } from 'src/app/shared/config';
 
@@ -14,10 +14,14 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
 
   public config:AppConfigInterface = AppConfig;
 
+  
+
   @Input() headElements:any;
   @Input() tab:any;
 
   @Output() editedRowData = new EventEmitter<any>();
+  @Output() dinamicForm = new EventEmitter<any>();
+  
 
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
 
@@ -28,7 +32,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   gridDataSubscription:Subscription;
   staticDataSubscription:Subscription;
   gridFilterDataSubscription:Subscription;
-  // dinamicFormSubscription:Subscription;
+  dinamicFormSubscription:Subscription;
   typeaheadDataSubscription:Subscription;
   roleChangeSubscription:Subscription;
   exportExcelSubscription:Subscription;
@@ -37,6 +41,18 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   previewHtmlSubscription:Subscription;
   fileDataSubscription:Subscription;
 
+  @HostListener('window:keyup.shift.control.e') onCtrlE() {
+    this.editedRowData.emit({
+      index : this.config.rowSelectionIndex,
+      formName : "UPDATE"
+    })
+  }
+  @HostListener('window:keyup.alt.a') onCtrlA() {
+    this.onBulkUpdate();
+  }
+  @HostListener('window:keyup.alt.control.d') onCtrlD() {
+    this.exportExcel();
+  }
   @HostListener('window:keyup.alt.n') onCtrlN() {
     let totalPageNumber = Math.floor(this.config.total/this.config.itemNumOfGrid);
     let text = this.config.total % this.config.itemNumOfGrid;
@@ -146,6 +162,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     private modalService:ModelService,
     private storageService:StorageService,
     private formBuilder: UntypedFormBuilder,
+    private downloadService:DownloadService
   ) { 
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
@@ -189,6 +206,12 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     this.previewHtmlSubscription = this.dataShareService.previewHtml.subscribe(data =>{
       this.setPreviewHtml(data);
     })
+    this.exportExcelSubscription = this.dataShareService.exportExcelLink.subscribe(data =>{
+      this.setExportExcelLink(data);
+    })
+    this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
+      this.setDinamicForm(form);
+    })
     this.config.currentMenu = this.storageService.GetActiveMenu(); 
   }
 
@@ -196,7 +219,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   }
   ngOnChanges(changes: SimpleChanges) {
     this.config.pageLoading=true;
-    this.config.gridButtons=[];   
+    // this.config.gridButtons=[];   
     this.config.elements=[];
     this.config.modifyGridData = [];
     this.config.total = 0;
@@ -410,6 +433,19 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       this.apiService.ResetFileData();
     }
   } 
+  setExportExcelLink(exportExcelLink:any){
+    if (exportExcelLink != '' && exportExcelLink != null && this.config.downloadClick != '') {
+      this.config.downloadClick = this.downloadService.downloadExcelFromLink(exportExcelLink,this.config.downloadClick);
+    }
+  }
+  setDinamicForm(form){
+    if(form && form.DINAMIC_FORM && this.config.flagForTdsForm){
+      this.config.flagForTdsForm = false;
+      this.dinamicForm.emit({'formName':'DINAMIC_FORM','form':form.DINAMIC_FORM});
+      this.apiCallService.getRealTimeGridData(this.config.currentMenu, this.config.elements[this.config.currentRowIndex]);
+    } 
+  }
+  
   //Subscribe Variable method handling-----------------------------------
 
 
@@ -538,14 +574,14 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
           break;
         case 'DOWNLOAD':
           let currentMenu = '';
-          if(this.config.currentMenu.name && this.config.currentMenu.name != null && this.config.currentMenu.name != undefined && this.config.currentMenu.name != ''){
+          if(this.config.currentMenu.name){
             currentMenu = this.config.currentMenu.name
           }
           this.config.downloadPdfCheck = this.apiCallService.downloadPdf(gridData,currentMenu);         
           break;
         case 'GETFILE':
           let currentsMenu = '';
-          if(this.config.currentMenu.name && this.config.currentMenu.name != null && this.config.currentMenu.name != undefined && this.config.currentMenu.name != ''){
+          if(this.config.currentMenu.name){
             currentsMenu = this.config.currentMenu.name
           }
           this.config.downloadPdfCheck = this.apiCallService.getPdf(gridData,currentsMenu);         
@@ -554,11 +590,11 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
           let currentMenuForTds = '';
           this.config.flagForTdsForm = true;
           this.config.currentRowIndex = index;
-          if(this.config.currentMenu.name && this.config.currentMenu.name != null && this.config.currentMenu.name != undefined && this.config.currentMenu.name != ''){
+          if(this.config.currentMenu.name){
             currentMenuForTds = this.config.currentMenu.name
           }
           const getFormData:any = this.apiCallService.getFormForTds(gridData,currentMenuForTds,this.config.elements[index]);        
-          if(getFormData._id && getFormData._id != undefined && getFormData._id != null && getFormData._id != ''){
+          if(getFormData._id){
             getFormData.data['data']=gridData;
             this.apiService.GetForm(getFormData);
           }else{
@@ -579,7 +615,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
           this.commonFunctionService.openModal('communication-modal',gridData);
           break;
         case 'DOWNLOAD_QR':
-          this.config.downloadQRCode = this.commonFunctionService.getQRCode(gridData);
+          this.commonFunctionService.getQRCode(gridData);
           this.config.checkForDownloadReport = true;
           break;
         case 'DELETE_ROW':
@@ -727,6 +763,24 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
     this.editedRowData.emit(obj);
   }
+  exportExcel() {
+    let responce:any = this.downloadService.exportExcel(this.config.total,this.headElements,this.filterForm.getRawValue(),this.tab,this.config.currentMenu.name);
+    if(responce != ''){
+      this.config.downloadClick = responce;
+    } 
+  }
+  exportCSV() {
+    let tempNme = this.config.currentMenu.name;
+    if(this.permissionService.checkPermission(tempNme,'export')){
+      const getExportData = this.downloadService.exportCsv(tempNme,this.headElements,this.tab,this.config.currentMenu,this.storageService.GetUserInfo(),this.filterForm);
+      var fileName = tempNme;
+      fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
+      this.config.downloadClick = fileName + '-' + new Date().toLocaleDateString();
+      this.apiService.GetExportCVSLink(getExportData);
+    }else{
+      this.permissionService.checkTokenStatusForPermission();
+    }
+  }
   //html page call functions..............
 
   // Dependency functions 
@@ -840,5 +894,10 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     console.log(event);
   }
   // Child model or child component responce Handling 
+
+  onBulkUpdate(){
+    this.config.isBulkUpdate = true;
+    this.dinamicForm.emit({'formName':'NEW','form':null});
+  }
 
 }

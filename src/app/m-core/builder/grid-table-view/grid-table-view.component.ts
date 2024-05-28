@@ -7,6 +7,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
 import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, ModelService, MenuOrModuleCommonService, GridCommonFunctionService,KeyCode,Common, ApiCallService, CheckIfService, FormCreationService, DownloadService } from '@core/web-core';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { CommonGridComponent } from '../../common-form-component/common-grid/common-grid.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -34,85 +35,48 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   // @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
 
-  // filterForm: UntypedFormGroup;
+  @ViewChild(CommonGridComponent) gridPage!: CommonGridComponent;
+
+  
   tabs: any = [];
   public tab: any = [];
-  //selectTabIndex: number = 0;
-  tableGrids: any = [];
-  template_name: any = '';
   elements: any = [];
-  modifyGridData:any = [];
-  previous: any = [];
   headElements = [];
   actionButtons:any=[];
   createFilterFormgroup: boolean = true;
   createFilterHeadElement: boolean = true;
-  firstItemIndex: any;
-  lastItemIndex: any;
-  maxVisibleItems = 25;
-  tableGrid1: any = [];
-  tableGrid2: any = [];
   currentMenu: any;
   selectedRowIndex: any = -1;
-
   rowSelectionIndex:number=0;
-  columnSelectionIndex: number = -1;
-  selectedRowData:any = {};
-  isShowDiv = false;
-
-  loadngAfterOnInit: boolean = true
-  temView: boolean = false;
-  treeView: boolean = false;
-  public orderBy = '-';
-  pageNumber: number = Common.PAGE_NO;
-  total: number;
-  loading: boolean;
-  itemNumOfGrid: any;
   userInfo: any;
-  staticData: any = {};
-  copyStaticData:any={};
-  pageLoading:boolean=true;
-  treeViewData: any = {};
-  public curTreeViewField: any = {};
-  public alertData = {};
-  public viewColumnName = '';
-  public updateGridData = false;
-  public selectedViewRowIndex = -1;
+
+  
   tableFields:any=[];
   forms:any={};
   formName:any='';
+  
   gridButtons:any=[];
-  downloadPdfCheck: any = '';
-  downloadQRCode: any = '';
-  previewData: any = "";
-  checkPreviewData = false;
-  editedRowCopyData:any={};
-  editedRowIndex:number=-1;
-  dinamic_form:any = {};
-  flagForTdsForm:boolean = false;
-  currentRowIndex:any = -1;
-  checkForDownloadReport:boolean = false;
 
   selectContactAdd:string='';
-  tab_api_params_criteria:any = {};
+  // tab_api_params_criteria:any = {};
   bulkuploadList:String[] = [];
-  isBulkUpdate:boolean = false;
+  // isBulkUpdate:boolean = false;
   details:any = {};
-  selectAllcheck:boolean = false;
-  tabFilterData:any=[];
-  typeAheadData: string[] = [];
-  typegrapyCriteriaList:any=[];
-  sortIcon="down"
-  isHidePrintbtn:boolean = false;
+  // selectAllcheck:boolean = false;
+  // tabFilterData:any=[];
+  // typeAheadData: string[] = [];
+  // typegrapyCriteriaList:any=[];
+  // sortIcon="down"
+  // isHidePrintbtn:boolean = false;
   
   navigationSubscription:Subscription;
   gridDataSubscription:Subscription;
   // staticDataSubscription:Subscription;
   // tempDataSubscription:Subscription;
-  saveResponceSubscription:Subscription;
+  // saveResponceSubscription:Subscription;
   // printFileSubscription:Subscription;
   // gridFilterDataSubscription:Subscription;
-  dinamicFormSubscription:Subscription;
+  // dinamicFormSubscription:Subscription;
   // fileDataSubscription:Subscription;
   // exportExcelSubscription:Subscription;
   // pdfFileSubscription:Subscription;
@@ -121,6 +85,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   exportCVSLinkSubscribe:Subscription;
   // roleChangeSubscription:Subscription;
   addUpdateFormResponceSubscription:Subscription;
+  selectedRowIndexSubscription:Subscription;
 
   filterdata = '';
   fixedcolwidth = 150;
@@ -139,15 +104,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   heavyDownload:boolean = false;
 
 
-  @HostListener('window:keyup.shift.control.e') onCtrlE() {
-    this.editedRowData(this.rowSelectionIndex,'UPDATE')
-  }
-  @HostListener('window:keyup.alt.a') onCtrlA() {
-    this.onBulkUpdate();
-  }
-  @HostListener('window:keyup.alt.control.d') onCtrlD() {
-    this.exportExcel();
-  }
+  
 
 
   constructor(
@@ -155,7 +112,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private commonFunctionService:CommonFunctionService, 
     private permissionService: PermissionService, 
     private modalService: ModelService, 
-    private formBuilder: UntypedFormBuilder,
+    // private formBuilder: UntypedFormBuilder,
     private router: Router, 
     private routers: ActivatedRoute,
     private apiService:ApiService,
@@ -166,7 +123,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private gridCommonFunctionServie:GridCommonFunctionService,
     private apiCallService:ApiCallService,
-    private checkIfService:CheckIfService,
+    // private checkIfService:CheckIfService,
     private formCreationService:FormCreationService,
     private downloadService:DownloadService
   ) {
@@ -174,10 +131,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
     })
+    this.selectedRowIndexSubscription = this.dataShareService.selectedRowIndex$.subscribe(index => {
+      this.selectedRowIndex = index;
+      this.rowSelectionIndex = index;
+    });
    
-    this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
-      this.setDinamicForm(form);
-    })    
+    // this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
+    //   this.setDinamicForm(form);
+    // })    
     this.userInfo = this.storageService.GetUserInfo();
     this.currentMenu = this.storageService.GetActiveMenu(); 
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -218,17 +179,17 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     });
   }
   initialiseInvites() {
-    this.loadngAfterOnInit = true
-    this.temView = false;
+    // this.loadngAfterOnInit = true
+    // this.temView = false;
     this.createFilterFormgroup = true;
     this.createFilterHeadElement = true;
-    this.pageLoading=true;
+    // this.pageLoading=true;
     this.selectedRowIndex = -1;
-    this.pageNumber = 1;
+    // this.pageNumber = 1;
     this.selectContactAdd = '';
     this.formName='';    
     //this.elements=[];
-    //this.gridButtons=[];
+    this.gridButtons=[];
     this.details = {};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
@@ -249,37 +210,37 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(this.gridDataSubscription){
       this.gridDataSubscription.unsubscribe();
     }
-    if(this.saveResponceSubscription){
-      this.saveResponceSubscription.unsubscribe();
-    }
-    if(this.dinamicFormSubscription){
-      this.dinamicFormSubscription.unsubscribe();
-    } 
-    this.editedRowIndex = -1;
+    // if(this.saveResponceSubscription){
+    //   this.saveResponceSubscription.unsubscribe();
+    // }
+    // if(this.dinamicFormSubscription){
+    //   this.dinamicFormSubscription.unsubscribe();
+    // } 
+    // this.editedRowIndex = -1;
     this.selectContactAdd = '';
-    this.pageNumber = 1;
+    // this.pageNumber = 1;
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.loadngAfterOnInit = true
-    this.temView = false;
+    // this.loadngAfterOnInit = true
+    // this.temView = false;
     this.createFilterFormgroup = true;
     this.createFilterHeadElement = true;
-    this.pageLoading=true;
+    // this.pageLoading=true;
     this.selectedRowIndex = -1;
     this.selectContactAdd = '';
     this.formName='';
     this.gridButtons=[];   
     this.elements=[];
-    this.modifyGridData = [];
-    this.total = 0;
+    // this.modifyGridData = [];
+    // this.total = 0;
     this.headElements = [];
     this.details = {};
     this.forms={};
     // Set default values and re-fetch any data you need.
     this.currentMenu = this.storageService.GetActiveMenu();
     if(this.selectTabIndex != -1){
-      this.itemNumOfGrid = this.storageService.getDefaultNumOfItem();
+      // this.itemNumOfGrid = this.storageService.getDefaultNumOfItem();
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
       this.ngOnInit();
@@ -298,14 +259,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         if(!this.createFilterFormgroup) this.createFilterFormgroup = true;
         if(!this.createFilterHeadElement) this.createFilterHeadElement = true;
         this.getTabData(this.selectTabIndex,this.formName);
-        this.temView = true;
+        // this.temView = true;
       }else{
-        this.temView = false;
+        // this.temView = false;
         this.tableFields=[];
         this.actionButtons =[];
       }      
     } else {
-      this.temView = false;
+      // this.temView = false;
       this.tableFields=[];
       this.actionButtons =[];
     } 
@@ -321,14 +282,14 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.rowId = "";
     }
   }
-  setDinamicForm(form){
-    if(form && form.DINAMIC_FORM && this.flagForTdsForm){
-      this.dinamic_form = form.DINAMIC_FORM;
-      this.flagForTdsForm = false;
-      this.addNewForm('DINAMIC_FORM');
-      this.apiCallService.getRealTimeGridData(this.currentMenu, this.elements[this.selectedRowIndex]);
-    } 
-  }
+  // setDinamicForm(form){
+  //   if(form && form.DINAMIC_FORM && this.flagForTdsForm){
+  //     this.dinamic_form = form.DINAMIC_FORM;
+  //     this.flagForTdsForm = false;
+  //     this.addNewForm('DINAMIC_FORM');
+  //     this.apiCallService.getRealTimeGridData(this.currentMenu, this.elements[this.selectedRowIndex]);
+  //   } 
+  // }
   getTabData(index,formName) {
     this.tab = this.menuOrModuleCommounService.addPermissionInTab(this.tabs[index]);
     if(this.tab != undefined){
@@ -358,6 +319,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }else{
         this.headElements = [];
       } 
+      if(grid.details && grid.details != null){
+        this.details = grid.details;
+      }
       if(this.tab.forms && this.tab.forms != undefined && this.tab.forms != null){
         this.forms = this.tab.forms;
         let form = this.commonFunctionService.getForm(this.tab.forms,formName,this.gridButtons);        
@@ -472,6 +436,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   seteditedRowData(event){
     this.editedRowData(event.index, event.formName);
   }
+  openDinamicForm(event){
+    if(event && event.formName){
+      this.addNewForm(event.formName,event.form);
+    }
+  }
   cloneData() {
     if(this.rowSelectionIndex != -1) {
       let selectedObject = JSON.parse(JSON.stringify(this.elements[this.rowSelectionIndex]));
@@ -494,11 +463,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   addAndUpdateResponce(element) {
     this.selectedRowIndex = -1;
-    if(this.pageNumber == undefined || this.pageNumber == -1 || this.pageNumber == 0){
-      this.pageNumber = 1;
-    }    
-    this.isBulkUpdate = false;
-    this.bulkuploadList = [];
+    // if(this.pageNumber == undefined || this.pageNumber == -1 || this.pageNumber == 0){
+    //   this.pageNumber = 1;
+    // }    
+    // this.isBulkUpdate = false;
+    // this.bulkuploadList = [];
     this.formName = '';
     this.updateRouteUrl();
     this.rowId = "";
@@ -510,169 +479,40 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.addUpdateFormResponceSubscription.unsubscribe();
     }  
   }
-  addNewForm(formName){
+  addNewForm(formName,form?:any,isBulkUpdate?:boolean,bulkuploadList?:any){
     if(this.selectContact != ''){
       this.selectContactAdd = this.selectContact;
     }    
     this.formName = formName;
-    let fromResponce = this.formCreationService.getFieldsFromForms(this.tab,this.formName,this.dinamic_form,this.gridButtons,this.tableFields,this.actionButtons);
+    let fromResponce = this.formCreationService.getFieldsFromForms(this.tab,this.formName,form,this.gridButtons,this.tableFields,this.actionButtons);
     this.tableFields = fromResponce.fields;
     this.actionButtons = fromResponce.buttons;
     
     if(this.tableFields.length > 0){      
       this.updateRouteUrl();
       this.subscribeAddUpdateResponce();
-      this.formCreationService.addNewForm(this.selectTabIndex,this.isBulkUpdate,this.bulkuploadList,this.selectedRowIndex,this.formName,this.selectContactAdd);
+      this.formCreationService.addNewForm(this.selectTabIndex,isBulkUpdate,bulkuploadList,this.selectedRowIndex,this.formName,this.selectContactAdd);
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
     }
-    if(formName == 'DINAMIC_FORM'){
-      this.selectedRowIndex = this.currentRowIndex;
-    }
+    // if(formName == 'DINAMIC_FORM'){
+    //   this.selectedRowIndex = this.currentRowIndex;
+    // }
   }
   subscribeAddUpdateResponce(){
     this.addUpdateFormResponceSubscription = this.dataShareService.addAndUpdateResponce.subscribe(data =>{
       this.addAndUpdateResponce(data);
     })
   }
-
-  templateModal(id,object,index,columnName){
-    this.selectedViewRowIndex = index;
-    this.viewColumnName = columnName;
-    const tempData = {
-      "data": object
-    }
-    this.modalService.open(id, tempData);
-  }
  
-  
-  public downloadClick = '';
-
   exportExcel() {
-    let responce:any = this.downloadService.exportExcel(this.total,this.headElements,{},this.tab,this.currentMenu.name);
-    if(responce != ''){
-      this.downloadClick = responce;
-    }  
+    this.gridPage.exportExcel();
   }
-
   exportCSV() {
-    let tempNme = this.currentMenu.name;
-    if(this.permissionService.checkPermission(tempNme,'export')){
-      const getExportData = this.downloadService.exportCsv(tempNme,this.headElements,this.tab,this.currentMenu,this.userInfo,{});
-      var fileName = tempNme;
-      fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
-      this.downloadClick = fileName + '-' + new Date().toLocaleDateString();
-      this.apiService.GetExportCVSLink(getExportData);
-    }else{
-      this.permissionService.checkTokenStatusForPermission();
-      //this.notificationService.notify("bg-danger", "Permission denied !!!");
-    }
+    this.gridPage.exportExcel();
   }
-
-
-
   gridButtonAction(index,button){
-    let gridData = this.elements[index];
-    if(button && button.onclick && button.onclick.action_name){
-      switch (button.onclick.action_name.toUpperCase()) {
-        case "PREVIEW":
-          this.checkPreviewData = true;
-          this.isHidePrintbtn = button?.printInPreview;
-          this.apiCallService.preview(gridData,this.currentMenu,'grid-preview-modal')        
-          break;
-        case "TEMPLATE": 
-          let object =JSON.parse(JSON.stringify(gridData))    
-          console.log(gridData); 
-          this.templateModal('template-modal',object,index, 'Template')
-          break;
-        case 'UPDATE':
-          this.editedRowData(index,button.onclick.action_name.toUpperCase())
-          break;
-        case 'DOWNLOAD':
-          let currentMenu = '';
-          if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
-            currentMenu = this.currentMenu.name
-          }
-          this.downloadPdfCheck = this.apiCallService.downloadPdf(gridData,currentMenu);         
-          break;
-        case 'GETFILE':
-          let currentsMenu = '';
-          if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
-            currentsMenu = this.currentMenu.name
-          }
-          this.downloadPdfCheck = this.apiCallService.getPdf(gridData,currentsMenu);         
-          break;
-        case 'TDS':
-          let currentMenuForTds = '';
-          this.flagForTdsForm = true;
-          this.currentRowIndex = index;
-          if(this.currentMenu.name && this.currentMenu.name != null && this.currentMenu.name != undefined && this.currentMenu.name != ''){
-            currentMenuForTds = this.currentMenu.name
-          }
-          const getFormData:any = this.apiCallService.getFormForTds(gridData,currentMenuForTds,this.elements[index]);        
-          if(getFormData._id && getFormData._id != undefined && getFormData._id != null && getFormData._id != ''){
-            getFormData.data['data']=gridData;
-            this.apiService.GetForm(getFormData);
-          }else{
-            getFormData.data=gridData;
-            this.apiService.GetForm(getFormData);
-          }
-          break;
-        case 'CANCEL':
-          this.editedRowData(index,button.onclick.action_name)
-          break;
-        case 'INLINEEDIT':
-          // this.gridInlineEdit(gridData,index);
-          break;
-        case 'COMMUNICATION':
-          this.commonFunctionService.openModal('communication-modal',gridData);
-          break;
-        case 'DOWNLOAD_QR':
-          this.downloadQRCode = this.commonFunctionService.getQRCode(gridData);
-          this.checkForDownloadReport = true;
-          break;
-        case 'DELETE_ROW':
-          if(this.permissionService.checkPermission(this.currentMenu.name, 'delete')){
-            this.editedRowData(index,button.onclick.action_name)
-          }else{
-            this.permissionService.checkTokenStatusForPermission();
-            //this.notificationService.notify("bg-danger", "Permission denied !!!");
-          }
-          break;
-        case 'AUDIT_HISTORY':
-          if (this.permissionService.checkPermission(this.currentMenu.name, 'auditHistory')) {
-            let obj = {
-              "aduitTabIndex": this.selectTabIndex,
-              "tabname": this.tabs,
-              "objectId": gridData._id
-            }
-            this.modalService.open('audit-history',obj);
-          }else {
-            this.permissionService.checkTokenStatusForPermission();
-            //this.notificationService.notify("bg-danger", "Permission denied !!!");
-          }
-          break;
-        case 'PRINT':
-          let templateType = '';
-          if(button.onclick.templateType && button.onclick.templateType != ''){
-            templateType = button.onclick.templateType;
-            gridData['print_template'] = templateType;
-            const payload = {
-              curTemp: this.currentMenu.name,
-              data: gridData,
-              _id :gridData._id
-            }
-            this.apiService.PrintTemplate(payload);
-            this.modalService.open('download-progress-modal', {});
-          }else{
-            this.notificationService.notify('bg-danger','Template Type is null!!!');
-          }
-          break;
-        default:
-          this.editedRowData(index,button.onclick.action_name)
-          break;
-      }
-    }
+    this.gridPage.gridButtonAction(index,button);
   }
   checkFieldsAvailability(formName){
     if(this.tab && this.tab.forms){
@@ -688,10 +528,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
 
 
-  onBulkUpdate(){
-    this.isBulkUpdate = true;
-    this.addNewForm('NEW');
-  }
+  
 
   checkUpdatePermission(rowdata){
     if(this.details && this.details.permission_key && this.details.permission_key != '' && this.details.permission_value && this.details.permission_value != ''){ 

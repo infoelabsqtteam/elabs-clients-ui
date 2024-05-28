@@ -67,7 +67,8 @@ export const AppConfig = {
     [Config.QueryParams] : {},
     [Config.TabFilterData] : [],
     [Config.TypegrapyCriteriaList] : [],
-    [Config.PreviewData] : ''
+    [Config.PreviewData] : '',
+    [Config.downloadClick] : ''
  };
 
  export interface AppConfigInterface {
@@ -133,5 +134,6 @@ export const AppConfig = {
     queryParams:any,
     tabFilterData:any,
     typegrapyCriteriaList:any,
-    previewData:any
+    previewData:any,
+    downloadClick:any
   }

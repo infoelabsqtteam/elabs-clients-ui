@@ -14,4 +14,4 @@
         <app-grid-filter-menu [extraClass]="'filterbtn float-right'" [columns]="headElements"></app-grid-filter-menu>
     </div>
 </section>
-<app-common-grid [tab]="tab" [headElements]="headElements"  (editedRowData)="seteditedRowData($event)"></app-common-grid>
+<app-common-grid [tab]="tab" [headElements]="headElements"  (editedRowData)="seteditedRowData($event)" (dinamicForm)="openDinamicForm($event)"></app-common-grid>
