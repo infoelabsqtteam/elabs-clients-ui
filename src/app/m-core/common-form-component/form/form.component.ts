@@ -3020,7 +3020,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(typeof checkValidatiaon != 'object'){
       const saveFromData = this.getSavePayloadData(dataWithCustValue);
       if(this.isSavedDuplicateData) {
-        saveFromData['data']['confirmSaveDuplicateData'] = true;
+        saveFromData['data']['confirmationRequired'] = true;
       }
       if(this.bulkupdates){
         saveFromData.data['data'] = this.bulkDataList;
