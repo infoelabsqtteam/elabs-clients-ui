@@ -1,9 +1,9 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
+import { ActivatedRoute } from '@angular/router';
+import { ApiCallService, ApiService, AppConfig, AppConfigInterface, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
-import { AppConfig, AppConfigInterface } from 'src/app/shared/config';
 
 @Component({
   selector: 'app-common-grid',
@@ -13,8 +13,6 @@ import { AppConfig, AppConfigInterface } from 'src/app/shared/config';
 export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
 
   public config:AppConfigInterface = AppConfig;
-
-  
 
   @Input() headElements:any;
   @Input() tab:any;
@@ -40,6 +38,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   printFileSubscription:Subscription;
   previewHtmlSubscription:Subscription;
   fileDataSubscription:Subscription;
+  exportCVSLinkSubscribe:Subscription;
 
   @HostListener('window:keyup.shift.control.e') onCtrlE() {
     this.editedRowData.emit({
@@ -162,8 +161,10 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     private modalService:ModelService,
     private storageService:StorageService,
     private formBuilder: UntypedFormBuilder,
-    private downloadService:DownloadService
+    private downloadService:DownloadService,
+    private routers: ActivatedRoute,
   ) { 
+    this.getUrlParameter(); 
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
     })
@@ -208,7 +209,10 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     })
     this.exportExcelSubscription = this.dataShareService.exportExcelLink.subscribe(data =>{
       this.setExportExcelLink(data);
-    })
+    });
+    this.exportCVSLinkSubscribe = this.dataShareService.exportCVSLink.subscribe(data =>{
+      this.handleExportCsv(data);
+    });
     this.dinamicFormSubscription = this.dataShareService.form.subscribe(form =>{
       this.setDinamicForm(form);
     })
@@ -325,6 +329,21 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       }  
       this.getPage(1);  
     }
+  }
+  getUrlParameter(){
+    let routers = this.routers;
+    if(routers.snapshot.params["formName"]){
+      this.config.formName = routers.snapshot.params["formName"];
+    }  
+    if(routers.snapshot.params["recordId"]){      
+      this.config.recordId = routers.snapshot.params["recordId"];
+    } 
+    if(routers.snapshot.params["rowId"]){      
+      this.config.rowId = routers.snapshot.params["rowId"];
+    } 
+    this.routers.queryParams.subscribe(params => {
+      this.config.queryParams = params;
+    });
   }
 
   //Subscribe Variable method handling-----------------------------------
@@ -444,6 +463,13 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       this.dinamicForm.emit({'formName':'DINAMIC_FORM','form':form.DINAMIC_FORM});
       this.apiCallService.getRealTimeGridData(this.config.currentMenu, this.config.elements[this.config.currentRowIndex]);
     } 
+  }
+  handleExportCsv(data){
+    if(data != null && data != undefined ){
+      this.notificationService.notify("bg-success", " File is under processing");
+    }else{
+      this.notificationService.notify("bg-danger", " Data issue");
+    }
   }
   
   //Subscribe Variable method handling-----------------------------------

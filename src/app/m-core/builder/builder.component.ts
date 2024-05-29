@@ -17,7 +17,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
 
   grid_view_mode:any = '';  
   navigationSubscription;  
-  selectTabIndex: number = 0;
+  selectTabIndex: number = -1;
   tabId:any = "";
   tabid:any = "";
   currentMenu:any;
@@ -121,16 +121,14 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getNavigationRouteData();
       this.getTempData = false;
       this.selectContact = '';
-      this.selectTabIndex = 0;
+      this.selectTabIndex = -1;
       this.selected = new UntypedFormControl(0);   
       this.currentMenu = this.storageService.GetActiveMenu();
-      if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
+      if (this.currentMenu  && this.currentMenu.name) {
         const payload = this.apiCallService.getTemData(this.currentMenu.name); 
         this.apiService.GetTempData(payload);     
       }
-    }
-    
-    
+    }    
   }
   getNavigationRouteData(){
     let routers = this.routers;
@@ -294,6 +292,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.tabs = [];
       }
       if(this.tabs.length > 0){
+        let tabIndex = -1;
         this.filterTab = tempData[0]?.filterTab;
         if(this.filterTab?.tab_name){
           this.isTabFilter = true;
@@ -301,24 +300,26 @@ export class BuilderComponent implements OnInit,OnDestroy {
           this.isTabFilter = false;          
         }
         if(this.tabId != ""){
-          this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
+          tabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
         }
         if(this.tabid != ""){
-          this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabid,'tab_name');
+          tabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabid,'tab_name');
         }
-        if(this.selectTabIndex == -1){
-          this.selectTabIndex = 0;
+        if(tabIndex == -1){
+          tabIndex = 0;
         }
-        if(!this.permissionService.checkPermission(this.tabs[this.selectTabIndex].tab_name,'view')){          
+        if(!this.permissionService.checkPermission(this.tabs[tabIndex].tab_name,'view')){          
           for (let i = 0; i < this.tabs.length; i++) {
             const tab = this.tabs[i];            
             if(this.permissionService.checkPermission(tab.tab_name,'view')){
-              this.selectTabIndex = i;
+              tabIndex = i;
+              break;
             }
           }          
         } 
-        this.selected = new UntypedFormControl(this.selectTabIndex);    
-        this.getViewMode(); 
+        this.selected = new UntypedFormControl(tabIndex);  
+        this.selectTabIndex = tabIndex;  
+        this.getViewMode();         
       }else{
         this.grid_view_mode = '';
       }  
