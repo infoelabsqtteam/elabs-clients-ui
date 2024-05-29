@@ -318,8 +318,10 @@ export class BuilderComponent implements OnInit,OnDestroy {
           }          
         } 
         this.selected = new UntypedFormControl(tabIndex);  
-        this.selectTabIndex = tabIndex;  
-        this.getViewMode();         
+        setTimeout(() => {
+          this.selectTabIndex = tabIndex;
+        }, 10);          
+        this.getViewMode(tabIndex);         
       }else{
         this.grid_view_mode = '';
       }  
@@ -371,25 +373,26 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
     this.selectTabIndex = i;  
-    this.getViewMode(); 
+    this.getViewMode(this.selectTabIndex); 
     this.selected = new UntypedFormControl(i);
   } 
-  getViewMode(){    
+  getViewMode(tabindex){   
+      let tab = this.tabs[tabindex]; 
       if(this.envService.getRequestType() == 'PUBLIC'){
         this.grid_view_mode="inlineFormView";
       }
-      else{
-        if(this.tabs[this.selectTabIndex] && this.tabs[this.selectTabIndex].grid && this.tabs[this.selectTabIndex].grid.grid_view && this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
-          this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
+      else{        
+        if(tab && tab.grid && tab.grid.grid_view && tab.grid.grid_view != null && tab.grid.grid_view != undefined && tab.grid.grid_view != ''){
+          this.grid_view_mode=tab.grid.grid_view; 
         }
-        else if(this.tabs[this.selectTabIndex] && this.tabs[this.selectTabIndex].chart_list != null && this.tabs[this.selectTabIndex].chart_list != undefined && this.tabs[this.selectTabIndex].chart_list != ''){
+        else if(tab && tab.chart_list != null && tab.chart_list != undefined && tab.chart_list != ''){
           this.grid_view_mode="chartView";
         }
         else{
           this.grid_view_mode="tableView";
         } 
       }
-      const url = this.currentUrl+"/"+this.tabs[this.selectTabIndex].tab_name;
+      const url = this.currentUrl+"/"+tab.tab_name;
       this._location.go(url); 
   }
   

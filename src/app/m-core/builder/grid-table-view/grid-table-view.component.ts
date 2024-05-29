@@ -1,4 +1,4 @@
-import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit,Input,OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -45,7 +45,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
     private permissionService: PermissionService,
-    private router: Router, 
     private routers: ActivatedRoute,
     private apiService:ApiService,
     private dataShareService:DataShareService,
@@ -66,13 +65,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.appConfig.rowSelectionIndex = index;
     });
    
-    // this.userInfo = this.storageService.GetUserInfo();
     this.appConfig.currentMenu = this.storageService.GetActiveMenu(); 
-    this.navigationSubscription = this.router.events.subscribe((e: any) => {
-      if (e instanceof NavigationEnd) {
-        this.initialiseInvites();
-      }
-    });  
   }
 
   
@@ -80,21 +73,10 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   getUrlParameter(){
     let routers = this.routers;
     if(routers.snapshot.params["formName"]){
-      this.appConfig.actionButtons = routers.snapshot.params["formName"];
+      this.appConfig.formName = routers.snapshot.params["formName"];
     }  
   }
-  initialiseInvites() {
-    this.appConfig.createFilterFormgroup = true;
-    this.appConfig.createFilterHeadElement = true;
-    this.appConfig.selectedRowIndex = -1;
-    this.appConfig.selectContactAdd = '';
-    this.appConfig.actionButtons='';  
-    this.appConfig.gridButtons=[];
-    this.appConfig.details = {};
-    // Set default values and re-fetch any data you need.
-    this.appConfig.currentMenu = this.storageService.GetActiveMenu();
-    this.getUrlParameter();    
-  }
+  
 
   ngOnDestroy() {
     // avoid memory leaks here by cleaning up after ourselves. If we  
@@ -114,22 +96,21 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.appConfig.createFilterHeadElement = true;
     this.appConfig.selectedRowIndex = -1;
     this.appConfig.selectContactAdd = '';
-    this.appConfig.actionButtons='';
+    this.appConfig.formName='';
     this.appConfig.gridButtons=[];   
-    this.appConfig.elements=[];
-    this.appConfig.headElements = [];
+    this.appConfig.elements=[];    
     this.appConfig.details = {};
     this.appConfig.forms={};
+    this.appConfig.heavyDownload = false;
     this.appConfig.currentMenu = this.storageService.GetActiveMenu();
     if(this.selectTabIndex != -1){
+      this.appConfig.headElements = [];
       const tempData = this.dataShareService.getTempData();
       this.setTempData(tempData);
       this.ngOnInit();
+      this.getUrlParameter(); 
     }
-    this.appConfig.heavyDownload = false;
-
   }
-
   ngOnInit(): void {
   }
   setTempData(tempData){
@@ -139,7 +120,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       if(tab && tab.tab_name && this.permissionService.checkPermission(tab.tab_name,'view')){
         if(!this.appConfig.createFilterFormgroup) this.appConfig.createFilterFormgroup = true;
         if(!this.appConfig.createFilterHeadElement) this.appConfig.createFilterHeadElement = true;
-        this.getTabData(this.selectTabIndex,this.appConfig.actionButtons);
+        this.getTabData(this.selectTabIndex,this.appConfig.formName);
       }else{
         this.appConfig.tableFields=[];
         this.appConfig.actionButtons =[];
@@ -271,7 +252,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   addAndUpdateResponce(element) {
     this.appConfig.selectedRowIndex = -1;
-    this.appConfig.actionButtons = '';
+    this.appConfig.formName = '';
     this.appConfig.currentBrowseUrl = this.routerService.updateRouteUrl(this.appConfig.selectedRowIndex,this.appConfig.elements,this.appConfig.currentBrowseUrl).currentBrowseUrl;
     if(this.addUpdateFormResponceSubscription){
       this.addUpdateFormResponceSubscription.unsubscribe();
@@ -281,15 +262,15 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     if(this.selectContact != ''){
       this.appConfig.selectContactAdd = this.selectContact;
     }    
-    this.appConfig.actionButtons = formName;
-    let fromResponce = this.formCreationService.getFieldsFromForms(this.appConfig.tab,this.appConfig.actionButtons,form,this.appConfig.gridButtons,this.appConfig.tableFields,this.appConfig.actionButtons);
+    this.appConfig.formName = formName;
+    let fromResponce = this.formCreationService.getFieldsFromForms(this.appConfig.tab,this.appConfig.formName,form,this.appConfig.gridButtons,this.appConfig.tableFields,this.appConfig.actionButtons);
     this.appConfig.tableFields = fromResponce.fields;
     this.appConfig.actionButtons = fromResponce.buttons;
     
     if(this.appConfig.tableFields.length > 0){      
       this.appConfig.currentBrowseUrl = this.routerService.updateRouteUrl(this.appConfig.selectedRowIndex,this.appConfig.elements,this.appConfig.currentBrowseUrl).currentBrowseUrl;
       this.subscribeAddUpdateResponce();
-      this.formCreationService.addNewForm(this.selectTabIndex,isBulkUpdate,bulkuploadList,this.appConfig.selectedRowIndex,this.appConfig.actionButtons,this.appConfig.selectContactAdd);
+      this.formCreationService.addNewForm(this.selectTabIndex,isBulkUpdate,bulkuploadList,this.appConfig.selectedRowIndex,this.appConfig.formName,this.appConfig.selectContactAdd);
     }else{
       this.notificationService.notify('text-danger','Action not allowed!!!')
     }
