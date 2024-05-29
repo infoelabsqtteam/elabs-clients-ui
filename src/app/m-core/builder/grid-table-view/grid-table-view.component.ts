@@ -68,16 +68,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.appConfig.currentMenu = this.storageService.GetActiveMenu(); 
   }
 
-  
-
-  getUrlParameter(){
-    let routers = this.routers;
-    if(routers.snapshot.params["formName"]){
-      this.appConfig.formName = routers.snapshot.params["formName"];
-    }  
-  }
-  
-
   ngOnDestroy() {
     // avoid memory leaks here by cleaning up after ourselves. If we  
     // don't then we will continue to run our initialiseInvites()   
@@ -112,6 +102,12 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     }
   }
   ngOnInit(): void {
+  }
+  getUrlParameter(){
+    let routers = this.routers;
+    if(routers.snapshot.params["formName"]){
+      this.appConfig.formName = routers.snapshot.params["formName"];
+    }  
   }
   setTempData(tempData){
     if (tempData && tempData.length > 0) {
@@ -247,7 +243,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }
       this.addNewForm('NEW');
       this.dataShareService.shareGridRunningData({"data" : copyObject});
-      
     }
   }
   addAndUpdateResponce(element) {
