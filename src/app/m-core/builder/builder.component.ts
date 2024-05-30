@@ -415,10 +415,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   addFebTab(tab,parent){  
     this.isPageLoading = true;
     tab.favourite = !tab.favourite;
-    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    // this.userPreferenceSubscribe(tab,'tab',parent);
     this.updateUserPreference(tab,'tab',parent);
-    // this.saveCallSubscribe();
   }
   
   async updateUserPreference(menu,field,parent){
@@ -431,11 +428,6 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.isPageLoading = false;
       this.notificationService.notify('bg-warning', 'Failed to save data.');
     }
-    // this.saveCallSubscribe();
   }
-//   checkFebTabAddOrNot(tab) {
-//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
-//     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
-// }
 }
 

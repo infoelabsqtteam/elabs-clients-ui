@@ -1,0 +1,23 @@
+<div mdbModal #gridModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick: true,keyboard: true}">
+    <div class="modal-dialog modal-dialog-scrollable" [ngClass]="checkModalClass?formSize:'modal-dialog-full-width'" role="document">
+      <div class="resizable modal-content" id="form_resize">
+        <div class="modal-header ">
+          <div class="form-tab d-flex">
+              <span >          
+                  <h3 class="modal-title m-0 text-uppercase"  >{{tab?.label ? tab?.label : tab?.name}}</h3>
+              </span>  
+          </div>          
+          <a class="h5 m-0 closebtb" (click)="close()"><span>×</span></a>
+        </div>
+        <div class="modal-body pb-2 pt-1 mt-0 px-4">
+          <div class="row m-0">
+              <div [ngClass]="'col-lg-12'">                  
+                <app-common-grid *ngIf="gridShowHide"  [tab]="tab" [headElements]="headElements"  (editedRowData)="seteditedRowData($event)" (dinamicForm)="openDinamicForm($event)"></app-common-grid>                 
+              </div>
+          </div>
+        </div>
+      </div>        
+    </div>
+</div>
+

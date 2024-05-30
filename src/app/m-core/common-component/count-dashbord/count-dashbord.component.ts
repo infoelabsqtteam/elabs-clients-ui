@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, MenuOrModuleCommonService, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, MenuOrModuleCommonService, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -39,7 +39,8 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     private modalService:ModelService,
     private formCreationService:FormCreationService,
     private notificationService:NotificationService,
-    private permissionService:PermissionService
+    private permissionService:PermissionService,
+    private gridCommonFunctionServie:GridCommonFunctionService
   ) { 
     this.modules = this.storageService.GetModules();
     this.gridCountByTab = this.storageService.GetTabCounts();
@@ -94,6 +95,15 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
               this.formCreationService.addNewForm(index,false,[],-1,'NEW','');
             }else{
               this.notificationService.notify("bg-danger","Add new form not exits in "+tab.label);
+            }            
+          }else if(this.selectedTabAction == "view"){
+            let grid = tab.grid;
+            let headElements = [];
+            if(grid && grid != undefined){
+              if(grid && grid.gridColumns){
+                headElements = this.gridCommonFunctionServie.modifyGridColumns(grid.gridColumns,{}); 
+              }
+              this.modalService.open("grid-modal",{'tab':tab,'headElements':headElements});
             }            
           }
         }

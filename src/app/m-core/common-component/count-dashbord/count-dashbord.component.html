@@ -57,6 +57,7 @@
           </div>
           <div class="card-footer  px-2 py-1">
             <a class="" *ngIf="tab.add_new" (click)="tabAction(tab,'add')"><mat-icon style="font-size: 18px;line-height: 1.4;">add_circle_outline</mat-icon></a>
+            <a class="" *ngIf="gridCountByTab[tab.tab_name+'_'+tab.name] && gridCountByTab[tab.tab_name+'_'+tab.name] > 0" (click)="tabAction(tab,'view')"><span class="material-icons-outlined">visibility</span></a>
             <a class="float-right" *ngIf="gridCountByTab[tab.tab_name+'_'+tab.name] && gridCountByTab[tab.tab_name+'_'+tab.name] > 0"  (click)="tabAction(tab,'download')"><mat-icon style="font-size: 18px;line-height: 1.4;">download</mat-icon></a>
           </div>
         </div>
