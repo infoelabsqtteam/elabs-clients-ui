@@ -131,7 +131,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
-
+  isSavedDuplicateData = false;
 
   //Google map variables
   latitude: number = 0;
@@ -881,6 +881,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.complete_object_payload_mode=result.complete_object_payload_mode;
       this.showNotify = result.showNotify;
       this.dataSaveInProgress = result.dataSaveInProgress;
+      if(result.saveDuplicateData) {
+        this.isSavedDuplicateData = true;
+      }
       if(result.isStepper) this.stepper.reset();
       if(result.resetForm) this.checkBeforeResetForm();
       if(result.next) this.next();
@@ -2847,6 +2850,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.longitude = 0;
     this.address = "";
     this.treeViewData={};
+    this.isSavedDuplicateData = false;
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
@@ -3015,6 +3019,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
     if(typeof checkValidatiaon != 'object'){
       const saveFromData = this.getSavePayloadData(dataWithCustValue);
+      if(this.isSavedDuplicateData) {
+        saveFromData['data']['confirmationRequired'] = true;
+      }
       if(this.bulkupdates){
         saveFromData.data['data'] = this.bulkDataList;
         saveFromData.data['bulk_update'] = true;
@@ -3025,6 +3032,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.saveCallSubscribe();
         }else{
           this.apiService.SaveFormData(saveFromData);
+          this.isSavedDuplicateData = false;
           this.saveCallSubscribe();
         }        
       }
