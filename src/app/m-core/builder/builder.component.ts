@@ -381,7 +381,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   }
   setGridData(gridData){
     if (gridData) {
-      if (gridData.data && gridData.data.length > 0) {
+      if (gridData.data && gridData.data.length >= 0) {
         this.total = gridData.data_size;                
         const tab = this.tabs[this.selectTabIndex];
         if(tab && tab.name){
@@ -393,8 +393,6 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
           dashbordCountList[dashbordCountKey] = gridData.data_size;
           this.storageService.SetTabCounts(dashbordCountList);
         }        
-      } else {
-        this.total = 0;
       }
     }
   }
