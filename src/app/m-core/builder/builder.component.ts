@@ -1,6 +1,6 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -13,7 +13,7 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent implements OnInit,OnDestroy {
+export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
 
   grid_view_mode:any = '';  
   navigationSubscription;  
@@ -39,6 +39,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
   currentUrl :String = "";
   isPageLoading: boolean = false;
   
+  // For Responsive Tabs
+  selectedMoreMenu = "More";
+  tabSliceCount : number;
+  hasOverflow=false;
+  @ViewChild('tabsGroup') tabsGroup: ElementRef;
+  
+  // when screen size changes call the updateTabsDynamically Fn
+  @HostListener('window:resize', ['$event']) onResize(event) {
+    this.updateTabsDynamically(this.tabs);
+  }
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
     let tab = {};
@@ -53,6 +63,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTab(this.selectTabIndex,tab["tab_name"],"")
     }
 }
+
+
   constructor(
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
@@ -87,6 +99,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
     this.gridDataCountSubscription = this.dataShareService.gridCountData.subscribe(counts =>{
       this.setGridCountData(counts);
     })
+  }
+  ngAfterViewChecked(): void {
+    this.updateTabsDynamically(this.tabs);
   }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
@@ -279,6 +294,42 @@ export class BuilderComponent implements OnInit,OnDestroy {
       })
     }
   }
+  updateTabsDynamically(tabs:[]) {
+    if(this.tabsGroup && tabs && tabs.length>0){
+      let moreMenuWidth = Math.ceil((this.selectedMoreMenu.length * 6)+35);
+      const tabGroupWidth = this.tabsGroup.nativeElement.offsetWidth-moreMenuWidth;
+      let tabsWidth: number = 0;
+        tabs.forEach((tab: HTMLElement) => {
+          tabsWidth += this.calculateTabWidth(tab).width;
+        });
+        if (tabsWidth >= tabGroupWidth) {
+          let accumulatedWidth = moreMenuWidth;
+          let sliceCount = -1;
+          for (let i = 0; i < tabs.length; i++) {
+            const tabWidth = this.calculateTabWidth(tabs[i]).width;
+            accumulatedWidth += tabWidth;
+            if (accumulatedWidth <= tabGroupWidth) {
+              sliceCount = i+1;
+            } else break;
+          }
+          this.tabSliceCount = sliceCount;
+          this.hasOverflow = true;
+        } else this.hasOverflow = false;
+    }
+  }
+
+  // Calculating tab width as per label, count & fav star icon width
+  calculateTabWidth(tab:any){
+    let label = this.gateTabName(tab);
+    let count = this.gridCountByTab[tab.tab_name+'_'+tab.name] ? this.gridCountByTab[tab.tab_name+'_'+tab.name] : '';
+    let tabLabel = `${label}(${count})`;
+    return {label:tabLabel,width:Math.ceil(tabLabel.length * 5.5+35)};
+  }
+
+  isTabActive(tab){
+    const currentMenu = this.storageService.GetActiveMenu();
+    return tab?.tab_name== currentMenu?.name;
+}
   
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
@@ -322,6 +373,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
       }else{
         this.grid_view_mode = '';
       }  
+      this.updateTabsDynamically(this.tabs);
     }
   }
   setGridData(gridData){
@@ -353,7 +405,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     const data = this.dataShareService.getTempData();
     this.setTempData(data);
   }
-  getTab(i, tabName,event) {
+  getTab(i, tabName,event,sliceCount?) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
       if(event != "" && event.ctrlKey){
         const url = this.currentUrl+"/"+tabName;
@@ -364,14 +416,21 @@ export class BuilderComponent implements OnInit,OnDestroy {
           this.apiService.resetGridData();
         }  
         
-      }       
+      } 
+      if(sliceCount){
+        i = i+sliceCount;  
+        this.selectedMoreMenu = this.calculateTabWidth(this.tabs[i]).label;
+      } else{
+        this.selectedMoreMenu = "More"
+      }
+      this.selectTabIndex = i;
+      this.getViewMode(); 
+      this.selected = new UntypedFormControl(i);  
     } else {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
-    this.selectTabIndex = i;  
-    this.getViewMode(); 
-    this.selected = new UntypedFormControl(i);
+    this.updateTabsDynamically(this.tabs);
   } 
   getViewMode(){    
       if(this.envService.getRequestType() == 'PUBLIC'){
