@@ -119,13 +119,14 @@
                                 <mat-date-range-picker #picker></mat-date-range-picker>  
                             </mat-form-field>
                         </div>
-                        <div *ngIf="tableField.type == 'time' || tableField.type == 'stdTime'">
+                        <div *ngIf="tableField.type == 'time'">
                             <mat-form-field appearance="outline" class="example-full-width w-100">
                                 <mat-label>{{ tableField.label | titlecase}}</mat-label>
-                                <input matInput [ngxTimepicker]="picker" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name" readonly [id]="tableField._id+'_'+tableField.field_name" [format]="tableField.type == 'stdTime' ? 24 : 12">
+                                <input matInput [ngxTimepicker]="picker" [placeholder]="tableField.placeholder | titlecase" [required]="tableField.is_mandatory"  [formControlName]="tableField.field_name"
+                                    readonly [id]="tableField._id+'_'+tableField.field_name" [format]="tableField.time_format ? (tableField.time_format | number) : 12">
                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                             </mat-form-field>
-                        </div>
+                        </div> 
                         <div *ngIf="tableField.type == 'radio'">
                             <div class="row m-0 w-100">
                                 <div class="col-lg-12 px-0">
@@ -960,7 +961,7 @@
                                         </thead>
                                         <tbody cdkDropList (cdkDropListDropped)="typeaheadDragDrop($event,'',tableField)">
                                             <tr *ngFor="let data of modifyCustmizedFormValue[tableField.field_name] | filter:term[tableField.field_name] | paginate
-                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y" class="border">
+                                            : { id: tableField.field_name + '_' + tableField.type, itemsPerPage: pageSize, currentPage: pageNo[tableField.field_name]} ; let i = index" cdkDrag cdkDragLockAxis="y" class="border" [style.background-color]="data['background-color']">
 
                                                 <td *ngIf="tableField.add_list_field != 'add' && (tableField.add_new_enabled || (tableField.draggable && !updateMode))" class="grid-coloumn-nowrap">
                                                     <div class="example-handle cursor-move" cdkDragHandle *ngIf="!updateMode && tableField.draggable" [ngClass]="{'d-inline-block': tableField.draggable}">
