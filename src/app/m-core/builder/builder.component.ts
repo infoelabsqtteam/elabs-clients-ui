@@ -1,6 +1,6 @@
 
 import { Router, NavigationEnd,ActivatedRoute } from '@angular/router';
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -13,11 +13,11 @@ import { StorageService, CommonFunctionService, PermissionService, DataShareServ
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent implements OnInit,OnDestroy {
+export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
 
   grid_view_mode:any = '';  
   navigationSubscription;  
-  selectTabIndex: number = 0;
+  selectTabIndex: number = -1;
   tabId:any = "";
   tabid:any = "";
   currentMenu:any;
@@ -39,6 +39,16 @@ export class BuilderComponent implements OnInit,OnDestroy {
   currentUrl :String = "";
   isPageLoading: boolean = false;
   
+  // For Responsive Tabs
+  selectedMoreMenu = "More";
+  tabSliceCount : number;
+  hasOverflow=false;
+  @ViewChild('tabsGroup') tabsGroup: ElementRef;
+  
+  // when screen size changes call the updateTabsDynamically Fn
+  @HostListener('window:resize', ['$event']) onResize(event) {
+    this.updateTabsDynamically(this.tabs);
+  }
 
   @HostListener('window:keyup.alt.t') onCtrlT(){
     let tab = {};
@@ -53,6 +63,8 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getTab(this.selectTabIndex,tab["tab_name"],"")
     }
 }
+
+
   constructor(
     private storageService: StorageService,
     private commonFunctionService:CommonFunctionService, 
@@ -88,6 +100,9 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.setGridCountData(counts);
     })
   }
+  ngAfterViewChecked(): void {
+    this.updateTabsDynamically(this.tabs);
+  }
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       this.setSaveResponce(responce);
@@ -121,16 +136,14 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.getNavigationRouteData();
       this.getTempData = false;
       this.selectContact = '';
-      this.selectTabIndex = 0;
+      this.selectTabIndex = -1;
       this.selected = new UntypedFormControl(0);   
       this.currentMenu = this.storageService.GetActiveMenu();
-      if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
+      if (this.currentMenu  && this.currentMenu.name) {
         const payload = this.apiCallService.getTemData(this.currentMenu.name); 
         this.apiService.GetTempData(payload);     
       }
-    }
-    
-    
+    }    
   }
   getNavigationRouteData(){
     let routers = this.routers;
@@ -279,6 +292,42 @@ export class BuilderComponent implements OnInit,OnDestroy {
       })
     }
   }
+  updateTabsDynamically(tabs:[]) {
+    if(this.tabsGroup && tabs && tabs.length>0){
+      let moreMenuWidth = Math.ceil((this.selectedMoreMenu.length * 6)+35);
+      const tabGroupWidth = this.tabsGroup.nativeElement.offsetWidth-moreMenuWidth;
+      let tabsWidth: number = 0;
+        tabs.forEach((tab: HTMLElement) => {
+          tabsWidth += this.calculateTabWidth(tab).width;
+        });
+        if (tabsWidth >= tabGroupWidth) {
+          let accumulatedWidth = moreMenuWidth;
+          let sliceCount = -1;
+          for (let i = 0; i < tabs.length; i++) {
+            const tabWidth = this.calculateTabWidth(tabs[i]).width;
+            accumulatedWidth += tabWidth;
+            if (accumulatedWidth <= tabGroupWidth) {
+              sliceCount = i+1;
+            } else break;
+          }
+          this.tabSliceCount = sliceCount;
+          this.hasOverflow = true;
+        } else this.hasOverflow = false;
+    }
+  }
+
+  // Calculating tab width as per label, count & fav star icon width
+  calculateTabWidth(tab:any){
+    let label = this.gateTabName(tab);
+    let count = this.gridCountByTab[tab.tab_name+'_'+tab.name] ? this.gridCountByTab[tab.tab_name+'_'+tab.name] : '';
+    let tabLabel = `${label}(${count})`;
+    return {label:tabLabel,width:Math.ceil(tabLabel.length * 5.5+35)};
+  }
+
+  isTabActive(tab){
+    const currentMenu = this.storageService.GetActiveMenu();
+    return tab?.tab_name== currentMenu?.name;
+}
   
   setTempData(tempData:any){
     if (tempData && tempData.length > 0) {
@@ -294,6 +343,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
         this.tabs = [];
       }
       if(this.tabs.length > 0){
+        let tabIndex = -1;
         this.filterTab = tempData[0]?.filterTab;
         if(this.filterTab?.tab_name){
           this.isTabFilter = true;
@@ -301,41 +351,48 @@ export class BuilderComponent implements OnInit,OnDestroy {
           this.isTabFilter = false;          
         }
         if(this.tabId != ""){
-          this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
+          tabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabId);
         }
         if(this.tabid != ""){
-          this.selectTabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabid,'tab_name');
+          tabIndex = this.commonFunctionService.getIndexInArrayById(this.tabs,this.tabid,'tab_name');
         }
-        if(this.selectTabIndex == -1){
-          this.selectTabIndex = 0;
+        if(tabIndex == -1){
+          tabIndex = 0;
         }
-        if(!this.permissionService.checkPermission(this.tabs[this.selectTabIndex].tab_name,'view')){          
+        if(!this.permissionService.checkPermission(this.tabs[tabIndex].tab_name,'view')){          
           for (let i = 0; i < this.tabs.length; i++) {
             const tab = this.tabs[i];            
             if(this.permissionService.checkPermission(tab.tab_name,'view')){
-              this.selectTabIndex = i;
+              tabIndex = i;
+              break;
             }
           }          
         } 
-        this.selected = new UntypedFormControl(this.selectTabIndex);    
-        this.getViewMode(); 
+        this.selected = new UntypedFormControl(tabIndex);  
+        setTimeout(() => {
+          this.selectTabIndex = tabIndex;
+        }, 10);          
+        this.getViewMode(tabIndex);         
       }else{
         this.grid_view_mode = '';
       }  
+      this.updateTabsDynamically(this.tabs);
     }
   }
   setGridData(gridData){
     if (gridData) {
-      if (gridData.data && gridData.data.length > 0) {
+      if (gridData.data && gridData.data.length >= 0) {
         this.total = gridData.data_size;                
         const tab = this.tabs[this.selectTabIndex];
         if(tab && tab.name){
           const currentTabName = this.storageService.GetActiveMenu()['name'];
           const key = currentTabName+"_"+tab.name;
           this.gridCountByTab[key] = gridData.data_size;
+          let dashbordCountList = this.storageService.GetTabCounts();
+          const dashbordCountKey = currentTabName+"_"+tab.label;
+          dashbordCountList[dashbordCountKey] = gridData.data_size;
+          this.storageService.SetTabCounts(dashbordCountList);
         }        
-      } else {
-        this.total = 0;
       }
     }
   }
@@ -349,7 +406,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
     const data = this.dataShareService.getTempData();
     this.setTempData(data);
   }
-  getTab(i, tabName,event) {
+  getTab(i, tabName,event,sliceCount?) {
     if (this.permissionService.checkPermission(tabName, 'view')) {
       if(event != "" && event.ctrlKey){
         const url = this.currentUrl+"/"+tabName;
@@ -360,31 +417,39 @@ export class BuilderComponent implements OnInit,OnDestroy {
           this.apiService.resetGridData();
         }  
         
-      }       
+      } 
+      if(sliceCount){
+        i = i+sliceCount;  
+        this.selectedMoreMenu = this.calculateTabWidth(this.tabs[i]).label;
+      } else{
+        this.selectedMoreMenu = "More"
+      }
+      this.selectTabIndex = i;  
+      this.getViewMode(this.selectTabIndex); 
+      this.selected = new UntypedFormControl(i);
     } else {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");
     }
-    this.selectTabIndex = i;  
-    this.getViewMode(); 
-    this.selected = new UntypedFormControl(i);
+    this.updateTabsDynamically(this.tabs);
   } 
-  getViewMode(){    
+  getViewMode(tabindex){   
+      let tab = this.tabs[tabindex]; 
       if(this.envService.getRequestType() == 'PUBLIC'){
         this.grid_view_mode="inlineFormView";
       }
-      else{
-        if(this.tabs[this.selectTabIndex] && this.tabs[this.selectTabIndex].grid && this.tabs[this.selectTabIndex].grid.grid_view && this.tabs[this.selectTabIndex].grid.grid_view != null && this.tabs[this.selectTabIndex].grid.grid_view != undefined && this.tabs[this.selectTabIndex].grid.grid_view != ''){
-          this.grid_view_mode=this.tabs[this.selectTabIndex].grid.grid_view; 
+      else{        
+        if(tab && tab.grid && tab.grid.grid_view && tab.grid.grid_view != null && tab.grid.grid_view != undefined && tab.grid.grid_view != ''){
+          this.grid_view_mode=tab.grid.grid_view; 
         }
-        else if(this.tabs[this.selectTabIndex] && this.tabs[this.selectTabIndex].chart_list != null && this.tabs[this.selectTabIndex].chart_list != undefined && this.tabs[this.selectTabIndex].chart_list != ''){
+        else if(tab && tab.chart_list != null && tab.chart_list != undefined && tab.chart_list != ''){
           this.grid_view_mode="chartView";
         }
         else{
           this.grid_view_mode="tableView";
         } 
       }
-      const url = this.currentUrl+"/"+this.tabs[this.selectTabIndex].tab_name;
+      const url = this.currentUrl+"/"+tab.tab_name;
       this._location.go(url); 
   }
   
@@ -407,10 +472,7 @@ export class BuilderComponent implements OnInit,OnDestroy {
   addFebTab(tab,parent){  
     this.isPageLoading = true;
     tab.favourite = !tab.favourite;
-    // this.apiCallService.getUserPrefrerence(this.storageService.GetUserInfo());
-    // this.userPreferenceSubscribe(tab,'tab',parent);
     this.updateUserPreference(tab,'tab',parent);
-    // this.saveCallSubscribe();
   }
   
   async updateUserPreference(menu,field,parent){
@@ -423,11 +485,6 @@ export class BuilderComponent implements OnInit,OnDestroy {
       this.isPageLoading = false;
       this.notificationService.notify('bg-warning', 'Failed to save data.');
     }
-    // this.saveCallSubscribe();
   }
-//   checkFebTabAddOrNot(tab) {
-//     const menus = this.storageService.getUserPreference()?.['favouriteMenus'] || {};
-//     return this.userPrefrenceService.isIdExistInTemplateTabs(menus, tab._id);
-// }
 }
 
