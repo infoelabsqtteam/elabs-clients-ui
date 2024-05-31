@@ -92,12 +92,21 @@ export class BulkUpdateComponent implements OnInit {
     this.apiservice.clearTypeaheadData();
     this.bulkUpdateModal.hide();
   }
+  typeheaderrormsg:any;
   bulkUpdate(){
     Object.keys(this.notUpdate).forEach(key =>{
       if(this.notUpdate[key]){
         delete this.data[key];
       }
     });
+    for (let i = 0; i < this.editableGridColumns.length; i++) {
+      if(this.editableGridColumns[i].errorMsg) {
+        this.typeheaderrormsg = "Data Invalid";
+        return;
+      }else {
+        this.typeheaderrormsg = "";
+      }
+    }
     this.bulkUpdateResponce.emit(this.data);
     this.closeModal();
   }
@@ -140,12 +149,16 @@ export class BulkUpdateComponent implements OnInit {
   }
   
   searchTypeaheadData(field, currentObject,chipsInputValue) {
-    //console.log(chipsInputValue)
     if(chipsInputValue != ''){
       this.typeaheadObjectWithtext = currentObject;
-
       this.addedDataInList = this.typeaheadObjectWithtext[field.field_name]
-
+      if(this.addedDataInList.name && this.addedDataInList.code) {
+        this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
+        delete field["errorMsg"];
+      }else {
+        field["errorMsg"] = true;
+        this.typeheaderrormsg = "";
+      }
       this.typeaheadObjectWithtext[field.field_name] = chipsInputValue;
 
       let call_back_field = '';
@@ -164,6 +177,7 @@ export class BulkUpdateComponent implements OnInit {
       this.typeaheadObjectWithtext[field.field_name] = this.addedDataInList;
     }else{
       this.typeAheadData = [];
+      delete field["errorMsg"];
     }
   }
   setTypeaheadData(typeAheadData) {
@@ -219,7 +233,8 @@ export class BulkUpdateComponent implements OnInit {
       }
       chipsInput.value = "";
     }    
-    this.typeAheadData = [];    
+    this.typeAheadData = [];
+    delete field["errorMsg"];   
   }
 
 }

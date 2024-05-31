@@ -4,12 +4,18 @@ import { FormModalComponent } from './form-modal/form-modal.component';
 import { FranchiseComponent } from './franchise/franchise.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { CommonFormComponentModule } from '../common-form-component/common-form-component.module';
+import { GridModalComponent } from './grid-modal/grid-modal.component';
 
 const models = [
   FormModalComponent,
   FranchiseComponent,
+  GridModalComponent
   
 ];
+const exportModels = [
+  models,
+  CommonFormComponentModule
+]
 
 @NgModule({
   imports: [
@@ -17,7 +23,7 @@ const models = [
     CommonFormComponentModule,
     MDBBootstrapModule.forRoot()
   ],
-  exports: models,
+  exports: exportModels,
   declarations: models
 })
 export class FormModelModule { }

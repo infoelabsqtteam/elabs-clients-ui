@@ -40,6 +40,7 @@ import { BulkUpdateComponent } from './bulk-update/bulk-update.component';
 import { PermissionTreeViewComponent } from './permission-tree-view/permission-tree-view.component';
 import { ChartModalComponent } from './chart-modal/chart-modal.component';
 import { AddPermissionTreeControlsComponent } from './add-permission-tree-controls/add-permission-tree-controls.component';
+import { FullScreenMapComponent } from './full-screen-map/full-screen-map.component';
 
 const models = [
   ModalsComponent,
@@ -71,21 +72,33 @@ const models = [
   HtmlViewModalComponent,
   BulkUpdateComponent,
   PermissionTreeViewComponent,
-  AddPermissionTreeControlsComponent
+  AddPermissionTreeControlsComponent,
+  FullScreenMapComponent
 ]
+const exportModels =[ 
+  models,
+  CommonModule,
+  CommonComponentModule,
+  AllPackageModule,
+  AngularMaterialModule,
+  ReactiveFormsModule,
+  FormsModule,
+  DirectiveModuleModule
+];
+exportModels.push();
 
 @NgModule({
   imports: [
     CommonModule,
-    AngularMaterialModule,
     MDBBootstrapModule.forRoot(),
-    DirectiveModuleModule,
     ReactiveFormsModule,
     FormsModule,
+    DirectiveModuleModule,
+    AngularMaterialModule,
     AllPackageModule,
     CommonComponentModule
   ],
   declarations: models,
-  exports : models
+  exports : exportModels
 })
 export class ModelModule { }

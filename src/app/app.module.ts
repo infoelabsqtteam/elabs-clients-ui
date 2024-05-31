@@ -7,11 +7,8 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FilterPipe } from './pipes/filter.pipe';
 import { AuthModule } from './auth/auth.module';
 import { McoreModule } from './m-core/m-core.module';
-import { CoreModule } from './core/core.module';
 import { AppLandingModule } from './app-landing/app-landing.module';
 import { AppComponent } from './app.component';
-import { ModelModule } from './m-core/modals/model.module';
-import { AngularMaterialModule } from './m-core/angular-material-module/angular-material.module';
 import { MyLibModule } from '@core/web-core';
 import { environment } from '../environments/environment'
 import { AppRoutingModule } from './app-routing.module';
@@ -31,11 +28,8 @@ import { AppRoutingModule } from './app-routing.module';
     HttpClientXsrfModule.withOptions({cookieName: 'XSRF-TOKEN'}),
     AppLandingModule,
     AuthModule,
-    CoreModule,
-    McoreModule,        
-    ModelModule,
-    AngularMaterialModule,
-    MyLibModule.forRoot(environment)
+    McoreModule, 
+    MyLibModule.forRoot(environment),
   ],
   providers: [
     DatePipe,

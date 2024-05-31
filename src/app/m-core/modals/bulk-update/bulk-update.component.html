@@ -80,6 +80,39 @@
                                     </div>
                                 </div>
                             </div>
+                            <div *ngIf="fieldName.type.toLowerCase() == 'date'">
+                                <div class="row m-0 w-100">
+                                    <div class="col-lg-5">
+                                        <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <input matInput [matDatepicker]="picker" [placeholder]="fieldName.placeholder ? fieldName.placeholder:'dd/mm/yyyy'" [(ngModel)]="data[fieldName.field_name]" >
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Skip</mat-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="fieldName.type.toLowerCase() == 'time'">
+                                <div class="row m-0 w-100">
+                                    <div class="col-lg-5">
+                                        <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder ? fieldName.placeholder : 'HH:MM AM/PM'" [(ngModel)]="data[fieldName.field_name]" >
+                                            <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <mat-checkbox  color="primary"  [(ngModel)]="notUpdate[fieldName.field_name]" >Skip</mat-checkbox>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="w-100 position-relative" *ngIf="fieldName.type.toLowerCase() == 'chips'">
                                 <div class="row m-0 w-100">
                                     <div class="col-lg-5">
@@ -142,6 +175,7 @@
                                                     <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
                                                 </mat-autocomplete>                                  
                                             </mat-form-field>
+                                            <small class="typeheaderrormsg" *ngIf="fieldName['errorMsg']">{{typeheaderrormsg}}</small>
                                         </div>
                                         <div class="w-100 position-relative" *ngIf="fieldName.datatype == 'chips'">
                                             <mat-form-field appearance="outline" class="example-full-width w-100 m-0">

@@ -22,6 +22,8 @@ export class SigninComponent implements OnInit,OnDestroy {
   applicationSettingSubscription:Subscription;
   loginInfoSubscribe:Subscription;
   sessionSubscribe:Subscription
+  wrongLoginAttempt:number=0;
+  applicationWrongLoginAttempt = 0;
   constructor(
     private router: Router,
     private authService:AuthService,
@@ -58,6 +60,12 @@ export class SigninComponent implements OnInit,OnDestroy {
           if(res.msg != '') {
             this.notificationService.notify(res.class, res.msg);            
           }
+          
+          if(this.applicationWrongLoginAttempt && res && res.wrongLoginAttempt){
+            this.wrongLoginAttempt = res.wrongLoginAttempt;
+          }else{
+            this.wrongLoginAttempt = 0;
+          }
           if(res.status == 'success') {
             this.authService.GetUserInfoFromToken(this.storageService.GetIdToken());
           }else{
@@ -74,7 +82,9 @@ export class SigninComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     this.loading = false;
-    this.signInForm.reset();
+    if(this.signInForm){
+      this.signInForm.reset();
+    }
     this.unsubscribeSubscription();
   }
 
@@ -97,6 +107,7 @@ export class SigninComponent implements OnInit,OnDestroy {
   }
 
   onSignIn() {
+    this.wrongLoginAttempt = 0;
     this.loading = true;
     const value = this.signInForm.getRawValue();
     let userId = value.userId;
@@ -120,6 +131,8 @@ export class SigninComponent implements OnInit,OnDestroy {
     this.logoPath = this.storageService.getLogoPath() + "logo-signin.png";
     this.template = this.storageService.getTemplateName();
     this.title = this.storageService.getPageTitle();
+    this.wrongLoginAttempt = 0;
+    this.applicationWrongLoginAttempt = this.storageService.getAuthenticationSetting()?.wrongLoginAttempt;
   }
 
   showPassword() {

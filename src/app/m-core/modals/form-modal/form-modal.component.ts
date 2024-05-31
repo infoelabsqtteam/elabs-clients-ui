@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output,ViewChild,EventEmitter } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
-import { CommonFunctionService, ModelService } from '@core/web-core';
+import { CommonFunctionService, DataShareService, ModelService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 
 
@@ -11,23 +12,32 @@ import { CommonFunctionService, ModelService } from '@core/web-core';
 })
 export class FormModalComponent implements OnInit {
 
-  @Output() addAndUpdateResponce = new EventEmitter();
-  @Input() tabIndex: number;
-  @Input() editedRowIndex: number;
-  @Input() formName: string;
-  @Input() id: string;
-  @Input() selectContact:string;
-  formSize:any = 'modal-dialog-full-width';
-  @Input() bulkUpdate:boolean;
-  @Input() bulkDataList:any;
+  // @Output() addAndUpdateResponce = new EventEmitter();
+  
+  @Input() id: string;    
+  
+  tabIndex: number;
+  bulkUpdate:boolean;
+  bulkDataList:any;
+  editedRowIndex: number;
+  formName: string;
+  selectContact:string;
+
+
   checkModalClass:boolean=false;
+  formSize:any = 'modal-dialog-full-width';
+  formShowHide:boolean=false;
+  addUpdateFormResponceSubscription:Subscription;
 
   
   @ViewChild('formModal') public formModal: ModalDirective;
   constructor(
     private commonFunctionService:CommonFunctionService, 
-    private modalService: ModelService
-    ) {}
+    private modalService: ModelService,
+    private dataShareService:DataShareService
+    ) {
+      
+    }
 
   ngOnInit(): void {
     let modal = this;
@@ -40,18 +50,28 @@ export class FormModalComponent implements OnInit {
     
   }
   showModal(object){ 
+    this.tabIndex = object['tabIndex'] 
+    this.bulkUpdate = object['bulkUpdate'] 
+    this.bulkDataList = object['bulkDataList'] 
+    this.editedRowIndex = object['editedRowIndex'] 
+    this.formName = object['formName'] 
+    this.selectContact = object['selectContact'] 
+    this.formShowHide = true;
     this.formModal.show();
     this.checkModalClass = true;
   }
+  
   close(){
+    
     this.formModal.hide();
+    this.formShowHide = false;
     this.checkModalClass = false;
   }
 
   formResponce(event){
     if(event == 'close'){
       this.close();
-      this.addAndUpdateResponce.emit(event);
+      this.dataShareService.shareAddAndUpdateResponce(event);
     }    
   }
 

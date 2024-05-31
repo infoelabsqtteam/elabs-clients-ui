@@ -2,7 +2,7 @@ import { Component, OnInit ,HostListener } from '@angular/core';
 import { Router,NavigationEnd } from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import { Subscription } from 'rxjs';
-import { StorageService, DataShareService, ModelService, CommonFunctionService, LoaderService, EnvService, AuthService, AuthDataShareService, ApiCallService } from '@core/web-core';
+import { StorageService, DataShareService, ModelService, LoaderService, EnvService, AuthService, AuthDataShareService, AwsSecretManagerService, CookiesService, ApiCallService } from '@core/web-core';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   showHideSetting:boolean = false;
   themeSettingSubscription:Subscription;
   applicationSettingSubscription:Subscription;
+  settingLoding = false;
 
   favIcon: HTMLLinkElement = document.querySelector('#favIcon');
   themeName:any = '';
@@ -30,15 +31,19 @@ export class AppComponent implements OnInit {
     private modelService:ModelService,
     public loaderService:LoaderService,
     private authService: AuthService,
-    private commonfunctionService:CommonFunctionService,
     private envService: EnvService,
     private authDataShareService: AuthDataShareService,
-    private apiCallService:ApiCallService
-
+    private apiCallService:ApiCallService,
+    private awsSecretManagerService : AwsSecretManagerService,
+    private cookieService: CookiesService
   ) {
-    
     //this.localSetting();
-    this.apiCallService.getApplicationAllSettings();
+    // this.apiCallService.getApplicationAllSettings();
+    if(!this.settingLoding){
+      this.getApplicationSettings();
+    }else {
+      this.loadApplicationSetting('constructure');
+    }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
@@ -77,8 +82,15 @@ export class AppComponent implements OnInit {
       }
 
     })
+
+    this.dataShareService.serverEndPoint.subscribe(data=>{
+      if(data){
+        this.awsSecretManagerService.getServerAndAppSetting();
+      }
+    })
    }
 
+   
   ngOnInit() {     
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
@@ -109,7 +121,14 @@ export class AppComponent implements OnInit {
   }
   redirectToHomePageWithStorage(){
     if(!this.authService.checkApplicationSetting()){
-      this.apiCallService.getApplicationAllSettings();
+      // this.apiCallService.getApplicationAllSettings();
+      if(!this.settingLoding){
+        this.getApplicationSettings();
+      }else {
+        this.loadApplicationSetting("first redirect home page");
+      }
+    }else {
+      this.loadApplicationSetting("second redirect home page");
     }
     if(this.authService.checkIdTokenStatus().status){
       this.authService.redirectionWithMenuType();
@@ -140,4 +159,56 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.storageService.getPageTitle());
     this.themeName = this.storageService.getPageThmem();
   }
+
+  getApplicationSettings() {
+    if(this.settingLoding){
+      return;
+    }
+    const domainName = document.location.hostname;
+    const hostNameInLocal = this.storageService.getHostNameDinamically();
+    const hostNameInCookies = this.cookieService.getCookieByName(domainName);
+    if(domainName != 'localhost'){
+      if (!!hostNameInCookies && !hostNameInLocal) {
+          let serverHost = new URL(hostNameInCookies)?.origin;
+          this.dataShareService.shareServerHostName(serverHost);
+          this.storageService.setHostNameDinamically(hostNameInCookies);
+          console.log("first If Conditions")
+      } else {
+        this.settingLoding = true;
+          if (!hostNameInLocal || !this.authService.checkApplicationSetting()) {
+            if(!this.authService.checkApplicationSetting() && hostNameInLocal){
+              this.apiCallService.getApplicationAllSettings();
+            } else{
+              this.awsSecretManagerService.getServerAndAppSetting();
+            }
+
+          } else {
+              let serverHost = new URL(hostNameInLocal)?.origin;
+              this.dataShareService.shareServerHostName(serverHost);
+              this.storageService.setHostNameDinamically(hostNameInLocal);
+              console.log("2nd If Conditions")
+          }
+      }
+    } else {
+      this.awsSecretManagerService.getServerAndAppSetting();
+    }
+    
+    if(this.storageService.getHostNameDinamically()){
+      this.settingLoding = false;
+    }
+  }
+
+
+  loadApplicationSetting(commingPlace){
+    this.envService.setApplicationSetting();
+    this.loadPage();
+    this.dataShareService.subscribeTemeSetting("setting");
+    let themeSettings =  this.storageService.getThemeSetting();
+      if(themeSettings){
+        this.envService.setThemeSetting(themeSettings);
+      }
+      console.log("Main If Conditions")
+      console.log(commingPlace); 
+  }
+  
 }

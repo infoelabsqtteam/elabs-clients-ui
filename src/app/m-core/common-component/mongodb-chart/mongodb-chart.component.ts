@@ -1,4 +1,4 @@
-import { Component, OnInit,AfterViewInit,Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit,AfterViewInit,Input, SimpleChanges, OnDestroy } from '@angular/core';
 import ChartsEmbedSDK from "@mongodb-js/charts-embed-dom";
 import { Subscription } from 'rxjs';
 import { ChartService, ModelService, CommonFunctionService, ApiService, StorageService, DataShareService, ApiCallService} from '@core/web-core';
@@ -8,17 +8,17 @@ import { ChartService, ModelService, CommonFunctionService, ApiService, StorageS
   templateUrl: './mongodb-chart.component.html',
   styleUrls: ['./mongodb-chart.component.css']
 })
-export class MongodbChartComponent implements OnInit,AfterViewInit {
+export class MongodbChartComponent implements OnInit,AfterViewInit,OnDestroy {
 
   chartIdList:any = [];
   createdChartList:any=[];
   accessToken:string="";
-  @Input() showMongoChart:boolean;
+  // @Input() showMongoChart:boolean;
   pageNumber:any=1;
   itemNumOfGrid: any = 6;
   gridDataSubscription:Subscription;
   darkTheme:any={};
-  total;
+  total:number;
   noOfItems:any = [
     6,9,12,15,18,21,24
   ]
@@ -66,12 +66,16 @@ export class MongodbChartComponent implements OnInit,AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if(this.showMongoChart){
-      this.getPage(1);
-      setTimeout(() => {
-        this.populateMongodbChart();
-      }, 100);
-    }
+    // if(this.showMongoChart){
+    //   this.getPage(1);
+    //   setTimeout(() => {
+    //     this.populateMongodbChart();
+    //   }, 100);
+    // }
+  }
+  ngOnDestroy(): void {
+    this.chartIdList = [];
+    this.createdChartList=[];
   }
   populateMongodbChart(){
     if(this.accessToken != "" && this.accessToken != null){      
