@@ -44,14 +44,14 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let data of modifiedGridData | filter:filterData; let i = index"  class="grid-filter border" [ngClass]="{'d-none': onlySelected && !data.selected}">
-                            <td *ngIf="grid_row_selection" class="text-center colSticky firstCol">
+                            <td [style.background-color]="data['background-color']" *ngIf="grid_row_selection" class="text-center colSticky firstCol">
                                 <div  [ngClass]="data.selected && grid_row_refresh_icon || ((data['column_edit'] || !data['column_edit']) && editableGridColumns.length > 1 && !editEnable) ?'checkeditmode':''">
                                     <mat-checkbox  color="primary" (click)="$event.stopPropagation()" (change)="$event ? toggle(data, $event, i) : null" [checked]="data.selected" [disabled]="data.disabled" [matTooltip]="'Select'"></mat-checkbox>
                                     <span *ngIf="data.selected && grid_row_refresh_icon" class="material-icons grid-button ml-2" (click)="refreshRowWithMasterData(i)" [matTooltip]="'Refresh'">refresh</span>
                                     <span *ngIf="data.selected && editableGridColumns.length > 1 && !editEnable" class="material-icons grid-button ml-2" (click)="singleRowEdit(data)" [matTooltip]="'Edit'"><span *ngIf="!data['column_edit']">edit</span><span *ngIf="data['column_edit']">save</span></span>
                                 </div>
                             </td>
-                            <td  *ngFor="let fieldName of listOfGridFieldName; let j = index" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
+                            <td [style.background-color]="data['background-color']" *ngFor="let fieldName of listOfGridFieldName; let j = index" [style.left]="fieldName.stickyPosition" [ngClass]="{'colSticky': fieldName.sticky,'d-table-cell':fieldName.display,'d-none':!fieldName.display}">
                               <div>
                                 <div *ngIf="!fieldName.editable" class="grid-data d-flex align-items-center copyIconContainer" [style.width]="fieldName.width" [style.text-align]="fieldName.text_align">
                                     <span  [matTooltip]="data[fieldName.field_name+'_tooltip']" [matTooltipPosition]="'above'" [ngClass]="[fieldName.field_class != null && fieldName.field_class != ''?fieldName.field_class:'',fieldName.wrap != null && fieldName.wrap?'':'grid-coloumn-nowrap']"  [innerHtml]="data[fieldName.field_name]" (click)="showGriddData(data,i,fieldName)" class="copyField"></span>
@@ -85,10 +85,10 @@
                                                 <mat-datepicker #picker></mat-datepicker>
                                             </mat-form-field>
                                         </div> 
-                                        <div *ngIf="fieldName.type == 'time'">
+                                        <div *ngIf="fieldName.type == 'time' || fieldName.type == 'stdTime'">
                                             <mat-form-field appearance="outline" class="w-100">
                                                 <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" [format]="fieldName.type == 'stdTime' ? 24 : 12">
                                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                                             </mat-form-field>
 

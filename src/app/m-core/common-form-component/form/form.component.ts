@@ -131,7 +131,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
-
+  isSavedDuplicateData = false;
 
   //Google map variables
   latitude: number = 0;
@@ -819,9 +819,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
       if(this.elements.length > 0){
-        if(data && data.data){
-          if(this.elements[this.editedRowIndex]._id == data.data[0]._id){
-            this.editedRowData(data.data[0]);
+        if(data && data.length > 0){
+          if(this.elements[this.editedRowIndex]._id == data[0]._id){
+            this.editedRowData(data[0]);
           }
         }else{
           this.editedRowData(this.elements[this.editedRowIndex]);
@@ -882,6 +882,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.showNotify = result.showNotify;
       this.dataSaveInProgress = result.dataSaveInProgress;
       if(result.isStepper) this.stepper.reset();
+      if(result.saveDuplicateData) this.isSavedDuplicateData = true;
       if(result.resetForm) this.checkBeforeResetForm();
       if(result.next) this.next();
       if(result.public.check){
@@ -2847,6 +2848,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.longitude = 0;
     this.address = "";
     this.treeViewData={};
+    this.isSavedDuplicateData = false;
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
@@ -3015,6 +3017,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
     if(typeof checkValidatiaon != 'object'){
       const saveFromData = this.getSavePayloadData(dataWithCustValue);
+      if(this.isSavedDuplicateData) {
+        saveFromData['data']['confirmationRequired'] = true;
+      }
       if(this.bulkupdates){
         saveFromData.data['data'] = this.bulkDataList;
         saveFromData.data['bulk_update'] = true;
@@ -3025,6 +3030,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.saveCallSubscribe();
         }else{
           this.apiService.SaveFormData(saveFromData);
+          this.isSavedDuplicateData = false;
           this.saveCallSubscribe();
         }        
       }
