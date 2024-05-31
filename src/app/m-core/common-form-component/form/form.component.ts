@@ -881,9 +881,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.complete_object_payload_mode=result.complete_object_payload_mode;
       this.showNotify = result.showNotify;
       this.dataSaveInProgress = result.dataSaveInProgress;
-      if(result.hasOwnProperty("saveDuplicateData") && result.saveDuplicateData) {
-        this.isSavedDuplicateData = true;
-      }
+      if(result.saveDuplicateData)this.isSavedDuplicateData = true;
       if(result.isStepper) this.stepper.reset();
       if(result.resetForm) this.checkBeforeResetForm();
       if(result.next) this.next();
