@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnI
 import { NgForm, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { ActivatedRoute } from '@angular/router';
-import { ApiCallService, ApiService, AppConfig, AppConfigInterface, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, AppConfig, AppConfigInterface, CheckIfService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -24,6 +24,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: MatMenuTrigger;
 
   filterForm: UntypedFormGroup; 
+  adFilterForm : UntypedFormGroup; // adFilter Form Group
 
   // addUpdateFormResponceSubscription:Subscription;
   saveResponceSubscription:Subscription;
@@ -163,6 +164,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private downloadService:DownloadService,
     private routers: ActivatedRoute,
+    private checkIfService:CheckIfService
   ) { 
     this.getUrlParameter(); 
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
@@ -328,6 +330,22 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
         this.apiService.getStatiData(staticModalGroup);
       }  
       this.getPage(1);  
+      // Calling for create From group for adFilter
+      this.createAdFilterFormgroup();
+    }
+  }
+  createAdFilterFormgroup(){
+    const forControl = {};
+    if(this.headElements.length > 0){
+      this.headElements.forEach(element => {
+        if(element != null && element.type != null){
+          this.formCreationService.createFormControl(forControl, element, '', "text")    
+        }
+      });
+    }
+
+    if (forControl) {
+      this.adFilterForm = this.formBuilder.group(forControl);
     }
   }
   getUrlParameter(){
@@ -805,6 +823,25 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       this.apiService.GetExportCVSLink(getExportData);
     }else{
       this.permissionService.checkTokenStatusForPermission();
+    }
+  }
+  // Getting input list from adFilter component to prepare crList.
+  setCrList (list:any) {
+    this.config.adFilterList = list;
+  }
+  // Getting input from adFilter component for filter applied or not.
+  onAdFilter (isAdFilterApplied:boolean) {
+    this.config.isAdFilter = isAdFilterApplied;
+    // To enable & disable filterForm when AdFilter is applied
+    // isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
+  }
+  getGridPayloadData(pagePayload:any) {  
+    if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.config.gridDisable)){
+      this.apiService.getGridData(pagePayload);
+    }else {
+      this.config.modifyGridData = [];
+      this.config.elements = [];
+      this.gridCommonFunctionServie.setOldTabCount(this.tab);
     }
   }
   //html page call functions..............

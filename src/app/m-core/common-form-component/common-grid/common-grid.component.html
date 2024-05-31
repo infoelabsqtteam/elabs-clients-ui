@@ -17,8 +17,13 @@
                                                   <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                               </span>
                                               <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
+                                                <button mat-button class="w-100 text-left" color="primary" [title]="'Advance Filter'" [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger="matMenuTrigger" (click)="$event.stopPropagation();$event.preventDefault()"><mdb-icon class="mr-2" size="sm" fas icon="filter"></mdb-icon> Advance Filter</button>
                                                   <app-grid-column-action-menu [elements]="config.elements" [sortIcon]="config.sortIcon" [headElements]="headElements" [data]="config.modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
                                               </mat-menu>
+                                              <!-- mat menu for Advance column filter  -->
+                                              <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
+                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [pageNumber]="config.pageNumber" [itemNumOfGrid]="config.itemNumOfGrid" [adFilterMenuTrigger]="adFilterMenuTrigger" [getGridPayloadData]="getGridPayloadData.bind(this)" [tab]="tab" [currentMenu]="config.currentMenu"></app-grid-advance-filter>
+                                            </mat-menu>
                                           </div>
                                       </th>                                        
                                   </tr>
