@@ -504,7 +504,11 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if (alert.field.onchange_api_params == "" || alert.field.onchange_api_params == null) {
       this.gridData = this.selecteData;
-      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);      
+      let typegrapyCriteriaList = [];
+      if(alert.field['colorCriteria'] && this.field['colorCriteria'].length > 0){
+        typegrapyCriteriaList = alert.field['colorCriteria'];
+      }
+      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns,typegrapyCriteriaList);      
       if(this.grid_row_selection && this.modifiedGridData && this.modifiedGridData.length < 50){
         this.editEnable = true;
       }
