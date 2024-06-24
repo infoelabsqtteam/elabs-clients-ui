@@ -102,7 +102,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   selectAllcheck:boolean = false;
   tabFilterData:any=[];
   typeAheadData: string[] = [];
-  typegrapyCriteriaList:any=[];
+  typographyCrList:any=[];
   sortIcon="down"
   isHidePrintbtn:boolean = false;
   
@@ -529,7 +529,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       if (gridData.data && gridData.data.length > 0) {
         this.elements = JSON.parse(JSON.stringify(gridData.data));
         this.total = gridData.data_size;
-        this.modifyGridData = this.gridCommonFunctionServie.modifyGridData(this.elements,this.headElements,{},[],this.typegrapyCriteriaList);
+        this.modifyGridData = this.gridCommonFunctionServie.modifyGridData(this.elements,this.headElements,{},[],this.typographyCrList);
         if(this.bulkuploadList.length > 0){
           this.bulkuploadList = [];
         }
@@ -630,9 +630,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
           this.gridDisable = false;
         }
         if(grid.colorCriteria && grid.colorCriteria != null && grid.colorCriteria.length >= 1){
-          this.typegrapyCriteriaList = grid.colorCriteria;
+          this.typographyCrList = grid.colorCriteria;
         }else{
-          this.typegrapyCriteriaList = [];
+          this.typographyCrList = [];
         }
         if(this.tab.grid.heavyDownload && this.tab.grid.heavyDownload != null){
                   this.heavyDownload = true;

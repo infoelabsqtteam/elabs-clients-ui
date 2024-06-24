@@ -9,11 +9,8 @@
             tr {border-left:none !important;
                 td {background:#fff;}
                 .firstCol {left:-1px !important;}
-                &:hover {
-                    td {
-                        color: var(--fontColor) !important;
-                        background-color: var(--activebg) !important;
-                    }
+                &:hover {color: var(--fontColor) !important;background-color: var(--activebg) !important;
+                    td {background:transparent;} 
                 }
             }
         }
