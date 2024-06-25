@@ -41,7 +41,10 @@ table,table td{
 
     tbody {
         tr {
-            &:hover {td {color: $txtColor; background-color: $row-hover-color;} th {color: $txtColor; background-color: $row-hover-color;}}
+            &:hover {color: $txtColor; background-color: $row-hover-color;
+                // td {color: $txtColor; background-color: $row-hover-color;}
+                // th {color: $txtColor; background-color: $row-hover-color;}
+            }
             // &:nth-of-type(odd) td{background-color: #fff;}
             // &:nth-of-type(even) td{background-color:#fafafa;}
             td {border:0px;border-left:1px solid rgba(0, 0, 0, 0.05);padding:0px 2px;vertical-align:middle ; overflow: hidden; text-overflow: ellipsis;}
