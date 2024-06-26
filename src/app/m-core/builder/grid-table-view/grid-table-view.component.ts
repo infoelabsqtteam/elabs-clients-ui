@@ -3,7 +3,6 @@ import { Component, OnInit,Input,OnChanges, OnDestroy, SimpleChanges, ViewChild 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Subscription } from 'rxjs';
-import { GridAdvanceFilterComponent } from '../../common-component/grid-advance-filter/grid-advance-filter.component';
 import { StorageService, CommonFunctionService, PermissionService, ApiService, DataShareService, NotificationService, MenuOrModuleCommonService, GridCommonFunctionService, ApiCallService, FormCreationService, CheckIfService, RouterService, AppConfig, AppConfigInterface, CoreFunctionService } from '@core/web-core';
 import { CommonGridComponent } from '../../common-form-component/common-grid/common-grid.component';
 
@@ -33,8 +32,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
 
   public appConfig:AppConfigInterface = AppConfig;
 
-  @ViewChild(CommonGridComponent) gridPage!: CommonGridComponent;
-  @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent! : GridAdvanceFilterComponent; // adFilter Component.
+  @ViewChild(CommonGridComponent) gridPage!: CommonGridComponent;  
   @Input() selectTabIndex:number;
   @Input() selectContact:string;
 
@@ -294,6 +292,6 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
   }
   // Calling the clear Filter fn from adFilter component.
   clearAdFilter (){
-    this.advanceFilterComponent.clearAdFilter();
+    this.gridPage.clearAdFilter();
   }
 }

@@ -295,8 +295,10 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   updateTabsDynamically(tabs:[]) {
     if(this.tabsGroup && tabs && tabs.length>0){
       let moreMenuWidth = Math.ceil((this.selectedMoreMenu.length * 6)+35);
-      const tabGroupWidth = this.tabsGroup.nativeElement.offsetWidth-moreMenuWidth;
-      let tabsWidth: number = 0;
+      let offSetWidth = this.tabsGroup.nativeElement.offsetWidth;
+      if(offSetWidth){
+        const tabGroupWidth = offSetWidth-moreMenuWidth;
+        let tabsWidth: number = 0;
         tabs.forEach((tab: HTMLElement) => {
           tabsWidth += this.calculateTabWidth(tab).width;
         });
@@ -313,6 +315,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
           this.tabSliceCount = sliceCount;
           this.hasOverflow = true;
         } else this.hasOverflow = false;
+      }
     }
   }
 

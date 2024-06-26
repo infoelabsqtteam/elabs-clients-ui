@@ -4,6 +4,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ActivatedRoute } from '@angular/router';
 import { ApiCallService, ApiService, AppConfig, AppConfigInterface, CheckIfService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
+import { GridAdvanceFilterComponent } from '../../common-component/grid-advance-filter/grid-advance-filter.component';
 
 @Component({
   selector: 'app-common-grid',
@@ -16,6 +17,8 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
 
   @Input() headElements:any;
   @Input() tab:any;
+
+  @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent; // adFilter Component.
 
   @Output() editedRowData = new EventEmitter<any>();
   @Output() dinamicForm = new EventEmitter<any>();
@@ -961,6 +964,10 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   onBulkUpdate(){
     this.config.isBulkUpdate = true;
     this.dinamicForm.emit({'formName':'NEW','form':null});
+  }
+  // Calling the clear Filter fn from adFilter component.
+  clearAdFilter (){
+    this.advanceFilterComponent.clearAdFilter();
   }
 
 }
