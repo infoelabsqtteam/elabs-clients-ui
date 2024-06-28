@@ -1,37 +1,21 @@
 <div class="container-fluid position-relative">
   <mat-tab-group *ngIf="chartPermission" [selectedIndex]="selected.value"  mat-align-tabs="start" (selectedIndexChange)="getTabIndex($event)">
-    <mat-tab>
+    <mat-tab *ngFor="let component of components; let i = index">
       <ng-template mat-tab-label>
-        <div class="mat-tab-label-content px-3 py-2" >Chart</div>
+        <div class="mat-tab-label-content px-3 py-2">{{ component.label }}</div>
       </ng-template>
-      <app-mongodb-chart *ngIf="mongodbChartShow"  [showMongoChart]="mongodbChartShow"></app-mongodb-chart> 
+      <app-mongodb-chart  *ngIf="selected.value === i && component.selector == 'app-mongodb-chart'"></app-mongodb-chart> 
+      <app-chart *ngIf="selected.value === i && component.selector == 'app-chart'" ></app-chart> 
+      <app-dashboard-chart *ngIf="selected.value === i && component.selector == 'app-dashboard-chart'" ></app-dashboard-chart>
+      <app-grid *ngIf="selected.value === i && component.selector == 'app-grid'" ></app-grid>
+      <app-count-dashbord *ngIf="selected.value === i && component.selector == 'app-count-dashbord'" ></app-count-dashbord>
     </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <div class="mat-tab-label-content px-3 py-2" >Old Chart</div>
-      </ng-template>
-      <app-chart *ngIf="isShow" [isShow]="isShow"></app-chart>  
-    </mat-tab>  
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <div class="mat-tab-label-content px-3 py-2" >Dashboard</div>
-      </ng-template>
-       <app-dashboard-chart *ngIf="dashboardMongodbChartShow" [showDashboardMongoChart]="dashboardMongodbChartShow"></app-dashboard-chart>   
-    </mat-tab> 
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <div class="mat-tab-label-content px-3 py-2" >In Progress Records</div>
-      </ng-template>
-      <app-grid *ngIf="isShowGrid" [isShowGrid]="isShowGrid"></app-grid>
-    </mat-tab>  
   </mat-tab-group>  
-
 
   <section class="maindashboard" *ngIf="!chartPermission">
     <div class="dashboardcard d-flex align-items-center justify-content-between">
       <h1>Welcome to {{welcometitle}}</h1>
       <img src="assets/img/welcomeimg.png" class="300px">
     </div>
-
   </section>
 </div>

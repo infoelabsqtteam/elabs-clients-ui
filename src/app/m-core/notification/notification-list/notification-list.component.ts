@@ -32,7 +32,6 @@ export class NotificationListComponent implements OnInit {
     private checkIfService:CheckIfService
   )
   { 
-    this.apiCallService.getUserNotification(this.pageNumber);
     this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
         if (data && data.data && data.data.length > 0) {
             this.setUserNotification(data.data);
@@ -233,8 +232,6 @@ export class NotificationListComponent implements OnInit {
       }      
     }else{
       return obj['days'] +" days ago";
-    }
-  }
-  
-
+      }
+    }    
 }

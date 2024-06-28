@@ -13,7 +13,7 @@ export class AuditHistoryComponent implements OnInit {
 
   @Input() id: string;
   @ViewChild('auditHistory') public auditHistory: ModalDirective;
-  aduitTabIndex;
+  // aduitTabIndex;
   selectedTab: any;
   allVersionList:any;
   objectid:any;
@@ -59,8 +59,8 @@ export class AuditHistoryComponent implements OnInit {
   }
 
   showModal(object) {
-    this.aduitTabIndex = object["aduitTabIndex"];
-    this.selectedTab = object["tabname"][this.aduitTabIndex];
+    // this.aduitTabIndex = object["aduitTabIndex"];
+    this.selectedTab = object["tabname"];
     if(this.selectedTab && this.selectedTab.grid && this.selectedTab.grid.action_buttons) {
       this.gridButton =this.selectedTab.grid.action_buttons;
     }else {

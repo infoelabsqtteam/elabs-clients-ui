@@ -56,14 +56,14 @@ body {font-family:$roboto;font-size:13px;}
 }
 
 .headerMoreMenu {
-    .mat-menu-item.active {
+    button.mat-menu-item.active {
       color: #3f51b5 !important; // Adjust text color for better visibility
     }
   }
 .headermenu {
     ul {
-        li {padding:0 7px;border-bottom:2px solid #fff;position:relative;
-            a {font-size:12px;}
+        li {padding:0 5px;border-bottom:2px solid #fff;position:relative;
+            a {font-size:12px}
         }
         li.active::after {content:"";border-bottom:2px solid #3f51b5;position:absolute;width:100%;bottom:-10px;left:0;}
         .submenulist {display:none;}

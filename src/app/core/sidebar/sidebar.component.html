@@ -1,5 +1,5 @@
 <section class="vertical-menu sidenav">
-  <div class="sidefilter px-3 mb-4"><input type="text" [(ngModel)]="modal" [placeholder]="'Search Modules...'"/></div>
+  <div class="sidefilter px-3 mb-4"><input type="text" [(ngModel)]="modal" [placeholder]="'Search Modules...'" (keyup)="searchDashbord(modal) "/></div>
   <!-- <perfect-scrollbar> -->
   <ng-scrollbar #scrollable visibility="hover" appearance="standard" pointerEventsMethod="scrollbar">
     <div class="metismenu list-unstyled mb-5" #sideMenu>
