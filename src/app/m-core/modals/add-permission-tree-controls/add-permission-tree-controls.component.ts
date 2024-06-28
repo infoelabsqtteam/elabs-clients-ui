@@ -371,7 +371,7 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       }else{ 
         let oldValue = this.crListFieldType;
         this.crListFieldType = '';
-        if(this.criteria.value[key].fValue && typeof this.criteria.value[key].fValue == 'object'){
+        if(this.criteria?.value[key]?.fValue && typeof this.criteria?.value[key]?.fValue == 'object'){
           this.modifyCrListController(key);
         } 
         if(oldValue == 'daterange'){

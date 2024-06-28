@@ -139,7 +139,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       this.selectTabIndex = -1;
       this.selected = new UntypedFormControl(0);   
       this.currentMenu = this.storageService.GetActiveMenu();
-      if (this.currentMenu  && this.currentMenu.name) {
+      if (this.currentMenu  && this.currentMenu?.name) {
         const payload = this.apiCallService.getTemData(this.currentMenu.name); 
         this.apiService.GetTempData(payload);     
       }
@@ -442,10 +442,10 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
         this.grid_view_mode="inlineFormView";
       }
       else{        
-        if(tab && tab.grid && tab.grid.grid_view && tab.grid.grid_view != null && tab.grid.grid_view != undefined && tab.grid.grid_view != ''){
+        if(tab && tab?.grid && tab?.grid?.grid_view && tab?.grid?.grid_view != null && tab?.grid?.grid_view != undefined && tab?.grid?.grid_view != ''){
           this.grid_view_mode=tab.grid.grid_view; 
         }
-        else if(tab && tab.chart_list != null && tab.chart_list != undefined && tab.chart_list != ''){
+        else if(tab && tab?.chart_list != null && tab?.chart_list != undefined && tab?.chart_list != ''){
           this.grid_view_mode="chartView";
         }
         else{

@@ -426,7 +426,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
   }
   setDownloadPdfData(downloadPdfData){
-    if (downloadPdfData != '' && downloadPdfData != null && this.config.downloadPdfCheck != '') {
+    if (downloadPdfData && this.config?.downloadPdfCheck) {
       let link = document.createElement('a');
       link.setAttribute('type', 'hidden');
       const file = new Blob([downloadPdfData.data], { type: "application/pdf" });
@@ -474,19 +474,19 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
   } 
   setExportExcelLink(exportExcelLink:any){
-    if (exportExcelLink != '' && exportExcelLink != null && this.config.downloadClick != '') {
+    if (exportExcelLink && this.config?.downloadClick) {
       this.config.downloadClick = this.downloadService.downloadExcelFromLink(exportExcelLink,this.config.downloadClick);
     }
   }
   setDinamicForm(form){
-    if(form && form.DINAMIC_FORM && this.config.flagForTdsForm){
+    if(form && form?.DINAMIC_FORM && this.config?.flagForTdsForm){
       this.config.flagForTdsForm = false;
       this.dinamicForm.emit({'formName':'DINAMIC_FORM','form':form.DINAMIC_FORM});
       this.apiCallService.getRealTimeGridData(this.config.currentMenu, this.config.elements[this.config.currentRowIndex]);
     } 
   }
   handleExportCsv(data){
-    if(data != null && data != undefined ){
+    if(data){
       this.notificationService.notify("bg-success", " File is under processing");
     }else{
       this.notificationService.notify("bg-danger", " Data issue");
@@ -530,7 +530,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   }
   openTreeView(field) {
     let fieldName;
-    if( field && field.field_list_tree_view_object && field.field_list_tree_view_object.field_list_name){
+    if( field && field?.field_list_tree_view_object && field?.field_list_tree_view_object?.field_list_name){
       fieldName = field.field_list_tree_view_object;
     }else{
       fieldName = field;
@@ -539,7 +539,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     this.config.treeViewData[fieldName.field_name] = [];
     this.config.curTreeViewField = fieldName;
     const staticModalGroup = [];
-    if (fieldName.api_params && fieldName.api_params != '') {
+    if (fieldName.api_params) {
       staticModalGroup.push(this.apiCallService.getPaylodWithCriteria(fieldName.api_params, fieldName.call_back_field, fieldName.api_params_criteria, {}));
     }
     if(staticModalGroup.length > 0){
@@ -601,7 +601,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   }
   gridButtonAction(index,button){
     let gridData = this.config.elements[index];
-    if(button && button.onclick && button.onclick.action_name){
+    if(button && button?.onclick && button?.onclick?.action_name){
       switch (button.onclick.action_name.toUpperCase()) {
         case "PREVIEW":
           this.config.checkPreviewData = true;
@@ -796,7 +796,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
   }
   PageSizeChange(event: any): void {
-    if(event.target.value && event.target.value != "") {
+    if(event?.target?.value) {
       this.config.itemNumOfGrid = event.target.value;
     }else {
       this.config.itemNumOfGrid = this.gridCommonFunctionServie.getNoOfItems( this.tab.grid,this.storageService.getDefaultNumOfItem());
@@ -886,7 +886,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     })
   }
   setSaveResponce(saveFromDataRsponce){
-    if (saveFromDataRsponce.success != '' && this.config.updateGridData) {
+    if (saveFromDataRsponce?.success != '' && this.config?.updateGridData) {
       if (saveFromDataRsponce.success == 'success') {
         this.config.updateGridData = false;
         this.notificationService.notify("bg-success", " Grid Data Update successfull !!!");
@@ -894,7 +894,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       }
       this.apiService.ResetSaveResponce();
     }
-    if (saveFromDataRsponce.error && saveFromDataRsponce.error != '' && this.config.updateGridData) {
+    if (saveFromDataRsponce?.error && saveFromDataRsponce?.error != '' && this.config?.updateGridData) {
       this.notificationService.notify("bg-danger", saveFromDataRsponce.error);
       this.config.updateGridData = false;
       this.apiService.ResetSaveResponce();

@@ -92,8 +92,8 @@ export class NotificationSettingComponent implements OnInit,OnDestroy {
   saveCallSubscribe(){
     this.saveResponceSubscription = this.dataShareService.saveResponceData.subscribe(responce =>{
       if (responce) {
-        if (responce.success && responce.success != '') {
-            if (responce.success == 'success') {
+        if (responce?.success) {
+            if (responce?.success == 'success') {
                 this.isPageLoading=false;
                 this.notificationService.notify("bg-success","Notification setting updated successfully!");
             }

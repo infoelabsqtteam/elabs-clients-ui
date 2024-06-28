@@ -4,7 +4,7 @@
         <span><h4  style="margin-bottom: 0; font-weight:400;">{{data.menu.name | titlecase}}</h4></span>
         <button class=" ml-auto mr-2 closebutton d-flex align-items-center justify-content-center" [mat-dialog-close]="{data}"><i class="material-icons">close</i></button>
         </div>
-        <div *ngIf="data.menu.templateTabs && data.menu.templateTabs.length>0">
+        <div *ngIf="data?.menu?.templateTabs && data?.menu?.templateTabs.length>0">
             <mat-list >
                 <mat-list-item *ngFor="let tab of data.menu.templateTabs" style="display: block;">
                   <span style="font-weight: 500">{{ tab.name }}</span>
