@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div *ngIf="fieldName.type.toLowerCase() == 'date'">
+                            <div *ngIf="fieldName?.type.toLowerCase() == 'date'">
                                 <div class="row m-0 w-100">
                                     <div class="col-lg-5">
                                         <div>{{fieldName.label}} <span *ngIf="fieldName.is_mandatory && fieldName.editable" class="text-danger"> *</span></div>

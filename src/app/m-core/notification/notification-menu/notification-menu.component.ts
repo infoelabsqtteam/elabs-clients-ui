@@ -33,11 +33,11 @@ export class NotificationMenuComponent implements OnInit,OnDestroy {
     if (this.notifyMenuTrigger?.menuOpen) {
        this.notifyMenuTrigger.closeMenu();
     }
-    if (data.notificationStatus === 'UNREAD') {
+    if (data?.notificationStatus === 'UNREAD') {
       this.notificationService.markUsRead(data);
       this.saveCallSubscribe();
     }
-    if(data && data.url){
+    if(data && data?.url){
       this.router.navigate([data.url])
     }      
   }
@@ -49,7 +49,7 @@ export class NotificationMenuComponent implements OnInit,OnDestroy {
   }
 
   setSaveResponce(saveFromDataRsponce){
-    if (saveFromDataRsponce && saveFromDataRsponce.success != '') {
+    if (saveFromDataRsponce && saveFromDataRsponce?.success) {
       if (saveFromDataRsponce.success == 'success') {
         this.apiCallService.getUserNotification(1);
       }

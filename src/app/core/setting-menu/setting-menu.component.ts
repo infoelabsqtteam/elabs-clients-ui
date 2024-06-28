@@ -135,7 +135,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         this.userNotificationSettingSubscription=this.dataShareService.userNotificationSetting.subscribe((res)=>{
             if(res){
                 this.isPageLoading =false;
-                if(this.rightsidenav.opened){
+                if(this.rightsidenav?.opened){
                     this.rightsidenav.toggle();
                 }
             }     
@@ -852,7 +852,7 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
     }
 
     gotoNotificationPage(){
-        if(this.rightsidenav.opened){
+        if(this.rightsidenav?.opened){
             this.rightsidenav.toggle();
         }
         this.router.navigate(["browse/NOTIFY/notification_settings/user_notification_master"]);  

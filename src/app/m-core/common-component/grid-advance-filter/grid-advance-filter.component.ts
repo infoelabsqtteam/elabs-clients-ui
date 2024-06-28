@@ -75,7 +75,7 @@ export class GridAdvanceFilterComponent implements OnInit {
           let startDate =  this.startDateInput.nativeElement.value;
           let endDate =  this.endDateInput.nativeElement.value;
 
-            if(startDate && startDate != '' && endDate && endDate != ''){
+            if(startDate && endDate){
               let crList = [
                 ...this.prepareCrList(fieldNameToUpdate,startDate,type,"gte"),
                 ...this.prepareCrList(fieldNameToUpdate,endDate,type,"lte")

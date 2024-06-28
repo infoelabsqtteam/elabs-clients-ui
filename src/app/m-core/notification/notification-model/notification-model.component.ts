@@ -21,7 +21,7 @@ ngOnInit(): void {
 }
 checkAllTabAlerts(){
     let flag=false;
-    if(this.data.module && this.data.module.menu_list){
+    if(this.data?.module && this.data?.module?.menu_list){
       this.data.module.menu_list.forEach((menu:any)=>{
         if(menu.templateTabs && menu.templateTabs.length>0){
           menu.templateTabs.forEach((tab:any)=>{

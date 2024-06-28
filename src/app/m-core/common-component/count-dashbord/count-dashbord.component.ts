@@ -77,7 +77,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     let tabs =[];
     let tab:any= {};
     if (tempData && tempData.length > 0) {
-      if(tempData[0] && tempData[0].templateTabs && tempData[0].templateTabs.length > 0){
+      if(tempData[0] && tempData[0]?.templateTabs && tempData[0]?.templateTabs.length > 0){
         tabs = this.menuOrModuleCommounService.viewPermissionInTabs(tempData[0].templateTabs);
       }
       let index = -1;
@@ -141,7 +141,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     this.modalService.open('form-modal',formData);    
   }
   setExportExcelLink(exportExcelLink:any){
-    if (exportExcelLink != '' && exportExcelLink != null && this.downloadClick != '') {
+    if (exportExcelLink && this.downloadClick) {
       this.downloadClick = this.downloadService.downloadExcelFromLink(exportExcelLink,this.downloadClick);
     }
   }
@@ -193,7 +193,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
     this.apiService.getTabCountData(payloads); 
   }
   prepareTab(module,menu,parent){
-    if(menu && menu.tabList && menu.tabList.length > 0){
+    if(menu && menu?.tabList && menu?.tabList.length > 0){
       let list=[];
       menu.tabList.forEach((tab,i) => {
         let field_name = tab?.field_name;
@@ -283,7 +283,7 @@ export class CountDashbordComponent implements OnInit,OnDestroy {
       if(this.tabList && this.tabList.length > 0){
         this.tabList.forEach((tempTab:any) => {
           let tab = {...tempTab};
-          if(tab && tab.grid && tab.grid.api_params_criteria && tab.grid.api_params_criteria.length > 0){
+          if(tab && tab?.grid && tab?.grid?.api_params_criteria && tab?.grid?.api_params_criteria.length > 0){
             crList.forEach(cr =>{
               tab.grid.api_params_criteria.push(cr);
             })

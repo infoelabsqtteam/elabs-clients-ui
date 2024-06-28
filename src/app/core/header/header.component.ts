@@ -391,7 +391,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewChecked, OnC
             this.menuOrModuleCommounService.getTemplateData(module,submenu);
         }
         if(menuSliceCount){
-            this.selectedMenu = submenu.label;
+            this.selectedMenu = submenu?.label;
             this.closeMatMenus(submenu);
         } else {
             this.selectedMenu = "More";
