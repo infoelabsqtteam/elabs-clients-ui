@@ -339,8 +339,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
         this.isGridSelectionOpen= data;
     })
-    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
-      this.updateRunningData(data.data); 
+    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(res =>{
+      this.updateRunningData(res.data); 
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
@@ -815,13 +815,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.apiService.ResetDownloadUrl();
     }
   }
-  updateRunningData(data:any){
+  updateRunningData(listData:any){
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
       if(this.elements.length > 0){
-        if(data && data.length > 0){
-          if(this.elements[this.editedRowIndex]._id == data[0]._id){
-            this.editedRowData(data[0]);
+       if(listData && listData.length > 0){
+          if(this.elements[this.editedRowIndex]._id == listData[0]._id){
+            this.editedRowData(listData[0]);
           }
         }else{
           this.editedRowData(this.elements[this.editedRowIndex]);
@@ -830,9 +830,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.selectedRowIndex = -1;
       if(this.editedRowIndex == -1) {
-        if(data && data._id == undefined) {
+        if(listData && listData._id == undefined) {
           setTimeout(() => {
-            this.updateDataOnFormField(data);
+            this.updateDataOnFormField(listData);
           }, 100);
         }
       }
