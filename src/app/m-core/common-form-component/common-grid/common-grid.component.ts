@@ -17,6 +17,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
 
   @Input() headElements:any;
   @Input() tab:any;
+  @Input() selectContact:string;
 
   @ViewChild(GridAdvanceFilterComponent) advanceFilterComponent : GridAdvanceFilterComponent; // adFilter Component.
 
@@ -523,7 +524,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     // console.log(this.config.bulkuploadList)
   }
   applyFilter() {
-    let responce = this.gridCommonFunctionServie.applyFilter(this.config.modifyGridData,this.config.elements,this.tab,this.config.currentMenu,this.headElements,this.filterForm.getRawValue(),{},this.config.itemNumOfGrid,this.config.gridDisable);
+    let responce = this.gridCommonFunctionServie.applyFilter(this.config.modifyGridData,this.config.elements,this.tab,this.config.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,this.config.itemNumOfGrid,this.config.gridDisable);
     this.config.modifyGridData = responce.modifyGridData;
     this.config.elements = responce.elements;
     this.config.pageNumber = responce.pageNumber;
