@@ -254,9 +254,11 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
     this.appConfig.selectedRowIndex = -1;
     this.appConfig.formName = '';
     this.appConfig.currentBrowseUrl = this.routerService.updateRouteUrl(this.appConfig.selectedRowIndex,this.appConfig.elements,this.appConfig.currentBrowseUrl).currentBrowseUrl;
+    this.gridPage.getPage(this.gridPage.config.pageNumber);
     if(this.addUpdateFormResponceSubscription){
       this.addUpdateFormResponceSubscription.unsubscribe();
     }  
+    
   }
   addNewForm(formName,form?:any,isBulkUpdate?:boolean,bulkuploadList?:any){
     if(this.selectContact != ''){

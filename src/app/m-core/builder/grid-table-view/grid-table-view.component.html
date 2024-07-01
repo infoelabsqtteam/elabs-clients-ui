@@ -15,4 +15,4 @@
         <app-grid-filter-menu [extraClass]="'filterbtn float-right'" [columns]="appConfig.headElements"></app-grid-filter-menu>
     </div>
 </section>
-<app-common-grid [tab]="appConfig.tab" [headElements]="appConfig.headElements"  (editedRowData)="seteditedRowData($event)" (dinamicForm)="openDinamicForm($event)"></app-common-grid>
+<app-common-grid [tab]="appConfig.tab" [headElements]="appConfig.headElements"  (editedRowData)="seteditedRowData($event)" (dinamicForm)="openDinamicForm($event)" [selectContact]="selectContact"></app-common-grid>
