@@ -307,9 +307,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.gridDataSubscription = this.dataShareService.gridData.subscribe(data =>{
       this.setGridData(data);
     })
-    this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
-      this.setTempData(temp);
-    })   
+    // this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
+    //   this.setTempData(temp);
+    // })   
     this.requestResponceSubscription = this.dataShareService.requestResponce.subscribe(responce =>{      
       this.serverReq = responce;
       this.checkFormFieldIfCondition();
@@ -535,12 +535,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     // this.mapsApiLoaded();
     this.gmapSearchPlaces();    
   }
+  
 
-  showModal(object){
-    this.custmizedFormValue = {}    
-    this.modifyCustmizedFormValue = {};
-    this.formModal.show();
-  }  
+  // showModal(object){
+  //   this.custmizedFormValue = {}    
+  //   this.modifyCustmizedFormValue = {};
+  //   this.formModal.show();
+  // }  
   
   //Subsribe Variable Responce Handlin Start ------------------
   setStaticData(staticDatas){   
@@ -830,10 +831,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.selectedRowIndex = -1;
       if(this.editedRowIndex == -1) {
-        if(listData && listData._id == undefined) {
-          setTimeout(() => {
-            this.updateDataOnFormField(listData);
-          }, 100);
+        if(listData && listData._id == undefined) {          
+          this.updateDataOnFormField(listData);          
         }
       }
     }
@@ -891,7 +890,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
         }
         this.router.navigate([result.public.url]);
       }
-      
+      this.apiCallService.getUserNotification(1);
       if(result.resetResponce) this.apiService.ResetSaveResponce();
       if(result.successAction) this.checkOnSuccessAction();
       if(result.message && result.message.msg && result.message.msg != ''){

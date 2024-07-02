@@ -9,10 +9,11 @@ import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { FormComponent } from './form/form.component';
-import { CommonComponentModule } from '../common-component/common-component.module';
+import { CommonGridComponent } from './common-grid/common-grid.component';
 
 const components = [
-  FormComponent
+  FormComponent,
+  CommonGridComponent
 ];
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const maskConfig: Partial<IConfig> = {
@@ -30,8 +31,7 @@ const maskConfig: Partial<IConfig> = {
     NgxMaskModule.forRoot(maskConfig),
     ModelModule,
     AllPackageModule,
-    GoogleMapsModule,
-    CommonComponentModule
+    GoogleMapsModule
   ],
   exports:components,
   declarations: components

@@ -4,9 +4,11 @@
 </div> -->
 <section [class]="themeName">
     <router-outlet></router-outlet>
+    <app-file-views-modal id="fileview-grid-modal"></app-file-views-modal>
 </section>
 <!-- <app-footer></app-footer> -->
 <app-setting-modal id="app-setting-modal" (appSettingModalResponce)="appSettingModalResponce($event)"></app-setting-modal>
 <!-- <a (click)="openSettingModel()" class="setting-icon" *ngIf="showHideSetting">
     <span class="material-icons-outlined">settings</span>
 </a> -->
+

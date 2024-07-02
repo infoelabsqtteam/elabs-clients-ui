@@ -2,32 +2,40 @@
     <div class="card-header d-flex align-items-center">
         <mat-icon class="mr-2">settings</mat-icon>
         <strong class="h6 m-0 text-muted">Notificatoin Setting</strong>
+        <button mat-button color="primary" class="ml-auto mr-2" (click)="saveNotification()">Save</button>
     </div>
-
-    <div class="card-body p-0">
+    <div class="notification-list">
         <mat-accordion>
-            <mat-expansion-panel *ngFor="let item of AllModuleList; let i = index">
-                <mat-expansion-panel-header>
-                    <mat-panel-title class="d-flex align-items-center"><mat-icon class="mr-2">settings</mat-icon> {{ item.title }}</mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <div *ngFor="let subitem of item.menu_list; let i = index">
-                    <div *ngIf="!hasSubMenu(subitem)" class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                        <small class="text-muted">{{ subitem.label }}</small>
-                        <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="1"><label class="custom-control-label" for="1"></label></div>
-                    </div>
-
-                    <mat-accordion class="notificationmenu">
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header class=" border-bottom pb-2 mb-2" *ngIf="hasSubMenu(subitem)">{{ subitem.label }}</mat-expansion-panel-header>
-                            <div class="d-flex justify-content-between mb-2" *ngFor="let subSubitem of subitem.submenu; let i = index">
-                                <small class="text-muted">{{ subSubitem.label }}</small>
-                                <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="customSwitch2"><label class="custom-control-label" for="customSwitch2"></label></div>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+          <mat-expansion-panel *ngFor="let module of AllModuleList;let i=index">
+              <mat-expansion-panel-header>
+                {{ module.name }}
+                <mat-slide-toggle class="ml-auto mr-3"  color="primary" #menukey  value="module.name" (change)="menuNotification($event,menukey,module,i)" (click)="$event.stopPropagation()" [checked]="module.notification"></mat-slide-toggle>
+              </mat-expansion-panel-header>
+            <ng-container *ngFor="let menu of module.menu_list" >
+              <mat-list>
+                <mat-list-item  *ngIf="menu?.submenu==null" (click)="openDialog(menu,module)" class="list">
+                    <span style="font-size: 15px;font-weight: 400;">{{ menu.name | titlecase }}</span>
+                    <span class="ml-auto"><i class="fa-solid fa-arrow-right gray"></i></span>
+                </mat-list-item>
+              </mat-list>    
+                  <ng-container *ngIf="menu?.submenu!=null">
+                    <mat-expansion-panel class="NotificationsubMenu">
+                      <mat-expansion-panel-header class="px-3 list">
+                        {{ menu.name | titlecase }}
+                      </mat-expansion-panel-header>
+                      <mat-list>
+                        <mat-list-item *ngFor="let submenu of menu.submenu" (click)="openDialog(submenu,module)" class="list">
+                            <span style="font-size: 15px;font-weight: 400;">{{ submenu.name }}</span>
+                            <span class="ml-auto"><i class="fa-solid fa-arrow-right gray" ></i></span>
+                        </mat-list-item>
+                      </mat-list>
+                    </mat-expansion-panel>
+                  </ng-container>
+            </ng-container>
+          </mat-expansion-panel>
+        </mat-accordion>       
     </div>
 </section>
+<div class="loader-overlay" *ngIf="isPageLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
