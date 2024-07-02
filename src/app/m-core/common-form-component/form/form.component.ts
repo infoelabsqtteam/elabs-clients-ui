@@ -831,10 +831,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.selectedRowIndex = -1;
       if(this.editedRowIndex == -1) {
-        if(listData && listData._id == undefined) {
-          setTimeout(() => {
-            this.updateDataOnFormField(listData);
-          }, 100);
+        if(listData && listData._id == undefined) {          
+          this.updateDataOnFormField(listData);          
         }
       }
     }
