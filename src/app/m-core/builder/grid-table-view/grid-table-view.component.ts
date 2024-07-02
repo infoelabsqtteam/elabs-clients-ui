@@ -247,7 +247,9 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
         });
       }
       this.addNewForm('NEW');
-      this.dataShareService.shareGridRunningData({"data" : copyObject});
+      setTimeout(() => {
+        this.dataShareService.shareGridRunningData({"data" : copyObject});
+      },100)
     }
   }
   addAndUpdateResponce(element) {
