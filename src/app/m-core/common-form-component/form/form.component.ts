@@ -522,6 +522,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if(this.validationConditionSubscription){
       this.validationConditionSubscription.unsubscribe();
     }
+    if(this.gridRealTimeDataSubscription){
+      this.gridRealTimeDataSubscription.unsubscribe();
+    }
   }
   ngOnChanges(changes: SimpleChanges) {
     //this.formIndex=0;   
