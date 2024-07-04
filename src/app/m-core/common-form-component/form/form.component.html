@@ -322,7 +322,7 @@
                         <div *ngIf="tableField.type == 'list_of_checkbox'">
                             <div class="row m-0 w-100">
                                 <div class="col-lg-12 px-0">
-                                    <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
+                                    <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}} ({{staticData[tableField.ddn_field] ? staticData[tableField.ddn_field].length: "0"}}) <sup [ngClass]="tableField.is_mandatory ? 'text-danger': ''" *ngIf="tableField.is_mandatory">*</sup></div>
                                 </div>
                             </div>
                             <div class="row" *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 16">
@@ -330,7 +330,7 @@
                             </div>
                             <div class="row" [formArrayName]="tableField.field_name">
                                 <div class="col-lg-3" *ngFor="let order of staticData[tableField.ddn_field] | filter:term[tableField.field_name]; let i = index">
-                                    <mat-checkbox color="primary" class="example-margin" [formControlName]="i">{{order.name ? order.name : order}}</mat-checkbox>
+                                    <mat-checkbox color="primary" [formControlName]="i">{{order.name ? order.name : order}}</mat-checkbox>
                                 </div>
                             </div>
                         </div>
