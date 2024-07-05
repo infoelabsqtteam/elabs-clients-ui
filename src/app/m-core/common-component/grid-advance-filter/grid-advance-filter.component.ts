@@ -17,6 +17,7 @@ export class GridAdvanceFilterComponent implements OnInit {
   @Input() itemNumOfGrid:any;
   @Input() getGridPayloadData:(payLoad:any)=>void;
   @Input() adFilterMenuTrigger!:MatMenuTrigger;
+  @Input() menMenuTrigger!:MatMenuTrigger;
   @Input() tab:any;
   @Input() currentMenu:any;
   @Input() adFilterForm: FormGroup;
@@ -165,6 +166,7 @@ export class GridAdvanceFilterComponent implements OnInit {
       this.isAdFilter.emit(this.adFilterApplied);
       // this.notificationService.notify('bg-success',"Filter Applied Successfully");
       this.closeAdFilterMenu();
+      this.closeMenFilterMenu();
     }  
     // calling apply filter function
     this.applyFilter(this.crList);
@@ -263,6 +265,15 @@ export class GridAdvanceFilterComponent implements OnInit {
         this.adFilterMenuTrigger.closeMenu();
       },200)
     }
+  }
+
+  //
+  closeMenFilterMenu(){
+    if(this.menMenuTrigger){
+      setTimeout(()=>{
+        this.menMenuTrigger.closeMenu();
+      },200)
+    }    
   }
 
   // focusOnSearchField() {
