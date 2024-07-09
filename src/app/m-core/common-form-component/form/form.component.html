@@ -330,7 +330,7 @@
                             </div>
                             <div class="row" [formArrayName]="tableField.field_name">
                                 <div class="col-lg-3" *ngFor="let order of staticData[tableField.ddn_field] | filter:term[tableField.field_name]; let i = index">
-                                    <mat-checkbox color="primary" [formControlName]="i">{{order.name ? order.name : order}}</mat-checkbox>
+                                    <mat-checkbox class="example-margin" color="primary" [formControlName]="i">{{order.name ? order.name : order}}</mat-checkbox>
                                 </div>
                             </div>
                         </div>
