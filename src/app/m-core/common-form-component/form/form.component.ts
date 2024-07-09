@@ -131,7 +131,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   checkForDownloadReport:boolean = false;
   currentActionButton:any={};
   saveResponceData:any={};
-
+  isSavedDuplicateData = false;
 
   //Google map variables
   latitude: number = 0;
@@ -339,8 +339,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.gridSelectionOpenOrNotSubscription = this.dataShareService.getIsGridSelectionOpen.subscribe(data =>{
         this.isGridSelectionOpen= data;
     })
-    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(data =>{
-      this.updateRunningData(data.data);
+    this.gridRealTimeDataSubscription = this.dataShareService.gridRunningData.subscribe(res =>{
+      this.updateRunningData(res.data); 
     })
     this.nextFormSubscription = this.dataShareService.nextFormData.subscribe(data => {
       if(!this.enableNextButton && !this.onchangeNextForm && data && data.data && data.data.length > 0){
@@ -815,13 +815,13 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.apiService.ResetDownloadUrl();
     }
   }
-  updateRunningData(data:any){
+  updateRunningData(listData:any){
     if (this.editedRowIndex >= 0) {
       this.selectedRowIndex = this.editedRowIndex;
       if(this.elements.length > 0){
-        if(data && data.data){
-          if(this.elements[this.editedRowIndex]._id == data.data[0]._id){
-            this.editedRowData(data.data[0]);
+       if(listData && listData.length > 0){
+          if(this.elements[this.editedRowIndex]._id == listData[0]._id){
+            this.editedRowData(listData[0]);
           }
         }else{
           this.editedRowData(this.elements[this.editedRowIndex]);
@@ -830,9 +830,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }else{
       this.selectedRowIndex = -1;
       if(this.editedRowIndex == -1) {
-        if(data && data._id == undefined) {
+        if(listData && listData._id == undefined) {
           setTimeout(() => {
-            this.updateDataOnFormField(data);
+            this.updateDataOnFormField(listData);
           }, 100);
         }
       }
@@ -882,6 +882,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.showNotify = result.showNotify;
       this.dataSaveInProgress = result.dataSaveInProgress;
       if(result.isStepper) this.stepper.reset();
+      if(result.saveDuplicateData) this.isSavedDuplicateData = true;
       if(result.resetForm) this.checkBeforeResetForm();
       if(result.next) this.next();
       if(result.public.check){
@@ -2847,6 +2848,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     this.longitude = 0;
     this.address = "";
     this.treeViewData={};
+    this.isSavedDuplicateData = false;
     this.checkFormAfterCloseModel();
   }
   checkFormAfterCloseModel(){
@@ -3015,6 +3017,9 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     let checkValidatiaon = this.commonFunctionService.sanitizeObject(this.tableFields,this.getFormValue(false),true,dataWithCustValue);
     if(typeof checkValidatiaon != 'object'){
       const saveFromData = this.getSavePayloadData(dataWithCustValue);
+      if(this.isSavedDuplicateData) {
+        saveFromData['data']['confirmationRequired'] = true;
+      }
       if(this.bulkupdates){
         saveFromData.data['data'] = this.bulkDataList;
         saveFromData.data['bulk_update'] = true;
@@ -3025,6 +3030,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
           this.saveCallSubscribe();
         }else{
           this.apiService.SaveFormData(saveFromData);
+          this.isSavedDuplicateData = false;
           this.saveCallSubscribe();
         }        
       }

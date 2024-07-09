@@ -114,7 +114,11 @@ export class GridSelectionModalComponent implements OnInit {
       if(this.setGridData && this.field.ddn_field && data[this.field.ddn_field] && data[this.field.ddn_field] != null){
         this.setStaticData(data);
         if(this.gridData.length > 0 && this.listOfGridFieldName.length > 0){
-          this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);
+          let typographyCrList = [];
+          if(this.field['colorCriteria'] && this.field['colorCriteria'].length > 0){
+            typographyCrList = this.field['colorCriteria']
+          }
+          this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.gridData,this.listOfGridFieldName,this.field,this.editableGridColumns,typographyCrList);
           if(this.modifiedGridData && this.modifiedGridData.length < 50){
             this.editEnable = true;
           }
@@ -500,7 +504,11 @@ export class GridSelectionModalComponent implements OnInit {
     }
     if (alert.field.onchange_api_params == "" || alert.field.onchange_api_params == null) {
       this.gridData = this.selecteData;
-      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns,[]);      
+      let typographyCrList = [];
+      if(alert.field['colorCriteria'] && this.field['colorCriteria'].length > 0){
+        typographyCrList = alert.field['colorCriteria'];
+      }
+      this.modifiedGridData = this.gridCommonFunctionService.modifyGridData(this.selecteData,this.listOfGridFieldName,this.field,this.editableGridColumns,typographyCrList);      
       if(this.grid_row_selection && this.modifiedGridData && this.modifiedGridData.length < 50){
         this.editEnable = true;
       }
@@ -859,7 +867,8 @@ export class GridSelectionModalComponent implements OnInit {
   deleteitem() {
     this.parentObj[this.fieldNameForDeletion.field_name].splice(this.deleteIndex, 1)
   }
-  showGriddData(index,column){
+  showGriddData(data,indx,column){
+    let index = this.CommonFunctionService.getCorrectIndex(data,indx,this.field,this.gridData,this.filterData);
     let value={};
     let rowData = this.gridData[index];
     let columnData = rowData[column.field_name];
