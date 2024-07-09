@@ -17,7 +17,7 @@ export class GridAdvanceFilterComponent implements OnInit {
   @Input() itemNumOfGrid:any;
   @Input() getGridPayloadData:(payLoad:any)=>void;
   @Input() adFilterMenuTrigger!:MatMenuTrigger;
-  @Input() menMenuTrigger!:MatMenuTrigger;
+  @Input() mainMenuTrigger!:MatMenuTrigger;
   @Input() tab:any;
   @Input() currentMenu:any;
   @Input() adFilterForm: FormGroup;
@@ -269,9 +269,9 @@ export class GridAdvanceFilterComponent implements OnInit {
 
   //
   closeMenFilterMenu(){
-    if(this.menMenuTrigger){
+    if(this.mainMenuTrigger){
       setTimeout(()=>{
-        this.menMenuTrigger.closeMenu();
+        this.mainMenuTrigger.closeMenu();
       },200)
     }    
   }
