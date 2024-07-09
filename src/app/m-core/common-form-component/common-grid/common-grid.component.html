@@ -14,7 +14,7 @@
                                               <span  class="grid-heading-nowrap resizeGridColunms" (click)="onSort(headElements[i])" [title]="head.label">{{ head.label | titlecase }}</span>
                                               <span class="show-on-hover mr-1">
                                                   <mdb-icon fas icon="sort" (click)="onSort(headElements[i])" [matTooltip]="'Sort'" [matTooltipPosition]="'above'" class="px-1"></mdb-icon>
-                                                  <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
+                                                  <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" #menMenuTrigger="matMenuTrigger" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                               </span>
                                               <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
                                                 <button mat-button class="w-100 text-left" color="primary" [title]="'Advance Filter'" [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger="matMenuTrigger" (click)="$event.stopPropagation();$event.preventDefault()"><mdb-icon class="mr-2" size="sm" fas icon="filter"></mdb-icon> Advance Filter</button>
@@ -22,7 +22,7 @@
                                               </mat-menu>
                                               <!-- mat menu for Advance column filter  -->
                                               <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [pageNumber]="config.pageNumber" [itemNumOfGrid]="config.itemNumOfGrid" [adFilterMenuTrigger]="adFilterMenuTrigger" [getGridPayloadData]="getGridPayloadData.bind(this)" [tab]="tab" [currentMenu]="config.currentMenu"></app-grid-advance-filter>
+                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [pageNumber]="config.pageNumber" [itemNumOfGrid]="config.itemNumOfGrid" [adFilterMenuTrigger]="adFilterMenuTrigger" [menMenuTrigger]="menMenuTrigger" [getGridPayloadData]="getGridPayloadData.bind(this)" [tab]="tab" [currentMenu]="config.currentMenu"></app-grid-advance-filter>
                                             </mat-menu>
                                           </div>
                                       </th>                                        
