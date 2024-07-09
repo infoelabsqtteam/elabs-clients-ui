@@ -3049,7 +3049,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     const downloadPdfFileFromFormData = this.getSavePayloadData();
     this.saveCallSubscribe();
     if(downloadPdfFileFromFormData != null){
-      downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
+      if(this.currentActionButton?.onclick?.action_name != '_id') downloadPdfFileFromFormData.data['_id'] = downloadPdfFileFromFormData.curTemp;
       let fileName = this.apiCallService.downloadPdf(downloadPdfFileFromFormData.data,downloadPdfFileFromFormData.curTemp);
       this.dataShareService.sharePdfFileName(fileName);      
     }
