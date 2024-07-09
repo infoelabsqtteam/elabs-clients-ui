@@ -166,7 +166,7 @@ export class GridAdvanceFilterComponent implements OnInit {
       this.isAdFilter.emit(this.adFilterApplied);
       // this.notificationService.notify('bg-success',"Filter Applied Successfully");
       this.closeAdFilterMenu();
-      this.closeMenFilterMenu();
+      this.closeMainFilterMenu();
     }  
     // calling apply filter function
     this.applyFilter(this.crList);
@@ -268,7 +268,7 @@ export class GridAdvanceFilterComponent implements OnInit {
   }
 
   //
-  closeMenFilterMenu(){
+  closeMainFilterMenu(){
     if(this.mainMenuTrigger){
       setTimeout(()=>{
         this.mainMenuTrigger.closeMenu();
