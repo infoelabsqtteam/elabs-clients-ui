@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../angular-material-module/angular-material.module';
 import { DirectiveModuleModule } from '../directive-module/directive-module.module';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { IConfig, NgxMaskDirective, provideEnvironmentNgxMask, provideNgxMask, } from 'ngx-mask';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ModelModule } from '../modals/model.module';
 import { AllPackageModule } from '../all-package/all-package.module';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -28,14 +28,12 @@ const maskConfig: Partial<IConfig> = {
     DirectiveModuleModule,
     ReactiveFormsModule,
     FormsModule,
-    // NgxMaskModule.forRoot(maskConfig),
-    NgxMaskDirective,
+    NgxMaskModule.forRoot(maskConfig),
     ModelModule,
     AllPackageModule,
     GoogleMapsModule
   ],
   exports:components,
-  declarations: components,
-  providers: [provideEnvironmentNgxMask(maskConfig),provideNgxMask()]
+  declarations: components
 })
 export class CommonFormComponentModule { }

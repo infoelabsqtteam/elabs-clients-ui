@@ -126,21 +126,13 @@
                       <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term['fValue']" [ngModelOptions]="{standalone: true}"></div>
                       
                       <!-- <mat-select-trigger> {{userCrListContral['fValue']?.value ? userCrListContral['fValue']?.value[0]?.name : ''}} <span *ngIf="userCrListContral['fValue']?.value?.length > 1"> (+{{userCrListContral['fValue']?.value.length - 1}} others)</span></mat-select-trigger> -->
-<<<<<<< HEAD
                       <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
-=======
-                      <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue._id" ><span>{{staticValue.name}}</span>
->>>>>>> 8365086bf6aeef2fe5eb23fd0c8ddb77de288920
                       </mat-option>
                   </mat-select>
                   <mat-select  [compareWith]="compareObjects" [formControlName]="'fValue'" multiple *ngIf="checkMultiple">
                     <div class="p-1 searchdropdown bg-white"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="term['fValue']" [ngModelOptions]="{standalone: true}"></div>                
                     
-<<<<<<< HEAD
                     <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue" ><span [innerHtml]="staticValue.name"></span>
-=======
-                    <mat-option *ngFor="let staticValue of staticData['user_value_list']" [class.d-none]="term['fValue'] && term['fValue'] !== '' && staticValue.name && staticValue.name.toLowerCase().indexOf(term['fValue'].toLowerCase()) === -1" [value]="staticValue._id" ><span>{{staticValue.name}}</span>
->>>>>>> 8365086bf6aeef2fe5eb23fd0c8ddb77de288920
                     </mat-option>
                 </mat-select>
 
