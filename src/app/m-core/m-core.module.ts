@@ -5,7 +5,7 @@ import { DocumentModule } from './document/document.module';
 import { FormModelModule } from './modals/form-model.module';
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { IConfig, NgxMaskDirective, provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask';
 
 import { McoreComponent } from './m-core.component';
 import { HomeComponent } from './home/home.component';
@@ -65,7 +65,8 @@ const maskConfig: Partial<IConfig> = {
     imports: [      
         McoreRoutingModule,        
         MDBBootstrapModule.forRoot(),         
-        NgxMaskModule.forRoot(maskConfig),
+        // NgxMaskModule.forRoot(maskConfig),
+        NgxMaskDirective,
         CoreModule,           
         DocumentModule,
         FormModelModule,

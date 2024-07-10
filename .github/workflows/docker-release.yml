@@ -42,14 +42,14 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v2
       with:
-        node-version: '14.21.3'
+        node-version: '18.20.2'
     
     - name: Installing NPM and Angular
       run: |         
         CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
         aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 292474393014 --region ap-south-1
         echo $CODEARTIFACT_AUTH_TOKEN        
-        npm install -g @angular/cli@14.2.13
+        npm install -g @angular/cli@15.2.10
         npm install
         
     
