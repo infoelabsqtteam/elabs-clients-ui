@@ -14,7 +14,7 @@ a:hover {text-decoration:none;}
     .mat-icon {font-size:12px;margin:0;width:auto;height:auto;}
 }
 .mat-mdc-icon-button.smbtn-circle {width:24px;height:24px;padding:0px;
-    .mat-icon {font-size:15px;margin:0;width:auto;height:auto;}
+    // .mat-icon {font-size:15px;margin:0;width:auto;height:auto;}
 }
 .mat-mdc-icon-button.plusicon {width:30px;height:30px;padding:0px;
     .mat-icon {font-size:22px;margin:0;width:auto;height:auto;}
@@ -293,7 +293,7 @@ i.fas{
     border-radius: 4px;
     overflow: visible;
 }
-.mat-mdc-card-content{
+app-common-grid .mat-mdc-card-content{
     padding: 0px!important;
 }
 .role-button .mdc-button__label{

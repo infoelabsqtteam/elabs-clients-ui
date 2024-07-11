@@ -28,7 +28,7 @@
 .password {position:relative;
   input {padding-right:0px;}
   button {position:absolute;right:5px;bottom:7px;
-    mat-icon {font-size:17px;}
+    mat-icon {font-size:17px;line-height: 25px;}
   }
   small {position:absolute;left:0;bottom:-20px;font-size:9px;}
 }
