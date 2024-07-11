@@ -272,3 +272,36 @@ body.modal-open .modal-backdrop {display:none !important;}
 i.fas{
     cursor: pointer !important;
 }
+.mdc-button{
+    box-sizing: border-box;
+    position: relative;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+}
+.mat-mdc-card-content{
+    padding: 0px!important;
+}
+.role-button .mdc-button__label{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 50px;
+    max-width: 100px;
+}
+.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab{
+    flex-grow: 0!important;
+}

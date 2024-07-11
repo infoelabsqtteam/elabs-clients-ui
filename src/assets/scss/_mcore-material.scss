@@ -38,7 +38,9 @@ body {font-family:$roboto;font-size:13px;}
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
+        gap: 0px;
+        height: 60px;
+        line-height: 60px;
         .mdc-icon-button{
             display:flex;
         }
