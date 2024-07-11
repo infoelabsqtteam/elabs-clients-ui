@@ -1,7 +1,7 @@
 .modal-dialog {
     .modal-body {min-height:200px;padding:15px 17px 0px!important;
         .row > .row {margin:0;}
-        .modelplusbtn {width:40px;height:40px;border-radius:0 5px 5px 0;right:0;top:0;margin:0;background:var(--buttonColor);
+        .modelplusbtn {width:35px;height:35px;border-radius:0 5px 5px 0;right:0;top:0;margin:0;background:var(--buttonColor);
             mat-icon {font-size:18px;width:auto;height:auto;}
         }
         .modelplusbtn.firstlistofbtn {border-radius:5px 0 0 5px;margin-right:2px;}
@@ -23,4 +23,7 @@
         .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {color:var(--buttonColor) !important;}
         .fileuploadicon {width:auto;height:auto;vertical-align:middle;}
     }
+}
+.mat-mdc-form-field-subscript-wrapper{
+    height: 15px!important;
 }
