@@ -13,8 +13,10 @@
           </mat-tab>
           <mat-tab *ngIf="hasOverflow">
             <ng-template mat-tab-label>
-              <div class="mat-tab-label-content moreBtn pl-1 py-2" [matMenuTriggerFor]="tabExtraMenu" [title]="selectedMoreMenu">
-                <span>{{selectedMoreMenu}}</span><mat-icon>more_vert</mat-icon>
+              <div class="mat-tab-label-content moreBtn pl-1 py-2" [matMenuTriggerFor]="tabExtraMenu" [title]="selectedMoreMenu != 'More' ?selectedMoreMenuTab?.label : selectedMoreMenu">
+                <span *ngIf="selectedMoreMenu != 'More'">{{selectedMoreMenuTab?.label}}({{gridCountByTab[selectedMoreMenuTab.tab_name+'_'+selectedMoreMenuTab.name]}})</span>
+                <span *ngIf="selectedMoreMenu == 'More'" >{{selectedMoreMenu}}</span>
+                <mat-icon>more_vert</mat-icon>
               </div>
             </ng-template>
           </mat-tab>
