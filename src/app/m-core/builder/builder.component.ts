@@ -41,6 +41,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   
   // For Responsive Tabs
   selectedMoreMenu = "More";
+  selectedMoreMenuTab:any = {};
   tabSliceCount : number;
   hasOverflow=false;
   @ViewChild('tabsGroup') tabsGroup: ElementRef;
@@ -424,8 +425,10 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       if(sliceCount){
         i = i+sliceCount;  
         this.selectedMoreMenu = this.calculateTabWidth(this.tabs[i]).label;
+        this.selectedMoreMenuTab = this.tabs[i];
       } else{
-        this.selectedMoreMenu = "More"
+        this.selectedMoreMenu = "More";
+        this.selectedMoreMenuTab = {};
       }
       this.selectTabIndex = i;  
       this.getViewMode(this.selectTabIndex); 
