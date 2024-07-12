@@ -164,7 +164,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       }else{
         this.appConfig.headElements = [];
       } 
-      if(grid && grid?.details && grid?.details != null){
+      if(grid && grid?.details){
         this.appConfig.details = grid.details;
       }
       if(this.appConfig.tab.forms && this.appConfig.tab.forms != undefined && this.appConfig.tab.forms != null){
