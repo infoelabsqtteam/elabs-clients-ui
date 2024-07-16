@@ -16,7 +16,7 @@
                             <mat-label>User<span class="mat-placeholder-required mat-form-field-required-marker ng-tns-c16-1 ng-star-inserted"> *</span></mat-label>
                             <input type="text" placeholder="user" matInput [formControlName]="'user'" [matAutocomplete]="first" (keyup)="updateData($event)">
                             <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" [displayWith]="getOptionText">
-                                <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="getddnDisplayVal(option)"></mat-option>
+                                <mat-option *ngFor="let option of typeAheadData" [value]="option">{{getddnDisplayVal(option)}}</mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
                     </div>

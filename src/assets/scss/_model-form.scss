@@ -1,31 +1,29 @@
 .modal-dialog {
     .modal-body {min-height:200px;padding:15px 17px 0px!important;
         .row > .row {margin:0;}
-        .modelplusbtn {width:40px;height:37px;border-radius:0 5px 5px 0;right:0;margin:0;background:var(--buttonColor);}
+        .modelplusbtn {width:35px;height:35px;border-radius:0 5px 5px 0;right:0;top:0;margin:0;background:var(--buttonColor);
+            mat-icon {font-size:18px;width:auto;height:auto;}
+        }
         .modelplusbtn.firstlistofbtn {border-radius:5px 0 0 5px;margin-right:2px;}
         .dropdowndata {
-            .mat-form-field-infix {padding-right:50px !important;}
             .autosuggestion {position:absolute;width:100%;left:0;top:40px;z-index:999;background:#fff;padding:10px;box-shadow:0 0 5px #ccc;display:none;
                 .typeahead-example-box {
                     p {border-radius:5px;}
                 }
             }
+            .btncounter {position:absolute;right:40px;top:5px;}
+            .btncounter span {font-size:12px;background:var(--buttonColor);display:inline-block;margin:5px;color:#fff;padding:0 7px;border-radius:5px;opacity:0.5;}
             &:hover {
                .autosuggestion {display:block;}  
             }
-        }
-        .fullscreenMap {position:relative;
-            .mapFullScreen {position:absolute;right:0;top:7px;background:#efefef;height:34px;width:35px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
         }
         .addrefreshiconbtn {position:absolute;top:10px;right:0;width:auto;}  
         //// Model Button Background and color Set
         .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {background:var(--buttonColor) !important;}
         .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {color:var(--buttonColor) !important;}
         .fileuploadicon {width:auto;height:auto;vertical-align:middle;}
-
-        .fullscreenMap {
-            .mat-form-field-appearance-outline .mat-form-field-infix {padding-right:40px !important;}
-        }
-        .typeheaderrormsg {color:red;position:absolute;bottom:-10px;left:0;z-index:3;}
     }
+}
+.mat-mdc-form-field-subscript-wrapper{
+    height: 15px!important;
 }
