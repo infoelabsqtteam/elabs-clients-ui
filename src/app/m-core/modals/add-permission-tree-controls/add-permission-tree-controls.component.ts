@@ -342,8 +342,12 @@ export class AddPermissionTreeControlsComponent implements OnInit {
       this.operators=
       this.staticData[callBackField] = this.coreFunctionService.getOperators(operatorType,OperatorKey.NAME);
       if(dataKey == 'user_filter_field_list' && field.onchange_api_params && field.onchange_api_params != ''){
+        let fieldCriteria = [];
+        if(field.onchange_api_params_criteria){
+          fieldCriteria = field.onchange_api_params_criteria;
+        }
         this.subscribeStaticData();
-        let payload = this.apiCallService.getPaylodWithCriteria(field.onchange_api_params,"user_value_list",[],{});
+        let payload = this.apiCallService.getPaylodWithCriteria(field.onchange_api_params,"user_value_list",fieldCriteria,{});
         this.apiService.getStatiData([payload]);
       }
     }
