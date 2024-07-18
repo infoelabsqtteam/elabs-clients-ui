@@ -1,4 +1,4 @@
-<div class="resizable modal-content" id="form_resize" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
+<div class="resizable modal-content mat-typography" id="form_resize" [formGroup]="templateForm" *ngIf="tableFields.length > 0 && templateForm && templateForm.controls" [ngClass]="grid_view_mode != 'inlineFormView'?'':'border-0'">
     <!--Header-->
     <div class="modal-header justify-content-center" *ngIf="grid_view_mode != 'inlineFormView'">
         <div class="form-tab d-flex">
@@ -322,7 +322,7 @@
                         <div *ngIf="tableField.type == 'list_of_checkbox'">
                             <div class="row m-0 w-100">
                                 <div class="col-lg-12 px-0">
-                                    <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}}</div>
+                                    <div class="form-label grid-selection-title mb-1">{{ tableField.label | titlecase}} ({{staticData[tableField.ddn_field] ? staticData[tableField.ddn_field].length: "0"}}) <sup [ngClass]="tableField.is_mandatory ? 'text-danger': ''" *ngIf="tableField.is_mandatory">*</sup></div>
                                 </div>
                             </div>
                             <div class="row" *ngIf="staticData[tableField.ddn_field] && staticData[tableField.ddn_field].length > 16">
@@ -1078,7 +1078,10 @@
                             <button mdbBtn type="button" size="sm" class="btn-public rounded bg-cerulean text-white" (click)="partialDataSave(tableField.onclick, tableField)" mdbWavesEffect [disabled]="tableField.is_disabled">{{tableField.label}}</button>
                         </div>
                         <div *ngIf="tableField.type == 'file'">
-                            <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg"> {{tableField.label}}</button> 
+                            <button class="btn filebtn btn-rounded btn-sm waves-light" (click)="uploadModal('',tableField,i,-1)" mdbWavesEffect [disabled]="tableField.is_disabled"><img src="assets/img/svg-icon/upload.svg">
+                                {{tableField.label}}
+                                <sup *ngIf="tableField.is_mandatory">*</sup>
+                            </button> 
                             <!-- list of attachment files -->
                             <div *ngIf="dataListForUpload && dataListForUpload[tableField.field_name] && dataListForUpload[tableField.field_name].length > 0">
                                 <table mdbTable small="true" bordered="true">

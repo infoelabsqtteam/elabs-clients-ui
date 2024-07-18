@@ -78,8 +78,10 @@ table,table td{
 
 }
 
-
-.filterbtn.mat-icon-button {width:30px;height:30px;line-height:30px;margin-top:-3px;
+.heading .columsFilterIcon{
+    display: inline-block !important;
+}
+.mat-icon-button.filterbtn {width:30px;height:30px;line-height:30px;margin-top:-3px;
     mat-icon {font-size:16px;}
 }
 .filterdrowdownmenu {margin-top:5px;min-width:160px !important;
@@ -99,7 +101,7 @@ table,table td{
         color: $txtColor;
     }
 }
-.tablist {padding-right:260px;
+.tablist {
     .mat-tab-label-active {border-radius:5px 5px 0 0;background:$buttoncolor;color:#000;}
 }
 
@@ -235,3 +237,19 @@ td{.copyicon {background-color:var(--activebg);position:absolute;right: -5px;cur
     .copyField{ display: block; overflow:hidden; text-overflow: ellipsis;}}
 
 .notAllow{cursor: no-drop !important;}
+
+// Advance filter css
+.filter-flex-container {max-width: 228px;border-radius: 5px;padding: 15px;display: flex;flex-direction: column;justify-content: flex-start;align-items: stretch;
+    .ad-filter-label {text-align: center;font-weight: 600;}
+    .filter-flex-item {padding: 5px;border: 1px;flex-shrink: 1;flex-basis: auto;align-self: auto;
+        input {line-height: 1.5;}
+        .clearInput{position:$absolute;top:$size10;cursor:$pointer;color:$colorred;right:$size9;font-size: 16px;text-align: center; }
+    }
+    .h-44p{height: 44px;}
+    .h-80p{height: 80px;}
+    .adFilterBtn{display: flex;justify-content: center;margin-top: 10px;}
+}
+
+.theme-bg{
+    background-color: $themecolor !important;
+}

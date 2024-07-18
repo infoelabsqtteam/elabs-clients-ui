@@ -79,16 +79,14 @@
                                         </div>
                                         <div *ngIf="fieldName.type == 'date'">
                                             <mat-form-field appearance="outline" class="w-100">
-                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                                <input matInput [matDatepicker]="picker" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
+                                                <input matInput [matDatepicker]="picker" [placeholder]="fieldName.placeholder ? fieldName.placeholder:'dd/mm/yyyy'" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                                 <mat-datepicker #picker></mat-datepicker>
                                             </mat-form-field>
                                         </div> 
                                         <div *ngIf="fieldName.type == 'time'">
                                             <mat-form-field appearance="outline" class="w-100">
-                                                <mat-label>{{ fieldName.label | titlecase}}</mat-label>
-                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder | titlecase" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']" [format]="fieldName.time_format && fieldName.time_format == '24' ? 24 : 12">
+                                                <input matInput [ngxTimepicker]="picker" [placeholder]="fieldName.placeholder ? fieldName.placeholder : 'HH:MM AM/PM'" [(ngModel)]="data[fieldName.field_name]" [disabled]="data[fieldName.field_name+'_disabled']">
                                                 <ngx-material-timepicker #picker></ngx-material-timepicker>
                                             </mat-form-field>
 

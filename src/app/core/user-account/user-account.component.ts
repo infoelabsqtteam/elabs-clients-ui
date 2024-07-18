@@ -1,14 +1,17 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit,OnDestroy, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSidenav } from '@angular/material/sidenav';
-import { AuthService,DataShareService,MenuOrModuleCommonService, StorageService } from '@core/web-core';
 // import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService,MenuOrModuleCommonService, StorageService,CommonFunctionService ,ApiCallService,ApiService,DataShareService} from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-account',
   templateUrl: './user-account.component.html',
   styleUrls: ['./user-account.component.css']
 })
-export class UserAccountComponent implements OnInit {
+export class UserAccountComponent implements OnInit,OnDestroy {
 
   @Input() rightsidenav: MatSidenav;
   roleList:any=[];
@@ -16,18 +19,40 @@ export class UserAccountComponent implements OnInit {
   filterdata:any;
   showsearchmenu = false;
   AllModuleList: any = [];
-
+  userNotificationSubscription:Subscription;
+  saveResponceSubscription:Subscription;
+  noOfNotification:any=0;
+  notificationlist=[];
+  @ViewChild('notifyMenuTrigger') notifyMenuTrigger:MatMenuTrigger;
   constructor(    
     // @Inject(DOCUMENT) private document: Document,
     private storageService:StorageService,    
     private authApiService:AuthService,
-    private dataShareService:DataShareService,
     private menuOrModuleCommounService:MenuOrModuleCommonService,
+    private apiCallService:ApiCallService,
+    private dataShareService:DataShareService,
+    private apiService:ApiService,
+    private commonFunctionService:CommonFunctionService,
+    private router:Router
   ) { 
     this.pageload();
+    this.apiCallService.getUserNotification(1);
+    this.userNotificationSubscription = this.dataShareService.userNotification.subscribe(data => {
+        if (data && data.data && data.data.length > 0) {
+            this.notificationlist=data.data.slice(0,5);
+            this.noOfNotification=data.data.filter((ele)=>ele.notificationStatus== "UNREAD").length;
+        }
+        else{
+          this.notificationlist=[];
+          this.noOfNotification=0;
+        }
+    });
   }
 
   ngOnInit() {
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe(this.userNotificationSubscription);
   }
   pageload(){
     this.AllModuleList = this.storageService.GetModules();
@@ -75,6 +100,9 @@ export class UserAccountComponent implements OnInit {
     }
   }
 
+  getNotification(){
+    this.apiCallService.getUserNotification(1);
+  }
 
   searchmodel(data:string) {
     this.filterdata = data;
@@ -97,5 +125,11 @@ export class UserAccountComponent implements OnInit {
             this.menuOrModuleCommounService.getTemplateData(module,menu)
         }
     }
+
+  unsubscribe(variable){
+    if(variable){
+      variable.unsubscribe();
+    }
+  }
 
 }

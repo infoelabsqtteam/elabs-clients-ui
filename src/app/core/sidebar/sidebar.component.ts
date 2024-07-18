@@ -100,7 +100,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
     }
     this.unsubscribe(this.saveResponceSubscription);
-}
+  }
+
+  searchDashbord(value:string){
+    this.dataShareService.shareDashbordSerach(value);
+  }
 
   /**
    * Initialize

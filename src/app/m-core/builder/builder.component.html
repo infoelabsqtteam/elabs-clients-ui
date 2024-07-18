@@ -1,75 +1,80 @@
 <div class="row m-0 w-100 position-relative">
-    <div class="px-0 py-1" [ngClass]="isTabFilter?'col-lg-2':'d-none'">
-        <app-sidebar-search (sidebarSearch)="sidebarSearchResponce($event)"></app-sidebar-search>
-    </div>
-    <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
+  <div class="px-0 py-1" [ngClass]="isTabFilter?'col-lg-2':'d-none'">
+      <app-sidebar-search (sidebarSearch)="sidebarSearchResponce($event)"></app-sidebar-search>
+  </div>
+  <div  [ngClass]="isTabFilter?'col-lg-10':'col-lg-12'">
+      <div class="tablist position-relative d-flex col-lg-9 col-md-8 col-sm-12 col-9 px-0" #tabsGroup>
+        <mat-tab-group [disablePagination]="true" animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+          <mat-tab *ngFor="let tab of (!!tabSliceCount ? (tabs| slice:0:tabSliceCount) : tabs); let i = index" >
+            <ng-template mat-tab-label>
+              <div class="mat-tab-label-content pl-3 pr-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
+              <span class="favibtn" [ngClass]="{'active':tab.favourite,'d-none': !tab.display}" (click)="addFebTab(tab,'')"><mat-icon>grade</mat-icon></span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab *ngIf="hasOverflow">
+            <ng-template mat-tab-label>
+              <div class="mat-tab-label-content moreBtn pl-1 py-2" [matMenuTriggerFor]="tabExtraMenu" [title]="selectedMoreMenu != 'More' ?selectedMoreMenuTab?.label : selectedMoreMenu">
+                <span *ngIf="selectedMoreMenu != 'More'">{{selectedMoreMenuTab?.label}}({{gridCountByTab[selectedMoreMenuTab.tab_name+'_'+selectedMoreMenuTab.name]}})</span>
+                <span *ngIf="selectedMoreMenu == 'More'" >{{selectedMoreMenu}}</span>
+                <mat-icon>more_vert</mat-icon>
+              </div>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+  </div>
 
-        <div class="tablist position-relative d-flex">
-          <mat-tab-group animationDuration="0ms" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
-            <mat-tab *ngFor="let tab of tabs; let i = index" >
-              <ng-template mat-tab-label>
-                <div class="mat-tab-label-content pl-3 pr-1 py-2" [ngClass]="{'d-none': !tab.display}" (click)="getTab(i,tab.tab_name,$event)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
-                <span class="favibtn" [ngClass]="{'active':tab.favourite,'d-none': !tab.display}" (click)="addFebTab(tab,'')"><mat-icon>grade</mat-icon></span>
-              </ng-template>
-            </mat-tab>
-          </mat-tab-group>
-        <button *ngIf="tabs.length>5" mat-icon-button [matMenuTriggerFor]="tabExtraMenu" [title]="'More Tabs'">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
 
-
-    <mat-menu #tabExtraMenu="matMenu">
-      <ng-container *ngFor="let tab of tabs; let i = index">
-        <div class="tabExtraMenu">
-          <div class="pl-3 pr-1 py-2 d-flex align-items-center tab" [ngClass]="{ 'd-none': !tab.display }"
-            (click)="getTab(i, tab.tab_name, $event)">
-            <div class="tab-content">
-              <span>{{ gateTabName(tab) }}</span>
-              <span>({{ gridCountByTab[tab.tab_name + "_" + tab.name] }})</span>
-            </div>
-            <span class="favibtn" [ngClass]="{ 'active': tab.favourite, 'd-none': !tab.display }"
-            (click)="addFebTab(tab,'')">
-              <mat-icon class="moreMenuFavIcon">grade</mat-icon>
-            </span>
+  <mat-menu #tabExtraMenu="matMenu">
+    <ng-container *ngFor="let tab of tabs | slice : tabSliceCount ; let i = index">
+      <div class="tabExtraMenu" *ngIf="tab" [ngClass]="isTabActive(tab) ? 'activetxt' : ''">
+        <div class="pl-3 pr-1 py-2 d-flex align-items-center tab" [ngClass]="{ 'd-none': !tab.display }"
+          (click)="getTab(i, tab.tab_name, $event,tabSliceCount)">
+          <div class="tab-content">
+            <span>{{ gateTabName(tab) }}</span>
+            <span>({{ gridCountByTab[tab.tab_name + "_" + tab.name] }})</span>
+          </div>
+          <span class="favibtn" [ngClass]="{ 'active': tab.favourite, 'd-none': !tab.display }"
+          (click)="addFebTab(tab,'')">
+            <mat-icon class="moreMenuFavIcon">grade</mat-icon>
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  </mat-menu>
+  <!-- <div class="tablist position-relative">
+          <button class="preview" id="firstbtn" (click)="previous()" *ngIf="tabs.length > 6"><mat-icon>arrow_back_ios</mat-icon></button>
+        <div class="gridtabs" id="tabdiv">
+          <div class="tabsmenu" *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
+              <div class="tabtitle" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
+              <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
           </div>
         </div>
-      </ng-container>
-    </mat-menu>
-    <!-- <div class="tablist position-relative">
-            <button class="preview" id="firstbtn" (click)="previous()" *ngIf="tabs.length > 6"><mat-icon>arrow_back_ios</mat-icon></button>
-          <div class="gridtabs" id="tabdiv">
-            <div class="tabsmenu" *ngFor="let tab of tabs; let i = index" [ngClass]="selectTabIndex == i ? 'mat-tab-label-active':''">
-                <div class="tabtitle" (click)="getTab(i,tab.tab_name)">{{ gateTabName(tab) }} <span>({{gridCountByTab[tab.tab_name+'_'+tab.name]}})</span></div>
-                <span class="favibtn" [ngClass]="{'active': checkFebMenuAddOrNot(tab,'')}" (click)="addFebMenu(tab,'')"><mat-icon>grade</mat-icon></span>
-            </div>
-          </div>
-          <button class="next" id="lastbtn" (click)="next()" *ngIf="tabs.length > 6"><mat-icon>arrow_forward_ios</mat-icon></button>
-        </div> -->
+        <button class="next" id="lastbtn" (click)="next()" *ngIf="tabs.length > 6"><mat-icon>arrow_forward_ios</mat-icon></button>
+      </div> -->
 
 
-        <div *ngIf="grid_view_mode == 'tableView' && tabs.length > 0">
-            <app-grid-table-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact' ></app-grid-table-view>
-        </div>
-        <div *ngIf="grid_view_mode == 'cardView' && tabs.length > 0">
-            <app-grid-card-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact'></app-grid-card-view>    
-        </div>
-        <div *ngIf="grid_view_mode == 'chartView' && tabs.length > 0">
-            <app-chart-view [selectTabIndex]='selectTabIndex' ></app-chart-view>    
-        </div>
-        <div *ngIf="grid_view_mode == 'inlineFormView'">
-            <app-inline-form-view class="inline-form" [selectTabIndex]='selectTabIndex' ></app-inline-form-view>
-            <!--app-inline-form-view [selectTabIndex]='selectTabIndex' ></app-inline-form-view-->
-        </div>
-         <div *ngIf="grid_view_mode == 'chatView' && tabs.length > 0">
-            <app-chat-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact'></app-chat-view>   
-        </div>
-        <div *ngIf="grid_view_mode == 'gmapView'">
-            <app-gmap-view></app-gmap-view>
-        </div>
-    </div>
+      <div *ngIf="grid_view_mode == 'tableView' && tabs.length > 0">
+          <app-grid-table-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact' ></app-grid-table-view>
+      </div>
+      <div *ngIf="grid_view_mode == 'cardView' && tabs.length > 0">
+          <app-grid-card-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact'></app-grid-card-view>    
+      </div>
+      <div *ngIf="grid_view_mode == 'chartView' && tabs.length > 0">
+          <app-chart-view [selectTabIndex]='selectTabIndex' ></app-chart-view>    
+      </div>
+      <div *ngIf="grid_view_mode == 'inlineFormView'">
+          <app-inline-form-view class="inline-form" [selectTabIndex]='selectTabIndex' ></app-inline-form-view>
+          <!--app-inline-form-view [selectTabIndex]='selectTabIndex' ></app-inline-form-view-->
+      </div>
+       <div *ngIf="grid_view_mode == 'chatView' && tabs.length > 0">
+          <app-chat-view [selectTabIndex]='selectTabIndex' [selectContact]='selectContact'></app-chat-view>   
+      </div>
+      <div *ngIf="grid_view_mode == 'gmapView'">
+          <app-gmap-view></app-gmap-view>
+      </div>
+  </div>
 </div>
 
 <div class="loader-overlay" *ngIf="isPageLoading">
-  <mat-spinner diameter="50"></mat-spinner>
+<mat-spinner diameter="50"></mat-spinner>
 </div>
