@@ -227,8 +227,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
 
   ngOnInit() {
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.config.pageLoading=true;
+  ngOnChanges(changes: SimpleChanges) {    
     // this.config.gridButtons=[];   
     this.config.elements=[];
     this.config.modifyGridData = [];
@@ -236,6 +235,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     this.config.details = {};
     this.config.currentMenu = this.storageService.GetActiveMenu();
     if(this.tab && this.tab.grid){
+      this.config.pageLoading=true;
       this.config.itemNumOfGrid = this.storageService.getDefaultNumOfItem();
       if(!this.config.createFilterFormgroup) this.config.createFilterFormgroup = true;
       if(!this.config.createFilterHeadElement) this.config.createFilterHeadElement = true;
