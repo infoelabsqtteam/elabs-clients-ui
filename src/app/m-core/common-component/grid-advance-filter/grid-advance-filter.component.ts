@@ -15,7 +15,7 @@ export class GridAdvanceFilterComponent implements OnInit {
   @Input() headElements: any;
   @Input() pageNumber:number;
   @Input() itemNumOfGrid:any;
-  @Input() getGridPayloadData:(payLoad:any)=>void;
+  // @Input() getGridPayloadData:(payLoad:any)=>void;
   @Input() adFilterMenuTrigger!:MatMenuTrigger;
   @Input() mainMenuTrigger!:MatMenuTrigger;
   @Input() tab:any;
@@ -169,7 +169,7 @@ export class GridAdvanceFilterComponent implements OnInit {
       this.closeMainFilterMenu();
     }  
     // calling apply filter function
-    this.applyFilter(this.crList);
+    // this.applyFilter(this.crList);
   }
 
 // Prepare crList [] through function
@@ -223,18 +223,18 @@ export class GridAdvanceFilterComponent implements OnInit {
     this.isDateFieldEmpty = false;
   
     this.setCrList.emit(this.crList);
-    this.applyFilter(this.crList);
+    // this.applyFilter(this.crList);
   
     // this.closeAdFilterMenu();
   }
 
 // Apply filter function
-  applyFilter(crList:any){
-    this.pageNumber = 1;
-    const pagePayload = this.apiCallService.getDataForGridFilter(this.pageNumber, this.tab, this.currentMenu,crList);
-    pagePayload.data.pageSize = this.itemNumOfGrid;
-    this.getGridPayloadData(pagePayload);
-  }
+  // applyFilter(crList:any){
+  //   this.pageNumber = 1;
+  //   const pagePayload = this.apiCallService.getDataForGridFilter(this.pageNumber, this.tab, this.currentMenu,{},crList);
+  //   pagePayload.data.pageSize = this.itemNumOfGrid;
+  //   this.getGridPayloadData(pagePayload);
+  // }
 
 // Removing isAdfilter boolean frim all column headers
   clearIsFiltered (headElements: any) {

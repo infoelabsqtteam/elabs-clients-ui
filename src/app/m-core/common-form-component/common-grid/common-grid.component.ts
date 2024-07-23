@@ -226,6 +226,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   }
 
   ngOnInit() {
+    sessionStorage.removeItem("ADVANCE_CRITERIA_LIST");
   }
   ngOnChanges(changes: SimpleChanges) {    
     // this.config.gridButtons=[];   
@@ -499,12 +500,10 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
 
   //html page call functions..............
   onSort(columnObject) {
-    let responce = this.gridCommonFunctionServie.onSort(columnObject,this.filterForm.getRawValue(),this.config.gridDisable,this.tab,this.config.modifyGridData,this.config.elements,this.config.sortingColumnName,this.config.sortIcon,this.config.orderBy,this.headElements,this.config.currentMenu,this.config.pageNumber,this.config.itemNumOfGrid);
+    let responce = this.gridCommonFunctionServie.onSort(columnObject,this.filterForm.getRawValue(),this.config.gridDisable,this.tab,this.config.sortingColumnName,this.config.sortIcon,this.config.orderBy,this.headElements,this.config.currentMenu,this.config.pageNumber);
     this.config.sortIcon = responce.sortIcon;
     this.config.sortingColumnName = responce.sortingColumnName;
     this.config.orderBy = responce.orderBy;
-    this.config.elements = responce.elements;
-    this.config.modifyGridData = responce.modifyGridData;
   }
   selectAll(){
     let SelectAllcheckboxe = document.getElementById("selectAllCheckbox");
@@ -524,7 +523,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     // console.log(this.config.bulkuploadList)
   }
   applyFilter() {
-    let responce = this.gridCommonFunctionServie.applyFilter(this.config.modifyGridData,this.config.elements,this.tab,this.config.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,this.config.itemNumOfGrid,this.config.gridDisable);
+    let responce = this.gridCommonFunctionServie.applyFilter(this.config.modifyGridData,this.config.elements,this.tab,this.config.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,this.config.itemNumOfGrid,this.config.gridDisable,this.config.sortingColumnName);
     this.config.modifyGridData = responce.modifyGridData;
     this.config.elements = responce.elements;
     this.config.pageNumber = responce.pageNumber;
@@ -812,7 +811,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     this.editedRowData.emit(obj);
   }
   exportExcel() {
-    let responce:any = this.downloadService.exportExcel(this.config.total,this.headElements,this.filterForm.getRawValue(),this.tab,this.config.currentMenu.name);
+    let responce:any = this.downloadService.exportExcel(this.config.total,this.headElements,this.filterForm.getRawValue(),this.tab,this.config.currentMenu);
     if(responce != ''){
       this.config.downloadClick = responce;
     } 
@@ -832,6 +831,15 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   // Getting input list from adFilter component to prepare crList.
   setCrList (list:any) {
     this.config.adFilterList = list;
+    let obj:any = {};
+    obj[this.config.currentMenu.name] = list;
+    if(list && list.length > 0){
+      sessionStorage.setItem("ADVANCE_CRITERIA_LIST",JSON.stringify(obj));
+    }else{
+      sessionStorage.removeItem("ADVANCE_CRITERIA_LIST");
+      this.config.sortingColumnName = null;
+    }    
+    this.applyFilter();
   }
   // Getting input from adFilter component for filter applied or not.
   onAdFilter (isAdFilterApplied:boolean) {
@@ -839,15 +847,15 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     // To enable & disable filterForm when AdFilter is applied
     // isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
   }
-  getGridPayloadData(pagePayload:any) {  
-    if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.config.gridDisable)){
-      this.apiService.getGridData(pagePayload);
-    }else {
-      this.config.modifyGridData = [];
-      this.config.elements = [];
-      this.gridCommonFunctionServie.setOldTabCount(this.tab);
-    }
-  }
+  // getGridPayloadData(pagePayload:any) {  
+  //   if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.config.gridDisable)){
+  //     this.apiService.getGridData(pagePayload);
+  //   }else {
+  //     this.config.modifyGridData = [];
+  //     this.config.elements = [];
+  //     this.gridCommonFunctionServie.setOldTabCount(this.tab);
+  //   }
+  // }
   //html page call functions..............
 
   // Dependency functions 

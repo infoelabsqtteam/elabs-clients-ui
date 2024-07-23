@@ -22,7 +22,7 @@
                                               </mat-menu>
                                               <!-- mat menu for Advance column filter  -->
                                               <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [pageNumber]="config.pageNumber" [itemNumOfGrid]="config.itemNumOfGrid" [adFilterMenuTrigger]="adFilterMenuTrigger" [mainMenuTrigger]="mainMenuTrigger" [getGridPayloadData]="getGridPayloadData.bind(this)" [tab]="tab" [currentMenu]="config.currentMenu"></app-grid-advance-filter>
+                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [pageNumber]="config.pageNumber" [itemNumOfGrid]="config.itemNumOfGrid" [adFilterMenuTrigger]="adFilterMenuTrigger" [mainMenuTrigger]="mainMenuTrigger" [tab]="tab" [currentMenu]="config.currentMenu"></app-grid-advance-filter>
                                             </mat-menu>
                                           </div>
                                       </th>                                        
