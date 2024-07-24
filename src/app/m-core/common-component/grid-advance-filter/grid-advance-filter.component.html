@@ -1,14 +1,12 @@
 <div *ngIf="headElements && headElements.length > 0">
     <div class="position-relative">
-        <button style="right: 0;" class="position-absolute theme-bg">Close</button>
+        <!-- <button style="right: 0;" class="position-absolute theme-bg">Close</button> -->
     </div>
     <div (click)="$event.stopPropagation();$event.preventDefault()" class="filter-flex-container" [formGroup]="adFilterForm">
         <mat-label class="ad-filter-label">Advance Filter</mat-label>
         <div class="filter-flex-item h-44p position-relative"
             *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
-            <input type="text" #searchInput placeholder="Search.." [(ngModel)]="searchField"  class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyAdFilter(head.field_name,head.type)" required>
-            <mat-icon *ngIf="searchField" class="clearInput" (click)="searchField=''">close</mat-icon>
-            <div *ngIf="!searchField && isSearchFieldEmpty" class="text-center danger-ic">* Search Field is Required</div>
+            <input type="text" #searchInput placeholder="Search.." class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyAdFilter(head.field_name,head.type)" required>            
         </div>
         <div class="filter-flex-item">
             <mat-label>Filter Type</mat-label>
