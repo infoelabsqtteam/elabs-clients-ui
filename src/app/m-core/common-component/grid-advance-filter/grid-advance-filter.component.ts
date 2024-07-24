@@ -13,19 +13,13 @@ export class GridAdvanceFilterComponent implements OnInit {
 
   @Input() head: any;
   @Input() headElements: any;
-  @Input() pageNumber:number;
-  @Input() itemNumOfGrid:any;
-  @Input() getGridPayloadData:(payLoad:any)=>void;
   @Input() adFilterMenuTrigger!:MatMenuTrigger;
   @Input() mainMenuTrigger!:MatMenuTrigger;
-  @Input() tab:any;
-  @Input() currentMenu:any;
   @Input() adFilterForm: FormGroup;
   @Input() crList:any[] = [];
 
   @Output() isAdFilter = new EventEmitter<boolean>();
   @Output() setCrList = new EventEmitter<any>();
-  // @Output() adFiltermenuOpened = new EventEmitter<void>();
 
   defaultOperator = "";
   selectedFilterType = "";
@@ -66,9 +60,14 @@ export class GridAdvanceFilterComponent implements OnInit {
   }
 
 // Apply Advance filter payload preparation
-  applyAdFilter(fieldNameToUpdate?: string, type?: string) {
+  applyAdFilter(fieldNameToUpdate: string, type: string) {
     
     let payload = [];
+    let formData = this.adFilterForm.getRawValue();
+    if(!formData[fieldNameToUpdate]){
+      this.clearAdFilter(fieldNameToUpdate);
+      return;
+    }
 
     switch (this.selectedFilterType) {
 
@@ -113,7 +112,7 @@ export class GridAdvanceFilterComponent implements OnInit {
 
       default:  {
 
-        const formData = this.adFilterForm.getRawValue();
+        
         const prevPayload = this.crList.filter(obj => obj.fName != fieldNameToUpdate);
       
         Object.keys(formData).forEach(key => {
@@ -165,11 +164,12 @@ export class GridAdvanceFilterComponent implements OnInit {
       this.adFilterApplied = this.crList.length > 0;
       this.isAdFilter.emit(this.adFilterApplied);
       // this.notificationService.notify('bg-success',"Filter Applied Successfully");
-      this.closeAdFilterMenu();
-      this.closeMainFilterMenu();
+      
     }  
     // calling apply filter function
-    this.applyFilter(this.crList);
+    // this.applyFilter(this.crList);
+    this.closeAdFilterMenu();
+    this.closeMainFilterMenu();
   }
 
 // Prepare crList [] through function
@@ -201,7 +201,7 @@ export class GridAdvanceFilterComponent implements OnInit {
   }
 
 // Clear Advance filter function.
-  clearAdFilter(fieldName?: string) {
+  clearAdFilter(fieldName: string) {
     if (fieldName && fieldName !== "") {
       // Removing current filter from payload.
       this.crList = this.crList.filter(obj => obj.fName !== fieldName);
@@ -212,29 +212,31 @@ export class GridAdvanceFilterComponent implements OnInit {
       // Removing All filter from payload
       this.crList = [];
       this.clearIsFiltered(this.headElements);
-    }
-  
-    this.adFilterApplied = this.crList.length > 0;
-    this.isAdFilter.emit(this.adFilterApplied);
+    } 
+    
+    
   
     this.selectedFilterType = this.getDefaultOperatorForAdFilter();
-    this.adFilterForm.reset();
+    this.adFilterForm.get([fieldName]).reset();
     this.isSearchFieldEmpty = false;
     this.isDateFieldEmpty = false;
   
+    this.adFilterApplied = this.crList.length > 0;
+    this.isAdFilter.emit(this.adFilterApplied);
     this.setCrList.emit(this.crList);
-    this.applyFilter(this.crList);
+    // this.applyFilter(this.crList);
   
-    // this.closeAdFilterMenu();
+    this.closeAdFilterMenu();
+    this.closeMainFilterMenu();
   }
 
 // Apply filter function
-  applyFilter(crList:any){
-    this.pageNumber = 1;
-    const pagePayload = this.apiCallService.getDataForGridFilter(this.pageNumber, this.tab, this.currentMenu,crList);
-    pagePayload.data.pageSize = this.itemNumOfGrid;
-    this.getGridPayloadData(pagePayload);
-  }
+  // applyFilter(crList:any){
+  //   this.pageNumber = 1;
+  //   const pagePayload = this.apiCallService.getDataForGridFilter(this.pageNumber, this.tab, this.currentMenu,{},crList);
+  //   pagePayload.data.pageSize = this.itemNumOfGrid;
+  //   this.getGridPayloadData(pagePayload);
+  // }
 
 // Removing isAdfilter boolean frim all column headers
   clearIsFiltered (headElements: any) {
