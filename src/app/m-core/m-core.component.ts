@@ -1,14 +1,34 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { LAYOUT_VERTICAL, LAYOUT_HORIZONTAL } from './m-core.model';
 import { StorageService, DataShareService, EnvService, MenuOrModuleCommonService } from '@core/web-core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Subscription } from 'rxjs';
 import { MediaMatcher } from '@angular/cdk/layout';
 
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
+
 @Component({
   selector: 'app-mcore',
   templateUrl: './m-core.component.html',
-  styleUrls: ['./m-core.component.css']
+  styleUrls: ['./m-core.component.css'],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class McoreComponent implements OnInit {
   @ViewChild('rightsidenav', { static: true }) rightsidenav: MatSidenav;
