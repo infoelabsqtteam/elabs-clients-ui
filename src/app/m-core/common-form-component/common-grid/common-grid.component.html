@@ -22,7 +22,7 @@
                                               </mat-menu>
                                               <!-- mat menu for Advance column filter  -->
                                               <mat-menu #filterMenu="matMenu" class="column-filter-menu" yPosition="below" xPosition="before">
-                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [pageNumber]="config.pageNumber" [itemNumOfGrid]="config.itemNumOfGrid" [adFilterMenuTrigger]="adFilterMenuTrigger" [mainMenuTrigger]="mainMenuTrigger" [tab]="tab" [currentMenu]="config.currentMenu"></app-grid-advance-filter>
+                                                <app-grid-advance-filter [crList]="config.adFilterList" (setCrList)="setCrList($event)" (isAdFilter)="onAdFilter($event)" [adFilterForm]="adFilterForm" [headElements]="headElements" [head]="head" [adFilterMenuTrigger]="adFilterMenuTrigger" [mainMenuTrigger]="mainMenuTrigger"></app-grid-advance-filter>
                                             </mat-menu>
                                           </div>
                                       </th>                                        
@@ -39,7 +39,7 @@
                                               <select class="form-control form-control-sm cursor-pointer w-100" [formControlName]="head.field_name" (click)="openTreeView(head)" style="min-width:100px;" readonly>
                                                   <option *ngFor="let data of config.treeViewData[head.field_name]" [value]="data">{{data && data.name ? data.name : data}}</option>
                                               </select>
-                                              <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                              <span *ngIf="filterFormValue[head.field_name] " class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                           </div>
                                           <div *ngIf="head.type == 'dropdown'" class="position-relative">
                                               <mat-form-field appearance="outline" class="w-100 position-relative">
@@ -47,7 +47,7 @@
                                                       <div class="p-1"><input type="search" class="form-control-sm w-100 border" [(ngModel)]="config.filterdata" [ngModelOptions]="{standalone: true}"></div>
                                                       <mat-option *ngFor="let data of config.copyStaticData[head.ddn_field] |filter:config.filterdata; index as i" [value]="data">{{data && data.name ? data.name : data}}</mat-option>
                                                   </mat-select>
-                                                  <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                  <span *ngIf="filterFormValue[head.field_name] " class="filter-clear-button btn-right-dropdown" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                               </mat-form-field>
                                           </div>
                                           <div *ngIf="head.type == 'typeahead'">
@@ -63,7 +63,7 @@
                                           </div>
                                           <div *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'" class="position-relative">
                                               <input class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyFilter()">
-                                              <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-right-text" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                              <span *ngIf="filterFormValue[head.field_name] " class="filter-clear-button btn-right-text" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                           </div>
                                           <div *ngIf="head.type != null && head.type.toLowerCase() == 'daterange'" >
                                               <mat-form-field appearance="outline" class="example-full-width w-100 m-0 custom">
@@ -81,7 +81,7 @@
                                                   <input matInput [matDatepicker]="picker2"   [formControlName]="head.field_name" (dateChange)="applyFilter()">
                                                   <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                                   <mat-datepicker #picker2 color="primary" ></mat-datepicker>
-                                                  <span *ngIf="filterFormValue[head.field_name] != ''" class="filter-clear-button btn-left-date btn-top-datetime" (click)="clearFilter(head.field_name,head.type)">&times;</span>
+                                                  <span *ngIf="filterFormValue[head.field_name] " class="filter-clear-button btn-left-date btn-top-datetime" (click)="clearFilter(head.field_name,head.type)">&times;</span>
                                               </mat-form-field>
                                           </div>
                                       </td>                                        

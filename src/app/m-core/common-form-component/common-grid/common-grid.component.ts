@@ -522,7 +522,49 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
     // console.log(this.config.bulkuploadList)
   }
-  applyFilter() {
+  checkSameKeyValue(obj1,obj2){
+    let keysList = [];
+    Object.keys(obj1).forEach(key =>{
+      if(obj1[key]){
+        if(obj2[key]){
+          keysList.push(key);
+        }
+      }
+    })
+    return keysList;
+  }
+  checkOrClearFilterList(call){
+    let keyList = this.checkSameKeyValue(this.adFilterForm.getRawValue(),this.filterForm.getRawValue());    
+    if(call){
+      if(keyList && keyList.length > 0){
+        keyList.forEach(key =>{
+          this.filterForm.get([key]).setValue("");
+        })
+      }
+    }else{
+      let adList = JSON.parse(<any>sessionStorage.getItem("ADVANCE_CRITERIA_LIST"))?.[this.config.currentMenu.name];
+      if(keyList && keyList.length > 0 && adList && adList.length > 0){        
+        keyList.forEach(key =>{
+          adList.forEach((cr,i) => {
+            if(cr.fName == key){
+              adList.splice(i, 1);
+              this.adFilterForm.get([key]).setValue('');
+            }
+          });
+        })               
+      }
+      if(adList && adList.length > 0){
+        let obj = {};
+        obj[this.config.currentMenu.name] = adList;
+        sessionStorage.setItem('ADVANCE_CRITERIA_LIST',JSON.stringify(obj));
+      }else{
+        sessionStorage.setItem('ADVANCE_CRITERIA_LIST',null);
+        this.config.isAdFilter = false;
+      }
+    }
+  }
+  applyFilter(call?) {
+    this.checkOrClearFilterList(call);
     let responce = this.gridCommonFunctionServie.applyFilter(this.config.modifyGridData,this.config.elements,this.tab,this.config.currentMenu,this.headElements,this.filterForm.getRawValue(),this.selectContact,this.config.itemNumOfGrid,this.config.gridDisable,this.config.sortingColumnName);
     this.config.modifyGridData = responce.modifyGridData;
     this.config.elements = responce.elements;
@@ -838,8 +880,8 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }else{
       sessionStorage.removeItem("ADVANCE_CRITERIA_LIST");
       this.config.sortingColumnName = null;
-    }    
-    this.applyFilter();
+    } 
+    this.applyFilter(true);
   }
   // Getting input from adFilter component for filter applied or not.
   onAdFilter (isAdFilterApplied:boolean) {
@@ -847,15 +889,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     // To enable & disable filterForm when AdFilter is applied
     // isAdFilterApplied?this.filterForm.disable():this.filterForm.enable();
   }
-  // getGridPayloadData(pagePayload:any) {  
-  //   if(this.checkIfService.checkCallGridData(this.filterForm.getRawValue(),this.config.gridDisable)){
-  //     this.apiService.getGridData(pagePayload);
-  //   }else {
-  //     this.config.modifyGridData = [];
-  //     this.config.elements = [];
-  //     this.gridCommonFunctionServie.setOldTabCount(this.tab);
-  //   }
-  // }
+ 
   //html page call functions..............
 
   // Dependency functions 
@@ -976,7 +1010,9 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   }
   // Calling the clear Filter fn from adFilter component.
   clearAdFilter (){
-    this.advanceFilterComponent.clearAdFilter();
+    this.setCrList([]);
+    this.config.isAdFilter = false;
+    this.adFilterForm.reset();
   }
 
 }
