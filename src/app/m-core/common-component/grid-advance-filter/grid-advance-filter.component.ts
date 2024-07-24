@@ -300,7 +300,7 @@ export class GridAdvanceFilterComponent implements OnInit {
 
 // Change default operator for 'number' , 'date', 'datetime', 'daterange' to EQUAL
   getDefaultOperatorForAdFilter(){
-    if (this.head && ['number', 'date', 'datetime', 'daterange'].includes(this.head?.type.toLowerCase())) {
+    if (this.head && ['number', 'date', 'datetime', 'daterange'].includes(this.head?.type?.toLowerCase())) {
       this.defaultOperator = "eq";
     } else {
       this.defaultOperator = JSON.parse(JSON.stringify(this.storageService.getDefaultSearchOperator()));

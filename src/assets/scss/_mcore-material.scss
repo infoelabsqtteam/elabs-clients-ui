@@ -167,4 +167,8 @@ body {font-family:$roboto;font-size:13px;}
         --scrollbar-hover-size: 13px;
     }
 }
+app-mcore{
+    z-index: 1;
+    position: relative;
+}
 // Start ngx-Scrollbar
