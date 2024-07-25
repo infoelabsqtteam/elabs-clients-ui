@@ -64,7 +64,7 @@ export class GridAdvanceFilterComponent implements OnInit {
     
     let payload = [];
     let formData = this.adFilterForm.getRawValue();
-    if(!formData[fieldNameToUpdate]){
+    if(!formData[fieldNameToUpdate] && this.selectedFilterType != 'drng'){
       this.clearAdFilter(fieldNameToUpdate);
       return;
     }

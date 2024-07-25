@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnI
 import { NgForm, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { ActivatedRoute } from '@angular/router';
-import { ApiCallService, ApiService, AppConfig, AppConfigInterface, CheckIfService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService } from '@core/web-core';
+import { ApiCallService, ApiService, AppConfig, AppConfigInterface, CheckIfService, CommonFunctionService, DataShareService, DownloadService, FormCreationService, GridCommonFunctionService, KeyCode, ModelService, NotificationService, PermissionService, StorageService, LoaderService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 import { GridAdvanceFilterComponent } from '../../common-component/grid-advance-filter/grid-advance-filter.component';
 
@@ -522,37 +522,33 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
     // console.log(this.config.bulkuploadList)
   }
-  checkSameKeyValue(obj1,obj2){
-    let keysList = [];
-    Object.keys(obj1).forEach(key =>{
-      if(obj1[key]){
-        if(obj2[key]){
-          keysList.push(key);
-        }
-      }
-    })
-    return keysList;
-  }
   checkOrClearFilterList(call){
-    let keyList = this.checkSameKeyValue(this.adFilterForm.getRawValue(),this.filterForm.getRawValue());    
+    let adList = JSON.parse(<any>sessionStorage.getItem("ADVANCE_CRITERIA_LIST"))?.[this.config.currentMenu.name];   
     if(call){
-      if(keyList && keyList.length > 0){
-        keyList.forEach(key =>{
-          this.filterForm.get([key]).setValue("");
-        })
+      if(adList && adList.length > 0){
+        adList.forEach((cr,i) => {
+          const fieldName = cr?.fName;
+          if(fieldName){
+            this.filterForm.get([fieldName]).setValue("");
+          }
+        });
       }
-    }else{
-      let adList = JSON.parse(<any>sessionStorage.getItem("ADVANCE_CRITERIA_LIST"))?.[this.config.currentMenu.name];
-      if(keyList && keyList.length > 0 && adList && adList.length > 0){        
-        keyList.forEach(key =>{
+    }else{      
+      let obj = this.filterForm.getRawValue();
+      Object.keys(obj).forEach(key=>{
+        if(obj[key]){
+          const indexList = [];
           adList.forEach((cr,i) => {
             if(cr.fName == key){
-              adList.splice(i, 1);
+              indexList.push(i);
               this.adFilterForm.get([key]).setValue('');
             }
-          });
-        })               
-      }
+          });          
+          indexList.forEach(index =>{
+            adList.splice(index, indexList.length);
+          })
+        }
+      })
       if(adList && adList.length > 0){
         let obj = {};
         obj[this.config.currentMenu.name] = adList;
