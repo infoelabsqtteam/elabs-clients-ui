@@ -538,15 +538,19 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       Object.keys(obj).forEach(key=>{
         if(obj[key]){
           const indexList = [];
-          adList.forEach((cr,i) => {
-            if(cr.fName == key){
-              indexList.push(i);
-              this.adFilterForm.get([key]).setValue('');
-            }
-          });          
-          indexList.forEach(index =>{
-            adList.splice(index, indexList.length);
-          })
+          if(adList && adList.length > 0){
+            adList.forEach((cr,i) => {
+              if(cr.fName == key){
+                indexList.push(i);
+                this.adFilterForm.get([key]).setValue('');
+              }
+            }); 
+          }
+          if(indexList && indexList.length > 0){         
+            indexList.forEach(index =>{
+              adList.splice(index, indexList.length);
+            })
+          }
         }
       })
       if(adList && adList.length > 0){
