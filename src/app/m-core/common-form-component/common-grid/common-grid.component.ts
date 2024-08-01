@@ -522,37 +522,37 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     }
     // console.log(this.config.bulkuploadList)
   }
-  checkSameKeyValue(obj1,obj2){
-    let keysList = [];
-    Object.keys(obj1).forEach(key =>{
-      if(obj1[key]){
-        if(obj2[key]){
-          keysList.push(key);
-        }
-      }
-    })
-    return keysList;
-  }
   checkOrClearFilterList(call){
-    let keyList = this.checkSameKeyValue(this.adFilterForm.getRawValue(),this.filterForm.getRawValue());    
+    let adList = JSON.parse(<any>sessionStorage.getItem("ADVANCE_CRITERIA_LIST"))?.[this.config.currentMenu.name];   
     if(call){
-      if(keyList && keyList.length > 0){
-        keyList.forEach(key =>{
-          this.filterForm.get([key]).setValue("");
-        })
+      if(adList && adList.length > 0){
+        adList.forEach((cr,i) => {
+          const fieldName = cr?.fName;
+          if(fieldName){
+            this.filterForm.get([fieldName]).setValue("");
+          }
+        });
       }
-    }else{
-      let adList = JSON.parse(<any>sessionStorage.getItem("ADVANCE_CRITERIA_LIST"))?.[this.config.currentMenu.name];
-      if(keyList && keyList.length > 0 && adList && adList.length > 0){        
-        keyList.forEach(key =>{
-          adList.forEach((cr,i) => {
-            if(cr.fName == key){
-              adList.splice(i, 1);
-              this.adFilterForm.get([key]).setValue('');
-            }
-          });
-        })               
-      }
+    }else{      
+      let obj = this.filterForm.getRawValue();
+      Object.keys(obj).forEach(key=>{
+        if(obj[key]){
+          const indexList = [];
+          if(adList && adList.length > 0){
+            adList.forEach((cr,i) => {
+              if(cr.fName == key){
+                indexList.push(i);
+                this.adFilterForm.get([key]).setValue('');
+              }
+            }); 
+          }
+          if(indexList && indexList.length > 0){         
+            indexList.forEach(index =>{
+              adList.splice(index, indexList.length);
+            })
+          }
+        }
+      })
       if(adList && adList.length > 0){
         let obj = {};
         obj[this.config.currentMenu.name] = adList;

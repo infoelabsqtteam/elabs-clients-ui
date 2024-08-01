@@ -1,7 +1,7 @@
 // Top header
 ul,ol,li {list-style:none;margin:0;padding:0;}
 a {color:#333;text-decoration:none;}
-a:hover {text-decoration:none;}
+a:hover {text-decoration:none;color: inherit;}
 // NOtification Alert of snackbar
 .mat-mdc-snack-bar-container { border-radius: 10px;
     .mdc-snackbar__surface{background: inherit !important;
@@ -30,9 +30,9 @@ a:hover {text-decoration:none;}
 ///// Input Fields
 // .mdc-text-field .mdc-floating-label {transform:translateY(-100%) !important;letter-spacing:normal !important;}
 .mat-mdc-text-field-wrapper {height:35px !important;padding:0px 8px !important;
-    .mat-mdc-floating-label {top:16px !important;}
+    .mat-mdc-floating-label {top:18px !important;}
     .mat-mdc-form-field-infix {padding:5px !important;}
-    .mdc-floating-label--float-above {transform: translateY( -23px) scale( 0.75 ) !important;font-size:11px !important;}
+    .mdc-floating-label--float-above {transform: translateY( -23px) scale( 0.75 ) !important;font-size:13px !important;}
 }
 /// input foucs and hover border color
 .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__trailing {border-color: rgb(139 139 139 / 38%);}
@@ -156,7 +156,7 @@ body.modal-open .modal-backdrop {display:none !important;}
     // .mat-checkbox-layout .mat-checkbox-label {font-size:12px!important;line-height:13px!important;white-space:pre-line!important;}
     .form-label {display:block;background:#efefef;padding:10px 10px;border:none;font-size:16px;border-radius:5px;margin:10px 0;}
 
-    .tree_view_class {position:absolute;white-space:nowrap;font-size:11px;border-radius:5px;top:-17px;right:5px;}
+    .tree_view_class {position:absolute;white-space:nowrap;font-size:11px;border-radius:5px;top:-18px;right:2px;color: var(--buttonColor);}
 }
 .colorplate {width:$size100;margin: 5px 5px 0px;
   input {border:none; width:100%;}
@@ -245,7 +245,6 @@ body.modal-open .modal-backdrop {display:none !important;}
     }
   }
   .mat-mdc-form-field .mdc-floating-label{
-    opacity: 0.75 !important;
     color: $txtColor !important;
 }
 
