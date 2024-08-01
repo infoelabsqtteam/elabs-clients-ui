@@ -11,18 +11,18 @@
       .mat-tab-label {height:58px;}
       .mat-mdc-tab-header{
         .mdc-tab {height: 60px !important;
-          a {line-height: 4.5;}
+          a {line-height: 4.5;padding: 0 7px;}
         }
       }
   }
 }
 
 .mat-mdc-tab-header {--mdc-secondary-navigation-tab-container-height: 60px !important;
-  .mdc-tab,.mat-mdc-menu-item-text {padding:0 7px;min-width:auto;font-size:12px;letter-spacing:0px;}
+  .mdc-tab,.mat-mdc-menu-item-text {padding:0px;min-width:auto;font-size:12px;letter-spacing:0px;}
 }
 .mat-mdc-button {display:block;text-align:left;letter-spacing:0;}
 .mat-mdc-tab-header-pagination {z-index:1 !important;}
-.mat-mdc-menu-panel.mat-mdc-menu-panel.menudropdon {margin-top:20px;}
+.mat-mdc-menu-panel.mat-mdc-menu-panel.menudropdon {margin-top:5px;}
 .mat-mdc-menu-content, .mat-mdc-menu-content .mat-mdc-menu-item .mat-mdc-menu-item-text{font-family: inherit !important;font-size: 12px !important;letter-spacing: inherit !important;font-weight: inherit !important; padding:0 !important;
   button {min-height:30px;
     .mdc-list-item__primary-text{font-size:12px !important;line-height:30px;letter-spacing:normal !important;}
