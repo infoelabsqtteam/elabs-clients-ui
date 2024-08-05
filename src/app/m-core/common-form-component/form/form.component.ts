@@ -804,7 +804,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
       const file = new Blob([getfileData.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(file);
-      this.downloadService.download(url,getfileData.filename);
+      this.downloadService.download(url,getfileData.filename,this.currentActionButton);
       this.dataSaveInProgress = true;
       this.checkForDownloadReport = false;
       this.dataSaveInProgress = true;
@@ -813,7 +813,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setFileDownloadUrl(fileDownloadUrl){
     if (fileDownloadUrl != '' && fileDownloadUrl != null && this.downloadClick != '') {
-      this.downloadService.download(fileDownloadUrl,this.downloadClick);
+      this.downloadService.download(fileDownloadUrl,this.downloadClick,this.currentActionButton);
       this.downloadClick = '';
       this.dataSaveInProgress = true;
       this.apiService.ResetDownloadUrl();
@@ -1482,7 +1482,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   downloadFileWithBytes(filedata){
     const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(file);
-    this.downloadService.download(url,this.downloadClick);
+    this.downloadService.download(url,this.downloadClick,this.currentActionButton);
   }
   refreshListofField(field,updatemode){    
     if(field.do_not_refresh_on_add && updatemode){
