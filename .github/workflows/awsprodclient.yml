@@ -30,8 +30,8 @@ jobs:
     
     - name: Installing source NPM dependencies...
       run: |
-        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 292474393014 --region ap-south-1 --query authorizationToken --output text`
-        aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 292474393014 --region ap-south-1
+        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 025066280539 --region ap-south-1 --query authorizationToken --output text`
+        aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 025066280539 --region ap-south-1
         echo $CODEARTIFACT_AUTH_TOKEN        
         npm install -g @angular/cli@13.0.0
         npm install
@@ -46,28 +46,28 @@ jobs:
 
   # Deploy Qualitek Labs
     - name: Clean up existing deployment - For Production Only UI Client
-      run: aws s3 rm s3://prodclientslims.e-labs.ai --recursive
+      run: aws s3 rm s3://prodclientslims.elabss.ai --recursive
 
     - name: Upload data
-      run: aws s3 sync dist s3://prodclientslims.e-labs.ai
+      run: aws s3 sync dist s3://prodclientslims.elabss.ai
       
-    - name: Clean up cache for SraLabs
-      run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
+    # - name: Clean up cache for SraLabs
+    #   run: aws cloudfront create-invalidation --distribution-id E3B4WJCPEX6K1N --paths '/*'    
         
-    - name: Clean up cache for Lims ITC
-      run: aws cloudfront create-invalidation --distribution-id E1HN9LNO9SWJVM --paths '/*'    
+    # - name: Clean up cache for Lims ITC
+    #   run: aws cloudfront create-invalidation --distribution-id E1HN9LNO9SWJVM --paths '/*'    
     
-    - name: Clean up cache for Qualitek LIMS
-      run: aws cloudfront create-invalidation --distribution-id E22VTDSRJMGYYT --paths '/*'    
+    # - name: Clean up cache for Qualitek LIMS
+    #   run: aws cloudfront create-invalidation --distribution-id E22VTDSRJMGYYT --paths '/*'    
         
-    - name: Clean up cache for BBSR Qualitek LIMS
-      run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
+    # - name: Clean up cache for BBSR Qualitek LIMS
+    #   run: aws cloudfront create-invalidation --distribution-id E1YPQRW90CBGO8 --paths '/*'
       
-    - name: Clean up cache for Document Library
-      run: aws cloudfront create-invalidation --distribution-id E204E1025HF47L --paths '/*'
+    # - name: Clean up cache for Document Library
+    #   run: aws cloudfront create-invalidation --distribution-id E204E1025HF47L --paths '/*'
       
-    - name: Clean up cache for IIRT LIMS
-      run: aws cloudfront create-invalidation --distribution-id EFJ8A5QIUJKHQ --paths '/*'
+    # - name: Clean up cache for IIRT LIMS
+    #   run: aws cloudfront create-invalidation --distribution-id EFJ8A5QIUJKHQ --paths '/*'
       
-    - name: Clean up cache for TICS LIMS
-      run: aws cloudfront create-invalidation --distribution-id E12SW0R68LTL3K --paths '/*'
+    # - name: Clean up cache for TICS LIMS
+    #   run: aws cloudfront create-invalidation --distribution-id E12SW0R68LTL3K --paths '/*'
