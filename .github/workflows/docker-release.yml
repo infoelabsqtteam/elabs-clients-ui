@@ -46,8 +46,8 @@ jobs:
     
     - name: Installing NPM and Angular
       run: |         
-        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 025066280539 --region ap-south-1 --query authorizationToken --output text`
-        aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 025066280539 --region ap-south-1
+        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ${{ secrets.ELABS_REPOSITORY }} --domain ${{ secrets.ELABS_DOMAIN }} --domain-owner ${{ secrets.ELABS_DOMAIN_OWNER }} --region ${{ secrets.ELABS_REGION }} --query authorizationToken --output text`
+        aws codeartifact login --tool npm --repository ${{ secrets.ELABS_REPOSITORY }} --domain ${{ secrets.ELABS_DOMAIN }} --domain-owner ${{ secrets.ELABS_DOMAIN_OWNER }} --region ${{ secrets.ELABS_REGION }}
         echo $CODEARTIFACT_AUTH_TOKEN        
         npm install -g @angular/cli@14.2.13
         npm install
