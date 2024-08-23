@@ -19,7 +19,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3","moment","diff-match-patch","luxon","json-2-csv","bezier-easing"],
+            "allowedCommonJsDependencies":["@looker/chatty","lodash/isEmpty","lodash/isEqual","hogan.js","aws-sdk/clients/s3","moment","diff-match-patch","luxon","json-2-csv","bezier-easing","fast-xml-parser","@aws-crypto/sha256-browser","jsoneditor","bowser"],
             "aot": false,
             "assets": [
               "src/favicon.ico",

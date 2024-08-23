@@ -1,0 +1,68 @@
+<div *ngIf="headElements && headElements.length > 0">
+    <div class="position-relative">
+        <!-- <button style="right: 0;" class="position-absolute theme-bg">Close</button> -->
+    </div>
+    <div (click)="$event.stopPropagation();$event.preventDefault()" class="filter-flex-container" [formGroup]="adFilterForm">
+        <mat-label class="ad-filter-label">Advance Filter</mat-label>
+        <div class="filter-flex-item h-44p position-relative"
+            *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'number' || head.type == 'chips'">
+            <input type="text" #searchInput placeholder="Search.." class="form-control form-control-sm pr-3" [formControlName]="head.field_name" (keyup.enter)="applyAdFilter(head.field_name,head.type)" required>            
+        </div>
+        <div class="filter-flex-item">
+            <mat-label>Filter Type</mat-label>
+            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'Text' || head.type == 'info' || head.type == 'reference_names' || head.type == 'chips'">
+                <mat-select [(value)]="selectedFilterType" name="filterType" placeholder="Select Type">
+                    <ng-container *ngFor="let filter of filterTypeString | keyvalue">
+                    <mat-option [value]="filter.key">{{ filter.value }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type == 'number'">
+                <mat-select [(value)]="selectedFilterType" name="filterType"  placeholder="Select Type">
+                    <ng-container *ngFor="let filter of filterTypeNumber | keyvalue">
+                    <mat-option [value]="filter.key">{{ filter.value }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100" *ngIf="head.type != null && (head.type.toLowerCase() == 'date'|| head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime')">
+                <mat-select [(value)]="selectedFilterType" name="filterType"  placeholder="Select Type">
+                    <ng-container *ngFor="let filter of filterTypeDate | keyvalue">
+                    <mat-option [value]="filter.key">{{ filter.value }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>                                                                
+        </div>
+        <ng-container *ngIf="head.type != null && (head.type.toLowerCase() == 'date' || head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime')  && selectedFilterType != 'drng'">
+            <div class="h-80p">
+                <mat-form-field class="filter-flex-item w-100">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker" [formControlName]="head.field_name">
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <div *ngIf="isDateFieldEmpty && !dateField" class="text-center danger-ic">* Date Field is Required</div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="head.type != null && (head.type.toLowerCase() == 'date'|| head.type.toLowerCase() == 'daterange' || head.type.toLowerCase() == 'datetime') && selectedFilterType=='drng'">
+            <div class="h-80p">
+                <mat-form-field class="filter-flex-item w-100">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate placeholder="Start date" #startDate>
+                        <input matEndDate placeholder="End date" #endDate>
+                    </mat-date-range-input>
+                    <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                <div *ngIf="isDateFieldEmpty" class="text-center danger-ic">* Date Field is Required</div>
+            </div>
+        </ng-container>
+        <div class="adFilterBtn w-100">
+            <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="clearAdFilter(head.field_name)">Clear</button>
+            <button class="noshadow rounded bg-cerulean text-white py-1 px-3" (click)="applyAdFilter(head.field_name,head.type)">Apply</button>
+        </div>
+    </div>
+</div>

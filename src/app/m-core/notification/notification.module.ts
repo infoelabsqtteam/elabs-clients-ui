@@ -4,16 +4,20 @@ import { NotificationSettingComponent } from './notification-setting/notificatio
 import { NotificationListComponent } from './notification-list/notification-list.component';
 import { AngularMaterialModule } from '../angular-material-module/angular-material.module';
 import { AllPackageModule } from '../all-package/all-package.module';
+import { NotificationModelComponent } from './notification-model/notification-model.component';
+import { FormsModule } from '@angular/forms';
 
 let components = [
   NotificationSettingComponent,
-  NotificationListComponent
+  NotificationListComponent,
+  NotificationModelComponent
 ]
 @NgModule({
   imports: [
     CommonModule,
     AngularMaterialModule,
-    AllPackageModule
+    AllPackageModule,
+    FormsModule
   ],
   declarations: components,
   exports : components
