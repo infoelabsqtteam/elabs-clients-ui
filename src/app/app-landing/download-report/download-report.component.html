@@ -1,6 +1,6 @@
 <section class="downloadreportform py-5">
     <h3 class="mb-5 text-center">Download report from here!</h3>
     <div class="downloadatat">
-        <app-form [tabIndex]="selectTabIndex" [editedRowIndex]="editedRowIndex" (addAndUpdateResponce)="formResponce($event)" [formName]='formName' [selectContact]='selectContact'></app-form>
+        <app-form *ngIf="showForm"  [tabIndex]="selectTabIndex" [editedRowIndex]="editedRowIndex" (addAndUpdateResponce)="formResponce($event)" [formName]='formName' [selectContact]='selectContact'></app-form>
     </div>
 </section>
