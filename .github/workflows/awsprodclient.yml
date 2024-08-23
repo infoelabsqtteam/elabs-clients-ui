@@ -30,7 +30,7 @@ jobs:
     
     - name: Installing source NPM dependencies...
       run: |
-        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 025066280539 --region ap-south-1 --query authorizationToken --output text`
+        CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ui-libs --domain-owner 025066280539 --region ap-south-1 --query authorizationToken --output text`
         aws codeartifact login --tool npm --repository ui-library --domain ui-libs --domain-owner 025066280539 --region ap-south-1
         echo $CODEARTIFACT_AUTH_TOKEN        
         npm install -g @angular/cli@13.0.0
@@ -69,5 +69,5 @@ jobs:
     # - name: Clean up cache for IIRT LIMS
     #   run: aws cloudfront create-invalidation --distribution-id EFJ8A5QIUJKHQ --paths '/*'
       
-    # - name: Clean up cache for TICS LIMS
-    #   run: aws cloudfront create-invalidation --distribution-id E12SW0R68LTL3K --paths '/*'
+    - name: Clean up cache for TICS LIMS
+      run: aws cloudfront create-invalidation --distribution-id E12SW0R68LTL3K --paths '/*'
