@@ -26,6 +26,7 @@ export class DownloadReportComponent implements OnInit {
    reportUrlNo:any = '';
    tempDataSubscription:Subscription;
   @Input() public pageName;
+  showForm:boolean=false;
 
 
   constructor(
@@ -54,11 +55,15 @@ export class DownloadReportComponent implements OnInit {
     }
     this.storageService.SetActiveMenu(menu);
     this.tempDataSubscription = this.dataShareService.tempData.subscribe( temp => {
-      if(this.reportUrlNo && this.reportUrlNo != ""){
+      if(temp && this.reportUrlNo && this.reportUrlNo != ""){
         let object = {
           "report_no": this.reportUrlNo
-        }
-        this.dataShareService.shareGridRunningData({data: object});
+        }        
+        this.showForm = true;
+        setTimeout(() => {
+          this.dataShareService.shareGridRunningData({data: object});
+        }, 100);
+
       }
     })
     this.currentMenu = this.storageService.GetActiveMenu();
