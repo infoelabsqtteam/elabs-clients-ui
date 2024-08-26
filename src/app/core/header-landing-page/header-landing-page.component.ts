@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostListener } from "@angular/core
 import { Router } from '@angular/router';
 import { solution } from './menu';
 import { StorageService, PermissionService, CommonFunctionService, DataShareService, AuthService, ModelService, EnvService,StorageTokenStatus } from '@core/web-core';
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-header-landing-page',
@@ -41,6 +42,8 @@ export class HeaderLandingPageComponent implements OnInit {
     
     logedin:boolean=false;
 
+    applicationSettingSubscription:Subscription;
+
   constructor(
     private router: Router, 
     private storageService: StorageService,
@@ -62,10 +65,19 @@ export class HeaderLandingPageComponent implements OnInit {
             this.setMenuData(menu);
         })
         this.solutions = solution;
+        // this.pageload();
+        this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
+            if(setting == 'setting'){
+              this.pageload();
+            }
+        })
 
 
-        this.logoPath = this.storageService.getLogoPath() + "logo.png";
+        // this.logoPath = this.storageService.getLogoPath() + "logo.png";
     }
+    pageload(){
+        this.logoPath = this.storageService.getLogoPath() + "logo.png";
+      }
 
   ngOnInit() {
   }
