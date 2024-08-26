@@ -93,6 +93,7 @@ export class AppComponent implements OnInit {
    
   async ngOnInit() {    
     console.log("app component page.")
+    await this.getApplicationSettings();
     if(!this.settingLoding){
       await this.getApplicationSettings();
     }else {
@@ -186,7 +187,8 @@ export class AppComponent implements OnInit {
             if(!this.authService.checkApplicationSetting() && hostNameInLocal){
               this.apiCallService.getApplicationAllSettings();
             } else{
-              this.awsSecretManagerService.getServerAndAppSetting();
+              await this.awsSecretManagerService.getServerAndAppSetting();
+              console.log("get aws endpoint.")
             }
 
           } else {
