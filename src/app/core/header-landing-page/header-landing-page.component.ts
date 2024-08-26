@@ -65,7 +65,7 @@ export class HeaderLandingPageComponent implements OnInit {
             this.setMenuData(menu);
         })
         this.solutions = solution;
-        // this.pageload();
+        this.pageload();
         this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
             if(setting == 'setting'){
               this.pageload();

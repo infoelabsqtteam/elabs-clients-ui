@@ -91,7 +91,14 @@ export class AppComponent implements OnInit {
    }
 
    
-  ngOnInit() {     
+  async ngOnInit() {    
+    console.log("app component page.")
+    if(!this.settingLoding){
+      await this.getApplicationSettings();
+    }else {
+      this.loadApplicationSetting('constructure');
+    } 
+    console.log("app component page after geting application setting.")
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
@@ -160,7 +167,7 @@ export class AppComponent implements OnInit {
     this.themeName = this.storageService.getPageThmem();
   }
 
-  getApplicationSettings() {
+  async getApplicationSettings() {
     if(this.settingLoding){
       return;
     }
