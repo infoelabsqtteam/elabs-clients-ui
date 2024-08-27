@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
     private cookieService: CookiesService
   ) {
     //this.localSetting();
-    this.apiCallService.getApplicationAllSettings();
+    // this.apiCallService.getApplicationAllSettings();
     if(!this.settingLoding){
       this.getApplicationSettings();
     }else {
