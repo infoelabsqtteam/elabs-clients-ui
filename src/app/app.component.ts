@@ -105,6 +105,7 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
           this.redirectToHomePage();
+          console.log("route first");
         }else if(
           event.id === 1 &&
           event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/privacy-policy")
@@ -117,6 +118,7 @@ export class AppComponent implements OnInit {
             this.envService.setThemeSetting(themeSettings);
           }      
           this.redirectToHomePageWithStorage();
+          console.log("route second");
         }
       }      
    })
@@ -181,6 +183,7 @@ export class AppComponent implements OnInit {
           let serverHost = new URL(hostNameInCookies)?.origin;
           this.dataShareService.shareServerHostName(serverHost);
           this.storageService.setHostNameDinamically(hostNameInCookies);
+          this.loadApplicationSetting('first check cookie');
           console.log("first");
       } else {
         this.settingLoding = true;
@@ -197,6 +200,7 @@ export class AppComponent implements OnInit {
               let serverHost = new URL(hostNameInLocal)?.origin;
               this.dataShareService.shareServerHostName(serverHost);
               this.storageService.setHostNameDinamically(hostNameInLocal);
+              this.loadApplicationSetting('forth check cookie');
               console.log("forth");
           }
       }
@@ -216,9 +220,10 @@ export class AppComponent implements OnInit {
     this.loadPage();
     this.dataShareService.subscribeTemeSetting("setting");
     let themeSettings =  this.storageService.getThemeSetting();
-      if(themeSettings){
-        this.envService.setThemeSetting(themeSettings);
-      }
+    if(themeSettings){
+      this.envService.setThemeSetting(themeSettings);
+    }
+    console.log(commingPlace);
   }
   
 }
