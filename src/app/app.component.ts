@@ -38,12 +38,12 @@ export class AppComponent implements OnInit {
     private cookieService: CookiesService
   ) {
     //this.localSetting();
-    // this.apiCallService.getApplicationAllSettings();
-    // if(!this.settingLoding){
-    //   this.getApplicationSettings();
-    // }else {
-    //   this.loadApplicationSetting('constructure');
-    // }
+    this.apiCallService.getApplicationAllSettings();
+    if(!this.settingLoding){
+      this.getApplicationSettings();
+    }else {
+      this.loadApplicationSetting('constructure');
+    }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
