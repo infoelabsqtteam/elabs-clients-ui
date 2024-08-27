@@ -41,8 +41,10 @@ export class AppComponent implements OnInit {
     // this.apiCallService.getApplicationAllSettings();
     if(!this.settingLoding){
       this.getApplicationSettings();
+      console.log("constructor first");
     }else {
       this.loadApplicationSetting('constructure');
+      console.log("constructor second");
     }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
@@ -94,8 +96,10 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     if(!this.settingLoding){
       await this.getApplicationSettings();
+      console.log("oninit first");
     }else {
       this.loadApplicationSetting('constructure');
+      console.log("oninit second");
     }
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
@@ -177,23 +181,28 @@ export class AppComponent implements OnInit {
           let serverHost = new URL(hostNameInCookies)?.origin;
           this.dataShareService.shareServerHostName(serverHost);
           this.storageService.setHostNameDinamically(hostNameInCookies);
+          console.log("first");
       } else {
         this.settingLoding = true;
           if (!hostNameInLocal || !this.authService.checkApplicationSetting()) {
             if(!this.authService.checkApplicationSetting() && hostNameInLocal){
               this.apiCallService.getApplicationAllSettings();
+              console.log("second");
             } else{
               await this.awsSecretManagerService.getServerAndAppSetting();
+              console.log("third");
             }
 
           } else {
               let serverHost = new URL(hostNameInLocal)?.origin;
               this.dataShareService.shareServerHostName(serverHost);
               this.storageService.setHostNameDinamically(hostNameInLocal);
+              console.log("forth");
           }
       }
     } else {
       await this.awsSecretManagerService.getServerAndAppSetting();
+      console.log("fifth");
     }
     
     if(this.storageService.getHostNameDinamically()){
