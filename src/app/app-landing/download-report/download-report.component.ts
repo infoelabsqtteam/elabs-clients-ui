@@ -68,10 +68,8 @@ export class DownloadReportComponent implements OnInit {
     })
     this.currentMenu = this.storageService.GetActiveMenu();
     if (this.currentMenu != null && this.currentMenu != undefined && this.currentMenu.name && this.currentMenu.name != '') {
-      console.log("download report page.")
       const payload = this.apiCallService.getTemData(this.currentMenu.name); 
-      this.apiService.GetTempData(payload);  
-      console.log("download page after geting template.")   
+      this.apiService.GetTempData(payload);   
     }
 
    }
