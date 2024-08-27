@@ -91,15 +91,7 @@ export class AppComponent implements OnInit {
    }
 
    
-  async ngOnInit() {    
-    console.log("app component page.")
-    await this.getApplicationSettings();
-    if(!this.settingLoding){
-      await this.getApplicationSettings();
-    }else {
-      this.loadApplicationSetting('constructure');
-    } 
-    console.log("app component page after geting application setting.")
+  ngOnInit() {
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
@@ -168,7 +160,7 @@ export class AppComponent implements OnInit {
     this.themeName = this.storageService.getPageThmem();
   }
 
-  async getApplicationSettings() {
+  getApplicationSettings() {
     if(this.settingLoding){
       return;
     }
@@ -180,22 +172,19 @@ export class AppComponent implements OnInit {
           let serverHost = new URL(hostNameInCookies)?.origin;
           this.dataShareService.shareServerHostName(serverHost);
           this.storageService.setHostNameDinamically(hostNameInCookies);
-          console.log("first If Conditions")
       } else {
         this.settingLoding = true;
           if (!hostNameInLocal || !this.authService.checkApplicationSetting()) {
             if(!this.authService.checkApplicationSetting() && hostNameInLocal){
               this.apiCallService.getApplicationAllSettings();
             } else{
-              await this.awsSecretManagerService.getServerAndAppSetting();
-              console.log("get aws endpoint.")
+              this.awsSecretManagerService.getServerAndAppSetting();
             }
 
           } else {
               let serverHost = new URL(hostNameInLocal)?.origin;
               this.dataShareService.shareServerHostName(serverHost);
               this.storageService.setHostNameDinamically(hostNameInLocal);
-              console.log("2nd If Conditions")
           }
       }
     } else {
@@ -216,8 +205,6 @@ export class AppComponent implements OnInit {
       if(themeSettings){
         this.envService.setThemeSetting(themeSettings);
       }
-      console.log("Main If Conditions")
-      console.log(commingPlace); 
   }
   
 }
