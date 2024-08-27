@@ -39,11 +39,11 @@ export class AppComponent implements OnInit {
   ) {
     //this.localSetting();
     // this.apiCallService.getApplicationAllSettings();
-    if(!this.settingLoding){
-      this.getApplicationSettings();
-    }else {
-      this.loadApplicationSetting('constructure');
-    }
+    // if(!this.settingLoding){
+    //   this.getApplicationSettings();
+    // }else {
+    //   this.loadApplicationSetting('constructure');
+    // }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
         data =>{
@@ -91,7 +91,12 @@ export class AppComponent implements OnInit {
    }
 
    
-  ngOnInit() {
+  async ngOnInit() {
+    if(!this.settingLoding){
+      await this.getApplicationSettings();
+    }else {
+      this.loadApplicationSetting('constructure');
+    }
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
@@ -160,7 +165,7 @@ export class AppComponent implements OnInit {
     this.themeName = this.storageService.getPageThmem();
   }
 
-  getApplicationSettings() {
+  async getApplicationSettings() {
     if(this.settingLoding){
       return;
     }
@@ -178,7 +183,7 @@ export class AppComponent implements OnInit {
             if(!this.authService.checkApplicationSetting() && hostNameInLocal){
               this.apiCallService.getApplicationAllSettings();
             } else{
-              this.awsSecretManagerService.getServerAndAppSetting();
+              await this.awsSecretManagerService.getServerAndAppSetting();
             }
 
           } else {
@@ -188,7 +193,7 @@ export class AppComponent implements OnInit {
           }
       }
     } else {
-      this.awsSecretManagerService.getServerAndAppSetting();
+      await this.awsSecretManagerService.getServerAndAppSetting();
     }
     
     if(this.storageService.getHostNameDinamically()){
