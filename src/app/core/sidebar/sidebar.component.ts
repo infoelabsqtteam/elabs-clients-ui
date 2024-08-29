@@ -232,17 +232,21 @@ addFebMenu(menu,parent){
   // this.commonFunctionService.updateUserPreference(modifiedMenuObj,'preferenceMap',parent);
   // this.saveCallSubscribe();
 }
-async updateUserPreference(menu,field,parent){  
-  this.unsubscribe(this.userPreferenceSubscription);
-  let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
-  if (response?.success) {
-    this.isPageLoading = false;
-    this.notificationService.notify('bg-success', 'Favourite Menu updated successfully!');
-  } else {
-    this.isPageLoading = false;
-    this.notificationService.notify('bg-warning', 'Failed to save data.');
+async updateUserPreference(menu,field,parent){
+  try{
+    this.unsubscribe(this.userPreferenceSubscription);
+    let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+    if (response?.success) {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-success', 'Favourite Menu updated successfully!');
+    } else {
+      this.isPageLoading = false;
+      this.notificationService.notify('bg-warning', 'Failed to save data.');
+    }
+    // this.saveCallSubscribe();
+  }catch(err){
+    console.log(err);
   }
-  // this.saveCallSubscribe();
 }
 // checkFebMenuAddOrNot(menu,parent){
 //   let menuId = menu._id;

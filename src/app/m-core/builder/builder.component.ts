@@ -482,14 +482,18 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
   }
   
   async updateUserPreference(menu,field,parent){
-    this.unsubscribe(this.userPreferenceSubscription);
-    let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
-    if (response?.success) {
-      this.isPageLoading = false;
-      this.notificationService.notify('bg-success', 'favourite Tab updated successfully!');
-    } else {
-      this.isPageLoading = false;
-      this.notificationService.notify('bg-warning', 'Failed to save data.');
+    try{
+      this.unsubscribe(this.userPreferenceSubscription);
+      let response = await this.userPrefrenceService.updateUserPreference(menu,field,parent);
+      if (response?.success) {
+        this.isPageLoading = false;
+        this.notificationService.notify('bg-success', 'favourite Tab updated successfully!');
+      } else {
+        this.isPageLoading = false;
+        this.notificationService.notify('bg-warning', 'Failed to save data.');
+      }
+    }catch(err){
+      console.log(err);
     }
   }
 }

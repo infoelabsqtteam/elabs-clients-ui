@@ -93,36 +93,44 @@ export class AppComponent implements OnInit {
    }
 
    
-  async ngOnInit() {
-    if(!this.settingLoding){
-      await this.getApplicationSettings();
-      console.log("oninit first");
-    }else {
-      this.loadApplicationSetting('constructure');
-      console.log("oninit second");
+  ngOnInit() {
+    this.initialOnInit();    
+  }
+
+  async initialOnInit(){
+    try{
+      if(!this.settingLoding){
+        await this.getApplicationSettings();
+        console.log("oninit first");
+      }else {
+        this.loadApplicationSetting('constructure');
+        console.log("oninit second");
+      }
+      this.router.events.subscribe(event =>{
+        if (event instanceof NavigationEnd) {
+          if(event.urlAfterRedirects == "/"){ 
+            this.redirectToHomePage();
+            console.log("route first");
+          }else if(
+            event.id === 1 &&
+            event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/privacy-policy")
+          ) { 
+            // if(event.url.startsWith("/browse") && this.storageService.getChildWindowUrl() == '/'){
+            //   this.storageService.setRedirectUrl(event.urlAfterRedirects);
+            // }  
+            let themeSettings =  this.storageService.getThemeSetting();
+            if(themeSettings){
+              this.envService.setThemeSetting(themeSettings);
+            }      
+            this.redirectToHomePageWithStorage();
+            console.log("route second");
+          }
+        }      
+     })
+
+    }catch(err){
+      console.log(err);
     }
-    this.router.events.subscribe(event =>{
-      if (event instanceof NavigationEnd) {
-        if(event.urlAfterRedirects == "/"){ 
-          this.redirectToHomePage();
-          console.log("route first");
-        }else if(
-          event.id === 1 &&
-          event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/privacy-policy")
-        ) { 
-          // if(event.url.startsWith("/browse") && this.storageService.getChildWindowUrl() == '/'){
-          //   this.storageService.setRedirectUrl(event.urlAfterRedirects);
-          // }  
-          let themeSettings =  this.storageService.getThemeSetting();
-          if(themeSettings){
-            this.envService.setThemeSetting(themeSettings);
-          }      
-          this.redirectToHomePageWithStorage();
-          console.log("route second");
-        }
-      }      
-   })
-    
   }
 
   redirectToHomePage(){
