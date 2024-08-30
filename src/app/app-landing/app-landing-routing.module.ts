@@ -8,8 +8,8 @@ const appLandingRoutes : Routes = [
 
         {path: '', component: AppLandingComponent, children:[
             { path: 'privacy-policy', pathMatch: 'full', component: PrivacyPolicyComponent},
-            { path: 'download-manual-report', component: DownloadReportComponent }
-            
+            { path: 'download-manual-report', component: DownloadReportComponent },            
+            { path : 'pbl/download/:value/:id', component: DownloadReportComponent }            
            ]
          },
     ];
