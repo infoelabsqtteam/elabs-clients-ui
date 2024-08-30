@@ -8,12 +8,14 @@ import { FormModelModule } from '../m-core/modals/form-model.module';
 import { AppLandingComponent } from './app-landing.component';
 import { DownloadReportComponent } from './download-report/download-report.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { DownloadComponent } from './download/download.component';
 
 @NgModule({
     declarations: [
     	AppLandingComponent,     
         DownloadReportComponent,
-        PrivacyPolicyComponent
+        PrivacyPolicyComponent,
+        DownloadComponent
     ],
     imports: [ 
         AppLandingRoutingModule,

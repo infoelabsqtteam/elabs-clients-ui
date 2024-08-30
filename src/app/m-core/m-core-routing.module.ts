@@ -17,12 +17,11 @@ import { ReportFormComponent } from './report/report-form/report-form.component'
 import { NotificationSettingComponent } from './notification/notification-setting/notification-setting.component';
 import { NotificationListComponent } from './notification/notification-list/notification-list.component';
 import { AuthGuard } from '@core/web-core';
-import { SigninComponent } from '../auth/signin/signin.component';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
-                { path : '/', component:SigninComponent},
-                { path : 'template', component:BuilderComponent} ,//will not in use this time
+                { path : '/', component:AdminDashboardComponent, canActivate: [AuthGuard]},
+                { path : 'template', component:BuilderComponent, canActivate: [AuthGuard]} ,//will not in use this time
                 { path : 'browse/:moduleId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'browse/:moduleId/:menuId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'browse/:moduleId/:menuId/:tabid', component:BuilderComponent, canActivate: [AuthGuard] } ,
