@@ -31,7 +31,6 @@ export class DownloadComponent implements OnInit {
     let routers = this.activatedRoute;
     let id = routers.snapshot.params?.id ? routers.snapshot.params.id : '';
     let value = routers.snapshot.params?.value ? routers.snapshot.params.value : '';
-    // this.reportUrlNo = this.encryptionService.decryptRequest(reportNo);
     if(id && value){
       let data:any = {};
       data._id = this.encryptionService.decryptRequest(id);
