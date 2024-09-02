@@ -117,8 +117,8 @@
 
 .spinner {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 125px;
+    height: 125px;
     z-index: 1001;
     display: flex;
     align-items: center;
@@ -130,10 +130,10 @@
     height: 100%;
     border-radius: 50%;
     border: 5px solid transparent;
-    border-top: 5px solid #3498db;
-    border-right: 5px solid #e74c3c;
-    border-bottom: 5px solid #f1c40f;
-    border-left: 5px solid #2ecc71;
+    border-top: 5px solid var(--themecolor);
+    border-right: 5px solid var(--buttonColor);
+    border-bottom: 5px solid var(--themecolor);
+    border-left: 5px solid var(--buttonColor);
     position: absolute;
     top: 0;
     left: 0;
