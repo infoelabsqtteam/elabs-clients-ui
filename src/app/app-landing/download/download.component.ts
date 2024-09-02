@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ApiCallService, ApiService, DataShareService, DownloadService, EncryptionService, RouterService } from '@core/web-core';
+import { ApiCallService, ApiService, DataShareService, DownloadService, EncryptionService, RouterService, StorageService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 })
 export class DownloadComponent implements OnInit {
 
+  welcometitle:any;
+
   fileDataSubscription:Subscription;
 
   constructor(
@@ -18,8 +20,10 @@ export class DownloadComponent implements OnInit {
     private apiCallService:ApiCallService,
     private dataShareService:DataShareService,
     private downloadService:DownloadService,
-    private routerService:RouterService
+    private routerService:RouterService,
+    private storageService:StorageService
   ) { 
+    this.welcometitle = this.storageService.getPageTitle();
     this.fileDataSubscription = this.dataShareService.getfileData.subscribe(data =>{
       this.setFileData(data);
     })
@@ -30,7 +34,7 @@ export class DownloadComponent implements OnInit {
     if(id && value){
       let data:any = {};
       data._id = id;
-      this.apiCallService.getPdf(data,value);
+      // this.apiCallService.getPdf(data,value);
     }
   }
 

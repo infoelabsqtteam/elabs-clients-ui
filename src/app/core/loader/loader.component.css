@@ -1,0 +1,183 @@
+/* #loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.spinner {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top: 5px solid #3498db;
+    border-right: 5px solid #e74c3c;
+    border-bottom: 5px solid #f1c40f;
+    border-left: 5px solid #2ecc71;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-content {
+    position: relative;
+    text-align: center;
+    z-index: 1002;
+}
+
+.spinner-text {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.progress-dots {
+    display: flex;
+    justify-content: space-between;
+    width: 50px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #3498db;
+    opacity: 0.3;
+    animation: dotPulse 1.5s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+} */
+
+
+/* loader.component.css */
+#loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.spinner {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top: 5px solid #3498db;
+    border-right: 5px solid #e74c3c;
+    border-bottom: 5px solid #f1c40f;
+    border-left: 5px solid #2ecc71;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-content {
+    position: relative;
+    text-align: center;
+    z-index: 1002;
+}
+
+.spinner-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.progress-dots {
+    display: flex;
+    justify-content: space-between;
+    width: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #3498db;
+    opacity: 0.3;
+    animation: dotPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}

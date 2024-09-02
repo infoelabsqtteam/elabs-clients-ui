@@ -17,6 +17,7 @@ import { UserAccountComponent } from './user-account/user-account.component';
 import { SettingMenuComponent } from './setting-menu/setting-menu.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NotificationMenuComponent } from '../m-core/notification/notification-menu/notification-menu.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
     declarations : [
@@ -29,7 +30,8 @@ import { NotificationMenuComponent } from '../m-core/notification/notification-m
         UserAccountComponent,
         SettingMenuComponent,
         SidebarComponent,
-        NotificationMenuComponent
+        NotificationMenuComponent,
+        LoaderComponent
         ],
         imports :[
             MDBBootstrapModule.forRoot(),
@@ -43,6 +45,7 @@ import { NotificationMenuComponent } from '../m-core/notification/notification-m
             UserAccountComponent,
             SettingMenuComponent,
             SidebarComponent,
+            LoaderComponent,
             ModelModule,           
             ],
         providers:[
