@@ -34,8 +34,8 @@ export class DownloadComponent implements OnInit {
     // this.reportUrlNo = this.encryptionService.decryptRequest(reportNo);
     if(id && value){
       let data:any = {};
-      data._id = id;
-      this.modelService.open('app-loader',{});
+      data._id = this.encryptionService.decryptRequest(id);
+      this.modelService.open('app-loader',{text:'Downloading...'});
       this.apiCallService.getPdf(data,value);
     }
   }

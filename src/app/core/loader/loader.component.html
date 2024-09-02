@@ -21,7 +21,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',
         <div class="spinner-circle"></div>
         <div class="spinner-content">
             <div class="spinner-text">
-                <span id="loading-text">Downloading</span>
+                <span id="loading-text" [innerHTML]="text"></span>
             </div>
             <!-- <div class="progress-dots">
                 <span class="dot" id="dot1"></span>
