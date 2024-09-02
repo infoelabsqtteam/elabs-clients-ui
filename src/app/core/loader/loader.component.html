@@ -13,19 +13,22 @@
   </div>
 </div> -->
 <!-- loader.component.html -->
-<div id="loader">
-  <div class="overlay"></div>
-  <div class="spinner">
-      <div class="spinner-circle"></div>
-      <div class="spinner-content">
-          <div class="spinner-text">
-              <span id="loading-text">Downloading</span>
-          </div>
-          <!-- <div class="progress-dots">
-              <span class="dot" id="dot1"></span>
-              <span class="dot" id="dot2"></span>
-              <span class="dot" id="dot3"></span>
-          </div> -->
-      </div>
+<div mdbModal #loaderModal="mdbModal" class="modal fade top"  tabindex="-1" role="dialog"
+aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
+  <div id="loader">
+    <div class="overlay"></div>
+    <div class="spinner">
+        <div class="spinner-circle"></div>
+        <div class="spinner-content">
+            <div class="spinner-text">
+                <span id="loading-text">Downloading</span>
+            </div>
+            <!-- <div class="progress-dots">
+                <span class="dot" id="dot1"></span>
+                <span class="dot" id="dot2"></span>
+                <span class="dot" id="dot3"></span>
+            </div> -->
+        </div>
+    </div>
   </div>
 </div>

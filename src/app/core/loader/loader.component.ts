@@ -1,16 +1,36 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModelService } from '@core/web-core';
+import { ModalDirective } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.css']
 })
-export class LoaderComponent implements AfterViewInit {
+export class LoaderComponent implements OnInit, AfterViewInit {
+  @Input() id: string;
+  @ViewChild('loaderModal') public loaderModal: ModalDirective;
 
   private letterIndex = 0;
   private dotIndex = 0;
 
-  constructor() { }
+  constructor(
+    private modalService:ModelService
+  ) { }
+  ngOnInit(): void {
+    if (!this.id) {
+        console.error('modal must have an id');
+        return;
+    }
+    this.modalService.remove(this.id);
+    this.modalService.add(this);
+  }
+  showModal(alert){ 
+    this.loaderModal.show();
+  } 
+  close(){
+    this.loaderModal.hide();
+  }
 
   ngAfterViewInit(): void {
     this.animateTextAndDots();

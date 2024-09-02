@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { ApiCallService, ApiService, DataShareService, DownloadService, EncryptionService, RouterService, StorageService } from '@core/web-core';
+import { ActivatedRoute } from '@angular/router';
+import { ApiCallService, DataShareService, DownloadService, EncryptionService, RouterService, StorageService, ModelService } from '@core/web-core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,7 +21,8 @@ export class DownloadComponent implements OnInit {
     private dataShareService:DataShareService,
     private downloadService:DownloadService,
     private routerService:RouterService,
-    private storageService:StorageService
+    private storageService:StorageService,
+    private modelService:ModelService
   ) { 
     this.welcometitle = this.storageService.getPageTitle();
     this.fileDataSubscription = this.dataShareService.getfileData.subscribe(data =>{
@@ -34,7 +35,8 @@ export class DownloadComponent implements OnInit {
     if(id && value){
       let data:any = {};
       data._id = id;
-      // this.apiCallService.getPdf(data,value);
+      this.modelService.open('app-loader',{});
+      this.apiCallService.getPdf(data,value);
     }
   }
 
@@ -44,8 +46,9 @@ export class DownloadComponent implements OnInit {
     if (getfileData != '' && getfileData != null) {
       const file = new Blob([getfileData.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(file);
-      this.routerService.openInSameTabWithoutHistory(url);
-      this.downloadService.download(url,getfileData.filename);      
+      this.downloadService.download(url,getfileData.filename);
+      this.modelService.close('app-loader');
+      this.routerService.openInSameTabWithoutHistory(url);  
     }
   }
 
