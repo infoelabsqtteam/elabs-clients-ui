@@ -42,7 +42,7 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v2
       with:
-        node-version: '18.20.2'
+        node-version: '18.20.3'
     
     - name: Installing NPM and Angular
       run: |         
