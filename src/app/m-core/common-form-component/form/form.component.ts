@@ -1405,18 +1405,14 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   openModal(id, index, parent,child, data, alertType) {
     let listData = this.custmizedFormValue[child['field_name']];
     let filterValue = this.term[child['field_name']];
+    this.deletefieldName['child'] = child;
     if(parent){
       let custmizedKey = this.commonFunctionService.custmizedKey(parent);   
       listData = this.custmizedFormValue[custmizedKey][child['field_name']];
       filterValue = this.term[parent['field_name']];
+      this.deletefieldName['parent'] = parent;
     }
     this.deleteIndex = this.commonFunctionService.getCorrectIndex(data,index,child,listData,filterValue);
-    if(parent != ''){
-      this.deletefieldName['parent'] = parent;
-      this.deletefieldName['child'] = child;
-    }else{
-      this.deletefieldName['child'] = child;
-    }
     this.commonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
   }
   onClickLoadData(parent,field){
