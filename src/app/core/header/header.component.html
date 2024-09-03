@@ -9,9 +9,9 @@
           </mat-tab>
           <mat-tab *ngFor="let menu of (!!menuSliceCount ? (menuData | slice: 0 : menuSliceCount) :menuData);let i = index" [ngClass]="getCurrentMenu() == menu.name ? 'active' : ''">
             <ng-template mat-tab-label>
-              <a class="p-2" *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
-                #tooltip="matTooltip" matTooltip="Press Ctrl + c" [ngClass]="{}">{{ menu.label }}</a>
-              <a class="p-2" [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
+              <a *ngIf="menu.submenu == undefined && menu.submenu == null" (click)="getTemplateMenuData(menu,i,-1,$event)"
+                #tooltip="matTooltip" [matTooltip]="menu.label" [ngClass]="{}">{{ menu.label }}</a>
+              <a [matMenuTriggerFor]="beforeMenu" *ngIf="menu.submenu && menu.submenu != null"
                 (click)="activeLinkD(menu.label,false)" [ngClass]="{}">{{ menu.label }} <mat-icon>arrow_drop_down</mat-icon></a>
               <mat-menu #beforeMenu="matMenu" xPosition="after" class="menudropdon">
                 <button mat-menu-item *ngFor="let submenu of menu.submenu;let j = index" (click)="getTemplateMenuData(submenu,i,j,$event)" [ngClass]="getCurrentMenu() == submenu.name ? 'activetxt active' : ''">{{
@@ -21,8 +21,8 @@
           </mat-tab>
           <mat-tab *ngIf="hasOverflow">
             <ng-template mat-tab-label >
-                <div [matMenuTriggerFor]="moreMenu" class="px-1">
-                  <span>{{selectedMenu}}</span><mat-icon>more_vert</mat-icon></div>
+                <a [matMenuTriggerFor]="moreMenu" class="px-1">
+                  <span>{{selectedMenu}}</span><mat-icon>more_vert</mat-icon></a>
             </ng-template>
           </mat-tab>
         </mat-tab-group>

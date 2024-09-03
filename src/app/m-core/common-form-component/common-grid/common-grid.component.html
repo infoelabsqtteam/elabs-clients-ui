@@ -17,7 +17,7 @@
                                                   <i fas class="fas fa-ellipsis-v px-1" [matMenuTriggerFor]="more" #mainMenuTrigger="matMenuTrigger" [matTooltip]="'More'" [matTooltipPosition]="'above'"></i>
                                               </span>
                                               <mat-menu  #more="matMenu" xPosition="after" class="rightclickmenu">
-                                                <button mat-button class="w-100 text-left" color="primary" [title]="'Advance Filter'" [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger="matMenuTrigger" (click)="$event.stopPropagation();$event.preventDefault()"><mdb-icon class="mr-2" size="sm" fas icon="filter"></mdb-icon> Advance Filter</button>
+                                                <button mat-button class="w-100 text-left d-block" color="primary" [title]="'Advance Filter'" [matMenuTriggerFor]="filterMenu" #adFilterMenuTrigger="matMenuTrigger" (click)="$event.stopPropagation();$event.preventDefault()"><mdb-icon class="mr-2" size="sm" fas icon="filter"></mdb-icon> Advance Filter</button>
                                                   <app-grid-column-action-menu [elements]="config.elements" [sortIcon]="config.sortIcon" [headElements]="headElements" [data]="config.modifyGridData" [index]="i"  [onSort]="onSort.bind(this)" ></app-grid-column-action-menu>
                                               </mat-menu>
                                               <!-- mat menu for Advance column filter  -->
@@ -182,7 +182,7 @@
   </div>
 </section>
 
-<section *ngIf="config.elements.length > 0">
+<section class="pt-4" *ngIf="config.elements.length > 0">
     <mat-card-content class="m-0 pt-4 text-center position-relative">
         <pagination-controls (pageChange)="getPage($event)" id="server5"></pagination-controls>
         <div class="paginationnumber">

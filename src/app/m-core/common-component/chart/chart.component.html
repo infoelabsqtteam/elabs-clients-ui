@@ -40,11 +40,11 @@
             [legend]="chartLegend[item.call_back_field]" (chartHover)="chartHover($event)"
             (chartClick)="chartClicked($event)">
           </canvas>
-          <google-chart *ngIf="item.package_name == 'google_chart' && chartTitle[item.call_back_field]"
+          <!-- <google-chart *ngIf="item.package_name == 'google_chart' && chartTitle[item.call_back_field]"
             [title]="chartTitle[item.call_back_field]" [type]="chartType[item.call_back_field]"
             [data]="chartDatasets[item.call_back_field]" [columns]="chartLabels[item.call_back_field]"
             [options]="chartOptions[item.call_back_field]">
-          </google-chart>
+          </google-chart> -->
         </ng-container>
         <div *ngIf="!chartType[item.call_back_field]" class="spinner"><mat-spinner diameter="40" class="custom-spinner"></mat-spinner></div>
       </div>
