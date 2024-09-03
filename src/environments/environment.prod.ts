@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  serverhost: "https://prodinventlandserver.e-labs.ai/rest/",
+  serverhost: "https://prodserveritclabs.elabss.ai/rest/",
   appId: "ELABS",
   appName: "elabsprod"
 };
