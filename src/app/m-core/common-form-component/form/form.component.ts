@@ -1402,8 +1402,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.updateAddNew = true;
     }    
   }
-  openModal(id, index, parent,child, filterValue, alertType) {
-    this.deleteIndex = this.commonFunctionService.getCorrectIndex(filterValue,index,child,this.custmizedFormValue[child['field_name']],this.term[child['field_name']]);
+  openModal(id, index, parent,child, data, alertType) {
+    this.deleteIndex = this.commonFunctionService.getCorrectIndex(data,index,child,this.custmizedFormValue[child['field_name']],this.term[child['field_name']]);
     if(parent != ''){
       this.deletefieldName['parent'] = parent;
       this.deletefieldName['child'] = child;
