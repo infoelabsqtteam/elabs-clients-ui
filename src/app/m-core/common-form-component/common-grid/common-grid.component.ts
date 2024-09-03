@@ -433,6 +433,9 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
       link.setAttribute('type', 'hidden');
       const file = new Blob([downloadPdfData.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(file);
+      if(this.config.currentActionButton && this.config.currentActionButton.openNewTab){
+        window.open(url, '_blank');
+      }
       link.href = url;
       link.download = downloadPdfData.filename;
       document.body.appendChild(link);
@@ -643,6 +646,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
   }
   gridButtonAction(index,button){
     let gridData = this.config.elements[index];
+    this.config.currentActionButton = button;
     if(button && button?.onclick && button?.onclick?.action_name){
       switch (button.onclick.action_name.toUpperCase()) {
         case "PREVIEW":
