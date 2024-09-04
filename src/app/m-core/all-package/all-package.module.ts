@@ -9,7 +9,6 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { EditorModule } from '@tinymce/tinymce-angular';
-// import { NgxDiff2htmlModule } from 'ngx-diff2html';
 import { PipesModule } from '../../pipes/pipes.module';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 // import { AngJsoneditorModule } from '@maaxgr/ang-jsoneditor';
@@ -26,8 +25,6 @@ const packages = [
   MomentDateModule,
   EditorModule,
   CarouselModule,
-  // NgxDiff2htmlModule,
-  // PerfectScrollbarModule,
   NgScrollbarModule,
   // AngJsoneditorModule
 ]
