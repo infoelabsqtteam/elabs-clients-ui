@@ -39,7 +39,7 @@ a:hover {text-decoration:none;color: inherit;}
 .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {border-color: #7ab3d6 !important;}
 ///// Select Option Dropdown Fields
 .mat-mdc-select-panel {
-    .mdc-list-item {line-height:34px;min-height: 30px;}
+    .mdc-list-item {line-height:34px;min-height: 20px;}
 }
 .mdc-menu-surface.mat-mdc-select-panel {padding:0 !important;}
 ///// Datepicker
@@ -286,7 +286,7 @@ i.fas{
     vertical-align: baseline;
     text-align: center;
     margin: 0;
-    min-width: 64px;
+    min-width: 35px;
     line-height: 36px;
     padding: 0 16px;
     border-radius: 4px;
@@ -298,7 +298,7 @@ app-common-grid .mat-mdc-card-content{
 .role-button .mdc-button__label{
     overflow: hidden;
     text-overflow: ellipsis;
-    min-width: 50px;
+    min-width: 35px;
     max-width: 100px;
 }
 .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab{
