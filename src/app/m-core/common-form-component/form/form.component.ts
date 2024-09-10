@@ -804,7 +804,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     if (getfileData != '' && getfileData != null && this.checkForDownloadReport) {
       const file = new Blob([getfileData.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(file);
-      this.downloadService.download(url,getfileData.filename);
+      this.downloadService.download(url,getfileData.filename,this.currentActionButton);
       this.dataSaveInProgress = true;
       this.checkForDownloadReport = false;
       this.dataSaveInProgress = true;
@@ -813,7 +813,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   }
   setFileDownloadUrl(fileDownloadUrl){
     if (fileDownloadUrl != '' && fileDownloadUrl != null && this.downloadClick != '') {
-      this.downloadService.download(fileDownloadUrl,this.downloadClick);
+      this.downloadService.download(fileDownloadUrl,this.downloadClick,this.currentActionButton);
       this.downloadClick = '';
       this.dataSaveInProgress = true;
       this.apiService.ResetDownloadUrl();
@@ -1403,13 +1403,16 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     }    
   }
   openModal(id, index, parent,child, data, alertType) {
-    this.deleteIndex = index;
-    if(parent != ''){
+    let listData = this.custmizedFormValue[child['field_name']];
+    let filterValue = this.term[child['field_name']];
+    this.deletefieldName['child'] = child;
+    if(parent){
+      let custmizedKey = this.commonFunctionService.custmizedKey(parent);   
+      listData = this.custmizedFormValue[custmizedKey][child['field_name']];
+      filterValue = this.term[parent['field_name']];
       this.deletefieldName['parent'] = parent;
-      this.deletefieldName['child'] = child;
-    }else{
-      this.deletefieldName['child'] = child;
     }
+    this.deleteIndex = this.commonFunctionService.getCorrectIndex(data,index,child,listData,filterValue);
     this.commonFunctionService.openAlertModal(id,alertType,'Are You Sure ?','Delete This record.');
   }
   onClickLoadData(parent,field){
@@ -1482,7 +1485,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
   downloadFileWithBytes(filedata){
     const file = new Blob([filedata.fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(file);
-    this.downloadService.download(url,this.downloadClick);
+    this.downloadService.download(url,this.downloadClick,this.currentActionButton);
   }
   refreshListofField(field,updatemode){    
     if(field.do_not_refresh_on_add && updatemode){

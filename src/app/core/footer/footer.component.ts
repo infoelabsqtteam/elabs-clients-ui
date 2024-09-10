@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import {DataShareService, EnvService, StorageService } from '@core/web-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-footer',
@@ -15,6 +16,7 @@ export class FooterComponent implements OnInit {
   template:string = "temp1";
   title = "";
   currentYear:any;
+  applicationSettingSubscription:Subscription;
 
   constructor(
     private dataShareService:DataShareService,
@@ -34,6 +36,11 @@ export class FooterComponent implements OnInit {
         () => console.log('test')
     );    
     this.currentYear=(new Date()).getFullYear();
+    this.applicationSettingSubscription = this.dataShareService.applicationSettings.subscribe(setting =>{
+      if(setting == 'setting'){
+        this.pageloded();
+      }
+  })
   }
 
   ngOnInit(): void {

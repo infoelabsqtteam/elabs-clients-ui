@@ -41,8 +41,10 @@ export class AppComponent implements OnInit {
     // this.apiCallService.getApplicationAllSettings();
     if(!this.settingLoding){
       this.getApplicationSettings();
+      console.log("constructor first");
     }else {
       this.loadApplicationSetting('constructure');
+      console.log("constructor second");
     }
     if(this.dataShareService.themeSetting != undefined){
       this.themeSettingSubscription = this.dataShareService.themeSetting.subscribe(
@@ -91,11 +93,19 @@ export class AppComponent implements OnInit {
    }
 
    
-  ngOnInit() {     
+  async ngOnInit() {
+    if(!this.settingLoding){
+      await this.getApplicationSettings();
+      console.log("oninit first");
+    }else {
+      this.loadApplicationSetting('constructure');
+      console.log("oninit second");
+    }
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
           this.redirectToHomePage();
+          console.log("route first");
         }else if(
           event.id === 1 &&
           event.url === event.urlAfterRedirects && !event.url.startsWith("/download-manual-report") && !event.url.startsWith("/verify") && !event.url.startsWith("/pbl") && !event.url.startsWith("/unsubscribe") && !event.url.startsWith("/privacy-policy")
@@ -108,6 +118,7 @@ export class AppComponent implements OnInit {
             this.envService.setThemeSetting(themeSettings);
           }      
           this.redirectToHomePageWithStorage();
+          console.log("route second");
         }
       }      
    })
@@ -160,7 +171,7 @@ export class AppComponent implements OnInit {
     this.themeName = this.storageService.getPageThmem();
   }
 
-  getApplicationSettings() {
+  async getApplicationSettings() {
     if(this.settingLoding){
       return;
     }
@@ -172,25 +183,30 @@ export class AppComponent implements OnInit {
           let serverHost = new URL(hostNameInCookies)?.origin;
           this.dataShareService.shareServerHostName(serverHost);
           this.storageService.setHostNameDinamically(hostNameInCookies);
-          console.log("first If Conditions")
+          this.loadApplicationSetting('first check cookie');
+          console.log("first");
       } else {
         this.settingLoding = true;
           if (!hostNameInLocal || !this.authService.checkApplicationSetting()) {
             if(!this.authService.checkApplicationSetting() && hostNameInLocal){
               this.apiCallService.getApplicationAllSettings();
+              console.log("second");
             } else{
-              this.awsSecretManagerService.getServerAndAppSetting();
+              await this.awsSecretManagerService.getServerAndAppSetting();
+              console.log("third");
             }
 
           } else {
               let serverHost = new URL(hostNameInLocal)?.origin;
               this.dataShareService.shareServerHostName(serverHost);
               this.storageService.setHostNameDinamically(hostNameInLocal);
-              console.log("2nd If Conditions")
+              this.loadApplicationSetting('forth check cookie');
+              console.log("forth");
           }
       }
     } else {
-      this.awsSecretManagerService.getServerAndAppSetting();
+      await this.awsSecretManagerService.getServerAndAppSetting();
+      console.log("fifth");
     }
     
     if(this.storageService.getHostNameDinamically()){
@@ -204,11 +220,10 @@ export class AppComponent implements OnInit {
     this.loadPage();
     this.dataShareService.subscribeTemeSetting("setting");
     let themeSettings =  this.storageService.getThemeSetting();
-      if(themeSettings){
-        this.envService.setThemeSetting(themeSettings);
-      }
-      console.log("Main If Conditions")
-      console.log(commingPlace); 
+    if(themeSettings){
+      this.envService.setThemeSetting(themeSettings);
+    }
+    console.log(commingPlace);
   }
   
 }
