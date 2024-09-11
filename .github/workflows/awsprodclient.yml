@@ -69,5 +69,5 @@ jobs:
     # - name: Clean up cache for IIRT LIMS
     #   run: aws cloudfront create-invalidation --distribution-id EFJ8A5QIUJKHQ --paths '/*'
       
-    - name: Clean up cache for TICS LIMS
-      run: aws cloudfront create-invalidation --distribution-id E12SW0R68LTL3K --paths '/*'
+    # - name: Clean up cache for TICS LIMS
+    #   run: aws cloudfront create-invalidation --distribution-id E12SW0R68LTL3K --paths '/*'
