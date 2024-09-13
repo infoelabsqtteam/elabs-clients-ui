@@ -23,7 +23,7 @@
                             <div class="password">
                                 <label class="font-15">Password</label>
                                 <input [type]="showpasswrd ? 'text' : 'password'" class="form-control" placeholder="" formControlName="password" required>
-                                <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                <button mat-icon-button class="smbtn-circle" [matTooltip]="showpasswrd ? 'Hide' : 'Show'" (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
                             </div>
                             <small class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
                                 {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
@@ -85,8 +85,8 @@
                                     <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                         <mat-label>Password</mat-label>
                                         <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
-                                        <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                        <button mat-icon-button class="smbtn-circle" [matTooltip]="showpasswrd ? 'Hide' : 'Show'" (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                        <small class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
                                             {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                     </mat-form-field> 
                                 </div>
@@ -94,7 +94,7 @@
                                     <mat-form-field appearance="outline" class="w-100 mb-4 password repassword">
                                         <mat-label>Confirm Password</mat-label>
                                         <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
-                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                        <small class="text-danger" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                                     </mat-form-field>  
                                 </div>
                                 <div class="col-md-12"> 
@@ -150,8 +150,8 @@
                                     <mat-form-field appearance="outline" class="w-100 mb-3 password">
                                         <mat-label>Password</mat-label>
                                         <input matInput [type]="showpasswrd ? 'text' : 'password'" placeholder="Enter your password" formControlName="password">
-                                        <button mat-icon-button (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
-                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
+                                        <button mat-icon-button class="smbtn-circle" [matTooltip]="showpasswrd ? 'Hide' : 'Show'" (click)="showpassword()"><mat-icon *ngIf="!showpasswrd">visibility</mat-icon><mat-icon *ngIf="showpasswrd">visibility_off</mat-icon></button>
+                                        <small class="text-danger" *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].dirty && signUpForm.controls['password'].errors?.invalidPassword" >
                                             {{ signUpForm.controls['password'].errors.invalidPassword | titlecase}}</small>
                                     </mat-form-field>
                                 </div>
@@ -159,7 +159,7 @@
                                     <mat-form-field appearance="outline" class="w-100 password repassword">
                                         <mat-label>Confirm Password</mat-label>
                                         <input matInput type="password" placeholder="Enter your Confirm password" formControlName="confirmPassword">
-                                        <small class="text-danger" style="font-size:9px;bottom:-16px;" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
+                                        <small class="text-danger" *ngIf="signUpForm.get('confirmPassword').touched && signUpForm.get('confirmPassword').errors?.passwordMismatch">Password Not Match</small>
                                     </mat-form-field>
                                 </div>
 

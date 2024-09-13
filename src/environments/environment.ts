@@ -4,9 +4,13 @@
 
 export const environment = {
   production: false,
-  // serverhost:"https://prodservercentral.elabss.ai",
-  serverhost:"http://localhost:8104",
-  appId: "ELABS"
+  baseUrl: 'https://omoknow.com/rest/',
+    //serverhost: "https://sitservercentrallims.e-labs.ai",
+    // serverhost: "https://testinventlandserver.e-labs.ai/rest/",
+    serverhost:"https://prodservercentral.elabss.ai",
+    // serverhost:"http://localhost:8104",
+  appId: "ELABS",
+  appName: "tonicprod"
 };
 
 /*
