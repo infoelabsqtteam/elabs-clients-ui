@@ -49,9 +49,10 @@ a.google-visualization-table-page-number.gradient {padding:0 3px;border-radius:1
 
 
 
-.maindashboard {height:calc(100vh - 120px);
-  .dashboardcard {background:#d3ebfa;border-radius:7px;padding:30px;
-    h1 {font-size:35px;}
+.maindashboard {height:calc(100vh - 133px);
+  .dashboardcard {background:#d3ebfa url(../img/welcomeimg.png)  no-repeat right 30px top 20px;border-radius:7px;padding:30px;height:100%;background-size:contain;
+    h1 {font-size:35px;display:inline-block;background:#d3ebfa;padding:10px;border-radius:10px;}
+    img {display:none;}
   }
 
 }

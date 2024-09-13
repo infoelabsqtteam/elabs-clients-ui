@@ -93,14 +93,7 @@ export class AppComponent implements OnInit {
    }
 
    
-  async ngOnInit() {
-    if(!this.settingLoding){
-      await this.getApplicationSettings();
-      console.log("oninit first");
-    }else {
-      this.loadApplicationSetting('constructure');
-      console.log("oninit second");
-    }
+  ngOnInit() {
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationEnd) {
         if(event.urlAfterRedirects == "/"){ 
@@ -171,7 +164,7 @@ export class AppComponent implements OnInit {
     this.themeName = this.storageService.getPageThmem();
   }
 
-  async getApplicationSettings() {
+  getApplicationSettings() {
     if(this.settingLoding){
       return;
     }
@@ -192,7 +185,7 @@ export class AppComponent implements OnInit {
               this.apiCallService.getApplicationAllSettings();
               console.log("second");
             } else{
-              await this.awsSecretManagerService.getServerAndAppSetting();
+              this.awsSecretManagerService.getServerAndAppSetting();
               console.log("third");
             }
 
@@ -205,7 +198,7 @@ export class AppComponent implements OnInit {
           }
       }
     } else {
-      await this.awsSecretManagerService.getServerAndAppSetting();
+      this.awsSecretManagerService.getServerAndAppSetting();
       console.log("fifth");
     }
     
