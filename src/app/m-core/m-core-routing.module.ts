@@ -20,7 +20,8 @@ import { AuthGuard } from '@core/web-core';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
-                { path : 'template', component:BuilderComponent} ,//will not in use this time
+                { path : '/', component:AdminDashboardComponent, canActivate: [AuthGuard]},
+                { path : 'template', component:BuilderComponent, canActivate: [AuthGuard]} ,//will not in use this time
                 { path : 'browse/:moduleId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'browse/:moduleId/:menuId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'browse/:moduleId/:menuId/:tabid', component:BuilderComponent, canActivate: [AuthGuard] } ,
@@ -28,17 +29,17 @@ const elabsRoutes : Routes = [
                 { path : 'pbl/:action/:key1/:key2/:key3', component:BuilderComponent },
                 { path : 'Navigation', component: NavigationComponent },
                 { path : 'permissions', component: PermissionsComponent },
-                { path : 'quote', component: QuoteComponent },
-                { path : 'user-admin', component: AdminComponent },
-                { path : 'scheduling-dashboard', component:SchedulingDashboardComponent},
-                { path : 'home', component:HomeComponent},
-                { path : 'dashboard', component:AdminDashboardComponent},
-                { path : 'diff_html', component:DiffHtmlComponent},
-                { path : 'vdr', component: DriveHomeComponent },
-                { path : 'report', component: ReportFormComponent },
-                { path : 'notification-setting', component: NotificationSettingComponent },
-                { path : 'notification-list', component: NotificationListComponent },
-                { path : 'notification/:moduleId/:menuId/:subMenuId/:tabId/:formName/:recordId', component: BuilderComponent },
+                { path : 'quote', component: QuoteComponent, canActivate: [AuthGuard] },
+                { path : 'user-admin', component: AdminComponent, canActivate: [AuthGuard] },
+                { path : 'scheduling-dashboard', component:SchedulingDashboardComponent, canActivate: [AuthGuard]},
+                { path : 'home', component:HomeComponent, canActivate: [AuthGuard]},
+                { path : 'dashboard', component:AdminDashboardComponent, canActivate: [AuthGuard]},
+                { path : 'diff_html', component:DiffHtmlComponent, canActivate: [AuthGuard]},
+                { path : 'vdr', component: DriveHomeComponent, canActivate: [AuthGuard] },
+                { path : 'report', component: ReportFormComponent, canActivate: [AuthGuard] },
+                { path : 'notification-setting', component: NotificationSettingComponent, canActivate: [AuthGuard] },
+                { path : 'notification-list', component: NotificationListComponent, canActivate: [AuthGuard] },
+                { path : 'notification/:moduleId/:menuId/:subMenuId/:tabId/:formName/:recordId', component: BuilderComponent, canActivate: [AuthGuard] },
                 { path : '**', pathMatch: 'full', component: PageNotFoundComponent },
             ],
             runGuardsAndResolvers: 'always'
