@@ -857,10 +857,7 @@ export class CommonGridComponent implements OnInit,OnChanges,OnDestroy {
     this.editedRowData.emit(obj);
   }
   exportExcel() {
-    let responce:any = this.downloadService.exportExcel(this.config.total,this.headElements,this.filterForm.getRawValue(),this.tab,this.config.currentMenu);
-    if(responce != ''){
-      this.config.downloadClick = responce;
-    } 
+    this.downloadService.exportExcel(this.config.total,this.headElements,this.filterForm.getRawValue(),this.tab,this.config.currentMenu);
   }
   exportCSV() {
     let tempNme = this.config.currentMenu.name;

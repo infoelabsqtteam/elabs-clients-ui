@@ -41,6 +41,7 @@ import { PermissionTreeViewComponent } from './permission-tree-view/permission-t
 import { ChartModalComponent } from './chart-modal/chart-modal.component';
 import { AddPermissionTreeControlsComponent } from './add-permission-tree-controls/add-permission-tree-controls.component';
 import { FullScreenMapComponent } from './full-screen-map/full-screen-map.component';
+import { ExportExcelComponent } from './export-excel/export-excel.component';
 
 const models = [
   ModalsComponent,
@@ -73,7 +74,8 @@ const models = [
   BulkUpdateComponent,
   PermissionTreeViewComponent,
   AddPermissionTreeControlsComponent,
-  FullScreenMapComponent
+  FullScreenMapComponent,
+  ExportExcelComponent
 ]
 const exportModels =[ 
   models,
