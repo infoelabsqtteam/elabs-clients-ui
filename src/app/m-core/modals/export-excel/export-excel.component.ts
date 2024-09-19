@@ -50,7 +50,7 @@ export class ExportExcelComponent implements OnInit {
   }
   download(){
     if(this.pageNo){
-      this.downloadService.getExcelData(this.modelData.tab,this.modelData.menuName,this.modelData.gridColumns,this.modelData.gridFilterValue,this.modelData.tempName,Number(this.pageNo),this.pageSize);
+      this.downloadService.getExcelData(this.modelData.tab,this.modelData.menuName,this.modelData.gridColumns,this.modelData.gridFilterValue,this.modelData.tempName,Number(this.pageNo),this.pageNo != '0'?this.pageSize:0);
     }    
     this.close();
   }
