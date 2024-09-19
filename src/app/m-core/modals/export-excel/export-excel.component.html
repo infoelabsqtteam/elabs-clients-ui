@@ -1,6 +1,6 @@
 <div mdbModal #exportExcelModal="mdbModal" class="modal fade top selectedparametermodule"  tabindex="-1" role="dialog"
   aria-labelledby="myModalLabel" aria-hidden="true" [config]="{backdrop: 'static',keyboard: false}">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
+  <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
     <div class="modal-content" >
       <!--Header-->
       <div class="modal-header">
@@ -9,15 +9,22 @@
       </div>
       <!--Body-->
       
-      <div class="modal-body pt-0 popuptable">
+      <div class="modal-body pt-0">
         <div class="">
             <div class="table without-filter mb-2">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-select [(ngModel)]="pageNo">                    
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let staticValue of data | keyvalue" [value]="staticValue.key" [innerHtml]="staticValue.value"></mat-option>
-                </mat-select>
-              </mat-form-field>
+              <div class="row">
+                <div class="col-lg-3">
+                  <p>Page</p>
+                </div>
+                <div class="col-lg-9">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-select [(ngModel)]="pageNo">                    
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let staticValue of data | keyvalue" [value]="staticValue.key" [innerHtml]="staticValue.value"></mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>              
             </div>
         </div>
       </div>
