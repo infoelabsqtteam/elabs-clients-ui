@@ -2648,7 +2648,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let formValueWithCustomData = this.getFormValue(true);
       let fromValue = this.getFormValue(false);
       staticModal = this.formCreationService.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
-      if(staticModal.length > 0 && this.editedRowIndex == -1){
+      if(this.editedRowIndex == -1){
         this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
       }
     }    
