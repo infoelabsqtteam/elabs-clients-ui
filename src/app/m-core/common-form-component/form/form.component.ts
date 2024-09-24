@@ -2625,7 +2625,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.filePreviewFields=formControl['filePreviewFields'];
       this.isStepper=formControl['isStepper'];
       this.showGridData = formControl['showGridData'];      
-      if (forControl && Object.keys(forControl).length > 0 && this.tableFields.length > 0) {
+      if (forControl && Object.keys(forControl).length > 0) {
         let validators = {};
         validators['validator'] = [];
         if(this.customValidationFiels && this.customValidationFiels.length > 0){
@@ -2648,7 +2648,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let formValueWithCustomData = this.getFormValue(true);
       let fromValue = this.getFormValue(false);
       staticModal = this.formCreationService.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
-      if(this.tableFields.length > 0 && this.editedRowIndex == -1){
+      if(this.editedRowIndex == -1){
         this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
       }
     }    
