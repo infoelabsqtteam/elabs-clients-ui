@@ -862,4 +862,8 @@ export class SettingMenuComponent implements OnInit, OnDestroy {
         this.dataShareService.getServerEndPoint(true);
     }
 
+    changeRoute(url){
+        this.router.navigate([url]);
+    }
+
 }

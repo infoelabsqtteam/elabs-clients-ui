@@ -35,12 +35,12 @@ aria-labelledby="myModalLabel" aria-hidden="true" [config]="{ignoreBackdropClick
           [legend]="chartLegend[dashboardItem.call_back_field]" (chartHover)="chartHover($event)"
           (chartClick)="chartClicked($event)">
         </canvas>
-        <google-chart id="excel-table" class="googlechart w-100" *ngIf="dashboardItem.package_name == 'google_chart' && chartTitle[dashboardItem.call_back_field]"
+        <!-- <google-chart id="excel-table" class="googlechart w-100" *ngIf="dashboardItem.package_name == 'google_chart' && chartTitle[dashboardItem.call_back_field]"
           [title]="chartTitle[dashboardItem.call_back_field]" [type]="chartType[dashboardItem.call_back_field]"
           [data]="chartDatasets[dashboardItem.call_back_field]"
           [columns]="chartLabels[dashboardItem.call_back_field]"
           [options]="chartOptions[dashboardItem.call_back_field]">
-        </google-chart>
+        </google-chart> -->
         <div *ngIf="dashboardItem.package_name == 'mongodb_chart'"><div [id]="'filter_'+dashboardItem.chartId"></div></div>
 </mat-drawer-container>
         

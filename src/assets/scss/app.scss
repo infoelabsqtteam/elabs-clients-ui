@@ -3,34 +3,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
-// @import "ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css";
-// @import "ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css";
+// @import "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css";
+// @import "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css";
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
 @import "@fortawesome/fontawesome-free/scss/regular.scss";
-@import "@fortawesome/fontawesome-free/scss/brands.scss";              
+@import "@fortawesome/fontawesome-free/scss/brands.scss";
 @import "~animate.css/animate.min.css";
 @import "angular-bootstrap-md/assets/scss/bootstrap/bootstrap.scss";
-@import "angular-bootstrap-md/assets/scss/mdb.scss";
+// @import "angular-bootstrap-md/assets/scss/mdb.scss";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import "~diff2html/bundles/css/diff2html.min.css";
-@import "~jsoneditor/dist/jsoneditor.min.css";
-.jsoneditor-poweredBy, .jsoneditor-menu{display:none;}
-.ace-jsoneditor, textarea.jsoneditor-text {min-height:320px;}
-.d2h-file-header, .d2h-info, .d2h-cntx  {display:none !important;}
-.d2h-files-diff {display:flex !important;}
-.d2h-file-side-diff {overflow:hidden !important}
-.cursor-pointer{cursor: pointer;}
-.cursor-move{cursor: move;}
+
 @import "_variables";
 @import "_themes";
-@import "_app-landing";
-@import "_sidebar";
 @import "_login";
+@import "_header";
+// @import "_app-landing";
+@import "_sidebar";
 @import "_mcore-material";
 @import "_modules";
 @import "_table-list";
-@import "_custom-material";
 @import "_step-progress-bar";
 @import "_theme1";
 @import "_report-form.scss";
@@ -39,5 +31,4 @@
 @import "_responsive";
 @import "setting-modal";
 @import "_model-form.scss";
-
-
+@import "_custom";
