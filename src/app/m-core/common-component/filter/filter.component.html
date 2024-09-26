@@ -81,7 +81,7 @@
                 <input type="text" [placeholder]="field.label" [required]="field.is_mandatory && field.datatype != 'list_of_object'" aria-label="Number" matInput [formControlName]="field.field_name"
                     [matAutocomplete]="first" (keyup)="updateData($event,field)" [id]="field._id+'_'+field.field_name">
                 <mat-autocomplete autoActiveFirstOption #first="matAutocomplete" class="chartautocomplete" (optionSelected)="setValue('',field,false)" [displayWith]="getOptionText">
-                    <mat-option *ngFor="let option of typeAheadData" [value]="option" [innerHtml]="option && option.name ? option.name : option"></mat-option>
+                    <mat-option *ngFor="let option of typeAheadData" [value]="option">{{option && option.name ? option.name : option}}</mat-option>
                 </mat-autocomplete>
             </mat-form-field>
         </div>

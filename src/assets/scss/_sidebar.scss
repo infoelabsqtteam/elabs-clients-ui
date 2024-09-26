@@ -13,7 +13,7 @@
         .mat-expansion-panel-header-title {align-items:center;font-size:13px;}
         .mat-expansion-panel-body {padding:0 25px 0 0;
             .menulist {padding-left:20px;
-                .menuitems {padding:6px 0;font-size:13px;position:relative;
+                .menuitems {padding:6px 0;font-size:13px;position:relative;cursor: pointer;
                   .mat-expansion-panel-body {padding:0;}
                   .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {background:none;}
                   .favibtn { position:absolute;right:0px;top:5px;size:13px;color:#ddd;cursor:pointer;
@@ -32,10 +32,15 @@
 
  //----- Right Side Bar Menu -----//
 .rightsettingmenu {width:260px;height:100%;background:var(--themecolor);
-    mat-icon {color:#999;font-size:16px;width:auto;height:auto;}
+    mat-icon.mdc-list-item__start{color:#999;font-size:16px;width:auto;height:auto;}
     .mat-icon-button {line-height:15px;}
-    mat-list-item {cursor:pointer;}
+    .mat-mdc-list-item {cursor:pointer !important;}
     .budget {background:#e86e6e;margin:0 5px;font-size:11px;display:inline-block;text-align:center;line-height:20px;padding:0 10px;border-radius:5px;color:#fff;}
+    .mat-mdc-list{overflow-y: auto;height: 100%;padding-bottom:120px;}
+    .mdc-list-item__content .mdc-list-item__primary-text{
+      font-size: 14px !important;font-weight: 500 !important;
+    }
+    .mat-mdc-list-item.mdc-list-item--with-leading-avatar.mdc-list-item--with-one-line, .mat-mdc-list-item.mdc-list-item--with-leading-checkbox.mdc-list-item--with-one-line, .mat-mdc-list-item.mdc-list-item--with-leading-icon.mdc-list-item--with-one-line{height: 48px !important}
 }
 
 .filterchart {width:300px;
@@ -46,9 +51,3 @@
 .mat-drawer-backdrop {z-index:4 !important;}
 .mat-drawer{z-index:5 !important;}
 .rightsidebar {z-index:99 !important;}
-
-
-
-
-
-

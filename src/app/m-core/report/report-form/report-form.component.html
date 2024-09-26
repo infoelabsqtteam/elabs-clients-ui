@@ -8,8 +8,8 @@
                         <mat-select (selectionChange)="setValue({'field_name':'collection_name'})"
                             [formControlName]="'collection_name'">
                             <mat-option></mat-option>
-                            <mat-option *ngFor="let data of staticData['collection_name']; let i = index" [value]="data"
-                                [innerHtml]="getddnDisplayVal(data)">
+                            <mat-option *ngFor="let data of staticData['collection_name']; let i = index" [value]="data">
+                                {{getddnDisplayVal(data)}}
                             </mat-option>
                         </mat-select>
                         <input type="hidden" [formControlName]="'collectionName'">
@@ -18,8 +18,8 @@
                         <mat-label>Name</mat-label>
                         <mat-select (selectionChange)="setValue({'field_name':'name'})" [formControlName]="'name'">
                             <mat-option></mat-option>
-                            <mat-option *ngFor="let field of fields; let i = index" [value]="field"
-                                [innerHtml]="getddnDisplayVal(field.label)">
+                            <mat-option *ngFor="let field of fields; let i = index" [value]="field">
+                                {{getddnDisplayVal(field.label)}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -27,8 +27,9 @@
                         <mat-label>Operator</mat-label>
                         <mat-select [formControlName]="'operator'" disableOptionCentering panelClass="optiondropdown">
                             <mat-option></mat-option>
-                            <mat-option *ngFor="let staticValue of operaters | keyvalue" [value]="staticValue.key"
-                                [innerHtml]="getddnDisplayVal(staticValue.value)"></mat-option>
+                            <mat-option *ngFor="let staticValue of operaters | keyvalue" [value]="staticValue.key">
+                                {{getddnDisplayVal(staticValue.value)}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>                
                     
@@ -41,7 +42,7 @@
                         </mat-form-field>
                     </div>
                     <div *ngIf="field.type == 'text' || field.type == 'textarea' || field.type == 'email' || field.type == 'gst_number' || field.type == 'typeahead' || field.type == 'po_number' || field.type == 'radio' || field.type == 'tree_view_selection'">
-                        <mat-form-field appearance="outline" class="w-100">
+                        <mat-form-field appearance="outline" class="w-100" [ngClass]="field.type == 'textarea'? 'textarea' : '' ">
                             <mat-label>Value</mat-label>
                             <input matInput type="text" [formControlName]="'value'" autocomplete="off">
                         </mat-form-field>
@@ -59,7 +60,7 @@
                             <mat-select [formControlName]="'value'">
                                 <mat-option></mat-option>
                                 <mat-option *ngFor="let field of staticData[field.ddn_field]; let i = index"
-                                    [value]="field" [innerHtml]="getddnDisplayVal(field)">
+                                    [value]="field">{{getddnDisplayVal(field)}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -68,7 +69,7 @@
                             <mat-select [formControlName]="'value'">
                                 <mat-option></mat-option>
                                 <mat-option *ngFor="let staticValue of staticData[field.ddn_field]| keyvalue"
-                                    [value]="staticValue.key" [innerHtml]="getddnDisplayVal(staticValue.value)">
+                                    [value]="staticValue.key">{{getddnDisplayVal(staticValue.value)}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -80,7 +81,7 @@
                             <mat-select [compareWith]="compareObjects" [formControlName]="'value'">
                                 <mat-option></mat-option>
                                 <mat-option *ngFor="let staticValue of staticData[field.ddn_field]"
-                                    [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                                    [value]="staticValue">{{getddnDisplayVal(staticValue)}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

@@ -7,36 +7,36 @@
     <!-- <perfect-scrollbar> -->
     <ng-scrollbar #scrollable visibility="hover" appearance="standard" pointerEventsMethod="scrollbar">
         <mat-list class="pt-0" style="padding-bottom:120px;">
-            <mat-list-item matRipple (click)="chartModel()"><mat-icon>bar_chart</mat-icon><div mat-subheader>Chart Bar</div></mat-list-item>
+            <mat-list-item matRipple (click)="chartModel()"><mat-icon matListItemIcon>bar_chart</mat-icon><div matListItemTitle>Chart Bar</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="shortcutinfo()"><mat-icon>info</mat-icon><div mat-subheader>Shortcut Key</div></mat-list-item>
+            <mat-list-item matRipple (click)="shortcutinfo()"><mat-icon matListItemIcon >info</mat-icon><div matListItemTitle>Shortcut Key</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="gotoNotificationPage()"><mat-icon>settings</mat-icon><div mat-subheader>Notifications</div></mat-list-item>
+            <mat-list-item matRipple (click)="gotoNotificationPage()"><mat-icon matListItemIcon>settings</mat-icon><div matListItemTitle>Notifications</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="notificationSetting()"><mat-icon>notifications</mat-icon><div mat-subheader>Notification Setting</div></mat-list-item>
+            <mat-list-item matRipple (click)="notificationSetting()"><mat-icon matListItemIcon>notifications</mat-icon><div matListItemTitle>Notification Setting</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="gitInfo()"><mat-icon>info</mat-icon><div mat-subheader>Version: {{gitVersion}}</div></mat-list-item>
+            <mat-list-item matRipple (click)="gitInfo()"><mat-icon matListItemIcon >info</mat-icon><div matListItemTitle>Version: {{gitVersion}}</div></mat-list-item>
             <mat-divider></mat-divider>
             <span *ngIf="profileMenuItemList && profileMenuItemList.length > 0">
               <span *ngFor="let menu of profileMenuItemList; let i = index">
                 <mat-list-item matRipple (click)="profileMenu(menu)">
-                  <mat-icon>support</mat-icon>
-                  <div mat-subheader>{{menu.label}}</div>
+                  <mat-icon matListItemIcon >support</mat-icon>
+                  <div matListItemTitle>{{menu.label}}</div>
                 </mat-list-item>
                 <mat-divider></mat-divider>
               </span>
             </span>
-            <mat-list-item matRipple (click)="feedback()"><mat-icon>forum</mat-icon><div mat-subheader>Feedback</div></mat-list-item>
+            <mat-list-item matRipple (click)="feedback()"><mat-icon matListItemIcon >forum</mat-icon><div matListItemTitle>Feedback</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple routerLink="/createpwd"><mat-icon>lock_clock</mat-icon><div mat-subheader>Change Password</div></mat-list-item>
+            <mat-list-item matRipple (click)="changeRoute('createpwd')"><mat-icon matListItemIcon >lock_clock</mat-icon><div matListItemTitle>Change Password</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="downloadpdf()"><mat-icon>lock_clock</mat-icon><div mat-subheader>User Manual</div></mat-list-item>
+            <mat-list-item matRipple (click)="downloadpdf()"><mat-icon matListItemIcon >lock_clock</mat-icon><div matListItemTitle>User Manual</div></mat-list-item>
             <mat-divider></mat-divider>            
-            <mat-list-item matRipple (click)="updateUserData()"><mat-icon>update</mat-icon><div mat-subheader>Refresh User Data</div></mat-list-item>
+            <mat-list-item matRipple (click)="updateUserData()"><mat-icon matListItemIcon >update</mat-icon><div matListItemTitle>Refresh User Data</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="refreshEndpoint()"><mat-icon>delete</mat-icon><div mat-subheader>Refresh Endpoint</div></mat-list-item>
+            <mat-list-item matRipple (click)="refreshEndpoint()"><mat-icon matListItemIcon >delete</mat-icon><div matListItemTitle>Refresh Endpoint</div></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item matRipple (click)="logOut()"><mat-icon>power_settings_new</mat-icon><div mat-subheader>Log out</div></mat-list-item>
+            <mat-list-item matRipple (click)="logOut()"><mat-icon matListItemIcon >power_settings_new</mat-icon><div matListItemTitle>Log out</div></mat-list-item>
             <mat-divider></mat-divider>
         </mat-list>
     </ng-scrollbar>
