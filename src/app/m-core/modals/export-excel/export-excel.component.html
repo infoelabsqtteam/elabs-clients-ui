@@ -20,7 +20,7 @@
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-select [(ngModel)]="pageNo">                    
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let staticValue of data | keyvalue" [value]="staticValue.key" [innerHtml]="staticValue.value"></mat-option>
+                        <mat-option *ngFor="let staticValue of data" [value]="staticValue.value">{{ staticValue.label }}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>

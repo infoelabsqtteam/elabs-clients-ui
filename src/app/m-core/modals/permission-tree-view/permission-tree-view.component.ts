@@ -184,15 +184,15 @@ export class PermissionTreeViewComponent implements OnInit {
   //   }
   //   return idList;
   // }
-  getLevel = (node: TodoItemFlatNode) => node.level;
+  getLevel = (node: TodoItemFlatNode) => node?.level;
 
-  isExpandable = (node: TodoItemFlatNode) => node.expandable;
+  isExpandable = (node: TodoItemFlatNode) => node?.expandable;
 
-  getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
+  getChildren = (node: TodoItemNode): TodoItemNode[] => node?.children;
 
-  hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
+  hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData?.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData?.item === '';
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.

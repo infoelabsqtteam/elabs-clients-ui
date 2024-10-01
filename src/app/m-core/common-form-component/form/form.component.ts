@@ -9,7 +9,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
+// import { JsonEditorOptions, JsonEditorComponent} from "@maaxgr/ang-jsoneditor";
 import { StorageService, CommonFunctionService, ApiService, ModelService, DataShareService, NotificationService, EnvService, CoreFunctionService, CustomvalidationService, GridCommonFunctionService, LimsCalculationsService,TreeComponentService,Common, FileHandlerService,editorConfig,minieditorConfig,htmlViewConfig, FormCreationService, FormValueService, ApiCallService, FormControlService, CheckIfService, GridSelectionService, ApiCallResponceService, MultipleFormService, DownloadService } from '@core/web-core';
 
 declare var tinymce: any;
@@ -21,7 +21,7 @@ declare var tinymce: any;
 })
 export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   
-  editorOptions: JsonEditorOptions;
+  // editorOptions: JsonEditorOptions;
   //https://www.npmjs.com/package/@kolkov/angular-editor
   editorConfig:AngularEditorConfig = editorConfig as AngularEditorConfig;
   minieditorConfig:AngularEditorConfig = minieditorConfig as AngularEditorConfig;
@@ -240,8 +240,8 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
     private multipleFormService:MultipleFormService,
     private downloadService:DownloadService
 ) {
-    this.editorOptions = new JsonEditorOptions();
-    this.editorOptions.mode = "text";
+    // this.editorOptions = new JsonEditorOptions();
+    // this.editorOptions.mode = "text";
     let tinymicEditorKey = this.storageService.getApplicationSetting()?.tinyMicCapikey;
     if(tinymicEditorKey && tinymicEditorKey != '') this.tinymceapikey = tinymicEditorKey;
     // this.treeFlattener = new MatTreeFlattener(
@@ -2625,7 +2625,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       this.filePreviewFields=formControl['filePreviewFields'];
       this.isStepper=formControl['isStepper'];
       this.showGridData = formControl['showGridData'];      
-      if (forControl && Object.keys(forControl).length > 0 && this.tableFields.length > 0) {
+      if (forControl && Object.keys(forControl).length > 0) {
         let validators = {};
         validators['validator'] = [];
         if(this.customValidationFiels && this.customValidationFiels.length > 0){
@@ -2648,7 +2648,7 @@ export class FormComponent implements OnInit, OnDestroy, OnChanges, AfterViewIni
       let formValueWithCustomData = this.getFormValue(true);
       let fromValue = this.getFormValue(false);
       staticModal = this.formCreationService.updateSelectContact(this.selectContact,this.tabFilterData,this.tableFields,this.templateForm,formValueWithCustomData,staticModal);
-      if(this.tableFields.length > 0 && this.editedRowIndex == -1){
+      if(this.editedRowIndex == -1){
         this.getStaticData(staticModal,formValueWithCustomData,fromValue);               
       }
     }    
