@@ -11,8 +11,8 @@ export class ExportExcelComponent implements OnInit {
 
   @Input() id: string; 
   @ViewChild('exportExcelModal') public exportExcelModal: ModalDirective; 
-  data:any={}
-  pageNo='1';
+  data:{ value: number; label: string }[] = [];
+  pageNo=1;
   pageSize;
   modelData:any = {};
   
@@ -42,15 +42,17 @@ export class ExportExcelComponent implements OnInit {
     this.exportExcelModal.show()      
   }
   close(){
-    this.pageNo = '1';
+    this.pageNo = 1;
     this.modelData = {};
     this.pageSize = 0;
-    this.data = {};
+    this.data = [];
     this.exportExcelModal.hide();
   }
   download(){
     if(this.pageNo){
-      this.downloadService.getExcelData(this.modelData.tab,this.modelData.menuName,this.modelData.gridColumns,this.modelData.gridFilterValue,this.modelData.tempName,Number(this.pageNo),this.pageNo != '0'?this.pageSize:0);
+      this.downloadService.getExcelData(this.modelData.tab,this.modelData.menuName,this.modelData.gridColumns,this.modelData.gridFilterValue,this.modelData.tempName,Number(this.pageNo),this.pageNo != 0?this.pageSize:0);
+    }else{      
+      // this.downloadService.getExcelData(this.modelData.tab,this.modelData.menuName,this.modelData.gridColumns,this.modelData.gridFilterValue,this.modelData.tempName,this.pageSize,this.data); //getAllExcelData
     }    
     this.close();
   }
