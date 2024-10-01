@@ -276,7 +276,7 @@ export class GridTableViewComponent implements OnInit,OnDestroy, OnChanges {
       this.subscribeAddUpdateResponce();
       this.formCreationService.addNewForm(this.selectTabIndex,isBulkUpdate,bulkuploadList,this.appConfig.selectedRowIndex,this.appConfig.formName,this.appConfig.selectContactAdd);
     }else{
-      this.notificationService.notify('text-danger','Action not allowed!!!')
+      this.notificationService.notify('bg-danger','Action not allowed!!!')
     }
   }
   subscribeAddUpdateResponce(){

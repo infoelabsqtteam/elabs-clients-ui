@@ -9,7 +9,7 @@ export const environment = {
   // serverhost: "https://testinventlandserver.e-labs.ai/rest/",
   //serverhost:"https://uatserveritclabs.e-labs.ai",
   // serverhost:"https://prodservercentral.elabss.ai",
-  serverhost:"http://localhost:3000",
+  serverhost:"http://localhost:8104",
   appId: "ELABS",
   appName: "tonicprod"
 };

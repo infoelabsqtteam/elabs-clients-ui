@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { LAYOUT_VERTICAL, LAYOUT_HORIZONTAL } from './m-core.model';
-import { StorageService, DataShareService, EnvService, MenuOrModuleCommonService } from '@core/web-core';
+import { StorageService, DataShareService, EnvService, MenuOrModuleCommonService, AuthService } from '@core/web-core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -48,7 +48,8 @@ export class McoreComponent implements OnInit {
     private envService:EnvService,
     private menuOrModuleCommonService:MenuOrModuleCommonService,
     changeDetectorRef: ChangeDetectorRef, 
-    media: MediaMatcher
+    media: MediaMatcher,
+    private authService: AuthService
     ) {
     this.dataShareService.sendCurrentPage('DASHBOARD');
     this.dataShareService.chartModelShowHide.subscribe(data =>{
@@ -66,6 +67,10 @@ export class McoreComponent implements OnInit {
       }
     })
    }
+
+  get checkLoginStatus(){
+    return this.authService.checkIdTokenStatus().status;
+  }
 
   ngOnInit() {
     if(this.envService.getRequestType() == 'PUBLIC'){

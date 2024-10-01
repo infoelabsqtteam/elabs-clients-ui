@@ -1,10 +1,4 @@
 .role-button{
     padding: 0 5px;
-    overflow: auto;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    min-width: 50px;
-    max-width: 100px;
 }

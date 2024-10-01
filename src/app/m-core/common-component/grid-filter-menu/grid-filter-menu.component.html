@@ -3,13 +3,12 @@
 </ng-container>
 <mat-menu  #notify="matMenu" xPosition="before" class="filterdrowdownmenu" >
   <div *ngIf="columns && columns.length > 0">
-    <span class="example-list-section">
-      <ul class="ml-2 mt-2 mb-2">
+      <ul class="m-2">
         <li class="pr-2 d-flex justify-content-between mb-2">
-            <button mat-menu-item class="d-flex justify-content-center border mr-2" (click)="updateColumnList()">
+            <button mat-menu-item class="d-flex justify-content-center border mr-2 p-0" (click)="updateColumnList()">
               Show All
             </button>
-            <button mat-menu-item class="d-flex justify-content-center border " [ngClass]="{'notAllow':allCheck }" (click)="saveColumns(columns)">
+            <button mat-menu-item class="d-flex justify-content-center border p-0" [ngClass]="{'notAllow':allCheck }" (click)="saveColumns(columns)">
               Save
             </button>
         </li>
@@ -25,6 +24,5 @@
           </mat-checkbox>
         </li>
       </ul>
-    </span>
-  </div>
+    </div>
 </mat-menu>

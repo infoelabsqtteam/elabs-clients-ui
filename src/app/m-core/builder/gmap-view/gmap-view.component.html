@@ -6,7 +6,8 @@
                     <mat-form-field appearance="outline" class="w-100" >
                         <mat-label>User</mat-label>
                         <mat-select [compareWith]="compareObjects" #user  (selectionChange)="getMaplist(user.value)" >
-                            <mat-option *ngFor="let staticValue of copyStaticData['user_list']" [value]="staticValue" [innerHtml]="getddnDisplayVal(staticValue)">
+                            <mat-option *ngFor="let staticValue of copyStaticData['user_list']" [value]="staticValue">
+                                {{getddnDisplayVal(staticValue)}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
