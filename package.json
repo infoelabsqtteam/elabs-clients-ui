@@ -10,9 +10,10 @@
     "e2e": "ng e2e",
     "sonar": "sonar-scanner",
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",
-    "serve:ssr": "node dist/server",
-    "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
-    "build:client-and-server-bundles": "ng build --configuration production && ng run elabs-client-ui:server:production --bundleDependencies none"
+    "serve:ssr": "node dist/server/main.js",
+    "build:ssr": "npm run build:client-and-server-bundles",
+    "dev:ssr": "ng run your-angular-app:serve-ssr",
+    "build:client-and-server-bundles": "ng build --configuration production && ng run elabs-client-ui:server:production"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +38,7 @@
     "@kolkov/angular-editor": "^3.0.0-beta.0",
     "@mongodb-js/charts-embed-dom": "^3.2.1",
     "@ng-bootstrap/ng-bootstrap": "^14.2.0",
+    "@nguniversal/express-engine": "^15.0.0",
     "@popperjs/core": "^2.11.7",
     "@tinymce/tinymce-angular": "^7.0.0",
     "@types/chart.js": "^2.9.37",
@@ -51,6 +53,7 @@
     "chart.js": "^4.2.1",
     "diff": "^5.0.0",
     "diff2html": "^3.4.9",
+    "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "json-2-csv": "^5.0.1",
     "jsoneditor": "^10.0.1",

@@ -6,6 +6,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { StorageService, CommonFunctionService, PermissionService, DataShareService, ApiService, NotificationService, EnvService, MenuOrModuleCommonService, ApiCallService, UserPrefrenceService} from '@core/web-core';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -79,7 +80,8 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
     private menuOrModuleCommounService:MenuOrModuleCommonService,
     private _location:Location,
     private apiCallService:ApiCallService,
-    private userPrefrenceService:UserPrefrenceService
+    private userPrefrenceService:UserPrefrenceService,
+    private titleService:Title,
   ) {  
     this.initialiseInvites();
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -376,7 +378,8 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
         setTimeout(() => {
           this.selectTabIndex = tabIndex;
         }, 10);          
-        this.getViewMode(tabIndex);         
+        this.getViewMode(tabIndex);      
+        this.titleService.setTitle(this.storageService.getPageTitle()+" | "+this.tabs[tabIndex].label);   
       }else{
         this.grid_view_mode = '';
       }  
@@ -433,6 +436,7 @@ export class BuilderComponent implements OnInit, OnDestroy, AfterViewChecked  {
       this.selectTabIndex = i;  
       this.getViewMode(this.selectTabIndex); 
       this.selected = new UntypedFormControl(i);
+      this.titleService.setTitle(this.storageService.getPageTitle()+" | "+this.tabs[i].label);
     } else {
       this.permissionService.checkTokenStatusForPermission();
       this.notificationService.notify("bg-danger", "Permission denied !!!");

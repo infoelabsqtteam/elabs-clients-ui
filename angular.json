@@ -224,11 +224,10 @@
           "builder": "@angular-devkit/build-angular:server",
           "options": {
             "outputPath": "dist/server",
-            "main": "src/main.server.ts",
+            "main": "src/server.ts",
             "tsConfig": "tsconfig.server.json",
             "sourceMap": true,
-            "optimization": false,
-            "buildOptimizer": false
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -242,8 +241,7 @@
               "optimization": {
                 "scripts": false,
                 "styles": true
-              },
-              "buildOptimizer": true
+              }
             },
             "develop": {
               "fileReplacements": [
@@ -256,8 +254,7 @@
               "optimization": {
                 "scripts": false,
                 "styles": true
-              },
-              "buildOptimizer": true
+              }
             },
             "sit": {
               "fileReplacements": [
@@ -270,8 +267,7 @@
               "optimization": {
                 "scripts": false,
                 "styles": true
-              },
-              "buildOptimizer": true
+              }
             },
             "uat": {
               "fileReplacements": [
@@ -284,11 +280,23 @@
               "optimization": {
                 "scripts": false,
                 "styles": true
-              },
-              "buildOptimizer": true
+              }
             }
           },
           "defaultConfiguration": ""
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "elabs-client-ui:build",
+            "serverTarget": "elabs-client-ui:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "elabs-client-ui:build:production",
+              "serverTarget": "elabs-client-ui:server:production"
+            }
+          }
         }
       }
     }

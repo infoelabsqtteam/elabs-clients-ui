@@ -20,7 +20,7 @@ import { AuthGuard } from '@core/web-core';
 
 const elabsRoutes : Routes = [
         {path: '', component: McoreComponent, children:[
-                { path : '/', component:AdminDashboardComponent, canActivate: [AuthGuard]},
+                { path : '', component:AdminDashboardComponent, canActivate: [AuthGuard]},
                 { path : 'template', component:BuilderComponent, canActivate: [AuthGuard]} ,//will not in use this time
                 { path : 'browse/:moduleId', component:BuilderComponent, canActivate: [AuthGuard] } ,
                 { path : 'browse/:moduleId/:menuId', component:BuilderComponent, canActivate: [AuthGuard] } ,

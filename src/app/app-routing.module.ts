@@ -7,7 +7,8 @@ const appRoutes: Routes = [
     { path: 'm-core', loadChildren: () => import('./m-core/m-core.module').then(m => m.McoreModule) },
     { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
     { path: 'verify-failed', pathMatch: 'full', component: VerifyFailedComponent},
-    
+    { path: '', redirectTo: 'm-core', pathMatch: 'full' },
+    { path: '**', redirectTo: 'm-core' }
     
 ]
 
